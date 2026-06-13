@@ -1,0 +1,4 @@
+_qa-*.png
+.vercel/
+.DS_Store
+Thumbs.db
