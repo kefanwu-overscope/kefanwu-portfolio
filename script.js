@@ -114,10 +114,7 @@ const projectData = {
     gallery: [
       { src: "assets/cover-ansys-cfd.webp", alt: "Ansys Fluent pressure coefficient result on a VTOL drone model", caption: "Conforming Cp result" },
       { src: "assets/ansys-cfd-streamlines.webp", alt: "Velocity streamlines around a VTOL drone CFD model", caption: "Velocity streamlines" },
-      { src: "assets/ansys-cfd-mach-plane.webp", alt: "Mach number plane plot around the VTOL drone", caption: "Mach plane" },
-      { src: "assets/ansys-cfd-pressure.webp", alt: "Pressure contour result on the VTOL drone body", caption: "Pressure field" },
-      { src: "assets/ansys-cfd-cp-top.webp", alt: "Top view pressure coefficient CFD result", caption: "Cp top view" },
-      { src: "assets/ansys-cfd-pressure-top.webp", alt: "Top view pressure contour CFD result", caption: "Pressure top view" }
+      { src: "assets/ansys-cfd-mach-plane.webp", alt: "Mach number plane plot around the VTOL drone", caption: "Mach plane" }
     ]
   },
   seat: {
