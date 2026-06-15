@@ -1258,6 +1258,8 @@ document.querySelectorAll("[data-count]").forEach((el) => {
 
 const cards = [...document.querySelectorAll(".project-card")];
 const filters = [...document.querySelectorAll(".filter")];
+const isInteractiveCardTarget = (event) =>
+  Boolean(event.target.closest("a, button, input, select, textarea"));
 
 filters.forEach((button) => {
   button.addEventListener("click", () => {
@@ -1310,12 +1312,21 @@ cards.forEach((card) => {
     card.style.transform = "";
   });
 
-  card.addEventListener("click", () => openModal(card.dataset.project));
+  card.addEventListener("click", (event) => {
+    if (isInteractiveCardTarget(event)) return;
+    openModal(card.dataset.project);
+  });
   card.addEventListener("keydown", (event) => {
+    if (isInteractiveCardTarget(event)) return;
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       openModal(card.dataset.project);
     }
+  });
+
+  card.querySelectorAll(".project-download").forEach((link) => {
+    link.addEventListener("click", (event) => event.stopPropagation());
+    link.addEventListener("keydown", (event) => event.stopPropagation());
   });
 });
 

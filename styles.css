@@ -1151,6 +1151,36 @@ h2 {
   text-transform: uppercase;
 }
 
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 0.85rem;
+}
+
+.project-download {
+  position: relative;
+  z-index: 4;
+  color: var(--blue);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-decoration: none;
+  text-transform: uppercase;
+  opacity: 0.86;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
+}
+
+.project-download:hover,
+.project-download:focus-visible {
+  color: var(--ink);
+  opacity: 1;
+  outline: none;
+}
+
 .text-button .arrow {
   width: 0.95rem;
   height: 0.95rem;
