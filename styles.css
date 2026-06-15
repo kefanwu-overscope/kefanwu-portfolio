@@ -1161,24 +1161,68 @@ h2 {
 .project-download {
   position: relative;
   z-index: 4;
-  color: var(--blue);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.8rem;
+  padding: 0.4rem 0.78rem;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.06)),
+    rgba(28, 142, 255, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 10px 24px rgba(0, 0, 0, 0.3);
+  color: var(--ink);
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0;
+  line-height: 1;
   text-decoration: none;
   text-transform: uppercase;
-  opacity: 0.86;
+  opacity: 0.96;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   transition:
+    background var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
     color var(--dur-fast) var(--ease-out),
-    opacity var(--dur-fast) var(--ease-out);
+    opacity var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.project-download::after {
+  content: "\2193";
+  margin-left: 0.45rem;
+  color: var(--blue);
+  font-size: 0.82rem;
+  line-height: 1;
+  transform: translateY(-1px);
+  transition: transform var(--dur-fast) var(--ease-out);
 }
 
 .project-download:hover,
 .project-download:focus-visible {
-  color: var(--ink);
+  border-color: rgba(255, 255, 255, 0.52);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.1)),
+    rgba(48, 153, 255, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.36),
+    0 14px 30px rgba(0, 0, 0, 0.35),
+    0 0 26px rgba(63, 150, 255, 0.16);
+  color: #fff;
   opacity: 1;
   outline: none;
+  transform: translateY(-1px);
+}
+
+.project-download:hover::after,
+.project-download:focus-visible::after {
+  transform: translateY(1px);
 }
 
 .text-button .arrow {
