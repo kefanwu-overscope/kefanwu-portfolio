@@ -114,7 +114,10 @@ const projectData = {
     gallery: [
       { src: "assets/cover-ansys-cfd.webp", alt: "Ansys Fluent pressure coefficient result on a VTOL drone model", caption: "Conforming Cp result" },
       { src: "assets/ansys-cfd-streamlines.webp", alt: "Velocity streamlines around a VTOL drone CFD model", caption: "Velocity streamlines" },
-      { src: "assets/ansys-cfd-mach-plane.webp", alt: "Mach number plane plot around the VTOL drone", caption: "Mach plane" }
+      { src: "assets/ansys-cfd-mach-plane.webp", alt: "Mach number plane plot around the VTOL drone", caption: "Mach plane" },
+      { src: "assets/ansys-cfd-wall-shear.webp", alt: "Wall shear stress contour on the VTOL drone CFD model", caption: "Wall shear stress" },
+      { src: "assets/ansys-cfd-agent-orchestration.webp", alt: "AI agent background tasks running a headless Ansys Fluent solve", caption: "Agent orchestration" },
+      { src: "assets/ansys-cfd-smooth-cp-validation.webp", alt: "AI agent report comparing smooth conforming CFD result to the original wrap mesh", caption: "Conforming Cp validation" }
     ]
   },
   seat: {
