@@ -55,6 +55,71 @@ const projectData = {
       { src: "assets/fsae-driver-live.webp", alt: "Kefan driving the Formula SAE car", caption: "Driver validation context" }
     ]
   },
+  ansysCfd: {
+    kicker: "Ansys Fluent / PyFluent / CFD automation",
+    title: "Agent-ready CFD workflow",
+    image: "assets/cover-ansys-cfd.webp",
+    summary:
+      "Open teaching package that shows AI agents how to run Ansys Fluent 2024 R1 headlessly through PyFluent, using a real VTOL drone cruise case as the validation path.",
+    highlights: [
+      "Converted a completed Javelin VTOL cruise CFD run at 300 kph, Mach 0.245, into a reusable agent instruction package.",
+      "Packaged a system prompt, workflow SOP, PyFluent playbook, failure recovery catalog, quality gates, templates, and verified reference scripts.",
+      "Documented 11 real failure modes, including headless STEP import crashes, wrap-mesh traps, silent far-field key failures, and orphaned MPI processes holding a license seat.",
+      "Moved from failed wrap-mesh refinement to a conforming multi-region mesh with a single pressure-far-field boundary while preserving CAD fidelity.",
+      "Built anti-fabrication gates: read back critical Fluent settings, label estimated-reference coefficients as process-validation values, and never report unverified results as design-grade."
+    ],
+    tools: ["Ansys Fluent 2024 R1", "PyFluent 0.17.1", "Python", "PowerShell", "CFD post-processing", "Quality gates"],
+    details: [
+      {
+        title: "Project goal",
+        points: [
+          "The project asks a practical question: can an AI coding agent drive desktop engineering software well enough to run a reviewable CFD workflow without a GUI?",
+          "The result is a teaching package for agents, not just a one-off simulation: the documents explain the operating discipline needed to launch Fluent, manage files, monitor solves, and report credibility.",
+          "The source case is a Javelin VTOL drone cruise simulation at 300 kph, Mach 0.245, with the final numbers explicitly marked as process-validation level where reference values are estimated."
+        ]
+      },
+      {
+        title: "Workflow package",
+        points: [
+          "The package includes a system prompt, a step-by-step SOP, a PyFluent playbook with real 2024 R1 API keys, a failure-recovery catalog, quality-gate definitions, report templates, and verified reference scripts.",
+          "Reference scripts cover solver setup, conforming far-field solve, post-processing images, audit checks, and result reporting so another agent can follow the workflow instead of rediscovering the same traps.",
+          "The workflow forces a gate at each stage: geometry, mesh, solver setup, convergence, y+, force extraction, post-processing, and credibility labeling."
+        ]
+      },
+      {
+        title: "Technical breakthrough",
+        points: [
+          "The early fault-tolerant wrap mesh ran, but it discarded real CAD surface fidelity and could not be refined reliably in a headless environment.",
+          "The route that worked was a conforming watertight mesh solved as a multi-region case with one pressure-far-field boundary, avoiding brittle region extraction while keeping the CAD surface smooth.",
+          "The final setup used compressible ideal-gas physics, k-omega SST, Mach 0.245, and a verified flow-direction vector for the angle of attack."
+        ]
+      },
+      {
+        title: "Failure recovery",
+        points: [
+          "The catalog records 11 failure modes and fixes, including SpaceClaim headless crashes, interactive TUI report loops, Fluent default convergence stopping too early, hidden moment report defaults, and report-file liveness traps.",
+          "One operational lesson was critical: clean up the whole Fluent process family, including mpiexec and cortex, before relaunching, or orphaned MPI processes can hold the license seat.",
+          "Silent no-op settings were treated as hard blockers: after setting a far-field Mach number or flow direction, the script reads the state back and aborts if the values do not match."
+        ]
+      },
+      {
+        title: "Professional standard",
+        points: [
+          "The package distinguishes process validation from design-grade CFD and makes the limitation visible instead of burying it.",
+          "Coefficients derived from estimated reference area, reference length, or moment center are labeled process-validation values only.",
+          "The project demonstrates simulation automation, engineering judgment, and agent instruction design: the agent is not asked to make pretty plots, it is asked to run a disciplined CFD process."
+        ]
+      }
+    ],
+    gallery: [
+      { src: "assets/cover-ansys-cfd.webp", alt: "Ansys Fluent pressure coefficient result on a VTOL drone model", caption: "Conforming Cp result" },
+      { src: "assets/ansys-cfd-streamlines.webp", alt: "Velocity streamlines around a VTOL drone CFD model", caption: "Velocity streamlines" },
+      { src: "assets/ansys-cfd-mach-plane.webp", alt: "Mach number plane plot around the VTOL drone", caption: "Mach plane" },
+      { src: "assets/ansys-cfd-pressure.webp", alt: "Pressure contour result on the VTOL drone body", caption: "Pressure field" },
+      { src: "assets/ansys-cfd-cp-top.webp", alt: "Top view pressure coefficient CFD result", caption: "Cp top view" },
+      { src: "assets/ansys-cfd-pressure-top.webp", alt: "Top view pressure contour CFD result", caption: "Pressure top view" }
+    ]
+  },
   seat: {
     kicker: "Formula SAE / cockpit / ergonomics",
     title: "Driver seat and harness",
