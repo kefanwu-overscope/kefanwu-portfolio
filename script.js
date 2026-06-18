@@ -57,7 +57,7 @@ const projectData = {
   },
   ansysCfd: {
     kicker: "Ansys Fluent / PyFluent / CFD automation",
-    title: "Agent-ready CFD workflow",
+    title: "Agent-based CFD",
     image: "assets/cover-ansys-cfd.webp",
     summary:
       "Open teaching package that shows AI agents how to run Ansys Fluent 2024 R1 headlessly through PyFluent, using a real VTOL drone cruise case as the validation path.",
@@ -177,7 +177,7 @@ const projectData = {
   },
   carbonSeat: {
     kicker: "Formula SAE / composites / support",
-    title: "Carbon fiber seat support",
+    title: "Carbon fiber seat",
     image: "assets/cover-carbon-fiber-seat.webp",
     summary:
       "Composite-focused seat and bodywork support work improving shoulder support, driver retention, repairability, and manufacturability.",
@@ -930,13 +930,13 @@ const heroSkillDetails = {
     text:
       "Fast control loops for sensors, motors, and bench prototypes when a mechanical idea needs physical feedback quickly."
   },
-  esp32: {
-    title: "ESP32",
-    meta: "Compact control nodes",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/ESP32%20Espressif%20ESP-WROOM-32%20Dev%20Board%20%282%29.jpg?width=900",
-    alt: "ESP32 development board",
+  "tig welding": {
+    title: "TIG Welding",
+    meta: "Precision fabrication",
+    image: "assets/skill-tig-welding.jpg",
+    alt: "TIG welding operation on metal tubing",
     text:
-      "Wireless-capable microcontroller work for compact telemetry, sensor nodes, and mechatronics debugging."
+      "Clean welded joints for brackets, fixtures, and motorsport hardware where heat control and fit-up matter."
   },
   autocad: {
     title: "AutoCAD",
@@ -1017,6 +1017,14 @@ const heroSkillDetails = {
     alt: "Close view of woven carbon fiber",
     text:
       "Layup, trimming, support geometry, and lightweight structure decisions for motorsport packaging."
+  },
+  "team management": {
+    title: "Team Management",
+    meta: "Engineering leadership",
+    image: "assets/skill-team-management.jpg",
+    alt: "Olin Electric Motorsports team standing with the race car",
+    text:
+      "Task breakdown, design reviews, fabrication planning, and cross-team execution from CAD to tested assemblies."
   }
 };
 

@@ -2079,6 +2079,7 @@ html.js .project-grid .project-card.is-settled {
 
   .eyebrow {
     max-width: 100%;
+    font-size: 0.78rem;
     overflow-wrap: anywhere;
   }
 
@@ -2094,11 +2095,12 @@ html.js .project-grid .project-card.is-settled {
 
   .hero-skill-track span {
     padding-inline: 0.95rem;
-    font-size: 1.08rem;
+    font-size: 1.2rem;
   }
 
   .hero-copy {
-    font-size: 1.02rem;
+    font-size: 1.08rem;
+    line-height: 1.52;
   }
 
   .set-piece-caption h2 {
@@ -2139,8 +2141,8 @@ html.js .project-grid .project-card.is-settled {
   }
 
   .hero-stats div > span {
-    font-size: 0.54rem;
-    line-height: 1.25;
+    font-size: 0.66rem;
+    line-height: 1.32;
     word-break: break-word;
   }
 
@@ -2157,7 +2159,15 @@ html.js .project-grid .project-card.is-settled {
 
   .capability span,
   .process-list span {
+    font-size: 0.78rem;
     margin-bottom: 1.4rem;
+  }
+
+  .filter {
+    min-height: 2.48rem;
+    padding: 0.62rem 1rem;
+    font-size: 0.76rem;
+    white-space: normal;
   }
 
   .project-card {
@@ -2167,6 +2177,34 @@ html.js .project-grid .project-card.is-settled {
 
   .project-body {
     min-height: 0;
+  }
+
+  .project-body h3,
+  .capability h3,
+  .process-list h3 {
+    font-size: 1.28rem;
+    line-height: 1.08;
+  }
+
+  .project-body p:not(.project-meta),
+  .capability p,
+  .process-list p {
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .project-meta,
+  .card-badge {
+    font-size: 0.72rem;
+    line-height: 1.35;
+  }
+
+  .text-button,
+  .project-download {
+    max-width: 100%;
+    font-size: 0.78rem;
+    line-height: 1.15;
+    white-space: normal;
   }
 
   .feature-panel,
@@ -2208,6 +2246,25 @@ html.js .project-grid .project-card.is-settled {
 
   .modal-gallery {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .modal-content > p,
+  .modal-columns li,
+  .detail-block li,
+  .contact p:not(.section-kicker) {
+    font-size: 0.98rem;
+    line-height: 1.62;
+  }
+
+  .modal-columns h3,
+  .detail-block h3 {
+    font-size: 0.82rem;
+  }
+
+  .gallery-item span {
+    font-size: 0.72rem;
+    line-height: 1.22;
+    overflow-wrap: anywhere;
   }
 }
 
