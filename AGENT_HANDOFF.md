@@ -1,123 +1,232 @@
-# Agent Handoff
+# Agent Handoff - Kefan Wu Portfolio
 
 ## Project
 
-Static portfolio rebuild for `www.kefanwu.com`.
+Static portfolio website for Kefan Wu.
 
-Workspace folder:
+Workspace:
 
 ```powershell
 C:\Users\oc\Desktop\WEBSITE\portfolio-site
 ```
 
-The deployable site is self-contained inside this folder. The root `WEBSITE`
-folder contains raw source photos and older exported assets, but the current
-site references only files under `portfolio-site`.
+Live production:
+
+```text
+https://www.kefanwu.com
+```
+
+Vercel preview/project URL:
+
+```text
+https://kefanwu-portfolio.vercel.app
+```
+
+Git remote:
+
+```text
+https://github.com/kefanwu-overscope/kefanwu-portfolio.git
+```
+
+The site is a plain static site: no framework, no build step, no package install required.
+
+## Current User Preferences
+
+- Website language must stay English.
+- Visual style should stay restrained, black, premium, engineering-focused, close to Apple / SpaceX.
+- Avoid videos.
+- Avoid hobby-framed personal content. If a project is hobby-adjacent, frame it as engineering, fabrication, CAD, controls, or analysis.
+- Avoid flashy purple effects, decorative orbs, and loud gradients.
+- Prefer real project photos and engineering assets over generic stock imagery.
+- Keep the site recruiter-friendly: projects, role, technical contribution, and contact should be easy to scan.
+- Use concise text, strong engineering nouns, and no marketing filler.
+- Do not add a right-side scroll strip. Current scroll hint is bottom-center `SCROLL` with a thin line/dot.
+- Preserve the current hero stats bar and avoid cropping its rounded corners.
+- For mobile, improve readability only inside `@media (max-width: 720px)` unless the user explicitly asks for desktop changes.
 
 ## File Map
 
-- `index.html` - page structure, project cards, modal shell, nav, contact links.
-- `styles.css` - Apple/SpaceX-inspired visual system, responsive layout, modal, project cards, animation styling.
-- `script.js` - project data, modal case-study content, galleries, filters, reveal animation, canvas background.
-- `assets/` - optimized local images used by the site.
-- `README.md` - local preview and deploy instructions.
+- `index.html` - page structure, hero, ticker text, project cards, section order, contact links, modal shell.
+- `styles.css` - visual system, responsive layout, ticker styling, liquid glass cards, section fades, project cards, modal, mobile typography.
+- `script.js` - project case-study data, modal content, galleries, filters, counters, reveal animation, hero skill hover cards.
+- `assets/` - local images, project covers, gallery media, and downloadable package.
+- `README.md` - short local preview and deploy notes.
+- `PROJECT_DOCUMENTATION.md` - older project brief; useful background but verify against current files.
+- `AGENT_HANDOFF.md` - this current handoff.
 
-## Local Preview
+## Current Site Structure
+
+1. Header/nav: Projects, Motorsport, About, Capabilities, Contact.
+2. Hero:
+   - Background: `assets/hero-fsae-track.webp`.
+   - Eyebrow: `Mechanical Lead / Olin Electric Motorsports / MechE @ Olin College '28`.
+   - Skill ticker:
+     `Arduino`, `TIG Welding`, `AutoCAD`, `Topology Study`, `SolidWorks`, `MATLAB`, `FEA`, `CFD`, `CNC Mill`, `Lathe`, `Waterjet`, `Carbon Fiber`, `Team Management`.
+   - Hero copy:
+     `Mechanical engineering student at Olin College, leading mechanical systems for Olin Electric Motorsports and building tested hardware across motorsport, robotics, and fabrication.`
+   - CTA buttons: `View projects`, `FSAE program`.
+   - Stats: `16 Engineering projects`, `18+ Technical skills`, `>30 Engineers led`, `Mechanical Lead / Olin Electric Motorsports`.
+3. Projects section:
+   - Kicker only: `Projects`.
+   - Filter chips: All, Motorsport, Robotics, Product, Analysis, Fabrication.
+   - Card order:
+     `Mk.8 steering system`, `Agent-based CFD`, `Carbon fiber seat`, `Brake temperature simulation`, `Line-following robot scanner`, `Formlabs scent dispenser`, `AURA autonomous luggage robot`, `Line follower robot`, `Automated transmission gearbox`, `Pool Sniper`, `Driver seat and harness`, `Engineering education kit`, `Wankel engine housing`, `Telecaster build`, `FTC robot`, `Noise reduction algorithm`.
+4. Olin Electric Motorsports set-piece:
+   - Background: `assets/oem-mk7-track.jpg`.
+   - Title: `Olin Electric Motorsports`.
+   - Subtitle: `Formula SAE Electric. Mk.7 validated on track - Mk.8 in development.`
+   - Link: `Visit OEM site ↗` to `https://olinelectricmotorsports.com/`.
+5. Mechanical Lead detail section:
+   - Role panel and three media panels.
+6. Capabilities:
+   - Heading: `Contribution`.
+   - Five cards in one row on desktop:
+     `Team management`, `Mechanical architecture`, `Fabrication`, `Simulation and modeling`, `Controls and integration`.
+7. Contact:
+   - Heading: `Let's build cool stuff.`
+   - Links: `kwu@olin.edu`, `kefanwu8888@gmail.com`, LinkedIn.
+
+## Recent Important Changes
+
+- `ESP32` was removed from the hero skill ticker only. Do not remove ESP32 from project/tool descriptions unless requested.
+- Added hero ticker skills:
+  - `TIG Welding`, image `assets/skill-tig-welding.jpg`.
+  - `Team Management`, image `assets/skill-team-management.jpg`.
+- `Agent-ready CFD workflow` was renamed to `Agent-based CFD`.
+- `Carbon fiber seat support` was renamed to `Carbon fiber seat`.
+- `Driver seat and harness` was moved after `Pool Sniper`.
+- Mobile typography was improved under `@media (max-width: 720px)` only.
+- CFD project includes a prominent `Download package` CTA for `assets/claude_ansys_cfd.zip`.
+- CFD gallery currently uses three post images:
+  - `assets/ansys-cfd-wall-shear.webp`
+  - `assets/ansys-cfd-agent-orchestration.webp`
+  - `assets/ansys-cfd-smooth-cp-validation.webp`
+- Olin Electric Motorsports background uses the local image copied from the OEM site: `assets/oem-mk7-track.jpg`.
+
+## Editing Guidance
+
+- Prefer small scoped patches. Do not rewrite the whole site unless asked.
+- Use `apply_patch` for manual edits.
+- Keep cache query strings in `index.html` updated after CSS/JS changes:
+  - `styles.css?v=...`
+  - `script.js?v=...`
+- Project cards exist in both `index.html` and `script.js`:
+  - `index.html` controls visible card order and cover content.
+  - `script.js` controls modal/case-study content through `projectData`.
+- Hero skill hover cards are in `script.js` under `heroSkillDetails`.
+- Section transition/fade issues are mainly in `styles.css` around `.hero::after`, `.systems`, `.systems::after`, `.set-piece`, and `.set-piece-sticky`.
+- Mobile readability changes should stay inside the `@media (max-width: 720px)` block.
+- Clean temporary QA files before finishing: `_qa-*.png`, `_qa-*.log`, etc.
+
+## Verification Commands
+
+Syntax check:
 
 ```powershell
 cd C:\Users\oc\Desktop\WEBSITE\portfolio-site
-python -m http.server 4173
+& 'C:\Users\oc\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' --check script.js
 ```
 
-If Python is not on PATH:
+Local preview:
 
 ```powershell
-& 'C:\Users\oc\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -m http.server 4173
+cd C:\Users\oc\Desktop\WEBSITE\portfolio-site
+& 'C:\Users\oc\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -m http.server 4173 --bind 127.0.0.1
 ```
 
-Open:
+Check local:
+
+```powershell
+Invoke-WebRequest http://localhost:4173 -UseBasicParsing
+```
+
+Recommended browser QA:
+
+- Desktop: 1440x900.
+- Mobile: 390x844.
+- Confirm no horizontal overflow:
+
+```js
+document.documentElement.scrollWidth <= window.innerWidth
+```
+
+After final edits:
+
+```powershell
+git status --short
+git add .
+git commit -m "Update portfolio"
+git push origin main
+```
+
+Vercel auto-deploys from `main`. After push, confirm:
+
+```powershell
+Invoke-WebRequest https://www.kefanwu.com -UseBasicParsing
+```
+
+## Direct Prompt For A New Agent
+
+Use this prompt to hand off the project:
 
 ```text
-http://localhost:4173
+You are taking over Kefan Wu's static portfolio website.
+
+Work directory:
+C:\Users\oc\Desktop\WEBSITE\portfolio-site
+
+Live site:
+https://www.kefanwu.com
+
+GitHub/Vercel:
+- Git remote: https://github.com/kefanwu-overscope/kefanwu-portfolio.git
+- Branch: main
+- Vercel auto-deploys after git push to main.
+
+User preferences:
+- Website must remain English.
+- Style must remain black, restrained, premium, Apple/SpaceX-inspired, engineering-focused.
+- No video.
+- Do not add personal hobby sections or hobby framing.
+- Use real project images where possible.
+- Avoid purple/flamboyant effects, decorative orbs, and overdesigned marketing layouts.
+- Keep recruiter readability high.
+- Use concise engineering language.
+- Preserve desktop layout unless explicitly asked.
+- For mobile readability, change only rules inside @media (max-width: 720px) unless asked otherwise.
+
+Important files:
+- index.html: page structure, hero ticker labels, project card order, visible card copy.
+- styles.css: all visual styling, responsive CSS, transitions, scroll cue, skill glass cards.
+- script.js: projectData modal content, heroSkillDetails hover cards, filters, reveal/counter interactions.
+- assets/: local images and downloadable ZIP assets.
+
+Current key content:
+- Hero ticker skills: Arduino, TIG Welding, AutoCAD, Topology Study, SolidWorks, MATLAB, FEA, CFD, CNC Mill, Lathe, Waterjet, Carbon Fiber, Team Management.
+- ESP32 was intentionally removed only from the hero ticker, but may still appear in project/tool descriptions.
+- Hero copy: "Mechanical engineering student at Olin College, leading mechanical systems for Olin Electric Motorsports and building tested hardware across motorsport, robotics, and fabrication."
+- Projects card order: Mk.8 steering system; Agent-based CFD; Carbon fiber seat; Brake temperature simulation; Line-following robot scanner; Formlabs scent dispenser; AURA autonomous luggage robot; Line follower robot; Automated transmission gearbox; Pool Sniper; Driver seat and harness; Engineering education kit; Wankel engine housing; Telecaster build; FTC robot; Noise reduction algorithm.
+- Olin Electric Motorsports section uses assets/oem-mk7-track.jpg and links to https://olinelectricmotorsports.com/.
+- Capabilities heading is "Contribution"; cards are Team management, Mechanical architecture, Fabrication, Simulation and modeling, Controls and integration.
+- Contact heading is "Let's build cool stuff."
+
+Workflow:
+1. Inspect current files before editing. Do not rely on older docs without checking current code.
+2. Make small scoped edits with apply_patch.
+3. Update CSS/JS cache query strings in index.html when changing styles.css or script.js.
+4. Run:
+   & 'C:\Users\oc\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' --check script.js
+5. Preview with:
+   & 'C:\Users\oc\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -m http.server 4173 --bind 127.0.0.1
+6. Check http://localhost:4173 returns 200.
+7. Browser-check desktop 1440x900 and mobile 390x844, especially no horizontal overflow.
+8. Clean _qa-* temporary files.
+9. Commit and push to main only after verification.
+10. Confirm https://www.kefanwu.com returns 200 after Vercel deploy.
+
+Be careful:
+- Project cards are duplicated conceptually between index.html visible cards and script.js modal data.
+- Section transition bugs have previously appeared around Hero -> Projects and Projects -> Motorsport; inspect visually if touching .hero, .systems, or .set-piece.
+- Hero stats bar rounded corners were previously clipped; preserve overflow/spacing around it.
+- Do not reintroduce the old right-side scroll strip.
 ```
-
-## Current Design Direction
-
-- Clean, dark, high-contrast mechanical engineering portfolio.
-- Apple Liquid Glass-inspired interaction layer for buttons, filters, modal controls, gallery controls, and project cards.
-- Recruiter-first: projects appear within the first one to two scrolls.
-- First four project cards must remain the FSAE split:
-  - Mk.8 steering system
-  - Driver seat and harness
-  - Carbon fiber seat support
-  - Brake temperature simulation
-- Personal hobby sections are intentionally removed.
-- Video assets and video UI are intentionally removed from the deployable site.
-- Telecaster is framed as CNC/fabrication, not personal interest content.
-- Current team role should remain `Mechanical Lead`.
-- Hero stats currently use broad recruiter-facing signals: `14` engineering projects, `18+` technical skills, `>30` engineers led, and `Mechanical Lead / Olin Electric Motorsports`.
-- Hero skill ticker should remain full-viewport and animate left-to-right above the `Kefan Wu` title.
-- Hero scroll cue is a wider semi-transparent right-side vertical rail with a downward moving chevron. It starts below the hero skill ticker, not at the top edge of the viewport.
-- Project cards should stay simple and image-first; the dedicated `assets/cover-*.webp` files are cleaned card covers derived from real project imagery.
-- Current card-cover updates:
-  - `cover-carbon-fiber-seat.webp` uses `Updated/Carbon Fiber Seat/b631a803db5b0636e18efab7e194549c.jpg`.
-  - `cover-ftc-robot.webp` uses `445ad524c3aaaae6c6cf24331973ea4.jpg`.
-  - `cover-perfume-dispenser.webp` uses `Updated/Formlanbs Hackathon, Smelly/0e82cce5adb5f6d76151b1d34cf38f61.jpg`.
-  - `cover-telecaster.webp` uses the finished guitar photo from `Updated/Telecaster`.
-  - The Olin Electric Motorsports set-piece still uses `hero-oem.webp`; its improved appearance comes from CSS object-position and reduced zoom, not a screenshot with baked-in text.
-
-## Current Site Behavior
-
-- Project cards are filterable by category.
-- Each card opens a rounded case-study modal.
-- Each modal includes:
-  - summary
-  - image gallery
-  - engineering signal list
-  - tools and methods list
-  - detailed case-study sections
-- Gallery thumbnails update the large modal image.
-- No project gallery uses video.
-- Canvas background and scroll reveal animations are active unless reduced motion is preferred.
-
-## Source Pages Used For Content
-
-- `https://www.kefanwu.com/3d-scanner`
-- `https://www.kefanwu.com/formlabs-hackathon-2026`
-- `https://www.kefanwu.com/fsae-2026`
-- `https://www.kefanwu.com/fsae2024_2025`
-- `https://www.kefanwu.com/poolsniper`
-- `https://www.kefanwu.com/gearbox`
-- `https://www.kefanwu.com/wankelengine`
-- `https://www.kefanwu.com/educationkit`
-- `https://www.kefanwu.com/telecaster`
-- `https://www.kefanwu.com/ftc`
-- `https://www.kefanwu.com/noisereduction`
-
-## Last Verification
-
-Completed after the latest project-detail expansion:
-
-- `node --check script.js` passed.
-- All `assets/...` references in `index.html`, `styles.css`, and `script.js` resolved.
-- Local server at `http://localhost:4173` returned HTTP 200.
-- Headless Chrome check passed:
-  - 14 project cards.
-  - First four cards are the FSAE split.
-  - Personal habit terms are absent.
-  - Scanner modal has 4 detail sections and 7 gallery items.
-  - Brake modal has 4 detail sections.
-  - Gallery thumbnail clicks update the modal hero image.
-  - No console errors.
-
-## Useful Edit Notes
-
-- Most content changes should happen in the `projectData` object in `script.js`.
-- To add a project image:
-  1. Add the optimized image to `assets/`.
-  2. Reference it in the relevant project's `gallery` array.
-  3. Run the asset-reference check before handoff.
-- To replace a card cover, update both the hard-coded card image in `index.html` and the matching `image` field in `script.js`.
-- Preserve the Liquid Glass hover or focus animation on all button-like controls and project cards.
-- Avoid creating large empty homepage sections; keep detailed content inside modals.
-- Keep generated verification screenshots and temporary contact sheets out of the final project folder.
