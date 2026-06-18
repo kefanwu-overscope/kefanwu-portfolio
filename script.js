@@ -407,7 +407,7 @@ const projectData = {
     title: "AURA swerve drive system",
     image: "assets/aura-swerve.jpeg",
     summary:
-      "Front-wheel swerve drive system for Project AURA, a 200-lb-capacity autonomous cart. My mechanical focus was the drive and steering package: independent front-wheel steering, chain-driven steering reduction, DC drive motors, robust shafts, and fabricated steel mounts.",
+      "Front-wheel swerve drive system for Project AURA, an autonomous cart that can load 300lbs. My mechanical focus was the drive and steering package: independent front-wheel steering, chain-driven steering reduction, DC drive motors, robust shafts, and fabricated steel mounts.",
     highlights: [
       "Owned the mechanical swerve drive direction for a cart designed to carry 200 lb while remaining steerable and autonomous.",
       "Used two front drive modules so the robot could combine drive and steering at the front while preserving maneuverability.",
