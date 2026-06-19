@@ -1079,6 +1079,20 @@ h2 {
   transition: transform 800ms var(--ease-out);
 }
 
+/* Full render shown without cropping on a clean light tile */
+.card-media--contain {
+  background: #ffffff;
+}
+
+.card-media--contain img {
+  object-fit: contain;
+  filter: none;
+}
+
+.card-media--contain::after {
+  opacity: 0.12;
+}
+
 .project-card:hover,
 .project-card:focus-visible {
   border-color: rgba(255, 255, 255, 0.34);
