@@ -406,6 +406,7 @@ const projectData = {
     kicker: "Autonomous cart / swerve drive / fabrication",
     title: "AURA swerve drive system",
     image: "assets/aura-swerve.jpeg",
+    scrub: { base: "assets/aura_explode/frame_", count: 60 },
     summary:
       "Front-wheel swerve drive system for Project AURA, an autonomous cart that can load 300lbs. My mechanical focus was the drive and steering package: independent front-wheel steering, chain-driven steering reduction, DC drive motors, robust shafts, and fabricated steel mounts.",
     highlights: [
@@ -1290,6 +1291,7 @@ function renderDetails(project) {
 }
 
 function showModalMedia(item, projectTitle, instant = false) {
+  modalScrub.pause();
   modalImage.hidden = false;
   const alt = item.alt || `${projectTitle} gallery image`;
   if (instant || reducedMotion.matches) {
@@ -1352,6 +1354,7 @@ function openModal(projectKey) {
   renderDetails(project);
   renderGallery(project);
   modalPanel.scrollTop = 0;
+  modalScrub.setup(project.scrub);
   modal.classList.remove("is-closing");
   modal.setAttribute("aria-hidden", "false");
   body.classList.add("modal-open");
@@ -1359,6 +1362,7 @@ function openModal(projectKey) {
 }
 
 function closeModal() {
+  modalScrub.teardown();
   const finish = () => {
     modal.classList.remove("is-closing");
     modal.setAttribute("aria-hidden", "true");
@@ -1406,118 +1410,114 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-/* ============ AURA exploded-view scroll scrub ============ */
-(function initAuraScrub() {
-  const media = document.querySelector("[data-aura-scrub]");
-  if (!media) return;
-  const poster = media.querySelector("img");
-  const count = parseInt(media.dataset.frameCount, 10) || 60;
-  const base = media.dataset.frameBase || "assets/aura_explode/frame_";
-  const urlFor = (n) => base + String(n).padStart(3, "0") + ".webp";
+/* ============ Exploded-view scroll scrub (inside the case-study modal) ============ */
+/* The left modal media is sticky/pinned while the case-study content scrolls.
+   For projects with a `scrub` config, that pinned media becomes a CAD viewer
+   that advances assembled -> exploded as the user scrolls the modal. */
+const modalMedia = modal.querySelector(".modal-media");
+const modalScrubImg = document.getElementById("modal-scrub-img");
+const scrubReduce = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  const reduceMQ = window.matchMedia("(prefers-reduced-motion: reduce)");
-  if (reduceMQ.matches) return; // keep the static exploded poster
-
-  let frames = null;
-  let ready = false;
-  let canvas = null;
-  let ctx = null;
-  let dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-  let ticking = false;
-  let started = false;
-  let lastIdx = -1;
-
-  function buildCanvas() {
-    canvas = document.createElement("canvas");
-    canvas.className = "aura-scrub__canvas";
-    canvas.setAttribute("aria-hidden", "true");
-    media.appendChild(canvas);
-    ctx = canvas.getContext("2d");
-    sizeCanvas();
-  }
-  function sizeCanvas() {
-    if (!canvas) return;
-    const w = media.clientWidth;
-    const h = media.clientHeight;
-    if (!w || !h) return;
-    canvas.width = Math.round(w * dpr);
-    canvas.height = Math.round(h * dpr);
-    canvas.style.width = w + "px";
-    canvas.style.height = h + "px";
-    lastIdx = -1;
-  }
-  function draw(idx) {
-    if (!ready || !ctx) return;
-    const im = frames[idx];
-    if (!im || !im.complete || !im.naturalWidth) return;
-    if (idx === lastIdx) return;
-    lastIdx = idx;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(im, 0, 0, canvas.width, canvas.height);
-  }
-  function frameForProgress() {
-    const r = media.getBoundingClientRect();
-    const vh = window.innerHeight || document.documentElement.clientHeight;
-    const center = r.top + r.height / 2;
-    const top = 0.85 * vh;
-    const bottom = 0.25 * vh;
-    let t = (top - center) / (top - bottom);
-    t = Math.max(0, Math.min(1, t));
-    return Math.round(t * (count - 1));
-  }
-  function update() {
-    ticking = false;
-    draw(frameForProgress());
-  }
-  function onScroll() {
-    if (!ticking) {
-      ticking = true;
-      requestAnimationFrame(update);
+const modalScrub = {
+  active: false,
+  paused: false,
+  ready: false,
+  count: 0,
+  base: "",
+  frames: null,
+  rafPending: false,
+  lastIdx: -1,
+  url(n) {
+    return this.base + String(n).padStart(3, "0") + ".webp";
+  },
+  setup(cfg) {
+    this.teardown();
+    if (!cfg || !modalScrubImg || !modalMedia) return;
+    this.active = true;
+    this.paused = false;
+    this.count = cfg.count;
+    this.base = cfg.base;
+    this.lastIdx = -1;
+    modalMedia.classList.add("modal-media--scrub");
+    modalMedia.classList.remove("modal-media--scrubbed");
+    modalScrubImg.hidden = false;
+    if (!this.frames || this.frames.base !== cfg.base) {
+      const arr = [];
+      for (let i = 1; i <= cfg.count; i++) {
+        const im = new Image();
+        im.decoding = "async";
+        im.src = this.url(i);
+        arr.push(im);
+      }
+      arr.base = cfg.base;
+      this.frames = arr;
     }
-  }
-  function onResize() {
-    dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-    sizeCanvas();
-    update();
-  }
-  function preload() {
-    if (frames) return;
-    frames = [];
-    for (let i = 1; i <= count; i++) {
-      const im = new Image();
-      im.decoding = "async";
-      im.src = urlFor(i);
-      frames.push(im);
+    if (scrubReduce.matches) {
+      modalScrubImg.src = this.url(cfg.count); // static fully-exploded view
+      return;
     }
+    modalScrubImg.src = this.url(1); // start assembled
+    this.lastIdx = 1;
+    modalPanel.addEventListener("scroll", this.onScroll, { passive: true });
     Promise.all(
-      frames.map((im) => (im.decode ? im.decode().catch(() => {}) : Promise.resolve()))
+      this.frames.map((im) => (im.decode ? im.decode().catch(() => {}) : Promise.resolve()))
     ).then(() => {
-      ready = true;
-      if (!canvas) buildCanvas();
-      media.classList.add("aura-scrub--ready");
-      update();
+      this.ready = true;
+      this.render();
+    });
+  },
+  teardown() {
+    if (!this.active) return;
+    this.active = false;
+    this.paused = false;
+    modalPanel.removeEventListener("scroll", this.onScroll);
+    if (modalScrubImg) {
+      modalScrubImg.hidden = true;
+      modalScrubImg.removeAttribute("src");
+    }
+    if (modalMedia) {
+      modalMedia.classList.remove("modal-media--scrub", "modal-media--scrubbed");
+    }
+  },
+  pause() {
+    // Called when a gallery photo is selected: reveal the static photo.
+    if (!this.active || this.paused) return;
+    this.paused = true;
+    if (modalScrubImg) modalScrubImg.hidden = true;
+    if (modalMedia) modalMedia.classList.add("modal-media--scrubbed");
+  },
+  resume() {
+    if (!this.active || !this.paused) return;
+    this.paused = false;
+    if (modalScrubImg) modalScrubImg.hidden = false;
+    this.lastIdx = -1;
+    this.render();
+  },
+  progress() {
+    const max = modalPanel.scrollHeight - modalPanel.clientHeight;
+    if (max <= 0) return 0;
+    const range = Math.min(max, modalPanel.clientHeight * 1.25);
+    return Math.max(0, Math.min(1, modalPanel.scrollTop / range));
+  },
+  render() {
+    if (!this.active || this.paused || scrubReduce.matches) return;
+    const t = this.progress();
+    const idx = Math.round(t * (this.count - 1)) + 1;
+    if (idx !== this.lastIdx) {
+      this.lastIdx = idx;
+      modalScrubImg.src = this.url(idx);
+    }
+    if (modalMedia) modalMedia.classList.toggle("modal-media--scrubbed", t > 0.04);
+  },
+};
+modalScrub.onScroll = function () {
+  if (!modalScrub.active || scrubReduce.matches) return;
+  if (modalScrub.paused) modalScrub.resume();
+  if (!modalScrub.rafPending) {
+    modalScrub.rafPending = true;
+    requestAnimationFrame(() => {
+      modalScrub.rafPending = false;
+      modalScrub.render();
     });
   }
-
-  if (!("IntersectionObserver" in window)) {
-    // No IO support: just preload and wire scroll directly.
-    preload();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onResize, { passive: true });
-    return;
-  }
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting && !started) {
-          started = true;
-          preload();
-          window.addEventListener("scroll", onScroll, { passive: true });
-          window.addEventListener("resize", onResize, { passive: true });
-        }
-      });
-    },
-    { rootMargin: "200% 0px" }
-  );
-  io.observe(media);
-})();
+};

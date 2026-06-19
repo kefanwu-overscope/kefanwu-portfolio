@@ -1093,17 +1093,50 @@ h2 {
   object-fit: cover;
 }
 
-/* AURA exploded-view scroll scrub: canvas overlays the static poster image */
-.aura-scrub__canvas {
+/* Exploded-view scroll scrub inside the case-study modal.
+   The scrub frame overlays the pinned modal media; its own white background
+   makes it read as a clean CAD viewer. Hidden again when a gallery photo
+   is selected, revealing the underlying image. */
+.modal-scrub-img {
   position: absolute;
   inset: 0;
-  z-index: 1;
-  display: block;
+  z-index: 2;
   width: 100%;
   height: 100%;
+  object-fit: contain;
+  background: #fff;
 }
 
-.aura-scrub--ready img {
+.modal-scrub-img[hidden] {
+  display: none;
+}
+
+.modal-scrub-hint {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  display: none;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  background: rgba(12, 13, 15, 0.78);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.modal-media--scrub .modal-scrub-hint {
+  display: block;
+}
+
+.modal-media--scrubbed .modal-scrub-hint {
   opacity: 0;
 }
 
@@ -2280,6 +2313,13 @@ html.js .project-grid .project-card.is-settled {
     height: auto;
     max-height: none;
     margin: 0.55rem 0.55rem 0;
+  }
+
+  /* Keep the exploded-view CAD pinned while the case study scrolls on mobile */
+  .modal-media--scrub {
+    position: sticky;
+    top: 0;
+    z-index: 4;
   }
 
   .modal-media img {

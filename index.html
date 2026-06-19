@@ -23,7 +23,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
     />
-    <link rel="stylesheet" href="styles.css?v=aura-scrub-20260619" />
+    <link rel="stylesheet" href="styles.css?v=aura-modal-scrub-20260619" />
     <script>document.documentElement.classList.add("js");</script>
   </head>
   <body>
@@ -182,8 +182,8 @@
             </article>
 
             <article class="project-card" data-category="robotics product fabrication" data-project="aura">
-              <div class="card-media card-media--contain aura-scrub" data-aura-scrub data-frame-count="60" data-frame-base="assets/aura_explode/frame_">
-                <img src="assets/aura_explode/frame_060.webp" alt="AURA swerve drive module exploded CAD view; scroll to animate from assembled to exploded" loading="lazy" decoding="async" />
+              <div class="card-media card-media--contain">
+                <img src="assets/cover-aura-swerve-cad.webp" alt="AURA swerve drive module CAD with steering motor, drive wheel, and gearmotor" loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
                 <h3>AURA swerve drive</h3>
@@ -387,6 +387,8 @@
         <button class="modal-close" type="button" data-close-modal aria-label="Close case study">Close</button>
         <div class="modal-media">
           <img id="modal-image" src="assets/hero-fsae-track.webp" alt="" />
+          <img id="modal-scrub-img" class="modal-scrub-img" alt="Exploded view" hidden />
+          <span class="modal-scrub-hint" aria-hidden="true">Scroll to explode</span>
         </div>
         <div class="modal-content">
           <p id="modal-kicker" class="section-kicker"></p>
@@ -408,6 +410,6 @@
       </article>
     </div>
 
-    <script src="script.js?v=aura-scrub-20260619"></script>
+    <script src="script.js?v=aura-modal-scrub-20260619"></script>
   </body>
 </html>
