@@ -1033,9 +1033,7 @@ h2 {
   overflow: hidden;
   aspect-ratio: 4 / 3;
   margin: 0.55rem 0.55rem 0;
-  background:
-    linear-gradient(160deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.035)),
-    rgba(255, 255, 255, 0.035);
+  background: #0e1014;
   border: 1px solid rgba(255, 255, 255, 0.13);
   border-radius: var(--radius-small);
   z-index: 2;
@@ -1073,7 +1071,7 @@ h2 {
 .card-media img {
   height: 100%;
   width: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   filter: saturate(0.92) contrast(1.04);
   transition: transform 800ms var(--ease-out);
