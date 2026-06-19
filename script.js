@@ -684,61 +684,6 @@ const projectData = {
       { src: "assets/education-kit-user-test.webp", alt: "Guitar kit components during user testing", caption: "User test setup" }
     ]
   },
-  wankel: {
-    kicker: "CAD / eccentric motion / 3D printing",
-    title: "Wankel engine replica",
-    image: "assets/wankel-model.webp",
-    summary:
-      "Functional automata inspired by the Mazda 13B rotary engine, using printed parts, eccentric gearing, and a motor-driven dual-rotor assembly.",
-    highlights: [
-      "Modeled complex rotary geometry and a SolidWorks exploded assembly around eccentric motion.",
-      "Built a dual-rotor mechanism driven by a motor at roughly 160 rpm.",
-      "Integrated a belt-driven centrifugal supercharger concept for the visual and mechanical system.",
-      "Designed extra mounting points and spare clearance to handle print tolerance and assembly variation.",
-      "Managed large prints and support structures across a roughly multi-pound PLA build."
-    ],
-    tools: ["SolidWorks", "FDM printing", "Gear trains", "Eccentric mechanisms", "Exploded views", "Assembly iteration"],
-    details: [
-      {
-        title: "Objective",
-        points: [
-          "Built an automata mechanism inspired by the Mazda 13B rotary engine, including two rotors eccentrically connected to the driveshaft.",
-          "The goal was to make the motion legible and smooth, not only to create a static engine model.",
-          "The project also required a clear SolidWorks exploded view and assembly logic for many printed parts."
-        ]
-      },
-      {
-        title: "Motion architecture",
-        points: [
-          "Modeled the rotor housing, eccentric path, drive geometry, and gear relationships needed for smooth rotary motion.",
-          "Added a belt-driven centrifugal supercharger concept to make the external mechanism more complete.",
-          "Used a small motor to drive the assembly and demonstrate the two rotors moving together."
-        ]
-      },
-      {
-        title: "Print and assembly challenges",
-        points: [
-          "Large prints and long print times made early design decisions important because failed geometry would cost too much time and material.",
-          "Added extra mounting holes and spare space so tolerance variation would not block final assembly.",
-          "Planned support structures and surface finish to get metallic-looking mechanical parts from FDM printing."
-        ]
-      },
-      {
-        title: "Skills shown",
-        points: [
-          "This project is a strong CAD and mechanism signal: complex geometry, eccentric motion, gear relationships, printed tolerances, and assembly planning.",
-          "It also shows the ability to turn a real mechanical reference into a functional educational model."
-        ]
-      }
-    ],
-    gallery: [
-      { src: "assets/wankel-model.webp", alt: "CAD render of Wankel engine replica", caption: "Automata model" },
-      { src: "assets/wankel-13b-reference.webp", alt: "Mazda 13B rotary engine reference image", caption: "13B reference" },
-      { src: "assets/wankel-exploded.webp", alt: "Wankel replica exploded view", caption: "Exploded view" },
-      { src: "assets/wankel-rotor.webp", alt: "Rotor and eccentric gear detail", caption: "Rotor geometry" },
-      { src: "assets/wankel-gear.webp", alt: "Wankel gear and housing detail", caption: "Gear detail" }
-    ]
-  },
   telecaster: {
     kicker: "CNC / finishing / electronics integration",
     title: "Telecaster build",
@@ -848,63 +793,6 @@ const projectData = {
       { src: "assets/ftc-action.webp", alt: "FTC competition scoreboard or field event", caption: "Competition result" },
       { src: "assets/ftc-cad.webp", alt: "FTC trophies and awards", caption: "Awards context" },
       { src: "assets/ftc-mechanism.webp", alt: "FTC robot mechanism close-up", caption: "Slide mechanism" }
-    ]
-  },
-  noise: {
-    kicker: "Image processing / parameter search",
-    title: "Noise reduction algorithm",
-    image: "assets/cover-noise-reduction.webp",
-    summary:
-      "Image-processing pipeline for extremely noisy images using SVD, PCA, Gaussian smoothing, mean filtering, adaptive thresholding, and parameter sweeps.",
-    highlights: [
-      "Targeted images degraded by Gaussian, salt-and-pepper, and Poisson-style noise.",
-      "Separated RGB channels and used SVD to isolate dominant image structure from noisy variation.",
-      "Combined Gaussian smoothing, downscale/upscale blocking, iterative mean filtering, and NaN pixel repair.",
-      "Ran a two-parameter sweep over SVD rank and threshold to tune quality.",
-      "Used a PSNR-weighted EVD metric to balance denoising strength against detail loss."
-    ],
-    tools: ["SVD", "PCA", "Gaussian filters", "Mean filters", "Adaptive thresholding", "Parameter sweeps"],
-    details: [
-      {
-        title: "Problem",
-        points: [
-          "Built the algorithm for images so noisy that both humans and downstream algorithms struggle to identify the content.",
-          "The project considered common noise sources such as sensor noise, photon scatter, high ISO, transmission artifacts, and storage corruption.",
-          "The team focused on Gaussian noise, salt-and-pepper noise, and Poisson-style noise examples."
-        ]
-      },
-      {
-        title: "Pipeline",
-        points: [
-          "Processed RGB channels separately so the algorithm could apply linear algebra and filtering per channel.",
-          "Used SVD to capture dominant structure, then applied Gaussian smoothing and iterative mean filtering to suppress noise.",
-          "Computed the difference between original and filtered outputs, used adaptive thresholding to mark noisy pixels, and repaired missing values from valid neighbors."
-        ]
-      },
-      {
-        title: "Optimization",
-        points: [
-          "Ran a two-dimensional sweep over SVD rank and noise threshold to understand the tuning space instead of guessing parameters.",
-          "Visualized the metric as a heatmap so the chosen settings were traceable.",
-          "Used a PSNR-weighted EVD metric to trade off denoising against oversmoothing."
-        ]
-      },
-      {
-        title: "Limitations",
-        points: [
-          "The SVD plus Gaussian approach removes much of the noise, but aggressive pixel repair can blur fine details.",
-          "The project is useful because it explains the tradeoff clearly rather than pretending denoising is lossless.",
-          "It rounds out the portfolio with analytical software work alongside hardware projects."
-        ]
-      }
-    ],
-    gallery: [
-      { src: "assets/noise-comparison.webp", alt: "Noise reduction before and after comparison", caption: "Before/after comparison" },
-      { src: "assets/noise-gaussian.webp", alt: "Gaussian noise image example", caption: "Gaussian noise" },
-      { src: "assets/noise-salt-pepper.webp", alt: "Salt-and-pepper noise image example", caption: "Salt-and-pepper noise" },
-      { src: "assets/noise-poisson.webp", alt: "Poisson noise image example", caption: "Poisson noise" },
-      { src: "assets/noise-after.webp", alt: "Denoised output image", caption: "Filtered output" },
-      { src: "assets/noise-sweep.webp", alt: "Heatmap of noise reduction metric", caption: "Parameter sweep" }
     ]
   }
 };
