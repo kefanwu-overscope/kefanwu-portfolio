@@ -233,7 +233,7 @@ const projectData = {
   },
   brakeSim: {
     kicker: "Formula SAE / MATLAB / brake thermal model",
-    title: "Brake temperature simulation",
+    title: "FSAE Brake Sim",
     image: "assets/oem-brake-fea.webp",
     summary:
       "Track-based brake rotor and pad temperature model for OEM Mk.8, built to size rotors around endurance heat load, pad operating range, 25 percent mass reduction, and structural safety margin.",
@@ -347,7 +347,7 @@ const projectData = {
   },
   formlabs: {
     kicker: "2.5-day hardware sprint",
-    title: "Automated perfume dispenser",
+    title: "Smelly",
     image: "assets/cover-perfume-dispenser.webp",
     summary:
       "Gantry and actuator hardware for Smelly, a fully automated perfume-mixing vending machine built by Team Scent-A-Tubbies during a Formlabs hackathon.",
