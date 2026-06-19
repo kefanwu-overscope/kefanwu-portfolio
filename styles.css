@@ -1087,6 +1087,12 @@ h2 {
   filter: none;
 }
 
+/* Fill the frame (crop slightly) for white-background images that would
+   otherwise show an obvious dark border around them */
+.card-media--fill img {
+  object-fit: cover;
+}
+
 .card-media--contain::after {
   opacity: 0.12;
 }
