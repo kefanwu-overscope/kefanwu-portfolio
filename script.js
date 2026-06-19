@@ -686,7 +686,7 @@ const projectData = {
   },
   telecaster: {
     kicker: "CNC / finishing / electronics integration",
-    title: "Telecaster build",
+    title: "Telecaster guitar",
     image: "assets/cover-telecaster.webp",
     summary:
       "Walnut and maple Telecaster-style electric guitar built through material prep, ShopBot CNC routing, drilling, sanding, finishing, and electronics installation.",
