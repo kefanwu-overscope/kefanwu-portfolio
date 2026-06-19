@@ -1224,6 +1224,24 @@ h2 {
   transform: translateY(1px);
 }
 
+.project-body--inline {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.project-download--icon {
+  flex: none;
+  min-height: 0;
+  padding: 0.42rem 0.58rem;
+}
+
+.project-download--icon::after {
+  margin-left: 0;
+  font-size: 0.95rem;
+}
+
 .text-button .arrow {
   width: 0.95rem;
   height: 0.95rem;
