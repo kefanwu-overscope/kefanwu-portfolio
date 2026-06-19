@@ -1405,3 +1405,119 @@ document.addEventListener("keydown", (event) => {
     }
   }
 });
+
+/* ============ AURA exploded-view scroll scrub ============ */
+(function initAuraScrub() {
+  const media = document.querySelector("[data-aura-scrub]");
+  if (!media) return;
+  const poster = media.querySelector("img");
+  const count = parseInt(media.dataset.frameCount, 10) || 60;
+  const base = media.dataset.frameBase || "assets/aura_explode/frame_";
+  const urlFor = (n) => base + String(n).padStart(3, "0") + ".webp";
+
+  const reduceMQ = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (reduceMQ.matches) return; // keep the static exploded poster
+
+  let frames = null;
+  let ready = false;
+  let canvas = null;
+  let ctx = null;
+  let dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  let ticking = false;
+  let started = false;
+  let lastIdx = -1;
+
+  function buildCanvas() {
+    canvas = document.createElement("canvas");
+    canvas.className = "aura-scrub__canvas";
+    canvas.setAttribute("aria-hidden", "true");
+    media.appendChild(canvas);
+    ctx = canvas.getContext("2d");
+    sizeCanvas();
+  }
+  function sizeCanvas() {
+    if (!canvas) return;
+    const w = media.clientWidth;
+    const h = media.clientHeight;
+    if (!w || !h) return;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+    lastIdx = -1;
+  }
+  function draw(idx) {
+    if (!ready || !ctx) return;
+    const im = frames[idx];
+    if (!im || !im.complete || !im.naturalWidth) return;
+    if (idx === lastIdx) return;
+    lastIdx = idx;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(im, 0, 0, canvas.width, canvas.height);
+  }
+  function frameForProgress() {
+    const r = media.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    const center = r.top + r.height / 2;
+    const top = 0.85 * vh;
+    const bottom = 0.25 * vh;
+    let t = (top - center) / (top - bottom);
+    t = Math.max(0, Math.min(1, t));
+    return Math.round(t * (count - 1));
+  }
+  function update() {
+    ticking = false;
+    draw(frameForProgress());
+  }
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }
+  function onResize() {
+    dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    sizeCanvas();
+    update();
+  }
+  function preload() {
+    if (frames) return;
+    frames = [];
+    for (let i = 1; i <= count; i++) {
+      const im = new Image();
+      im.decoding = "async";
+      im.src = urlFor(i);
+      frames.push(im);
+    }
+    Promise.all(
+      frames.map((im) => (im.decode ? im.decode().catch(() => {}) : Promise.resolve()))
+    ).then(() => {
+      ready = true;
+      if (!canvas) buildCanvas();
+      media.classList.add("aura-scrub--ready");
+      update();
+    });
+  }
+
+  if (!("IntersectionObserver" in window)) {
+    // No IO support: just preload and wire scroll directly.
+    preload();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
+    return;
+  }
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting && !started) {
+          started = true;
+          preload();
+          window.addEventListener("scroll", onScroll, { passive: true });
+          window.addEventListener("resize", onResize, { passive: true });
+        }
+      });
+    },
+    { rootMargin: "200% 0px" }
+  );
+  io.observe(media);
+})();
