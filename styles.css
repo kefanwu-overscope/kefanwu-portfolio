@@ -1140,6 +1140,16 @@ h2 {
   opacity: 0;
 }
 
+/* While scrubbing, size the pinned media to a compact CAD card (~4:3) at the
+   top of the column instead of filling the full-height column, so the white
+   viewer isn't surrounded by large empty bands. It stays pinned as the case
+   study scrolls; the rest of the left column shows the dark panel. */
+.modal-media.modal-media--scrub {
+  align-self: start;
+  height: min(330px, 25vw);
+  max-height: none;
+}
+
 .card-media--contain::after {
   opacity: 0.12;
 }
@@ -2315,11 +2325,15 @@ html.js .project-grid .project-card.is-settled {
     margin: 0.55rem 0.55rem 0;
   }
 
-  /* Keep the exploded-view CAD pinned while the case study scrolls on mobile */
-  .modal-media--scrub {
+  /* Keep the exploded-view CAD pinned while the case study scrolls on mobile.
+     Single-column here, so aspect-ratio is safe (its own grid row) and sizes
+     the card to the full width without the desktop vw cap collapsing it. */
+  .modal-media.modal-media--scrub {
     position: sticky;
     top: 0;
     z-index: 4;
+    height: auto;
+    aspect-ratio: 4 / 3;
   }
 
   .modal-media img {
