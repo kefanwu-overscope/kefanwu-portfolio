@@ -975,8 +975,7 @@ h2 {
   --my: 50%;
   position: relative;
   display: grid;
-  grid-template-rows: 1fr auto;
-  min-height: 15.5rem;
+  grid-template-rows: auto auto;
   overflow: hidden;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.045) 34%, rgba(255, 255, 255, 0.018)),
@@ -1032,6 +1031,7 @@ h2 {
 .card-media {
   position: relative;
   overflow: hidden;
+  aspect-ratio: 4 / 3;
   margin: 0.55rem 0.55rem 0;
   background:
     linear-gradient(160deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.035)),
@@ -2202,7 +2202,7 @@ html.js .project-grid .project-card.is-settled {
   }
 
   .project-card {
-    grid-template-rows: 12.5rem 1fr;
+    grid-template-rows: auto auto;
     min-height: 0;
   }
 
