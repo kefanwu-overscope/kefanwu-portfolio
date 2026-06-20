@@ -407,6 +407,16 @@ const projectData = {
     title: "AURA swerve drive system",
     image: "assets/aura-swerve.jpeg",
     scrub: { base: "assets/aura_explode/frame_", count: 60 },
+    spec: {
+      meta: [
+        ["Role", "Mechanical lead"],
+        ["Process", "Waterjet · TIG weld"],
+      ],
+      stats: [
+        ["300 lb", "Payload"],
+        ["18:80", "Steer ratio"],
+      ],
+    },
     summary:
       "Front-wheel swerve drive system for Project AURA, an autonomous cart that can load 300lbs. My mechanical focus was the drive and steering package: independent front-wheel steering, chain-driven steering reduction, DC drive motors, robust shafts, and fabricated steel mounts.",
     highlights: [
@@ -1354,7 +1364,7 @@ function openModal(projectKey) {
   renderDetails(project);
   renderGallery(project);
   modalPanel.scrollTop = 0;
-  modalScrub.setup(project.scrub);
+  modalScrub.setup(project.scrub, project);
   modal.classList.remove("is-closing");
   modal.setAttribute("aria-hidden", "false");
   body.classList.add("modal-open");
@@ -1416,6 +1426,8 @@ document.addEventListener("keydown", (event) => {
    that advances assembled -> exploded as the user scrolls the modal. */
 const modalMedia = modal.querySelector(".modal-media");
 const modalScrubImg = document.getElementById("modal-scrub-img");
+const modalSpec = document.getElementById("modal-spec");
+const modalScrubBar = document.getElementById("modal-scrub-bar");
 const scrubReduce = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 const modalScrub = {
@@ -1430,7 +1442,7 @@ const modalScrub = {
   url(n) {
     return this.base + String(n).padStart(3, "0") + ".webp";
   },
-  setup(cfg) {
+  setup(cfg, project) {
     this.teardown();
     if (!cfg || !modalScrubImg || !modalMedia) return;
     this.active = true;
@@ -1438,6 +1450,7 @@ const modalScrub = {
     this.count = cfg.count;
     this.base = cfg.base;
     this.lastIdx = -1;
+    this.renderSpec(project);
     modalMedia.classList.add("modal-media--scrub");
     modalMedia.classList.remove("modal-media--scrubbed");
     modalScrubImg.hidden = false;
@@ -1454,6 +1467,7 @@ const modalScrub = {
     }
     if (scrubReduce.matches) {
       modalScrubImg.src = this.url(cfg.count); // static fully-exploded view
+      if (modalScrubBar) modalScrubBar.style.width = "100%";
       return;
     }
     modalScrubImg.src = this.url(1); // start assembled
@@ -1467,7 +1481,6 @@ const modalScrub = {
     });
   },
   teardown() {
-    if (!this.active) return;
     this.active = false;
     this.paused = false;
     modalPanel.removeEventListener("scroll", this.onScroll);
@@ -1475,9 +1488,66 @@ const modalScrub = {
       modalScrubImg.hidden = true;
       modalScrubImg.removeAttribute("src");
     }
+    if (modalScrubBar) modalScrubBar.style.width = "0";
+    if (modalSpec) {
+      modalSpec.replaceChildren();
+      modalSpec.hidden = true;
+    }
     if (modalMedia) {
       modalMedia.classList.remove("modal-media--scrub", "modal-media--scrubbed");
     }
+    modal.classList.remove("modal--scrub");
+  },
+  renderSpec(project) {
+    if (!modalSpec) return;
+    const spec = project && project.spec;
+    const frag = document.createDocumentFragment();
+    if (spec && Array.isArray(spec.meta) && spec.meta.length) {
+      const meta = document.createElement("div");
+      meta.className = "spec-meta";
+      spec.meta.forEach(([k, v]) => {
+        const row = document.createElement("div");
+        row.className = "spec-row";
+        const ks = document.createElement("span");
+        ks.textContent = k;
+        const vs = document.createElement("b");
+        vs.textContent = v;
+        row.append(ks, vs);
+        meta.append(row);
+      });
+      frag.append(meta);
+    }
+    if (spec && Array.isArray(spec.stats) && spec.stats.length) {
+      const stats = document.createElement("div");
+      stats.className = "spec-stats";
+      spec.stats.forEach(([n, k]) => {
+        const tile = document.createElement("div");
+        tile.className = "spec-tile";
+        const ns = document.createElement("span");
+        ns.className = "n";
+        ns.textContent = n;
+        const ks = document.createElement("span");
+        ks.className = "k";
+        ks.textContent = k;
+        tile.append(ns, ks);
+        stats.append(tile);
+      });
+      frag.append(stats);
+    }
+    if (project && Array.isArray(project.tools) && project.tools.length) {
+      const tools = document.createElement("div");
+      tools.className = "spec-tools";
+      project.tools.forEach((t) => {
+        const chip = document.createElement("span");
+        chip.className = "chip";
+        chip.textContent = t;
+        tools.append(chip);
+      });
+      frag.append(tools);
+    }
+    modalSpec.replaceChildren(frag);
+    modalSpec.hidden = false;
+    modal.classList.add("modal--scrub");
   },
   pause() {
     // Called when a gallery photo is selected: reveal the static photo.
@@ -1507,6 +1577,7 @@ const modalScrub = {
       this.lastIdx = idx;
       modalScrubImg.src = this.url(idx);
     }
+    if (modalScrubBar) modalScrubBar.style.width = (t * 100).toFixed(1) + "%";
     if (modalMedia) modalMedia.classList.toggle("modal-media--scrubbed", t > 0.04);
   },
 };

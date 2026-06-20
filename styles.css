@@ -1144,10 +1144,149 @@ h2 {
    top of the column instead of filling the full-height column, so the white
    viewer isn't surrounded by large empty bands. It stays pinned as the case
    study scrolls; the rest of the left column shows the dark panel. */
+/* Scrub layout: the left column is a composed "instrument panel" — a 4:3 CAD
+   viewer pinned at the TOP, a compact spec/meta block anchored to the BOTTOM,
+   with intentional negative space between (Apple/SpaceX spec-readout pattern). */
 .modal-media.modal-media--scrub {
   align-self: start;
-  height: min(330px, 25vw);
-  max-height: none;
+  height: min(840px, 92vh);
+  max-height: min(840px, 92vh);
+  justify-content: space-between;
+}
+
+.modal-media--scrub .modal-stage {
+  flex: 0 0 auto;
+  aspect-ratio: 4 / 3;
+}
+
+.modal-media--scrub .modal-spec {
+  display: flex;
+}
+
+/* Figure caption + scrub-progress line, centered in the negative space
+   between the CAD viewer and the spec footer. */
+.modal-fig {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1rem;
+}
+
+.modal-media--scrub .modal-fig {
+  display: flex;
+}
+
+.modal-fig__label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.modal-fig__track {
+  width: min(60%, 170px);
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.modal-fig__track i {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--blue);
+  transition: width 90ms linear;
+}
+
+.modal-spec {
+  display: none;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 0.95rem 1rem 1.05rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.spec-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.spec-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.spec-row span {
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.spec-row b {
+  color: var(--ink);
+  font-weight: 500;
+  text-align: right;
+}
+
+.spec-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+}
+
+.spec-tile {
+  padding: 0.55rem 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-small);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.spec-tile .n {
+  display: block;
+  font-size: 1.1rem;
+  line-height: 1.05;
+  color: var(--ink);
+}
+
+.spec-tile .k {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.spec-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.spec-tools .chip {
+  padding: 0.25rem 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Tools/methods move into the left spec panel on desktop, so hide the
+   duplicate right-column block while scrubbing. */
+.modal--scrub #modal-tools-block {
+  display: none;
+}
+
+.modal--scrub .modal-columns {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .card-media--contain::after {
@@ -1759,10 +1898,10 @@ h2 {
 .modal-media {
   position: sticky;
   top: 0;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   height: min(840px, 92vh);
   max-height: min(840px, 92vh);
-  place-items: center;
   overflow: hidden;
   margin: 0.7rem 0 0.7rem 0.7rem;
   background:
@@ -1770,6 +1909,15 @@ h2 {
     #030303;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-small);
+}
+
+.modal-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
 }
 
 .modal-media img {
@@ -2325,15 +2473,24 @@ html.js .project-grid .project-card.is-settled {
     margin: 0.55rem 0.55rem 0;
   }
 
-  /* Keep the exploded-view CAD pinned while the case study scrolls on mobile.
-     Single-column here, so aspect-ratio is safe (its own grid row) and sizes
-     the card to the full width without the desktop vw cap collapsing it. */
+  /* Mobile is single-column, so the CAD card just pins at the top and the
+     content (including tools) flows beneath it — no left-bottom gap to fill.
+     Keep the spec panel out of the pinned media here; show the right-column
+     tools block instead. The stage's own aspect-ratio sets the card height. */
   .modal-media.modal-media--scrub {
     position: sticky;
     top: 0;
     z-index: 4;
     height: auto;
-    aspect-ratio: 4 / 3;
+  }
+
+  .modal-media--scrub .modal-spec,
+  .modal-media--scrub .modal-fig {
+    display: none;
+  }
+
+  .modal--scrub #modal-tools-block {
+    display: block;
   }
 
   .modal-media img {
