@@ -856,8 +856,8 @@ const heroSkillDetails = {
   solidworks: {
     title: "SolidWorks",
     meta: "Parametric CAD",
-    image: "assets/seat-cad.webp",
-    alt: "CAD model of a seat structure",
+    image: "assets/gearbox-render.webp",
+    alt: "SolidWorks CAD render of a multi-shaft gearbox assembly",
     text:
       "Assemblies, packaging studies, drawings, and design reviews that connect concept geometry to buildable hardware."
   },
@@ -880,24 +880,24 @@ const heroSkillDetails = {
   cfd: {
     title: "CFD",
     meta: "Flow-aware design",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Hepia-cmefe%20Kalex%20CFD.png?width=900",
-    alt: "Motorcycle fairing computational fluid dynamics visualization",
+    image: "assets/ansys-cfd-pressure.webp",
+    alt: "Ansys CFD pressure-field result over a VTOL drone body",
     text:
       "Flow and pressure tradeoff thinking for cooling, bodywork, and geometry choices where air becomes a design constraint."
   },
   "cnc mill": {
     title: "CNC Mill",
     meta: "Precision machining",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/CNC%20milling%20machine.jpg?width=900",
-    alt: "CNC milling machine",
+    image: "assets/skill-cnc-mill.jpg",
+    alt: "CNC milling machine cutting metal with coolant",
     text:
       "Machined interfaces, bearing cages, mounts, and tolerance-critical details where fit and repeatability matter."
   },
   lathe: {
     title: "Lathe",
     meta: "Round hardware",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Workshop%20lathe%20machine.jpg?width=900",
-    alt: "Workshop lathe machine",
+    image: "assets/skill-lathe.jpg",
+    alt: "Metal lathe turning a shiny workpiece in the chuck",
     text:
       "Shafts, spacers, bushings, and clean rotational fits for steering, drivetrain, and assembly hardware."
   },

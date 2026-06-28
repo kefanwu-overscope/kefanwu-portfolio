@@ -93,6 +93,12 @@ The site is a plain static site: no framework, no build step, no package install
   - `TIG Welding`, image `assets/skill-tig-welding.jpg`.
   - `Team Management`, image `assets/skill-team-management.jpg`.
   - `Vibe Coding`, image `assets/skill-vibe-coding.jpg` (Unsplash, free commercial license, downloaded locally). Hover-card key is `vibe coding` in `heroSkillDetails`. Skills stat bumped to `19+`.
+- Replaced four hover-card skill images (in `heroSkillDetails`):
+  - `CFD` -> own render `assets/ansys-cfd-pressure.webp`.
+  - `SolidWorks` -> own render `assets/gearbox-render.webp` (was `seat-cad.webp`).
+  - `CNC Mill` -> `assets/skill-cnc-mill.jpg` (Unsplash, free commercial, local).
+  - `Lathe` -> `assets/skill-lathe.jpg` (Unsplash, free commercial, local).
+  - These replaced external Wikimedia hotlinks; prefer local assets / Unsplash (no attribution) over CC BY-SA hotlinks.
 - `Agent-ready CFD workflow` was renamed to `Agent-based CFD`.
 - `Carbon fiber seat support` was renamed to `Carbon fiber seat`.
 - `Driver seat and harness` was moved after `Pool Sniper`.
