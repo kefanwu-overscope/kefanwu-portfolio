@@ -1695,6 +1695,79 @@ h2 {
   line-height: 1.45;
 }
 
+.oem-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: clamp(1.1rem, 2.4vw, 1.7rem);
+  padding-bottom: 0.2rem;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.oem-link:hover,
+.oem-link:focus-visible {
+  color: #fff;
+  border-color: var(--blue);
+}
+
+/* ============ skill matrix ============ */
+.matrix-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.7rem, 1.5vw, 1rem);
+}
+
+.matrix-cell {
+  padding: clamp(1.1rem, 2.2vw, 1.5rem);
+  background: var(--bg-elevated);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius);
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.matrix-cell:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  transform: translateY(-2px);
+}
+
+.matrix-cell h3 {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.matrix-cell ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.matrix-cell li {
+  padding: 0.35rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
 /* ============ capabilities ============ */
 
 .capabilities {
@@ -2409,7 +2482,8 @@ html.js .project-grid .project-card.is-settled {
 
   .project-grid,
   .capability-grid,
-  .process-list {
+  .process-list,
+  .matrix-grid {
     grid-template-columns: 1fr;
   }
 

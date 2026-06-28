@@ -23,7 +23,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
     />
-    <link rel="stylesheet" href="styles.css?v=mech-lead-compact-20260619" />
+    <link rel="stylesheet" href="styles.css?v=skill-matrix-20260619" />
     <script>document.documentElement.classList.add("js");</script>
   </head>
   <body>
@@ -42,6 +42,7 @@
       </button>
       <nav id="site-nav" class="site-nav" aria-label="Primary navigation">
         <a href="#work">Projects</a>
+        <a href="#skills">Skills</a>
         <a href="#motorsport">Motorsport</a>
         <a href="#capabilities">Contribution</a>
         <a href="#contact">Contact</a>
@@ -256,23 +257,64 @@
         </div>
       </section>
 
-      <!-- ============ MOTORSPORT SET PIECE ============ -->
-      <section id="motorsport" class="set-piece" aria-labelledby="featured-title">
-        <div class="set-piece-sticky">
-          <img src="assets/oem-mk7-track.jpg" alt="Olin Electric Motorsports Formula SAE car at competition" loading="lazy" decoding="async" />
-          <div class="set-piece-shade" aria-hidden="true"></div>
-          <div class="set-piece-caption">
-            <p class="section-kicker">Flagship program</p>
-            <h2 id="featured-title">Olin Electric Motorsports</h2>
-            <p>Formula SAE Electric. Mk.7 validated on track - Mk.8 in development.</p>
-            <a class="set-piece-link" href="https://olinelectricmotorsports.com/" target="_blank" rel="noreferrer">
-              Visit OEM site <span aria-hidden="true">&#8599;</span>
-            </a>
-          </div>
+      <!-- ============ SKILL MATRIX ============ -->
+      <section id="skills" class="skills-matrix section-shell" aria-labelledby="skills-title">
+        <div class="section-head" data-reveal>
+          <p class="section-kicker">Skills</p>
+          <h2 id="skills-title">Skill matrix</h2>
+        </div>
+        <div class="matrix-grid" data-reveal-group>
+          <article class="matrix-cell" data-reveal>
+            <h3>CAD &amp; modeling</h3>
+            <ul>
+              <li>SolidWorks</li>
+              <li>AutoCAD</li>
+              <li>Topology study</li>
+            </ul>
+          </article>
+          <article class="matrix-cell" data-reveal>
+            <h3>Simulation &amp; analysis</h3>
+            <ul>
+              <li>FEA</li>
+              <li>CFD</li>
+              <li>MATLAB</li>
+            </ul>
+          </article>
+          <article class="matrix-cell" data-reveal>
+            <h3>CNC &amp; machining</h3>
+            <ul>
+              <li>CNC mill</li>
+              <li>Lathe</li>
+              <li>Waterjet</li>
+            </ul>
+          </article>
+          <article class="matrix-cell" data-reveal>
+            <h3>Fabrication &amp; composites</h3>
+            <ul>
+              <li>TIG welding</li>
+              <li>Carbon fiber</li>
+              <li>3D printing</li>
+            </ul>
+          </article>
+          <article class="matrix-cell" data-reveal>
+            <h3>Electronics &amp; controls</h3>
+            <ul>
+              <li>Arduino</li>
+              <li>ESP32</li>
+              <li>Embedded sensors</li>
+            </ul>
+          </article>
+          <article class="matrix-cell" data-reveal>
+            <h3>Software &amp; leadership</h3>
+            <ul>
+              <li>Vibe coding</li>
+              <li>Team management</li>
+            </ul>
+          </article>
         </div>
       </section>
 
-      <section class="featured section-shell" aria-label="Mechanical lead role detail">
+      <section id="motorsport" class="featured section-shell" aria-label="Mechanical lead role detail">
         <div class="feature-grid" data-reveal-group>
           <article class="feature-panel media-large" data-reveal="scale">
             <img src="assets/fsae-mk7-track.webp" alt="Olin Electric Motorsports race car on track" loading="lazy" decoding="async" data-parallax />
@@ -319,6 +361,9 @@
             </div>
           </article>
         </div>
+        <a class="oem-link" href="https://olinelectricmotorsports.com/" target="_blank" rel="noreferrer">
+          Visit Olin Electric Motorsports <span aria-hidden="true">&#8599;</span>
+        </a>
       </section>
 
       <!-- ============ CAPABILITIES ============ -->

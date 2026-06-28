@@ -56,7 +56,7 @@ The site is a plain static site: no framework, no build step, no package install
 
 ## Current Site Structure
 
-1. Header/nav: Projects, Motorsport, About, Capabilities, Contact.
+1. Header/nav: Projects, Skills, Motorsport, Contribution, Contact.
 2. Hero:
    - Background: `assets/hero-fsae-track.webp`.
    - Eyebrow: `Mechanical Lead / Olin Electric Motorsports / MechE @ Olin College '28`.
@@ -71,13 +71,14 @@ The site is a plain static site: no framework, no build step, no package install
    - Filter chips: All, Motorsport, Robotics, Product, Analysis, Fabrication.
    - Card order:
      `Mk.8 steering system`, `Agent-based CFD`, `Carbon fiber seat`, `Brake temperature simulation`, `Line-following robot scanner`, `Formlabs scent dispenser`, `AURA autonomous luggage robot`, `Line follower robot`, `Automated transmission gearbox`, `Pool Sniper`, `Driver seat and harness`, `Engineering education kit`, `Wankel engine housing`, `Telecaster build`, `FTC robot`, `Noise reduction algorithm`.
-4. Olin Electric Motorsports set-piece:
-   - Background: `assets/oem-mk7-track.jpg`.
-   - Title: `Olin Electric Motorsports`.
-   - Subtitle: `Formula SAE Electric. Mk.7 validated on track - Mk.8 in development.`
-   - Link: `Visit OEM site ↗` to `https://olinelectricmotorsports.com/`.
-5. Mechanical Lead detail section:
-   - Role panel and three media panels.
+4. Skill matrix (`#skills`, `.skills-matrix`), placed right after Projects:
+   - Heading `Skill matrix`. Six category cells (`.matrix-cell`) of skill chips:
+     CAD & modeling, Simulation & analysis, CNC & machining, Fabrication & composites, Electronics & controls, Software & leadership.
+   - Replaced the old full-bleed `Olin Electric Motorsports` set-piece (removed because it felt redundant/abrupt). The `.set-piece` CSS/JS still exists but is unused; `assets/oem-mk7-track.jpg` is now orphaned.
+5. Mechanical Lead detail section (`.featured`, now carries `id="motorsport"`):
+   - Role panel and three media panels (compact 3-column layout).
+   - The `Visit Olin Electric Motorsports ↗` link lives here now (`.oem-link`), preserving the OEM link.
+   - Nav `Motorsport` and the hero `FSAE program` CTA both point to `#motorsport` (this section).
 6. Capabilities:
    - Heading: `Contribution`.
    - Five cards in one row on desktop:
