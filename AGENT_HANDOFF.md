@@ -61,11 +61,11 @@ The site is a plain static site: no framework, no build step, no package install
    - Background: `assets/hero-fsae-track.webp`.
    - Eyebrow: `Mechanical Lead / Olin Electric Motorsports / MechE @ Olin College '28`.
    - Skill ticker:
-     `Arduino`, `TIG Welding`, `AutoCAD`, `Topology Study`, `SolidWorks`, `MATLAB`, `FEA`, `CFD`, `CNC Mill`, `Lathe`, `Waterjet`, `Carbon Fiber`, `Team Management`.
+     `Arduino`, `TIG Welding`, `AutoCAD`, `Topology Study`, `SolidWorks`, `MATLAB`, `FEA`, `CFD`, `CNC Mill`, `Lathe`, `Waterjet`, `Carbon Fiber`, `Team Management`, `Vibe Coding`.
    - Hero copy:
      `Mechanical engineering student at Olin College, leading mechanical systems for Olin Electric Motorsports and building tested hardware across motorsport, robotics, and fabrication.`
    - CTA buttons: `View projects`, `FSAE program`.
-   - Stats: `16 Engineering projects`, `18+ Technical skills`, `>30 Engineers led`, `Mechanical Lead / Olin Electric Motorsports`.
+   - Stats: `14 Engineering projects`, `19+ Technical skills`, `>30 Engineers led`, `Mechanical Lead / Olin Electric Motorsports`.
 3. Projects section:
    - Kicker only: `Projects`.
    - Filter chips: All, Motorsport, Robotics, Product, Analysis, Fabrication.
@@ -92,6 +92,7 @@ The site is a plain static site: no framework, no build step, no package install
 - Added hero ticker skills:
   - `TIG Welding`, image `assets/skill-tig-welding.jpg`.
   - `Team Management`, image `assets/skill-team-management.jpg`.
+  - `Vibe Coding`, image `assets/skill-vibe-coding.jpg` (Unsplash, free commercial license, downloaded locally). Hover-card key is `vibe coding` in `heroSkillDetails`. Skills stat bumped to `19+`.
 - `Agent-ready CFD workflow` was renamed to `Agent-based CFD`.
 - `Carbon fiber seat support` was renamed to `Carbon fiber seat`.
 - `Driver seat and harness` was moved after `Pool Sniper`.
@@ -202,7 +203,7 @@ Important files:
 - assets/: local images and downloadable ZIP assets.
 
 Current key content:
-- Hero ticker skills: Arduino, TIG Welding, AutoCAD, Topology Study, SolidWorks, MATLAB, FEA, CFD, CNC Mill, Lathe, Waterjet, Carbon Fiber, Team Management.
+- Hero ticker skills: Arduino, TIG Welding, AutoCAD, Topology Study, SolidWorks, MATLAB, FEA, CFD, CNC Mill, Lathe, Waterjet, Carbon Fiber, Team Management, Vibe Coding.
 - ESP32 was intentionally removed only from the hero ticker, but may still appear in project/tool descriptions.
 - Hero copy: "Mechanical engineering student at Olin College, leading mechanical systems for Olin Electric Motorsports and building tested hardware across motorsport, robotics, and fabrication."
 - Projects card order: Mk.8 steering system; Agent-based CFD; Carbon fiber seat; Brake temperature simulation; Line-following robot scanner; Formlabs scent dispenser; AURA autonomous luggage robot; Line follower robot; Automated transmission gearbox; Pool Sniper; Driver seat and harness; Engineering education kit; Wankel engine housing; Telecaster build; FTC robot; Noise reduction algorithm.

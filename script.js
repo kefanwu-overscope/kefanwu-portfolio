@@ -924,6 +924,14 @@ const heroSkillDetails = {
     alt: "Olin Electric Motorsports team standing with the race car",
     text:
       "Task breakdown, design reviews, fabrication planning, and cross-team execution from CAD to tested assemblies."
+  },
+  "vibe coding": {
+    title: "Vibe Coding",
+    meta: "AI-assisted development",
+    image: "assets/skill-vibe-coding.jpg",
+    alt: "Code on a dark screen with blue and red ambient lighting",
+    text:
+      "Rapid AI-paired prototyping — turning intent into working scripts, tools, and automation for simulation, data wrangling, and hardware workflows."
   }
 };
 
