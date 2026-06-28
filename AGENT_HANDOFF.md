@@ -74,6 +74,7 @@ The site is a plain static site: no framework, no build step, no package install
 4. Skill matrix (`#skills`, `.skills-matrix`), placed right after Projects:
    - Heading `Skill matrix`. Six category cells (`.matrix-cell`) of skill chips:
      CAD & modeling, Simulation & analysis, CNC & machining, Fabrication & composites, Electronics & controls, Software & leadership.
+   - Each chip (`.matrix-cell li`) is wired into the same `heroSkillDetails` hover-card system as the ticker (`initHeroSkillCards` includes `.matrix-cell li`); chips are keyboard-focusable. Three new entries were added for chips not in the ticker: `3d printing` (`assets/skill-3d-printing.jpg`), `esp32` (`assets/skill-esp32.jpg`) — both Unsplash, free commercial, local — and `embedded sensors` (reuses `assets/line-follower-white.webp`). Keep every matrix chip label matching a lowercase key in `heroSkillDetails`.
    - Replaced the old full-bleed `Olin Electric Motorsports` set-piece (removed because it felt redundant/abrupt). The `.set-piece` CSS/JS still exists but is unused; `assets/oem-mk7-track.jpg` is now orphaned.
 5. Mechanical Lead detail section (`.featured`, now carries `id="motorsport"`):
    - Role panel and three media panels (compact 3-column layout).

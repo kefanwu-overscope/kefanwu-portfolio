@@ -932,11 +932,38 @@ const heroSkillDetails = {
     alt: "Code on a dark screen with blue and red ambient lighting",
     text:
       "Rapid AI-paired prototyping — turning intent into working scripts, tools, and automation for simulation, data wrangling, and hardware workflows."
+  },
+  "3d printing": {
+    title: "3D Printing",
+    meta: "Rapid prototyping",
+    image: "assets/skill-3d-printing.jpg",
+    alt: "3D printer in operation under colored ambient lighting",
+    text:
+      "FDM prints for fixtures, jigs, housings, and functional prototypes — from tolerance-aware design to support strategy and finish."
+  },
+  "esp32": {
+    title: "ESP32",
+    meta: "Embedded compute",
+    image: "assets/skill-esp32.jpg",
+    alt: "ESP32 microcontroller development board on a dark background",
+    text:
+      "Wi-Fi-capable microcontroller for sensor fusion, motor control, and data logging across robotics and instrumentation builds."
+  },
+  "embedded sensors": {
+    title: "Embedded Sensors",
+    meta: "Sensing and feedback",
+    image: "assets/line-follower-white.webp",
+    alt: "Robot packed with sensors and wiring",
+    text:
+      "LiDAR, encoders, reflectance arrays, and IMUs integrated with calibration and noise control for closed-loop robotics."
   }
 };
 
 function initHeroSkillCards() {
-  const skillItems = [...document.querySelectorAll(".hero-skill-track span")];
+  const skillItems = [
+    ...document.querySelectorAll(".hero-skill-track span"),
+    ...document.querySelectorAll(".matrix-cell li"),
+  ];
   if (!skillItems.length) return;
 
   const card = document.createElement("aside");
