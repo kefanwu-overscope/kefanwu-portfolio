@@ -1578,18 +1578,21 @@ h2 {
 /* ============ featured grid ============ */
 
 .featured {
-  padding: clamp(4rem, 9vw, 7.5rem) 0;
+  padding: clamp(2.5rem, 5vw, 4rem) 0;
 }
 
+/* Compact role-detail grid: role panel spans the left; a hero image sits top
+   right with two supporting images beneath it, so the whole section fits a
+   landscape desktop viewport without oversized media. */
 .feature-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.16fr) minmax(280px, 0.84fr);
-  gap: clamp(0.85rem, 2vw, 1.1rem);
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(0.7rem, 1.5vw, 1rem);
 }
 
 .feature-panel {
   position: relative;
-  min-height: 24rem;
+  min-height: 0;
   overflow: hidden;
   background: var(--bg-elevated);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -1610,29 +1613,38 @@ h2 {
 }
 
 .media-large {
-  grid-row: span 2;
-  min-height: 42rem;
+  grid-column: 2 / span 2;
+  grid-row: 1;
+  height: clamp(14rem, 22vw, 18rem);
+}
+
+.media-small {
+  height: clamp(11rem, 18vw, 14rem);
 }
 
 .dark-panel {
+  grid-column: 1;
+  grid-row: 1 / span 2;
   display: flex;
   flex-direction: column;
-  justify-content: end;
-  padding: clamp(1.2rem, 3vw, 2rem);
+  justify-content: center;
+  padding: clamp(1.1rem, 2.4vw, 1.6rem);
 }
 
 .dark-panel h3 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 2.45rem;
+  font-size: clamp(1.7rem, 2.4vw, 2.1rem);
   font-weight: 700;
   letter-spacing: 0;
-  line-height: 1;
+  line-height: 1.02;
 }
 
 .dark-panel > p {
+  margin: 0.6rem 0 0;
   color: var(--muted);
-  line-height: 1.7;
+  font-size: 0.92rem;
+  line-height: 1.55;
 }
 
 .media-caption {
@@ -1658,26 +1670,28 @@ h2 {
 
 .spec-list {
   display: grid;
-  gap: 0.6rem;
-  margin: 1.4rem 0 0;
+  gap: 0.45rem;
+  margin: 1rem 0 0;
 }
 
 .spec-list div {
-  padding: 0.9rem;
+  padding: 0.6rem 0.8rem;
   background: rgba(255, 255, 255, 0.045);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-small);
 }
 
 .spec-list dt {
-  margin: 0 0 0.25rem;
+  margin: 0 0 0.2rem;
   color: var(--ink);
+  font-size: 0.92rem;
   font-weight: 600;
 }
 
 .spec-list dd {
   margin: 0;
   color: var(--muted);
+  font-size: 0.82rem;
   line-height: 1.45;
 }
 
@@ -2181,6 +2195,13 @@ html.js .project-grid .project-card.is-settled {
   .feature-grid,
   .contact-grid {
     grid-template-columns: 1fr;
+  }
+
+  .dark-panel,
+  .media-large,
+  .media-small {
+    grid-column: auto;
+    grid-row: auto;
   }
 
   .project-grid,
