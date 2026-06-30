@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Step into Kefan Wu's interactive 3D desk: an engineering workshop where a folder opens the resume and project models open case studies. A WebGL companion to the main portfolio."
+    />
+    <!-- The static homepage is the canonical, crawlable surface. -->
+    <link rel="canonical" href="https://www.kefanwu.com/" />
+    <meta property="og:title" content="Kefan Wu — Interactive 3D Desk" />
+    <meta
+      property="og:description"
+      content="An interactive 3D engineering desk: click the folder for the resume, click project models for case studies."
+    />
+    <meta property="og:image" content="assets/hero-fsae-track.webp" />
+    <meta property="og:type" content="website" />
+    <title>Kefan Wu | Interactive 3D Desk</title>
+    <link rel="icon" href="assets/favicon_custom.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+    <link rel="stylesheet" href="experience.css?v=exp-scaffold-20260629" />
+
+    <!-- Three.js import map (pinned, single CDN). Used by later phases. -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/",
+          "tween": "https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@25.0.0/dist/tween.esm.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Always-visible, keyboard-focusable escape hatch to the classic site -->
+    <div class="exp-topbar">
+      <a class="exp-brand" href="index.html#top" aria-label="Kefan Wu — home">
+        <span class="brand-mark" aria-hidden="true">KW</span>
+        <span class="brand-name">Kefan Wu</span>
+      </a>
+      <a class="exp-classic-link" href="index.html">
+        <span>View classic site</span>
+        <span class="arrow" aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+
+    <!-- The 3D scene renders here in later phases. -->
+    <div class="exp-stage" aria-hidden="true">
+      <canvas id="exp-canvas"></canvas>
+    </div>
+
+    <!-- Intro + accessible fallback content (real DOM: crawlable, no-JS safe). -->
+    <main class="exp-intro" id="exp-intro">
+      <div class="exp-intro__inner">
+        <p class="exp-eyebrow">Interactive&nbsp;·&nbsp;WebGL workshop</p>
+        <h1 class="exp-title">Step onto the<br /><span class="accent">engineering desk</span></h1>
+        <p class="exp-lead">
+          A 3D companion to the portfolio. Open the folder for the resume, and click the
+          project models — steering, the VTOL drone, the swerve module, and more — to dive
+          into each case study.
+        </p>
+
+        <div class="exp-actions">
+          <button class="exp-btn exp-btn--primary" id="enter-btn" type="button" aria-disabled="true">
+            Enter the desk
+          </button>
+          <a class="exp-btn exp-btn--ghost" href="index.html">View classic site</a>
+        </div>
+
+        <nav class="exp-chips" aria-label="Featured projects">
+          <a class="exp-chip" href="index.html#work">Mk.8 Steering</a>
+          <a class="exp-chip" href="index.html#work">Javelin VTOL</a>
+          <a class="exp-chip" href="index.html#work">Carbon seat</a>
+          <a class="exp-chip" href="index.html#work">Brake Sim</a>
+          <a class="exp-chip" href="index.html#work">3D scanner</a>
+          <a class="exp-chip" href="index.html#work">AURA swerve</a>
+          <a class="exp-chip" href="index.html#work">Agent-based CFD</a>
+        </nav>
+
+        <p class="exp-note">Interactive 3D scene — in active development.</p>
+      </div>
+    </main>
+
+    <noscript>
+      <p style="text-align:center;color:#a1a1a6;padding:2rem;font-family:sans-serif">
+        This interactive 3D view needs JavaScript.
+        <a href="index.html" style="color:#3f8cff">View the classic site &rarr;</a>
+      </p>
+    </noscript>
+
+    <script type="module" src="experience.js?v=exp-scaffold-20260629"></script>
+  </body>
+</html>
