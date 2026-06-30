@@ -55,6 +55,72 @@ const projectData = {
       { src: "assets/fsae-driver-live.webp", alt: "Kefan driving the Formula SAE car", caption: "Driver validation context" }
     ]
   },
+  javelin: {
+    kicker: "Aerospace / VTOL / differential thrust",
+    title: "Javelin high-speed VTOL drone",
+    image: "assets/javelin-3q.webp",
+    summary:
+      "A tail-sitter VTOL drone with no moving control surfaces. It launches vertically, tips onto its belly, and flies like a dart toward a 300 km/h target — every maneuver produced by varying the speed of four motors (differential thrust). The whole airframe is shaped around one enemy: drag at 300 km/h.",
+    highlights: [
+      "Targets 300 km/h with zero control surfaces — yaw, pitch, and roll all come from differential thrust across four motors, moving the entire control burden onto the autopilot and tuning.",
+      "Drag-driven airframe: Von Karman ogive nose, swept wing, NACA-0008 stabilizers, and streamlined motor fairings; CG placed ahead of the center of pressure for high-speed stability.",
+      "3D-printed structure material-matched per function — PPA-CF chassis (stiffness/heat), ASA antenna fairings (RF-transparent), PC-FR parts (flame-retardant) — with 3x1.5 mm carbon-fiber tube spars bonded through the wing and tail.",
+      "Avionics on a Matek H743-WING running ArduPlane: pitot/airspeed sensor for stall prevention, GPS auto-return-home, integrated Remote ID, and EMI-aware HV/LV cable separation.",
+      "Drove the design from a ~24-item requirements matrix; custom CAD tooling for a carbon-tube cutting jig and a motor thrust test stand; quick-release body and XT90-S anti-spark throughout.",
+      "Built and fully modeled, not airborne yet by design: finishing fail-safe logic and FAA compliance before a 300 km/h first flight."
+    ],
+    tools: ["SolidWorks", "ArduPilot / ArduPlane", "CFD", "3D printing (PPA-CF)", "Carbon fiber", "Differential thrust", "FPV"],
+    details: [
+      {
+        title: "Concept",
+        points: [
+          "Four-motor tail-sitter that takes off vertically like a quadcopter, tips over, and flies forward like a dart.",
+          "No flaps, ailerons, rudders, or servos anywhere — a deliberate trade of simpler mechanics for harder software (all attitude control through motor mixing).",
+          "Target top speed of 300 km/h drives every shape and material decision."
+        ]
+      },
+      {
+        title: "Aerodynamics and structure",
+        points: [
+          "Von Karman ogive nosecone for a minimum-drag profile; swept wing to delay drag rise and house the motor arms.",
+          "Thin symmetric NACA-0008 stabilizers and streamlined motor fairings to cut frontal drag.",
+          "Center of gravity ahead of the center of pressure for stability at speed; embedded 3x1.5 mm carbon-fiber tubes bonded through wing and stabilizers (a dedicated cutting jig was designed to cut them)."
+        ]
+      },
+      {
+        title: "Propulsion and power",
+        points: [
+          "Four T-Motor F90 2806 motors in a tractor layout — props pull rather than push, keeping clean airflow and aiding cooling.",
+          "Two 4S LiPo packs wired in parallel hold 14.8 V while roughly doubling current and burst capacity for sustained high-speed power.",
+          "High-pitch APC props in multiple pitches under test; XT90-S anti-spark connectors standardized throughout for safe inrush current."
+        ]
+      },
+      {
+        title: "Avionics and electronics",
+        points: [
+          "Matek H743-WING flight controller running ArduPlane for the VTOL/tail-sitter modes and motor mixing; Matek M10Q-5883 GPS/compass facing the sky.",
+          "Matek ASPD-4525 airspeed sensor with a pitot tube extended past the nose and short silicone tubing for low-lag, accurate readings used for stall prevention.",
+          "ELRS radio link, FPV camera and 5.8 GHz VTX (antenna placed at the tail for clearance), Holybro Remote ID, and separated HV/LV cabling to minimize EMI."
+        ]
+      },
+      {
+        title: "Status and next steps",
+        points: [
+          "Airframe complete, full CAD model finished, electronics selected and integrated.",
+          "Not airborne yet by design: at 300 km/h the failure modes get dangerous fast, so fail-safe behavior is being finalized first.",
+          "Researching FAA compliance (the target speed is well past small-UAS limits) and tuning ArduPlane attitude control through pure differential-thrust mixing."
+        ]
+      }
+    ],
+    gallery: [
+      { src: "assets/javelin-3q.webp", alt: "Javelin VTOL drone three-quarter view showing the ogive nose, swept wings, and four motors", caption: "Carbon airframe" },
+      { src: "assets/cover-javelin.webp", alt: "Javelin front view with four motors in an X and the camera at the nose", caption: "Front / X-config" },
+      { src: "assets/javelin-nose.webp", alt: "Von Karman ogive nose with the extended pitot tube", caption: "Ogive nose and pitot" },
+      { src: "assets/javelin-motor.webp", alt: "T-Motor F90 and propeller mounted on the swept wing", caption: "Tractor motor" },
+      { src: "assets/javelin-rear.webp", alt: "Javelin rear three-quarter showing the swept wing and stabilizers", caption: "Swept wing and tail" },
+      { src: "assets/javelin-outdoor.webp", alt: "Javelin held outdoors showing scale", caption: "Scale in hand" }
+    ]
+  },
   ansysCfd: {
     kicker: "Ansys Fluent / PyFluent / CFD automation",
     title: "Agent-based CFD",

@@ -65,12 +65,13 @@ The site is a plain static site: no framework, no build step, no package install
    - Hero copy:
      `Mechanical engineering student at Olin College, leading mechanical systems for Olin Electric Motorsports and building tested hardware across motorsport, robotics, and fabrication.`
    - CTA buttons: `View projects`, `FSAE program`.
-   - Stats: `14 Engineering projects`, `19+ Technical skills`, `>30 Engineers led`, `Mechanical Lead / Olin Electric Motorsports`.
+   - Stats: `15 Engineering projects`, `19+ Technical skills`, `>30 Engineers led`, `Mechanical Lead / Olin Electric Motorsports`.
 3. Projects section:
    - Kicker only: `Projects`.
    - Filter chips: All, Motorsport, Robotics, Product, Analysis, Fabrication.
    - Card order:
-     `Mk.8 steering system`, `Agent-based CFD`, `Carbon fiber seat`, `Brake temperature simulation`, `Line-following robot scanner`, `Formlabs scent dispenser`, `AURA autonomous luggage robot`, `Line follower robot`, `Automated transmission gearbox`, `Pool Sniper`, `Driver seat and harness`, `Engineering education kit`, `Wankel engine housing`, `Telecaster build`, `FTC robot`, `Noise reduction algorithm`.
+     Current actual order (15 cards): `Mk.8 steering system`, `Javelin VTOL drone`, `Agent-based CFD`, `Carbon fiber seat`, `FSAE Brake Sim`, `3D scanner`, `Smelly`, `AURA swerve drive`, `LineFollower robot`, `2-speed gearbox`, `Pool Sniper`, `Driver seat and harness`, `Guitar education kit`, `Telecaster guitar`, `FTC robot`.
+   - `Javelin VTOL drone` (`data-project="javelin"`) added right after steering: high-speed tail-sitter VTOL drone (300 km/h target, differential thrust, no control surfaces). Source: `C:\Users\oc\Desktop\Javeline\` (`Javelin_Project_Overview.md` + `Javelin_pics/`). Cover `assets/cover-javelin.webp`; gallery `javelin-3q/nose/motor/rear/outdoor.webp`. Modal lead `assets/javelin-3q.webp`. `card-media--fill` (photo on gray studio bg).
 4. Skill matrix (`#skills`, `.skills-matrix`), placed right after Projects:
    - Heading `Skill matrix`. Six category cells (`.matrix-cell`) of skill chips:
      CAD & modeling, Simulation & analysis, CNC & machining, Fabrication & composites, Electronics & controls, Software & leadership.
