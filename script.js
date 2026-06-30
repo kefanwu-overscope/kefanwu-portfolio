@@ -69,7 +69,7 @@ const projectData = {
       "Drove the design from a ~24-item requirements matrix; custom CAD tooling for a carbon-tube cutting jig and a motor thrust test stand; quick-release body and XT90-S anti-spark throughout.",
       "Built and fully modeled, not airborne yet by design: finishing fail-safe logic and FAA compliance before a 300 km/h first flight."
     ],
-    tools: ["SolidWorks", "ArduPilot / ArduPlane", "CFD", "3D printing (PPA-CF)", "Carbon fiber", "Differential thrust", "FPV"],
+    tools: ["SolidWorks", "ArduPilot / ArduPlane", "CFD", "3D printing (PPA-CF / PC-FR)", "Carbon-rod reinforcement", "Differential thrust", "FPV"],
     details: [
       {
         title: "Concept",
@@ -113,7 +113,7 @@ const projectData = {
       }
     ],
     gallery: [
-      { src: "assets/javelin-3q.webp", alt: "Javelin VTOL drone three-quarter view showing the ogive nose, swept wings, and four motors", caption: "Carbon airframe" },
+      { src: "assets/javelin-3q.webp", alt: "Javelin VTOL drone three-quarter view showing the ogive nose, swept wings, and four motors", caption: "Printed PPA-CF / PC-FR" },
       { src: "assets/cover-javelin.webp", alt: "Javelin front view with four motors in an X and the camera at the nose", caption: "Front / X-config" },
       { src: "assets/javelin-nose.webp", alt: "Von Karman ogive nose with the extended pitot tube", caption: "Ogive nose and pitot" },
       { src: "assets/javelin-motor.webp", alt: "T-Motor F90 and propeller mounted on the swept wing", caption: "Tractor motor" },
