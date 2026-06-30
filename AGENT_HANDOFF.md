@@ -72,6 +72,7 @@ The site is a plain static site: no framework, no build step, no package install
    - Card order:
      Current actual order (15 cards): `Mk.8 steering system`, `Javelin VTOL drone`, `Agent-based CFD`, `Carbon fiber seat`, `FSAE Brake Sim`, `3D scanner`, `Smelly`, `AURA swerve drive`, `LineFollower robot`, `2-speed gearbox`, `Pool Sniper`, `Driver seat and harness`, `Guitar education kit`, `Telecaster guitar`, `FTC robot`.
    - `Javelin VTOL drone` (`data-project="javelin"`) added right after steering: high-speed tail-sitter VTOL drone (300 km/h target, differential thrust, no control surfaces). Source: `C:\Users\oc\Desktop\Javeline\` (`Javelin_Project_Overview.md` + `Javelin_pics/`). Cover `assets/cover-javelin.webp`; gallery `javelin-3q/nose/motor/rear/outdoor.webp`. Modal lead `assets/javelin-3q.webp`. `card-media--fill` (photo on gray studio bg).
+     - Material accuracy: the airframe is **3D-printed PPA-CF and PC-FR** (carbon-filled nylon), with **carbon-fiber rods only as wing/tail spars** — it is NOT a full carbon-fiber layup. Tools chips read `3D printing (PPA-CF / PC-FR)` and `Carbon-rod reinforcement`; gallery caption is `Printed PPA-CF / PC-FR`. Do not relabel this as a "carbon airframe".
 4. Skill matrix (`#skills`, `.skills-matrix`), placed right after Projects:
    - Heading `Skill matrix`. Six category cells (`.matrix-cell`) of skill chips:
      CAD & modeling, Simulation & analysis, CNC & machining, Fabrication & composites, Electronics & controls, Software & leadership.
@@ -112,6 +113,32 @@ The site is a plain static site: no framework, no build step, no package install
   - `assets/ansys-cfd-agent-orchestration.webp`
   - `assets/ansys-cfd-smooth-cp-validation.webp`
 - Olin Electric Motorsports background uses the local image copied from the OEM site: `assets/oem-mk7-track.jpg`.
+
+## Cover Images, Modal Media, and Tooling
+
+### Project-card cover treatment (all cards are a uniform 4:3 box)
+- `.card-media` is `aspect-ratio: 4 / 3`; every card box is identically sized. Fix "image too big / wrong proportion" complaints at the box + `object-fit` level, NOT by resizing the source image.
+- Default `.card-media img` is `object-fit: contain` on a dark tile (`#0e1014`) — shows a render/photo whole on a dark background.
+- `.card-media--fill` → `object-fit: cover` (image fills the box, edges cropped). Use for full-bleed photos (e.g. Javelin).
+- `.card-media--contain` → white tile + `object-fit: contain`. Use for CAD renders on a white/transparent background.
+- Covers were cleaned with `rembg` (background removal) where needed; see tooling below.
+
+### AURA modal scroll-scrub (exploded view) — NOT a video
+- The `AURA swerve drive` case study has a scroll-scrubbed exploded-view animation INSIDE the modal (not on the card cover). As the user scrolls the open modal, the swerve assembly animates assembled → exploded.
+- It is an image sequence (deliberately not a `<video>`, per the no-video rule): 60 frames at `assets/aura_explode/frame_001.webp` … `frame_060.webp`.
+- Driven by the `modalScrub` controller in `script.js` (config `scrub: { base: "assets/aura_explode/frame_", count: 60 }`), rendering into `#modal-scrub-img` with a scroll-progress line `#modal-scrub-bar`. Has a `prefers-reduced-motion` fallback (static fully-exploded frame).
+- That modal's left column is a composed instrument panel: CAD stage on top, figure caption + progress line, then a spec panel (role/process, stat tiles, tool chips). On desktop the right-hand tools block is hidden for this modal (`.modal--scrub`); tools live in the left spec panel instead.
+- To rebuild frames: export an MP4 from SolidWorks, extract frames with imageio-ffmpeg, crop to a FIXED union 4:3 box (so the part doesn't jump between frames), save as webp.
+
+### Asset tooling (local, on this machine)
+- `rembg` lives in an isolated venv: `C:\Users\oc\rembg_venv` (model `isnet-general-use`, cached under `~/.u2net`). Use it to white-out / remove backgrounds.
+- `ffmpeg` is available via the `imageio-ffmpeg` Python package (MP4 → frame extraction).
+- `Pillow (PIL)` for cropping / webp conversion (covers are ~1400×933 webp at ~q82).
+- Windows gotchas: Python cannot write to `/tmp` — write temp files under `C:/Users/oc/AppData/Local/Temp/...`. In `python -c` strings use forward slashes / `os.path.join`, not escaped backslashes. Pasted screenshots land in `C:\Users\oc\AppData\Local\Packages\MicrosoftWindows.Client.Core_cw5n1h2txyewy\TempState\ScreenClip\`.
+
+### Current cache versions (bump the matching one whenever you edit that file)
+- `styles.css?v=skill-matrix-20260619`
+- `script.js?v=javelin-mat-20260620`
 
 ## Editing Guidance
 
@@ -215,8 +242,10 @@ Current key content:
 - Hero ticker skills: Arduino, TIG Welding, AutoCAD, Topology Study, SolidWorks, MATLAB, FEA, CFD, CNC Mill, Lathe, Waterjet, Carbon Fiber, Team Management, Vibe Coding.
 - ESP32 was intentionally removed only from the hero ticker, but may still appear in project/tool descriptions.
 - Hero copy: "Mechanical engineering student at Olin College, leading mechanical systems for Olin Electric Motorsports and building tested hardware across motorsport, robotics, and fabrication."
-- Projects card order: Mk.8 steering system; Agent-based CFD; Carbon fiber seat; Brake temperature simulation; Line-following robot scanner; Formlabs scent dispenser; AURA autonomous luggage robot; Line follower robot; Automated transmission gearbox; Pool Sniper; Driver seat and harness; Engineering education kit; Wankel engine housing; Telecaster build; FTC robot; Noise reduction algorithm.
-- Olin Electric Motorsports section uses assets/oem-mk7-track.jpg and links to https://olinelectricmotorsports.com/.
+- Projects card order (15 cards, current): Mk.8 steering system; Javelin VTOL drone; Agent-based CFD; Carbon fiber seat; FSAE Brake Sim; 3D scanner; Smelly; AURA swerve drive; LineFollower robot; 2-speed gearbox; Pool Sniper; Driver seat and harness; Guitar education kit; Telecaster guitar; FTC robot. (Wankel engine housing and Noise reduction algorithm were removed; cards now show image + name only.)
+- After Projects comes a Skill matrix section (#skills); the old full-bleed OEM "set-piece" was removed. The Olin Electric Motorsports link now lives in the Mechanical Lead detail section (.featured, id="motorsport") as .oem-link → https://olinelectricmotorsports.com/. assets/oem-mk7-track.jpg is now orphaned.
+- AURA swerve drive has a scroll-scrubbed exploded-view image sequence INSIDE its modal (assets/aura_explode/frame_001..060.webp, modalScrub controller) — not a video, not on the cover.
+- Card cover treatment is uniform 4:3: default object-fit contain on dark tile, .card-media--fill = cover, .card-media--contain = white tile. Fix proportion complaints via these classes, not by resizing images.
 - Capabilities heading is "Contribution"; cards are Team management, Mechanical architecture, Fabrication, Simulation and modeling, Controls and integration.
 - Contact heading is "Let's build cool stuff."
 
