@@ -178,6 +178,15 @@ button {
   place-items: center;
   padding: 6rem clamp(1.2rem, 5vw, 3rem) 4rem;
   text-align: center;
+  /* Opaque cover over the canvas (start-gate). Hidden once the user enters. */
+  background: radial-gradient(120% 100% at 50% 0%, #101216 0%, #050506 55%, #000 100%);
+  transition: opacity var(--dur-slow) var(--ease-out);
+}
+
+/* When the scene is entered (wired in a later phase), the cover fades away. */
+.exp-entered .exp-intro {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .exp-intro__inner {
