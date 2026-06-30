@@ -90,6 +90,157 @@ The site is a plain static site: no framework, no build step, no package install
    - Heading: `Let's build cool stuff.`
    - Links: `kwu@olin.edu`, `kefanwu8888@gmail.com`, LinkedIn.
 
+## DOM / Anchor / ID Reference
+
+_Verified 2026-06-29 token-by-token against `index.html` + `script.js`. Re-verify before trusting if the files have changed since._
+
+> ⚠️ **Footgun:** Section ids do **NOT** match their visible names. "Projects" = `id="work"` (there is no `#projects`). "Contribution" = `id="capabilities"`. Also: the kicker on `#work` literally reads "Projects" but is `id="systems-title"`. Always navigate by id, not by visible label.
+
+### Section / landmark map (DOM order)
+
+| Visible name | Element & class | id | Linked from |
+|---|---|---|---|
+| (progress bar) | `div.progress` | — | (not linked; decorative, `aria-hidden`) |
+| (header) | `header.site-header` | — | (not linked) |
+| (main wrapper) | `main` (no class) | `top` | brand link `KW / Kefan Wu` → `#top` |
+| Hero | `section.hero` | — (h1 is `hero-title`) | (not linked) |
+| Projects | `section.systems` | `work` | nav `Projects` → `#work`; hero CTA `View projects` → `#work`; scroll cue `Scroll` → `#work` |
+| Skills | `section.skills-matrix.section-shell` | `skills` | nav `Skills` → `#skills` |
+| Motorsport | `section.featured.section-shell` | `motorsport` | nav `Motorsport` → `#motorsport`; hero CTA `FSAE program` → `#motorsport` |
+| Contribution | `section.capabilities.section-shell` | `capabilities` | nav `Contribution` → `#capabilities` |
+| Contact | `section.contact` | `contact` | nav `Contact` → `#contact` |
+| (footer) | `footer.site-footer` | — | (not linked) |
+| Case-study modal | `div.modal` | `project-modal` | (opened by JS, not an href) |
+
+### Nav & CTA targets
+
+| Control (verbatim label) | href target | Resolves to section |
+|---|---|---|
+| `KW` / `Kefan Wu` (brand) | `#top` | `main#top` |
+| `Projects` (nav) | `#work` | Projects `section#work` |
+| `Skills` (nav) | `#skills` | Skills `section#skills` |
+| `Motorsport` (nav) | `#motorsport` | Motorsport `section#motorsport` |
+| `Contribution` (nav) | `#capabilities` | Contribution `section#capabilities` |
+| `Contact` (nav) | `#contact` | Contact `section#contact` |
+| `View projects` (hero CTA, `button primary`, `data-magnetic`) | `#work` | Projects `section#work` |
+| `FSAE program` (hero CTA, `button secondary`, `data-magnetic`) | `#motorsport` | Motorsport `section#motorsport` |
+| `Scroll` (scroll-cue, `a.scroll-cue.stage`) | `#work` | Projects `section#work` |
+
+All in-page hash anchors resolve — **no broken `#` targets**. Nav container is `id="site-nav"`. There is also a `.nav-toggle` button (read by JS).
+
+### Project cards
+
+Container: `<div id="project-cards" class="project-grid" data-reveal-group>`. Each card is `<article class="project-card" data-project="…" data-category="…">` with an `<h3>` title. **15 cards total.** Open value passed to JS `openModal()` = `data-project`.
+
+| # | data-project | `<h3>` visible | data-category tokens | card-media variant | Notes |
+|---|---|---|---|---|---|
+| 1 | `steering` | Mk.8 steering system | `motorsport analysis fabrication` | `card-media card-media--contain` | |
+| 2 | `javelin` | Javelin VTOL drone | `robotics analysis fabrication` | `card-media card-media--fill` | |
+| 3 | `ansysCfd` | Agent-based CFD | `analysis software` | `card-media card-media--contain` | **download icon** (`a.project-download.project-download--icon` → `assets/claude_ansys_cfd.zip`); body is `project-body project-body--inline`; only card with `software` token |
+| 4 | `carbonSeat` | Carbon fiber seat | `motorsport product fabrication` | `card-media card-media--contain` | |
+| 5 | `brakeSim` | FSAE Brake Sim | `motorsport analysis` | `card-media card-media--fill` | |
+| 6 | `scanner` | 3D scanner | `robotics analysis` | `card-media card-media--fill` | |
+| 7 | `formlabs` | Smelly | `robotics product` | `card-media card-media--contain` | (h3 "Smelly", data-project `formlabs`) |
+| 8 | `aura` | AURA swerve drive | `robotics product fabrication` | `card-media card-media--contain` | scroll-scrub/exploded modal (drives `modal-scrub-*` + `modal-spec`) |
+| 9 | `lineFollower` | LineFollower robot | `robotics product fabrication` | `card-media card-media--contain` | |
+| 10 | `gearbox` | 2-speed gearbox | `product fabrication` | `card-media card-media--contain` | |
+| 11 | `pool` | Pool Sniper | `robotics product fabrication` | `card-media card-media--contain` | |
+| 12 | `seat` | Driver seat and harness | `motorsport product fabrication` | `card-media card-media--contain` | |
+| 13 | `education` | Guitar education kit | `product fabrication` | `card-media card-media--contain` | |
+| 14 | `telecaster` | Telecaster guitar | `fabrication product` | plain `card-media` | |
+| 15 | `ftc` | FTC robot | `robotics fabrication` | plain `card-media` | |
+
+### Filter chips
+
+Container: `<div class="filter-bar" role="list" aria-label="Filter case studies" data-reveal>`. Buttons are `button.filter` with `data-filter`; `All` carries extra class `active` (`class="filter active"`). JS reads `button.dataset.filter` vs `card.dataset.category`.
+
+| Chip label | data-filter | Matches data-category token(s) |
+|---|---|---|
+| All | `all` | special — matches every card (not a category token) |
+| Motorsport | `motorsport` | `motorsport` (cards 1, 4, 5, 12) |
+| Robotics | `robotics` | `robotics` (cards 2, 6, 7, 8, 9, 11, 15) |
+| Product | `product` | `product` (cards 4, 7, 8, 9, 10, 11, 12, 13, 14) |
+| Analysis | `analysis` | `analysis` (cards 1, 2, 3, 5, 6) |
+| Fabrication | `fabrication` | `fabrication` (cards 1, 2, 4, 8, 9, 10, 11, 12, 13, 14, 15) |
+
+**Full set of distinct category tokens (6):** `analysis`, `fabrication`, `motorsport`, `product`, `robotics`, `software`.
+⚠️ `software` has **no filter chip** — it appears only on card #3 (`ansysCfd`), which is still reachable via the `Analysis` chip (it also carries `analysis`).
+
+### Case-study modal — element id map
+
+Root: `<div class="modal" id="project-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">`. "(JS-written)" = content populated/mutated by `script.js`.
+
+| id | Holds | JS-written |
+|---|---|---|
+| `project-modal` | modal root dialog | — (read by JS, never null-checked — removing it throws) |
+| `modal-image` | main gallery `<img>` (default `assets/hero-fsae-track.webp`) | yes (src swapped) |
+| `modal-scrub-img` | exploded-view CAD frame `<img …hidden>` | yes (`.hidden`, `.src`) |
+| `modal-scrub-bar` | scrub progress `<i>` inside `.modal-fig__track` | yes (`.style.width`) |
+| `modal-spec` | spec/meta/stats chips panel `<div hidden>` | yes (`.replaceChildren()`, `.hidden`) |
+| `modal-kicker` | kicker `<p class="section-kicker">` | yes |
+| `modal-title` | project title `<h2>` (also `aria-labelledby` target) | yes |
+| `modal-summary` | summary `<p>` | yes |
+| `modal-gallery` | gallery thumbnail buttons container `<div>` | yes (builds `.gallery-item` buttons) |
+| `modal-highlights` | "Engineering signal" `<ul>` | yes |
+| `modal-tools-block` | wrapper `<div>` for "Tools and methods" heading + list | **no JS consumer** (structural only; only modal id not referenced by script.js) |
+| `modal-tools` | tools/methods `<ul>` | yes |
+| `modal-details` | case-study detail sections `<div>` | yes |
+
+Modal structural (id-less) hooks: `.modal-backdrop[data-close-modal]`, `.modal-panel`, `.modal-close[data-close-modal]` (text "Close"), `.modal-media`, `.modal-stage`, `.modal-content`, `.modal-columns`, `.modal-fig__track`.
+
+### JS load-bearing hooks (do NOT rename in HTML)
+
+**ids read via getElementById:** `modal-scrub-img`, `modal-spec`, `modal-scrub-bar`.
+**ids read via querySelector("#…"):** `project-modal`, `modal-image`, `modal-kicker`, `modal-title`, `modal-summary`, `modal-highlights`, `modal-tools`, `modal-details`, `modal-gallery`.
+
+Structural class / attr selectors used by script.js (one line each):
+- `.project-card` — card list; `data-category` filtered, `data-project` → modal key, `h3` → aria-label.
+- `.filter` — filter buttons; reads `data-filter`.
+- `.project-grid .project-card` / `[data-reveal-group]` / `[data-reveal]` — scroll-reveal grouping.
+- `.project-download` — per-card download link.
+- `[data-count]` — stat counters (animated count-up).
+- `[data-magnetic]` — magnetic hover CTAs.
+- `[data-close-modal]` — modal close (backdrop + close button).
+- `.gallery-item` — modal gallery buttons (created by JS, queried back).
+- `.modal-panel`, `.modal-media`, `.modal-close` — modal layout / focus targets.
+- `.hero-skill-track span` — ticker labels; `.hero h1` — hero headline; `.scroll-cue` / `.scroll-cue:not(.is-gone)` — scroll cue state.
+- `.matrix-cell li` — skill matrix items; `.skill-card-kicker` / `.skill-card-text` — skill card text nodes.
+- `.progress`, `.site-header`, `.set-piece` — scroll-progress / header / set-piece animation targets.
+- `.nav-toggle` + `.site-nav` — mobile nav toggle.
+
+### Hero / stats anchors
+
+- **Ticker:** strip `div.hero-skill-strip.stage`; track class `hero-skill-track` (no id) — **two** tracks (visible + `aria-hidden` duplicate), each with **14** `<span>` labels: Arduino, TIG Welding, AutoCAD, Topology Study, SolidWorks, MATLAB, FEA, CFD, CNC Mill, Lathe, Waterjet, Carbon Fiber, Team Management, Vibe Coding.
+- **Eyebrow:** `p.eyebrow.stage` — "Mechanical Lead / Olin Electric Motorsports / MechE @ Olin College '28".
+- **Headline:** `<h1 id="hero-title">`; inner `span.line > span.stage` ×2 → "Kefan", "Wu".
+- **Stats bar** (`div.hero-stats.stage`), in order:
+
+| Strong content | data-count | Label (verbatim) |
+|---|---|---|
+| `Mechanical Lead` (`strong.stat-word`) | (none) | Olin Electric Motorsports |
+| `15` | `data-count="15"` | Engineering projects |
+| `19`+ (trailing `+` outside span) | `data-count="19"` | Technical skills |
+| `>30` (leading `>` before span) | `data-count="30"` | Engineers led |
+
+### Contact & downloadable assets
+
+- Contact section: `<section id="contact" class="contact" aria-labelledby="contact-title">`; kicker `p.section-kicker` "Contact"; `<h2 id="contact-title">Let's build cool stuff.</h2>`; sub-copy "Open to mechanical engineering internships and project conversations."
+- Contact links (`div.contact-actions`): `mailto:kwu@olin.edu` ("kwu@olin.edu", `button primary`) · `mailto:kefanwu8888@gmail.com` ("kefanwu8888@gmail.com", `button secondary`) · `https://www.linkedin.com/in/kefan-wu-olin/` ("LinkedIn", `button secondary`, `target="_blank"`).
+- Footer also links `https://www.linkedin.com/in/kefan-wu-olin/` ("LinkedIn").
+- **Download asset:** `href="assets/claude_ansys_cfd.zip"` (`a.project-download.project-download--icon`, `download`, `aria-label="Download claude_ansys_cfd package"`) — lives on project card #3 `data-project="ansysCfd"` (`<h3>Agent-based CFD</h3>`). Only `.zip`/download on the page.
+- External: OEM `https://olinelectricmotorsports.com/` ("Visit Olin Electric Motorsports ↗", `target="_blank"`) in the Motorsport section.
+
+### Leftover id anchors (not detailed above)
+
+| id | Element | Role |
+|---|---|---|
+| `site-nav` | nav | header nav container (JS `.site-nav` toggle target) |
+| `systems-title` | `p.section-kicker` | kicker text "Projects" inside `#work` (NOT the section id) |
+| `skills-title` | `h2` | "Skill matrix" |
+| `capabilities-title` | `h2` | "Contribution" heading inside `#capabilities` |
+
+Asset/version refs (verbatim): CSS `styles.css?v=skill-matrix-20260619`; JS `script.js?v=javelin-mat-20260620`; page title "Kefan Wu | Mechanical Engineering Portfolio".
+
 ## Recent Important Changes
 
 - `ESP32` was removed from the hero skill ticker only. Do not remove ESP32 from project/tool descriptions unless requested.
