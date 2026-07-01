@@ -16,6 +16,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
@@ -228,7 +229,7 @@ function initScene(canvas) {
   scene.add(fill);
 
   // banker's-lamp warm pool
-  const lampLight = new THREE.PointLight(0xffb15a, 6, 3.2, 2);
+  const lampLight = new THREE.PointLight(0xffb15a, 4.2, 3.0, 2);
   lampLight.position.set(-0.62, 0.95, -0.2);
   scene.add(lampLight);
 
@@ -291,7 +292,8 @@ function initScene(canvas) {
   // resume: a sheet of paper lying flat on the desk (clickable)
   placeRoot(buildResumePaper(), scene, {
     name: "resumePaper", action: "resume", label: "Résumé",
-    pos: [-0.08, DESK_TOP, 0.14], rotY: 0.18,
+    // desk top 0.76 + leather inlay 0.012 — sit ON the leather, not inside it
+    pos: [-0.08, DESK_TOP + 0.013, 0.14], rotY: 0.18,
   });
   scene.add(buildMug(0.32, 0.14, DESK_TOP));
   scene.add(buildPaperStack(0.55, 0.18, DESK_TOP));
@@ -300,48 +302,47 @@ function initScene(canvas) {
   scene.add(buildDisplayCabinet());
 
   // real SolidWorks assemblies (merged per-part STLs, material buckets)
+  // hero row (middle, eye level): javelin / steering / brake
   const ASSEMBLIES = [
-    { file: "steering", key: "steering",   label: "Mk.8 Steering",     size: 0.32, axis: "y", bay: 0, row: 0, rotY: 0.5 },
-    { file: "javelin",  key: "javelin",    label: "Javelin VTOL",      size: 0.44, axis: "x", bay: 1, row: 0, rotY: 0.6,
+    { file: "seat",     key: "carbonSeat", label: "Carbon fiber seat", size: 0.3,  axis: "y", bay: 0, row: 0, rotY: 0.4 },
+    { file: "aura",     key: "aura",       label: "AURA Swerve",       size: 0.32, axis: "y", bay: 1, row: 0, rotY: 0.35, rotZ: Math.PI },
+    { file: "scanner",  key: "scanner",    label: "3D scanner",        size: 0.38, axis: "x", bay: 2, row: 0, rotY: 0.35 },
+    { file: "javelin",  key: "javelin",    label: "Javelin VTOL",      size: 0.44, axis: "x", bay: 0, row: 1, rotY: 0.6,
       matTweak: { aero: { color: 0x2e3136, roughness: 0.5 }, printed: { color: 0x1f2126 } } },
-    { file: "aura",     key: "aura",       label: "AURA Swerve",       size: 0.32, axis: "y", bay: 2, row: 0, rotY: 0.35 },
-    { file: "seat",     key: "carbonSeat", label: "Carbon fiber seat", size: 0.3,  axis: "y", bay: 0, row: 1, rotY: 0.4 },
-    { file: "scanner",  key: "scanner",    label: "3D scanner",        size: 0.38, axis: "x", bay: 1, row: 1, rotY: 0.35 },
+    { file: "steering", key: "steering",   label: "Mk.8 Steering",     size: 0.32, axis: "y", bay: 1, row: 1, rotY: 0.5 },
   ];
   ASSEMBLIES.forEach((a) =>
     loadAssembly(loader, scene, `models/real/${a.file}.glb`, {
       name: "ex_" + a.key, projectKey: a.key, label: a.label,
       targetSize: a.size, axis: a.axis, matTweak: a.matTweak,
       markerCap: CAB.rows[a.row] + (a.row === 0 ? 0.36 : 0.44), // top row: stay under the cabinet's top frame
-      pos: [CAB.bays[a.bay], CAB.rows[a.row], CAB.frontZ], rotY: a.rotY,
+      pos: [CAB.bays[a.bay], CAB.rows[a.row], CAB.frontZ], rotY: a.rotY, rotZ: a.rotZ,
     })
   );
 
   // procedural exhibits for projects without CAD exports
+  placeRoot(buildBrakeRotor(), scene, {
+    markerCap: CAB.rows[1] + 0.44, name: "ex_brakeSim", projectKey: "brakeSim", label: "FSAE Brake Sim",
+    targetSize: 0.26, axis: "x", pos: [CAB.bays[2], CAB.rows[1], CAB.frontZ], rotX: -Math.PI / 2, rotY: 0.15,
+  });
   placeRoot(buildLineFollower(), scene, {
-    markerCap: CAB.rows[1] + 0.44, name: "ex_lineFollower", projectKey: "lineFollower", label: "LineFollower robot",
-    targetSize: 0.3, axis: "x", pos: [CAB.bays[2], CAB.rows[1], CAB.frontZ], rotY: 0.45,
+    markerCap: CAB.rows[2] + 0.44, name: "ex_lineFollower", projectKey: "lineFollower", label: "LineFollower robot",
+    targetSize: 0.3, axis: "x", pos: [CAB.bays[0], CAB.rows[2], CAB.frontZ], rotY: 0.45,
   });
   placeRoot(buildCfdDisplay(artLoader), scene, {
     markerCap: CAB.rows[2] + 0.44, name: "ex_ansysCfd", projectKey: "ansysCfd", label: "Agent-based CFD",
-    targetSize: 0.34, axis: "x", pos: [CAB.bays[0], CAB.rows[2], CAB.frontZ], rotY: 0.25,
+    targetSize: 0.34, axis: "x", pos: [CAB.bays[1], CAB.rows[2], CAB.frontZ], rotY: 0.25,
   });
-  placeRoot(buildBrakeRotor(), scene, {
-    markerCap: CAB.rows[2] + 0.44, name: "ex_brakeSim", projectKey: "brakeSim", label: "FSAE Brake Sim",
-    targetSize: 0.26, axis: "x", pos: [CAB.bays[1], CAB.rows[2], CAB.frontZ], rotX: -Math.PI / 2, rotY: 0.15,
-  });
-  placeRoot(buildTelecaster(), scene, {
-    markerCap: CAB.rows[2] + 0.44, name: "ex_telecaster", projectKey: "telecaster", label: "Telecaster guitar",
-    targetSize: 0.42, axis: "y", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotY: -0.3,
+  placeRoot(buildEducationKit(), scene, {
+    markerCap: CAB.rows[2] + 0.44, name: "ex_education", projectKey: "education", label: "Guitar education kit",
+    targetSize: 0.4, axis: "x", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotY: 0.3,
   });
 
   /* ---------- side dressing ---------- */
-  loadModel(loader, scene, "models/pp/bookcase.glb", {
-    name: "shelfL", targetSize: 2.0, axis: "y", pos: [-2.32, 0, -0.35], rotY: -Math.PI / 2 + Math.PI, tint: 0x8a6644,
-  });
-  loadModel(loader, scene, "models/pp/bookcase.glb", {
-    name: "shelfR", targetSize: 2.0, axis: "y", pos: [2.32, 0, -0.35], rotY: Math.PI / 2 + Math.PI, tint: 0x8a6644,
-  });
+  // realistic filled bookshelves on both side walls (procedural, PBR wood,
+  // merged vertex-colored books for one draw call per case)
+  scene.add(buildRealBookshelf(-2.42, Math.PI / 2, 12345));
+  scene.add(buildRealBookshelf(2.42, -Math.PI / 2, 67890));
   loadModel(loader, scene, "models/pp/armchair.glb", {
     name: "chair", targetSize: 0.95, axis: "y", pos: [-0.2, 0, 1.05], rotY: Math.PI,
   });
@@ -427,8 +428,8 @@ function initScene(canvas) {
       if (!busy && !prefersReducedMotion) {
         const ph = h.userData.hotspot.phase;
         m.position.y = h.userData.hotspot.markerY + Math.sin(t * 0.0024 + ph) * 0.016;
-        m.material.opacity = 0.55 + 0.3 * (0.5 + 0.5 * Math.sin(t * 0.0038 + ph));
-        const s = h === hovered ? 0.085 : 0.06;
+        m.material.opacity = 0.26 + 0.2 * (0.5 + 0.5 * Math.sin(t * 0.003 + ph));
+        const s = h === hovered ? 0.06 : 0.042;
         m.scale.setScalar(s);
       }
     }
@@ -567,6 +568,7 @@ function placeRoot(root, scene, opts, onPlaced) {
   });
   if (opts.rotX) root.rotation.x = opts.rotX;
   if (opts.rotY) root.rotation.y = opts.rotY;
+  if (opts.rotZ) root.rotation.z = opts.rotZ;
   root.updateWorldMatrix(true, true);
 
   let box = new THREE.Box3().setFromObject(root);
@@ -597,6 +599,15 @@ function placeRoot(root, scene, opts, onPlaced) {
     scene.add(pivot);
     pivot.add(root);
     root.position.sub(center);
+
+    // invisible hitbox so thin/flat exhibits are clickable anywhere in
+    // their volume (raycaster tests geometry, not material visibility)
+    const hbSize = bb.getSize(new THREE.Vector3());
+    const hitbox = new THREE.Mesh(
+      new THREE.BoxGeometry(hbSize.x, hbSize.y, hbSize.z),
+      new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
+    );
+    pivot.add(hitbox);
 
     // Genshin-style interact marker floating above the object
     // (capped so it never pokes through the shelf above)
@@ -742,6 +753,56 @@ function buildRoom(scene) {
   addWain(2 * sideX, 0, back + 0.03, 0);
   addWain(depth, -sideX + 0.03, (front + back) / 2, Math.PI / 2);
   addWain(depth, sideX - 0.03, (front + back) / 2, -Math.PI / 2);
+
+  // crown molding + baseboards along the three walls
+  const trimMat = new THREE.MeshStandardMaterial({ color: 0x4a331c, roughness: 0.62, metalness: 0.04 });
+  const addTrim = (w, x, z, rotY, y, h, d) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), trimMat);
+    m.position.set(x, y, z);
+    m.rotation.y = rotY;
+    m.castShadow = true;
+    scene.add(m);
+  };
+  // crown
+  addTrim(2 * sideX, 0, back + 0.045, 0, WALL_H - 0.045, 0.09, 0.09);
+  addTrim(depth, -sideX + 0.045, (front + back) / 2, Math.PI / 2, WALL_H - 0.045, 0.09, 0.09);
+  addTrim(depth, sideX - 0.045, (front + back) / 2, -Math.PI / 2, WALL_H - 0.045, 0.09, 0.09);
+  // baseboard
+  addTrim(2 * sideX, 0, back + 0.028, 0, 0.05, 0.1, 0.055);
+  addTrim(depth, -sideX + 0.028, (front + back) / 2, Math.PI / 2, 0.05, 0.1, 0.055);
+  addTrim(depth, sideX - 0.028, (front + back) / 2, -Math.PI / 2, 0.05, 0.1, 0.055);
+
+  // pendant lamp hanging over the desk
+  const pendant = new THREE.Group();
+  const cord = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.004, 0.004, WALL_H - 2.42, 8),
+    new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 0.7 })
+  );
+  cord.position.y = 2.42 + (WALL_H - 2.42) / 2;
+  pendant.add(cord);
+  const shade = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.05, 0.17, 0.15, 28, 1, true),
+    new THREE.MeshStandardMaterial({
+      color: 0x1e3a2c,
+      roughness: 0.35,
+      metalness: 0.6,
+      side: THREE.DoubleSide,
+    })
+  );
+  shade.position.y = 2.42;
+  shade.castShadow = true;
+  pendant.add(shade);
+  const bulb = new THREE.Mesh(
+    new THREE.SphereGeometry(0.028, 16, 16),
+    new THREE.MeshStandardMaterial({ color: 0xfff2d8, emissive: 0xffd9a0, emissiveIntensity: 1.4 })
+  );
+  bulb.position.y = 2.37;
+  pendant.add(bulb);
+  const pendantLight = new THREE.PointLight(0xffd9a0, 3.2, 4.5, 2);
+  pendantLight.position.y = 2.32;
+  pendant.add(pendantLight);
+  pendant.position.set(0.15, 0, 0.35);
+  scene.add(pendant);
 }
 
 /* ============================================================
@@ -882,10 +943,10 @@ function buildDisplayCabinet() {
       new THREE.MeshStandardMaterial({
         color: 0x9a7040,
         emissive: 0xffc98a,
-        emissiveIntensity: 0.8,
+        emissiveIntensity: 0.55,
       })
     );
-    strip.position.set(0, y + CAB.rowH - 0.06, z + D / 2 - 0.06);
+    strip.position.set(0, y + CAB.rowH - 0.055, z + D / 2 - 0.12);
     g.add(strip);
   });
 
@@ -962,9 +1023,111 @@ function makeInteractMarker() {
       opacity: 0.9,
     })
   );
-  sprite.scale.setScalar(0.06);
+  sprite.scale.setScalar(0.042);
   sprite.renderOrder = 5;
   return sprite;
+}
+
+/* seeded RNG so both bookcases look different but stable across loads */
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return () => {
+    a |= 0; a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function buildRealBookshelf(x, rotY, seed) {
+  const g = new THREE.Group();
+  const rnd = mulberry32(seed);
+  const W = 1.7, H = 2.14, D = 0.3;
+  const frameMat = woodMaterial(0x5e3f22, 0.66);
+  const shelfYs = [0.14, 0.52, 0.9, 1.28, 1.66];
+  const gapH = 0.38;
+
+  // carcass: sides, top, back, plinth
+  [-W / 2 + 0.025, W / 2 - 0.025].forEach((sx) => {
+    const side = new THREE.Mesh(new THREE.BoxGeometry(0.05, H, D), frameMat);
+    side.position.set(sx, H / 2, 0);
+    side.castShadow = true; side.receiveShadow = true;
+    g.add(side);
+  });
+  const top = new THREE.Mesh(new THREE.BoxGeometry(W + 0.06, 0.06, D + 0.04), frameMat);
+  top.position.set(0, H - 0.03, 0);
+  top.castShadow = true;
+  g.add(top);
+  const backP = new THREE.Mesh(new THREE.BoxGeometry(W, H, 0.018), woodMaterial(0x3a2614, 0.85));
+  backP.position.set(0, H / 2, -D / 2 + 0.009);
+  backP.receiveShadow = true;
+  g.add(backP);
+  const plinth = new THREE.Mesh(new THREE.BoxGeometry(W, 0.14, D), frameMat);
+  plinth.position.set(0, 0.07, 0);
+  plinth.castShadow = true; plinth.receiveShadow = true;
+  g.add(plinth);
+  shelfYs.forEach((y) => {
+    const b = new THREE.Mesh(new THREE.BoxGeometry(W - 0.1, 0.03, D - 0.03), frameMat);
+    b.position.set(0, y - 0.015, 0);
+    b.castShadow = true; b.receiveShadow = true;
+    g.add(b);
+  });
+
+  // books: varied spines, occasional lean/gap/horizontal pile, merged
+  const PALETTE = [0x6e2a22, 0x3a2c1a, 0x24402e, 0x2a3350, 0x5a4626, 0x50262e, 0x315046, 0x6e4020, 0x223244, 0x584838, 0x743d28, 0x2e2e38];
+  const geos = [];
+  const tint = new THREE.Color();
+  function pushBook(geo, colHex, shade) {
+    tint.setHex(colHex).multiplyScalar(shade);
+    const n = geo.attributes.position.count;
+    const cols = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) { cols[i * 3] = tint.r; cols[i * 3 + 1] = tint.g; cols[i * 3 + 2] = tint.b; }
+    geo.setAttribute("color", new THREE.BufferAttribute(cols, 3));
+    geos.push(geo);
+  }
+  shelfYs.forEach((shelfY) => {
+    let bx = -W / 2 + 0.09;
+    const endX = W / 2 - 0.09;
+    while (bx < endX) {
+      const r = rnd();
+      if (r < 0.06) { bx += 0.03 + rnd() * 0.05; continue; } // gap
+      if (r < 0.16 && endX - bx > 0.2) {
+        // small horizontal pile
+        let py = shelfY;
+        const n = 2 + Math.floor(rnd() * 2);
+        for (let i = 0; i < n; i++) {
+          const bw = 0.16 + rnd() * 0.05, bh = 0.03 + rnd() * 0.012, bd = 0.2 + rnd() * 0.04;
+          const geo = new THREE.BoxGeometry(bh, bw, bd); // spine up
+          geo.rotateZ(Math.PI / 2);
+          geo.translate(bx + bw / 2, py + bh / 2, (rnd() - 0.5) * 0.02);
+          pushBook(geo, PALETTE[(rnd() * PALETTE.length) | 0], 0.85 + rnd() * 0.3);
+          py += bh;
+        }
+        bx += 0.24;
+        continue;
+      }
+      const bw = 0.022 + rnd() * 0.03;
+      const bh = 0.22 + rnd() * (gapH - 0.26);
+      const bd = 0.19 + rnd() * 0.05;
+      const lean = rnd() < 0.08 ? (rnd() - 0.5) * 0.22 : 0;
+      const geo = new THREE.BoxGeometry(bw, bh, bd);
+      if (lean) geo.rotateZ(lean);
+      geo.translate(bx + bw / 2, shelfY + bh / 2 + Math.abs(lean) * 0.02, (rnd() - 0.5) * 0.015);
+      pushBook(geo, PALETTE[(rnd() * PALETTE.length) | 0], 0.8 + rnd() * 0.4);
+      bx += bw + 0.0035;
+    }
+  });
+  const books = new THREE.Mesh(
+    mergeGeometries(geos, false),
+    new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.78, metalness: 0.02 })
+  );
+  books.castShadow = true;
+  books.receiveShadow = true;
+  g.add(books);
+
+  g.position.set(x, 0, -0.35);
+  g.rotation.y = rotY;
+  return g;
 }
 
 function buildResumePaper() {
@@ -1083,15 +1246,10 @@ function buildCfdDisplay(texLoader) {
   g.add(bezel);
   const tex = texLoader.load("assets/ansys-cfd-pressure.webp");
   tex.colorSpace = THREE.SRGBColorSpace;
+  // unlit screen: shows the render as-is, immune to spotlights/bloom blowout
   const screen = new THREE.Mesh(
     new THREE.PlaneGeometry(0.245, 0.155),
-    new THREE.MeshStandardMaterial({
-      map: tex,
-      emissiveMap: tex,
-      emissive: 0xffffff,
-      emissiveIntensity: 0.55,
-      roughness: 0.35,
-    })
+    new THREE.MeshBasicMaterial({ map: tex })
   );
   screen.position.set(0, 0.16, 0.0078);
   screen.rotation.x = -0.06;
@@ -1100,57 +1258,74 @@ function buildCfdDisplay(texLoader) {
   return g;
 }
 
-function buildTelecaster() {
-  // single-cutaway body + neck + strings, butterscotch finish
+function buildEducationKit() {
+  // open wooden teaching case: mini guitar body + detached neck + parts
   const g = new THREE.Group();
+  const caseMat = new THREE.MeshStandardMaterial({ color: 0x8a6844, roughness: 0.62, metalness: 0.03 });
+  const W = 0.38, D = 0.26, wall = 0.012, hWall = 0.035;
+  const bottom = new THREE.Mesh(new RoundedBoxGeometry(W, 0.012, D, 2, 0.004), caseMat);
+  bottom.position.y = 0.006;
+  g.add(bottom);
+  [[0, D / 2 - wall / 2], [0, -(D / 2 - wall / 2)]].forEach(([x, z]) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(W, hWall, wall), caseMat);
+    m.position.set(x, hWall / 2 + 0.006, z);
+    g.add(m);
+  });
+  [[W / 2 - wall / 2, 0], [-(W / 2 - wall / 2), 0]].forEach(([x, z]) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(wall, hWall, D - 2 * wall), caseMat);
+    m.position.set(x, hWall / 2 + 0.006, z);
+    g.add(m);
+  });
+
+  // mini guitar body (natural wood, lying in the case)
   const body = new THREE.Shape();
-  body.moveTo(0, -0.16);
-  body.bezierCurveTo(0.09, -0.16, 0.115, -0.09, 0.105, -0.02);
-  body.bezierCurveTo(0.1, 0.04, 0.075, 0.06, 0.07, 0.1);
-  body.bezierCurveTo(0.065, 0.15, 0.03, 0.17, 0, 0.17);
-  body.bezierCurveTo(-0.03, 0.17, -0.065, 0.15, -0.07, 0.1);
-  body.bezierCurveTo(-0.075, 0.06, -0.1, 0.04, -0.105, -0.02);
-  body.bezierCurveTo(-0.115, -0.09, -0.09, -0.16, 0, -0.16);
+  body.moveTo(0, -0.075);
+  body.bezierCurveTo(0.045, -0.075, 0.055, -0.04, 0.05, -0.008);
+  body.bezierCurveTo(0.047, 0.02, 0.035, 0.028, 0.033, 0.048);
+  body.bezierCurveTo(0.03, 0.072, 0.015, 0.082, 0, 0.082);
+  body.bezierCurveTo(-0.015, 0.082, -0.03, 0.072, -0.033, 0.048);
+  body.bezierCurveTo(-0.035, 0.028, -0.047, 0.02, -0.05, -0.008);
+  body.bezierCurveTo(-0.055, -0.04, -0.045, -0.075, 0, -0.075);
   const bodyMesh = new THREE.Mesh(
-    new THREE.ExtrudeGeometry(body, { depth: 0.035, bevelEnabled: true, bevelThickness: 0.004, bevelSize: 0.004, bevelSegments: 2 }),
-    new THREE.MeshPhysicalMaterial({ color: 0xc98f3f, roughness: 0.3, metalness: 0.05, clearcoat: 0.8, clearcoatRoughness: 0.15 })
+    new THREE.ExtrudeGeometry(body, { depth: 0.02, bevelEnabled: true, bevelThickness: 0.003, bevelSize: 0.003, bevelSegments: 2 }),
+    new THREE.MeshPhysicalMaterial({ color: 0xc98f3f, roughness: 0.32, metalness: 0.04, clearcoat: 0.7, clearcoatRoughness: 0.18 })
   );
-  bodyMesh.rotation.x = 0; // extrude along +z; guitar faces viewer
-  bodyMesh.position.set(0, 0.17, 0);
+  bodyMesh.rotation.x = -Math.PI / 2; // lie flat
+  bodyMesh.position.set(-0.09, 0.014, 0.01);
+  bodyMesh.rotation.z = 0.25;
   g.add(bodyMesh);
-  // pickguard
-  const pg = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.055, 0.055, 0.004, 24),
-    new THREE.MeshStandardMaterial({ color: 0xf5f0e0, roughness: 0.5 })
-  );
-  pg.rotation.x = Math.PI / 2;
-  pg.position.set(-0.035, 0.13, 0.04);
-  g.add(pg);
-  // neck + headstock
+
+  // detached neck + fretboard beside it
   const neckMat = new THREE.MeshStandardMaterial({ color: 0xa8763c, roughness: 0.55 });
-  const neck = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.3, 0.02), neckMat);
-  neck.position.set(0, 0.45, 0.02);
+  const neck = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.012, 0.028), neckMat);
+  neck.position.set(0.07, 0.02, -0.06);
+  neck.rotation.y = -0.12;
   g.add(neck);
-  const head = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.09, 0.016), neckMat);
-  head.position.set(0.008, 0.64, 0.02);
-  g.add(head);
-  // fretboard + strings
   const fb = new THREE.Mesh(
-    new THREE.BoxGeometry(0.036, 0.3, 0.004),
+    new THREE.BoxGeometry(0.2, 0.003, 0.026),
     new THREE.MeshStandardMaterial({ color: 0x3a2614, roughness: 0.6 })
   );
-  fb.position.set(0, 0.45, 0.033);
+  fb.position.set(0.07, 0.028, -0.06);
+  fb.rotation.y = -0.12;
   g.add(fb);
-  const stringMat = new THREE.MeshStandardMaterial({ color: 0xc8ccd2, metalness: 0.9, roughness: 0.3 });
-  for (let i = 0; i < 6; i++) {
-    const s = new THREE.Mesh(new THREE.CylinderGeometry(0.0006, 0.0006, 0.5, 4), stringMat);
-    s.position.set(-0.0125 + i * 0.005, 0.38, 0.038);
-    g.add(s);
+
+  // parts: pickup block, string coil, tuner pegs
+  const metal = new THREE.MeshStandardMaterial({ color: 0xc8ccd2, metalness: 0.9, roughness: 0.3 });
+  const pickup = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.012, 0.018),
+    new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.45, metalness: 0.3 }));
+  pickup.position.set(0.05, 0.014, 0.075);
+  pickup.rotation.y = 0.3;
+  g.add(pickup);
+  const coil = new THREE.Mesh(new THREE.TorusGeometry(0.02, 0.005, 10, 24), metal);
+  coil.rotation.x = -Math.PI / 2;
+  coil.position.set(0.12, 0.012, 0.07);
+  g.add(coil);
+  for (let i = 0; i < 3; i++) {
+    const peg = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.022, 8), metal);
+    peg.rotation.z = Math.PI / 2;
+    peg.position.set(0.145, 0.012, -0.02 + i * 0.018);
+    g.add(peg);
   }
-  // bridge
-  const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.02, 0.006), stringMat);
-  bridge.position.set(0, 0.115, 0.038);
-  g.add(bridge);
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
 }
