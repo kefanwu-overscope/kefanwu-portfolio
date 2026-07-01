@@ -1,21 +1,21 @@
-3D model attributions — experience.html (interactive 3D desk)
+3D asset attributions — experience.html (interactive 3D study)
+
+Project exhibits (models/real/*.glb):
+- Kefan Wu's own SolidWorks CAD, exported per-part to STL and merged to
+  GLB with tools/stl2glb.py. No third-party license applies.
 
 CC-BY (attribution required), via Poly Pizza (poly.pizza):
 - "Desk lamp" (green banker lamp) by Poly by Google — CC-BY 3.0
-- "Steering wheel" by Poly by Google — CC-BY 3.0  (project: Mk.8 steering)
-- "Drone" by NateGazzard — CC-BY 3.0  (project: Javelin VTOL)
-- "Cockpit" (racing seat) by Anonymous — CC-BY 3.0  (project: carbon fiber seat)
-- "Hubcap" by Poly by Google — CC-BY 3.0  (project: FSAE brake sim)
-- "Movie camera on tripod" by Franziska Haaf — CC-BY 3.0  (project: 3D scanner)
 
-CC0 (public domain, no attribution required, credited as courtesy):
-- metal_office_desk, wooden_bookshelf_worn, book_encyclopedia_set_01, desk_lamp_arm_01 — Poly Haven (polyhaven.com)
-- Armchair, Globe, Books — CreativeTrio, via Poly Pizza (CC0)
-- Houseplant — Quaternius, via Poly Pizza (CC0)
-- Rug Rectangle — Kenney (kenney.nl), via Poly Pizza (CC0)
+CC0 (public domain, credited as courtesy):
+- book_encyclopedia_set_01, potted_plant_04 — Poly Haven (polyhaven.com)
+- Armchair, Globe, Books — CreativeTrio, via Poly Pizza
+- Bookcase with Books — Quaternius, via Poly Pizza
+- File folder — reyshapes, via Poly Pizza
 
 HDRI:
 - wooden_lounge — Poly Haven (CC0)
 
 Textures:
 - dark_wood, laminate_floor_02, painted_plaster_wall — Poly Haven (CC0)
+- Carpet008 — ambientCG (ambientcg.com, CC0)
