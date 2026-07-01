@@ -14,6 +14,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { STLLoader } from "three/addons/loaders/STLLoader.js";
 import { HERO_PROJECTS, ACCENT, RESUME } from "./experience-data.js";
 
 document.documentElement.classList.add("exp-js");
@@ -186,6 +187,7 @@ function initScene(canvas) {
 
   // ---- real models ----
   const loader = new GLTFLoader(manager);
+  const stlLoader = new STLLoader(manager);
   const artLoader = new THREE.TextureLoader(manager);
 
   // WOOD desk (Quaternius); desktop props chain onto its measured top surface
@@ -220,16 +222,23 @@ function initScene(canvas) {
     { file: "drone",    key: "javelin",    label: "Javelin VTOL",    size: 0.30, axis: "x", pos: [ 0.34, 1.28, -0.98], rotY: 0.4 },
     { file: "robot",    key: "aura",       label: "AURA Swerve",     size: 0.22, axis: "y", pos: [-0.34, 0.96, -0.98], rotY: 0.3 },
     { file: "cfd",      key: "ansysCfd",   label: "Agent-based CFD", size: 0.32, axis: "x", pos: [ 0.34, 0.96, -0.98], rotY: -0.5 },
-    { file: "seat",     key: "carbonSeat", label: "Carbon seat",     size: 0.22, axis: "y", pos: [-0.34, 0.66, -0.98], rotY: 0.25 },
     { file: "scanner",  key: "scanner",    label: "3D scanner",      size: 0.26, axis: "y", pos: [ 0.34, 0.66, -0.98], rotY: -0.3 },
     { file: "brake",    key: "brakeSim",   label: "FSAE Brake Sim",  size: 0.20, axis: "x", pos: [ 0.0,  0.40, -0.98], rotX: -Math.PI / 2, rotY: 0.2 },
   ];
   EXHIBITS.forEach((x) =>
     loadModel(loader, scene, `models/proj/${x.file}.glb`, {
       name: "ex_" + x.key, projectKey: x.key, label: x.label,
-      targetSize: x.size, axis: x.axis, pos: x.pos, rotY: x.rotY,
+      targetSize: x.size, axis: x.axis, pos: x.pos, rotX: x.rotX, rotY: x.rotY,
     })
   );
+
+  // carbon seat: REAL geometry from SolidWorks (CF_Seat_Mold.STL). SW exports
+  // are typically Z-up, so rotate -90° about X to stand it upright.
+  loadSTL(stlLoader, scene, "models/real/seat.stl", {
+    name: "ex_carbonSeat", projectKey: "carbonSeat", label: "Carbon fiber seat",
+    targetSize: 0.24, axis: "y", pos: [-0.34, 0.66, -0.98], rotX: -Math.PI / 2, rotY: 0.3,
+    material: { color: 0x17181c, metalness: 0.25, roughness: 0.42 },
+  });
 
   // side bookcases (decor) against the two side walls, facing inward
   loadModel(loader, scene, "models/pp/bookcase.glb",
@@ -391,58 +400,77 @@ function initScene(canvas) {
 /* ============================================================
    model loading + normalization
    ============================================================ */
+function placeRoot(root, scene, opts, onPlaced) {
+  root.traverse((o) => {
+    if (o.isMesh) {
+      o.castShadow = true;
+      o.receiveShadow = true;
+      if (opts.tint && o.material) {
+        o.material = o.material.clone();
+        o.material.color = new THREE.Color(opts.tint);
+      }
+    }
+  });
+  if (opts.rotX) root.rotation.x = opts.rotX;
+  if (opts.rotY) root.rotation.y = opts.rotY;
+  root.updateWorldMatrix(true, true);
+
+  let box = new THREE.Box3().setFromObject(root);
+  if (opts.targetSize) {
+    const size = box.getSize(new THREE.Vector3());
+    const dim = opts.axis === "x" ? size.x : opts.axis === "z" ? size.z : size.y;
+    if (dim > 0) {
+      root.scale.multiplyScalar(opts.targetSize / dim);
+      root.updateWorldMatrix(true, true);
+      box = new THREE.Box3().setFromObject(root);
+    }
+  }
+  const c = box.getCenter(new THREE.Vector3());
+  const pos = opts.pos || [0, 0, 0];
+  root.position.x += pos[0] - c.x;
+  root.position.z += pos[2] - c.z;
+  root.position.y += pos[1] - box.min.y;
+  root.updateWorldMatrix(true, true);
+
+  scene.add(root);
+  MODELS[opts.name] = root;
+
+  // register clickable hotspot (project exhibit or resume folder)
+  if (opts.projectKey || opts.action) {
+    root.userData.hotspot = {
+      key: opts.projectKey || null,
+      action: opts.action || null,
+      label: opts.label || "",
+      baseScale: root.scale.x,
+      baseY: root.position.y,
+    };
+    root.traverse((o) => { if (o.isMesh) o.userData.hotspotRoot = root; });
+    HOTSPOTS.push(root);
+  }
+  if (onPlaced) onPlaced(root, new THREE.Box3().setFromObject(root));
+}
+
 function loadModel(loader, scene, url, opts, onPlaced) {
   loader.load(
     url,
-    (gltf) => {
-      const root = gltf.scene;
-      root.traverse((o) => {
-        if (o.isMesh) {
-          o.castShadow = true;
-          o.receiveShadow = true;
-          if (opts.tint && o.material) {
-            o.material = o.material.clone();
-            o.material.color = new THREE.Color(opts.tint);
-          }
-        }
-      });
-      if (opts.rotX) root.rotation.x = opts.rotX;
-      if (opts.rotY) root.rotation.y = opts.rotY;
-      root.updateWorldMatrix(true, true);
+    (gltf) => placeRoot(gltf.scene, scene, opts, onPlaced),
+    undefined,
+    (err) => console.warn(`[experience] failed to load ${url}`, err)
+  );
+}
 
-      let box = new THREE.Box3().setFromObject(root);
-      if (opts.targetSize) {
-        const size = box.getSize(new THREE.Vector3());
-        const dim = opts.axis === "x" ? size.x : opts.axis === "z" ? size.z : size.y;
-        if (dim > 0) {
-          root.scale.multiplyScalar(opts.targetSize / dim);
-          root.updateWorldMatrix(true, true);
-          box = new THREE.Box3().setFromObject(root);
-        }
-      }
-      const c = box.getCenter(new THREE.Vector3());
-      const pos = opts.pos || [0, 0, 0];
-      root.position.x += pos[0] - c.x;
-      root.position.z += pos[2] - c.z;
-      root.position.y += pos[1] - box.min.y;
-      root.updateWorldMatrix(true, true);
-
-      scene.add(root);
-      MODELS[opts.name] = root;
-
-      // register clickable hotspot (project exhibit or resume folder)
-      if (opts.projectKey || opts.action) {
-        root.userData.hotspot = {
-          key: opts.projectKey || null,
-          action: opts.action || null,
-          label: opts.label || "",
-          baseScale: root.scale.x,
-          baseY: root.position.y,
-        };
-        root.traverse((o) => { if (o.isMesh) o.userData.hotspotRoot = root; });
-        HOTSPOTS.push(root);
-      }
-      if (onPlaced) onPlaced(root, new THREE.Box3().setFromObject(root));
+// Load a raw STL (e.g. a SolidWorks export) and give it a material.
+function loadSTL(stlLoader, scene, url, opts, onPlaced) {
+  stlLoader.load(
+    url,
+    (geom) => {
+      geom.computeVertexNormals();
+      const mat = new THREE.MeshStandardMaterial(
+        opts.material || { color: 0x1b1d22, metalness: 0.35, roughness: 0.45 }
+      );
+      const root = new THREE.Group();
+      root.add(new THREE.Mesh(geom, mat));
+      placeRoot(root, scene, opts, onPlaced);
     },
     undefined,
     (err) => console.warn(`[experience] failed to load ${url}`, err)
