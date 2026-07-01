@@ -102,7 +102,7 @@ const brassMat = () =>
 
 /* engineering materials for the merged assembly buckets (mesh name mat_*) */
 const ASSEMBLY_MATS = {
-  steel: () => new THREE.MeshStandardMaterial({ color: 0xb9bcc2, metalness: 1.0, roughness: 0.32 }),
+  steel: () => new THREE.MeshStandardMaterial({ color: 0x9aa0a8, metalness: 1.0, roughness: 0.45 }),
   brass: () => new THREE.MeshStandardMaterial({ color: 0xb98b35, metalness: 1.0, roughness: 0.3 }),
   dark: () => new THREE.MeshStandardMaterial({ color: 0x1a1c20, metalness: 0.55, roughness: 0.45 }),
   printed: () => new THREE.MeshStandardMaterial({ color: 0x2c3038, metalness: 0.12, roughness: 0.58 }),
@@ -117,8 +117,8 @@ const HOTSPOTS = [];
 
 /* display-cabinet layout: 3 bays x 3 rows (single source of truth) */
 const CAB = {
-  z: -1.1, // cabinet center z
-  frontZ: -0.9, // exhibit center z
+  z: -1.12, // cabinet center z
+  frontZ: -1.08, // exhibit center z (fully ON the shelf boards)
   bays: [-0.73, 0, 0.73],
   rows: [1.62, 1.12, 0.62], // shelf top surfaces
   bayW: 0.7,
@@ -174,9 +174,9 @@ function initScene(canvas) {
   composer.addPass(new RenderPass(scene, camera));
   const bloom = new UnrealBloomPass(
     new THREE.Vector2(window.innerWidth, window.innerHeight),
-    0.22, // strength — whisper quiet
-    0.55, // radius
-    0.85 // threshold — only true highlights bloom
+    0.12, // strength — whisper quiet
+    0.4, // radius
+    0.9 // threshold — only true highlights bloom
   );
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
@@ -234,7 +234,7 @@ function initScene(canvas) {
 
   // display spots washing the cabinet
   [-0.7, 0, 0.7].forEach((x) => {
-    const spot = new THREE.SpotLight(0xffd9a8, 5, 6, 0.42, 0.7, 1.6);
+    const spot = new THREE.SpotLight(0xffd9a8, 3.2, 6, 0.42, 0.75, 1.6);
     spot.position.set(x, 2.5, 0.4);
     spot.target.position.set(x, 1.1, CAB.z);
     scene.add(spot);
@@ -288,62 +288,52 @@ function initScene(canvas) {
   loadModel(loader, scene, "models/book_encyclopedia_set_01/book_encyclopedia_set_01.gltf", {
     name: "books", targetSize: 0.26, axis: "x", pos: [0.52, DESK_TOP, -0.08], rotY: -0.2,
   });
-  loadModel(loader, scene, "models/proj/folder.glb", {
-    name: "folder", action: "resume", label: "Résumé",
-    targetSize: 0.22, axis: "x", pos: [-0.12, DESK_TOP, 0.18], rotY: 0.25,
+  // resume: a sheet of paper lying flat on the desk (clickable)
+  placeRoot(buildResumePaper(), scene, {
+    name: "resumePaper", action: "resume", label: "Résumé",
+    pos: [-0.08, DESK_TOP, 0.14], rotY: 0.18,
   });
-  scene.add(buildMug(0.28, 0.16, DESK_TOP));
-  scene.add(buildPaperStack(0.05, -0.12, DESK_TOP));
+  scene.add(buildMug(0.32, 0.14, DESK_TOP));
+  scene.add(buildPaperStack(0.55, 0.18, DESK_TOP));
 
-  /* ---------- display cabinet + exhibits ---------- */
+  /* ---------- display cabinet + exhibits (3 x 3) ---------- */
   scene.add(buildDisplayCabinet());
 
   // real SolidWorks assemblies (merged per-part STLs, material buckets)
   const ASSEMBLIES = [
-    { file: "steering", key: "steering",   label: "Mk.8 Steering",    size: 0.36, axis: "y", bay: 0, row: 0, rotY: 0.5 },
-    { file: "javelin",  key: "javelin",    label: "Javelin VTOL",     size: 0.5,  axis: "x", bay: 1, row: 0, rotY: 0.6 },
-    { file: "aura",     key: "aura",       label: "AURA Swerve",      size: 0.4,  axis: "y", bay: 2, row: 0, rotY: 0.3 },
-    { file: "seat",     key: "carbonSeat", label: "Carbon fiber seat", size: 0.3, axis: "y", bay: 0, row: 1, rotY: 0.4 },
-    { file: "scanner",  key: "scanner",    label: "3D scanner",       size: 0.4,  axis: "x", bay: 1, row: 1, rotY: 0.35 },
+    { file: "steering", key: "steering",   label: "Mk.8 Steering",     size: 0.32, axis: "y", bay: 0, row: 0, rotY: 0.5 },
+    { file: "javelin",  key: "javelin",    label: "Javelin VTOL",      size: 0.44, axis: "x", bay: 1, row: 0, rotY: 0.6,
+      matTweak: { aero: { color: 0x2e3136, roughness: 0.5 }, printed: { color: 0x1f2126 } } },
+    { file: "aura",     key: "aura",       label: "AURA Swerve",       size: 0.32, axis: "y", bay: 2, row: 0, rotY: 0.35 },
+    { file: "seat",     key: "carbonSeat", label: "Carbon fiber seat", size: 0.3,  axis: "y", bay: 0, row: 1, rotY: 0.4 },
+    { file: "scanner",  key: "scanner",    label: "3D scanner",        size: 0.38, axis: "x", bay: 1, row: 1, rotY: 0.35 },
   ];
   ASSEMBLIES.forEach((a) =>
     loadAssembly(loader, scene, `models/real/${a.file}.glb`, {
       name: "ex_" + a.key, projectKey: a.key, label: a.label,
-      targetSize: a.size, axis: a.axis,
+      targetSize: a.size, axis: a.axis, matTweak: a.matTweak,
+      markerCap: CAB.rows[a.row] + (a.row === 0 ? 0.36 : 0.44), // top row: stay under the cabinet's top frame
       pos: [CAB.bays[a.bay], CAB.rows[a.row], CAB.frontZ], rotY: a.rotY,
     })
   );
 
-  // gearbox + thermal brake stay procedural (no CAD export exists)
-  placeRoot(buildGearbox(), scene, {
-    name: "ex_gearbox", projectKey: "gearbox", label: "2-speed gearbox",
-    targetSize: 0.3, axis: "x", pos: [CAB.bays[2], CAB.rows[1], CAB.frontZ], rotX: -Math.PI / 2, rotY: -0.3,
+  // procedural exhibits for projects without CAD exports
+  placeRoot(buildLineFollower(), scene, {
+    markerCap: CAB.rows[1] + 0.44, name: "ex_lineFollower", projectKey: "lineFollower", label: "LineFollower robot",
+    targetSize: 0.3, axis: "x", pos: [CAB.bays[2], CAB.rows[1], CAB.frontZ], rotY: 0.45,
+  });
+  placeRoot(buildCfdDisplay(artLoader), scene, {
+    markerCap: CAB.rows[2] + 0.44, name: "ex_ansysCfd", projectKey: "ansysCfd", label: "Agent-based CFD",
+    targetSize: 0.34, axis: "x", pos: [CAB.bays[0], CAB.rows[2], CAB.frontZ], rotY: 0.25,
   });
   placeRoot(buildBrakeRotor(), scene, {
-    name: "ex_brakeSim", projectKey: "brakeSim", label: "FSAE Brake Sim",
+    markerCap: CAB.rows[2] + 0.44, name: "ex_brakeSim", projectKey: "brakeSim", label: "FSAE Brake Sim",
     targetSize: 0.26, axis: "x", pos: [CAB.bays[1], CAB.rows[2], CAB.frontZ], rotX: -Math.PI / 2, rotY: 0.15,
   });
-
-  // bottom-row décor
-  loadModel(loader, scene, "models/pp/books_small.glb", {
-    name: "decorBooks", targetSize: 0.26, axis: "x", pos: [CAB.bays[0], CAB.rows[2], CAB.frontZ], rotY: 0.4,
+  placeRoot(buildTelecaster(), scene, {
+    markerCap: CAB.rows[2] + 0.44, name: "ex_telecaster", projectKey: "telecaster", label: "Telecaster guitar",
+    targetSize: 0.42, axis: "y", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotY: -0.3,
   });
-  loadModel(loader, scene, "models/pp/globe.glb", {
-    name: "decorGlobe", targetSize: 0.3, axis: "y", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotY: -0.4,
-  });
-
-  // engraved plaques (from the same layout table)
-  [
-    ["MK.8 STEERING", 0, 0],
-    ["JAVELIN VTOL", 1, 0],
-    ["AURA SWERVE", 2, 0],
-    ["CARBON SEAT", 0, 1],
-    ["3D SCANNER", 1, 1],
-    ["2-SPD GEARBOX", 2, 1],
-    ["BRAKE SIM", 1, 2],
-  ].forEach(([text, bay, row]) =>
-    scene.add(makePlaque(text, CAB.bays[bay], CAB.rows[row], CAB.z + 0.26))
-  );
 
   /* ---------- side dressing ---------- */
   loadModel(loader, scene, "models/pp/bookcase.glb", {
@@ -609,7 +599,9 @@ function placeRoot(root, scene, opts, onPlaced) {
     root.position.sub(center);
 
     // Genshin-style interact marker floating above the object
-    const markerY = bb.max.y - center.y + 0.1;
+    // (capped so it never pokes through the shelf above)
+    const capY = opts.markerCap !== undefined ? opts.markerCap : Infinity;
+    const markerY = Math.min(bb.max.y + 0.09, capY) - center.y;
     const marker = makeInteractMarker();
     marker.position.set(0, markerY, 0);
     pivot.add(marker);
@@ -654,6 +646,8 @@ function loadAssembly(loader, scene, url, opts, onPlaced) {
           if (name.includes(`mat_${k}`)) { matKey = k; break; }
         }
         o.material = ASSEMBLY_MATS[matKey]();
+        // per-project material overrides (e.g. Javelin's dark PPA-CF shell)
+        if (opts.matTweak && opts.matTweak[matKey]) o.material.setValues(opts.matTweak[matKey]);
         o.castShadow = true;
         o.receiveShadow = true;
       });
@@ -833,7 +827,7 @@ function buildDisplayCabinet() {
   const g = new THREE.Group();
   const W = 2.36;
   const H = 2.08;
-  const D = 0.42;
+  const D = 0.54;
   const z = CAB.z;
   const frameMat = woodMaterial(0x5e3f22, 0.62);
   const backMat = woodMaterial(0x3a2614, 0.8);
@@ -888,7 +882,7 @@ function buildDisplayCabinet() {
       new THREE.MeshStandardMaterial({
         color: 0x9a7040,
         emissive: 0xffc98a,
-        emissiveIntensity: 0.9,
+        emissiveIntensity: 0.8,
       })
     );
     strip.position.set(0, y + CAB.rowH - 0.06, z + D / 2 - 0.06);
@@ -973,36 +967,192 @@ function makeInteractMarker() {
   return sprite;
 }
 
-function makePlaque(text, x, y, z) {
+function buildResumePaper() {
+  // A4-ish sheet lying flat on the desk with a printed resume header
+  const g = new THREE.Group();
   const c = document.createElement("canvas");
   c.width = 256;
-  c.height = 64;
+  c.height = 340;
   const ctx = c.getContext("2d");
-  const grad = ctx.createLinearGradient(0, 0, 0, 64);
-  grad.addColorStop(0, "#c9a24b");
-  grad.addColorStop(0.5, "#a8843a");
-  grad.addColorStop(1, "#8a6a2c");
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 256, 64);
-  ctx.strokeStyle = "rgba(60,42,12,0.85)";
-  ctx.lineWidth = 4;
-  ctx.strokeRect(3, 3, 250, 58);
-  ctx.fillStyle = "#2e2005";
-  ctx.font = "700 26px Arial, sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(text, 128, 34, 236);
+  ctx.fillStyle = "#f2ecdd";
+  ctx.fillRect(0, 0, 256, 340);
+  ctx.fillStyle = "#1a1a1c";
+  ctx.font = "700 30px Arial, sans-serif";
+  ctx.fillText("KEFAN WU", 22, 46);
+  ctx.font = "500 13px Arial, sans-serif";
+  ctx.fillStyle = "#5a5a5e";
+  ctx.fillText("Mechanical Lead — Olin Electric", 22, 70);
+  ctx.fillText("Motorsports · MechE @ Olin '28", 22, 88);
+  ctx.strokeStyle = "#3f8cff";
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(22, 104); ctx.lineTo(234, 104); ctx.stroke();
+  ctx.fillStyle = "#8d8d92";
+  for (let y = 128; y < 320; y += 16) {
+    const w = 150 + ((y * 37) % 62);
+    ctx.fillRect(22, y, w, 4.5);
+  }
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
 
-  const plaque = new THREE.Mesh(
-    new THREE.BoxGeometry(0.15, 0.037, 0.006),
-    new THREE.MeshStandardMaterial({ map: tex, metalness: 0.7, roughness: 0.35 })
+  const sheet = new THREE.Mesh(
+    new THREE.BoxGeometry(0.21, 0.004, 0.28),
+    new THREE.MeshStandardMaterial({ color: 0xf2ecdd, roughness: 0.94 })
   );
-  plaque.position.set(x, y + 0.024, z);
-  plaque.rotation.x = -0.42;
-  plaque.castShadow = true;
-  return plaque;
+  sheet.castShadow = true;
+  sheet.receiveShadow = true;
+  g.add(sheet);
+  const face = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.205, 0.273),
+    new THREE.MeshStandardMaterial({ map: tex, roughness: 0.94 })
+  );
+  face.rotation.x = -Math.PI / 2;
+  face.position.y = 0.0025;
+  g.add(face);
+  return g;
+}
+
+function buildLineFollower() {
+  const g = new THREE.Group();
+  const deck = new THREE.Mesh(
+    new RoundedBoxGeometry(0.2, 0.012, 0.13, 2, 0.006),
+    new THREE.MeshStandardMaterial({ color: 0x14161a, roughness: 0.5, metalness: 0.2 })
+  );
+  deck.position.y = 0.035;
+  g.add(deck);
+  // arduino board
+  const board = new THREE.Mesh(
+    new THREE.BoxGeometry(0.075, 0.008, 0.055),
+    new THREE.MeshStandardMaterial({ color: 0x1a4f8a, roughness: 0.45, metalness: 0.25 })
+  );
+  board.position.set(-0.02, 0.045, 0);
+  g.add(board);
+  // battery pack
+  const batt = new THREE.Mesh(
+    new THREE.BoxGeometry(0.055, 0.02, 0.035),
+    new THREE.MeshStandardMaterial({ color: 0x2c2e33, roughness: 0.6 })
+  );
+  batt.position.set(0.055, 0.052, 0.02);
+  g.add(batt);
+  // wheels + silver micro gearmotors
+  const wheelMat = new THREE.MeshStandardMaterial({ color: 0x0d0e10, roughness: 0.9 });
+  const hubMat = new THREE.MeshStandardMaterial({ color: 0xb8bcc2, metalness: 0.9, roughness: 0.35 });
+  [-0.075, 0.075].forEach((z) => {
+    const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.012, 24), wheelMat);
+    wheel.rotation.x = Math.PI / 2;
+    wheel.position.set(-0.055, 0.032, z);
+    g.add(wheel);
+    const motor = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.012, 0.012), hubMat);
+    motor.position.set(-0.055, 0.032, z * 0.55);
+    g.add(motor);
+  });
+  // front caster + sensor bar with reflectance array
+  const caster = new THREE.Mesh(new THREE.SphereGeometry(0.012, 14, 14), hubMat);
+  caster.position.set(0.08, 0.014, 0);
+  g.add(caster);
+  const bar = new THREE.Mesh(
+    new THREE.BoxGeometry(0.02, 0.006, 0.11),
+    new THREE.MeshStandardMaterial({ color: 0x0e0f12, roughness: 0.5 })
+  );
+  bar.position.set(0.095, 0.026, 0);
+  g.add(bar);
+  for (let i = 0; i < 6; i++) {
+    const dot = new THREE.Mesh(
+      new THREE.BoxGeometry(0.006, 0.003, 0.006),
+      new THREE.MeshStandardMaterial({ color: 0xe8e8ea, emissive: 0x666666, emissiveIntensity: 0.3 })
+    );
+    dot.position.set(0.095, 0.022, -0.045 + i * 0.018);
+    g.add(dot);
+  }
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildCfdDisplay(texLoader) {
+  // small monitor on a stand showing the real Ansys pressure field render
+  const g = new THREE.Group();
+  const dark = new THREE.MeshStandardMaterial({ color: 0x101114, roughness: 0.4, metalness: 0.5 });
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.012, 24), dark);
+  base.position.y = 0.006;
+  g.add(base);
+  const neck = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.07, 0.016), dark);
+  neck.position.y = 0.045;
+  g.add(neck);
+  const bezel = new THREE.Mesh(new RoundedBoxGeometry(0.26, 0.17, 0.014, 2, 0.005), dark);
+  bezel.position.y = 0.16;
+  bezel.rotation.x = -0.06;
+  g.add(bezel);
+  const tex = texLoader.load("assets/ansys-cfd-pressure.webp");
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const screen = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.245, 0.155),
+    new THREE.MeshStandardMaterial({
+      map: tex,
+      emissiveMap: tex,
+      emissive: 0xffffff,
+      emissiveIntensity: 0.55,
+      roughness: 0.35,
+    })
+  );
+  screen.position.set(0, 0.16, 0.0078);
+  screen.rotation.x = -0.06;
+  g.add(screen);
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildTelecaster() {
+  // single-cutaway body + neck + strings, butterscotch finish
+  const g = new THREE.Group();
+  const body = new THREE.Shape();
+  body.moveTo(0, -0.16);
+  body.bezierCurveTo(0.09, -0.16, 0.115, -0.09, 0.105, -0.02);
+  body.bezierCurveTo(0.1, 0.04, 0.075, 0.06, 0.07, 0.1);
+  body.bezierCurveTo(0.065, 0.15, 0.03, 0.17, 0, 0.17);
+  body.bezierCurveTo(-0.03, 0.17, -0.065, 0.15, -0.07, 0.1);
+  body.bezierCurveTo(-0.075, 0.06, -0.1, 0.04, -0.105, -0.02);
+  body.bezierCurveTo(-0.115, -0.09, -0.09, -0.16, 0, -0.16);
+  const bodyMesh = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(body, { depth: 0.035, bevelEnabled: true, bevelThickness: 0.004, bevelSize: 0.004, bevelSegments: 2 }),
+    new THREE.MeshPhysicalMaterial({ color: 0xc98f3f, roughness: 0.3, metalness: 0.05, clearcoat: 0.8, clearcoatRoughness: 0.15 })
+  );
+  bodyMesh.rotation.x = 0; // extrude along +z; guitar faces viewer
+  bodyMesh.position.set(0, 0.17, 0);
+  g.add(bodyMesh);
+  // pickguard
+  const pg = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.055, 0.055, 0.004, 24),
+    new THREE.MeshStandardMaterial({ color: 0xf5f0e0, roughness: 0.5 })
+  );
+  pg.rotation.x = Math.PI / 2;
+  pg.position.set(-0.035, 0.13, 0.04);
+  g.add(pg);
+  // neck + headstock
+  const neckMat = new THREE.MeshStandardMaterial({ color: 0xa8763c, roughness: 0.55 });
+  const neck = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.3, 0.02), neckMat);
+  neck.position.set(0, 0.45, 0.02);
+  g.add(neck);
+  const head = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.09, 0.016), neckMat);
+  head.position.set(0.008, 0.64, 0.02);
+  g.add(head);
+  // fretboard + strings
+  const fb = new THREE.Mesh(
+    new THREE.BoxGeometry(0.036, 0.3, 0.004),
+    new THREE.MeshStandardMaterial({ color: 0x3a2614, roughness: 0.6 })
+  );
+  fb.position.set(0, 0.45, 0.033);
+  g.add(fb);
+  const stringMat = new THREE.MeshStandardMaterial({ color: 0xc8ccd2, metalness: 0.9, roughness: 0.3 });
+  for (let i = 0; i < 6; i++) {
+    const s = new THREE.Mesh(new THREE.CylinderGeometry(0.0006, 0.0006, 0.5, 4), stringMat);
+    s.position.set(-0.0125 + i * 0.005, 0.38, 0.038);
+    g.add(s);
+  }
+  // bridge
+  const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.02, 0.006), stringMat);
+  bridge.position.set(0, 0.115, 0.038);
+  g.add(bridge);
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
 }
 
 function makeThermalTexture() {
@@ -1056,44 +1206,6 @@ function buildBrakeRotor() {
     bolt.position.set(Math.cos(a) * 0.022, 0, Math.sin(a) * 0.022);
     g.add(bolt);
   }
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  return g;
-}
-
-function buildGearbox() {
-  const g = new THREE.Group();
-  const steel = new THREE.MeshStandardMaterial({ color: 0x9a9da3, metalness: 0.95, roughness: 0.32 });
-  const dark = new THREE.MeshStandardMaterial({ color: 0x3a3d42, metalness: 0.9, roughness: 0.4 });
-
-  function gear(rBody, nTeeth, thick, mat) {
-    const gg = new THREE.Group();
-    gg.add(new THREE.Mesh(new THREE.CylinderGeometry(rBody, rBody, thick, Math.max(28, nTeeth * 2)), mat));
-    const toothLen = rBody * 0.22;
-    const toothGeo = new THREE.BoxGeometry(toothLen, thick, (2 * Math.PI * rBody) / nTeeth * 0.55);
-    for (let i = 0; i < nTeeth; i++) {
-      const a = (i / nTeeth) * Math.PI * 2;
-      const t = new THREE.Mesh(toothGeo, mat);
-      t.position.set(Math.cos(a) * (rBody + toothLen / 2 - 0.001), 0, Math.sin(a) * (rBody + toothLen / 2 - 0.001));
-      t.rotation.y = -a;
-      gg.add(t);
-    }
-    gg.add(new THREE.Mesh(new THREE.CylinderGeometry(rBody * 0.28, rBody * 0.28, thick + 0.004, 20), dark));
-    return gg;
-  }
-
-  const big = gear(0.09, 20, 0.026, steel);
-  big.position.set(-0.03, 0, 0);
-  g.add(big);
-  const small = gear(0.055, 12, 0.026, steel);
-  small.position.set(0.03 + 0.09 + 0.055 - 0.012, 0, 0.02);
-  g.add(small);
-
-  [[-0.03, 0], [small.position.x, 0.02]].forEach(([x, z]) => {
-    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.14, 16), dark);
-    shaft.position.set(x, 0, z);
-    g.add(shaft);
-  });
-
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
 }
