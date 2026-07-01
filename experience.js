@@ -168,6 +168,15 @@ function initScene(canvas) {
   lampLight.position.set(-0.62, 0.95, -0.2);
   scene.add(lampLight);
 
+  // two warm display spots washing the cabinet shelves (no shadows, cheap)
+  [-0.5, 0.5].forEach((x) => {
+    const spot = new THREE.SpotLight(0xffd9a8, 6, 6, 0.5, 0.7, 1.6);
+    spot.position.set(x, 2.4, 0.5);
+    spot.target.position.set(x * 0.6, 0.95, -1.05);
+    scene.add(spot);
+    scene.add(spot.target);
+  });
+
   // ---- procedural room shell ----
   buildRoom(scene);
 
@@ -250,6 +259,17 @@ function initScene(canvas) {
     targetSize: 0.28, axis: "x", pos: [0.34, 0.96, -0.98], rotX: -Math.PI / 2, rotY: -0.3,
   });
 
+  // engraved brass plaques under each exhibit (museum display style)
+  [
+    ["MK.8 STEERING", -0.34, 1.28],
+    ["JAVELIN VTOL", 0.34, 1.28],
+    ["AURA SWERVE", -0.34, 0.96],
+    ["2-SPEED GEARBOX", 0.34, 0.96],
+    ["CARBON SEAT", -0.34, 0.66],
+    ["3D SCANNER", 0.34, 0.66],
+    ["BRAKE SIM", 0, 0.4],
+  ].forEach(([text, x, y]) => scene.add(makePlaque(text, x, y, -0.86)));
+
   // side bookcases (decor) against the two side walls, facing inward
   loadModel(loader, scene, "models/pp/bookcase.glb",
     { name: "shelfL", targetSize: 2.0, axis: "y", pos: [-2.32, 0, -0.55], rotY: -Math.PI / 2 });
@@ -287,15 +307,24 @@ function initScene(canvas) {
   }
   window.addEventListener("resize", onResize);
 
-  // intro move-in
-  let introStart = null;
-  let introPending = false;
-  const INTRO_MS = 1500;
-  const introLookFrom = new THREE.Vector3(0, 0.7, -0.1);
-  function startIntro() {
+  // camera flight system (intro fly-in + focus-on-click share it)
+  let flight = null; // { fromPos, toPos, fromLook, toLook, ms, start, onDone }
+  function startFlight(toPos, toLook, ms, onDone) {
+    flight = {
+      fromPos: camera.position.clone(),
+      toPos: toPos.clone(),
+      fromLook: controls.target.clone(),
+      toLook: toLook.clone(),
+      ms,
+      start: null,
+      onDone,
+    };
     controls.enabled = false;
+  }
+  function startIntro() {
     camera.position.copy(FLY_POS);
-    introPending = true;
+    controls.target.set(0, 0.7, -0.1);
+    startFlight(REST_POS, REST_TARGET, 1500);
   }
 
   let running = true;
@@ -305,24 +334,36 @@ function initScene(canvas) {
 
   renderer.setAnimationLoop((t) => {
     if (!running) return;
-    if (introPending) {
-      introStart = t;
-      introPending = false;
-    }
-    if (introStart !== null) {
-      const p = Math.min((t - introStart) / INTRO_MS, 1);
+
+    if (flight) {
+      if (flight.start === null) flight.start = t;
+      const p = Math.min((t - flight.start) / flight.ms, 1);
       const e = easeInOutCubic(p);
-      camera.position.lerpVectors(FLY_POS, REST_POS, e);
-      camera.lookAt(introLookFrom.clone().lerp(REST_TARGET, e));
+      camera.position.lerpVectors(flight.fromPos, flight.toPos, e);
+      const look = flight.fromLook.clone().lerp(flight.toLook, e);
+      camera.lookAt(look);
       if (p >= 1) {
-        introStart = null;
-        controls.target.copy(REST_TARGET);
-        controls.enabled = true;
-        controls.update();
+        const done = flight.onDone;
+        controls.target.copy(flight.toLook);
+        flight = null;
+        // while a panel is open we hold the focused framing
+        if (!document.documentElement.classList.contains("exp-panel-open")) {
+          controls.enabled = true;
+          controls.update();
+        }
+        if (done) done();
       }
     } else {
       controls.update();
     }
+
+    // museum-turntable idle spin on project exhibits (paused on hover)
+    if (!prefersReducedMotion) {
+      for (const h of HOTSPOTS) {
+        if (h.userData.hotspot.key && h !== hovered) h.rotation.y += 0.0035;
+      }
+    }
+
     renderer.render(scene, camera);
   });
 
@@ -368,7 +409,7 @@ function initScene(canvas) {
   }
   renderer.domElement.addEventListener("pointermove", (ev) => {
     updatePointer(ev);
-    if (panelOpen || introStart !== null || introPending) return;
+    if (panelOpen || flight) return;
     setHover(pickHotspot());
   });
   renderer.domElement.addEventListener("pointerdown", (ev) => { downXY = [ev.clientX, ev.clientY]; });
@@ -376,16 +417,43 @@ function initScene(canvas) {
     if (!downXY) return;
     const moved = Math.hypot(ev.clientX - downXY[0], ev.clientY - downXY[1]);
     downXY = null;
-    if (moved > 6 || panelOpen) return; // treat as orbit drag
+    if (moved > 6 || panelOpen || flight) return; // treat as orbit drag / busy
     updatePointer(ev);
     const root = pickHotspot();
-    if (root) {
-      setHover(null);
-      const hs = root.userData.hotspot;
-      if (hs.action === "resume") openPanel(resumeHTML(RESUME));
-      else if (hs.key && window.projectData && window.projectData[hs.key]) openPanel(projectHTML(window.projectData[hs.key]));
-    }
+    if (root) focusHotspot(root);
   });
+
+  // fly the camera in close on the clicked object, then slide the panel out
+  function focusHotspot(root) {
+    setHover(null);
+    const hs = root.userData.hotspot;
+    const html =
+      hs.action === "resume"
+        ? resumeHTML(RESUME)
+        : hs.key && window.projectData && window.projectData[hs.key]
+          ? projectHTML(window.projectData[hs.key])
+          : null;
+    if (!html) return;
+
+    const c = hs.center;
+    const focusPos = new THREE.Vector3(c.x * 0.55, Math.max(c.y + 0.06, 0.98), c.z + 0.95);
+    if (hs.action === "resume") focusPos.set(c.x + 0.28, c.y + 0.5, c.z + 0.75);
+    // look slightly right of the object so it sits left of the slide-in panel
+    const focusLook = c.clone();
+    focusLook.x += 0.2;
+
+    panelOpen = true; // block hover/clicks during the approach
+    if (prefersReducedMotion) {
+      camera.position.copy(focusPos);
+      controls.target.copy(focusLook);
+      controls.enabled = false;
+      camera.lookAt(focusLook);
+      openPanel(html);
+    } else {
+      startFlight(focusPos, focusLook, 850);
+      setTimeout(() => openPanel(html), 550);
+    }
+  }
 
   function openPanel(html) {
     if (!panelEl) return;
@@ -397,8 +465,18 @@ function initScene(canvas) {
     setHover(null);
   }
   function closePanel() {
+    if (!panelOpen) return;
     panelOpen = false;
     document.documentElement.classList.remove("exp-panel-open");
+    // return to the resting overview
+    if (prefersReducedMotion) {
+      camera.position.copy(REST_POS);
+      controls.target.copy(REST_TARGET);
+      controls.enabled = true;
+      controls.update();
+    } else {
+      startFlight(REST_POS, REST_TARGET, 750);
+    }
   }
   if (backdropEl) backdropEl.addEventListener("click", closePanel);
   window.addEventListener("keydown", (e) => { if (e.key === "Escape" && panelOpen) closePanel(); });
@@ -445,17 +523,26 @@ function placeRoot(root, scene, opts, onPlaced) {
   scene.add(root);
   MODELS[opts.name] = root;
 
-  // register clickable hotspot (project exhibit or resume folder)
+  // register clickable hotspot (project exhibit or resume folder), wrapped in
+  // a pivot at its geometric center so idle spin / hover scale stay centered
   if (opts.projectKey || opts.action) {
-    root.userData.hotspot = {
+    const c = new THREE.Box3().setFromObject(root).getCenter(new THREE.Vector3());
+    const pivot = new THREE.Group();
+    pivot.position.copy(c);
+    scene.add(pivot);
+    pivot.add(root);
+    root.position.sub(c);
+    pivot.userData.hotspot = {
       key: opts.projectKey || null,
       action: opts.action || null,
       label: opts.label || "",
-      baseScale: root.scale.x,
-      baseY: root.position.y,
+      baseScale: 1,
+      center: c.clone(),
     };
-    root.traverse((o) => { if (o.isMesh) o.userData.hotspotRoot = root; });
-    HOTSPOTS.push(root);
+    HOTSPOTS.push(pivot);
+    MODELS[opts.name] = pivot;
+    if (onPlaced) onPlaced(pivot, new THREE.Box3().setFromObject(pivot));
+    return;
   }
   if (onPlaced) onPlaced(root, new THREE.Box3().setFromObject(root));
 }
@@ -547,6 +634,21 @@ function buildRoom(scene) {
     scene.add(w);
   });
 
+  // ceiling so low orbit angles don't reveal a void
+  const ceiling = new THREE.Mesh(
+    new THREE.PlaneGeometry(2 * sideX, depth),
+    new THREE.MeshStandardMaterial({
+      color: 0x3a2c20,
+      map: wt.map,
+      normalMap: wt.normalMap,
+      roughness: 1.0,
+      metalness: 0,
+    })
+  );
+  ceiling.rotation.x = Math.PI / 2;
+  ceiling.position.set(0, WALL_H, (front + back) / 2);
+  scene.add(ceiling);
+
   // wood wainscot + chair rail on the three walls
   const wainH = 0.95;
   const addWain = (w, x, z, rotY) => {
@@ -632,6 +734,39 @@ function makeFramedArt(texLoader, a) {
   g.position.set(a.x, a.y, a.z);
   g.rotation.y = a.rotY;
   return g;
+}
+
+function makePlaque(text, x, y, z) {
+  // engraved-brass label texture
+  const c = document.createElement("canvas");
+  c.width = 256;
+  c.height = 64;
+  const ctx = c.getContext("2d");
+  const grad = ctx.createLinearGradient(0, 0, 0, 64);
+  grad.addColorStop(0, "#c9a24b");
+  grad.addColorStop(0.5, "#a8843a");
+  grad.addColorStop(1, "#8a6a2c");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 256, 64);
+  ctx.strokeStyle = "rgba(60,42,12,0.85)";
+  ctx.lineWidth = 4;
+  ctx.strokeRect(3, 3, 250, 58);
+  ctx.fillStyle = "#2e2005";
+  ctx.font = "700 26px Arial, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(text, 128, 34, 236);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+
+  const plaque = new THREE.Mesh(
+    new THREE.BoxGeometry(0.14, 0.035, 0.006),
+    new THREE.MeshStandardMaterial({ map: tex, metalness: 0.7, roughness: 0.35 })
+  );
+  plaque.position.set(x, y + 0.022, z);
+  plaque.rotation.x = -0.42; // leaned back like a museum label
+  plaque.castShadow = true;
+  return plaque;
 }
 
 function makeThermalTexture() {
