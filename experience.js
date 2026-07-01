@@ -1,16 +1,19 @@
 /* ============================================================
    experience.js — 3D desk experience (warm library study)
-   Textured wood + plaster room, fixed banker's lamp / pen cup /
-   pedestal drawers, and more props. Loads straight into the
-   scene (loader fades, gentle camera move-in). Clickable project
-   models + resume folder come next.
+   Real CC0/CC-BY models (Poly Haven photoreal + Poly Pizza) loaded
+   via GLTFLoader, unified under one warm HDRI. Procedural room
+   shell (floor + walls + wainscot). Loads straight into the scene
+   with a brief loader + gentle camera move-in.
+   Clickable project models + resume folder come next.
+
+   Model credits: green banker lamp — "Desk lamp" by Poly by Google,
+   CC-BY 3.0 (via Poly Pizza). All other models CC0. See ATTRIBUTIONS.txt.
    ============================================================ */
 
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
-import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
-import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { HERO_PROJECTS, ACCENT } from "./experience-data.js";
 
 document.documentElement.classList.add("exp-js");
@@ -37,44 +40,32 @@ const revealScene = () => document.documentElement.classList.add("exp-ready");
 const easeInOutCubic = (x) =>
   x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
 
-/* warm library palette */
 const COL = {
   bg: 0x0c0907,
-  brass: 0xb98b35,
-  brassDark: 0x7a5a22,
-  leather: 0x21402f,
-  shadeGreen: 0x0f5132,
-  shadeCream: 0xf3e6c4,
-  bulb: 0xffd9a0,
-  paper: 0xe7dcc2,
-  rug: 0x241008,
-  bookSpines: [0x6e241c, 0x3a2a16, 0x1f3a2a, 0x27314e, 0x5a4420, 0x47202a, 0x2e4636, 0x70391a],
-  pages: 0xcab78c,
-  woodTint: 0x8a6038,
   floorTint: 0x6b4f33,
   wallTint: 0x5a4636,
+  woodTint: 0x8a6038,
+  rug: 0x3a1c12,
 };
 
-/* texture loading (set up inside initScene) */
-let TEX = null; // { loadPBR(slug, rx, ry) }
-
-function setupTextures(manager, maxAniso) {
+let TEX = null;
+let MAXA = 4;
+function setupTextures(manager) {
   const loader = new THREE.TextureLoader(manager);
   const cache = {};
-  // one shared texture set per slug (avoids re-uploading the same maps)
-  const DEFAULT_REPEAT = {
+  const REP = {
     dark_wood: [2, 1],
     laminate_floor_02: [6, 6],
     painted_plaster_wall: [3, 2],
   };
   function loadPBR(slug) {
     if (cache[slug]) return cache[slug];
-    const [rx, ry] = DEFAULT_REPEAT[slug] || [1, 1];
+    const [rx, ry] = REP[slug] || [1, 1];
     const mk = (m) => {
       const t = loader.load(`textures/${slug}/${slug}_${m}_1k.jpg`);
       t.wrapS = t.wrapT = THREE.RepeatWrapping;
       t.repeat.set(rx, ry);
-      t.anisotropy = maxAniso;
+      t.anisotropy = MAXA;
       return t;
     };
     const map = mk("diff");
@@ -86,42 +77,26 @@ function setupTextures(manager, maxAniso) {
   TEX = { loadPBR };
 }
 
-function woodMaterial(rx, ry, tint = COL.woodTint) {
-  // rx/ry kept for call-site compatibility; repeat is fixed per slug (shared texture)
-  const t = TEX.loadPBR("dark_wood");
-  return new THREE.MeshStandardMaterial({
-    color: tint,
-    map: t.map,
-    normalMap: t.normalMap,
-    roughnessMap: t.roughnessMap,
-    roughness: 0.85,
-    metalness: 0.0,
-  });
-}
-
-const brassMat = () =>
-  new THREE.MeshStandardMaterial({ color: COL.brass, roughness: 0.3, metalness: 1.0 });
+const MODELS = {}; // named refs for live tuning
 
 function initScene(canvas) {
-  /* ---------- renderer ---------- */
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.18;
+  renderer.toneMappingExposure = 1.1;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
-  const maxAniso = renderer.capabilities.getMaxAnisotropy();
+  MAXA = renderer.capabilities.getMaxAnisotropy();
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(COL.bg);
   scene.fog = new THREE.Fog(COL.bg, 6, 16);
 
-  /* ---------- camera + controls ---------- */
-  const REST_POS = new THREE.Vector3(1.35, 1.02, 2.05);
-  const REST_TARGET = new THREE.Vector3(0, 0.78, -0.15);
-  const FLY_POS = new THREE.Vector3(2.0, 1.5, 3.1);
+  const REST_POS = new THREE.Vector3(1.55, 1.15, 2.15);
+  const REST_TARGET = new THREE.Vector3(0, 0.72, -0.2);
+  const FLY_POS = new THREE.Vector3(2.3, 1.7, 3.2);
 
   const camera = new THREE.PerspectiveCamera(
     42,
@@ -135,17 +110,15 @@ function initScene(canvas) {
   controls.enableDamping = true;
   controls.dampingFactor = 0.08;
   controls.enablePan = false;
-  controls.minDistance = 1.4;
-  controls.maxDistance = 4.2;
-  controls.minPolarAngle = 0.45;
+  controls.minDistance = 1.5;
+  controls.maxDistance = 4.6;
+  controls.minPolarAngle = 0.42;
   controls.maxPolarAngle = Math.PI / 2 - 0.04;
-  // keep the camera on the open (front) side of the room
-  controls.minAzimuthAngle = -Math.PI * 0.42;
+  controls.minAzimuthAngle = -Math.PI * 0.45;
   controls.maxAzimuthAngle = Math.PI * 0.78;
   controls.target.copy(REST_TARGET);
   controls.update();
 
-  /* ---------- loading manager (reveal when everything is ready) ---------- */
   const manager = new THREE.LoadingManager();
   let revealed = false;
   const doReveal = () => {
@@ -155,82 +128,143 @@ function initScene(canvas) {
     if (!prefersReducedMotion) startIntro();
   };
   manager.onLoad = doReveal;
-  setTimeout(doReveal, 5000); // safety
+  setTimeout(doReveal, 8000); // safety
 
-  setupTextures(manager, maxAniso);
+  setupTextures(manager);
 
-  /* ---------- HDRI (warm reflections) ---------- */
+  // HDRI warm environment
   const pmrem = new THREE.PMREMGenerator(renderer);
   new HDRLoader(manager).load("hdri/wooden_lounge_1k.hdr", (tex) => {
     scene.environment = pmrem.fromEquirectangular(tex).texture;
-    scene.environmentIntensity = 0.28;
+    scene.environmentIntensity = 0.5;
     tex.dispose();
     pmrem.dispose();
   });
 
-  /* ---------- warm lighting ---------- */
-  const hemi = new THREE.HemisphereLight(0x4a3520, 0x0a0705, 0.5);
+  // lighting
+  const hemi = new THREE.HemisphereLight(0x4a3520, 0x0a0705, 0.45);
   scene.add(hemi);
 
-  const key = new THREE.DirectionalLight(0xffe6c2, 1.05);
-  key.position.set(2.4, 4.4, 2.2);
+  const key = new THREE.DirectionalLight(0xffe6c2, 1.4);
+  key.position.set(2.6, 4.6, 2.4);
   key.castShadow = true;
   key.shadow.mapSize.set(2048, 2048);
   key.shadow.camera.near = 0.5;
-  key.shadow.camera.far = 18;
-  key.shadow.camera.left = -3.5;
-  key.shadow.camera.right = 3.5;
-  key.shadow.camera.top = 3.5;
-  key.shadow.camera.bottom = -3.5;
+  key.shadow.camera.far = 20;
+  key.shadow.camera.left = -4;
+  key.shadow.camera.right = 4;
+  key.shadow.camera.top = 4;
+  key.shadow.camera.bottom = -4;
   key.shadow.bias = -0.0004;
   key.shadow.normalBias = 0.02;
   key.shadow.radius = 5;
   scene.add(key);
 
-  // banker's-lamp warm pool (no shadow — point-light shadows are 6x passes)
-  const lampLight = new THREE.PointLight(0xffb15a, 12, 5.0, 2);
-  lampLight.position.set(-0.6, 0.95, -0.12);
+  const lampLight = new THREE.PointLight(0xffb15a, 6, 3.2, 2);
+  lampLight.position.set(-0.62, 0.95, -0.2);
   scene.add(lampLight);
 
-  /* ---------- room ---------- */
-  scene.add(buildRoom());
-  scene.add(buildBookshelf());
+  // ---- procedural room shell ----
+  buildRoom(scene);
 
-  /* ---------- rug + contact shadow ---------- */
-  const rug = new THREE.Mesh(
-    new THREE.PlaneGeometry(3.4, 2.4),
-    new THREE.MeshStandardMaterial({ color: COL.rug, roughness: 1.0, metalness: 0 })
-  );
-  rug.rotation.x = -Math.PI / 2;
-  rug.position.set(0, 0.004, 0.15);
-  rug.receiveShadow = true;
-  scene.add(rug);
-
+  // contact shadow under the desk
   const contact = new THREE.Mesh(
-    new THREE.PlaneGeometry(2.9, 1.8),
+    new THREE.PlaneGeometry(2.6, 1.5),
     new THREE.MeshBasicMaterial({
       map: makeRadialShadowTexture(),
       transparent: true,
       depthWrite: false,
-      opacity: 0.8,
+      opacity: 0.85,
     })
   );
   contact.rotation.x = -Math.PI / 2;
-  contact.position.set(0, 0.014, 0.0);
+  contact.position.set(0, 0.02, -0.1);
   scene.add(contact);
 
-  /* ---------- desk + props ---------- */
-  scene.add(buildDesk());
-  const lamp = buildBankersLamp();
-  scene.add(lamp);
-  scene.add(buildBookStack(0.66, -0.2));
-  scene.add(buildOpenBook(0.05, 0.16));
-  const penGroup = buildPenCup(0.36, -0.05);
-  scene.add(penGroup);
-  scene.add(buildMug(-0.2, 0.2));
-  scene.add(buildPaperStack(-0.05, -0.05));
+  // ---- real models ----
+  const loader = new GLTFLoader(manager);
+  const DESK_TOP = 0.79; // measured top surface of metal_office_desk
 
-  /* ---------- resize ---------- */
+  // desk (Poly Haven metal office desk, metric)
+  loadModel(loader, scene, "models/metal_office_desk/metal_office_desk.gltf", {
+    name: "desk",
+    pos: [0, 0, -0.05],
+    rotY: 0,
+  });
+
+  // bookcase pre-filled with books (Poly Pizza / Quaternius) against back wall
+  loadModel(loader, scene, "models/pp/bookcase.glb", {
+    name: "bookshelf",
+    targetSize: 2.0,
+    axis: "y",
+    pos: [0, 0, -1.2],
+    rotY: 0,
+  });
+
+  // green banker lamp (Poly Pizza, scale to height)
+  loadModel(loader, scene, "models/pp/banker_lamp_green.glb", {
+    name: "lamp",
+    targetSize: 0.42,
+    axis: "y",
+    pos: [-0.62, DESK_TOP, -0.22],
+    rotY: 0.3,
+  });
+
+  // encyclopedia books on the desk (Poly Haven, metric)
+  loadModel(loader, scene, "models/book_encyclopedia_set_01/book_encyclopedia_set_01.gltf", {
+    name: "books",
+    targetSize: 0.28,
+    axis: "x",
+    pos: [0.6, DESK_TOP, -0.18],
+    rotY: -0.2,
+  });
+
+  // small books (Poly Pizza) — a second pile
+  loadModel(loader, scene, "models/pp/books_small.glb", {
+    name: "booksSmall",
+    targetSize: 0.24,
+    axis: "x",
+    pos: [0.42, DESK_TOP, 0.12],
+    rotY: 0.5,
+  });
+
+  // globe (Poly Pizza) — desk corner
+  loadModel(loader, scene, "models/pp/globe.glb", {
+    name: "globe",
+    targetSize: 0.22,
+    axis: "y",
+    pos: [0.82, DESK_TOP, 0.12],
+    rotY: 0,
+  });
+
+  // rug (Poly Pizza) under the desk
+  loadModel(loader, scene, "models/pp/rug.glb", {
+    name: "rug",
+    targetSize: 2.6,
+    axis: "x",
+    pos: [0, 0.01, 0.1],
+    rotY: 0,
+    tint: COL.rug,
+  });
+
+  // armchair (Poly Pizza) angled at the desk
+  loadModel(loader, scene, "models/pp/armchair.glb", {
+    name: "chair",
+    targetSize: 0.95,
+    axis: "y",
+    pos: [0.15, 0, 0.95],
+    rotY: Math.PI,
+  });
+
+  // houseplant (Poly Pizza) — floor corner
+  loadModel(loader, scene, "models/pp/houseplant.glb", {
+    name: "plant",
+    targetSize: 0.85,
+    axis: "y",
+    pos: [1.7, 0, -0.6],
+    rotY: 0,
+  });
+
   function onResize() {
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -241,10 +275,10 @@ function initScene(canvas) {
   }
   window.addEventListener("resize", onResize);
 
-  /* ---------- intro move-in ---------- */
+  // intro move-in
   let introStart = null;
   let introPending = false;
-  const INTRO_MS = 1400;
+  const INTRO_MS = 1500;
   const introLookFrom = new THREE.Vector3(0, 0.7, -0.1);
   function startIntro() {
     controls.enabled = false;
@@ -252,7 +286,6 @@ function initScene(canvas) {
     introPending = true;
   }
 
-  /* ---------- render loop ---------- */
   let running = true;
   document.addEventListener("visibilitychange", () => {
     running = !document.hidden;
@@ -281,21 +314,60 @@ function initScene(canvas) {
     renderer.render(scene, camera);
   });
 
-  window.__exp = { THREE, scene, camera, renderer, controls, lampLight, key, hemi, lamp, penGroup };
-  console.info(
-    `[experience] warm library scene live — ${HERO_PROJECTS.length} hero objects pending`
+  window.__exp = { THREE, scene, camera, renderer, controls, lampLight, key, hemi, models: MODELS };
+  console.info(`[experience] study scene loading — ${HERO_PROJECTS.length} hero objects pending`);
+}
+
+/* ============================================================
+   model loading + normalization
+   ============================================================ */
+function loadModel(loader, scene, url, opts) {
+  loader.load(
+    url,
+    (gltf) => {
+      const root = gltf.scene;
+      root.traverse((o) => {
+        if (o.isMesh) {
+          o.castShadow = true;
+          o.receiveShadow = true;
+          if (opts.tint && o.material) {
+            o.material = o.material.clone();
+            o.material.color = new THREE.Color(opts.tint);
+          }
+        }
+      });
+      if (opts.rotY) root.rotation.y = opts.rotY;
+      root.updateWorldMatrix(true, true);
+
+      let box = new THREE.Box3().setFromObject(root);
+      if (opts.targetSize) {
+        const size = box.getSize(new THREE.Vector3());
+        const dim = opts.axis === "x" ? size.x : opts.axis === "z" ? size.z : size.y;
+        if (dim > 0) {
+          root.scale.multiplyScalar(opts.targetSize / dim);
+          root.updateWorldMatrix(true, true);
+          box = new THREE.Box3().setFromObject(root);
+        }
+      }
+      const c = box.getCenter(new THREE.Vector3());
+      const pos = opts.pos || [0, 0, 0];
+      root.position.x += pos[0] - c.x;
+      root.position.z += pos[2] - c.z;
+      root.position.y += pos[1] - box.min.y;
+
+      scene.add(root);
+      MODELS[opts.name] = root;
+    },
+    undefined,
+    (err) => console.warn(`[experience] failed to load ${url}`, err)
   );
 }
 
 /* ============================================================
-   room
+   procedural room shell
    ============================================================ */
-
-function buildRoom() {
-  const g = new THREE.Group();
-
-  // wood-plank floor
-  const ft = TEX.loadPBR("laminate_floor_02", 6, 6);
+function buildRoom(scene) {
+  const ft = TEX.loadPBR("laminate_floor_02");
   const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(16, 16),
     new THREE.MeshStandardMaterial({
@@ -309,9 +381,9 @@ function buildRoom() {
   );
   floor.rotation.x = -Math.PI / 2;
   floor.receiveShadow = true;
-  g.add(floor);
+  scene.add(floor);
 
-  const wt = TEX.loadPBR("painted_plaster_wall", 3, 2);
+  const wt = TEX.loadPBR("painted_plaster_wall");
   const wallMat = () =>
     new THREE.MeshStandardMaterial({
       color: COL.wallTint,
@@ -321,439 +393,56 @@ function buildRoom() {
       roughness: 1.0,
       metalness: 0,
     });
+  const wd = TEX.loadPBR("dark_wood");
+  const woodMat = () =>
+    new THREE.MeshStandardMaterial({
+      color: COL.woodTint,
+      map: wd.map,
+      normalMap: wd.normalMap,
+      roughnessMap: wd.roughnessMap,
+      roughness: 0.82,
+      metalness: 0,
+    });
 
   const WALL_H = 3.4;
-  const back = -1.78;
-  const sideX = 2.7;
-  const front = 1.9;
+  const back = -1.55;
+  const sideX = 2.6;
+  const front = 2.0;
+  const depth = front - back;
 
-  // back wall
   const backWall = new THREE.Mesh(new THREE.PlaneGeometry(2 * sideX, WALL_H), wallMat());
   backWall.position.set(0, WALL_H / 2, back);
   backWall.receiveShadow = true;
-  g.add(backWall);
+  scene.add(backWall);
 
-  // side walls
-  const depth = front - back;
   [-sideX, sideX].forEach((x) => {
     const w = new THREE.Mesh(new THREE.PlaneGeometry(depth, WALL_H), wallMat());
     w.position.set(x, WALL_H / 2, (front + back) / 2);
     w.rotation.y = x < 0 ? Math.PI / 2 : -Math.PI / 2;
     w.receiveShadow = true;
-    g.add(w);
+    scene.add(w);
   });
 
-  // wood wainscot (lower paneling) on the three walls
+  // wood wainscot + chair rail on the three walls
   const wainH = 0.95;
-  const railY = wainH + 0.02;
-  const panelMat = woodMaterial(3, 1);
-  const railMat = woodMaterial(3, 0.3, 0x7a5026);
-
-  const addWainscot = (w, x, z, rotY) => {
-    const panel = new THREE.Mesh(new RoundedBoxGeometry(w, wainH, 0.04, 2, 0.01), panelMat);
+  const addWain = (w, x, z, rotY) => {
+    const panel = new THREE.Mesh(new THREE.BoxGeometry(w, wainH, 0.04), woodMat());
     panel.position.set(x, wainH / 2, z);
     panel.rotation.y = rotY;
     panel.receiveShadow = true;
     panel.castShadow = true;
-    g.add(panel);
-    const rail = new THREE.Mesh(new THREE.BoxGeometry(w, 0.05, 0.07), railMat);
-    rail.position.set(x, railY, z);
+    scene.add(panel);
+    const rail = new THREE.Mesh(
+      new THREE.BoxGeometry(w, 0.05, 0.07),
+      new THREE.MeshStandardMaterial({ color: 0x5a3d1f, roughness: 0.6, metalness: 0.05 })
+    );
+    rail.position.set(x, wainH + 0.02, z);
     rail.rotation.y = rotY;
-    rail.castShadow = true;
-    g.add(rail);
+    scene.add(rail);
   };
-  addWainscot(2 * sideX, 0, back + 0.03, 0);
-  addWainscot(depth, -sideX + 0.03, (front + back) / 2, Math.PI / 2);
-  addWainscot(depth, sideX - 0.03, (front + back) / 2, -Math.PI / 2);
-
-  // framed pictures on side walls
-  g.add(makeFrame(-sideX + 0.06, 1.9, -0.5, Math.PI / 2, 0x6e241c));
-  g.add(makeFrame(-sideX + 0.06, 1.9, 0.5, Math.PI / 2, 0x27314e));
-  g.add(makeFrame(sideX - 0.06, 1.95, 0.2, -Math.PI / 2, 0x2e4636));
-
-  return g;
-}
-
-function makeFrame(x, y, z, rotY, art) {
-  const g = new THREE.Group();
-  const frame = new THREE.Mesh(
-    new THREE.BoxGeometry(0.5, 0.66, 0.03),
-    new THREE.MeshStandardMaterial({ color: COL.brassDark, roughness: 0.4, metalness: 0.7 })
-  );
-  const canvasArt = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.42, 0.58),
-    new THREE.MeshStandardMaterial({ color: art, roughness: 0.7, metalness: 0 })
-  );
-  canvasArt.position.z = 0.018;
-  g.add(frame, canvasArt);
-  g.position.set(x, y, z);
-  g.rotation.y = rotY;
-  return g;
-}
-
-function buildBookshelf() {
-  const g = new THREE.Group();
-  const wallZ = -1.62;
-  const shelfMat = woodMaterial(2, 0.4, 0x6b4a26);
-  const unitW = 3.6;
-  const shelfYs = [0.98, 1.45, 1.92, 2.39];
-
-  shelfYs.forEach((y) => {
-    const board = new THREE.Mesh(new THREE.BoxGeometry(unitW, 0.045, 0.3), shelfMat);
-    board.position.set(0, y, wallZ);
-    board.castShadow = true;
-    board.receiveShadow = true;
-    g.add(board);
-  });
-  [-unitW / 2, unitW / 2].forEach((x) => {
-    const side = new THREE.Mesh(new THREE.BoxGeometry(0.05, 1.62, 0.3), shelfMat);
-    side.position.set(x, 1.68, wallZ);
-    side.castShadow = true;
-    g.add(side);
-  });
-  // back panel
-  const backPanel = new THREE.Mesh(
-    new THREE.BoxGeometry(unitW, 1.62, 0.02),
-    woodMaterial(2, 1, 0x3a2614)
-  );
-  backPanel.position.set(0, 1.68, wallZ - 0.14);
-  g.add(backPanel);
-
-  // all shelf books merged into ONE geometry (vertex colors) for performance
-  const bookGeos = [];
-  for (let s = 0; s < shelfYs.length - 1; s++) {
-    const shelfY = shelfYs[s];
-    let x = -unitW / 2 + 0.14;
-    while (x < unitW / 2 - 0.14) {
-      const w = 0.04 + Math.random() * 0.035;
-      const h = 0.3 + Math.random() * 0.12;
-      const depth = 0.2 + Math.random() * 0.04;
-      const col = new THREE.Color(
-        COL.bookSpines[Math.floor(Math.random() * COL.bookSpines.length)]
-      );
-      const geo = new THREE.BoxGeometry(w, h, depth);
-      const lean = Math.random() < 0.1 ? (Math.random() - 0.5) * 0.16 : 0;
-      geo.rotateZ(lean);
-      geo.translate(x + w / 2, shelfY + 0.022 + h / 2, wallZ);
-      const n = geo.attributes.position.count;
-      const colors = new Float32Array(n * 3);
-      for (let i = 0; i < n; i++) {
-        colors[i * 3] = col.r;
-        colors[i * 3 + 1] = col.g;
-        colors[i * 3 + 2] = col.b;
-      }
-      geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-      bookGeos.push(geo);
-      x += w + 0.004;
-    }
-  }
-  const booksMesh = new THREE.Mesh(
-    mergeGeometries(bookGeos, false),
-    new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.78, metalness: 0.02 })
-  );
-  booksMesh.castShadow = true;
-  booksMesh.receiveShadow = true;
-  g.add(booksMesh);
-  return g;
-}
-
-/* ============================================================
-   desk (pedestal desk with real drawers)
-   ============================================================ */
-
-const DESK_TOP = 0.76;
-
-function buildDesk() {
-  const g = new THREE.Group();
-  const topThk = 0.05;
-  const W = 2.1;
-  const D = 1.0;
-
-  // wood top (rounded edges)
-  const top = new THREE.Mesh(new RoundedBoxGeometry(W, topThk, D, 3, 0.012), woodMaterial(1, 1));
-  top.position.set(0, DESK_TOP - topThk / 2, 0);
-  top.castShadow = true;
-  top.receiveShadow = true;
-  g.add(top);
-
-  // green leather inlay
-  const inlay = new THREE.Mesh(
-    new THREE.BoxGeometry(W - 0.22, 0.012, D - 0.18),
-    new THREE.MeshStandardMaterial({ color: COL.leather, roughness: 0.6, metalness: 0.02 })
-  );
-  inlay.position.set(0, DESK_TOP + 0.002, 0);
-  inlay.receiveShadow = true;
-  g.add(inlay);
-
-  // brass trim around the inlay
-  const trim = brassMat();
-  const inW = W - 0.2;
-  const inD = D - 0.16;
-  const t = 0.012;
-  [[0, inD / 2], [0, -inD / 2]].forEach(([x, z]) => {
-    const bar = new THREE.Mesh(new THREE.BoxGeometry(inW, 0.006, t), trim);
-    bar.position.set(x, DESK_TOP + 0.006, z);
-    g.add(bar);
-  });
-  [[inW / 2, 0], [-inW / 2, 0]].forEach(([x, z]) => {
-    const bar = new THREE.Mesh(new THREE.BoxGeometry(t, 0.006, inD), trim);
-    bar.position.set(x, DESK_TOP + 0.006, z);
-    g.add(bar);
-  });
-
-  // two pedestals with drawers
-  const pedW = 0.5;
-  const pedH = DESK_TOP - topThk;
-  const pedD = D - 0.06;
-  [-(W / 2 - pedW / 2 - 0.05), W / 2 - pedW / 2 - 0.05].forEach((px) => {
-    g.add(buildPedestal(px, pedW, pedH, pedD));
-  });
-
-  // back modesty panel
-  const modesty = new THREE.Mesh(
-    new RoundedBoxGeometry(W - 2 * pedW - 0.2, pedH - 0.18, 0.04, 2, 0.008),
-    woodMaterial(2, 1)
-  );
-  modesty.position.set(0, pedH / 2 + 0.04, -(D / 2 - 0.06));
-  modesty.castShadow = true;
-  modesty.receiveShadow = true;
-  g.add(modesty);
-
-  return g;
-}
-
-function buildPedestal(px, pedW, pedH, pedD) {
-  const g = new THREE.Group();
-  const body = new THREE.Mesh(
-    new RoundedBoxGeometry(pedW, pedH, pedD, 3, 0.01),
-    woodMaterial(1, 1.4)
-  );
-  body.position.set(px, pedH / 2, 0);
-  body.castShadow = true;
-  body.receiveShadow = true;
-  g.add(body);
-
-  // 3 inset drawer fronts on the front face (+z)
-  const faceZ = pedD / 2 + 0.006;
-  const n = 3;
-  const margin = 0.04;
-  const gap = 0.018;
-  const dh = (pedH - 2 * margin - (n - 1) * gap) / n;
-  const dw = pedW - 2 * margin;
-  for (let i = 0; i < n; i++) {
-    const cy = margin + dh / 2 + i * (dh + gap);
-    const front = new THREE.Mesh(
-      new RoundedBoxGeometry(dw, dh, 0.025, 2, 0.006),
-      woodMaterial(1, 1, 0x8a6038)
-    );
-    front.position.set(px, cy, faceZ);
-    front.castShadow = true;
-    g.add(front);
-    // brass knob
-    const knob = new THREE.Mesh(new THREE.SphereGeometry(0.016, 18, 18), brassMat());
-    knob.position.set(px, cy, faceZ + 0.022);
-    g.add(knob);
-  }
-  return g;
-}
-
-/* ============================================================
-   props
-   ============================================================ */
-
-function buildBankersLamp() {
-  const g = new THREE.Group();
-  const x = -0.6;
-  const z = -0.16;
-
-  const base = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.085, 0.095, 0.022, 32),
-    brassMat()
-  );
-  base.position.set(x, DESK_TOP + 0.011, z);
-  base.castShadow = true;
-  base.receiveShadow = true;
-  g.add(base);
-
-  // column up to the shade
-  const colH = 0.2;
-  const column = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.013, 0.014, colH, 18),
-    brassMat()
-  );
-  column.position.set(x, DESK_TOP + 0.022 + colH / 2, z);
-  column.castShadow = true;
-  g.add(column);
-
-  const shadeY = DESK_TOP + 0.022 + colH; // top of column
-  const shadeR = 0.085;
-  const shadeLen = 0.28;
-
-  // green outer shell (half tube, opening down)
-  const outer = new THREE.Mesh(
-    new THREE.CylinderGeometry(shadeR, shadeR, shadeLen, 28, 1, true, 0, Math.PI),
-    new THREE.MeshStandardMaterial({
-      color: COL.shadeGreen,
-      roughness: 0.4,
-      metalness: 0.15,
-      side: THREE.FrontSide,
-    })
-  );
-  outer.rotation.z = Math.PI / 2; // tube axis -> X
-  outer.position.set(x, shadeY, z);
-  outer.castShadow = true;
-  g.add(outer);
-
-  // cream inner liner (visible from below), faintly glowing
-  const inner = new THREE.Mesh(
-    new THREE.CylinderGeometry(shadeR - 0.004, shadeR - 0.004, shadeLen - 0.01, 28, 1, true, 0, Math.PI),
-    new THREE.MeshStandardMaterial({
-      color: COL.shadeCream,
-      roughness: 0.6,
-      metalness: 0,
-      emissive: new THREE.Color(0xffd9a0),
-      emissiveIntensity: 0.35,
-      side: THREE.BackSide,
-    })
-  );
-  inner.rotation.z = Math.PI / 2;
-  inner.position.set(x, shadeY, z);
-  g.add(inner);
-
-  // warm bulb under the shade
-  const bulb = new THREE.Mesh(
-    new THREE.SphereGeometry(0.028, 16, 16),
-    new THREE.MeshBasicMaterial({ color: COL.bulb })
-  );
-  bulb.position.set(x, shadeY - 0.02, z);
-  g.add(bulb);
-
-  return g;
-}
-
-function buildPenCup(x, z) {
-  const g = new THREE.Group();
-  const cupH = 0.1;
-  const cupR = 0.04;
-  const mat = new THREE.MeshStandardMaterial({
-    color: COL.brassDark,
-    roughness: 0.4,
-    metalness: 0.85,
-  });
-  // wall
-  const wall = new THREE.Mesh(
-    new THREE.CylinderGeometry(cupR, cupR - 0.004, cupH, 24, 1, true),
-    mat
-  );
-  wall.position.set(x, DESK_TOP + cupH / 2, z);
-  wall.castShadow = true;
-  wall.receiveShadow = true;
-  g.add(wall);
-  // bottom
-  const bottom = new THREE.Mesh(new THREE.CylinderGeometry(cupR - 0.004, cupR - 0.004, 0.01, 24), mat);
-  bottom.position.set(x, DESK_TOP + 0.006, z);
-  g.add(bottom);
-
-  // pens seated inside, tips up
-  const penDefs = [
-    [0.012, 0.008, 0xb98b35, 0.05],
-    [-0.013, -0.006, 0x2e4636, -0.04],
-    [0.004, -0.014, 0x47202a, 0.02],
-  ];
-  penDefs.forEach(([dx, dz, c, tilt]) => {
-    const penH = 0.17;
-    const pen = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.005, 0.004, penH, 10),
-      new THREE.MeshStandardMaterial({ color: c, roughness: 0.5, metalness: 0.3 })
-    );
-    // bottom rests near cup bottom; lean within the cup
-    pen.position.set(x + dx, DESK_TOP + penH / 2 - 0.01, z + dz);
-    pen.rotation.set(tilt, 0, dx * 1.6);
-    pen.castShadow = true;
-    g.add(pen);
-  });
-  return g;
-}
-
-function buildMug(x, z) {
-  const g = new THREE.Group();
-  const mat = new THREE.MeshStandardMaterial({ color: 0x244033, roughness: 0.5, metalness: 0.05 });
-  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.035, 0.085, 24), mat);
-  body.position.set(x, DESK_TOP + 0.043, z);
-  body.castShadow = true;
-  body.receiveShadow = true;
-  g.add(body);
-  const coffee = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.036, 0.036, 0.005, 24),
-    new THREE.MeshStandardMaterial({ color: 0x140b06, roughness: 0.4 })
-  );
-  coffee.position.set(x, DESK_TOP + 0.082, z);
-  g.add(coffee);
-  const handle = new THREE.Mesh(new THREE.TorusGeometry(0.026, 0.007, 12, 24), mat);
-  handle.position.set(x + 0.045, DESK_TOP + 0.045, z);
-  handle.rotation.y = Math.PI / 2;
-  g.add(handle);
-  return g;
-}
-
-function buildPaperStack(x, z) {
-  const g = new THREE.Group();
-  for (let i = 0; i < 4; i++) {
-    const sheet = new THREE.Mesh(
-      new THREE.BoxGeometry(0.21, 0.004, 0.28),
-      new THREE.MeshStandardMaterial({ color: COL.paper, roughness: 0.95 })
-    );
-    sheet.position.set(x + (Math.random() - 0.5) * 0.01, DESK_TOP + 0.004 + i * 0.004, z + (Math.random() - 0.5) * 0.01);
-    sheet.rotation.y = (Math.random() - 0.5) * 0.1;
-    sheet.castShadow = true;
-    sheet.receiveShadow = true;
-    g.add(sheet);
-  }
-  return g;
-}
-
-function buildBookStack(x, z) {
-  const g = new THREE.Group();
-  let y = DESK_TOP;
-  for (let i = 0; i < 4; i++) {
-    const w = 0.26 - i * 0.012;
-    const d = 0.19 - i * 0.01;
-    const h = 0.03 + Math.random() * 0.016;
-    const col = COL.bookSpines[Math.floor(Math.random() * COL.bookSpines.length)];
-    const rot = (Math.random() - 0.5) * 0.16;
-    const book = new THREE.Mesh(
-      new RoundedBoxGeometry(w, h, d, 2, 0.004),
-      new THREE.MeshStandardMaterial({ color: col, roughness: 0.7, metalness: 0.02 })
-    );
-    book.position.set(x + (Math.random() - 0.5) * 0.02, y + h / 2, z);
-    book.rotation.y = rot;
-    book.castShadow = true;
-    book.receiveShadow = true;
-    g.add(book);
-    y += h;
-  }
-  return g;
-}
-
-function buildOpenBook(x, z) {
-  const g = new THREE.Group();
-  const cover = new THREE.Mesh(
-    new THREE.BoxGeometry(0.34, 0.014, 0.24),
-    new THREE.MeshStandardMaterial({ color: 0x47202a, roughness: 0.7, metalness: 0.02 })
-  );
-  cover.position.set(x, DESK_TOP + 0.007, z);
-  cover.castShadow = true;
-  cover.receiveShadow = true;
-  g.add(cover);
-  const pageMat = new THREE.MeshStandardMaterial({ color: COL.paper, roughness: 0.92 });
-  [-0.083, 0.083].forEach((dx) => {
-    const page = new THREE.Mesh(new THREE.BoxGeometry(0.158, 0.006, 0.22), pageMat);
-    page.position.set(x + dx, DESK_TOP + 0.016, z);
-    page.rotation.z = dx < 0 ? 0.02 : -0.02;
-    page.receiveShadow = true;
-    g.add(page);
-  });
-  return g;
+  addWain(2 * sideX, 0, back + 0.03, 0);
+  addWain(depth, -sideX + 0.03, (front + back) / 2, Math.PI / 2);
+  addWain(depth, sideX - 0.03, (front + back) / 2, -Math.PI / 2);
 }
 
 function makeRadialShadowTexture() {
@@ -773,7 +462,7 @@ function makeRadialShadowTexture() {
 }
 
 /* ============================================================
-   bootstrap — after all definitions
+   bootstrap
    ============================================================ */
 if (!canvas || !webglSupported()) {
   document.documentElement.classList.add("exp-no-webgl");

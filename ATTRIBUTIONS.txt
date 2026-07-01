@@ -1,0 +1,16 @@
+3D model attributions — experience.html (interactive 3D desk)
+
+CC-BY (attribution required):
+- "Desk lamp" (green banker lamp) by Poly by Google — CC-BY 3.0, via Poly Pizza (poly.pizza)
+
+CC0 (public domain, no attribution required, credited as courtesy):
+- metal_office_desk, wooden_bookshelf_worn, book_encyclopedia_set_01, desk_lamp_arm_01 — Poly Haven (polyhaven.com)
+- Armchair, Globe, Books — CreativeTrio, via Poly Pizza (CC0)
+- Houseplant — Quaternius, via Poly Pizza (CC0)
+- Rug Rectangle — Kenney (kenney.nl), via Poly Pizza (CC0)
+
+HDRI:
+- wooden_lounge — Poly Haven (CC0)
+
+Textures:
+- dark_wood, laminate_floor_02, painted_plaster_wall — Poly Haven (CC0)
