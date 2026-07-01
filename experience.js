@@ -111,11 +111,13 @@ function initScene(canvas) {
   controls.dampingFactor = 0.08;
   controls.enablePan = false;
   controls.minDistance = 1.5;
-  controls.maxDistance = 4.6;
-  controls.minPolarAngle = 0.42;
-  controls.maxPolarAngle = Math.PI / 2 - 0.04;
-  controls.minAzimuthAngle = -Math.PI * 0.45;
-  controls.maxAzimuthAngle = Math.PI * 0.78;
+  controls.maxDistance = 3.7;
+  controls.minPolarAngle = 0.5;
+  controls.maxPolarAngle = Math.PI / 2 - 0.05;
+  // front-only arc (<180°): camera stays on the +Z side so the room's open
+  // back (behind the viewer) is never visible.
+  controls.minAzimuthAngle = -Math.PI * 0.36;
+  controls.maxAzimuthAngle = Math.PI * 0.36;
   controls.target.copy(REST_TARGET);
   controls.update();
 
@@ -183,87 +185,57 @@ function initScene(canvas) {
 
   // ---- real models ----
   const loader = new GLTFLoader(manager);
-  const DESK_TOP = 0.79; // measured top surface of metal_office_desk
+  const artLoader = new THREE.TextureLoader(manager);
 
-  // desk (Poly Haven metal office desk, metric)
-  loadModel(loader, scene, "models/metal_office_desk/metal_office_desk.gltf", {
-    name: "desk",
-    pos: [0, 0, -0.05],
-    rotY: 0,
-  });
+  // WOOD desk (Quaternius); desktop props chain onto its measured top surface
+  loadModel(
+    loader, scene, "models/pp/desk_wood.glb",
+    { name: "desk", targetSize: 0.78, axis: "y", pos: [0, 0, 0.05], rotY: 0, tint: 0x6e4a2a },
+    (root, box) => {
+      const top = box.max.y;
+      lampLight.position.set(-0.58, top + 0.22, -0.14);
+      loadModel(loader, scene, "models/pp/banker_lamp_green.glb",
+        { name: "lamp", targetSize: 0.4, axis: "y", pos: [-0.58, top, -0.14], rotY: 0.3 });
+      loadModel(loader, scene, "models/book_encyclopedia_set_01/book_encyclopedia_set_01.gltf",
+        { name: "books", targetSize: 0.26, axis: "x", pos: [0.55, top, -0.1], rotY: -0.2 });
+      loadModel(loader, scene, "models/pp/books_small.glb",
+        { name: "booksSmall", targetSize: 0.2, axis: "x", pos: [0.32, top, 0.12], rotY: 0.5 });
+      loadModel(loader, scene, "models/pp/globe.glb",
+        { name: "globe", targetSize: 0.18, axis: "y", pos: [0.7, top, 0.08], rotY: 0 });
+    }
+  );
 
-  // bookcase pre-filled with books (Poly Pizza / Quaternius) against back wall
-  loadModel(loader, scene, "models/pp/bookcase.glb", {
-    name: "bookshelf",
-    targetSize: 2.0,
-    axis: "y",
-    pos: [0, 0, -1.2],
-    rotY: 0,
-  });
+  // DISPLAY CABINET (empty photoreal shelf) — front-center; holds the project
+  // exhibits (added in the next phase).
+  loadModel(loader, scene, "models/wooden_bookshelf_worn/wooden_bookshelf_worn.gltf",
+    { name: "cabinet", pos: [0, 0, -1.12], rotY: 0 });
 
-  // green banker lamp (Poly Pizza, scale to height)
-  loadModel(loader, scene, "models/pp/banker_lamp_green.glb", {
-    name: "lamp",
-    targetSize: 0.42,
-    axis: "y",
-    pos: [-0.62, DESK_TOP, -0.22],
-    rotY: 0.3,
-  });
+  // side bookcases (decor) against the two side walls, facing inward
+  loadModel(loader, scene, "models/pp/bookcase.glb",
+    { name: "shelfL", targetSize: 2.0, axis: "y", pos: [-2.32, 0, -0.55], rotY: -Math.PI / 2 });
+  loadModel(loader, scene, "models/pp/bookcase.glb",
+    { name: "shelfR", targetSize: 2.0, axis: "y", pos: [2.32, 0, -0.55], rotY: Math.PI / 2 });
 
-  // encyclopedia books on the desk (Poly Haven, metric)
-  loadModel(loader, scene, "models/book_encyclopedia_set_01/book_encyclopedia_set_01.gltf", {
-    name: "books",
-    targetSize: 0.28,
-    axis: "x",
-    pos: [0.6, DESK_TOP, -0.18],
-    rotY: -0.2,
-  });
+  // rug under the desk
+  loadModel(loader, scene, "models/pp/rug.glb",
+    { name: "rug", targetSize: 2.6, axis: "x", pos: [0, 0.01, 0.2], rotY: 0, tint: COL.rug });
 
-  // small books (Poly Pizza) — a second pile
-  loadModel(loader, scene, "models/pp/books_small.glb", {
-    name: "booksSmall",
-    targetSize: 0.24,
-    axis: "x",
-    pos: [0.42, DESK_TOP, 0.12],
-    rotY: 0.5,
-  });
+  // reading chair, angled at the desk
+  loadModel(loader, scene, "models/pp/armchair.glb",
+    { name: "chair", targetSize: 0.95, axis: "y", pos: [-0.15, 0, 0.95], rotY: Math.PI });
 
-  // globe (Poly Pizza) — desk corner
-  loadModel(loader, scene, "models/pp/globe.glb", {
-    name: "globe",
-    targetSize: 0.22,
-    axis: "y",
-    pos: [0.82, DESK_TOP, 0.12],
-    rotY: 0,
-  });
+  // photoreal potted plant, floor corner
+  loadModel(loader, scene, "models/potted_plant_04/potted_plant_04.gltf",
+    { name: "plant", targetSize: 0.95, axis: "y", pos: [1.85, 0, 0.2], rotY: 0 });
 
-  // rug (Poly Pizza) under the desk
-  loadModel(loader, scene, "models/pp/rug.glb", {
-    name: "rug",
-    targetSize: 2.6,
-    axis: "x",
-    pos: [0, 0.01, 0.1],
-    rotY: 0,
-    tint: COL.rug,
-  });
-
-  // armchair (Poly Pizza) angled at the desk
-  loadModel(loader, scene, "models/pp/armchair.glb", {
-    name: "chair",
-    targetSize: 0.95,
-    axis: "y",
-    pos: [0.15, 0, 0.95],
-    rotY: Math.PI,
-  });
-
-  // houseplant (Poly Pizza) — floor corner
-  loadModel(loader, scene, "models/pp/houseplant.glb", {
-    name: "plant",
-    targetSize: 0.85,
-    axis: "y",
-    pos: [1.7, 0, -0.6],
-    rotY: 0,
-  });
+  // framed project renders as wall art on the two side walls
+  const ART = [
+    { img: "assets/cover-steering-system.webp", x: -2.56, y: 1.75, z: -0.3, rotY: Math.PI / 2 },
+    { img: "assets/javelin-3q.webp",            x: -2.56, y: 1.75, z: 0.7,  rotY: Math.PI / 2 },
+    { img: "assets/cover-carbon-fiber-seat.webp", x: 2.56, y: 1.75, z: -0.3, rotY: -Math.PI / 2 },
+    { img: "assets/gearbox-render.webp",        x: 2.56, y: 1.75, z: 0.7,  rotY: -Math.PI / 2 },
+  ];
+  ART.forEach((a) => scene.add(makeFramedArt(artLoader, a)));
 
   function onResize() {
     const w = window.innerWidth;
@@ -321,7 +293,7 @@ function initScene(canvas) {
 /* ============================================================
    model loading + normalization
    ============================================================ */
-function loadModel(loader, scene, url, opts) {
+function loadModel(loader, scene, url, opts, onPlaced) {
   loader.load(
     url,
     (gltf) => {
@@ -354,9 +326,11 @@ function loadModel(loader, scene, url, opts) {
       root.position.x += pos[0] - c.x;
       root.position.z += pos[2] - c.z;
       root.position.y += pos[1] - box.min.y;
+      root.updateWorldMatrix(true, true);
 
       scene.add(root);
       MODELS[opts.name] = root;
+      if (onPlaced) onPlaced(root, new THREE.Box3().setFromObject(root));
     },
     undefined,
     (err) => console.warn(`[experience] failed to load ${url}`, err)
@@ -443,6 +417,33 @@ function buildRoom(scene) {
   addWain(2 * sideX, 0, back + 0.03, 0);
   addWain(depth, -sideX + 0.03, (front + back) / 2, Math.PI / 2);
   addWain(depth, sideX - 0.03, (front + back) / 2, -Math.PI / 2);
+}
+
+function makeFramedArt(texLoader, a) {
+  const g = new THREE.Group();
+  const w = 0.58, h = 0.44, d = 0.03;
+  const frame = new THREE.Mesh(
+    new THREE.BoxGeometry(w, h, d),
+    new THREE.MeshStandardMaterial({ color: 0x2a1c0e, roughness: 0.5, metalness: 0.25 })
+  );
+  const tex = texLoader.load(a.img);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const art = new THREE.Mesh(
+    new THREE.PlaneGeometry(w - 0.07, h - 0.07),
+    new THREE.MeshStandardMaterial({
+      map: tex,
+      emissiveMap: tex,
+      emissive: 0xffffff,
+      emissiveIntensity: 0.3,
+      roughness: 0.85,
+      metalness: 0,
+    })
+  );
+  art.position.z = d / 2 + 0.003;
+  g.add(frame, art);
+  g.position.set(a.x, a.y, a.z);
+  g.rotation.y = a.rotY;
+  return g;
 }
 
 function makeRadialShadowTexture() {
