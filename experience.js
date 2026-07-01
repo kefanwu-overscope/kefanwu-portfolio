@@ -221,9 +221,7 @@ function initScene(canvas) {
     { file: "steering", key: "steering",   label: "Mk.8 Steering",   size: 0.22, axis: "x", pos: [-0.34, 1.28, -0.98], rotX: -Math.PI / 2, rotY: -0.35 },
     { file: "drone",    key: "javelin",    label: "Javelin VTOL",    size: 0.30, axis: "x", pos: [ 0.34, 1.28, -0.98], rotY: 0.4 },
     { file: "robot",    key: "aura",       label: "AURA Swerve",     size: 0.22, axis: "y", pos: [-0.34, 0.96, -0.98], rotY: 0.3 },
-    { file: "cfd",      key: "ansysCfd",   label: "Agent-based CFD", size: 0.32, axis: "x", pos: [ 0.34, 0.96, -0.98], rotY: -0.5 },
     { file: "scanner",  key: "scanner",    label: "3D scanner",      size: 0.26, axis: "y", pos: [ 0.34, 0.66, -0.98], rotY: -0.3 },
-    { file: "brake",    key: "brakeSim",   label: "FSAE Brake Sim",  size: 0.20, axis: "x", pos: [ 0.0,  0.40, -0.98], rotX: -Math.PI / 2, rotY: 0.2 },
   ];
   EXHIBITS.forEach((x) =>
     loadModel(loader, scene, `models/proj/${x.file}.glb`, {
@@ -238,6 +236,18 @@ function initScene(canvas) {
     name: "ex_carbonSeat", projectKey: "carbonSeat", label: "Carbon fiber seat",
     targetSize: 0.24, axis: "y", pos: [-0.34, 0.66, -0.98], rotX: -Math.PI / 2, rotY: 0.3,
     material: { color: 0x17181c, metalness: 0.25, roughness: 0.42 },
+  });
+
+  // brake sim: procedural vented rotor with a baked thermal gradient (per Kefan)
+  placeRoot(buildBrakeRotor(), scene, {
+    name: "ex_brakeSim", projectKey: "brakeSim", label: "FSAE Brake Sim",
+    targetSize: 0.22, axis: "x", pos: [0.0, 0.40, -0.98], rotX: -Math.PI / 2, rotY: 0.15,
+  });
+
+  // gearbox: procedural meshing-gear cluster (replaces CFD as the high-value pick)
+  placeRoot(buildGearbox(), scene, {
+    name: "ex_gearbox", projectKey: "gearbox", label: "2-speed gearbox",
+    targetSize: 0.28, axis: "x", pos: [0.34, 0.96, -0.98], rotX: -Math.PI / 2, rotY: -0.3,
   });
 
   // side bookcases (decor) against the two side walls, facing inward
@@ -621,6 +631,105 @@ function makeFramedArt(texLoader, a) {
   g.add(frame, art);
   g.position.set(a.x, a.y, a.z);
   g.rotation.y = a.rotY;
+  return g;
+}
+
+function makeThermalTexture() {
+  // radial gradient: cool hub -> glowing orange/yellow friction band -> red edge,
+  // with dark radial vent slots, evoking a brake thermal (CFD/FEA) result.
+  const s = 512;
+  const c = document.createElement("canvas");
+  c.width = c.height = s;
+  const ctx = c.getContext("2d");
+  const g = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
+  g.addColorStop(0.0, "#3a3a40");
+  g.addColorStop(0.34, "#2c2c30");
+  g.addColorStop(0.5, "#7a1500");
+  g.addColorStop(0.66, "#ff5a00");
+  g.addColorStop(0.82, "#ffc23a");
+  g.addColorStop(0.93, "#ff6a12");
+  g.addColorStop(1.0, "#7a1500");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, s, s);
+  // vent slots
+  ctx.strokeStyle = "rgba(10,6,4,0.9)";
+  ctx.lineWidth = 10;
+  for (let i = 0; i < 20; i++) {
+    const a = (i / 20) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(s / 2 + Math.cos(a) * s * 0.3, s / 2 + Math.sin(a) * s * 0.3);
+    ctx.lineTo(s / 2 + Math.cos(a) * s * 0.46, s / 2 + Math.sin(a) * s * 0.46);
+    ctx.stroke();
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+function buildBrakeRotor() {
+  const g = new THREE.Group();
+  const tex = makeThermalTexture();
+  const rotorMat = new THREE.MeshStandardMaterial({
+    map: tex,
+    emissiveMap: tex,
+    emissive: 0xffffff,
+    emissiveIntensity: 0.85,
+    metalness: 0.55,
+    roughness: 0.5,
+  });
+  const rotor = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.016, 60), rotorMat);
+  g.add(rotor);
+  const hubMat = new THREE.MeshStandardMaterial({ color: 0x2a2c30, metalness: 0.9, roughness: 0.35 });
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.03, 28), hubMat);
+  g.add(hub);
+  // 5 lug bolts
+  for (let i = 0; i < 5; i++) {
+    const a = (i / 5) * Math.PI * 2;
+    const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.034, 8), hubMat);
+    bolt.position.set(Math.cos(a) * 0.022, 0, Math.sin(a) * 0.022);
+    g.add(bolt);
+  }
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildGearbox() {
+  const g = new THREE.Group();
+  const steel = new THREE.MeshStandardMaterial({ color: 0x9a9da3, metalness: 0.95, roughness: 0.32 });
+  const dark = new THREE.MeshStandardMaterial({ color: 0x3a3d42, metalness: 0.9, roughness: 0.4 });
+
+  function gear(rBody, nTeeth, thick, mat) {
+    const gg = new THREE.Group();
+    gg.add(new THREE.Mesh(new THREE.CylinderGeometry(rBody, rBody, thick, Math.max(28, nTeeth * 2)), mat));
+    const toothLen = rBody * 0.22;
+    const toothGeo = new THREE.BoxGeometry(toothLen, thick, (2 * Math.PI * rBody) / nTeeth * 0.55);
+    for (let i = 0; i < nTeeth; i++) {
+      const a = (i / nTeeth) * Math.PI * 2;
+      const t = new THREE.Mesh(toothGeo, mat);
+      t.position.set(Math.cos(a) * (rBody + toothLen / 2 - 0.001), 0, Math.sin(a) * (rBody + toothLen / 2 - 0.001));
+      t.rotation.y = -a;
+      gg.add(t);
+    }
+    // hub bore ring
+    gg.add(new THREE.Mesh(new THREE.CylinderGeometry(rBody * 0.28, rBody * 0.28, thick + 0.004, 20), dark));
+    return gg;
+  }
+
+  const big = gear(0.09, 20, 0.026, steel);
+  big.position.set(-0.03, 0, 0);
+  g.add(big);
+  const small = gear(0.055, 12, 0.026, steel);
+  small.position.set(0.03 + 0.09 + 0.055 - 0.012, 0, 0.02);
+  g.add(small);
+
+  // shafts
+  [[-0.03, 0], [small.position.x, 0.02]].forEach(([x, z]) => {
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.14, 16), dark);
+    shaft.position.set(x, 0, z);
+    g.add(shaft);
+  });
+
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
 }
 
