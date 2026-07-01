@@ -24,7 +24,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
     />
-    <link rel="stylesheet" href="experience.css?v=exp-library-20260630" />
+    <link rel="stylesheet" href="experience.css?v=exp-interactive-20260630" />
 
     <!-- Three.js import map (pinned, single CDN). -->
     <script type="importmap">
@@ -44,11 +44,19 @@
         <span class="brand-mark" aria-hidden="true">KW</span>
         <span class="brand-name">Kefan Wu</span>
       </a>
-      <a class="exp-classic-link" href="index.html">
-        <span>View classic site</span>
-        <span class="arrow" aria-hidden="true">&rarr;</span>
-      </a>
+      <div class="exp-topbar__right">
+        <a class="exp-hud-link" href="index.html#work">All projects</a>
+        <a class="exp-classic-link" href="index.html">
+          <span>View classic site</span>
+          <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
     </div>
+
+    <!-- hover label + case-study / resume panel -->
+    <div class="exp-label" id="exp-label" hidden></div>
+    <div class="exp-backdrop" id="exp-backdrop"></div>
+    <aside class="exp-panel" id="exp-panel" aria-label="Details" aria-live="polite"></aside>
 
     <!-- The 3D scene -->
     <div class="exp-stage" aria-hidden="true">
@@ -76,6 +84,6 @@
     </noscript>
 
     <script src="project-data.js?v=proj-shared-20260630"></script>
-    <script type="module" src="experience.js?v=exp-layout-20260630"></script>
+    <script type="module" src="experience.js?v=exp-interactive-20260630"></script>
   </body>
 </html>

@@ -1,7 +1,12 @@
 3D model attributions — experience.html (interactive 3D desk)
 
-CC-BY (attribution required):
-- "Desk lamp" (green banker lamp) by Poly by Google — CC-BY 3.0, via Poly Pizza (poly.pizza)
+CC-BY (attribution required), via Poly Pizza (poly.pizza):
+- "Desk lamp" (green banker lamp) by Poly by Google — CC-BY 3.0
+- "Steering wheel" by Poly by Google — CC-BY 3.0  (project: Mk.8 steering)
+- "Drone" by NateGazzard — CC-BY 3.0  (project: Javelin VTOL)
+- "Cockpit" (racing seat) by Anonymous — CC-BY 3.0  (project: carbon fiber seat)
+- "Hubcap" by Poly by Google — CC-BY 3.0  (project: FSAE brake sim)
+- "Movie camera on tripod" by Franziska Haaf — CC-BY 3.0  (project: 3D scanner)
 
 CC0 (public domain, no attribution required, credited as courtesy):
 - metal_office_desk, wooden_bookshelf_worn, book_encyclopedia_set_01, desk_lamp_arm_01 — Poly Haven (polyhaven.com)

@@ -14,7 +14,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { HERO_PROJECTS, ACCENT } from "./experience-data.js";
+import { HERO_PROJECTS, ACCENT, RESUME } from "./experience-data.js";
 
 document.documentElement.classList.add("exp-js");
 
@@ -78,6 +78,7 @@ function setupTextures(manager) {
 }
 
 const MODELS = {}; // named refs for live tuning
+const HOTSPOTS = []; // clickable root objects (projects + folder)
 
 function initScene(canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -202,13 +203,33 @@ function initScene(canvas) {
         { name: "booksSmall", targetSize: 0.2, axis: "x", pos: [0.32, top, 0.12], rotY: 0.5 });
       loadModel(loader, scene, "models/pp/globe.glb",
         { name: "globe", targetSize: 0.18, axis: "y", pos: [0.7, top, 0.08], rotY: 0 });
+      // resume folder (clickable) on the desk, in the lamp's pool of light
+      loadModel(loader, scene, "models/proj/folder.glb",
+        { name: "folder", action: "resume", label: "Résumé", targetSize: 0.22, axis: "x", pos: [-0.15, top, 0.16], rotY: 0.25 });
     }
   );
 
-  // DISPLAY CABINET (empty photoreal shelf) — front-center; holds the project
-  // exhibits (added in the next phase).
+  // DISPLAY CABINET (photoreal shelf) — front-center; holds the project exhibits.
   loadModel(loader, scene, "models/wooden_bookshelf_worn/wooden_bookshelf_worn.gltf",
     { name: "cabinet", pos: [0, 0, -1.12], rotY: 0 });
+
+  // ---- project exhibits on the cabinet shelves (clickable) ----
+  // shelf surfaces at y ~ 0.40 / 0.66 / 0.96 / 1.28; interior x in [-0.6,0.6], front z ~ -0.98
+  const EXHIBITS = [
+    { file: "steering", key: "steering",   label: "Mk.8 Steering",   size: 0.22, axis: "x", pos: [-0.34, 1.28, -0.98], rotX: -Math.PI / 2, rotY: -0.35 },
+    { file: "drone",    key: "javelin",    label: "Javelin VTOL",    size: 0.30, axis: "x", pos: [ 0.34, 1.28, -0.98], rotY: 0.4 },
+    { file: "robot",    key: "aura",       label: "AURA Swerve",     size: 0.22, axis: "y", pos: [-0.34, 0.96, -0.98], rotY: 0.3 },
+    { file: "cfd",      key: "ansysCfd",   label: "Agent-based CFD", size: 0.32, axis: "x", pos: [ 0.34, 0.96, -0.98], rotY: -0.5 },
+    { file: "seat",     key: "carbonSeat", label: "Carbon seat",     size: 0.22, axis: "y", pos: [-0.34, 0.66, -0.98], rotY: 0.25 },
+    { file: "scanner",  key: "scanner",    label: "3D scanner",      size: 0.26, axis: "y", pos: [ 0.34, 0.66, -0.98], rotY: -0.3 },
+    { file: "brake",    key: "brakeSim",   label: "FSAE Brake Sim",  size: 0.20, axis: "x", pos: [ 0.0,  0.40, -0.98], rotX: -Math.PI / 2, rotY: 0.2 },
+  ];
+  EXHIBITS.forEach((x) =>
+    loadModel(loader, scene, `models/proj/${x.file}.glb`, {
+      name: "ex_" + x.key, projectKey: x.key, label: x.label,
+      targetSize: x.size, axis: x.axis, pos: x.pos, rotY: x.rotY,
+    })
+  );
 
   // side bookcases (decor) against the two side walls, facing inward
   loadModel(loader, scene, "models/pp/bookcase.glb",
@@ -286,8 +307,85 @@ function initScene(canvas) {
     renderer.render(scene, camera);
   });
 
-  window.__exp = { THREE, scene, camera, renderer, controls, lampLight, key, hemi, models: MODELS };
-  console.info(`[experience] study scene loading — ${HERO_PROJECTS.length} hero objects pending`);
+  // ---- interaction: hover + click hotspots, HTML panels ----
+  const raycaster = new THREE.Raycaster();
+  const pointer = new THREE.Vector2();
+  let hovered = null;
+  let panelOpen = false;
+  let downXY = null;
+  const panelEl = document.getElementById("exp-panel");
+  const backdropEl = document.getElementById("exp-backdrop");
+  const labelEl = document.getElementById("exp-label");
+
+  function setHover(root) {
+    if (hovered === root) return;
+    if (hovered) hovered.scale.setScalar(hovered.userData.hotspot.baseScale);
+    hovered = root;
+    if (hovered) {
+      hovered.scale.setScalar(hovered.userData.hotspot.baseScale * 1.12);
+      renderer.domElement.style.cursor = "pointer";
+      if (labelEl) { labelEl.textContent = hovered.userData.hotspot.label; labelEl.hidden = false; }
+    } else {
+      renderer.domElement.style.cursor = "";
+      if (labelEl) labelEl.hidden = true;
+    }
+  }
+  function updatePointer(ev) {
+    const r = renderer.domElement.getBoundingClientRect();
+    pointer.x = ((ev.clientX - r.left) / r.width) * 2 - 1;
+    pointer.y = -((ev.clientY - r.top) / r.height) * 2 + 1;
+    if (labelEl && !labelEl.hidden) {
+      labelEl.style.left = ev.clientX + "px";
+      labelEl.style.top = ev.clientY - 14 + "px";
+    }
+  }
+  function pickHotspot() {
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObjects(HOTSPOTS, true);
+    if (!hits.length) return null;
+    let o = hits[0].object;
+    while (o && !o.userData.hotspot) o = o.parent;
+    return o || null;
+  }
+  renderer.domElement.addEventListener("pointermove", (ev) => {
+    updatePointer(ev);
+    if (panelOpen || introStart !== null || introPending) return;
+    setHover(pickHotspot());
+  });
+  renderer.domElement.addEventListener("pointerdown", (ev) => { downXY = [ev.clientX, ev.clientY]; });
+  renderer.domElement.addEventListener("pointerup", (ev) => {
+    if (!downXY) return;
+    const moved = Math.hypot(ev.clientX - downXY[0], ev.clientY - downXY[1]);
+    downXY = null;
+    if (moved > 6 || panelOpen) return; // treat as orbit drag
+    updatePointer(ev);
+    const root = pickHotspot();
+    if (root) {
+      setHover(null);
+      const hs = root.userData.hotspot;
+      if (hs.action === "resume") openPanel(resumeHTML(RESUME));
+      else if (hs.key && window.projectData && window.projectData[hs.key]) openPanel(projectHTML(window.projectData[hs.key]));
+    }
+  });
+
+  function openPanel(html) {
+    if (!panelEl) return;
+    panelOpen = true;
+    panelEl.innerHTML = html;
+    panelEl.scrollTop = 0;
+    panelEl.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", closePanel));
+    document.documentElement.classList.add("exp-panel-open");
+    setHover(null);
+  }
+  function closePanel() {
+    panelOpen = false;
+    document.documentElement.classList.remove("exp-panel-open");
+  }
+  if (backdropEl) backdropEl.addEventListener("click", closePanel);
+  window.addEventListener("keydown", (e) => { if (e.key === "Escape" && panelOpen) closePanel(); });
+
+  window.__exp = { THREE, scene, camera, renderer, controls, lampLight, key, hemi, models: MODELS, hotspots: HOTSPOTS, openPanel };
+  console.info(`[experience] study scene live — ${HOTSPOTS.length} clickable hotspots`);
 }
 
 /* ============================================================
@@ -308,6 +406,7 @@ function loadModel(loader, scene, url, opts, onPlaced) {
           }
         }
       });
+      if (opts.rotX) root.rotation.x = opts.rotX;
       if (opts.rotY) root.rotation.y = opts.rotY;
       root.updateWorldMatrix(true, true);
 
@@ -330,6 +429,19 @@ function loadModel(loader, scene, url, opts, onPlaced) {
 
       scene.add(root);
       MODELS[opts.name] = root;
+
+      // register clickable hotspot (project exhibit or resume folder)
+      if (opts.projectKey || opts.action) {
+        root.userData.hotspot = {
+          key: opts.projectKey || null,
+          action: opts.action || null,
+          label: opts.label || "",
+          baseScale: root.scale.x,
+          baseY: root.position.y,
+        };
+        root.traverse((o) => { if (o.isMesh) o.userData.hotspotRoot = root; });
+        HOTSPOTS.push(root);
+      }
       if (onPlaced) onPlaced(root, new THREE.Box3().setFromObject(root));
     },
     undefined,
@@ -417,6 +529,44 @@ function buildRoom(scene) {
   addWain(2 * sideX, 0, back + 0.03, 0);
   addWain(depth, -sideX + 0.03, (front + back) / 2, Math.PI / 2);
   addWain(depth, sideX - 0.03, (front + back) / 2, -Math.PI / 2);
+}
+
+function projectHTML(p) {
+  const hi = (p.highlights || []).slice(0, 5).map((h) => `<li>${h}</li>`).join("");
+  const tools = (p.tools || []).map((t) => `<span class="exp-chip">${t}</span>`).join("");
+  const img = (p.gallery && p.gallery[0] && p.gallery[0].src) || p.image || "";
+  return `
+    <button class="exp-panel__close" data-close aria-label="Close">&times;</button>
+    ${img ? `<div class="exp-panel__media"><img src="${img}" alt="" loading="lazy"></div>` : ""}
+    <p class="exp-panel__kicker">${p.kicker || ""}</p>
+    <h2 class="exp-panel__title">${p.title || ""}</h2>
+    <p class="exp-panel__summary">${p.summary || ""}</p>
+    ${hi ? `<h3 class="exp-panel__h3">Engineering signal</h3><ul class="exp-panel__list">${hi}</ul>` : ""}
+    ${tools ? `<h3 class="exp-panel__h3">Tools &amp; methods</h3><div class="exp-panel__chips">${tools}</div>` : ""}
+    <a class="exp-panel__more" href="index.html#work">Full case study on the classic site &rarr;</a>
+  `;
+}
+
+function resumeHTML(r) {
+  const hi = (r.highlights || []).map((h) => `<li>${h}</li>`).join("");
+  const skills = (r.skills || [])
+    .map((s) => `<div class="exp-skill"><span class="exp-skill__g">${s.group}</span><span class="exp-skill__i">${s.items.join(" · ")}</span></div>`)
+    .join("");
+  const contact = (r.contact || [])
+    .map((c) => `<a href="${c.href}"${c.href.startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>${c.label}</a>`)
+    .join("");
+  return `
+    <button class="exp-panel__close" data-close aria-label="Close">&times;</button>
+    <p class="exp-panel__kicker">Résumé</p>
+    <h2 class="exp-panel__title">${r.name}</h2>
+    <p class="exp-panel__role">${r.role}<br /><span>${r.meta}</span></p>
+    <p class="exp-panel__summary">${r.summary}</p>
+    <ul class="exp-panel__list">${hi}</ul>
+    <h3 class="exp-panel__h3">Skills</h3>
+    <div class="exp-skills">${skills}</div>
+    <h3 class="exp-panel__h3">Contact</h3>
+    <div class="exp-panel__contact">${contact}</div>
+  `;
 }
 
 function makeFramedArt(texLoader, a) {
