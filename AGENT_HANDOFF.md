@@ -288,8 +288,15 @@ Asset/version refs (verbatim): CSS `styles.css?v=skill-matrix-20260619`; JS `scr
 - Windows gotchas: Python cannot write to `/tmp` — write temp files under `C:/Users/oc/AppData/Local/Temp/...`. In `python -c` strings use forward slashes / `os.path.join`, not escaped backslashes. Pasted screenshots land in `C:\Users\oc\AppData\Local\Packages\MicrosoftWindows.Client.Core_cw5n1h2txyewy\TempState\ScreenClip\`.
 
 ### Current cache versions (bump the matching one whenever you edit that file)
-- `styles.css?v=skill-matrix-20260619`
-- `script.js?v=javelin-mat-20260620`
+- `styles.css?v=polish-20260701`
+- `script.js?v=polish-20260701`
+- `project-data.js?v=proj-shared-20260630` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html)
+
+### 2026-07-01 polish pass (approved by Kefan, groups A-D)
+- Reveal/stagger system is now ACTIVE (was dead CSS): `[data-reveal]` and project cards start hidden and rise in with `--i` stagger; `.is-settled` restores fast hover transitions. Hero `.stage` elements animate via `stage-rise` keyed off `--stage`.
+- Stat counters count up on first view (JS in script.js). Filters: per-card `view-transition-name` (FLIP in Chrome) + `.is-filtering` fade fallback. Modal content staggers in (`modal-item-in`). `[data-parallax]` img (Motorsport) now has a real parallax in `updateScrollEffects`.
+- Projects section header is now kicker "Selected work" + `<h2 id="systems-title">Projects</h2>` (was a giant `<p>` kicker). `.skills-matrix` got its own vertical padding. Uppercase micro-labels gained letter-spacing (0.04-0.14em). Nav has scrollspy `.is-current`. `--text-h3` token normalized to 1.18rem.
+- `.set-piece` CSS/JS fully REMOVED (was dead since the OEM set-piece was cut). Project-card backdrop blur reduced 26->14px for scroll perf.
 
 ## Editing Guidance
 

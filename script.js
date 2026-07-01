@@ -290,8 +290,8 @@ initHeroSkillCards();
 
 const progress = document.querySelector(".progress");
 const header = document.querySelector(".site-header");
-const setPiece = document.querySelector(".set-piece");
 const scrollCue = document.querySelector(".scroll-cue");
+const parallaxImgs = [...document.querySelectorAll("[data-parallax]")];
 let scrollTicking = false;
 
 function updateScrollEffects() {
@@ -300,13 +300,14 @@ function updateScrollEffects() {
   progress.style.width = `${ratio * 100}%`;
   header.classList.toggle("is-scrolled", window.scrollY > 24);
 
-  if (setPiece && !reducedMotion.matches) {
-    const rect = setPiece.getBoundingClientRect();
-    const total = rect.height - window.innerHeight;
-    if (rect.top < window.innerHeight && rect.bottom > 0 && total > 0) {
-      const p = Math.min(Math.max(-rect.top / total, 0), 1);
-      setPiece.style.setProperty("--p", p.toFixed(4));
-    }
+  // gentle parallax on flagged media (slight overscale hides the travel)
+  if (!reducedMotion.matches) {
+    parallaxImgs.forEach((img) => {
+      const rect = img.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+      const offset = (rect.top + rect.height / 2 - window.innerHeight / 2) / window.innerHeight;
+      img.style.transform = `translateY(${(-offset * 14).toFixed(2)}px) scale(1.06)`;
+    });
   }
 }
 
@@ -349,6 +350,31 @@ nav?.addEventListener("click", (event) => {
   }
 });
 
+/* ============ scrollspy (current section in nav) ============ */
+
+const spyLinks = new Map(
+  [...document.querySelectorAll('#site-nav a[href^="#"]')].map((a) => [
+    a.getAttribute("href").slice(1),
+    a,
+  ])
+);
+
+const spyObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      spyLinks.forEach((link) => link.classList.remove("is-current"));
+      spyLinks.get(entry.target.id)?.classList.add("is-current");
+    });
+  },
+  { rootMargin: "-35% 0px -60% 0px" }
+);
+
+spyLinks.forEach((link, id) => {
+  const section = document.getElementById(id);
+  if (section) spyObserver.observe(section);
+});
+
 /* ============ reveal system with stagger ============ */
 
 document.querySelectorAll("[data-reveal-group]").forEach((group) => {
@@ -380,20 +406,52 @@ document
   .querySelectorAll("[data-reveal], .project-grid .project-card")
   .forEach((element) => revealObserver.observe(element));
 
-/* ============ stat counters ============ */
+/* ============ stat counters (count up on first view) ============ */
+
+const counterObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      counterObserver.unobserve(el);
+      const target = parseFloat(el.dataset.count);
+      const decimals = parseInt(el.dataset.decimals || "0", 10);
+      if (reducedMotion.matches) {
+        el.textContent = target.toFixed(decimals);
+        return;
+      }
+      const duration = 900;
+      const start = performance.now();
+      const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+      const tick = (now) => {
+        const p = Math.min((now - start) / duration, 1);
+        el.textContent = (target * easeOutCubic(p)).toFixed(decimals);
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  },
+  { threshold: 0.5 }
+);
 
 document.querySelectorAll("[data-count]").forEach((el) => {
-  const target = parseFloat(el.dataset.count);
-  const decimals = parseInt(el.dataset.decimals || "0", 10);
-  el.textContent = target.toFixed(decimals);
+  el.textContent = (0).toFixed(parseInt(el.dataset.decimals || "0", 10));
+  counterObserver.observe(el);
 });
 
 /* ============ filters (with view transitions when available) ============ */
 
 const cards = [...document.querySelectorAll(".project-card")];
 const filters = [...document.querySelectorAll(".filter")];
+const projectGrid = document.querySelector(".project-grid");
 const isInteractiveCardTarget = (event) =>
   Boolean(event.target.closest("a, button, input, select, textarea"));
+
+// unique view-transition-name per card => cards glide (FLIP) between
+// filter states in browsers with the View Transitions API
+cards.forEach((card) => {
+  card.style.viewTransitionName = `card-${card.dataset.project}`;
+});
 
 filters.forEach((button) => {
   button.addEventListener("click", () => {
@@ -405,10 +463,19 @@ filters.forEach((button) => {
         card.classList.toggle("is-hidden", !show);
       });
     };
-    if (document.startViewTransition && !reducedMotion.matches) {
+    if (reducedMotion.matches) {
+      apply();
+    } else if (document.startViewTransition) {
       document.startViewTransition(apply);
     } else {
-      apply();
+      // graceful fade fallback (Firefox / older Safari)
+      projectGrid?.classList.add("is-filtering");
+      setTimeout(() => {
+        apply();
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => projectGrid?.classList.remove("is-filtering"))
+        );
+      }, 150);
     }
   });
 });
