@@ -46,10 +46,19 @@ The site is a plain static site: no framework, no build step, no package install
 
 ## File Map
 
+Static homepage (canonical, recruiter-facing):
 - `index.html` - page structure, hero, ticker text, project cards, section order, contact links, modal shell.
 - `styles.css` - visual system, responsive layout, ticker styling, liquid glass cards, section fades, project cards, modal, mobile typography.
-- `script.js` - project case-study data, modal content, galleries, filters, counters, reveal animation, hero skill hover cards.
+- `script.js` - modal content wiring, galleries, filters, counters, reveal animation, hero skill hover cards.
+- `project-data.js` - shared `window.projectData` (case-study content); loaded before `script.js` on index.html AND before `experience.js` on experience.html.
 - `assets/` - local images, project covers, gallery media, and downloadable package.
+
+Interactive 3D page (immersive companion; see the "3D Experience Page" section below):
+- `experience.html` / `experience.css` / `experience.js` - the buildless three.js scene.
+- `experience-data.js` - exports `RESUME` (used); `HERO_PROJECTS` is legacy/unused.
+- `models/real/*.glb` - 5 real SolidWorks assemblies; `tools/stl2glb.py` builds them; `ATTRIBUTIONS.txt` credits the few CC0 assets.
+
+Docs:
 - `README.md` - short local preview and deploy notes.
 - `PROJECT_DOCUMENTATION.md` - older project brief; useful background but verify against current files.
 - `AGENT_HANDOFF.md` - this current handoff.
@@ -291,6 +300,9 @@ Asset/version refs (verbatim): CSS `styles.css?v=skill-matrix-20260619`; JS `scr
 - `styles.css?v=polish-20260701`
 - `script.js?v=polish-20260701`
 - `project-data.js?v=proj-shared-20260630` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html)
+- `experience.css?v=exp-bcd-20260703` (3D page styles — in experience.html)
+- `experience.js?v=exp-bcd-20260703` (3D page module — in experience.html)
+- Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
 - Reveal/stagger system is now ACTIVE (was dead CSS): `[data-reveal]` and project cards start hidden and rise in with `--i` stagger; `.is-settled` restores fast hover transitions. Hero `.stage` elements animate via `stage-rise` keyed off `--stage`.
@@ -362,43 +374,144 @@ Invoke-WebRequest https://www.kefanwu.com -UseBasicParsing
 
 ## 3D Experience Page (experience.html) — as of 2026-07-03
 
-A standalone Three.js "engineering office" page linked from the homepage nav
-("3D Desk"). Buildless: three@0.185.0 via jsDelivr importmap. Files:
-`experience.html` / `experience.css` / `experience.js` (+ shared
-`project-data.js` for case-study content, `experience-data.js` for RESUME).
+An interactive WebGL "hardcore engineering office" companion to the static
+site, reached from the homepage nav link **`3D Desk`**
+(`<a href="experience.html" class="nav-experience">` in `index.html`). The
+static homepage stays the canonical, recruiter-facing surface (the 3D page
+sets `<link rel="canonical" href="https://www.kefanwu.com/">`); this page is
+the "wow" layer. It is buildless: `three@0.185.0` via a jsDelivr importmap,
+no bundler, no install.
 
-- **Scene**: graphite engineering office matching the site palette
-  (#0b0c0e / #f5f5f7 / #3f8cff). Fully enclosed room (4 walls + ceiling);
-  the camera is azimuth/distance-limited AND hard-clamped inside the shell
-  each frame, so no angle shows past the set.
-- **All 15 projects are clickable exhibits** (16 hotspots incl. the resume
-  sheet on the desk): main back-wall cabinet 3x3 + right-wall cabinet 2x3.
-  Five exhibits are Kefan's REAL SolidWorks assemblies (models/real/*.glb,
-  built by `tools/stl2glb.py` from per-part STL exports in Desktop\STL —
-  material buckets encoded as mesh names mat_steel/dark/printed/aero/
-  carbon/rubber/brass). The rest are procedural builders in experience.js.
-  `placeRoot` normalizes scale (targetSize/axis), recenters, wraps hotspots
-  in centered pivots, adds invisible hitboxes, blue interact markers
-  (capped below shelves via markerCap), and a per-bay `fit` budget that
-  shrinks anything exceeding its shelf space (anti-clipping).
-- **Interactions**: click exhibit -> camera flight (generic approach from
-  room center) + wide side panel with the FULL case study (all highlights,
-  tools, detail sections, gallery; gallery images open a lightbox). Click
-  the resume -> a paper sheet rises to the viewer (.exp-sheet overlay).
-  Esc/backdrop closes and flies back. Focused exhibits slowly turn.
-  First visit gets a guided camera sweep (localStorage kw_intro_seen).
-  Optional UI sounds (synth, muted by default, HUD toggle, kw_snd).
-- **Rendering**: EffectComposer (MSAA x4) with RenderPass -> GTAO ->
-  Bokeh DoF (opens only while focused) -> subtle bloom -> OutputPass.
-  ACES, exposure ~1.45, 4096 shadows. LOW_TIER (coarse pointer or narrow
-  screens): skips GTAO/Bokeh, 1024 shadows, DPR<=1.5.
-- **Furniture** is all procedural: sit-stand desk, two display cabinets,
-  workbench (Bambu H2S per reference photo w/ AMS, PSU, solder station,
-  tools pegboard, LED bar lamp), tool chest, ergo chair, blueprint panel.
-- Gotchas: STL-derived GLBs have no UVs (boxProjectUVs generates them for
-  the carbon seat); exhibits' bbox includes their marker sprite — measure
-  before the marker is added if you need true model dims; python-splice
-  edits on experience.js must verify anchor ORDER (two past incidents).
+### Files
+
+| File | Role |
+|---|---|
+| `experience.html` | shell: topbar (KW brand, sound toggle, "All projects", "View classic site"), loader, overlay containers (`#exp-label`, `#exp-backdrop`, `#exp-panel`, `#exp-paper`, `#exp-lightbox`), `#exp-canvas`, importmap. |
+| `experience.css` | all overlay styling. Palette tokens MIRROR the site (`--bg #0b0c0e`, `--ink #f5f5f7`, `--blue #3f8cff`). Key blocks: `.exp-panel` (project side panel), `.exp-sheet` (picked-up resume), `.exp-lightbox`, `.exp-label` (hover info card), `.exp-sound`. |
+| `experience.js` | ~2600-line ES module: the whole scene. Sole data import is `RESUME` from `experience-data.js`; case-study content comes from `window.projectData` (set by `project-data.js`, loaded classic-script BEFORE the module). |
+| `experience-data.js` | exports `RESUME` (used) and `HERO_PROJECTS` (LEGACY — no longer imported after the 2026-07-03 cleanup; safe to ignore or delete). |
+| `tools/stl2glb.py` | offline STL→GLB merge pipeline (trimesh) for the real CAD exhibits. |
+| `models/real/*.glb` | 5 real merged assemblies (aura, javelin, scanner, seat, steering). |
+| `models/potted_plant_01/`, `hdri/`, `textures/` | the only third-party assets (Poly Haven CC0; see `ATTRIBUTIONS.txt`). Everything else is procedural. |
+
+### Scene
+
+Graphite engineering office, FULLY enclosed (4 walls + ceiling + front
+wall). The camera is OrbitControls-limited (azimuth ±0.32π, distance
+1.4–3.2, polar clamped) AND additionally hard-clamped to the room's
+interior AABB every frame in the render loop — no orbit/zoom combination
+can see past a wall. All furniture is procedural: sit-stand desk (telescopic
+columns, T-feet, keypad), two display cabinets (slim steel + tinted glass),
+electronics workbench (Bambu H2S built to the reference photo w/ top AMS 2
+spool bay, programmable PSU, soldering station, screwdriver set, multimeter,
+pegboard of MechE tools — rule/drill/Dremel/torque wrench/caliper/hex keys/
+hammer/cutters/tape, LED bar lamp), rolling 5-drawer tool chest, ergonomic
+task chair (axis-aligned, all parts intersecting), blueprint wall panel,
+ceiling cove LED strips, potted plant.
+
+### Exhibits — all 15 projects clickable (16 hotspots incl. the resume)
+
+Two cabinets. Every exhibit is placed by `placeRoot(root, scene, opts)`,
+which: normalizes scale to `targetSize` along `axis`, recenters on its
+geometric center, wraps it in a pivot, adds an invisible hitbox mesh + a
+blue "Genshin-style" interact marker sprite (bobs/pulses, capped below the
+shelf lip via `markerCap`), and — critically — applies an optional
+`fit: [x,y,z]` bay budget that UNIFORMLY shrinks anything exceeding its
+shelf cell (this is the anti-clipping mechanism; every exhibit passes a
+`fit`).
+
+- **Main back-wall cabinet** (3 bays × 3 rows, layout const `CAB`):
+  - REAL GLBs (`models/real/…`, loaded via `loadAssembly`): `carbonSeat`
+    (seat.glb), `aura` (aura.glb, lower drivetrain half, rotated so wheels
+    sit down), `scanner` (scanner.glb), `javelin` (javelin.glb, dark shell
+    tweak), `steering` (steering.glb).
+  - Procedural (`build…` in experience.js): `brakeSim` (buildBrakeRotor,
+    thermal-gradient disc), `lineFollower` (buildLineFollower),
+    `ansysCfd` (buildCfdDisplay — a monitor showing the CFD result),
+    `education` (buildEducationKit — guitar education kit).
+- **Right-wall cabinet** (2 bays × 3 rows, layout const `CAB2`), ALL
+  procedural: `gearbox` (buildGearboxV2), `seat` (buildDriverSeat — the
+  DRIVER seat/harness project, distinct from `carbonSeat`), `formlabs`
+  (buildSmelly — the "Smelly" perfume mixer), `ftc` (buildFtcBot), `pool`
+  (buildPoolSniper), `telecaster` (buildTelecasterV2).
+- **Resume** = a paper sheet on the desk (`buildResumePaper`, `action:
+  "resume"`), the 16th hotspot.
+
+> Exhibit `key` matches a `window.projectData` key so the panel content is
+> the SAME data as the homepage modal. Note the two seat keys: `carbonSeat`
+> (real CF seat, main cabinet) vs `seat` (procedural driver seat, right
+> cabinet) are different projects — don't conflate them.
+
+### Interactions
+
+- **Click a project exhibit** → camera flies in (generic "approach from
+  room center", so it frames left-, back-, and right-wall exhibits alike)
+  and a wide right-side panel (`#exp-panel`, `projectHTML`) slides in with
+  the FULL case study: summary, all highlights, tool chips, every detail
+  section, and the gallery. The focused exhibit slowly turntables while the
+  panel is open, and depth-of-field eases open (background blurs).
+- **Click a gallery image** → `#exp-lightbox` full-screen viewer w/ caption.
+- **Click the resume** → the camera dips to the desk and a paper sheet
+  (`#exp-paper` / `.exp-sheet`, `resumeHTML` from `RESUME`) RISES up to the
+  viewer like picking the page up (dark ink on paper, blue rule). This is
+  intentionally NOT the side panel.
+- **Close**: Esc or backdrop (Esc closes the lightbox first if open, else
+  the panel/sheet), then the camera flies back to rest.
+- **First visit**: a guided camera sweep (right cabinet → main cabinet →
+  rest), remembered in `localStorage.kw_intro_seen`; return visits get the
+  short fly-in. `prefers-reduced-motion` skips motion.
+- **Hover**: exhibit scales up 6% and an info card (`#exp-label`) shows the
+  title + kicker (pulled from `projectData[key].kicker`).
+- **Sound**: optional WebAudio synth (hover tick / click / flight whoosh),
+  MUTED BY DEFAULT, toggled by the HUD speaker button, persisted in
+  `localStorage.kw_snd`.
+
+### Rendering
+
+EffectComposer (MSAA ×4 render target) chain:
+`RenderPass → GTAOPass → BokehPass → UnrealBloomPass → OutputPass`.
+ACES tone mapping, exposure ~1.45, key light 4096² shadows, GTAO for
+contact darkening, restrained bloom (screens/paper read as lit, not
+light fixtures), Bokeh DoF that only opens while an exhibit is focused.
+Loader shows REAL progress via `LoadingManager.onProgress`.
+
+**Quality tiers** — `LOW_TIER` = coarse pointer OR viewport < 820px:
+skips GTAO + Bokeh, 1024² shadows, DPR ≤ 1.5 (keeps phones smooth).
+
+### Editing experience.js (important workflow)
+
+`experience.js` is large and was built up through **anchored Python-splice
+scripts** (write a `.py` in scratch that does `src.replace(old, new)` with
+`assert old in src`, or `splice(startAnchor, endAnchor, replacement)` with
+an `assert s < e` ORDER check, then rewrite the file with
+`newline="\n"`). Small edits can also use the Edit tool. Whichever you use:
+
+- ALWAYS verify anchor ORDER for splice-style edits. Two past regressions
+  came from a start/end anchor spanning too far and swallowing unrelated
+  functions (e.g. `makeInteractMarker`/`makeCarbonTwillTexture`/
+  `boxProjectUVs` were deleted by a monitor-removal splice). After any
+  structural edit, grep that each top-level `function name(` appears
+  exactly once.
+- Serve over http (the http.server command above) — it's an ES module, so
+  `file://` won't load it. Verify in the browser: `window.__exp` exposes
+  `{ scene, camera, renderer, controls, composer, models, hotspots, THREE }`
+  for scripted checks (used heavily during QA — e.g. read
+  `hotspots.length`, click-simulate via projected bbox centers, inspect
+  `composer.passes`).
+
+### Gotchas
+
+- STL-derived GLBs carry NO UVs; `boxProjectUVs` generates them (used for
+  the carbon-seat carbon-twill material). New real assemblies needing a
+  tiling texture must do the same.
+- An exhibit's bounding box INCLUDES its interact-marker sprite — measure
+  the model before the marker is added if you need true part dimensions.
+- To re-add a real CAD exhibit: export per-part STLs from SolidWorks to
+  `C:\Users\oc\Desktop\STL`, bucket filenames so `tools/stl2glb.py`'s
+  regexes tag them (mesh names `mat_steel/brass/dark/printed/aero/carbon/
+  rubber`), run it to emit `models/real/<name>.glb`, then reference it in
+  the `ASSEMBLIES` array. This is the pending "A" task for the six
+  right-cabinet exhibits (currently procedural approximations).
 
 ## Direct Prompt For A New Agent
 
@@ -466,4 +579,18 @@ Be careful:
 - Section transition bugs have previously appeared around Hero -> Projects and Projects -> Motorsport; inspect visually if touching .hero, .systems, or .set-piece.
 - Hero stats bar rounded corners were previously clipped; preserve overflow/spacing around it.
 - Do not reintroduce the old right-side scroll strip.
+
+There is also a SECOND surface: the interactive 3D page (experience.html /
+experience.css / experience.js / experience-data.js), reached from the nav
+link "3D Desk". It is a buildless three.js scene. The static homepage stays
+canonical and recruiter-facing; the 3D page is the immersive extra. See the
+dedicated "3D Experience Page" section above for its full architecture,
+exhibit map (all 15 projects are clickable; 5 are real CAD GLBs, 10 are
+procedural), interaction model (project side panel; resume rises as a paper
+sheet; lightbox; guided intro; optional sound), render pipeline
+(GTAO + Bokeh + bloom, LOW_TIER for mobile), and the anchored-Python-splice
+editing workflow with its anchor-ORDER footgun. When editing it: bump BOTH
+experience.css and experience.js cache strings in experience.html to a new
+exp-<label>-<date>, verify window.__exp in the browser + no console errors,
+then push and curl the live experience.html for the new cache string.
 ```
