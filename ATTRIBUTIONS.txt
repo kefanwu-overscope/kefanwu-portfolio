@@ -4,18 +4,14 @@ Project exhibits (models/real/*.glb):
 - Kefan Wu's own SolidWorks CAD, exported per-part to STL and merged to
   GLB with tools/stl2glb.py. No third-party license applies.
 
-CC-BY (attribution required), via Poly Pizza (poly.pizza):
-- "Desk lamp" (green banker lamp) by Poly by Google — CC-BY 3.0
+All furniture, tools, equipment (incl. the Bambu-style printer), and the
+room itself are procedurally modeled in-code — no third-party models.
 
 CC0 (public domain, credited as courtesy):
-- book_encyclopedia_set_01, potted_plant_04 — Poly Haven (polyhaven.com)
-- Armchair, Globe, Books — CreativeTrio, via Poly Pizza
-- Bookcase with Books — Quaternius, via Poly Pizza
-- File folder — reyshapes, via Poly Pizza
+- potted_plant_01 — Poly Haven (polyhaven.com)
 
 HDRI:
 - wooden_lounge — Poly Haven (CC0)
 
 Textures:
-- dark_wood, laminate_floor_02, painted_plaster_wall — Poly Haven (CC0)
-- Carpet008 — ambientCG (ambientcg.com, CC0)
+- dark_wood, painted_plaster_wall — Poly Haven (CC0)

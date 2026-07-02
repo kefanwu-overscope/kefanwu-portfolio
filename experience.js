@@ -16,7 +16,6 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
-import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
@@ -64,9 +63,7 @@ function setupTextures(manager) {
   const cache = {};
   const DEFS = {
     dark_wood: { rep: [2, 1], base: "textures/dark_wood/dark_wood", maps: ["diff_1k.jpg", "nor_gl_1k.jpg", "rough_1k.jpg"] },
-    laminate_floor_02: { rep: [6, 6], base: "textures/laminate_floor_02/laminate_floor_02", maps: ["diff_1k.jpg", "nor_gl_1k.jpg", "rough_1k.jpg"] },
     painted_plaster_wall: { rep: [3, 2], base: "textures/painted_plaster_wall/painted_plaster_wall", maps: ["diff_1k.jpg", "nor_gl_1k.jpg", "rough_1k.jpg"] },
-    carpet008: { rep: [1, 1], base: "textures/carpet008/Carpet008_1K-JPG", maps: ["Color.jpg", "NormalGL.jpg", "Roughness.jpg"] },
   };
   function loadPBR(slug) {
     if (cache[slug]) return cache[slug];
@@ -236,8 +233,8 @@ function initScene(canvas) {
   scene.add(fill);
 
   // banker's-lamp warm pool
-  const lampLight = new THREE.PointLight(0xffc27a, 3.6, 2.8, 2);
-  lampLight.position.set(-0.62, 0.95, -0.2);
+  const lampLight = new THREE.PointLight(0xffe2c0, 3.2, 2.6, 2);
+  lampLight.position.set(-0.44, 1.1, -0.12);
   scene.add(lampLight);
 
   // display spots washing the cabinet
@@ -273,19 +270,25 @@ function initScene(canvas) {
   const DESK_TOP = 0.76;
   scene.add(buildDesk());
 
-  loadModel(loader, scene, "models/pp/banker_lamp_green.glb", {
-    name: "lamp", targetSize: 0.4, axis: "y", pos: [-0.58, DESK_TOP, -0.14], rotY: 0.3,
-  });
-  loadModel(loader, scene, "models/book_encyclopedia_set_01/book_encyclopedia_set_01.gltf", {
-    name: "books", targetSize: 0.26, axis: "x", pos: [0.52, DESK_TOP, -0.08], rotY: -0.2,
-  });
+  // modern LED desk lamp (procedural), warm pool on the resume
+  const deskLamp = buildModernDeskLamp();
+  deskLamp.position.set(-0.62, DESK_TOP, -0.16);
+  deskLamp.rotation.y = 0.5;
+  scene.add(deskLamp);
+  MODELS.deskLamp = deskLamp;
+
+  // monitor + keyboard + mouse (dark telemetry dashboard)
+  const rig = buildMonitorSetup();
+  rig.position.set(0.28, DESK_TOP, -0.32);
+  rig.rotation.y = -0.06;
+  scene.add(rig);
+  MODELS.rig = rig;
   // resume: the hero object on the desk — front and center, in the light
   placeRoot(buildResumePaper(), scene, {
     name: "resumePaper", action: "resume", label: "Résumé",
     // desk top 0.76 + leather inlay 0.012 — sit ON the leather, not inside it
     pos: [0.02, DESK_TOP + 0.013, 0.16], rotY: 0.12,
   });
-  scene.add(buildMug(0.45, 0.05, DESK_TOP));
 
   /* ---------- display cabinet + exhibits (3 x 3) ---------- */
   scene.add(buildDisplayCabinet());
@@ -331,7 +334,7 @@ function initScene(canvas) {
   // right wall: filled bookshelf; left wall: the electronics workbench
   // (bench + Bambu H2S mid-print + PSU + soldering station + drivers +
   // multimeter + task lamp)
-  scene.add(buildRealBookshelf(2.38, -Math.PI / 2, 67890));
+  scene.add(buildModernShelf(2.38, -Math.PI / 2));
   scene.add(buildWorkbench());
 
   const chair = buildErgoChair();
@@ -784,6 +787,18 @@ function buildRoom(scene) {
     addTrim(w, x, z, rY, 0.045, 0.09, 0.05);
   });
 
+  // ceiling cove LED strips along the wall tops
+  const coveMat = new THREE.MeshStandardMaterial({ color: 0x6a7078, emissive: 0xcfe0f4, emissiveIntensity: 0.7 });
+  const addCove = (w, x, z, rotY) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, 0.018, 0.018), coveMat);
+    m.position.set(x, WALL_H - 0.14, z);
+    m.rotation.y = rotY;
+    scene.add(m);
+  };
+  addCove(2 * sideX - 0.3, 0, back + 0.09, 0);
+  addCove(depth - 0.3, -sideX + 0.09, (front + back) / 2, Math.PI / 2);
+  addCove(depth - 0.3, sideX - 0.09, (front + back) / 2, -Math.PI / 2);
+
   // modern black pendant over the desk (neutral light)
   const pendant = new THREE.Group();
   const cord = new THREE.Mesh(
@@ -1024,41 +1039,156 @@ function buildErgoChair() {
   return g;
 }
 
-function buildMug(x, z, topY) {
-  // glazed ceramic mug: open body, visible inner wall, handle fused to the
-  // side (the old torus floated apart from the body)
+function buildModernDeskLamp() {
+  // minimal modern desk lamp: puck base, slim angled stem, flat LED head
   const g = new THREE.Group();
-  const mat = new THREE.MeshPhysicalMaterial({
-    color: 0x2b4a3a,
-    roughness: 0.32,
-    metalness: 0.0,
-    clearcoat: 0.5,
-    clearcoatRoughness: 0.25,
-    side: THREE.DoubleSide,
+  const body = new THREE.MeshStandardMaterial({ color: 0x1d1f23, roughness: 0.38, metalness: 0.7 });
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.062, 0.016, 24), body);
+  base.position.y = 0.008;
+  g.add(base);
+  function segment(p0, p1, r) {
+    const dir = new THREE.Vector3().subVectors(p1, p0);
+    const mesh = new THREE.Mesh(new THREE.CylinderGeometry(r, r, dir.length(), 12), body);
+    mesh.position.copy(p0).addScaledVector(dir, 0.5);
+    mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
+    return mesh;
+  }
+  const P0 = new THREE.Vector3(0, 0.016, 0);
+  const P1 = new THREE.Vector3(0.05, 0.34, 0);
+  const P2 = new THREE.Vector3(0.2, 0.36, 0.02);
+  g.add(segment(P0, P1, 0.008));
+  g.add(segment(P1, P2, 0.007));
+  [P1].forEach((pt) => {
+    const j = new THREE.Mesh(new THREE.SphereGeometry(0.011, 12, 12), body);
+    j.position.copy(pt);
+    g.add(j);
   });
-  const R = 0.036, H = 0.088;
-  const wall = new THREE.Mesh(new THREE.CylinderGeometry(R, R * 0.92, H, 28, 1, true), mat);
-  wall.position.set(x, topY + H / 2, z);
-  wall.castShadow = true;
-  g.add(wall);
-  const bottom = new THREE.Mesh(new THREE.CylinderGeometry(R * 0.92, R * 0.92, 0.006, 28), mat);
-  bottom.position.set(x, topY + 0.003, z);
-  g.add(bottom);
-  const rim = new THREE.Mesh(new THREE.TorusGeometry(R, 0.0022, 8, 28), mat);
-  rim.rotation.x = Math.PI / 2;
-  rim.position.set(x, topY + H, z);
-  g.add(rim);
-  const coffee = new THREE.Mesh(
-    new THREE.CylinderGeometry(R * 0.88, R * 0.88, 0.004, 28),
-    new THREE.MeshStandardMaterial({ color: 0x170d07, roughness: 0.25 })
+  const head = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 0.018, 22), body);
+  head.position.copy(P2).add(new THREE.Vector3(0.02, -0.004, 0));
+  head.rotation.z = 0.14;
+  g.add(head);
+  const led = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.038, 0.038, 0.004, 22),
+    new THREE.MeshStandardMaterial({ color: 0xfff4e2, emissive: 0xffe8c8, emissiveIntensity: 1.2 })
   );
-  coffee.position.set(x, topY + H - 0.016, z);
-  g.add(coffee);
-  // handle: vertical ring half-sunk into the wall so it reads as one piece
-  const handle = new THREE.Mesh(new THREE.TorusGeometry(0.02, 0.005, 12, 28), mat);
-  handle.position.set(x + R + 0.008, topY + H / 2, z);
-  handle.castShadow = true;
-  g.add(handle);
+  led.position.copy(head.position).add(new THREE.Vector3(0, -0.011, 0));
+  led.rotation.z = 0.14;
+  g.add(led);
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildLedBarLamp() {
+  // bench light: puck base, single straight stem, horizontal LED bar
+  const g = new THREE.Group();
+  const body = new THREE.MeshStandardMaterial({ color: 0x1d1f23, roughness: 0.38, metalness: 0.7 });
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.058, 0.016, 22), body);
+  base.position.y = 0.008;
+  g.add(base);
+  const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.009, 0.34, 12), body);
+  stem.position.set(0, 0.185, 0);
+  g.add(stem);
+  const bar = new THREE.Mesh(new RoundedBoxGeometry(0.3, 0.022, 0.04, 2, 0.008), body);
+  bar.position.set(-0.1, 0.36, 0.04);
+  bar.rotation.y = 0.1;
+  g.add(bar);
+  const led = new THREE.Mesh(
+    new THREE.BoxGeometry(0.27, 0.004, 0.026),
+    new THREE.MeshStandardMaterial({ color: 0xfff4e2, emissive: 0xffeacd, emissiveIntensity: 1.3 })
+  );
+  led.position.set(-0.1, 0.347, 0.04);
+  led.rotation.y = 0.1;
+  g.add(led);
+  const lLight = new THREE.PointLight(0xffe8c8, 1.7, 2.4, 2);
+  lLight.position.set(-0.1, 0.32, 0.05);
+  g.add(lLight);
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildMonitorSetup() {
+  // slim widescreen monitor + low-profile keyboard + mouse on the desk
+  const g = new THREE.Group();
+  const body = new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.4, metalness: 0.5 });
+
+  // dashboard texture: dark engineering telemetry
+  const c = document.createElement("canvas");
+  c.width = 512; c.height = 288;
+  const ctx = c.getContext("2d");
+  ctx.fillStyle = "#0d0f13"; ctx.fillRect(0, 0, 512, 288);
+  ctx.fillStyle = "#15181e"; ctx.fillRect(0, 0, 512, 34);
+  ctx.fillStyle = "#3f8cff"; ctx.font = "700 15px Arial"; ctx.fillText("OEM MK.8 — TELEMETRY", 16, 23);
+  ctx.strokeStyle = "#1f242c"; ctx.lineWidth = 1;
+  for (let gx = 16; gx < 500; gx += 30) { ctx.beginPath(); ctx.moveTo(gx, 50); ctx.lineTo(gx, 190); ctx.stroke(); }
+  for (let gy = 50; gy < 195; gy += 28) { ctx.beginPath(); ctx.moveTo(16, gy); ctx.lineTo(496, gy); ctx.stroke(); }
+  ctx.strokeStyle = "#3f8cff"; ctx.lineWidth = 2.5; ctx.beginPath();
+  for (let i = 0; i <= 48; i++) {
+    const x = 16 + i * 10;
+    const y = 130 - Math.sin(i * 0.4) * 32 - Math.sin(i * 0.13) * 22;
+    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  }
+  ctx.stroke();
+  ctx.strokeStyle = "#e8b84a"; ctx.lineWidth = 1.6; ctx.beginPath();
+  for (let i = 0; i <= 48; i++) {
+    const x = 16 + i * 10;
+    const y = 150 - Math.cos(i * 0.3) * 18;
+    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  }
+  ctx.stroke();
+  ctx.fillStyle = "#252a33";
+  [16, 140, 264, 388].forEach((bx) => ctx.fillRect(bx, 212, 108, 56));
+  ctx.fillStyle = "#c9ced6"; ctx.font = "700 17px Consolas, monospace";
+  ["412 C", "1.42 g", "96 km/h", "78 %"].forEach((t, i) => ctx.fillText(t, 30 + i * 124, 244));
+  ctx.fillStyle = "#6a7078"; ctx.font = "500 10px Arial";
+  ["ROTOR PEAK", "LAT ACCEL", "SPEED", "SOC"].forEach((t, i) => ctx.fillText(t, 30 + i * 124, 260));
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = MAXA;
+
+  const panel = new THREE.Mesh(new RoundedBoxGeometry(0.61, 0.36, 0.02, 2, 0.006), body);
+  panel.position.set(0, 0.5, 0);
+  panel.rotation.x = -0.04;
+  g.add(panel);
+  const screen = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.585, 0.33),
+    new THREE.MeshBasicMaterial({ map: tex, color: 0x8f8f8f })
+  );
+  screen.position.set(0, 0.5, 0.0115);
+  screen.rotation.x = -0.04;
+  g.add(screen);
+  const neck = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.18, 0.02), body);
+  neck.position.set(0, 0.24, -0.03);
+  g.add(neck);
+  const foot = new THREE.Mesh(new RoundedBoxGeometry(0.24, 0.012, 0.16, 2, 0.005), body);
+  foot.position.set(0, 0.006, -0.02);
+  g.add(foot);
+
+  // low-profile keyboard with key-grid texture
+  const kc = document.createElement("canvas");
+  kc.width = 256; kc.height = 96;
+  const kctx = kc.getContext("2d");
+  kctx.fillStyle = "#1a1c20"; kctx.fillRect(0, 0, 256, 96);
+  kctx.fillStyle = "#2a2d33";
+  for (let ry = 6; ry < 90; ry += 18)
+    for (let rx = 6; rx < 248; rx += 17) kctx.fillRect(rx, ry, 14, 14);
+  kctx.fillRect(74, 78, 100, 14); // spacebar
+  const kTex = new THREE.CanvasTexture(kc);
+  kTex.colorSpace = THREE.SRGBColorSpace;
+  const kb = new THREE.Mesh(
+    new RoundedBoxGeometry(0.36, 0.012, 0.13, 2, 0.005),
+    [body, body, new THREE.MeshStandardMaterial({ map: kTex, roughness: 0.55 }), body, body, body]
+  );
+  kb.position.set(0, 0.006, 0.28);
+  kb.rotation.y = 0.02;
+  g.add(kb);
+
+  // mouse
+  const mouse = new THREE.Mesh(new RoundedBoxGeometry(0.055, 0.02, 0.09, 3, 0.014), body);
+  mouse.position.set(0.26, 0.01, 0.3);
+  mouse.rotation.y = -0.2;
+  g.add(mouse);
+
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
 }
 
@@ -1152,104 +1282,120 @@ function boxProjectUVs(geo, scale) {
 }
 
 /* seeded RNG so both bookcases look different but stable across loads */
-function mulberry32(seed) {
-  let a = seed >>> 0;
-  return () => {
-    a |= 0; a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function buildRealBookshelf(x, rotY, seed) {
+function buildModernShelf(x, rotY) {
+  // modern storage wall: slim black-steel frame, matte shelves, neat rows
+  // of matching binders, archive boxes, a small trophy — tech-office tidy
   const g = new THREE.Group();
-  const rnd = mulberry32(seed);
-  const W = 1.7, H = 2.14, D = 0.3;
-  const frameMat = woodMaterial(0x261c14, 0.6);
-  const shelfYs = [0.14, 0.52, 0.9, 1.28, 1.66];
-  const gapH = 0.38;
+  const frameMat = new THREE.MeshStandardMaterial({ color: 0x1d1f23, roughness: 0.4, metalness: 0.65 });
+  const shelfMat = new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.5, metalness: 0.45 });
+  const W = 1.7, H = 2.14, D = 0.32;
+  const shelfYs = [0.16, 0.62, 1.08, 1.54];
 
-  // carcass: sides, top, back, plinth
-  [-W / 2 + 0.025, W / 2 - 0.025].forEach((sx) => {
-    const side = new THREE.Mesh(new THREE.BoxGeometry(0.05, H, D), frameMat);
+  [-W / 2 + 0.02, W / 2 - 0.02].forEach((sx) => {
+    const side = new THREE.Mesh(new RoundedBoxGeometry(0.04, H, D, 2, 0.008), frameMat);
     side.position.set(sx, H / 2, 0);
-    side.castShadow = true; side.receiveShadow = true;
+    side.castShadow = true;
+    side.receiveShadow = true;
     g.add(side);
   });
-  const top = new THREE.Mesh(new THREE.BoxGeometry(W + 0.06, 0.06, D + 0.04), frameMat);
-  top.position.set(0, H - 0.03, 0);
+  const top = new THREE.Mesh(new RoundedBoxGeometry(W + 0.02, 0.045, D + 0.02, 2, 0.008), frameMat);
+  top.position.set(0, H - 0.022, 0);
   top.castShadow = true;
   g.add(top);
-  const backP = new THREE.Mesh(new THREE.BoxGeometry(W, H, 0.018), woodMaterial(0x17120d, 0.9));
-  backP.position.set(0, H / 2, -D / 2 + 0.009);
+  const backP = new THREE.Mesh(new THREE.BoxGeometry(W, H, 0.016),
+    new THREE.MeshStandardMaterial({ color: 0x141518, roughness: 0.7, metalness: 0.2 }));
+  backP.position.set(0, H / 2, -D / 2 + 0.008);
   backP.receiveShadow = true;
   g.add(backP);
-  const plinth = new THREE.Mesh(new THREE.BoxGeometry(W, 0.14, D), frameMat);
-  plinth.position.set(0, 0.07, 0);
-  plinth.castShadow = true; plinth.receiveShadow = true;
+  const plinth = new THREE.Mesh(new THREE.BoxGeometry(W, 0.09, D), frameMat);
+  plinth.position.set(0, 0.045, 0);
+  plinth.castShadow = true;
   g.add(plinth);
   shelfYs.forEach((y) => {
-    const b = new THREE.Mesh(new THREE.BoxGeometry(W - 0.1, 0.03, D - 0.03), frameMat);
-    b.position.set(0, y - 0.015, 0);
-    b.castShadow = true; b.receiveShadow = true;
+    const b = new THREE.Mesh(new THREE.BoxGeometry(W - 0.09, 0.024, D - 0.03), shelfMat);
+    b.position.set(0, y - 0.012, 0);
+    b.castShadow = true;
+    b.receiveShadow = true;
     g.add(b);
   });
-
-  // books: varied spines, occasional lean/gap/horizontal pile, merged
-  const PALETTE = [0x6e2a22, 0x3a2c1a, 0x24402e, 0x2a3350, 0x5a4626, 0x50262e, 0x315046, 0x6e4020, 0x223244, 0x584838, 0x743d28, 0x2e2e38];
-  const geos = [];
-  const tint = new THREE.Color();
-  function pushBook(geo, colHex, shade) {
-    tint.setHex(colHex).multiplyScalar(shade);
-    const n = geo.attributes.position.count;
-    const cols = new Float32Array(n * 3);
-    for (let i = 0; i < n; i++) { cols[i * 3] = tint.r; cols[i * 3 + 1] = tint.g; cols[i * 3 + 2] = tint.b; }
-    geo.setAttribute("color", new THREE.BufferAttribute(cols, 3));
-    geos.push(geo);
-  }
-  shelfYs.forEach((shelfY) => {
-    let bx = -W / 2 + 0.09;
-    const endX = W / 2 - 0.09;
-    while (bx < endX) {
-      const r = rnd();
-      if (r < 0.06) { bx += 0.03 + rnd() * 0.05; continue; } // gap
-      if (r < 0.16 && endX - bx > 0.2) {
-        // small horizontal pile
-        let py = shelfY;
-        const n = 2 + Math.floor(rnd() * 2);
-        for (let i = 0; i < n; i++) {
-          const bw = 0.16 + rnd() * 0.05, bh = 0.03 + rnd() * 0.012, bd = 0.2 + rnd() * 0.04;
-          const geo = new THREE.BoxGeometry(bh, bw, bd); // spine up
-          geo.rotateZ(Math.PI / 2);
-          geo.translate(bx + bw / 2, py + bh / 2, (rnd() - 0.5) * 0.02);
-          pushBook(geo, PALETTE[(rnd() * PALETTE.length) | 0], 0.85 + rnd() * 0.3);
-          py += bh;
-        }
-        bx += 0.24;
-        continue;
-      }
-      const bw = 0.022 + rnd() * 0.03;
-      const bh = 0.22 + rnd() * (gapH - 0.26);
-      const bd = 0.19 + rnd() * 0.05;
-      const lean = rnd() < 0.08 ? (rnd() - 0.5) * 0.22 : 0;
-      const geo = new THREE.BoxGeometry(bw, bh, bd);
-      if (lean) geo.rotateZ(lean);
-      geo.translate(bx + bw / 2, shelfY + bh / 2 + Math.abs(lean) * 0.02, (rnd() - 0.5) * 0.015);
-      pushBook(geo, PALETTE[(rnd() * PALETTE.length) | 0], 0.8 + rnd() * 0.4);
-      bx += bw + 0.0035;
-    }
-  });
-  const books = new THREE.Mesh(
-    mergeGeometries(geos, false),
-    new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.78, metalness: 0.02 })
+  // under-top LED strip
+  const strip = new THREE.Mesh(
+    new THREE.BoxGeometry(W - 0.2, 0.006, 0.012),
+    new THREE.MeshStandardMaterial({ color: 0x6a7078, emissive: 0xdfe8f4, emissiveIntensity: 0.6 })
   );
-  books.castShadow = true;
-  books.receiveShadow = true;
-  g.add(books);
+  strip.position.set(0, H - 0.06, D / 2 - 0.06);
+  g.add(strip);
+
+  // shelf 1 (0.16): row of matching binders, two accent colors
+  const spineCols = [0x2b3038, 0x2b3038, 0x1f3a5e, 0x2b3038, 0x1f3a5e, 0x2b3038, 0x2b3038, 0x314457];
+  spineCols.forEach((col, i) => {
+    const binder = new THREE.Mesh(new RoundedBoxGeometry(0.055, 0.3, 0.24, 2, 0.008),
+      new THREE.MeshStandardMaterial({ color: col, roughness: 0.6, metalness: 0.05 }));
+    binder.position.set(-W / 2 + 0.16 + i * 0.062, 0.31, 0);
+    binder.castShadow = true;
+    g.add(binder);
+    const label = new THREE.Mesh(new THREE.PlaneGeometry(0.03, 0.09),
+      new THREE.MeshStandardMaterial({ color: 0xd8dce2, roughness: 0.8 }));
+    label.position.set(-W / 2 + 0.16 + i * 0.062, 0.34, 0.121);
+    g.add(label);
+  });
+
+  // shelf 2 (0.62): three archive boxes, neatly spaced
+  [-0.5, -0.12, 0.28].forEach((bx, i) => {
+    const box = new THREE.Mesh(new RoundedBoxGeometry(0.3, 0.22, 0.26, 2, 0.008),
+      new THREE.MeshStandardMaterial({ color: i === 1 ? 0x3a3d43 : 0x53565c, roughness: 0.7, metalness: 0.05 }));
+    box.position.set(bx + 0.1, 0.73, 0);
+    box.castShadow = true;
+    g.add(box);
+    const slot = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.02, 0.012),
+      new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.6 }));
+    slot.position.set(bx + 0.1, 0.79, 0.13);
+    g.add(slot);
+  });
+
+  // shelf 3 (1.08): half binders, one small equipment case
+  [0, 1, 2, 3].forEach((i) => {
+    const binder = new THREE.Mesh(new RoundedBoxGeometry(0.055, 0.3, 0.24, 2, 0.008),
+      new THREE.MeshStandardMaterial({ color: i % 2 ? 0x1f3a5e : 0x2b3038, roughness: 0.6 }));
+    binder.position.set(-W / 2 + 0.16 + i * 0.062, 1.23, 0);
+    binder.castShadow = true;
+    g.add(binder);
+  });
+  const caseBox = new THREE.Mesh(new RoundedBoxGeometry(0.4, 0.16, 0.26, 2, 0.012),
+    new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.45, metalness: 0.3 }));
+  caseBox.position.set(0.35, 1.16, 0);
+  caseBox.castShadow = true;
+  g.add(caseBox);
+  [[0.2, 0.5]].forEach(() => {});
+  const caseLatch = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.02, 0.01),
+    new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.35, metalness: 0.9 }));
+  caseLatch.position.set(0.35, 1.16, 0.135);
+  g.add(caseLatch);
+
+  // shelf 4 (1.54): trophy + small framed plate, sparse
+  const trophyBase = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.045, 0.03, 18),
+    new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.4, metalness: 0.4 }));
+  trophyBase.position.set(-0.45, 1.685, 0);
+  g.add(trophyBase);
+  const trophyCup = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.02, 0.09, 18),
+    new THREE.MeshStandardMaterial({ color: 0xc9a24b, roughness: 0.3, metalness: 1.0 }));
+  trophyCup.position.set(-0.45, 1.75, 0);
+  trophyCup.castShadow = true;
+  g.add(trophyCup);
+  const plate = new THREE.Mesh(new RoundedBoxGeometry(0.22, 0.15, 0.012, 2, 0.004),
+    new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.4, metalness: 0.5 }));
+  plate.position.set(0.15, 1.63, -0.05);
+  plate.rotation.x = -0.12;
+  g.add(plate);
+  const plateFace = new THREE.Mesh(new THREE.PlaneGeometry(0.19, 0.12),
+    new THREE.MeshStandardMaterial({ color: 0x3f8cff, emissive: 0x1c3a63, emissiveIntensity: 0.5, roughness: 0.4 }));
+  plateFace.position.set(0.15, 1.632, -0.042);
+  plateFace.rotation.x = -0.12;
+  g.add(plateFace);
 
   g.position.set(x, 0, -0.35);
   g.rotation.y = rotY;
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
 }
 
@@ -1628,47 +1774,11 @@ function buildWorkbench() {
   meter.rotation.y = 0.5;
   g.add(meter);
 
-  // articulated task lamp — segments computed so every joint CONNECTS
-  const lamp = new THREE.Group();
-  const lampMetal = new THREE.MeshStandardMaterial({ color: 0x24262a, roughness: 0.4, metalness: 0.6 });
-  function segment(p0, p1, r) {
-    const dir = new THREE.Vector3().subVectors(p1, p0);
-    const len = dir.length();
-    const mesh = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 10), lampMetal);
-    mesh.position.copy(p0).addScaledVector(dir, 0.5);
-    mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
-    return mesh;
-  }
-  const P0 = new THREE.Vector3(0, 0.02, 0);
-  const P1 = new THREE.Vector3(-0.1, 0.24, 0);
-  const P2 = new THREE.Vector3(-0.26, 0.3, 0.03);
-  const lBase = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.02, 20), darkPlastic);
-  lBase.position.y = 0.01;
-  lamp.add(lBase);
-  lamp.add(segment(P0, P1, 0.007));
-  lamp.add(segment(P1, P2, 0.006));
-  [P0, P1].forEach((pt) => {
-    const joint = new THREE.Mesh(new THREE.SphereGeometry(0.012, 12, 12), lampMetal);
-    joint.position.copy(pt);
-    lamp.add(joint);
-  });
-  const lHead = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.026, 0.048, 0.07, 18, 1, true),
-    new THREE.MeshStandardMaterial({ color: 0x24262a, roughness: 0.4, metalness: 0.6, side: THREE.DoubleSide })
-  );
-  lHead.position.copy(P2);
-  lHead.rotation.z = 2.35;
-  lamp.add(lHead);
-  const lBulb = new THREE.Mesh(new THREE.SphereGeometry(0.015, 12, 12),
-    new THREE.MeshStandardMaterial({ color: 0xfff6e8, emissive: 0xffe8c2, emissiveIntensity: 1.1 }));
-  lBulb.position.set(P2.x - 0.022, P2.y - 0.022, P2.z);
-  lamp.add(lBulb);
-  const lLight = new THREE.PointLight(0xffe8c8, 1.7, 2.4, 2);
-  lLight.position.set(P2.x - 0.03, P2.y - 0.03, P2.z);
-  lamp.add(lLight);
-  lamp.position.set(0.9, TOP_Y, -0.2);
-  lamp.rotation.y = -0.5;
-  g.add(lamp);
+  // LED bar bench lamp (clean single-stem design)
+  const benchLamp = buildLedBarLamp();
+  benchLamp.position.set(0.9, TOP_Y, -0.18);
+  benchLamp.rotation.y = -0.6;
+  g.add(benchLamp);
 
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   g.position.set(-2.22, 0, -0.25);
