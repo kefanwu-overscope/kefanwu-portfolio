@@ -245,6 +245,14 @@ function initScene(canvas) {
     scene.add(spot);
     scene.add(spot.target);
   });
+  // right-wall cabinet gets its own pair of spots
+  [-0.75, -0.05].forEach((z) => {
+    const spot = new THREE.SpotLight(0xe8ecf4, 2.6, 6, 0.46, 0.75, 1.6);
+    spot.position.set(0.9, 2.55, z + 0.3);
+    spot.target.position.set(2.3, 1.0, z);
+    scene.add(spot);
+    scene.add(spot.target);
+  });
 
   /* ---------- room + rug ---------- */
   buildRoom(scene);
@@ -328,8 +336,38 @@ function initScene(canvas) {
   // right wall: filled bookshelf; left wall: the electronics workbench
   // (bench + Bambu H2S mid-print + PSU + soldering station + drivers +
   // multimeter + task lamp)
-  scene.add(buildModernShelf(2.38, -Math.PI / 2));
+  scene.add(buildSideCabinet());
+
+  // six more projects in the right-wall cabinet (full 15 on display)
+  const SIDE_EXHIBITS = [
+    { build: buildGearboxV2,   key: "gearbox",   label: "2-speed gearbox",   size: 0.3,  bay: 0, row: 0 },
+    { build: buildDriverSeat,  key: "seat",      label: "Driver seat",       size: 0.3,  bay: 1, row: 0 },
+    { build: buildSmelly,      key: "formlabs",  label: "Smelly",            size: 0.28, bay: 0, row: 1 },
+    { build: buildFtcBot,      key: "ftc",       label: "FTC robot",         size: 0.28, bay: 1, row: 1 },
+    { build: buildPoolSniper,  key: "pool",      label: "Pool Sniper",       size: 0.32, bay: 0, row: 2 },
+    { build: buildTelecasterV2, key: "telecaster", label: "Telecaster",      size: 0.42, axis: "y", bay: 1, row: 2 },
+  ];
+  SIDE_EXHIBITS.forEach((s) =>
+    placeRoot(s.build(), scene, {
+      name: "ex_" + s.key, projectKey: s.key, label: s.label,
+      targetSize: s.size, axis: s.axis || "x",
+      markerCap: CAB2.rows[s.row] + (s.row === 0 ? 0.36 : 0.44),
+      pos: [CAB2.frontX, CAB2.rows[s.row], CAB2.bays[s.bay]], rotY: -Math.PI / 2 + 0.25,
+    })
+  );
   scene.add(buildWorkbench());
+
+  // rolling tool chest beside the workbench
+  const chest = buildToolChest();
+  chest.position.set(-2.22, 0, 0.95);
+  chest.rotation.y = Math.PI / 2;
+  scene.add(chest);
+  MODELS.chest = chest;
+
+  // technical schematic panel above the main cabinet
+  const blueprint = buildBlueprintPanel();
+  blueprint.position.set(0, 2.72, -1.5);
+  scene.add(blueprint);
 
   const chair = buildErgoChair();
   chair.position.set(-0.25, 0, 1.05);
@@ -502,10 +540,16 @@ function initScene(canvas) {
     if (!html) return;
 
     const c = hs.center;
-    const focusPos = new THREE.Vector3(c.x * 0.55, Math.max(c.y + 0.06, 0.98), c.z + 1.0);
+    // approach from the room center, whatever wall the exhibit is on
+    const dir = new THREE.Vector3(-c.x, 0, 0.35 - c.z);
+    if (dir.lengthSq() < 0.01) dir.set(0, 0, 1);
+    dir.normalize();
+    const focusPos = c.clone().addScaledVector(dir, 1.0);
+    focusPos.y = Math.max(c.y + 0.06, 0.98);
     if (hs.action === "resume") focusPos.set(c.x + 0.28, c.y + 0.5, c.z + 0.75);
-    const focusLook = c.clone();
-    focusLook.x += 0.2;
+    // bias the look right of the object so it sits left of the panel
+    const right = new THREE.Vector3(0, 1, 0).cross(dir).normalize();
+    const focusLook = c.clone().addScaledVector(right, 0.2);
 
     panelOpen = true;
     if (prefersReducedMotion) {
@@ -832,7 +876,10 @@ function buildDesk() {
   const steelPanel = new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.42, metalness: 0.7 });
   const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.3, metalness: 1.0 });
 
-  const top = new THREE.Mesh(new RoundedBoxGeometry(W, thk, D, 3, 0.008), woodMaterial(0x3f2e22, 0.42));
+  const top = new THREE.Mesh(
+    new RoundedBoxGeometry(W, thk, D, 3, 0.008),
+    new THREE.MeshStandardMaterial({ color: 0x1f2126, roughness: 0.55, metalness: 0.25 })
+  );
   top.position.set(0, topY - thk / 2, 0);
   top.castShadow = true;
   top.receiveShadow = true;
@@ -848,24 +895,39 @@ function buildDesk() {
   g.add(mat);
 
   // slim panel legs + low back beam
-  [-(W / 2 - 0.09), W / 2 - 0.09].forEach((px) => {
-    const panel = new THREE.Mesh(new RoundedBoxGeometry(0.035, topY - thk, D - 0.12, 2, 0.006), steelPanel);
-    panel.position.set(px, (topY - thk) / 2, 0);
-    panel.castShadow = true;
-    panel.receiveShadow = true;
-    g.add(panel);
+  // sit-stand lifting columns: telescopic two-stage + T-feet
+  [-(W / 2 - 0.16), W / 2 - 0.16].forEach((px) => {
+    const upper = new THREE.Mesh(new RoundedBoxGeometry(0.07, 0.4, 0.06, 2, 0.008), steelPanel);
+    upper.position.set(px, topY - thk - 0.2, 0);
+    upper.castShadow = true;
+    g.add(upper);
+    const lowerCol = new THREE.Mesh(new RoundedBoxGeometry(0.085, 0.34, 0.075, 2, 0.008), steelPanel);
+    lowerCol.position.set(px, 0.19, 0);
+    lowerCol.castShadow = true;
+    g.add(lowerCol);
+    const footBar = new THREE.Mesh(new RoundedBoxGeometry(0.09, 0.025, 0.66, 2, 0.01), steelPanel);
+    footBar.position.set(px, 0.02, 0);
+    footBar.castShadow = true;
+    footBar.receiveShadow = true;
+    g.add(footBar);
   });
+  // lift keypad on the front edge
+  const keypad = new THREE.Mesh(new RoundedBoxGeometry(0.09, 0.018, 0.045, 2, 0.005), steelPanel);
+  keypad.position.set(-0.55, topY - thk - 0.012, D / 2 - 0.02);
+  g.add(keypad);
   const beam = new THREE.Mesh(new THREE.BoxGeometry(W - 0.3, 0.06, 0.025), steelPanel);
   beam.position.set(0, 0.18, -(D / 2 - 0.1));
   g.add(beam);
 
   // slim under-top drawer unit (right side) with aluminum bar pulls
-  const unit = new THREE.Mesh(new RoundedBoxGeometry(0.52, 0.16, D - 0.2, 2, 0.008), woodMaterial(0x33261c, 0.5));
+  const unit = new THREE.Mesh(new RoundedBoxGeometry(0.52, 0.16, D - 0.2, 2, 0.008),
+    new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.48, metalness: 0.5 }));
   unit.position.set(W / 2 - 0.35, topY - thk - 0.08, 0);
   unit.castShadow = true;
   g.add(unit);
   [-0.13, 0.13].forEach((dx) => {
-    const front = new THREE.Mesh(new RoundedBoxGeometry(0.24, 0.13, 0.014, 2, 0.005), woodMaterial(0x3f2e22, 0.45));
+    const front = new THREE.Mesh(new RoundedBoxGeometry(0.24, 0.13, 0.014, 2, 0.005),
+      new THREE.MeshStandardMaterial({ color: 0x1f2126, roughness: 0.5, metalness: 0.4 }));
     front.position.set(W / 2 - 0.35 + dx, topY - thk - 0.08, (D - 0.2) / 2 + 0.008);
     g.add(front);
     const pull = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.008, 0.008), alu);
@@ -910,12 +972,6 @@ function buildDisplayCabinet() {
   plinth.castShadow = true;
   plinth.receiveShadow = true;
   g.add(plinth);
-  const accent = new THREE.Mesh(
-    new THREE.BoxGeometry(W - 0.2, 0.006, 0.01),
-    new THREE.MeshStandardMaterial({ color: 0x14314f, emissive: 0x3f8cff, emissiveIntensity: 0.9 })
-  );
-  accent.position.set(0, 0.105, z + D / 2 + 0.005);
-  g.add(accent);
 
   // thin steel dividers between bays
   [-0.365, 0.365].forEach((x) => {
@@ -953,117 +1009,73 @@ function buildDisplayCabinet() {
 }
 
 function buildErgoChair() {
-  // ergonomic task chair, built with connected construction: every post and
-  // bracket is placed between computed points so nothing floats
+  // ergonomic task chair v3 — axis-aligned boxes only; every part overlaps
+  // its neighbor so nothing can float
   const g = new THREE.Group();
   const alu = new THREE.MeshStandardMaterial({ color: 0x8f959d, roughness: 0.35, metalness: 0.9 });
   const blackPl = new THREE.MeshStandardMaterial({ color: 0x1a1c20, roughness: 0.55, metalness: 0.2 });
   const mesh = new THREE.MeshStandardMaterial({ color: 0x24262b, roughness: 0.92, metalness: 0.02 });
-  function segment(p0, p1, r, mat) {
-    const dir = new THREE.Vector3().subVectors(p1, p0);
-    const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, dir.length(), 12), mat);
-    m.position.copy(p0).addScaledVector(dir, 0.5);
-    m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
-    return m;
-  }
 
-  // 5-star base: arms run from the hub outward; casters under the arm tips
+  // 5-star base: arms from the hub outward, casters under the tips
   const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 0.05, 18), blackPl);
-  hub.position.y = 0.08;
+  hub.position.y = 0.075;
   g.add(hub);
   for (let i = 0; i < 5; i++) {
     const a = (i / 5) * Math.PI * 2;
-    const tip = new THREE.Vector3(Math.sin(a) * 0.28, 0.055, Math.cos(a) * 0.28);
-    const arm = segment(new THREE.Vector3(0, 0.08, 0), tip, 0.016, alu);
+    const arm = new THREE.Mesh(new RoundedBoxGeometry(0.045, 0.022, 0.3, 2, 0.008), alu);
+    arm.position.set(Math.sin(a) * 0.135, 0.06, Math.cos(a) * 0.135);
+    arm.rotation.y = a;
     arm.castShadow = true;
     g.add(arm);
-    const fork = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.035, 0.026), blackPl);
-    fork.position.set(tip.x, 0.038, tip.z);
-    g.add(fork);
     const caster = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.018, 14), blackPl);
     caster.rotation.z = Math.PI / 2;
     caster.rotation.y = a;
-    caster.position.set(tip.x, 0.026, tip.z);
+    caster.position.set(Math.sin(a) * 0.265, 0.026, Math.cos(a) * 0.265);
     caster.castShadow = true;
     g.add(caster);
   }
-
-  // gas lift from hub up into the seat plate
-  const lift = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.024, 0.24, 16), alu);
-  lift.position.y = 0.22;
+  const lift = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.024, 0.26, 16), alu);
+  lift.position.y = 0.2;
   g.add(lift);
   const boot = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.12, 16), blackPl);
-  boot.position.y = 0.16;
+  boot.position.y = 0.15;
   g.add(boot);
-  const seatPlate = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.02, 0.2), blackPl);
-  seatPlate.position.y = 0.375;
-  g.add(seatPlate);
 
-  // seat cushion (top surface y = 0.46)
-  const SEAT_Y = 0.42;
-  const seat = new THREE.Mesh(new RoundedBoxGeometry(0.46, 0.075, 0.44, 3, 0.025), mesh);
+  // seat over a plate that swallows the lift top
+  const SEAT_Y = 0.43;
+  const seatPlate = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.03, 0.22), blackPl);
+  seatPlate.position.y = SEAT_Y - 0.05;
+  g.add(seatPlate);
+  const seat = new THREE.Mesh(new RoundedBoxGeometry(0.47, 0.08, 0.45, 3, 0.025), mesh);
   seat.position.y = SEAT_Y;
   seat.castShadow = true;
   seat.receiveShadow = true;
   g.add(seat);
 
-  // back spine: from under the rear of the seat up to the backrest bottom
-  const spineFoot = new THREE.Vector3(0, SEAT_Y - 0.02, -0.2);
-  const backBottom = new THREE.Vector3(0, 0.56, -0.27);
-  const spine = segment(spineFoot, backBottom, 0.016, blackPl);
-  spine.castShadow = true;
-  g.add(spine);
-
-  // backrest leaning back; bottom edge meets the spine top
-  const backAngle = 0.12;
-  const backH = 0.56;
-  const backCenter = new THREE.Vector3(
-    0,
-    backBottom.y + (backH / 2) * Math.cos(backAngle),
-    backBottom.z - (backH / 2) * Math.sin(backAngle)
-  );
-  const backRest = new THREE.Mesh(new RoundedBoxGeometry(0.44, backH, 0.05, 3, 0.02), mesh);
-  backRest.position.copy(backCenter);
-  backRest.rotation.x = backAngle;
+  // back uprights: rise straight from INSIDE the seat rear (overlap by 6cm)
+  [-0.14, 0.14].forEach((x) => {
+    const upright = new THREE.Mesh(new RoundedBoxGeometry(0.045, 0.5, 0.035, 2, 0.01), blackPl);
+    upright.position.set(x, SEAT_Y + 0.19, -0.205);
+    upright.castShadow = true;
+    g.add(upright);
+  });
+  // backrest panel bolted onto the uprights (overlaps them)
+  const backRest = new THREE.Mesh(new RoundedBoxGeometry(0.46, 0.58, 0.055, 3, 0.02), mesh);
+  backRest.position.set(0, SEAT_Y + 0.42, -0.225);
   backRest.castShadow = true;
   g.add(backRest);
-  const lumbar = new THREE.Mesh(new RoundedBoxGeometry(0.3, 0.12, 0.03, 2, 0.012), blackPl);
-  lumbar.position.set(0, backBottom.y + 0.12, backBottom.z - 0.12 * Math.sin(backAngle) + 0.028);
-  lumbar.rotation.x = backAngle;
+  const lumbar = new THREE.Mesh(new RoundedBoxGeometry(0.32, 0.13, 0.03, 2, 0.012), blackPl);
+  lumbar.position.set(0, SEAT_Y + 0.2, -0.195);
   g.add(lumbar);
 
-  // headrest: posts run from the backrest top edge into the pad
-  const backTop = new THREE.Vector3(
-    0,
-    backBottom.y + backH * Math.cos(backAngle),
-    backBottom.z - backH * Math.sin(backAngle)
-  );
-  const headCenter = new THREE.Vector3(0, backTop.y + 0.09, backTop.z - 0.02);
-  [-0.05, 0.05].forEach((dx) => {
-    const post = segment(
-      new THREE.Vector3(dx, backTop.y - 0.04, backTop.z + 0.005),
-      new THREE.Vector3(dx, headCenter.y, headCenter.z),
-      0.008,
-      blackPl
-    );
-    g.add(post);
-  });
-  const headrest = new THREE.Mesh(new RoundedBoxGeometry(0.26, 0.12, 0.05, 2, 0.02), mesh);
-  headrest.position.copy(headCenter);
-  headrest.rotation.x = backAngle + 0.08;
-  headrest.castShadow = true;
-  g.add(headrest);
-
-  // armrests: L-shaped — bracket from under the seat out, post up, pad on top
+  // armrests: solid slabs growing out of the seat sides, pads on top
   [-1, 1].forEach((s) => {
-    const sideX = s * 0.21; // inside the 0.46-wide seat
-    const bracketStart = new THREE.Vector3(s * 0.14, SEAT_Y - 0.03, 0.0);
-    const bracketEnd = new THREE.Vector3(sideX, SEAT_Y - 0.03, 0.0);
-    g.add(segment(bracketStart, bracketEnd, 0.011, blackPl));
-    const postTop = new THREE.Vector3(sideX, SEAT_Y + 0.16, 0.0);
-    g.add(segment(bracketEnd, postTop, 0.011, blackPl));
-    const pad = new THREE.Mesh(new RoundedBoxGeometry(0.06, 0.02, 0.22, 2, 0.008), blackPl);
-    pad.position.set(sideX, postTop.y + 0.01, 0.0);
+    const slab = new THREE.Mesh(new RoundedBoxGeometry(0.02, 0.24, 0.2, 2, 0.008), blackPl);
+    slab.position.set(s * 0.225, SEAT_Y + 0.1, 0.0);
+    slab.castShadow = true;
+    g.add(slab);
+    const pad = new THREE.Mesh(new RoundedBoxGeometry(0.065, 0.02, 0.24, 2, 0.008), blackPl);
+    pad.position.set(s * 0.225, SEAT_Y + 0.23, 0.0);
     pad.castShadow = true;
     g.add(pad);
   });
@@ -1227,123 +1239,6 @@ function boxProjectUVs(geo, scale) {
   geo.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
 }
 
-function buildModernShelf(x, rotY) {
-  // modern storage wall: slim black-steel frame, matte shelves, neat rows
-  // of matching binders, archive boxes, a small trophy — tech-office tidy
-  const g = new THREE.Group();
-  const frameMat = new THREE.MeshStandardMaterial({ color: 0x1d1f23, roughness: 0.4, metalness: 0.65 });
-  const shelfMat = new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.5, metalness: 0.45 });
-  const W = 1.7, H = 2.14, D = 0.32;
-  const shelfYs = [0.16, 0.62, 1.08, 1.54];
-
-  [-W / 2 + 0.02, W / 2 - 0.02].forEach((sx) => {
-    const side = new THREE.Mesh(new RoundedBoxGeometry(0.04, H, D, 2, 0.008), frameMat);
-    side.position.set(sx, H / 2, 0);
-    side.castShadow = true;
-    side.receiveShadow = true;
-    g.add(side);
-  });
-  const top = new THREE.Mesh(new RoundedBoxGeometry(W + 0.02, 0.045, D + 0.02, 2, 0.008), frameMat);
-  top.position.set(0, H - 0.022, 0);
-  top.castShadow = true;
-  g.add(top);
-  const backP = new THREE.Mesh(new THREE.BoxGeometry(W, H, 0.016),
-    new THREE.MeshStandardMaterial({ color: 0x141518, roughness: 0.7, metalness: 0.2 }));
-  backP.position.set(0, H / 2, -D / 2 + 0.008);
-  backP.receiveShadow = true;
-  g.add(backP);
-  const plinth = new THREE.Mesh(new THREE.BoxGeometry(W, 0.09, D), frameMat);
-  plinth.position.set(0, 0.045, 0);
-  plinth.castShadow = true;
-  g.add(plinth);
-  shelfYs.forEach((y) => {
-    const b = new THREE.Mesh(new THREE.BoxGeometry(W - 0.09, 0.024, D - 0.03), shelfMat);
-    b.position.set(0, y - 0.012, 0);
-    b.castShadow = true;
-    b.receiveShadow = true;
-    g.add(b);
-  });
-  // under-top LED strip
-  const strip = new THREE.Mesh(
-    new THREE.BoxGeometry(W - 0.2, 0.006, 0.012),
-    new THREE.MeshStandardMaterial({ color: 0x6a7078, emissive: 0xdfe8f4, emissiveIntensity: 0.6 })
-  );
-  strip.position.set(0, H - 0.06, D / 2 - 0.06);
-  g.add(strip);
-
-  // shelf 1 (0.16): row of matching binders, two accent colors
-  const spineCols = [0x2b3038, 0x2b3038, 0x1f3a5e, 0x2b3038, 0x1f3a5e, 0x2b3038, 0x2b3038, 0x314457];
-  spineCols.forEach((col, i) => {
-    const binder = new THREE.Mesh(new RoundedBoxGeometry(0.055, 0.3, 0.24, 2, 0.008),
-      new THREE.MeshStandardMaterial({ color: col, roughness: 0.6, metalness: 0.05 }));
-    binder.position.set(-W / 2 + 0.16 + i * 0.062, 0.31, 0);
-    binder.castShadow = true;
-    g.add(binder);
-    const label = new THREE.Mesh(new THREE.PlaneGeometry(0.03, 0.09),
-      new THREE.MeshStandardMaterial({ color: 0xd8dce2, roughness: 0.8 }));
-    label.position.set(-W / 2 + 0.16 + i * 0.062, 0.34, 0.121);
-    g.add(label);
-  });
-
-  // shelf 2 (0.62): three archive boxes, neatly spaced
-  [-0.5, -0.12, 0.28].forEach((bx, i) => {
-    const box = new THREE.Mesh(new RoundedBoxGeometry(0.3, 0.22, 0.26, 2, 0.008),
-      new THREE.MeshStandardMaterial({ color: i === 1 ? 0x3a3d43 : 0x53565c, roughness: 0.7, metalness: 0.05 }));
-    box.position.set(bx + 0.1, 0.73, 0);
-    box.castShadow = true;
-    g.add(box);
-    const slot = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.02, 0.012),
-      new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.6 }));
-    slot.position.set(bx + 0.1, 0.79, 0.13);
-    g.add(slot);
-  });
-
-  // shelf 3 (1.08): half binders, one small equipment case
-  [0, 1, 2, 3].forEach((i) => {
-    const binder = new THREE.Mesh(new RoundedBoxGeometry(0.055, 0.3, 0.24, 2, 0.008),
-      new THREE.MeshStandardMaterial({ color: i % 2 ? 0x1f3a5e : 0x2b3038, roughness: 0.6 }));
-    binder.position.set(-W / 2 + 0.16 + i * 0.062, 1.23, 0);
-    binder.castShadow = true;
-    g.add(binder);
-  });
-  const caseBox = new THREE.Mesh(new RoundedBoxGeometry(0.4, 0.16, 0.26, 2, 0.012),
-    new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.45, metalness: 0.3 }));
-  caseBox.position.set(0.35, 1.16, 0);
-  caseBox.castShadow = true;
-  g.add(caseBox);
-  [[0.2, 0.5]].forEach(() => {});
-  const caseLatch = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.02, 0.01),
-    new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.35, metalness: 0.9 }));
-  caseLatch.position.set(0.35, 1.16, 0.135);
-  g.add(caseLatch);
-
-  // shelf 4 (1.54): trophy + small framed plate, sparse
-  const trophyBase = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.045, 0.03, 18),
-    new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.4, metalness: 0.4 }));
-  trophyBase.position.set(-0.45, 1.685, 0);
-  g.add(trophyBase);
-  const trophyCup = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.02, 0.09, 18),
-    new THREE.MeshStandardMaterial({ color: 0xc9a24b, roughness: 0.3, metalness: 1.0 }));
-  trophyCup.position.set(-0.45, 1.75, 0);
-  trophyCup.castShadow = true;
-  g.add(trophyCup);
-  const plate = new THREE.Mesh(new RoundedBoxGeometry(0.22, 0.15, 0.012, 2, 0.004),
-    new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.4, metalness: 0.5 }));
-  plate.position.set(0.15, 1.63, -0.05);
-  plate.rotation.x = -0.12;
-  g.add(plate);
-  const plateFace = new THREE.Mesh(new THREE.PlaneGeometry(0.19, 0.12),
-    new THREE.MeshStandardMaterial({ color: 0x3f8cff, emissive: 0x1c3a63, emissiveIntensity: 0.5, roughness: 0.4 }));
-  plateFace.position.set(0.15, 1.632, -0.042);
-  plateFace.rotation.x = -0.12;
-  g.add(plateFace);
-
-  g.position.set(x, 0, -0.35);
-  g.rotation.y = rotY;
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  return g;
-}
-
 function buildWorkbench() {
   // electronics workbench, left wall: pegboard with real MechE tools,
   // H2S printing on the left, instruments clustered right, and the middle
@@ -1377,12 +1272,14 @@ function buildWorkbench() {
     [-0.26, 0.08, 0x17181c],
     [0.42, -0.05, 0xd06018],
   ].forEach(([sx, sz, col]) => {
-    const sp = makeSpool(col);
-    sp.position.set(sx, 0.247, sz);
+    const sp = makeMiniSpool(col);
+    sp.scale.setScalar(1.6);
+    sp.position.set(sx, 0.243, sz);
     g.add(sp);
   });
-  const spTop = makeSpool(0x2255cc);
-  spTop.position.set(-0.62, 0.312, 0.05); // stacked on the green one
+  const spTop = makeMiniSpool(0x2255cc);
+  spTop.scale.setScalar(1.6);
+  spTop.position.set(-0.62, 0.298, 0.05); // stacked on the green one
   g.add(spTop);
 
   // pegboard with dot-grid
@@ -1731,203 +1628,593 @@ function buildWorkbench() {
   return g;
 }
 
-function makeSpool(filColor) {
-  // realistic filament spool: translucent flanges, hollow hub, wound filament
+function makeMiniSpool(col) {
   const g = new THREE.Group();
-  const flangeMat = new THREE.MeshPhysicalMaterial({
-    color: 0xd8dce2,
-    roughness: 0.25,
-    metalness: 0,
-    transparent: true,
-    opacity: 0.55,
-    side: THREE.DoubleSide,
+  const fl = new THREE.MeshPhysicalMaterial({ color: 0xd8dce2, roughness: 0.3, transparent: true, opacity: 0.5 });
+  [-0.017, 0.017].forEach((dy) => {
+    const f = new THREE.Mesh(new THREE.CylinderGeometry(0.046, 0.046, 0.003, 22), fl);
+    f.position.y = dy;
+    g.add(f);
   });
-  [-0.028, 0.028].forEach((dy) => {
-    const flange = new THREE.Mesh(new THREE.CylinderGeometry(0.078, 0.078, 0.004, 32), flangeMat);
-    flange.position.y = dy;
-    g.add(flange);
-  });
-  const hub = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.024, 0.024, 0.055, 20, 1, true),
-    new THREE.MeshStandardMaterial({ color: 0xcfd3d9, roughness: 0.4, side: THREE.DoubleSide })
-  );
-  g.add(hub);
-  // wound filament: stack of tori reads as coiled strands
-  const filMat = new THREE.MeshStandardMaterial({ color: filColor, roughness: 0.55 });
-  for (let i = 0; i < 5; i++) {
-    const layer = new THREE.Mesh(new THREE.TorusGeometry(0.036 + i * 0.006, 0.005, 8, 36), filMat);
-    layer.rotation.x = Math.PI / 2;
-    layer.position.y = (i % 2 === 0 ? -1 : 1) * 0.011;
-    g.add(layer);
-    const layer2 = new THREE.Mesh(new THREE.TorusGeometry(0.036 + i * 0.006, 0.005, 8, 36), filMat);
-    layer2.rotation.x = Math.PI / 2;
-    layer2.position.y = (i % 2 === 0 ? 1 : -1) * 0.011;
-    g.add(layer2);
-  }
-  const core = new THREE.Mesh(new THREE.CylinderGeometry(0.062, 0.062, 0.044, 28), filMat);
-  g.add(core);
+  const fil = new THREE.Mesh(new THREE.CylinderGeometry(0.038, 0.038, 0.028, 22),
+    new THREE.MeshStandardMaterial({ color: col, roughness: 0.55 }));
+  g.add(fil);
   return g;
 }
 
 function buildBambuPrinter() {
-  // Bambu Lab H2S: tall charcoal enclosure, full-height tinted front door
-  // with a visible printing chamber, angled touchscreen, top glass, vents
+  // Bambu Lab H2S per reference: light-silver side shells, dark front with a
+  // large tinted door, top control band with screen + wordmark, side logo,
+  // and an AMS 2 unit on top with four visible spools under a smoked cover
   const g = new THREE.Group();
-  const shellMat = new THREE.MeshStandardMaterial({ color: 0x2b2d31, roughness: 0.38, metalness: 0.42 });
-  const trimMat = new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.45, metalness: 0.5 });
-  const W = 0.5, H = 0.62, D = 0.5;
+  const silver = new THREE.MeshStandardMaterial({ color: 0xb4b7bc, roughness: 0.42, metalness: 0.35 });
+  const darkFace = new THREE.MeshStandardMaterial({ color: 0x1a1c20, roughness: 0.45, metalness: 0.4 });
+  const trim = new THREE.MeshStandardMaterial({ color: 0x101114, roughness: 0.5, metalness: 0.4 });
+  const W = 0.49, H = 0.6, D = 0.5;
 
-  // body with rounded vertical edges
-  const shell = new THREE.Mesh(new RoundedBoxGeometry(W, H, D, 4, 0.035), shellMat);
-  shell.position.y = H / 2 + 0.012;
+  // main shell (light silver), slightly rounded
+  const shell = new THREE.Mesh(new RoundedBoxGeometry(W, H, D, 3, 0.02), silver);
+  shell.position.y = H / 2 + 0.008;
   shell.castShadow = true;
   shell.receiveShadow = true;
   g.add(shell);
   [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz]) => {
-    const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.022, 0.024, 12), trimMat);
-    foot.position.set(sx * (W / 2 - 0.06), 0.012, sz * (D / 2 - 0.06));
+    const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.02, 0.018, 12), trim);
+    foot.position.set(sx * (W / 2 - 0.05), 0.009, sz * (D / 2 - 0.05));
     g.add(foot);
   });
 
-  // printing chamber: dark recessed box visible through the door glass
-  const chamberW = W - 0.11, chamberH = H - 0.2, frontZ = D / 2;
+  // dark front face panel
+  const frontZ = D / 2 + 0.006;
+  const facePanel = new THREE.Mesh(new RoundedBoxGeometry(W - 0.02, H - 0.02, 0.014, 2, 0.008), darkFace);
+  facePanel.position.set(0, H / 2 + 0.008, D / 2);
+  g.add(facePanel);
+
+  // printing chamber behind the glass
+  const chamberW = W - 0.1, doorH = H * 0.66;
   const chamber = new THREE.Mesh(
-    new THREE.BoxGeometry(chamberW, chamberH, 0.36),
+    new THREE.BoxGeometry(chamberW, doorH, 0.34),
     new THREE.MeshStandardMaterial({ color: 0x0a0b0d, roughness: 0.9, side: THREE.BackSide })
   );
-  chamber.position.set(0, H / 2 + 0.045, frontZ - 0.19);
+  chamber.position.set(0, doorH / 2 + 0.05, D / 2 - 0.18);
   g.add(chamber);
-
-  // build plate (textured PEI gold-ish) + half-printed blue car
   const plate = new THREE.Mesh(
-    new THREE.BoxGeometry(chamberW - 0.06, 0.006, 0.26),
+    new THREE.BoxGeometry(chamberW - 0.05, 0.006, 0.24),
     new THREE.MeshStandardMaterial({ color: 0x6a5a30, roughness: 0.5, metalness: 0.55 })
   );
-  plate.position.set(0, 0.145, frontZ - 0.2);
+  plate.position.set(0, 0.12, D / 2 - 0.19);
   g.add(plate);
   const printMat = new THREE.MeshStandardMaterial({ color: 0x3f8cff, roughness: 0.5, metalness: 0.05 });
-  const carBody = new THREE.Mesh(new RoundedBoxGeometry(0.13, 0.032, 0.06, 2, 0.008), printMat);
-  carBody.position.set(0, 0.165, frontZ - 0.2);
+  const carBody = new THREE.Mesh(new RoundedBoxGeometry(0.12, 0.03, 0.055, 2, 0.007), printMat);
+  carBody.position.set(0, 0.138, D / 2 - 0.19);
   g.add(carBody);
-  const carCabin = new THREE.Mesh(new RoundedBoxGeometry(0.065, 0.022, 0.05, 2, 0.006), printMat);
-  carCabin.position.set(-0.01, 0.19, frontZ - 0.2);
+  const carCabin = new THREE.Mesh(new RoundedBoxGeometry(0.06, 0.02, 0.045, 2, 0.006), printMat);
+  carCabin.position.set(-0.008, 0.16, D / 2 - 0.19);
   g.add(carCabin);
-
-  // CoreXY gantry: two rails + crossbar + white toolhead
   const railMat = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.35, metalness: 0.9 });
-  [-1, 1].forEach((s) => {
-    const side = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.012, 0.3), railMat);
-    side.position.set(s * (chamberW / 2 - 0.02), 0.42, frontZ - 0.2);
-    g.add(side);
-  });
-  const crossbar = new THREE.Mesh(new THREE.BoxGeometry(chamberW - 0.05, 0.014, 0.02), railMat);
-  crossbar.position.set(0, 0.42, frontZ - 0.22);
+  const crossbar = new THREE.Mesh(new THREE.BoxGeometry(chamberW - 0.04, 0.012, 0.018), railMat);
+  crossbar.position.set(0, 0.34, D / 2 - 0.2);
   g.add(crossbar);
-  const head = new THREE.Mesh(
-    new RoundedBoxGeometry(0.055, 0.075, 0.05, 2, 0.01),
-    new THREE.MeshStandardMaterial({ color: 0xe8eaee, roughness: 0.35, metalness: 0.1 })
-  );
-  head.position.set(0.05, 0.385, frontZ - 0.21);
+  const head = new THREE.Mesh(new RoundedBoxGeometry(0.05, 0.065, 0.045, 2, 0.009),
+    new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.4, metalness: 0.3 }));
+  head.position.set(0.04, 0.31, D / 2 - 0.19);
   g.add(head);
   const headLed = new THREE.Mesh(
-    new THREE.BoxGeometry(0.022, 0.005, 0.004),
+    new THREE.BoxGeometry(0.02, 0.005, 0.004),
     new THREE.MeshStandardMaterial({ color: 0xff3344, emissive: 0xff3344, emissiveIntensity: 1.2 })
   );
-  headLed.position.set(0.05, 0.36, frontZ - 0.187);
+  headLed.position.set(0.04, 0.288, D / 2 - 0.168);
   g.add(headLed);
   MODELS.printerHead = head;
   MODELS.printerHeadLed = headLed;
-
-  // chamber LED strip + interior light
   const chamberLed = new THREE.Mesh(
-    new THREE.BoxGeometry(chamberW - 0.06, 0.006, 0.01),
-    new THREE.MeshStandardMaterial({ color: 0xdfe8f4, emissive: 0xe8f0fa, emissiveIntensity: 1.1 })
+    new THREE.BoxGeometry(chamberW - 0.05, 0.005, 0.008),
+    new THREE.MeshStandardMaterial({ color: 0xdfe8f4, emissive: 0xe8f0fa, emissiveIntensity: 1.0 })
   );
-  chamberLed.position.set(0, H - 0.115, frontZ - 0.06);
+  chamberLed.position.set(0, doorH - 0.02, D / 2 - 0.05);
   g.add(chamberLed);
-  const inner = new THREE.PointLight(0xe8f0fa, 1.1, 0.9, 2);
-  inner.position.set(0, H - 0.16, frontZ - 0.18);
+  const inner = new THREE.PointLight(0xe8f0fa, 0.9, 0.8, 2);
+  inner.position.set(0, doorH - 0.06, D / 2 - 0.16);
   g.add(inner);
 
-  // full-height tinted glass door + slim frame + hinge + handle
+  // tinted glass door over the lower 2/3 of the front + handle
   const glass = new THREE.Mesh(
-    new THREE.PlaneGeometry(chamberW, chamberH),
+    new THREE.PlaneGeometry(chamberW, doorH),
     new THREE.MeshPhysicalMaterial({
-      color: 0x30363c,
-      roughness: 0.06,
-      metalness: 0,
-      transparent: true,
-      opacity: 0.22,
-      side: THREE.DoubleSide,
+      color: 0x22262b, roughness: 0.06, metalness: 0,
+      transparent: true, opacity: 0.3, side: THREE.DoubleSide,
     })
   );
-  glass.position.set(0, H / 2 + 0.045, frontZ + 0.004);
+  glass.position.set(0, doorH / 2 + 0.05, frontZ + 0.004);
   g.add(glass);
-  const dFrame = new THREE.Mesh(new THREE.BoxGeometry(chamberW + 0.02, 0.012, 0.008), trimMat);
-  dFrame.position.set(0, H / 2 + 0.045 + chamberH / 2, frontZ + 0.004);
-  g.add(dFrame);
-  const dFrameB = dFrame.clone();
-  dFrameB.position.y = H / 2 + 0.045 - chamberH / 2;
-  g.add(dFrameB);
-  const handle = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.11, 0.012), trimMat);
-  handle.position.set(chamberW / 2 - 0.015, H / 2 + 0.05, frontZ + 0.012);
+  const handle = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.09, 0.01), trim);
+  handle.position.set(chamberW / 2 - 0.012, doorH / 2 + 0.06, frontZ + 0.01);
   g.add(handle);
 
-  // wordmark top-left of the door
+  // top control band: touchscreen (left) + "Bambu H2S" wordmark
+  const ui = document.createElement("canvas");
+  ui.width = 96; ui.height = 64;
+  const uctx = ui.getContext("2d");
+  uctx.fillStyle = "#0c0f12"; uctx.fillRect(0, 0, 96, 64);
+  uctx.fillStyle = "#8ce04a"; uctx.fillRect(8, 8, 34, 22);
+  uctx.fillStyle = "#2a2f36"; uctx.fillRect(8, 40, 80, 8);
+  uctx.fillStyle = "#8ce04a"; uctx.fillRect(8, 40, 52, 8);
+  uctx.fillStyle = "#c9ced6"; uctx.font = "600 11px Arial"; uctx.fillText("66%", 66, 24);
+  const uiTex = new THREE.CanvasTexture(ui);
+  uiTex.colorSpace = THREE.SRGBColorSpace;
+  const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.075, 0.05),
+    new THREE.MeshBasicMaterial({ map: uiTex, color: 0x969696 }));
+  screen.position.set(-W / 2 + 0.075, H - 0.065, frontZ + 0.009);
+  g.add(screen);
   const wm = document.createElement("canvas");
   wm.width = 128; wm.height = 24;
   const wctx = wm.getContext("2d");
-  wctx.fillStyle = "#2b2d31"; wctx.fillRect(0, 0, 128, 24);
-  wctx.fillStyle = "#c9ced6"; wctx.font = "700 13px Arial";
-  wctx.fillText("BAMBU LAB  H2S", 6, 17);
+  wctx.fillStyle = "#1a1c20"; wctx.fillRect(0, 0, 128, 24);
+  wctx.fillStyle = "#8a9099"; wctx.font = "600 13px Arial";
+  wctx.fillText("Bambu  H2S", 30, 17);
   const wmTex = new THREE.CanvasTexture(wm);
   wmTex.colorSpace = THREE.SRGBColorSpace;
-  const mark = new THREE.Mesh(new THREE.PlaneGeometry(0.13, 0.024), new THREE.MeshBasicMaterial({ map: wmTex, color: 0x9a9a9a }));
-  mark.position.set(-W / 2 + 0.1, H - 0.05, frontZ + 0.002);
+  const mark = new THREE.Mesh(new THREE.PlaneGeometry(0.12, 0.0225), new THREE.MeshBasicMaterial({ map: wmTex, color: 0x9a9a9a }));
+  mark.position.set(0.04, H - 0.06, frontZ + 0.009);
   g.add(mark);
 
-  // angled touchscreen, bottom-right
-  const ui = document.createElement("canvas");
-  ui.width = 128; ui.height = 64;
-  const uctx = ui.getContext("2d");
-  uctx.fillStyle = "#0c0f12"; uctx.fillRect(0, 0, 128, 64);
-  uctx.fillStyle = "#8ce04a"; uctx.font = "700 15px Arial"; uctx.fillText("BAMBU", 10, 22);
-  uctx.fillStyle = "#2a2f36"; uctx.fillRect(10, 36, 108, 9);
-  uctx.fillStyle = "#8ce04a"; uctx.fillRect(10, 36, 71, 9);
-  uctx.fillStyle = "#c9ced6"; uctx.font = "600 11px Arial"; uctx.fillText("66%  car_v3.gcode", 10, 58);
-  const uiTex = new THREE.CanvasTexture(ui);
-  uiTex.colorSpace = THREE.SRGBColorSpace;
-  const screenHolder = new THREE.Mesh(new RoundedBoxGeometry(0.12, 0.07, 0.012, 2, 0.004), trimMat);
-  screenHolder.position.set(W / 2 - 0.1, 0.1, frontZ + 0.012);
-  screenHolder.rotation.x = -0.28;
-  g.add(screenHolder);
-  const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.108, 0.056), new THREE.MeshBasicMaterial({ map: uiTex, color: 0x8f8f8f }));
-  screen.position.set(W / 2 - 0.1, 0.102, frontZ + 0.02);
-  screen.rotation.x = -0.28;
-  g.add(screen);
+  // Bambu Lab logo on the right side shell (two bars + wordmark)
+  const lg = document.createElement("canvas");
+  lg.width = 128; lg.height = 128;
+  const lctx = lg.getContext("2d");
+  lctx.fillStyle = "#b4b7bc"; lctx.fillRect(0, 0, 128, 128);
+  lctx.fillStyle = "#17181c";
+  lctx.fillRect(50, 22, 12, 40);
+  lctx.fillRect(68, 30, 12, 32);
+  lctx.font = "600 13px Arial"; lctx.textAlign = "center";
+  lctx.fillText("Bambu Lab", 64, 88);
+  const lgTex = new THREE.CanvasTexture(lg);
+  lgTex.colorSpace = THREE.SRGBColorSpace;
+  const logo = new THREE.Mesh(new THREE.PlaneGeometry(0.16, 0.16), new THREE.MeshBasicMaterial({ map: lgTex, color: 0x9a9a9a }));
+  logo.position.set(W / 2 + 0.002, H * 0.5 + 0.05, -0.02);
+  logo.rotation.y = Math.PI / 2;
+  g.add(logo);
 
-  // top: inset dark glass lid
-  const lid = new THREE.Mesh(
-    new THREE.BoxGeometry(W - 0.12, 0.008, D - 0.14),
-    new THREE.MeshPhysicalMaterial({ color: 0x24282d, roughness: 0.1, metalness: 0.1, transparent: true, opacity: 0.75 })
-  );
-  lid.position.set(0, H + 0.008, 0);
-  g.add(lid);
-
-  // side vents (slats)
-  for (let i = 0; i < 5; i++) {
-    const vent = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.05, 0.14), trimMat);
-    vent.position.set(-W / 2 - 0.001, 0.2 + i * 0.02, -0.08);
-    g.add(vent);
+  /* ---- AMS 2 on top: dark tray + four spools under a smoked cover ---- */
+  const ams = new THREE.Group();
+  const amsW = W - 0.06, amsD = D - 0.16, amsH = 0.05;
+  const tray = new THREE.Mesh(new RoundedBoxGeometry(amsW, amsH, amsD, 2, 0.01), trim);
+  tray.position.y = amsH / 2;
+  ams.add(tray);
+  // 4 feed slots on the tray front
+  for (let i = 0; i < 4; i++) {
+    const slot = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.02, 0.008),
+      new THREE.MeshStandardMaterial({ color: 0x2a2d33, roughness: 0.5 }));
+    slot.position.set(-amsW / 2 + 0.08 + i * 0.095, 0.03, amsD / 2 - 0.002);
+    ams.add(slot);
   }
-
-  // side-mounted spool
-  const spool = makeSpool(0x3f9e4f);
-  spool.rotation.z = Math.PI / 2;
-  spool.position.set(-W / 2 - 0.045, H * 0.62, -0.05);
-  g.add(spool);
+  // spools row
+  [0xe8eaee, 0x3f9e4f, 0xc23c2e, 0x27408a].forEach((col, i) => {
+    const sp = makeMiniSpool(col);
+    sp.rotation.z = Math.PI / 2;
+    sp.position.set(-amsW / 2 + 0.075 + i * 0.095, amsH + 0.042, 0);
+    ams.add(sp);
+  });
+  // smoked half-cylinder cover along the width
+  const cover = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.075, 0.075, amsW, 26, 1, true, 0, Math.PI),
+    new THREE.MeshPhysicalMaterial({
+      color: 0x101114, roughness: 0.12, metalness: 0,
+      transparent: true, opacity: 0.42, side: THREE.DoubleSide,
+    })
+  );
+  cover.rotation.z = Math.PI / 2;
+  cover.position.set(0, amsH + 0.035, 0);
+  ams.add(cover);
+  // cover end caps
+  [-amsW / 2, amsW / 2].forEach((ex) => {
+    const cap = new THREE.Mesh(new THREE.CircleGeometry(0.075, 26, 0, Math.PI),
+      new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.45, metalness: 0.3, side: THREE.DoubleSide }));
+    cap.position.set(ex, amsH + 0.035, 0);
+    cap.rotation.y = Math.PI / 2;
+    ams.add(cap);
+  });
+  ams.position.set(0, H + 0.016, -0.02);
+  g.add(ams);
 
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+/* right-wall display cabinet layout (2 bays x 3 rows) */
+const CAB2 = {
+  x: 2.42, // cabinet center x (against the right wall)
+  frontX: 2.24, // exhibit center x
+  bays: [-0.75, -0.05], // z centers
+  rows: [1.68, 1.2, 0.72],
+  rowH: 0.48,
+};
+
+function buildSideCabinet() {
+  // second display cabinet on the right wall — same modern language as the
+  // main one: slim steel frame, tinted glass shelves, cool light strips
+  const g = new THREE.Group();
+  const W = 1.6; // along z
+  const H = 2.2;
+  const D = 0.5;
+  const frameMat = new THREE.MeshStandardMaterial({ color: 0x1d1f23, roughness: 0.4, metalness: 0.65 });
+  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.3, metalness: 1.0 });
+
+  const back = new THREE.Mesh(new THREE.BoxGeometry(0.02, H, W),
+    new THREE.MeshStandardMaterial({ color: 0x141518, roughness: 0.7, metalness: 0.2 }));
+  back.position.set(D / 2 - 0.01, H / 2, 0);
+  back.receiveShadow = true;
+  g.add(back);
+  [-W / 2 + 0.02, W / 2 - 0.02].forEach((z) => {
+    const side = new THREE.Mesh(new RoundedBoxGeometry(D, H, 0.04, 2, 0.008), frameMat);
+    side.position.set(0, H / 2, z);
+    side.castShadow = true;
+    side.receiveShadow = true;
+    g.add(side);
+  });
+  const top = new THREE.Mesh(new RoundedBoxGeometry(D + 0.02, 0.05, W + 0.02, 2, 0.008), frameMat);
+  top.position.set(0, H - 0.025, 0);
+  top.castShadow = true;
+  g.add(top);
+  const plinth = new THREE.Mesh(new RoundedBoxGeometry(D, 0.1, W + 0.01, 2, 0.008), frameMat);
+  plinth.position.set(0, 0.05, 0);
+  plinth.castShadow = true;
+  plinth.receiveShadow = true;
+  g.add(plinth);
+  // middle divider between the two bays
+  const div = new THREE.Mesh(new THREE.BoxGeometry(D - 0.1, H - 0.15, 0.014), frameMat);
+  div.position.set(0, (H - 0.15) / 2 + 0.1, -0.4);
+  div.castShadow = true;
+  g.add(div);
+
+  const glassMat = new THREE.MeshPhysicalMaterial({
+    color: 0x2c343c, roughness: 0.08, metalness: 0, transparent: true, opacity: 0.4,
+  });
+  CAB2.rows.forEach((y) => {
+    const board = new THREE.Mesh(new THREE.BoxGeometry(D - 0.08, 0.014, W - 0.08), glassMat);
+    board.position.set(0, y - 0.007, 0);
+    board.receiveShadow = true;
+    g.add(board);
+    const edge = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.016, W - 0.08), alu);
+    edge.position.set(-D / 2 + 0.04, y - 0.007, 0);
+    g.add(edge);
+    const strip = new THREE.Mesh(
+      new THREE.BoxGeometry(0.014, 0.008, W - 0.14),
+      new THREE.MeshStandardMaterial({ color: 0x6a7078, emissive: 0xdfe8f4, emissiveIntensity: 0.5 })
+    );
+    strip.position.set(-D / 2 + 0.1, y + CAB2.rowH - 0.055, 0);
+    g.add(strip);
+  });
+
+  g.position.set(CAB2.x, 0, -0.4);
+  return g;
+}
+
+function buildGearboxV2() {
+  // 2-speed gearbox: meshed gear pair on shafts in an open housing shell
+  const g = new THREE.Group();
+  const steel = new THREE.MeshStandardMaterial({ color: 0x9a9da3, metalness: 0.95, roughness: 0.35 });
+  const dark = new THREE.MeshStandardMaterial({ color: 0x2c2f34, metalness: 0.85, roughness: 0.45 });
+  function gear(rBody, nTeeth, thick) {
+    const gg = new THREE.Group();
+    gg.add(new THREE.Mesh(new THREE.CylinderGeometry(rBody, rBody, thick, Math.max(24, nTeeth * 2)), steel));
+    const toothLen = rBody * 0.2;
+    const toothGeo = new THREE.BoxGeometry(toothLen, thick, (2 * Math.PI * rBody) / nTeeth * 0.5);
+    for (let i = 0; i < nTeeth; i++) {
+      const a = (i / nTeeth) * Math.PI * 2;
+      const t = new THREE.Mesh(toothGeo, steel);
+      t.position.set(Math.cos(a) * (rBody + toothLen / 2), 0, Math.sin(a) * (rBody + toothLen / 2));
+      t.rotation.y = -a;
+      gg.add(t);
+    }
+    gg.add(new THREE.Mesh(new THREE.CylinderGeometry(rBody * 0.26, rBody * 0.26, thick + 0.004, 18), dark));
+    return gg;
+  }
+  const housing = new THREE.Mesh(new RoundedBoxGeometry(0.3, 0.05, 0.16, 2, 0.012), dark);
+  housing.position.y = 0.012;
+  g.add(housing);
+  const big = gear(0.08, 18, 0.024);
+  big.position.set(-0.05, 0.062, 0);
+  g.add(big);
+  const small = gear(0.05, 11, 0.024);
+  small.position.set(0.085, 0.062, 0.012);
+  g.add(small);
+  [[-0.05, 0], [0.085, 0.012]].forEach(([x, z]) => {
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.13, 14), dark);
+    shaft.position.set(x, 0.075, z);
+    g.add(shaft);
+  });
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildDriverSeat() {
+  // aluminum FSAE driver seat: bent-sheet pan + reclined back, side flanges
+  const g = new THREE.Group();
+  const alu = new THREE.MeshStandardMaterial({ color: 0xb0b4ba, metalness: 0.9, roughness: 0.38, side: THREE.DoubleSide });
+  const pan = new THREE.Mesh(new RoundedBoxGeometry(0.2, 0.012, 0.2, 2, 0.005), alu);
+  pan.position.set(0, 0.05, 0.04);
+  pan.rotation.x = -0.12;
+  g.add(pan);
+  const backr = new THREE.Mesh(new RoundedBoxGeometry(0.2, 0.3, 0.012, 2, 0.005), alu);
+  backr.position.set(0, 0.19, -0.07);
+  backr.rotation.x = 0.32;
+  g.add(backr);
+  [[-0.095], [0.095]].forEach(([x]) => {
+    const flange = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.12, 0.16), alu);
+    flange.position.set(x, 0.1, -0.02);
+    flange.rotation.x = 0.25;
+    g.add(flange);
+  });
+  // mounting rails
+  [[-0.06], [0.06]].forEach(([x]) => {
+    const rail = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.02, 0.2), new THREE.MeshStandardMaterial({ color: 0x2c2f34, metalness: 0.8, roughness: 0.5 }));
+    rail.position.set(x, 0.012, 0.03);
+    g.add(rail);
+  });
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildPoolSniper() {
+  // assistive cue launcher: barrel on a stand, spring section, grip, cue tip
+  const g = new THREE.Group();
+  const dark = new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.5, metalness: 0.4 });
+  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.35, metalness: 0.9 });
+  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.26, 18), dark);
+  barrel.rotation.z = Math.PI / 2;
+  barrel.position.set(0, 0.08, 0);
+  g.add(barrel);
+  // spring: stacked tori
+  for (let i = 0; i < 6; i++) {
+    const coil = new THREE.Mesh(new THREE.TorusGeometry(0.017, 0.003, 8, 20), alu);
+    coil.rotation.y = Math.PI / 2;
+    coil.position.set(-0.06 + i * 0.014, 0.08, 0);
+    g.add(coil);
+  }
+  const cue = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.008, 0.22, 12),
+    new THREE.MeshStandardMaterial({ color: 0xc99a5b, roughness: 0.5 }));
+  cue.rotation.z = Math.PI / 2;
+  cue.position.set(0.2, 0.08, 0);
+  g.add(cue);
+  const grip = new THREE.Mesh(new RoundedBoxGeometry(0.03, 0.09, 0.035, 2, 0.008), dark);
+  grip.position.set(-0.08, 0.025, 0);
+  grip.rotation.z = 0.25;
+  g.add(grip);
+  // stand
+  [[-0.03], [0.09]].forEach(([x]) => {
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.06, 0.05), alu);
+    leg.position.set(x, 0.03, 0);
+    g.add(leg);
+  });
+  // three pool balls beside
+  [[0.02, 0xffffff], [0.055, 0xc23c2e], [0.09, 0x27408a]].forEach(([z, col], i) => {
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(0.016, 16, 16),
+      new THREE.MeshPhysicalMaterial({ color: col, roughness: 0.15, clearcoat: 0.8 }));
+    ball.position.set(-0.02 + i * 0.02, 0.016, 0.08);
+    g.add(ball);
+  });
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildSmelly() {
+  // "Smelly" perfume mixer: base, dual-rail gantry, dispensing head, vials
+  const g = new THREE.Group();
+  const dark = new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.5, metalness: 0.4 });
+  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.35, metalness: 0.9 });
+  const base = new THREE.Mesh(new RoundedBoxGeometry(0.24, 0.02, 0.16, 2, 0.006), dark);
+  base.position.y = 0.01;
+  g.add(base);
+  [[-0.1], [0.1]].forEach(([x]) => {
+    const rail = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.18, 12), alu);
+    rail.position.set(x, 0.11, -0.04);
+    g.add(rail);
+  });
+  const beam = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.016, 0.02), dark);
+  beam.position.set(0, 0.2, -0.04);
+  g.add(beam);
+  const carriage = new THREE.Mesh(new RoundedBoxGeometry(0.04, 0.05, 0.03, 2, 0.006), dark);
+  carriage.position.set(0.03, 0.17, -0.04);
+  g.add(carriage);
+  const nozzle = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.002, 0.03, 10), alu);
+  nozzle.position.set(0.03, 0.13, -0.04);
+  g.add(nozzle);
+  // vial grid
+  [[-0.07, 0x8fd0b0], [-0.023, 0xd8b25a], [0.024, 0xc98fb0], [0.071, 0x8fb8d8]].forEach(([x, col]) => {
+    const vial = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.05, 14),
+      new THREE.MeshPhysicalMaterial({ color: col, roughness: 0.1, transparent: true, opacity: 0.7 }));
+    vial.position.set(x, 0.045, 0.03);
+    g.add(vial);
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.01, 12), dark);
+    cap.position.set(x, 0.075, 0.03);
+    g.add(cap);
+  });
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildTelecasterV2() {
+  // Telecaster on a small stand: butterscotch body, neck, strings
+  const g = new THREE.Group();
+  const body = new THREE.Shape();
+  body.moveTo(0, -0.1);
+  body.bezierCurveTo(0.06, -0.1, 0.072, -0.055, 0.066, -0.012);
+  body.bezierCurveTo(0.062, 0.025, 0.047, 0.037, 0.044, 0.062);
+  body.bezierCurveTo(0.04, 0.094, 0.019, 0.106, 0, 0.106);
+  body.bezierCurveTo(-0.019, 0.106, -0.04, 0.094, -0.044, 0.062);
+  body.bezierCurveTo(-0.047, 0.037, -0.062, 0.025, -0.066, -0.012);
+  body.bezierCurveTo(-0.072, -0.055, -0.06, -0.1, 0, -0.1);
+  const bodyMesh = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(body, { depth: 0.026, bevelEnabled: true, bevelThickness: 0.004, bevelSize: 0.004, bevelSegments: 2 }),
+    new THREE.MeshPhysicalMaterial({ color: 0xc98f3f, roughness: 0.28, metalness: 0.04, clearcoat: 0.8, clearcoatRoughness: 0.14 })
+  );
+  bodyMesh.position.set(0, 0.135, 0);
+  g.add(bodyMesh);
+  const pg = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.036, 0.004, 20),
+    new THREE.MeshStandardMaterial({ color: 0xf5f0e0, roughness: 0.5 }));
+  pg.rotation.x = Math.PI / 2;
+  pg.position.set(-0.022, 0.11, 0.028);
+  g.add(pg);
+  const neckMat = new THREE.MeshStandardMaterial({ color: 0xa8763c, roughness: 0.55 });
+  const neck = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.2, 0.014), neckMat);
+  neck.position.set(0, 0.32, 0.012);
+  g.add(neck);
+  const head = new THREE.Mesh(new THREE.BoxGeometry(0.034, 0.06, 0.012), neckMat);
+  head.position.set(0.005, 0.45, 0.012);
+  g.add(head);
+  const fb = new THREE.Mesh(new THREE.BoxGeometry(0.025, 0.2, 0.003),
+    new THREE.MeshStandardMaterial({ color: 0x3a2614, roughness: 0.6 }));
+  fb.position.set(0, 0.32, 0.021);
+  g.add(fb);
+  const stringMat = new THREE.MeshStandardMaterial({ color: 0xc8ccd2, metalness: 0.9, roughness: 0.3 });
+  for (let i = 0; i < 6; i++) {
+    const s = new THREE.Mesh(new THREE.CylinderGeometry(0.0005, 0.0005, 0.34, 4), stringMat);
+    s.position.set(-0.0085 + i * 0.0034, 0.27, 0.026);
+    g.add(s);
+  }
+  const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.036, 0.014, 0.005), stringMat);
+  bridge.position.set(0, 0.085, 0.026);
+  g.add(bridge);
+  // A-stand
+  const standMat = new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.5, metalness: 0.5 });
+  [[-0.05, 0.05], [0.05, 0.05], [-0.05, -0.03], [0.05, -0.03]].forEach(([x, z]) => {
+    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.12, 8), standMat);
+    leg.position.set(x, 0.055, z);
+    leg.rotation.x = z > 0 ? -0.35 : 0.35;
+    g.add(leg);
+  });
+  const cradle = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.008, 0.02), standMat);
+  cradle.position.set(0, 0.1, 0.012);
+  g.add(cradle);
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildFtcBot() {
+  // FTC robot: chassis, four mecanum wheels, vertical lift, claw, hub
+  const g = new THREE.Group();
+  const dark = new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.5, metalness: 0.4 });
+  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.35, metalness: 0.9 });
+  const chassis = new THREE.Mesh(new RoundedBoxGeometry(0.2, 0.02, 0.16, 2, 0.005), alu);
+  chassis.position.y = 0.045;
+  g.add(chassis);
+  // mecanum wheels: cylinder + angled rollers
+  [[-0.085, -0.07], [0.085, -0.07], [-0.085, 0.07], [0.085, 0.07]].forEach(([x, z]) => {
+    const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.02, 16),
+      new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.7 }));
+    wheel.rotation.z = Math.PI / 2;
+    wheel.position.set(x, 0.032, z);
+    g.add(wheel);
+    for (let r = 0; r < 5; r++) {
+      const a = (r / 5) * Math.PI * 2;
+      const roller = new THREE.Mesh(new THREE.CapsuleGeometry(0.005, 0.014, 3, 8),
+        new THREE.MeshStandardMaterial({ color: 0x53565c, roughness: 0.6 }));
+      roller.position.set(x + (x > 0 ? 0.011 : -0.011), 0.032 + Math.sin(a) * 0.026, z + Math.cos(a) * 0.026);
+      roller.rotation.x = a + 0.8;
+      g.add(roller);
+    }
+  });
+  // vertical lift + claw
+  [[-0.03], [0.03]].forEach(([x]) => {
+    const rail = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.22, 0.012), alu);
+    rail.position.set(x, 0.16, -0.05);
+    g.add(rail);
+  });
+  const carriage = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.03, 0.02), dark);
+  carriage.position.set(0, 0.2, -0.04);
+  g.add(carriage);
+  [[-0.02, 0.25], [0.02, -0.25]].forEach(([x, rot]) => {
+    const finger = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.05, 0.03), dark);
+    finger.position.set(x, 0.185, -0.015);
+    finger.rotation.z = rot;
+    g.add(finger);
+  });
+  const hub = new THREE.Mesh(new RoundedBoxGeometry(0.07, 0.02, 0.05, 2, 0.005),
+    new THREE.MeshStandardMaterial({ color: 0x27408a, roughness: 0.45 }));
+  hub.position.set(0.04, 0.065, 0.03);
+  g.add(hub);
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildToolChest() {
+  // rolling tool chest: graphite body, five drawers with aluminum pulls
+  const g = new THREE.Group();
+  const body = new THREE.MeshStandardMaterial({ color: 0x212429, roughness: 0.42, metalness: 0.55 });
+  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.3, metalness: 1.0 });
+  const shell = new THREE.Mesh(new RoundedBoxGeometry(0.55, 0.72, 0.42, 2, 0.014), body);
+  shell.position.y = 0.42;
+  shell.castShadow = true;
+  shell.receiveShadow = true;
+  g.add(shell);
+  const topMat = new THREE.Mesh(new RoundedBoxGeometry(0.53, 0.012, 0.4, 2, 0.005),
+    new THREE.MeshStandardMaterial({ color: 0x141519, roughness: 0.8 }));
+  topMat.position.y = 0.785;
+  g.add(topMat);
+  for (let i = 0; i < 5; i++) {
+    const h = i < 2 ? 0.085 : 0.12;
+    const y = 0.72 - 0.06 - [0, 0.1, 0.245, 0.385, 0.525][i];
+    const front = new THREE.Mesh(new RoundedBoxGeometry(0.5, h, 0.014, 2, 0.005), body);
+    front.position.set(0, y + 0.08, 0.215);
+    g.add(front);
+    const pull = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.012, 0.012), alu);
+    pull.position.set(0, y + 0.08 + h / 2 - 0.02, 0.228);
+    g.add(pull);
+  }
+  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz]) => {
+    const caster = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.024, 14),
+      new THREE.MeshStandardMaterial({ color: 0x101114, roughness: 0.6 }));
+    caster.rotation.z = Math.PI / 2;
+    caster.position.set(sx * 0.21, 0.032, sz * 0.14);
+    caster.castShadow = true;
+    g.add(caster);
+  });
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildBlueprintPanel() {
+  // wide technical schematic panel (Mk.8 line drawing) above the cabinet
+  const c = document.createElement("canvas");
+  c.width = 1024; c.height = 300;
+  const ctx = c.getContext("2d");
+  ctx.fillStyle = "#14161a"; ctx.fillRect(0, 0, 1024, 300);
+  ctx.strokeStyle = "#1f242c"; ctx.lineWidth = 1;
+  for (let x = 0; x <= 1024; x += 32) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 300); ctx.stroke(); }
+  for (let y = 0; y <= 300; y += 32) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1024, y); ctx.stroke(); }
+  ctx.strokeStyle = "#8fb8e8"; ctx.lineWidth = 2;
+  // side-profile race car schematic
+  ctx.beginPath();
+  ctx.moveTo(180, 190);
+  ctx.lineTo(300, 185); ctx.lineTo(360, 150); ctx.lineTo(470, 140);
+  ctx.lineTo(520, 110); ctx.lineTo(610, 108); ctx.lineTo(650, 140);
+  ctx.lineTo(760, 150); ctx.lineTo(800, 185); ctx.lineTo(840, 190);
+  ctx.stroke();
+  [[300, 200, 38], [740, 200, 38]].forEach(([cx, cy, r]) => {
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, r * 0.55, 0, 7); ctx.stroke();
+  });
+  // rear wing + dimension lines
+  ctx.strokeRect(806, 96, 70, 10);
+  ctx.strokeStyle = "#3f8cff"; ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.moveTo(180, 250); ctx.lineTo(840, 250); ctx.stroke();
+  [180, 840].forEach((x) => { ctx.beginPath(); ctx.moveTo(x, 242); ctx.lineTo(x, 258); ctx.stroke(); });
+  ctx.fillStyle = "#8fb8e8"; ctx.font = "600 20px Consolas, monospace";
+  ctx.fillText("OEM MK.8 — WB 1550", 440, 244);
+  ctx.fillStyle = "#53565c"; ctx.font = "600 16px Consolas, monospace";
+  ctx.fillText("KW/ENG-024  REV C", 850, 285);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = MAXA;
+  const g = new THREE.Group();
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(2.24, 0.66, 0.03),
+    new THREE.MeshStandardMaterial({ color: 0x1d1f23, roughness: 0.4, metalness: 0.6 }));
+  g.add(frame);
+  const face = new THREE.Mesh(new THREE.PlaneGeometry(2.16, 0.6),
+    new THREE.MeshBasicMaterial({ map: tex, color: 0x8f8f8f }));
+  face.position.z = 0.017;
+  g.add(face);
   return g;
 }
 
