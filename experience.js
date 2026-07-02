@@ -277,12 +277,6 @@ function initScene(canvas) {
   scene.add(deskLamp);
   MODELS.deskLamp = deskLamp;
 
-  // monitor + keyboard + mouse (dark telemetry dashboard)
-  const rig = buildMonitorSetup();
-  rig.position.set(0.28, DESK_TOP, -0.32);
-  rig.rotation.y = -0.06;
-  scene.add(rig);
-  MODELS.rig = rig;
   // resume: the hero object on the desk — front and center, in the light
   placeRoot(buildResumePaper(), scene, {
     name: "resumePaper", action: "resume", label: "Résumé",
@@ -959,78 +953,117 @@ function buildDisplayCabinet() {
 }
 
 function buildErgoChair() {
-  // ergonomic task chair: 5-star caster base, gas lift, contoured seat,
-  // mesh back with lumbar, armrests, headrest
+  // ergonomic task chair, built with connected construction: every post and
+  // bracket is placed between computed points so nothing floats
   const g = new THREE.Group();
   const alu = new THREE.MeshStandardMaterial({ color: 0x8f959d, roughness: 0.35, metalness: 0.9 });
   const blackPl = new THREE.MeshStandardMaterial({ color: 0x1a1c20, roughness: 0.55, metalness: 0.2 });
   const mesh = new THREE.MeshStandardMaterial({ color: 0x24262b, roughness: 0.92, metalness: 0.02 });
+  function segment(p0, p1, r, mat) {
+    const dir = new THREE.Vector3().subVectors(p1, p0);
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, dir.length(), 12), mat);
+    m.position.copy(p0).addScaledVector(dir, 0.5);
+    m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
+    return m;
+  }
 
-  // 5-star base + casters
+  // 5-star base: arms run from the hub outward; casters under the arm tips
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 0.05, 18), blackPl);
+  hub.position.y = 0.08;
+  g.add(hub);
   for (let i = 0; i < 5; i++) {
     const a = (i / 5) * Math.PI * 2;
-    const arm = new THREE.Mesh(new RoundedBoxGeometry(0.05, 0.024, 0.3, 2, 0.008), alu);
-    arm.position.set(Math.sin(a) * 0.14, 0.05, Math.cos(a) * 0.14);
-    arm.rotation.y = a;
+    const tip = new THREE.Vector3(Math.sin(a) * 0.28, 0.055, Math.cos(a) * 0.28);
+    const arm = segment(new THREE.Vector3(0, 0.08, 0), tip, 0.016, alu);
     arm.castShadow = true;
     g.add(arm);
-    const fork = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.03, 0.03), blackPl);
-    fork.position.set(Math.sin(a) * 0.27, 0.035, Math.cos(a) * 0.27);
+    const fork = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.035, 0.026), blackPl);
+    fork.position.set(tip.x, 0.038, tip.z);
     g.add(fork);
-    const caster = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.02, 14), blackPl);
+    const caster = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.018, 14), blackPl);
     caster.rotation.z = Math.PI / 2;
     caster.rotation.y = a;
-    caster.position.set(Math.sin(a) * 0.27, 0.026, Math.cos(a) * 0.27);
+    caster.position.set(tip.x, 0.026, tip.z);
     caster.castShadow = true;
     g.add(caster);
   }
-  // gas lift
-  const lift = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.3, 16), alu);
-  lift.position.y = 0.2;
+
+  // gas lift from hub up into the seat plate
+  const lift = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.024, 0.24, 16), alu);
+  lift.position.y = 0.22;
   g.add(lift);
   const boot = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.12, 16), blackPl);
-  boot.position.y = 0.14;
+  boot.position.y = 0.16;
   g.add(boot);
+  const seatPlate = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.02, 0.2), blackPl);
+  seatPlate.position.y = 0.375;
+  g.add(seatPlate);
 
-  // seat
+  // seat cushion (top surface y = 0.46)
+  const SEAT_Y = 0.42;
   const seat = new THREE.Mesh(new RoundedBoxGeometry(0.46, 0.075, 0.44, 3, 0.025), mesh);
-  seat.position.y = 0.42;
+  seat.position.y = SEAT_Y;
   seat.castShadow = true;
   seat.receiveShadow = true;
   g.add(seat);
 
-  // back frame + mesh back + lumbar
-  const spine = new THREE.Mesh(new RoundedBoxGeometry(0.05, 0.3, 0.03, 2, 0.01), blackPl);
-  spine.position.set(0, 0.52, -0.25);
-  spine.rotation.x = 0.18;
+  // back spine: from under the rear of the seat up to the backrest bottom
+  const spineFoot = new THREE.Vector3(0, SEAT_Y - 0.02, -0.2);
+  const backBottom = new THREE.Vector3(0, 0.56, -0.27);
+  const spine = segment(spineFoot, backBottom, 0.016, blackPl);
+  spine.castShadow = true;
   g.add(spine);
-  const backRest = new THREE.Mesh(new RoundedBoxGeometry(0.44, 0.56, 0.05, 3, 0.02), mesh);
-  backRest.position.set(0, 0.78, -0.27);
-  backRest.rotation.x = 0.12;
+
+  // backrest leaning back; bottom edge meets the spine top
+  const backAngle = 0.12;
+  const backH = 0.56;
+  const backCenter = new THREE.Vector3(
+    0,
+    backBottom.y + (backH / 2) * Math.cos(backAngle),
+    backBottom.z - (backH / 2) * Math.sin(backAngle)
+  );
+  const backRest = new THREE.Mesh(new RoundedBoxGeometry(0.44, backH, 0.05, 3, 0.02), mesh);
+  backRest.position.copy(backCenter);
+  backRest.rotation.x = backAngle;
   backRest.castShadow = true;
   g.add(backRest);
   const lumbar = new THREE.Mesh(new RoundedBoxGeometry(0.3, 0.12, 0.03, 2, 0.012), blackPl);
-  lumbar.position.set(0, 0.6, -0.245);
-  lumbar.rotation.x = 0.12;
+  lumbar.position.set(0, backBottom.y + 0.12, backBottom.z - 0.12 * Math.sin(backAngle) + 0.028);
+  lumbar.rotation.x = backAngle;
   g.add(lumbar);
-  // headrest
-  const hrPost = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.1, 0.02), blackPl);
-  hrPost.position.set(0, 1.09, -0.31);
-  hrPost.rotation.x = 0.12;
-  g.add(hrPost);
+
+  // headrest: posts run from the backrest top edge into the pad
+  const backTop = new THREE.Vector3(
+    0,
+    backBottom.y + backH * Math.cos(backAngle),
+    backBottom.z - backH * Math.sin(backAngle)
+  );
+  const headCenter = new THREE.Vector3(0, backTop.y + 0.09, backTop.z - 0.02);
+  [-0.05, 0.05].forEach((dx) => {
+    const post = segment(
+      new THREE.Vector3(dx, backTop.y - 0.04, backTop.z + 0.005),
+      new THREE.Vector3(dx, headCenter.y, headCenter.z),
+      0.008,
+      blackPl
+    );
+    g.add(post);
+  });
   const headrest = new THREE.Mesh(new RoundedBoxGeometry(0.26, 0.12, 0.05, 2, 0.02), mesh);
-  headrest.position.set(0, 1.17, -0.32);
-  headrest.rotation.x = 0.2;
+  headrest.position.copy(headCenter);
+  headrest.rotation.x = backAngle + 0.08;
   headrest.castShadow = true;
   g.add(headrest);
 
-  // armrests
-  [-0.26, 0.26].forEach((x) => {
-    const post = new THREE.Mesh(new THREE.BoxGeometry(0.025, 0.16, 0.05), blackPl);
-    post.position.set(x, 0.51, -0.02);
-    g.add(post);
+  // armrests: L-shaped — bracket from under the seat out, post up, pad on top
+  [-1, 1].forEach((s) => {
+    const sideX = s * 0.21; // inside the 0.46-wide seat
+    const bracketStart = new THREE.Vector3(s * 0.14, SEAT_Y - 0.03, 0.0);
+    const bracketEnd = new THREE.Vector3(sideX, SEAT_Y - 0.03, 0.0);
+    g.add(segment(bracketStart, bracketEnd, 0.011, blackPl));
+    const postTop = new THREE.Vector3(sideX, SEAT_Y + 0.16, 0.0);
+    g.add(segment(bracketEnd, postTop, 0.011, blackPl));
     const pad = new THREE.Mesh(new RoundedBoxGeometry(0.06, 0.02, 0.22, 2, 0.008), blackPl);
-    pad.position.set(x, 0.6, 0.0);
+    pad.position.set(sideX, postTop.y + 0.01, 0.0);
     pad.castShadow = true;
     g.add(pad);
   });
@@ -1106,94 +1139,8 @@ function buildLedBarLamp() {
   return g;
 }
 
-function buildMonitorSetup() {
-  // slim widescreen monitor + low-profile keyboard + mouse on the desk
-  const g = new THREE.Group();
-  const body = new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.4, metalness: 0.5 });
-
-  // dashboard texture: dark engineering telemetry
-  const c = document.createElement("canvas");
-  c.width = 512; c.height = 288;
-  const ctx = c.getContext("2d");
-  ctx.fillStyle = "#0d0f13"; ctx.fillRect(0, 0, 512, 288);
-  ctx.fillStyle = "#15181e"; ctx.fillRect(0, 0, 512, 34);
-  ctx.fillStyle = "#3f8cff"; ctx.font = "700 15px Arial"; ctx.fillText("OEM MK.8 — TELEMETRY", 16, 23);
-  ctx.strokeStyle = "#1f242c"; ctx.lineWidth = 1;
-  for (let gx = 16; gx < 500; gx += 30) { ctx.beginPath(); ctx.moveTo(gx, 50); ctx.lineTo(gx, 190); ctx.stroke(); }
-  for (let gy = 50; gy < 195; gy += 28) { ctx.beginPath(); ctx.moveTo(16, gy); ctx.lineTo(496, gy); ctx.stroke(); }
-  ctx.strokeStyle = "#3f8cff"; ctx.lineWidth = 2.5; ctx.beginPath();
-  for (let i = 0; i <= 48; i++) {
-    const x = 16 + i * 10;
-    const y = 130 - Math.sin(i * 0.4) * 32 - Math.sin(i * 0.13) * 22;
-    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
-  }
-  ctx.stroke();
-  ctx.strokeStyle = "#e8b84a"; ctx.lineWidth = 1.6; ctx.beginPath();
-  for (let i = 0; i <= 48; i++) {
-    const x = 16 + i * 10;
-    const y = 150 - Math.cos(i * 0.3) * 18;
-    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
-  }
-  ctx.stroke();
-  ctx.fillStyle = "#252a33";
-  [16, 140, 264, 388].forEach((bx) => ctx.fillRect(bx, 212, 108, 56));
-  ctx.fillStyle = "#c9ced6"; ctx.font = "700 17px Consolas, monospace";
-  ["412 C", "1.42 g", "96 km/h", "78 %"].forEach((t, i) => ctx.fillText(t, 30 + i * 124, 244));
-  ctx.fillStyle = "#6a7078"; ctx.font = "500 10px Arial";
-  ["ROTOR PEAK", "LAT ACCEL", "SPEED", "SOC"].forEach((t, i) => ctx.fillText(t, 30 + i * 124, 260));
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = MAXA;
-
-  const panel = new THREE.Mesh(new RoundedBoxGeometry(0.61, 0.36, 0.02, 2, 0.006), body);
-  panel.position.set(0, 0.5, 0);
-  panel.rotation.x = -0.04;
-  g.add(panel);
-  const screen = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.585, 0.33),
-    new THREE.MeshBasicMaterial({ map: tex, color: 0x8f8f8f })
-  );
-  screen.position.set(0, 0.5, 0.0115);
-  screen.rotation.x = -0.04;
-  g.add(screen);
-  const neck = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.18, 0.02), body);
-  neck.position.set(0, 0.24, -0.03);
-  g.add(neck);
-  const foot = new THREE.Mesh(new RoundedBoxGeometry(0.24, 0.012, 0.16, 2, 0.005), body);
-  foot.position.set(0, 0.006, -0.02);
-  g.add(foot);
-
-  // low-profile keyboard with key-grid texture
-  const kc = document.createElement("canvas");
-  kc.width = 256; kc.height = 96;
-  const kctx = kc.getContext("2d");
-  kctx.fillStyle = "#1a1c20"; kctx.fillRect(0, 0, 256, 96);
-  kctx.fillStyle = "#2a2d33";
-  for (let ry = 6; ry < 90; ry += 18)
-    for (let rx = 6; rx < 248; rx += 17) kctx.fillRect(rx, ry, 14, 14);
-  kctx.fillRect(74, 78, 100, 14); // spacebar
-  const kTex = new THREE.CanvasTexture(kc);
-  kTex.colorSpace = THREE.SRGBColorSpace;
-  const kb = new THREE.Mesh(
-    new RoundedBoxGeometry(0.36, 0.012, 0.13, 2, 0.005),
-    [body, body, new THREE.MeshStandardMaterial({ map: kTex, roughness: 0.55 }), body, body, body]
-  );
-  kb.position.set(0, 0.006, 0.28);
-  kb.rotation.y = 0.02;
-  g.add(kb);
-
-  // mouse
-  const mouse = new THREE.Mesh(new RoundedBoxGeometry(0.055, 0.02, 0.09, 3, 0.014), body);
-  mouse.position.set(0.26, 0.01, 0.3);
-  mouse.rotation.y = -0.2;
-  g.add(mouse);
-
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  return g;
-}
-
 function makeInteractMarker() {
-  // Genshin-style prompt: soft gold glow + diamond outline + white core
+  // Genshin-style prompt: soft glow + diamond outline + white core (site blue)
   const s = 128;
   const c = document.createElement("canvas");
   c.width = c.height = s;
@@ -1240,7 +1187,6 @@ function makeCarbonTwillTexture() {
   const cell = s / 8;
   for (let y = 0; y < 8; y++) {
     for (let x = 0; x < 8; x++) {
-      // twill: tow direction alternates on the diagonal
       const horizontal = ((x + y) >> 1) % 2 === 0;
       const g = ctx.createLinearGradient(
         x * cell, y * cell,
@@ -1263,7 +1209,7 @@ function makeCarbonTwillTexture() {
 }
 
 /* STL meshes carry no UVs — box-project by dominant face normal so a
-   tiling texture can wrap the surface (scale = tiles per meter) */
+   tiling texture can wrap the surface (scale = tiles per unit) */
 function boxProjectUVs(geo, scale) {
   const pos = geo.attributes.position;
   if (!geo.attributes.normal) geo.computeVertexNormals();
@@ -1281,7 +1227,6 @@ function boxProjectUVs(geo, scale) {
   geo.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
 }
 
-/* seeded RNG so both bookcases look different but stable across loads */
 function buildModernShelf(x, rotY) {
   // modern storage wall: slim black-steel frame, matte shelves, neat rows
   // of matching binders, archive boxes, a small trophy — tech-office tidy
