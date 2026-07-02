@@ -308,7 +308,7 @@ function initScene(canvas) {
   ASSEMBLIES.forEach((a) =>
     loadAssembly(loader, scene, `models/real/${a.file}.glb`, {
       name: "ex_" + a.key, projectKey: a.key, label: a.label,
-      targetSize: a.size, axis: a.axis, matTweak: a.matTweak,
+      targetSize: a.size, axis: a.axis, matTweak: a.matTweak, fit: [0.6, 0.4, 0.4],
       markerCap: CAB.rows[a.row] + (a.row === 0 ? 0.36 : 0.44), // top row: stay under the cabinet's top frame
       pos: [CAB.bays[a.bay], CAB.rows[a.row], CAB.frontZ], rotY: a.rotY, rotZ: a.rotZ,
     })
@@ -316,19 +316,19 @@ function initScene(canvas) {
 
   // procedural exhibits for projects without CAD exports
   placeRoot(buildBrakeRotor(), scene, {
-    markerCap: CAB.rows[1] + 0.44, name: "ex_brakeSim", projectKey: "brakeSim", label: "FSAE Brake Sim",
+    fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[1] + 0.44, name: "ex_brakeSim", projectKey: "brakeSim", label: "FSAE Brake Sim",
     targetSize: 0.26, axis: "x", pos: [CAB.bays[2], CAB.rows[1], CAB.frontZ], rotX: -Math.PI / 2, rotY: 0.15,
   });
   placeRoot(buildLineFollower(), scene, {
-    markerCap: CAB.rows[2] + 0.44, name: "ex_lineFollower", projectKey: "lineFollower", label: "LineFollower robot",
+    fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_lineFollower", projectKey: "lineFollower", label: "LineFollower robot",
     targetSize: 0.3, axis: "x", pos: [CAB.bays[0], CAB.rows[2], CAB.frontZ], rotY: 0.45,
   });
   placeRoot(buildCfdDisplay(artLoader), scene, {
-    markerCap: CAB.rows[2] + 0.44, name: "ex_ansysCfd", projectKey: "ansysCfd", label: "Agent-based CFD",
+    fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_ansysCfd", projectKey: "ansysCfd", label: "Agent-based CFD",
     targetSize: 0.34, axis: "x", pos: [CAB.bays[1], CAB.rows[2], CAB.frontZ], rotY: 0.25,
   });
   placeRoot(buildEducationKit(), scene, {
-    markerCap: CAB.rows[2] + 0.44, name: "ex_education", projectKey: "education", label: "Guitar education kit",
+    fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_education", projectKey: "education", label: "Guitar education kit",
     targetSize: 0.4, axis: "x", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotY: 0.3,
   });
 
@@ -351,6 +351,7 @@ function initScene(canvas) {
     placeRoot(s.build(), scene, {
       name: "ex_" + s.key, projectKey: s.key, label: s.label,
       targetSize: s.size, axis: s.axis || "x",
+      fit: [0.34, 0.4, 0.58], // x depth into cabinet, z along the wall
       markerCap: CAB2.rows[s.row] + (s.row === 0 ? 0.36 : 0.44),
       pos: [CAB2.frontX, CAB2.rows[s.row], CAB2.bays[s.bay]], rotY: -Math.PI / 2 + 0.25,
     })
@@ -479,6 +480,7 @@ function initScene(canvas) {
   let panelOpen = false;
   let downXY = null;
   const panelEl = document.getElementById("exp-panel");
+  const paperEl = document.getElementById("exp-paper");
   const backdropEl = document.getElementById("exp-backdrop");
   const labelEl = document.getElementById("exp-label");
 
@@ -552,15 +554,16 @@ function initScene(canvas) {
     const focusLook = c.clone().addScaledVector(right, 0.2);
 
     panelOpen = true;
+    const open = hs.action === "resume" ? openPaper : openPanel;
     if (prefersReducedMotion) {
       camera.position.copy(focusPos);
       controls.target.copy(focusLook);
       controls.enabled = false;
       camera.lookAt(focusLook);
-      openPanel(html);
+      open(html);
     } else {
       startFlight(focusPos, focusLook, 850);
-      setTimeout(() => openPanel(html), 550);
+      setTimeout(() => open(html), 500);
     }
   }
 
@@ -573,10 +576,20 @@ function initScene(canvas) {
     document.documentElement.classList.add("exp-panel-open");
     setHover(null);
   }
+  function openPaper(html) {
+    if (!paperEl) return;
+    panelOpen = true;
+    paperEl.innerHTML = html;
+    paperEl.scrollTop = 0;
+    paperEl.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", closePanel));
+    document.documentElement.classList.add("exp-paper-open");
+    setHover(null);
+  }
   function closePanel() {
     if (!panelOpen) return;
     panelOpen = false;
     document.documentElement.classList.remove("exp-panel-open");
+    document.documentElement.classList.remove("exp-paper-open");
     if (prefersReducedMotion) {
       camera.position.copy(REST_POS);
       controls.target.copy(REST_TARGET);
@@ -618,6 +631,16 @@ function placeRoot(root, scene, opts, onPlaced) {
     const dim = opts.axis === "x" ? size.x : opts.axis === "z" ? size.z : size.y;
     if (dim > 0) {
       root.scale.multiplyScalar(opts.targetSize / dim);
+      root.updateWorldMatrix(true, true);
+      box = new THREE.Box3().setFromObject(root);
+    }
+  }
+  // optional shelf-bay budget: uniformly shrink anything that exceeds it
+  if (opts.fit) {
+    const size = box.getSize(new THREE.Vector3());
+    const k = Math.min(1, opts.fit[0] / size.x, opts.fit[1] / size.y, opts.fit[2] / size.z);
+    if (k < 1) {
+      root.scale.multiplyScalar(k);
       root.updateWorldMatrix(true, true);
       box = new THREE.Box3().setFromObject(root);
     }
@@ -915,9 +938,6 @@ function buildDesk() {
   const keypad = new THREE.Mesh(new RoundedBoxGeometry(0.09, 0.018, 0.045, 2, 0.005), steelPanel);
   keypad.position.set(-0.55, topY - thk - 0.012, D / 2 - 0.02);
   g.add(keypad);
-  const beam = new THREE.Mesh(new THREE.BoxGeometry(W - 0.3, 0.06, 0.025), steelPanel);
-  beam.position.set(0, 0.18, -(D / 2 - 0.1));
-  g.add(beam);
 
   // slim under-top drawer unit (right side) with aluminum bar pulls
   const unit = new THREE.Mesh(new RoundedBoxGeometry(0.52, 0.16, D - 0.2, 2, 0.008),
@@ -1824,7 +1844,7 @@ function buildBambuPrinter() {
 /* right-wall display cabinet layout (2 bays x 3 rows) */
 const CAB2 = {
   x: 2.42, // cabinet center x (against the right wall)
-  frontX: 2.24, // exhibit center x
+  frontX: 2.4, // exhibit center x (centered on the glass boards)
   bays: [-0.75, -0.05], // z centers
   rows: [1.68, 1.2, 0.72],
   rowH: 0.48,
@@ -1890,39 +1910,77 @@ function buildSideCabinet() {
   return g;
 }
 
+function steelToolMat() {
+  return new THREE.MeshStandardMaterial({ color: 0x9aa0a8, metalness: 0.9, roughness: 0.4 });
+}
+
 function buildGearboxV2() {
-  // 2-speed gearbox: meshed gear pair on shafts in an open housing shell
+  // enclosed 2-speed gearbox: ribbed housing, bearing bosses, input/output
+  // shafts with couplers, shift lever, sight window showing the gear pair
   const g = new THREE.Group();
-  const steel = new THREE.MeshStandardMaterial({ color: 0x9a9da3, metalness: 0.95, roughness: 0.35 });
-  const dark = new THREE.MeshStandardMaterial({ color: 0x2c2f34, metalness: 0.85, roughness: 0.45 });
-  function gear(rBody, nTeeth, thick) {
-    const gg = new THREE.Group();
-    gg.add(new THREE.Mesh(new THREE.CylinderGeometry(rBody, rBody, thick, Math.max(24, nTeeth * 2)), steel));
-    const toothLen = rBody * 0.2;
-    const toothGeo = new THREE.BoxGeometry(toothLen, thick, (2 * Math.PI * rBody) / nTeeth * 0.5);
-    for (let i = 0; i < nTeeth; i++) {
-      const a = (i / nTeeth) * Math.PI * 2;
-      const t = new THREE.Mesh(toothGeo, steel);
-      t.position.set(Math.cos(a) * (rBody + toothLen / 2), 0, Math.sin(a) * (rBody + toothLen / 2));
-      t.rotation.y = -a;
-      gg.add(t);
-    }
-    gg.add(new THREE.Mesh(new THREE.CylinderGeometry(rBody * 0.26, rBody * 0.26, thick + 0.004, 18), dark));
-    return gg;
-  }
-  const housing = new THREE.Mesh(new RoundedBoxGeometry(0.3, 0.05, 0.16, 2, 0.012), dark);
-  housing.position.y = 0.012;
+  const caseMat = new THREE.MeshStandardMaterial({ color: 0x555a61, metalness: 0.85, roughness: 0.42 });
+  const steel = new THREE.MeshStandardMaterial({ color: 0x9a9da3, metalness: 0.95, roughness: 0.32 });
+  const dark = new THREE.MeshStandardMaterial({ color: 0x2c2f34, metalness: 0.8, roughness: 0.5 });
+
+  const housing = new THREE.Mesh(new RoundedBoxGeometry(0.26, 0.16, 0.13, 3, 0.016), caseMat);
+  housing.position.y = 0.1;
   g.add(housing);
-  const big = gear(0.08, 18, 0.024);
-  big.position.set(-0.05, 0.062, 0);
-  g.add(big);
-  const small = gear(0.05, 11, 0.024);
-  small.position.set(0.085, 0.062, 0.012);
-  g.add(small);
-  [[-0.05, 0], [0.085, 0.012]].forEach(([x, z]) => {
-    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.13, 14), dark);
-    shaft.position.set(x, 0.075, z);
-    g.add(shaft);
+  // cooling ribs on top
+  for (let i = 0; i < 5; i++) {
+    const rib = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.008, 0.012), caseMat);
+    rib.position.set(0, 0.185, -0.048 + i * 0.024);
+    g.add(rib);
+  }
+  // flange bolts around the case seam
+  for (let i = 0; i < 6; i++) {
+    const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.012, 8), dark);
+    bolt.rotation.x = Math.PI / 2;
+    bolt.position.set(-0.1 + i * 0.04, 0.055, 0.068);
+    g.add(bolt);
+  }
+  // bearing bosses + shafts (input high, output low)
+  const bossIn = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.032, 0.026, 18), caseMat);
+  bossIn.rotation.z = Math.PI / 2;
+  bossIn.position.set(-0.135, 0.135, 0);
+  g.add(bossIn);
+  const shaftIn = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.1, 14), steel);
+  shaftIn.rotation.z = Math.PI / 2;
+  shaftIn.position.set(-0.18, 0.135, 0);
+  g.add(shaftIn);
+  const couplerIn = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.03, 14), dark);
+  couplerIn.rotation.z = Math.PI / 2;
+  couplerIn.position.set(-0.215, 0.135, 0);
+  g.add(couplerIn);
+  const bossOut = new THREE.Mesh(new THREE.CylinderGeometry(0.034, 0.036, 0.026, 18), caseMat);
+  bossOut.rotation.z = Math.PI / 2;
+  bossOut.position.set(0.135, 0.07, 0);
+  g.add(bossOut);
+  const shaftOut = new THREE.Mesh(new THREE.CylinderGeometry(0.013, 0.013, 0.09, 14), steel);
+  shaftOut.rotation.z = Math.PI / 2;
+  shaftOut.position.set(0.175, 0.07, 0);
+  g.add(shaftOut);
+  const sprocketOut = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.012, 16), steel);
+  sprocketOut.rotation.z = Math.PI / 2;
+  sprocketOut.position.set(0.21, 0.07, 0);
+  g.add(sprocketOut);
+  // shift lever on top
+  const lever = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.006, 0.07, 10), steel);
+  lever.position.set(0.06, 0.22, -0.02);
+  lever.rotation.z = -0.3;
+  g.add(lever);
+  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.011, 12, 12), dark);
+  knob.position.set(0.0805, 0.253, -0.02);
+  g.add(knob);
+  // sight window: dark glass + the gear pair behind it
+  const win = new THREE.Mesh(new RoundedBoxGeometry(0.12, 0.08, 0.006, 2, 0.006),
+    new THREE.MeshPhysicalMaterial({ color: 0x1a2026, roughness: 0.1, transparent: true, opacity: 0.55 }));
+  win.position.set(0, 0.105, 0.066);
+  g.add(win);
+  [[-0.028, 0.03, 0.115], [0.03, 0.02, 0.095]].forEach(([x, r, y]) => {
+    const gearDisc = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 0.012, 20), steel);
+    gearDisc.rotation.x = Math.PI / 2;
+    gearDisc.position.set(x, y, 0.058);
+    g.add(gearDisc);
   });
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
@@ -1957,41 +2015,56 @@ function buildDriverSeat() {
 }
 
 function buildPoolSniper() {
-  // assistive cue launcher: barrel on a stand, spring section, grip, cue tip
+  // cue launcher: aluminum rail, spring-loaded carriage, cue shaft, trigger
+  // grip, and a 3-ball triangle beside it
   const g = new THREE.Group();
   const dark = new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.5, metalness: 0.4 });
   const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.35, metalness: 0.9 });
-  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.26, 18), dark);
-  barrel.rotation.z = Math.PI / 2;
-  barrel.position.set(0, 0.08, 0);
-  g.add(barrel);
-  // spring: stacked tori
-  for (let i = 0; i < 6; i++) {
-    const coil = new THREE.Mesh(new THREE.TorusGeometry(0.017, 0.003, 8, 20), alu);
+
+  // extrusion rail on two feet
+  const rail = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.024, 0.03), alu);
+  rail.position.set(0, 0.045, 0);
+  g.add(rail);
+  [[-0.11], [0.11]].forEach(([x]) => {
+    const foot = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.035, 0.06), dark);
+    foot.position.set(x, 0.018, 0);
+    g.add(foot);
+  });
+  // spring section around the cue, behind the carriage
+  for (let i = 0; i < 7; i++) {
+    const coil = new THREE.Mesh(new THREE.TorusGeometry(0.014, 0.0026, 8, 18), steelToolMat());
     coil.rotation.y = Math.PI / 2;
-    coil.position.set(-0.06 + i * 0.014, 0.08, 0);
+    coil.position.set(-0.105 + i * 0.012, 0.082, 0);
     g.add(coil);
   }
-  const cue = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.008, 0.22, 12),
+  // carriage with cue clamp
+  const carriage = new THREE.Mesh(new RoundedBoxGeometry(0.05, 0.045, 0.045, 2, 0.008), dark);
+  carriage.position.set(0, 0.085, 0);
+  g.add(carriage);
+  // cue shaft through the carriage
+  const cue = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.007, 0.3, 12),
     new THREE.MeshStandardMaterial({ color: 0xc99a5b, roughness: 0.5 }));
   cue.rotation.z = Math.PI / 2;
-  cue.position.set(0.2, 0.08, 0);
+  cue.position.set(0.1, 0.085, 0);
   g.add(cue);
-  const grip = new THREE.Mesh(new RoundedBoxGeometry(0.03, 0.09, 0.035, 2, 0.008), dark);
-  grip.position.set(-0.08, 0.025, 0);
-  grip.rotation.z = 0.25;
+  const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.0052, 0.005, 0.012, 10),
+    new THREE.MeshStandardMaterial({ color: 0x2a6da8, roughness: 0.6 }));
+  tip.rotation.z = Math.PI / 2;
+  tip.position.set(0.256, 0.085, 0);
+  g.add(tip);
+  // trigger grip under the rail rear
+  const grip = new THREE.Mesh(new RoundedBoxGeometry(0.028, 0.07, 0.035, 2, 0.008), dark);
+  grip.position.set(-0.12, 0.0, 0);
+  grip.rotation.z = 0.3;
   g.add(grip);
-  // stand
-  [[-0.03], [0.09]].forEach(([x]) => {
-    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.06, 0.05), alu);
-    leg.position.set(x, 0.03, 0);
-    g.add(leg);
-  });
-  // three pool balls beside
-  [[0.02, 0xffffff], [0.055, 0xc23c2e], [0.09, 0x27408a]].forEach(([z, col], i) => {
+  const trigger = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.024, 0.016), alu);
+  trigger.position.set(-0.095, 0.014, 0);
+  g.add(trigger);
+  // 3-ball triangle beside the rail
+  [[0.05, 0.055, 0xffffff], [0.085, 0.075, 0xc23c2e], [0.085, 0.035, 0x27408a]].forEach(([x, z, col]) => {
     const ball = new THREE.Mesh(new THREE.SphereGeometry(0.016, 16, 16),
-      new THREE.MeshPhysicalMaterial({ color: col, roughness: 0.15, clearcoat: 0.8 }));
-    ball.position.set(-0.02 + i * 0.02, 0.016, 0.08);
+      new THREE.MeshPhysicalMaterial({ color: col, roughness: 0.12, clearcoat: 0.85 }));
+    ball.position.set(x, 0.016, z);
     g.add(ball);
   });
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
@@ -2035,57 +2108,86 @@ function buildSmelly() {
 }
 
 function buildTelecasterV2() {
-  // Telecaster on a small stand: butterscotch body, neck, strings
+  // Telecaster on an A-stand: single-cutaway slab body, bolt-on neck with
+  // headstock + tuners, pickguard, bridge plate, six strings
   const g = new THREE.Group();
   const body = new THREE.Shape();
-  body.moveTo(0, -0.1);
-  body.bezierCurveTo(0.06, -0.1, 0.072, -0.055, 0.066, -0.012);
-  body.bezierCurveTo(0.062, 0.025, 0.047, 0.037, 0.044, 0.062);
-  body.bezierCurveTo(0.04, 0.094, 0.019, 0.106, 0, 0.106);
-  body.bezierCurveTo(-0.019, 0.106, -0.04, 0.094, -0.044, 0.062);
-  body.bezierCurveTo(-0.047, 0.037, -0.062, 0.025, -0.066, -0.012);
-  body.bezierCurveTo(-0.072, -0.055, -0.06, -0.1, 0, -0.1);
+  // slimmer, more tele-like outline (units ~m, body ~0.19 tall)
+  body.moveTo(0.0, -0.095);
+  body.bezierCurveTo(0.055, -0.095, 0.068, -0.06, 0.064, -0.02);
+  body.bezierCurveTo(0.061, 0.008, 0.05, 0.02, 0.048, 0.04);
+  body.bezierCurveTo(0.045, 0.07, 0.028, 0.092, 0.006, 0.092);
+  body.bezierCurveTo(-0.02, 0.092, -0.034, 0.075, -0.04, 0.05);
+  body.bezierCurveTo(-0.046, 0.026, -0.06, 0.012, -0.063, -0.018);
+  body.bezierCurveTo(-0.068, -0.06, -0.055, -0.095, 0.0, -0.095);
   const bodyMesh = new THREE.Mesh(
-    new THREE.ExtrudeGeometry(body, { depth: 0.026, bevelEnabled: true, bevelThickness: 0.004, bevelSize: 0.004, bevelSegments: 2 }),
-    new THREE.MeshPhysicalMaterial({ color: 0xc98f3f, roughness: 0.28, metalness: 0.04, clearcoat: 0.8, clearcoatRoughness: 0.14 })
+    new THREE.ExtrudeGeometry(body, { depth: 0.03, bevelEnabled: true, bevelThickness: 0.005, bevelSize: 0.004, bevelSegments: 3 }),
+    new THREE.MeshPhysicalMaterial({ color: 0xd6a049, roughness: 0.24, metalness: 0.03, clearcoat: 0.9, clearcoatRoughness: 0.1 })
   );
-  bodyMesh.position.set(0, 0.135, 0);
+  bodyMesh.position.set(0, 0.14, -0.015);
   g.add(bodyMesh);
-  const pg = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.036, 0.004, 20),
-    new THREE.MeshStandardMaterial({ color: 0xf5f0e0, roughness: 0.5 }));
-  pg.rotation.x = Math.PI / 2;
-  pg.position.set(-0.022, 0.11, 0.028);
-  g.add(pg);
-  const neckMat = new THREE.MeshStandardMaterial({ color: 0xa8763c, roughness: 0.55 });
-  const neck = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.2, 0.014), neckMat);
-  neck.position.set(0, 0.32, 0.012);
+  // pickguard (tele-ish polygon approximated with a lens shape)
+  const pgShape = new THREE.Shape();
+  pgShape.moveTo(-0.05, -0.03);
+  pgShape.bezierCurveTo(-0.055, 0.02, -0.03, 0.055, 0.005, 0.05);
+  pgShape.bezierCurveTo(-0.005, 0.02, -0.01, -0.02, 0.005, -0.055);
+  pgShape.bezierCurveTo(-0.02, -0.06, -0.045, -0.055, -0.05, -0.03);
+  const pgMesh = new THREE.Mesh(new THREE.ExtrudeGeometry(pgShape, { depth: 0.003, bevelEnabled: false }),
+    new THREE.MeshStandardMaterial({ color: 0xf5f0e0, roughness: 0.45 }));
+  pgMesh.position.set(-0.002, 0.14, 0.0165);
+  g.add(pgMesh);
+  const neckMat = new THREE.MeshStandardMaterial({ color: 0xb98d4f, roughness: 0.5 });
+  const neck = new THREE.Mesh(new RoundedBoxGeometry(0.026, 0.21, 0.016, 2, 0.006), neckMat);
+  neck.position.set(0, 0.33, -0.002);
   g.add(neck);
-  const head = new THREE.Mesh(new THREE.BoxGeometry(0.034, 0.06, 0.012), neckMat);
-  head.position.set(0.005, 0.45, 0.012);
+  // headstock: slim slab, tele profile-ish, 6 inline tuners
+  const head = new THREE.Mesh(new RoundedBoxGeometry(0.036, 0.062, 0.012, 2, 0.005), neckMat);
+  head.position.set(0.006, 0.465, -0.004);
+  head.rotation.z = -0.06;
   g.add(head);
-  const fb = new THREE.Mesh(new THREE.BoxGeometry(0.025, 0.2, 0.003),
+  const tunerMat = new THREE.MeshStandardMaterial({ color: 0xc8ccd2, metalness: 0.9, roughness: 0.3 });
+  for (let i = 0; i < 6; i++) {
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.0022, 0.0022, 0.01, 8), tunerMat);
+    post.rotation.x = Math.PI / 2;
+    post.position.set(-0.004 + (i % 2) * 0.0, 0.44 + i * 0.0088, 0.004);
+    g.add(post);
+    const key = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.005, 0.003), tunerMat);
+    key.position.set(-0.014, 0.44 + i * 0.0088, -0.009);
+    g.add(key);
+  }
+  const fb = new THREE.Mesh(new THREE.BoxGeometry(0.027, 0.21, 0.003),
     new THREE.MeshStandardMaterial({ color: 0x3a2614, roughness: 0.6 }));
-  fb.position.set(0, 0.32, 0.021);
+  fb.position.set(0, 0.33, 0.008);
   g.add(fb);
+  // frets
+  for (let i = 0; i < 12; i++) {
+    const fret = new THREE.Mesh(new THREE.BoxGeometry(0.027, 0.0012, 0.0012), tunerMat);
+    fret.position.set(0, 0.245 + i * 0.016 - i * i * 0.0003, 0.0095);
+    g.add(fret);
+  }
   const stringMat = new THREE.MeshStandardMaterial({ color: 0xc8ccd2, metalness: 0.9, roughness: 0.3 });
   for (let i = 0; i < 6; i++) {
-    const s = new THREE.Mesh(new THREE.CylinderGeometry(0.0005, 0.0005, 0.34, 4), stringMat);
-    s.position.set(-0.0085 + i * 0.0034, 0.27, 0.026);
+    const s = new THREE.Mesh(new THREE.CylinderGeometry(0.0005, 0.0005, 0.36, 4), stringMat);
+    s.position.set(-0.0095 + i * 0.0038, 0.275, 0.012);
     g.add(s);
   }
-  const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.036, 0.014, 0.005), stringMat);
-  bridge.position.set(0, 0.085, 0.026);
+  const bridge = new THREE.Mesh(new RoundedBoxGeometry(0.04, 0.028, 0.006, 2, 0.003), tunerMat);
+  bridge.position.set(0, 0.095, 0.018);
   g.add(bridge);
+  const strapPin = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.005, 0.008, 8), tunerMat);
+  strapPin.rotation.x = Math.PI / 2;
+  strapPin.position.set(0, 0.045, -0.015);
+  g.add(strapPin);
   // A-stand
   const standMat = new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.5, metalness: 0.5 });
-  [[-0.05, 0.05], [0.05, 0.05], [-0.05, -0.03], [0.05, -0.03]].forEach(([x, z]) => {
-    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.12, 8), standMat);
-    leg.position.set(x, 0.055, z);
+  [[-0.05, 0.05], [0.05, 0.05], [-0.05, -0.05], [0.05, -0.05]].forEach(([x, z]) => {
+    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.13, 8), standMat);
+    leg.position.set(x, 0.06, z - 0.01);
     leg.rotation.x = z > 0 ? -0.35 : 0.35;
     g.add(leg);
   });
-  const cradle = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.008, 0.02), standMat);
-  cradle.position.set(0, 0.1, 0.012);
+  const cradle = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.008, 0.024), standMat);
+  cradle.position.set(0, 0.105, -0.008);
   g.add(cradle);
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
@@ -2636,6 +2738,29 @@ function projectHTML(p) {
 }
 
 function resumeHTML(r) {
+  const hi = (r.highlights || []).map((h) => `<li>${h}</li>`).join("");
+  const skills = (r.skills || [])
+    .map((s) => `<div class="exp-sheet__skill"><b>${s.group}</b><span>${s.items.join(" · ")}</span></div>`)
+    .join("");
+  const contact = (r.contact || [])
+    .map((c) => `<a href="${c.href}"${c.href.startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>${c.label}</a>`)
+    .join('<span class="exp-sheet__dot">·</span>');
+  return `
+    <button class="exp-sheet__close" data-close aria-label="Close">&times;</button>
+    <h2 class="exp-sheet__name">${r.name}</h2>
+    <p class="exp-sheet__role">${r.role} — ${r.meta}</p>
+    <hr class="exp-sheet__rule" />
+    <p class="exp-sheet__summary">${r.summary}</p>
+    <h3 class="exp-sheet__h3">Highlights</h3>
+    <ul class="exp-sheet__list">${hi}</ul>
+    <h3 class="exp-sheet__h3">Skills</h3>
+    <div class="exp-sheet__skills">${skills}</div>
+    <h3 class="exp-sheet__h3">Contact</h3>
+    <p class="exp-sheet__contact">${contact}</p>
+  `;
+}
+
+function resumeHTMLOld(r) {
   const hi = (r.highlights || []).map((h) => `<li>${h}</li>`).join("");
   const skills = (r.skills || [])
     .map((s) => `<div class="exp-skill"><span class="exp-skill__g">${s.group}</span><span class="exp-skill__i">${s.items.join(" · ")}</span></div>`)
