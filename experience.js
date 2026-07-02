@@ -109,7 +109,14 @@ const ASSEMBLY_MATS = {
   printed: () => new THREE.MeshStandardMaterial({ color: 0x2c3038, metalness: 0.12, roughness: 0.58 }),
   aero: () => new THREE.MeshStandardMaterial({ color: 0xd8dadc, metalness: 0.05, roughness: 0.42 }),
   carbon: () =>
-    new THREE.MeshPhysicalMaterial({ color: 0x24262b, metalness: 0.35, roughness: 0.32, clearcoat: 0.7, clearcoatRoughness: 0.18 }),
+    new THREE.MeshPhysicalMaterial({
+      map: makeCarbonTwillTexture(),
+      color: 0xbfc2c6, // tint over the dark weave map
+      metalness: 0.25,
+      roughness: 0.62, // matte prepreg finish
+      clearcoat: 0.12,
+      clearcoatRoughness: 0.5,
+    }),
   rubber: () => new THREE.MeshStandardMaterial({ color: 0x0d0e10, metalness: 0.0, roughness: 0.95 }),
 };
 
@@ -121,9 +128,9 @@ const CAB = {
   z: -1.12, // cabinet center z
   frontZ: -1.08, // exhibit center z (fully ON the shelf boards)
   bays: [-0.73, 0, 0.73],
-  rows: [1.62, 1.12, 0.62], // shelf top surfaces
+  rows: [1.68, 1.2, 0.72], // shelf top surfaces (raised so the desk never hides the bottom row)
   bayW: 0.7,
-  rowH: 0.5,
+  rowH: 0.48,
 };
 
 function initScene(canvas) {
@@ -141,9 +148,9 @@ function initScene(canvas) {
   scene.background = new THREE.Color(COL.bg);
   scene.fog = new THREE.Fog(COL.bg, 6, 16);
 
-  const REST_POS = new THREE.Vector3(1.5, 1.22, 2.2);
-  const REST_TARGET = new THREE.Vector3(0, 0.85, -0.3);
-  const FLY_POS = new THREE.Vector3(2.3, 1.75, 3.2);
+  const REST_POS = new THREE.Vector3(1.45, 1.35, 2.25);
+  const REST_TARGET = new THREE.Vector3(0, 0.95, -0.3);
+  const FLY_POS = new THREE.Vector3(2.3, 1.85, 3.2);
 
   const camera = new THREE.PerspectiveCamera(
     42,
@@ -175,9 +182,9 @@ function initScene(canvas) {
   composer.addPass(new RenderPass(scene, camera));
   const bloom = new UnrealBloomPass(
     new THREE.Vector2(window.innerWidth, window.innerHeight),
-    0.12, // strength — whisper quiet
-    0.4, // radius
-    0.9 // threshold — only true highlights bloom
+    0.1, // strength — whisper quiet
+    0.35, // radius
+    0.95 // threshold — only true emitters bloom (screens/paper stay crisp)
   );
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
@@ -235,9 +242,9 @@ function initScene(canvas) {
 
   // display spots washing the cabinet
   [-0.7, 0, 0.7].forEach((x) => {
-    const spot = new THREE.SpotLight(0xffd9a8, 3.2, 6, 0.42, 0.75, 1.6);
-    spot.position.set(x, 2.5, 0.4);
-    spot.target.position.set(x, 1.1, CAB.z);
+    const spot = new THREE.SpotLight(0xffd9a8, 3.2, 6, 0.46, 0.75, 1.6);
+    spot.position.set(x, 2.55, 0.45);
+    spot.target.position.set(x, 1.0, CAB.z);
     scene.add(spot);
     scene.add(spot.target);
   });
@@ -305,7 +312,7 @@ function initScene(canvas) {
   // hero row (middle, eye level): javelin / steering / brake
   const ASSEMBLIES = [
     { file: "seat",     key: "carbonSeat", label: "Carbon fiber seat", size: 0.3,  axis: "y", bay: 0, row: 0, rotY: 0.4 },
-    { file: "aura",     key: "aura",       label: "AURA Swerve",       size: 0.32, axis: "y", bay: 1, row: 0, rotY: 0.35, rotZ: Math.PI },
+    { file: "aura",     key: "aura",       label: "AURA Swerve",       size: 0.34, axis: "y", bay: 1, row: 0, rotY: 0.35, rotZ: -Math.PI / 2 },
     { file: "scanner",  key: "scanner",    label: "3D scanner",        size: 0.38, axis: "x", bay: 2, row: 0, rotY: 0.35 },
     { file: "javelin",  key: "javelin",    label: "Javelin VTOL",      size: 0.44, axis: "x", bay: 0, row: 1, rotY: 0.6,
       matTweak: { aero: { color: 0x2e3136, roughness: 0.5 }, printed: { color: 0x1f2126 } } },
@@ -341,8 +348,8 @@ function initScene(canvas) {
   /* ---------- side dressing ---------- */
   // realistic filled bookshelves on both side walls (procedural, PBR wood,
   // merged vertex-colored books for one draw call per case)
-  scene.add(buildRealBookshelf(-2.42, Math.PI / 2, 12345));
-  scene.add(buildRealBookshelf(2.42, -Math.PI / 2, 67890));
+  scene.add(buildRealBookshelf(-2.38, Math.PI / 2, 12345));
+  scene.add(buildRealBookshelf(2.38, -Math.PI / 2, 67890));
   loadModel(loader, scene, "models/pp/armchair.glb", {
     name: "chair", targetSize: 0.95, axis: "y", pos: [-0.2, 0, 1.05], rotY: Math.PI,
   });
@@ -350,11 +357,18 @@ function initScene(canvas) {
     name: "plant", targetSize: 0.95, axis: "y", pos: [1.9, 0, 0.35], rotY: 0,
   });
 
+  // Bambu Lab H2S, mid-print on a car model (right side, facing the room)
+  const printer = buildBambuPrinter();
+  printer.position.set(2.02, 0, 1.32);
+  printer.rotation.y = -2.15;
+  scene.add(printer);
+  MODELS.printer = printer;
+
+  // kept clear of the bookshelf span (z -1.2..0.5) so frames never sink into it
   const ART = [
-    { img: "assets/cover-steering-system.webp", x: -2.56, y: 1.8, z: -0.05, rotY: Math.PI / 2 },
-    { img: "assets/javelin-3q.webp", x: -2.56, y: 1.8, z: 0.95, rotY: Math.PI / 2 },
-    { img: "assets/cover-carbon-fiber-seat.webp", x: 2.56, y: 1.8, z: -0.05, rotY: -Math.PI / 2 },
-    { img: "assets/gearbox-render.webp", x: 2.56, y: 1.8, z: 0.95, rotY: -Math.PI / 2 },
+    { img: "assets/cover-steering-system.webp", x: -2.56, y: 1.8, z: 1.0, rotY: Math.PI / 2 },
+    { img: "assets/javelin-3q.webp", x: -2.56, y: 1.8, z: 1.62, rotY: Math.PI / 2 },
+    { img: "assets/cover-carbon-fiber-seat.webp", x: 2.56, y: 1.8, z: 1.0, rotY: -Math.PI / 2 },
   ];
   ART.forEach((a) => scene.add(makeFramedArt(artLoader, a)));
 
@@ -417,6 +431,13 @@ function initScene(canvas) {
       }
     } else {
       controls.update();
+    }
+
+    // Bambu printer: printhead sweeps while "printing"
+    if (!prefersReducedMotion && MODELS.printerHead) {
+      const hx = Math.sin(t * 0.0032) * 0.16;
+      MODELS.printerHead.position.x = hx;
+      MODELS.printerHeadLed.position.x = hx;
     }
 
     // Genshin-style interact markers: bob + pulse, hidden while busy
@@ -659,6 +680,9 @@ function loadAssembly(loader, scene, url, opts, onPlaced) {
         o.material = ASSEMBLY_MATS[matKey]();
         // per-project material overrides (e.g. Javelin's dark PPA-CF shell)
         if (opts.matTweak && opts.matTweak[matKey]) o.material.setValues(opts.matTweak[matKey]);
+        // STL-derived meshes have no UVs; box-project some so the carbon
+        // weave map can tile across the surface
+        if (matKey === "carbon") boxProjectUVs(o.geometry, 0.08); // geometry is in mm; ~12mm weave tile
         o.castShadow = true;
         o.receiveShadow = true;
       });
@@ -794,11 +818,11 @@ function buildRoom(scene) {
   pendant.add(shade);
   const bulb = new THREE.Mesh(
     new THREE.SphereGeometry(0.028, 16, 16),
-    new THREE.MeshStandardMaterial({ color: 0xfff2d8, emissive: 0xffd9a0, emissiveIntensity: 1.4 })
+    new THREE.MeshStandardMaterial({ color: 0xfff2d8, emissive: 0xffd9a0, emissiveIntensity: 1.0 })
   );
   bulb.position.y = 2.37;
   pendant.add(bulb);
-  const pendantLight = new THREE.PointLight(0xffd9a0, 3.2, 4.5, 2);
+  const pendantLight = new THREE.PointLight(0xffd9a0, 2.2, 4.0, 2);
   pendantLight.position.y = 2.32;
   pendant.add(pendantLight);
   pendant.position.set(0.15, 0, 0.35);
@@ -887,7 +911,7 @@ function buildDesk() {
 function buildDisplayCabinet() {
   const g = new THREE.Group();
   const W = 2.36;
-  const H = 2.08;
+  const H = 2.2;
   const D = 0.54;
   const z = CAB.z;
   const frameMat = woodMaterial(0x5e3f22, 0.62);
@@ -1028,6 +1052,58 @@ function makeInteractMarker() {
   return sprite;
 }
 
+/* 2x2 twill carbon-fiber weave tile (cached) */
+let _carbonTex = null;
+function makeCarbonTwillTexture() {
+  if (_carbonTex) return _carbonTex;
+  const s = 128;
+  const c = document.createElement("canvas");
+  c.width = c.height = s;
+  const ctx = c.getContext("2d");
+  const cell = s / 8;
+  for (let y = 0; y < 8; y++) {
+    for (let x = 0; x < 8; x++) {
+      // twill: tow direction alternates on the diagonal
+      const horizontal = ((x + y) >> 1) % 2 === 0;
+      const g = ctx.createLinearGradient(
+        x * cell, y * cell,
+        horizontal ? x * cell : (x + 1) * cell,
+        horizontal ? (y + 1) * cell : y * cell
+      );
+      g.addColorStop(0, "#17181b");
+      g.addColorStop(0.5, horizontal ? "#33363c" : "#26282d");
+      g.addColorStop(1, "#101114");
+      ctx.fillStyle = g;
+      ctx.fillRect(x * cell, y * cell, cell, cell);
+    }
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.anisotropy = MAXA;
+  _carbonTex = tex;
+  return tex;
+}
+
+/* STL meshes carry no UVs — box-project by dominant face normal so a
+   tiling texture can wrap the surface (scale = tiles per meter) */
+function boxProjectUVs(geo, scale) {
+  const pos = geo.attributes.position;
+  if (!geo.attributes.normal) geo.computeVertexNormals();
+  const nor = geo.attributes.normal;
+  const uv = new Float32Array(pos.count * 2);
+  for (let i = 0; i < pos.count; i++) {
+    const nx = Math.abs(nor.getX(i)), ny = Math.abs(nor.getY(i)), nz = Math.abs(nor.getZ(i));
+    let u, v;
+    if (nx >= ny && nx >= nz) { u = pos.getY(i); v = pos.getZ(i); }
+    else if (ny >= nx && ny >= nz) { u = pos.getX(i); v = pos.getZ(i); }
+    else { u = pos.getX(i); v = pos.getY(i); }
+    uv[i * 2] = u * scale;
+    uv[i * 2 + 1] = v * scale;
+  }
+  geo.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+}
+
 /* seeded RNG so both bookcases look different but stable across loads */
 function mulberry32(seed) {
   let a = seed >>> 0;
@@ -1130,6 +1206,125 @@ function buildRealBookshelf(x, rotY, seed) {
   return g;
 }
 
+function buildBambuPrinter() {
+  // Bambu Lab H2S-style enclosed CoreXY printer, mid-print on a small car
+  const g = new THREE.Group();
+  const shellMat = new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.42, metalness: 0.35 });
+  const darkMat = new THREE.MeshStandardMaterial({ color: 0x101114, roughness: 0.55, metalness: 0.3 });
+  const W = 0.62, H = 0.63, D = 0.6;
+
+  // enclosure shell (open front), rounded corners
+  const shell = new THREE.Mesh(new RoundedBoxGeometry(W, H, D, 3, 0.03), shellMat);
+  shell.position.y = H / 2 + 0.02;
+  shell.castShadow = true;
+  shell.receiveShadow = true;
+  g.add(shell);
+  // feet
+  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz]) => {
+    const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.024, 0.02, 12), darkMat);
+    foot.position.set(sx * (W / 2 - 0.06), 0.01, sz * (D / 2 - 0.06));
+    g.add(foot);
+  });
+
+  // interior cavity (dark) + glass front door
+  const cavity = new THREE.Mesh(
+    new THREE.BoxGeometry(W - 0.09, H - 0.14, 0.02),
+    new THREE.MeshStandardMaterial({ color: 0x08090b, roughness: 0.85 })
+  );
+  cavity.position.set(0, H / 2 + 0.03, D / 2 - 0.1);
+  g.add(cavity);
+  const glass = new THREE.Mesh(
+    new THREE.PlaneGeometry(W - 0.12, H - 0.18),
+    new THREE.MeshPhysicalMaterial({
+      color: 0x2c343a,
+      roughness: 0.08,
+      metalness: 0,
+      transparent: true,
+      opacity: 0.28,
+      side: THREE.DoubleSide,
+    })
+  );
+  glass.position.set(0, H / 2 + 0.03, D / 2 + 0.011);
+  g.add(glass);
+  const doorFrame = new THREE.Mesh(new THREE.BoxGeometry(W - 0.1, 0.016, 0.012), shellMat);
+  doorFrame.position.set(0, H - 0.055, D / 2 + 0.008);
+  g.add(doorFrame);
+  const handle = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.012, 0.012), darkMat);
+  handle.position.set(0, 0.16, D / 2 + 0.016);
+  g.add(handle);
+
+  // build plate + half-printed car body + printhead gantry (inside, glimpsed
+  // through the glass)
+  const plate = new THREE.Mesh(new THREE.BoxGeometry(W - 0.2, 0.008, D - 0.28), darkMat);
+  plate.position.set(0, 0.16, D / 2 - 0.24);
+  g.add(plate);
+  const printMat = new THREE.MeshStandardMaterial({ color: 0x3f8cff, roughness: 0.55, metalness: 0.05 });
+  const carBody = new THREE.Mesh(new RoundedBoxGeometry(0.14, 0.035, 0.06, 2, 0.008), printMat);
+  carBody.position.set(0, 0.185, D / 2 - 0.24);
+  g.add(carBody);
+  const carCabin = new THREE.Mesh(new RoundedBoxGeometry(0.07, 0.024, 0.05, 2, 0.006), printMat);
+  carCabin.position.set(-0.01, 0.213, D / 2 - 0.24);
+  g.add(carCabin);
+  const rail = new THREE.Mesh(new THREE.BoxGeometry(W - 0.16, 0.014, 0.02), darkMat);
+  rail.position.set(0, 0.36, D / 2 - 0.26);
+  g.add(rail);
+  const head = new THREE.Mesh(new RoundedBoxGeometry(0.05, 0.07, 0.045, 2, 0.008), shellMat);
+  head.position.set(0.05, 0.325, D / 2 - 0.25);
+  g.add(head);
+  const headLed = new THREE.Mesh(
+    new THREE.BoxGeometry(0.02, 0.006, 0.004),
+    new THREE.MeshStandardMaterial({ color: 0xff3344, emissive: 0xff3344, emissiveIntensity: 1.2 })
+  );
+  headLed.position.set(0.05, 0.3, D / 2 - 0.227);
+  g.add(headLed);
+  MODELS.printerHead = head;
+  MODELS.printerHeadLed = headLed;
+
+  // interior work light
+  const inner = new THREE.PointLight(0xdfe8ff, 0.9, 0.9, 2);
+  inner.position.set(0, H - 0.14, D / 2 - 0.2);
+  g.add(inner);
+
+  // front touchscreen (Bambu UI: dark, green progress bar)
+  const ui = document.createElement("canvas");
+  ui.width = 128; ui.height = 64;
+  const uctx = ui.getContext("2d");
+  uctx.fillStyle = "#0c0f12"; uctx.fillRect(0, 0, 128, 64);
+  uctx.fillStyle = "#8ce04a"; uctx.font = "700 15px Arial"; uctx.fillText("BAMBU", 10, 22);
+  uctx.fillStyle = "#2a2f36"; uctx.fillRect(10, 36, 108, 9);
+  uctx.fillStyle = "#8ce04a"; uctx.fillRect(10, 36, 71, 9);
+  uctx.fillStyle = "#c9ced6"; uctx.font = "600 11px Arial"; uctx.fillText("66%  car_v3.gcode", 10, 58);
+  const uiTex = new THREE.CanvasTexture(ui);
+  uiTex.colorSpace = THREE.SRGBColorSpace;
+  const screen = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.11, 0.055),
+    new THREE.MeshBasicMaterial({ map: uiTex, color: 0x8f8f8f })
+  );
+  screen.position.set(W / 2 - 0.1, 0.1, D / 2 + 0.012);
+  g.add(screen);
+
+  // side-mounted filament spool (green)
+  const spoolMat = new THREE.MeshStandardMaterial({ color: 0xdadde2, roughness: 0.5, metalness: 0.1 });
+  const spool = new THREE.Group();
+  [-0.026, 0.026].forEach((dy) => {
+    const flange = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.006, 28), spoolMat);
+    flange.rotation.z = Math.PI / 2;
+    flange.position.x = dy;
+    spool.add(flange);
+  });
+  const filament = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.062, 0.062, 0.046, 28),
+    new THREE.MeshStandardMaterial({ color: 0x3f9e4f, roughness: 0.6 })
+  );
+  filament.rotation.z = Math.PI / 2;
+  spool.add(filament);
+  spool.position.set(-W / 2 - 0.035, H * 0.62, -0.05);
+  g.add(spool);
+
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
 function buildResumePaper() {
   // A4-ish sheet lying flat on the desk with a printed resume header
   const g = new THREE.Group();
@@ -1159,14 +1354,15 @@ function buildResumePaper() {
 
   const sheet = new THREE.Mesh(
     new THREE.BoxGeometry(0.21, 0.004, 0.28),
-    new THREE.MeshStandardMaterial({ color: 0xf2ecdd, roughness: 0.94 })
+    new THREE.MeshStandardMaterial({ color: 0xc9c2b0, roughness: 0.97 })
   );
   sheet.castShadow = true;
   sheet.receiveShadow = true;
   g.add(sheet);
+  // slightly dimmed so warm lamps don't push the paper into bloom
   const face = new THREE.Mesh(
     new THREE.PlaneGeometry(0.205, 0.273),
-    new THREE.MeshStandardMaterial({ map: tex, roughness: 0.94 })
+    new THREE.MeshStandardMaterial({ map: tex, color: 0xcfc8b6, roughness: 0.97 })
   );
   face.rotation.x = -Math.PI / 2;
   face.position.y = 0.0025;
@@ -1246,10 +1442,11 @@ function buildCfdDisplay(texLoader) {
   g.add(bezel);
   const tex = texLoader.load("assets/ansys-cfd-pressure.webp");
   tex.colorSpace = THREE.SRGBColorSpace;
-  // unlit screen: shows the render as-is, immune to spotlights/bloom blowout
+  // unlit screen, dimmed below the bloom threshold so it reads as an LCD,
+  // not a light fixture
   const screen = new THREE.Mesh(
     new THREE.PlaneGeometry(0.245, 0.155),
-    new THREE.MeshBasicMaterial({ map: tex })
+    new THREE.MeshBasicMaterial({ map: tex, color: 0x9d9d9d })
   );
   screen.position.set(0, 0.16, 0.0078);
   screen.rotation.x = -0.06;
