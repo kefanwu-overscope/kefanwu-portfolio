@@ -647,6 +647,42 @@ a {
   margin: 0 0.5rem;
   color: #9a9182;
 }
+
+/* ============ custom cursor (fine pointers, over the canvas only) ============ */
+.exp-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  pointer-events: none;
+  border-radius: 999px;
+  opacity: 0;
+  will-change: transform;
+}
+.exp-cursor.is-on {
+  opacity: 1;
+}
+.exp-cursor--dot {
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  background: var(--ink);
+  transition: opacity 160ms var(--ease-out), background 160ms var(--ease-out);
+}
+.exp-cursor--dot.is-hot {
+  background: var(--blue);
+}
+.exp-cursor--ring {
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border: 1.5px solid rgba(245, 245, 247, 0.55);
+  transition: opacity 160ms var(--ease-out), border-color 160ms var(--ease-out);
+}
+.exp-cursor--ring.is-hot {
+  border-color: var(--blue);
+}
+
 @media (max-width: 720px) {
   .exp-sheet {
     padding: 1.8rem 1.4rem 1.6rem;

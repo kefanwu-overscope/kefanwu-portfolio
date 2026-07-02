@@ -539,13 +539,64 @@ function initScene(canvas) {
   const backdropEl = document.getElementById("exp-backdrop");
   const labelEl = document.getElementById("exp-label");
 
+  /* ---------- custom cursor: ring + dot over the canvas (fine pointers) ---------- */
+  const FINE_POINTER = window.matchMedia("(pointer: fine)").matches;
+  let setCursorHover = (on) => {
+    renderer.domElement.style.cursor = on ? "pointer" : "";
+  };
+  if (FINE_POINTER) {
+    renderer.domElement.style.cursor = "none";
+    const ring = document.createElement("div");
+    ring.className = "exp-cursor exp-cursor--ring";
+    const dot = document.createElement("div");
+    dot.className = "exp-cursor exp-cursor--dot";
+    document.body.append(ring, dot);
+    let cx = -100, cy = -100, rx = -100, ry = -100;
+    let ringScale = 1, wantScale = 1, down = false, hot = false, shown = false;
+    const applyState = () => {
+      wantScale = down ? 0.82 : hot ? 1.55 : 1;
+      ring.classList.toggle("is-hot", hot);
+      dot.classList.toggle("is-hot", hot);
+    };
+    const show = (v) => {
+      if (shown === v) return;
+      shown = v;
+      ring.classList.toggle("is-on", v);
+      dot.classList.toggle("is-on", v);
+    };
+    window.addEventListener("pointermove", (ev) => {
+      cx = ev.clientX; cy = ev.clientY;
+      show(ev.target === renderer.domElement);
+      dot.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+      if (prefersReducedMotion) {
+        rx = cx; ry = cy;
+        ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) scale(${wantScale})`;
+      }
+    }, { passive: true });
+    window.addEventListener("pointerdown", () => { down = true; applyState(); });
+    window.addEventListener("pointerup", () => { down = false; applyState(); });
+    window.addEventListener("blur", () => show(false));
+    document.documentElement.addEventListener("pointerleave", () => show(false));
+    if (!prefersReducedMotion) {
+      const tick = () => {
+        rx += (cx - rx) * 0.3;
+        ry += (cy - ry) * 0.3;
+        ringScale += (wantScale - ringScale) * 0.22;
+        ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) scale(${ringScale})`;
+        requestAnimationFrame(tick);
+      };
+      tick();
+    }
+    setCursorHover = (on) => { hot = on; applyState(); };
+  }
+
   function setHover(root) {
     if (hovered === root) return;
     if (hovered) hovered.scale.setScalar(hovered.userData.hotspot.baseScale);
     hovered = root;
     if (hovered) {
       hovered.scale.setScalar(hovered.userData.hotspot.baseScale * 1.06);
-      renderer.domElement.style.cursor = "pointer";
+      setCursorHover(true);
       sndTick();
       if (labelEl) {
         const hs = hovered.userData.hotspot;
@@ -556,7 +607,7 @@ function initScene(canvas) {
         labelEl.hidden = false;
       }
     } else {
-      renderer.domElement.style.cursor = "";
+      setCursorHover(false);
       if (labelEl) labelEl.hidden = true;
     }
   }
@@ -1438,7 +1489,7 @@ function buildWorkbench() {
   });
   const spTop = makeMiniSpool(0x2255cc);
   spTop.scale.setScalar(1.6);
-  spTop.position.set(-0.62, 0.298, 0.05); // stacked on the green one
+  spTop.position.set(-0.62, 0.302, 0.05); // stacked on the green one
   g.add(spTop);
 
   // pegboard with dot-grid
@@ -1947,29 +1998,30 @@ function buildBambuPrinter() {
     slot.position.set(-amsW / 2 + 0.08 + i * 0.095, 0.03, amsD / 2 - 0.002);
     ams.add(slot);
   }
-  // spools row
+  // spools row — same 1.6x scale as the spare spools on the bench shelf
   [0xe8eaee, 0x3f9e4f, 0xc23c2e, 0x27408a].forEach((col, i) => {
     const sp = makeMiniSpool(col);
+    sp.scale.setScalar(1.6);
     sp.rotation.z = Math.PI / 2;
-    sp.position.set(-amsW / 2 + 0.075 + i * 0.095, amsH + 0.042, 0);
+    sp.position.set(-amsW / 2 + 0.075 + i * 0.095, amsH + 0.055, 0);
     ams.add(sp);
   });
-  // smoked half-cylinder cover along the width
+  // smoked half-cylinder cover along the width (sized to clear the spools)
   const cover = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.075, 0.075, amsW, 26, 1, true, 0, Math.PI),
+    new THREE.CylinderGeometry(0.085, 0.085, amsW, 26, 1, true, 0, Math.PI),
     new THREE.MeshPhysicalMaterial({
       color: 0x101114, roughness: 0.12, metalness: 0,
       transparent: true, opacity: 0.42, side: THREE.DoubleSide,
     })
   );
   cover.rotation.z = Math.PI / 2;
-  cover.position.set(0, amsH + 0.035, 0);
+  cover.position.set(0, amsH + 0.045, 0);
   ams.add(cover);
   // cover end caps
   [-amsW / 2, amsW / 2].forEach((ex) => {
-    const cap = new THREE.Mesh(new THREE.CircleGeometry(0.075, 26, 0, Math.PI),
+    const cap = new THREE.Mesh(new THREE.CircleGeometry(0.085, 26, 0, Math.PI),
       new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.45, metalness: 0.3, side: THREE.DoubleSide }));
-    cap.position.set(ex, amsH + 0.035, 0);
+    cap.position.set(ex, amsH + 0.045, 0);
     cap.rotation.y = Math.PI / 2;
     ams.add(cap);
   });
@@ -2020,9 +2072,10 @@ function buildSideCabinet() {
   plinth.castShadow = true;
   plinth.receiveShadow = true;
   g.add(plinth);
-  // middle divider between the two bays
+  // middle divider between the two bays (bays sit at local z ±0.35, so the
+  // divider belongs at local z 0 — anything else slices through bay 0)
   const div = new THREE.Mesh(new THREE.BoxGeometry(D - 0.1, H - 0.15, 0.014), frameMat);
-  div.position.set(0, (H - 0.15) / 2 + 0.1, -0.4);
+  div.position.set(0, (H - 0.15) / 2 + 0.1, 0);
   div.castShadow = true;
   g.add(div);
 
