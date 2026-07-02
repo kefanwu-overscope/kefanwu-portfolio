@@ -24,15 +24,14 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
     />
-    <link rel="stylesheet" href="experience.css?v=exp-pickup-20260703" />
+    <link rel="stylesheet" href="experience.css?v=exp-bcd-20260703" />
 
     <!-- Three.js import map (pinned, single CDN). -->
     <script type="importmap">
       {
         "imports": {
           "three": "https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.js",
-          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/",
-          "tween": "https://cdn.jsdelivr.net/npm/@tweenjs/tween.js@25.0.0/dist/tween.esm.js"
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/"
         }
       }
     </script>
@@ -45,6 +44,7 @@
         <span class="brand-name">Kefan Wu</span>
       </a>
       <div class="exp-topbar__right">
+        <button class="exp-sound" id="exp-sound" type="button" aria-label="Enable sound">&#128263;</button>
         <a class="exp-hud-link" href="index.html#work">All projects</a>
         <a class="exp-classic-link" href="index.html">
           <span>View classic site</span>
@@ -58,6 +58,7 @@
     <div class="exp-backdrop" id="exp-backdrop"></div>
     <aside class="exp-panel" id="exp-panel" aria-label="Details" aria-live="polite"></aside>
     <div class="exp-sheet" id="exp-paper" role="dialog" aria-label="Resume"></div>
+    <div class="exp-lightbox" id="exp-lightbox" role="dialog" aria-label="Image preview"></div>
 
     <!-- The 3D scene -->
     <div class="exp-stage" aria-hidden="true">
@@ -85,6 +86,6 @@
     </noscript>
 
     <script src="project-data.js?v=proj-shared-20260630"></script>
-    <script type="module" src="experience.js?v=exp-pickup-20260703"></script>
+    <script type="module" src="experience.js?v=exp-bcd-20260703"></script>
   </body>
 </html>

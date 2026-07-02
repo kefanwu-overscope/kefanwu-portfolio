@@ -250,19 +250,31 @@ a {
 .exp-label {
   position: fixed;
   z-index: 75;
-  transform: translate(-50%, -100%);
+  transform: translate(-50%, -110%);
   pointer-events: none;
-  padding: 0.3rem 0.62rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
+  display: grid;
+  gap: 0.14rem;
+  padding: 0.5rem 0.75rem;
   color: var(--ink);
-  background: rgba(12, 13, 16, 0.85);
+  background: rgba(12, 13, 16, 0.88);
   border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  border-radius: var(--radius);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   white-space: nowrap;
+}
+.exp-label b {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.exp-label span {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 /* ============ detail panel (project / resume) ============ */
@@ -456,6 +468,62 @@ a {
   color: var(--quiet);
 }
 
+
+
+/* ============ sound toggle + gallery lightbox ============ */
+.exp-sound {
+  width: 2.1rem;
+  height: 2.1rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(12, 13, 16, 0.55);
+  color: var(--ink);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.exp-sound:hover {
+  background: rgba(24, 26, 31, 0.72);
+  transform: translateY(-1px);
+}
+.exp-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.7rem;
+  padding: 3rem;
+  background: rgba(4, 5, 7, 0.88);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-med) var(--ease-out);
+  cursor: zoom-out;
+}
+.exp-lightbox-open .exp-lightbox {
+  opacity: 1;
+  pointer-events: auto;
+}
+.exp-lightbox img {
+  max-width: min(92vw, 1200px);
+  max-height: 78vh;
+  border-radius: var(--radius);
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.7);
+}
+.exp-lightbox p {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
 
 /* ============ picked-up resume sheet ============ */
 .exp-sheet {

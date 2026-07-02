@@ -20,9 +20,15 @@ import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
-import { HERO_PROJECTS, RESUME } from "./experience-data.js";
+import { GTAOPass } from "three/addons/postprocessing/GTAOPass.js";
+import { BokehPass } from "three/addons/postprocessing/BokehPass.js";
+import { RESUME } from "./experience-data.js";
 
 document.documentElement.classList.add("exp-js");
+
+// low tier: phones / coarse pointers get a lighter pipeline
+const LOW_TIER =
+  window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 820;
 
 const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
@@ -132,7 +138,7 @@ const CAB = {
 
 function initScene(canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, LOW_TIER ? 1.5 : 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -177,6 +183,19 @@ function initScene(canvas) {
   });
   const composer = new EffectComposer(renderer, rt);
   composer.addPass(new RenderPass(scene, camera));
+  // ambient occlusion: contact darkening in corners/seams (desktop only)
+  let gtao = null;
+  if (!LOW_TIER) {
+    gtao = new GTAOPass(scene, camera, window.innerWidth, window.innerHeight);
+    gtao.output = GTAOPass.OUTPUT.Default;
+    composer.addPass(gtao);
+  }
+  // depth of field, opened up only while an exhibit is focused
+  let bokeh = null;
+  if (!LOW_TIER) {
+    bokeh = new BokehPass(scene, camera, { focus: 2.2, aperture: 0.0, maxblur: 0.008 });
+    composer.addPass(bokeh);
+  }
   const bloom = new UnrealBloomPass(
     new THREE.Vector2(window.innerWidth, window.innerHeight),
     0.1, // strength — whisper quiet
@@ -188,6 +207,15 @@ function initScene(canvas) {
 
   /* ---------- loading manager ---------- */
   const manager = new THREE.LoadingManager();
+  const barEl = loaderEl ? loaderEl.querySelector(".exp-loader__bar i") : null;
+  const txtEl = loaderEl ? loaderEl.querySelector(".exp-loader__text") : null;
+  manager.onProgress = (url, loaded, total) => {
+    if (!barEl || !total) return;
+    const pct = Math.round((loaded / total) * 100);
+    barEl.style.animation = "none";
+    barEl.style.width = pct + "%";
+    if (txtEl) txtEl.textContent = "Loading " + pct + "%";
+  };
   let revealed = false;
   const doReveal = () => {
     if (revealed) return;
@@ -215,7 +243,7 @@ function initScene(canvas) {
   const key = new THREE.DirectionalLight(0xeef2f8, 1.35);
   key.position.set(2.6, 4.6, 2.4);
   key.castShadow = true;
-  key.shadow.mapSize.set(2048, 2048);
+  key.shadow.mapSize.set(LOW_TIER ? 1024 : 4096, LOW_TIER ? 1024 : 4096);
   key.shadow.camera.near = 0.5;
   key.shadow.camera.far = 20;
   key.shadow.camera.left = -4;
@@ -387,9 +415,10 @@ function initScene(canvas) {
     const h = window.innerHeight;
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, LOW_TIER ? 1.5 : 2));
     renderer.setSize(w, h);
     composer.setSize(w, h);
+    if (gtao) gtao.setSize(w, h);
   }
   window.addEventListener("resize", onResize);
 
@@ -410,7 +439,19 @@ function initScene(canvas) {
   function startIntro() {
     camera.position.copy(FLY_POS);
     controls.target.set(0, 0.75, -0.1);
-    startFlight(REST_POS, REST_TARGET, 1500);
+    let seen = false;
+    try { seen = localStorage.getItem("kw_intro_seen") === "1"; } catch (e) {}
+    if (seen) {
+      startFlight(REST_POS, REST_TARGET, 1500);
+      return;
+    }
+    try { localStorage.setItem("kw_intro_seen", "1"); } catch (e) {}
+    // guided sweep: right cabinet -> main cabinet -> resting pose
+    startFlight(new THREE.Vector3(0.7, 1.5, 1.9), new THREE.Vector3(2.3, 1.2, -0.4), 1700, () => {
+      startFlight(new THREE.Vector3(0.6, 1.45, 1.6), new THREE.Vector3(0, 1.2, -1.1), 1900, () => {
+        startFlight(REST_POS, REST_TARGET, 1500);
+      });
+    });
   }
 
   let running = true;
@@ -455,6 +496,19 @@ function initScene(canvas) {
       MODELS.printerHeadLed.position.x = hx;
     }
 
+    // focused exhibit slowly turns on its pedestal; DoF opens up
+    if (panelOpen && focusedPivot && !prefersReducedMotion) {
+      focusedPivot.rotation.y += 0.0035;
+    }
+    if (bokeh) {
+      const want = panelOpen && focusedPivot ? 0.00022 : 0.0;
+      const u = bokeh.uniforms;
+      u.aperture.value += (want - u.aperture.value) * 0.08;
+      if (panelOpen && focusedPivot) {
+        u.focus.value = camera.position.distanceTo(focusedPivot.userData.hotspot.center);
+      }
+    }
+
     // Genshin-style interact markers: bob + pulse, hidden while busy
     const busy = panelOpen || !!flight;
     for (const h of HOTSPOTS) {
@@ -478,6 +532,7 @@ function initScene(canvas) {
   const pointer = new THREE.Vector2();
   let hovered = null;
   let panelOpen = false;
+  let focusedPivot = null;
   let downXY = null;
   const panelEl = document.getElementById("exp-panel");
   const paperEl = document.getElementById("exp-paper");
@@ -491,7 +546,15 @@ function initScene(canvas) {
     if (hovered) {
       hovered.scale.setScalar(hovered.userData.hotspot.baseScale * 1.06);
       renderer.domElement.style.cursor = "pointer";
-      if (labelEl) { labelEl.textContent = hovered.userData.hotspot.label; labelEl.hidden = false; }
+      sndTick();
+      if (labelEl) {
+        const hs = hovered.userData.hotspot;
+        const sub = hs.action === "resume"
+          ? "Click to read"
+          : (window.projectData && window.projectData[hs.key] && window.projectData[hs.key].kicker) || "";
+        labelEl.innerHTML = `<b>${hs.label}</b>` + (sub ? `<span>${sub}</span>` : "");
+        labelEl.hidden = false;
+      }
     } else {
       renderer.domElement.style.cursor = "";
       if (labelEl) labelEl.hidden = true;
@@ -554,6 +617,9 @@ function initScene(canvas) {
     const focusLook = c.clone().addScaledVector(right, 0.2);
 
     panelOpen = true;
+    focusedPivot = hs.key ? root : null;
+    sndClick();
+    sndWhoosh();
     const open = hs.action === "resume" ? openPaper : openPanel;
     if (prefersReducedMotion) {
       camera.position.copy(focusPos);
@@ -588,6 +654,8 @@ function initScene(canvas) {
   function closePanel() {
     if (!panelOpen) return;
     panelOpen = false;
+    focusedPivot = null;
+    sndWhoosh(0.4);
     document.documentElement.classList.remove("exp-panel-open");
     document.documentElement.classList.remove("exp-paper-open");
     if (prefersReducedMotion) {
@@ -599,12 +667,83 @@ function initScene(canvas) {
       startFlight(REST_POS, REST_TARGET, 750);
     }
   }
+  // gallery lightbox: click a panel shot to enlarge it
+  const lightboxEl = document.getElementById("exp-lightbox");
+  function closeLightbox() {
+    document.documentElement.classList.remove("exp-lightbox-open");
+  }
+  if (panelEl && lightboxEl) {
+    panelEl.addEventListener("click", (ev) => {
+      const img = ev.target.closest(".exp-panel__shot img");
+      if (!img) return;
+      const cap = img.closest("figure")?.querySelector("figcaption")?.textContent || "";
+      lightboxEl.innerHTML = `<img src="${img.src}" alt="" /><p>${cap}</p>`;
+      document.documentElement.classList.add("exp-lightbox-open");
+      sndClick();
+    });
+    lightboxEl.addEventListener("click", closeLightbox);
+  }
+
   if (backdropEl) backdropEl.addEventListener("click", closePanel);
-  window.addEventListener("keydown", (e) => { if (e.key === "Escape" && panelOpen) closePanel(); });
+  window.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    if (document.documentElement.classList.contains("exp-lightbox-open")) return closeLightbox();
+    if (panelOpen) closePanel();
+  });
 
   window.__exp = { THREE, scene, camera, renderer, controls, composer, bloom, lampLight, key, hemi, models: MODELS, hotspots: HOTSPOTS, openPanel };
-  console.info(`[experience] real-assembly scene — ${HERO_PROJECTS.length} projects`);
+  console.info(`[experience] engineering office ready — ${HOTSPOTS.length} hotspots`);
 }
+
+/* ============================================================
+   UI sounds — tiny WebAudio synth, muted by default, toggle in the HUD
+   ============================================================ */
+let sndMuted = true;
+try { sndMuted = localStorage.getItem("kw_snd") !== "on"; } catch (e) {}
+let _actx = null;
+function actx() {
+  if (!_actx) _actx = new (window.AudioContext || window.webkitAudioContext)();
+  if (_actx.state === "suspended") _actx.resume();
+  return _actx;
+}
+function tone(freq, dur, gain, type = "sine", sweepTo) {
+  if (sndMuted) return;
+  try {
+    const ctx = actx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = type;
+    o.frequency.setValueAtTime(freq, ctx.currentTime);
+    if (sweepTo) o.frequency.exponentialRampToValueAtTime(sweepTo, ctx.currentTime + dur);
+    g.gain.setValueAtTime(gain, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
+    o.connect(g).connect(ctx.destination);
+    o.start();
+    o.stop(ctx.currentTime + dur + 0.02);
+  } catch (e) {}
+}
+let _lastTick = 0;
+function sndTick() {
+  const now = performance.now();
+  if (now - _lastTick < 90) return;
+  _lastTick = now;
+  tone(1250, 0.05, 0.015, "sine");
+}
+function sndClick() { tone(620, 0.09, 0.03, "triangle", 380); }
+function sndWhoosh(mul = 1) { tone(240, 0.32, 0.018 * mul, "sine", 90); }
+function initSoundToggle() {
+  const btn = document.getElementById("exp-sound");
+  if (!btn) return;
+  const paint = () => { btn.textContent = sndMuted ? "\uD83D\uDD07" : "\uD83D\uDD0A"; btn.setAttribute("aria-label", sndMuted ? "Enable sound" : "Mute sound"); };
+  paint();
+  btn.addEventListener("click", () => {
+    sndMuted = !sndMuted;
+    try { localStorage.setItem("kw_snd", sndMuted ? "off" : "on"); } catch (e) {}
+    if (!sndMuted) sndClick();
+    paint();
+  });
+}
+initSoundToggle();
 
 /* ============================================================
    model loading + normalization
@@ -2757,28 +2896,6 @@ function resumeHTML(r) {
     <div class="exp-sheet__skills">${skills}</div>
     <h3 class="exp-sheet__h3">Contact</h3>
     <p class="exp-sheet__contact">${contact}</p>
-  `;
-}
-
-function resumeHTMLOld(r) {
-  const hi = (r.highlights || []).map((h) => `<li>${h}</li>`).join("");
-  const skills = (r.skills || [])
-    .map((s) => `<div class="exp-skill"><span class="exp-skill__g">${s.group}</span><span class="exp-skill__i">${s.items.join(" · ")}</span></div>`)
-    .join("");
-  const contact = (r.contact || [])
-    .map((c) => `<a href="${c.href}"${c.href.startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>${c.label}</a>`)
-    .join("");
-  return `
-    <button class="exp-panel__close" data-close aria-label="Close">&times;</button>
-    <p class="exp-panel__kicker">Résumé</p>
-    <h2 class="exp-panel__title">${r.name}</h2>
-    <p class="exp-panel__role">${r.role}<br /><span>${r.meta}</span></p>
-    <p class="exp-panel__summary">${r.summary}</p>
-    <ul class="exp-panel__list">${hi}</ul>
-    <h3 class="exp-panel__h3">Skills</h3>
-    <div class="exp-skills">${skills}</div>
-    <h3 class="exp-panel__h3">Contact</h3>
-    <div class="exp-panel__contact">${contact}</div>
   `;
 }
 

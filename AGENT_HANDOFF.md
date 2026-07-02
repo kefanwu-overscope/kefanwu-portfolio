@@ -360,6 +360,46 @@ Vercel auto-deploys from `main`. After push, confirm:
 Invoke-WebRequest https://www.kefanwu.com -UseBasicParsing
 ```
 
+## 3D Experience Page (experience.html) — as of 2026-07-03
+
+A standalone Three.js "engineering office" page linked from the homepage nav
+("3D Desk"). Buildless: three@0.185.0 via jsDelivr importmap. Files:
+`experience.html` / `experience.css` / `experience.js` (+ shared
+`project-data.js` for case-study content, `experience-data.js` for RESUME).
+
+- **Scene**: graphite engineering office matching the site palette
+  (#0b0c0e / #f5f5f7 / #3f8cff). Fully enclosed room (4 walls + ceiling);
+  the camera is azimuth/distance-limited AND hard-clamped inside the shell
+  each frame, so no angle shows past the set.
+- **All 15 projects are clickable exhibits** (16 hotspots incl. the resume
+  sheet on the desk): main back-wall cabinet 3x3 + right-wall cabinet 2x3.
+  Five exhibits are Kefan's REAL SolidWorks assemblies (models/real/*.glb,
+  built by `tools/stl2glb.py` from per-part STL exports in Desktop\STL —
+  material buckets encoded as mesh names mat_steel/dark/printed/aero/
+  carbon/rubber/brass). The rest are procedural builders in experience.js.
+  `placeRoot` normalizes scale (targetSize/axis), recenters, wraps hotspots
+  in centered pivots, adds invisible hitboxes, blue interact markers
+  (capped below shelves via markerCap), and a per-bay `fit` budget that
+  shrinks anything exceeding its shelf space (anti-clipping).
+- **Interactions**: click exhibit -> camera flight (generic approach from
+  room center) + wide side panel with the FULL case study (all highlights,
+  tools, detail sections, gallery; gallery images open a lightbox). Click
+  the resume -> a paper sheet rises to the viewer (.exp-sheet overlay).
+  Esc/backdrop closes and flies back. Focused exhibits slowly turn.
+  First visit gets a guided camera sweep (localStorage kw_intro_seen).
+  Optional UI sounds (synth, muted by default, HUD toggle, kw_snd).
+- **Rendering**: EffectComposer (MSAA x4) with RenderPass -> GTAO ->
+  Bokeh DoF (opens only while focused) -> subtle bloom -> OutputPass.
+  ACES, exposure ~1.45, 4096 shadows. LOW_TIER (coarse pointer or narrow
+  screens): skips GTAO/Bokeh, 1024 shadows, DPR<=1.5.
+- **Furniture** is all procedural: sit-stand desk, two display cabinets,
+  workbench (Bambu H2S per reference photo w/ AMS, PSU, solder station,
+  tools pegboard, LED bar lamp), tool chest, ergo chair, blueprint panel.
+- Gotchas: STL-derived GLBs have no UVs (boxProjectUVs generates them for
+  the carbon seat); exhibits' bbox includes their marker sprite — measure
+  before the marker is added if you need true model dims; python-splice
+  edits on experience.js must verify anchor ORDER (two past incidents).
+
 ## Direct Prompt For A New Agent
 
 Use this prompt to hand off the project:
