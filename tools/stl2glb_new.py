@@ -37,14 +37,14 @@ def smelly_extra(name):
 PROJECTS = [
     ("brakeSim", "Brake", "*.STL", [], None, [
         (r".", "steel"),                       # a lone brake rotor -> machined steel
-    ], 6000),
+    ], 90000),
     ("education", "Guitar Education", "V2 - *.STL", COMMON_SKIP, None, [
         (r"body|neck|finger_board", "wood"),
         (r"control_panel", "steel"),
         (r"pick_up|pickup", "dark"),
         (r"bridge|saddle|screw", "steel"),
         (r".", "printed"),
-    ], 45000),
+    ], 150000),
     ("lineFollower", "Line_Follower", "*.STL", COMMON_SKIP, None, [
         (r"wheel", "rubber"),
         (r"dc_motor", "dark"),
@@ -52,26 +52,26 @@ PROJECTS = [
         (r"battery", "dark"),
         (r"standoff|coupler", "steel"),
         (r".", "printed"),                     # chassis, mounts, caster
-    ], 40000),
+    ], 120000),
     ("pool", "Pool Sniper", "*.STL", COMMON_SKIP, None, [
         (r"\bcue", "wood"),
         (r"motor\b|d_shaft_motor", "dark"),
         (r"rack|pinion|pulley|sprocket|shaft|stand_off|standoff|latchpin|"
          r"sheet_metal|front plate|offset front|90128a|3310-|1309-", "steel"),
         (r".", "printed"),                     # housings, triggers, mounts, floor
-    ], 40000),
+    ], 110000),
     ("telecaster", "Telecaster", "telecaster - *.STL", COMMON_SKIP, None, [
         (r"body|_neck", "wood"),
         (r"\bnut\b", "printed"),
         (r"string|spring|saddle|screw|bridge|tuner|avvolgitore|cassa|lever", "steel"),
         (r".", "printed"),
-    ], 45000),
+    ], 160000),
     ("smelly", "Smelly", "*.STL", SMELLY_SKIP, smelly_extra, [
         (r"nema17|stepper|servo|motor|pinion", "dark"),
         (r"lead screw|guiding_rod|rod_|coupler|coupling|bearing|idler|"
          r"pulley|shaft|screw", "steel"),
         (r".", "printed"),                     # frames, reservoir, blocks, holders
-    ], 45000),
+    ], 140000),
 ]
 
 def bucket_of(name, rules):

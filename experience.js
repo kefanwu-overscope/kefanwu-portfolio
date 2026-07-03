@@ -447,13 +447,6 @@ function initScene(canvas) {
   };
   HOTSPOTS.push(deskLamp);
 
-  // slim monitor on the desk's right — dark CAD viewport (set dressing)
-  const monitor = buildDeskMonitor();
-  monitor.position.set(0.52, DESK_TOP, -0.22);
-  monitor.rotation.y = -0.32;
-  scene.add(monitor);
-  MODELS.monitor = monitor;
-
   // resume: the hero object on the desk — front and center, in the light
   placeRoot(buildResumePaper(), scene, {
     name: "resumePaper", action: "resume", label: "Résumé",
@@ -513,8 +506,11 @@ function initScene(canvas) {
   const SIDE_EXHIBITS = [
     { build: buildDriverSeat,  key: "seat",      label: "Driver seat",       size: 0.3,  bay: 0, row: 0 },
     { build: buildFtcBot,      key: "ftc",       label: "FTC robot",         size: 0.28, bay: 1, row: 0 },
-    { file: "smelly",          key: "formlabs",  label: "Smelly",            size: 0.3,  axis: "y", bay: 0, row: 1, rotY: -Math.PI / 2 + 0.2 },
-    { file: "pool",            key: "pool",      label: "Pool Sniper",       size: 0.32, axis: "y", bay: 1, row: 1, rotY: -Math.PI / 2 + 0.2 },
+    { file: "smelly",          key: "formlabs",  label: "Smelly",            size: 0.3,  axis: "y", bay: 0, row: 1, rotY: -Math.PI / 2 + 0.2,
+      matTweak: { printed: { color: 0x5a6068 } } },
+    // the launcher's long axis is raw +y — lay it down along the shelf
+    { file: "pool",            key: "pool",      label: "Pool Sniper",       size: 0.42, axis: "z", bay: 1, row: 1, rotX: -Math.PI / 2, rotY: -0.2,
+      matTweak: { printed: { color: 0x454b53 } } },
     { file: "telecaster",      key: "telecaster", label: "Telecaster",       size: 0.42, axis: "y", bay: 0, row: 2, rotY: -Math.PI / 2 + 0.2 },
   ];
   SIDE_EXHIBITS.forEach((s) => {
@@ -525,7 +521,7 @@ function initScene(canvas) {
       markerCap: CAB2.rows[s.row] + (s.row === 0 ? 0.36 : 0.44),
       pos: [CAB2.frontX, CAB2.rows[s.row], CAB2.bays[s.bay]],
       rotY: s.rotY !== undefined ? s.rotY : -Math.PI / 2 + 0.25,
-      rotZ: s.rotZ, rotX: s.rotX,
+      rotZ: s.rotZ, rotX: s.rotX, matTweak: s.matTweak,
     };
     if (s.file) loadAssembly(loader, scene, `models/real/${s.file}.glb`, opts);
     else placeRoot(s.build(), scene, opts);
@@ -2590,62 +2586,6 @@ function buildSkillPaper() {
   face.rotation.x = -Math.PI / 2;
   face.position.y = 0.0025;
   g.add(face);
-  return g;
-}
-
-function buildDeskMonitor() {
-  // slim 24" monitor showing a dark CAD viewport — pure set dressing
-  const g = new THREE.Group();
-  const dark = new THREE.MeshStandardMaterial({ color: 0x17191d, roughness: 0.4, metalness: 0.5 });
-  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.085, 0.012, 24), dark);
-  base.position.y = 0.006;
-  g.add(base);
-  const col = new THREE.Mesh(new RoundedBoxGeometry(0.028, 0.2, 0.02, 2, 0.006), dark);
-  col.position.set(0, 0.11, -0.012);
-  g.add(col);
-  const panel = new THREE.Mesh(new RoundedBoxGeometry(0.54, 0.315, 0.018, 2, 0.006), dark);
-  panel.position.set(0, 0.32, 0.01);
-  panel.castShadow = true;
-  g.add(panel);
-  const c = document.createElement("canvas");
-  c.width = 512;
-  c.height = 288;
-  const ctx = c.getContext("2d");
-  ctx.fillStyle = "#0c0e12";
-  ctx.fillRect(0, 0, 512, 288);
-  ctx.fillStyle = "#14171d";
-  ctx.fillRect(0, 0, 512, 26); // toolbar
-  ctx.fillStyle = "#1a1e26";
-  ctx.fillRect(392, 26, 120, 262); // feature tree
-  ctx.strokeStyle = "#3f8cff";
-  ctx.lineWidth = 1.6;
-  ctx.globalAlpha = 0.9;
-  ctx.strokeRect(96, 92, 160, 96); // wireframe bracket, isometric-ish
-  ctx.beginPath();
-  ctx.moveTo(96, 92); ctx.lineTo(146, 60); ctx.lineTo(306, 60); ctx.lineTo(256, 92);
-  ctx.moveTo(306, 60); ctx.lineTo(306, 156); ctx.lineTo(256, 188);
-  ctx.moveTo(146, 60); ctx.lineTo(146, 90);
-  ctx.stroke();
-  ctx.globalAlpha = 0.55;
-  ctx.beginPath(); ctx.arc(176, 140, 26, 0, 7); ctx.stroke();
-  ctx.globalAlpha = 1;
-  ctx.fillStyle = "#3f8cff";
-  ctx.fillRect(0, 0, 512, 2);
-  ctx.fillStyle = "#6e7277";
-  ctx.font = "500 11px Consolas, monospace";
-  ctx.fillText("bracket_v8.sldprt", 12, 17);
-  ctx.fillStyle = "#3a3f48";
-  for (let i = 0; i < 7; i++) ctx.fillRect(404, 44 + i * 22, 96, 6);
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = MAXA;
-  const screen = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.512, 0.288),
-    new THREE.MeshBasicMaterial({ map: tex, color: 0xb9c2cc })
-  );
-  screen.position.set(0, 0.32, 0.0195);
-  g.add(screen);
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
 }
 

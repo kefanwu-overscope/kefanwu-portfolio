@@ -448,10 +448,14 @@ shelf cell (this is the anti-clipping mechanism; every exhibit passes a
 > (Brake, Guitar Education, Line_Follower, Pool Sniper, Smelly, Telecaster).
 > Same `mat_<bucket>` scheme as `stl2glb.py`, plus two new buckets — `wood`
 > (guitar bodies/necks, pool cue) and `pcb` (Arduino/driver boards) — with
-> matching `ASSEMBLY_MATS` entries. Each is decimated (fast-simplification)
-> to ≤ ~50k tris / < 1 MB. The old procedural builders (buildBrakeRotor,
-> buildLineFollower, buildEducationKit, buildPoolSniper, buildSmelly,
-> buildTelecasterV2, makeThermalTexture) were removed.
+> matching `ASSEMBLY_MATS` entries. Decimation is GENTLE (90k–160k tris,
+> 1.4–2.8 MB each) — the first aggressive pass (≤50k) produced visible
+> triangle faceting and was redone; don't lower the budgets in
+> stl2glb_new.py without checking curved parts (brake rotor!) up close.
+> The old procedural builders (buildBrakeRotor, buildLineFollower,
+> buildEducationKit, buildPoolSniper, buildSmelly, buildTelecasterV2,
+> makeThermalTexture) were removed. Pool Sniper's raw long axis is +y;
+> it is laid flat with rotX=-π/2 (axis "z").
 - **Resume** = a paper sheet on the desk (`buildResumePaper`, `action:
   "resume"`).
 - **Skill paper** = `buildSkillPaper()` second printed sheet on the desk
@@ -463,11 +467,11 @@ shelf cell (this is the anti-clipping mechanism; every exhibit passes a
   invisible hit pad in the lamp group). `toggleDeskLamp()` switches
   `lampLight` + the `lampLed`-named emissive disc; hover label wording
   tracks the on/off state.
-- Also note: `buildDeskMonitor()` (decorative CAD-viewport monitor on the
-  desk), a `Reflector` gloss strip set into the floor in front of the main
-  cabinet (LOW_TIER gets a static glossy plane), and `runLightIntro()` —
-  staged light-up on reveal (ambient → strips → spots → lamps), skipped
-  under prefers-reduced-motion.
+- Also note: a `Reflector` gloss strip set into the floor in front of the
+  main cabinet (LOW_TIER gets a static glossy plane), and `runLightIntro()`
+  — staged light-up on reveal (ambient → strips → spots → lamps), skipped
+  under prefers-reduced-motion. (The desk monitor was removed — it blocked
+  sightlines; don't re-add set dressing on the desk's right half.)
 
 > Exhibit `key` matches a `window.projectData` key so the panel content is
 > the SAME data as the homepage modal. Note the two seat keys: `carbonSeat`
