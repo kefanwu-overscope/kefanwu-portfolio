@@ -5,7 +5,14 @@ Project exhibits (models/real/*.glb):
   GLB with tools/stl2glb.py. No third-party license applies.
 
 All furniture, tools, equipment (incl. the Bambu-style printer), and the
-room itself are procedurally modeled in-code — no third-party models.
+room itself are procedurally modeled in-code — no third-party models,
+except the desk chair credited below.
+
+CC BY 4.0 (attribution required):
+- ergonomic_mesh_office_chair — "Ergonomic mesh office chair" by guillaumecrz
+  (https://sketchfab.com/3d-models/ergonomic-mesh-office-chair-cd5ef0305d8545dd8cd934ebb99cf7d5),
+  licensed CC Attribution 4.0 (creativecommons.org/licenses/by/4.0/),
+  obtained via the Objaverse mirror (huggingface.co/datasets/allenai/objaverse).
 
 CC0 (public domain, credited as courtesy):
 - potted_plant_01 — Poly Haven (polyhaven.com)

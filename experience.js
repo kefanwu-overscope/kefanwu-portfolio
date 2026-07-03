@@ -54,9 +54,9 @@ const easeInOutCubic = (x) =>
 
 const COL = {
   bg: 0x0b0c0e, // matches the main site's near-black
-  floorTint: 0x74777c, // polished concrete
-  wallTint: 0x9a9da3, // light graphite plaster
-  woodTint: 0x4a3527, // dark walnut furniture
+  floorTint: 0x64676d, // sealed satin concrete
+  wallTint: 0xa4a7ad, // light graphite plaster
+  woodTint: 0x3c332a, // ebonized cool walnut
   leather: 0x16181c, // near-black desk leather
   accent: 0x3f8cff, // site accent blue
 };
@@ -106,11 +106,13 @@ const brassMat = () =>
 
 /* engineering materials for the merged assembly buckets (mesh name mat_*) */
 const ASSEMBLY_MATS = {
-  steel: () => new THREE.MeshStandardMaterial({ color: 0x9aa0a8, metalness: 1.0, roughness: 0.45 }),
-  brass: () => new THREE.MeshStandardMaterial({ color: 0xb98b35, metalness: 1.0, roughness: 0.3 }),
-  dark: () => new THREE.MeshStandardMaterial({ color: 0x1a1c20, metalness: 0.55, roughness: 0.45 }),
-  printed: () => new THREE.MeshStandardMaterial({ color: 0x2c3038, metalness: 0.12, roughness: 0.58 }),
-  aero: () => new THREE.MeshStandardMaterial({ color: 0xd8dadc, metalness: 0.05, roughness: 0.42 }),
+  // fully-metallic mats live off the env map — boost per-material intensity
+  // so the CAD exhibits stay readable at the scene's low global env level
+  steel: () => new THREE.MeshStandardMaterial({ color: 0x9aa0a8, metalness: 1.0, roughness: 0.45, envMapIntensity: 1.8 }),
+  brass: () => new THREE.MeshStandardMaterial({ color: 0x9d9789, metalness: 1.0, roughness: 0.35, envMapIntensity: 1.6 }),
+  dark: () => new THREE.MeshStandardMaterial({ color: 0x1a1c20, metalness: 0.55, roughness: 0.45, envMapIntensity: 1.4 }),
+  printed: () => new THREE.MeshStandardMaterial({ color: 0x2c3038, metalness: 0.12, roughness: 0.58, envMapIntensity: 1.2 }),
+  aero: () => new THREE.MeshStandardMaterial({ color: 0xd8dadc, metalness: 0.05, roughness: 0.42, envMapIntensity: 1.2 }),
   carbon: () =>
     new THREE.MeshPhysicalMaterial({
       map: makeCarbonTwillTexture(),
@@ -125,6 +127,10 @@ const ASSEMBLY_MATS = {
 
 const MODELS = {};
 const HOTSPOTS = [];
+// pick-proxy hitboxes + marker sprites: excluded from the GTAO/Bokeh
+// pre-passes (their override-material renders would ghost these as grey
+// boxes / dark squares in the AO and depth buffers)
+const NO_PREPASS = [];
 
 /* display-cabinet layout: 3 bays x 3 rows (single source of truth) */
 const CAB = {
@@ -142,7 +148,7 @@ function initScene(canvas) {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.45;
+  renderer.toneMappingExposure = 1.3;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
   MAXA = renderer.capabilities.getMaxAnisotropy();
@@ -188,6 +194,10 @@ function initScene(canvas) {
   if (!LOW_TIER) {
     gtao = new GTAOPass(scene, camera, window.innerWidth, window.innerHeight);
     gtao.output = GTAOPass.OUTPUT.Default;
+    // contact-scale AO only — the default 0.25 m radius at full blend crushes
+    // the enclosed cabinet interiors (and their exhibits) to black
+    gtao.updateGtaoMaterial({ radius: 0.1 });
+    gtao.blendIntensity = 0.7;
     composer.addPass(gtao);
   }
   // depth of field, opened up only while an exhibit is focused
@@ -196,11 +206,25 @@ function initScene(canvas) {
     bokeh = new BokehPass(scene, camera, { focus: 2.2, aperture: 0.0, maxblur: 0.008 });
     composer.addPass(bokeh);
   }
+  // hide pick-proxies + marker sprites while GTAO/Bokeh re-render the scene
+  // with override materials (otherwise they ghost into the AO/depth buffers)
+  const hideForPrepass = (pass) => {
+    if (!pass) return;
+    const orig = pass.render.bind(pass);
+    pass.render = (...args) => {
+      const shown = [];
+      for (const o of NO_PREPASS) if (o.visible) { o.visible = false; shown.push(o); }
+      orig(...args);
+      for (const o of shown) o.visible = true;
+    };
+  };
+  hideForPrepass(gtao);
+  hideForPrepass(bokeh);
   const bloom = new UnrealBloomPass(
     new THREE.Vector2(window.innerWidth, window.innerHeight),
-    0.1, // strength — whisper quiet
-    0.35, // radius
-    0.95 // threshold — only true emitters bloom (screens/paper stay crisp)
+    0.2, // strength — a whisper halo on true emitters only
+    0.45, // radius
+    0.82 // threshold — LED strips / pendant / chamber light, nothing else
   );
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
@@ -231,13 +255,13 @@ function initScene(canvas) {
   const pmrem = new THREE.PMREMGenerator(renderer);
   new HDRLoader(manager).load("hdri/wooden_lounge_1k.hdr", (tex) => {
     scene.environment = pmrem.fromEquirectangular(tex).texture;
-    scene.environmentIntensity = 0.34;
+    scene.environmentIntensity = 0.22; // keep the HDRI's warm-wood cast subtle
     tex.dispose();
     pmrem.dispose();
   });
 
   /* ---------- lighting ---------- */
-  const hemi = new THREE.HemisphereLight(0x4a505a, 0x101114, 0.7);
+  const hemi = new THREE.HemisphereLight(0x4e5766, 0x14161a, 0.95);
   scene.add(hemi);
 
   const key = new THREE.DirectionalLight(0xeef2f8, 1.35);
@@ -256,18 +280,18 @@ function initScene(canvas) {
   scene.add(key);
 
   // soft cool fill from the front-left balances the warm key (cinematic 2-point)
-  const fill = new THREE.DirectionalLight(0xa8bfdd, 0.18);
+  const fill = new THREE.DirectionalLight(0xa8bfdd, 0.3);
   fill.position.set(-3, 2.2, 3);
   scene.add(fill);
 
-  // banker's-lamp warm pool
-  const lampLight = new THREE.PointLight(0xffe2c0, 3.2, 2.6, 2);
+  // desk-lamp pool — near-neutral so the resume reads white, not amber
+  const lampLight = new THREE.PointLight(0xffeedd, 2.2, 2.6, 2);
   lampLight.position.set(-0.44, 1.1, -0.12);
   scene.add(lampLight);
 
   // display spots washing the cabinet
   [-0.7, 0, 0.7].forEach((x) => {
-    const spot = new THREE.SpotLight(0xe8ecf4, 3.0, 6, 0.46, 0.75, 1.6);
+    const spot = new THREE.SpotLight(0xe8ecf4, 3.4, 6, 0.46, 0.75, 1.6);
     spot.position.set(x, 2.55, 0.45);
     spot.target.position.set(x, 1.0, CAB.z);
     scene.add(spot);
@@ -275,12 +299,20 @@ function initScene(canvas) {
   });
   // right-wall cabinet gets its own pair of spots
   [-0.75, -0.05].forEach((z) => {
-    const spot = new THREE.SpotLight(0xe8ecf4, 2.6, 6, 0.46, 0.75, 1.6);
+    const spot = new THREE.SpotLight(0xe8ecf4, 3.0, 6, 0.46, 0.75, 1.6);
     spot.position.set(0.9, 2.55, z + 0.3);
     spot.target.position.set(2.3, 1.0, z);
     scene.add(spot);
     scene.add(spot.target);
   });
+  // shadowless in-case fills so the exhibits read against the dark backs
+  // (the shelf strips are emissive decals only — they cast no real light)
+  const caseFillA = new THREE.PointLight(0xdfe8f4, 1.3, 3.2, 1.8);
+  caseFillA.position.set(0, 1.55, -0.55);
+  scene.add(caseFillA);
+  const caseFillB = new THREE.PointLight(0xdfe8f4, 1.1, 2.8, 1.8);
+  caseFillB.position.set(1.85, 1.45, -0.4);
+  scene.add(caseFillB);
 
   /* ---------- room + rug ---------- */
   buildRoom(scene);
@@ -297,6 +329,28 @@ function initScene(canvas) {
   contact.rotation.x = -Math.PI / 2;
   contact.position.set(0, 0.02, 0.1);
   scene.add(contact);
+
+  // low-pile graphite rug anchoring the desk + chair vignette, with a thin
+  // muted-blue inner border line (matte, no emissive)
+  const rug = new THREE.Mesh(
+    new RoundedBoxGeometry(2.3, 0.012, 1.7, 2, 0.006),
+    new THREE.MeshStandardMaterial({ color: 0x111318, roughness: 0.95, metalness: 0 })
+  );
+  rug.position.set(0, 0.006, 0.5);
+  rug.receiveShadow = true;
+  scene.add(rug);
+  const rugLine = new THREE.MeshStandardMaterial({ color: 0x2b4d80, roughness: 0.9, metalness: 0 });
+  const rugIn = { w: 2.12, d: 1.52 };
+  [
+    [rugIn.w, 0.02, 0, 0.5 - rugIn.d / 2 + 0.01],
+    [rugIn.w, 0.02, 0, 0.5 + rugIn.d / 2 - 0.01],
+    [0.02, rugIn.d, -rugIn.w / 2 + 0.01, 0.5],
+    [0.02, rugIn.d, rugIn.w / 2 - 0.01, 0.5],
+  ].forEach(([w, d, x, z]) => {
+    const line = new THREE.Mesh(new THREE.BoxGeometry(w, 0.002, d), rugLine);
+    line.position.set(x, 0.0125, z);
+    scene.add(line);
+  });
 
   /* ---------- loaders ---------- */
   const loader = new GLTFLoader(manager);
@@ -330,7 +384,7 @@ function initScene(canvas) {
     { file: "aura",     key: "aura",       label: "AURA Swerve",       size: 0.29, axis: "y", bay: 1, row: 0, rotY: 0.35, rotZ: -Math.PI / 2 },
     { file: "scanner",  key: "scanner",    label: "3D scanner",        size: 0.38, axis: "x", bay: 2, row: 0, rotY: 0.35 },
     { file: "javelin",  key: "javelin",    label: "Javelin VTOL",      size: 0.44, axis: "x", bay: 0, row: 1, rotY: 0.6,
-      matTweak: { aero: { color: 0x2e3136, roughness: 0.5 }, printed: { color: 0x1f2126 } } },
+      matTweak: { aero: { color: 0x3a3e44, roughness: 0.5 }, printed: { color: 0x26292e }, dark: { color: 0x24272c } } },
     { file: "steering", key: "steering",   label: "Mk.8 Steering",     size: 0.32, axis: "y", bay: 1, row: 1, rotY: 0.5 },
   ];
   ASSEMBLIES.forEach((a) =>
@@ -398,11 +452,11 @@ function initScene(canvas) {
   blueprint.position.set(0, 2.72, -1.5);
   scene.add(blueprint);
 
-  const chair = buildErgoChair();
-  chair.position.set(-0.25, 0, 1.05);
-  chair.rotation.y = Math.PI - 0.25;
-  scene.add(chair);
-  MODELS.chair = chair;
+  // real ergonomic mesh task chair (CC BY 4.0 — see ATTRIBUTIONS.txt);
+  // replaces the old procedural buildErgoChair() stand-in
+  loadModel(loader, scene, "models/ergonomic_mesh_office_chair/ergonomic_mesh_office_chair.glb", {
+    name: "chair", targetSize: 0.95, axis: "y", pos: [-0.25, 0, 1.05], rotY: Math.PI - 0.25,
+  });
   // leafy plant tucked in the corner pocket between cabinet and bookshelf
   loadModel(loader, scene, "models/potted_plant_01/potted_plant_01.gltf", {
     name: "plant", targetSize: 1.05, axis: "y", pos: [1.75, 0, -1.18], rotY: 0.6,
@@ -633,6 +687,11 @@ function initScene(canvas) {
     if (panelOpen || flight) return;
     setHover(pickHotspot());
   });
+  // the hover card would otherwise stay stuck when the pointer exits the
+  // canvas (topbar, panel, window edge) without another canvas pointermove
+  renderer.domElement.addEventListener("pointerleave", () => setHover(null));
+  renderer.domElement.addEventListener("pointercancel", () => setHover(null));
+  window.addEventListener("blur", () => setHover(null));
   renderer.domElement.addEventListener("pointerdown", (ev) => { downXY = [ev.clientX, ev.clientY]; });
   renderer.domElement.addEventListener("pointerup", (ev) => {
     if (!downXY) return;
@@ -870,6 +929,7 @@ function placeRoot(root, scene, opts, onPlaced) {
     const marker = makeInteractMarker();
     marker.position.set(0, markerY, 0);
     pivot.add(marker);
+    NO_PREPASS.push(hitbox, marker);
 
     pivot.userData.hotspot = {
       key: opts.projectKey || null,
@@ -934,15 +994,21 @@ function buildRoom(scene) {
   // with a steel lower band, fully enclosed (incl. front wall) so no camera
   // angle can ever see past the set
   const ft = TEX.loadPBR("painted_plaster_wall");
+  // the shared wall set stretched over 16x16 m is featureless mush up close —
+  // clone the maps for the floor only, at a much tighter repeat
+  const fMap = ft.map.clone(); fMap.repeat.set(8, 8); fMap.needsUpdate = true;
+  const fNor = ft.normalMap.clone(); fNor.repeat.set(8, 8); fNor.needsUpdate = true;
+  const fRgh = ft.roughnessMap.clone(); fRgh.repeat.set(8, 8); fRgh.needsUpdate = true;
   const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(16, 16),
     new THREE.MeshStandardMaterial({
       color: COL.floorTint,
-      map: ft.map,
-      normalMap: ft.normalMap,
-      roughnessMap: ft.roughnessMap,
-      roughness: 0.55,
-      metalness: 0.05,
+      map: fMap,
+      normalMap: fNor,
+      roughnessMap: fRgh,
+      roughness: 0.42,
+      metalness: 0.0,
+      envMapIntensity: 0.9,
     })
   );
   floor.rotation.x = -Math.PI / 2;
@@ -988,7 +1054,7 @@ function buildRoom(scene) {
   const ceiling = new THREE.Mesh(
     new THREE.PlaneGeometry(2 * sideX, depth),
     new THREE.MeshStandardMaterial({
-      color: 0x3a3d42,
+      color: 0x4a4e55,
       map: wt.map,
       normalMap: wt.normalMap,
       roughness: 1.0,
@@ -1039,7 +1105,7 @@ function buildRoom(scene) {
   });
 
   // ceiling cove LED strips along the wall tops
-  const coveMat = new THREE.MeshStandardMaterial({ color: 0x6a7078, emissive: 0xcfe0f4, emissiveIntensity: 0.7 });
+  const coveMat = new THREE.MeshStandardMaterial({ color: 0x6a7078, emissive: 0xc4d9f6, emissiveIntensity: 1.2 });
   const addCove = (w, x, z, rotY) => {
     const m = new THREE.Mesh(new THREE.BoxGeometry(w, 0.018, 0.018), coveMat);
     m.position.set(x, WALL_H - 0.14, z);
@@ -1086,8 +1152,9 @@ function buildDesk() {
   const thk = 0.045;
   const W = 1.85;
   const D = 0.9;
-  const steelPanel = new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.42, metalness: 0.7 });
-  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.3, metalness: 1.0 });
+  // silver sit-stand frame under a matte-black slab (Jarvis/Fully language)
+  const steelPanel = new THREE.MeshStandardMaterial({ color: 0x8f959d, roughness: 0.35, metalness: 0.9 });
+  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.45, metalness: 0.85 });
 
   const top = new THREE.Mesh(
     new RoundedBoxGeometry(W, thk, D, 3, 0.008),
@@ -1156,8 +1223,8 @@ function buildDisplayCabinet() {
   const H = 2.2;
   const D = 0.54;
   const z = CAB.z;
-  const frameMat = new THREE.MeshStandardMaterial({ color: 0x1d1f23, roughness: 0.4, metalness: 0.65 });
-  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.3, metalness: 1.0 });
+  const frameMat = new THREE.MeshStandardMaterial({ color: 0x1d1f23, roughness: 0.45, metalness: 0.5, envMapIntensity: 0.5 });
+  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.45, metalness: 0.85 });
 
   // matte back panel
   const back = new THREE.Mesh(new THREE.BoxGeometry(W, H, 0.02), new THREE.MeshStandardMaterial({ color: 0x141518, roughness: 0.7, metalness: 0.2 }));
@@ -1193,11 +1260,14 @@ function buildDisplayCabinet() {
 
   // tinted glass shelves with aluminum front edge + cool light strips
   const glassMat = new THREE.MeshPhysicalMaterial({
-    color: 0x2c343c,
-    roughness: 0.08,
+    color: 0x31404f,
+    roughness: 0.05,
     metalness: 0,
     transparent: true,
-    opacity: 0.4,
+    opacity: 0.3,
+    envMapIntensity: 1.3,
+    clearcoat: 0.5,
+    clearcoatRoughness: 0.08,
   });
   CAB.rows.forEach((y) => {
     const board = new THREE.Mesh(new THREE.BoxGeometry(W - 0.09, 0.014, D - 0.08), glassMat);
@@ -1209,7 +1279,7 @@ function buildDisplayCabinet() {
     g.add(edge);
     const strip = new THREE.Mesh(
       new THREE.BoxGeometry(W - 0.16, 0.008, 0.014),
-      new THREE.MeshStandardMaterial({ color: 0x6a7078, emissive: 0xdfe8f4, emissiveIntensity: 0.5 })
+      new THREE.MeshStandardMaterial({ color: 0x6a7078, emissive: 0xbcd7ff, emissiveIntensity: 1.15 })
     );
     strip.position.set(0, y + CAB.rowH - 0.055, z + D / 2 - 0.12);
     g.add(strip);
@@ -1324,7 +1394,7 @@ function buildModernDeskLamp() {
   g.add(head);
   const led = new THREE.Mesh(
     new THREE.CylinderGeometry(0.038, 0.038, 0.004, 22),
-    new THREE.MeshStandardMaterial({ color: 0xfff4e2, emissive: 0xffe8c8, emissiveIntensity: 1.2 })
+    new THREE.MeshStandardMaterial({ color: 0xf6f7f9, emissive: 0xfff0e0, emissiveIntensity: 1.2 })
   );
   led.position.copy(head.position).add(new THREE.Vector3(0, -0.011, 0));
   led.rotation.z = 0.14;
@@ -1349,12 +1419,12 @@ function buildLedBarLamp() {
   g.add(bar);
   const led = new THREE.Mesh(
     new THREE.BoxGeometry(0.27, 0.004, 0.026),
-    new THREE.MeshStandardMaterial({ color: 0xfff4e2, emissive: 0xffeacd, emissiveIntensity: 1.3 })
+    new THREE.MeshStandardMaterial({ color: 0xf6f7f9, emissive: 0xfff2e4, emissiveIntensity: 1.3 })
   );
   led.position.set(-0.1, 0.347, 0.04);
   led.rotation.y = 0.1;
   g.add(led);
-  const lLight = new THREE.PointLight(0xffe8c8, 1.7, 2.4, 2);
+  const lLight = new THREE.PointLight(0xfff1e2, 1.7, 2.4, 2);
   lLight.position.set(-0.1, 0.32, 0.05);
   g.add(lLight);
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
@@ -1460,7 +1530,9 @@ function buildWorkbench() {
   const TOP_Y = 0.78;
 
   // bench: butcher-block top on steel legs + lower shelf
-  const top = new THREE.Mesh(new RoundedBoxGeometry(1.95, 0.055, 0.64, 2, 0.01), woodMaterial(0x6e4e2c, 0.5));
+  // light phenolic lab worktop — brightens the whole left wall
+  const top = new THREE.Mesh(new RoundedBoxGeometry(1.95, 0.055, 0.64, 2, 0.01),
+    new THREE.MeshStandardMaterial({ color: 0xd3d6da, roughness: 0.5, metalness: 0.08 }));
   top.position.set(0, TOP_Y - 0.0275, 0);
   top.castShadow = true;
   top.receiveShadow = true;
@@ -1477,17 +1549,17 @@ function buildWorkbench() {
   g.add(lower);
   // spare spools on the lower shelf — all lying flat, one stacked pair
   [
-    [-0.62, 0.05, 0x3f9e4f],
+    [-0.62, 0.05, 0x2b66d9],
     [-0.44, -0.1, 0x8a8f96],
     [-0.26, 0.08, 0x17181c],
-    [0.42, -0.05, 0xd06018],
+    [0.42, -0.05, 0xe8eaee],
   ].forEach(([sx, sz, col]) => {
     const sp = makeMiniSpool(col);
     sp.scale.setScalar(1.6);
     sp.position.set(sx, 0.243, sz);
     g.add(sp);
   });
-  const spTop = makeMiniSpool(0x2255cc);
+  const spTop = makeMiniSpool(0x2b66d9);
   spTop.scale.setScalar(1.6);
   spTop.position.set(-0.62, 0.302, 0.05); // stacked on the green one
   g.add(spTop);
@@ -1592,7 +1664,7 @@ function buildWorkbench() {
   tHandle.position.y = -0.14;
   torque.add(tHandle);
   const band = new THREE.Mesh(new THREE.CylinderGeometry(0.0125, 0.0125, 0.02, 14),
-    new THREE.MeshStandardMaterial({ color: 0xc23c2e, roughness: 0.45 }));
+    new THREE.MeshStandardMaterial({ color: 0x2b66d9, roughness: 0.45 }));
   band.position.y = -0.1;
   torque.add(band);
   const scaleWin = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.05, 0.004),
@@ -1616,7 +1688,7 @@ function buildWorkbench() {
   wrJaw.position.set(0.536, TOP_Y + 0.515, bz);
   g.add(wrJaw);
   const plierHandleL = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.006, 0.09, 10),
-    new THREE.MeshStandardMaterial({ color: 0xc23c2e, roughness: 0.5 }));
+    new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.5 }));
   plierHandleL.position.set(0.76, TOP_Y + 0.56, bz);
   plierHandleL.rotation.z = 0.16;
   g.add(plierHandleL);
@@ -1664,7 +1736,7 @@ function buildWorkbench() {
 
   // ball-peen hammer
   const hammer = new THREE.Group();
-  const hHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.011, 0.2, 10), woodMaterial(0x8a6236, 0.55));
+  const hHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.011, 0.2, 10), woodMaterial(0x4a4038, 0.55));
   hammer.add(hHandle);
   const hHead = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.075, 12), toolSteel);
   hHead.rotation.z = Math.PI / 2;
@@ -1677,9 +1749,9 @@ function buildWorkbench() {
   hammer.rotation.z = -0.06;
   g.add(hammer);
 
-  // flush cutters (red handles)
+  // flush cutters (equipment-blue handles)
   const cutL = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.006, 0.075, 10),
-    new THREE.MeshStandardMaterial({ color: 0xc23c2e, roughness: 0.5 }));
+    new THREE.MeshStandardMaterial({ color: 0x2b66d9, roughness: 0.5 }));
   cutL.position.set(0.895, TOP_Y + 0.55, bz);
   cutL.rotation.z = 0.14;
   g.add(cutL);
@@ -1694,13 +1766,81 @@ function buildWorkbench() {
   // tape measure
   const tape = new THREE.Group();
   const tBody = new THREE.Mesh(new RoundedBoxGeometry(0.055, 0.055, 0.032, 2, 0.01),
-    new THREE.MeshStandardMaterial({ color: 0xd8a018, roughness: 0.5 }));
+    new THREE.MeshStandardMaterial({ color: 0x2b66d9, roughness: 0.5 }));
   tape.add(tBody);
   const tClip = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.03, 0.036), toolSteel);
   tClip.position.set(-0.032, 0, 0);
   tape.add(tClip);
   tape.position.set(0.68, TOP_Y + 0.52, bz + 0.018);
   g.add(tape);
+
+  // torpedo level (graphite body, two blue vials) — upper band, left
+  const level = new THREE.Group();
+  const lvBody = new THREE.Mesh(new RoundedBoxGeometry(0.22, 0.034, 0.018, 2, 0.006), darkPlastic);
+  level.add(lvBody);
+  [-0.05, 0.05].forEach((vx) => {
+    const vial = new THREE.Mesh(new THREE.BoxGeometry(0.028, 0.014, 0.02),
+      new THREE.MeshPhysicalMaterial({ color: 0x2b66d9, roughness: 0.2, transparent: true, opacity: 0.85 }));
+    vial.position.set(vx, 0.002, 0.001);
+    level.add(vial);
+  });
+  level.position.set(-0.55, TOP_Y + 0.83, bz + 0.012);
+  g.add(level);
+
+  // hex key set — five L-keys hung in descending sizes
+  for (let i = 0; i < 5; i++) {
+    const hk = new THREE.Group();
+    const len = 0.085 - i * 0.011;
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.006 - i * 0.0006, len, 0.005), toolSteel);
+    leg.position.y = -len / 2;
+    hk.add(leg);
+    const foot = new THREE.Mesh(new THREE.BoxGeometry(0.03 - i * 0.003, 0.006 - i * 0.0006, 0.005), toolSteel);
+    foot.position.set(0.012, -len - 0.001, 0);
+    hk.add(foot);
+    hk.position.set(-0.32 + i * 0.036, TOP_Y + 0.85, bz + 0.01);
+    g.add(hk);
+  }
+
+  // machinist square (L of steel, clear of the torque wrench head)
+  const sqV = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.13, 0.005), toolSteel);
+  sqV.position.set(-0.06, TOP_Y + 0.79, bz + 0.01);
+  g.add(sqV);
+  const sqH = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.02, 0.005), toolSteel);
+  sqH.position.set(-0.022, TOP_Y + 0.734, bz + 0.01);
+  g.add(sqH);
+
+  // adjustable wrench fills the mid gap between torque and combo wrench
+  const aw = new THREE.Group();
+  const awShaft = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.15, 0.008), toolSteel);
+  aw.add(awShaft);
+  const awJawF = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.03, 0.01), toolSteel);
+  awJawF.position.set(0.008, 0.088, 0);
+  aw.add(awJawF);
+  const awJawM = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.016, 0.01), toolSteel);
+  awJawM.position.set(-0.002, 0.062, 0);
+  aw.add(awJawM);
+  const awGrip = new THREE.Mesh(new RoundedBoxGeometry(0.024, 0.06, 0.012, 2, 0.005),
+    new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.5 }));
+  awGrip.position.y = -0.05;
+  aw.add(awGrip);
+  aw.position.set(0.35, TOP_Y + 0.6, bz + 0.01);
+  aw.rotation.z = -0.12;
+  g.add(aw);
+
+  // wire strippers (blue handles, steel head) — upper band, right
+  const stp = new THREE.Group();
+  [-1, 1].forEach((s) => {
+    const h = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.006, 0.08, 10),
+      new THREE.MeshStandardMaterial({ color: 0x2b66d9, roughness: 0.5 }));
+    h.position.set(s * 0.011, -0.02, 0);
+    h.rotation.z = s * 0.18;
+    stp.add(h);
+  });
+  const stpHead = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.05, 0.007), toolSteel);
+  stpHead.position.y = 0.04;
+  stp.add(stpHead);
+  stp.position.set(0.9, TOP_Y + 0.8, bz + 0.01);
+  g.add(stp);
 
   /* ---- bench top: printer LEFT, clear middle, instruments RIGHT ---- */
   const printer = buildBambuPrinter();
@@ -1738,7 +1878,7 @@ function buildWorkbench() {
     knob.position.set(kx, ky, 0.088);
     psu.add(knob);
   });
-  [[-0.06, 0xcc3333], [-0.03, 0x111111], [0.0, 0xcc3333], [0.03, 0x111111]].forEach(([jx, col]) => {
+  [[-0.06, 0x2b66d9], [-0.03, 0x111111], [0.0, 0x2b66d9], [0.03, 0x111111]].forEach(([jx, col]) => {
     const jack = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.012, 10),
       new THREE.MeshStandardMaterial({ color: col, roughness: 0.4 }));
     jack.rotation.x = Math.PI / 2;
@@ -1791,7 +1931,7 @@ function buildWorkbench() {
   const block = new THREE.Mesh(new RoundedBoxGeometry(0.17, 0.032, 0.055, 2, 0.006), woodMaterial(0x4a3527, 0.5));
   block.position.y = 0.045;
   drivers.add(block);
-  [[-0.06, 0xcc3333], [-0.036, 0x2255cc], [-0.012, 0x2a9944], [0.012, 0xe8b830], [0.036, 0x222222], [0.06, 0xd06018]].forEach(([dx, col], i) => {
+  [[-0.06, 0x2b66d9], [-0.036, 0x17181c], [-0.012, 0x2b66d9], [0.012, 0x8a8f96], [0.036, 0x17181c], [0.06, 0x2b66d9]].forEach(([dx, col], i) => {
     const shaft2 = new THREE.Mesh(new THREE.CylinderGeometry(0.0022, 0.0022, 0.075, 8), toolSteel);
     shaft2.position.set(dx, 0.02, 0);
     drivers.add(shaft2);
@@ -1807,7 +1947,7 @@ function buildWorkbench() {
   // multimeter
   const meter = new THREE.Group();
   const mBody = new THREE.Mesh(new RoundedBoxGeometry(0.082, 0.02, 0.15, 2, 0.007),
-    new THREE.MeshStandardMaterial({ color: 0xd8a018, roughness: 0.55 }));
+    new THREE.MeshStandardMaterial({ color: 0x27408a, roughness: 0.55 }));
   mBody.position.y = 0.01;
   meter.add(mBody);
   const mScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.058, 0.03),
@@ -1890,7 +2030,7 @@ function buildBambuPrinter() {
   g.add(chamber);
   const plate = new THREE.Mesh(
     new THREE.BoxGeometry(chamberW - 0.05, 0.006, 0.24),
-    new THREE.MeshStandardMaterial({ color: 0x6a5a30, roughness: 0.5, metalness: 0.55 })
+    new THREE.MeshStandardMaterial({ color: 0x8a8676, roughness: 0.5, metalness: 0.55 })
   );
   plate.position.set(0, 0.12, D / 2 - 0.19);
   g.add(plate);
@@ -1931,8 +2071,8 @@ function buildBambuPrinter() {
   const glass = new THREE.Mesh(
     new THREE.PlaneGeometry(chamberW, doorH),
     new THREE.MeshPhysicalMaterial({
-      color: 0x22262b, roughness: 0.06, metalness: 0,
-      transparent: true, opacity: 0.3, side: THREE.DoubleSide,
+      color: 0x232a33, roughness: 0.06, metalness: 0, envMapIntensity: 1.2,
+      transparent: true, opacity: 0.26, side: THREE.DoubleSide,
     })
   );
   glass.position.set(0, doorH / 2 + 0.05, frontZ + 0.004);
@@ -1999,7 +2139,7 @@ function buildBambuPrinter() {
     ams.add(slot);
   }
   // spools row — same 1.6x scale as the spare spools on the bench shelf
-  [0xe8eaee, 0x3f9e4f, 0xc23c2e, 0x27408a].forEach((col, i) => {
+  [0xe8eaee, 0x2b66d9, 0x8a8f96, 0x17181c].forEach((col, i) => {
     const sp = makeMiniSpool(col);
     sp.scale.setScalar(1.6);
     sp.rotation.z = Math.PI / 2;
@@ -2048,8 +2188,8 @@ function buildSideCabinet() {
   const W = 1.6; // along z
   const H = 2.2;
   const D = 0.5;
-  const frameMat = new THREE.MeshStandardMaterial({ color: 0x1d1f23, roughness: 0.4, metalness: 0.65 });
-  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.3, metalness: 1.0 });
+  const frameMat = new THREE.MeshStandardMaterial({ color: 0x1d1f23, roughness: 0.45, metalness: 0.5, envMapIntensity: 0.5 });
+  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.45, metalness: 0.85 });
 
   const back = new THREE.Mesh(new THREE.BoxGeometry(0.02, H, W),
     new THREE.MeshStandardMaterial({ color: 0x141518, roughness: 0.7, metalness: 0.2 }));
@@ -2080,7 +2220,8 @@ function buildSideCabinet() {
   g.add(div);
 
   const glassMat = new THREE.MeshPhysicalMaterial({
-    color: 0x2c343c, roughness: 0.08, metalness: 0, transparent: true, opacity: 0.4,
+    color: 0x31404f, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.3,
+    envMapIntensity: 1.3, clearcoat: 0.5, clearcoatRoughness: 0.08,
   });
   CAB2.rows.forEach((y) => {
     const board = new THREE.Mesh(new THREE.BoxGeometry(D - 0.08, 0.014, W - 0.08), glassMat);
@@ -2092,7 +2233,7 @@ function buildSideCabinet() {
     g.add(edge);
     const strip = new THREE.Mesh(
       new THREE.BoxGeometry(0.014, 0.008, W - 0.14),
-      new THREE.MeshStandardMaterial({ color: 0x6a7078, emissive: 0xdfe8f4, emissiveIntensity: 0.5 })
+      new THREE.MeshStandardMaterial({ color: 0x6a7078, emissive: 0xbcd7ff, emissiveIntensity: 1.15 })
     );
     strip.position.set(-D / 2 + 0.1, y + CAB2.rowH - 0.055, 0);
     g.add(strip);
@@ -2235,7 +2376,7 @@ function buildPoolSniper() {
   g.add(carriage);
   // cue shaft through the carriage
   const cue = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.007, 0.3, 12),
-    new THREE.MeshStandardMaterial({ color: 0xc99a5b, roughness: 0.5 }));
+    new THREE.MeshStandardMaterial({ color: 0x6b5a44, roughness: 0.5 }));
   cue.rotation.z = Math.PI / 2;
   cue.position.set(0.1, 0.085, 0);
   g.add(cue);
@@ -2436,7 +2577,7 @@ function buildToolChest() {
   // rolling tool chest: graphite body, five drawers with aluminum pulls
   const g = new THREE.Group();
   const body = new THREE.MeshStandardMaterial({ color: 0x212429, roughness: 0.42, metalness: 0.55 });
-  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.3, metalness: 1.0 });
+  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.45, metalness: 0.85 });
   const shell = new THREE.Mesh(new RoundedBoxGeometry(0.55, 0.72, 0.42, 2, 0.014), body);
   shell.position.y = 0.42;
   shell.castShadow = true;
@@ -2506,7 +2647,7 @@ function buildBlueprintPanel() {
     new THREE.MeshStandardMaterial({ color: 0x1d1f23, roughness: 0.4, metalness: 0.6 }));
   g.add(frame);
   const face = new THREE.Mesh(new THREE.PlaneGeometry(2.16, 0.6),
-    new THREE.MeshBasicMaterial({ map: tex, color: 0x8f8f8f }));
+    new THREE.MeshBasicMaterial({ map: tex, color: 0xa8b0ba }));
   face.position.z = 0.017;
   g.add(face);
   return g;
@@ -2519,7 +2660,7 @@ function buildResumePaper() {
   c.width = 256;
   c.height = 340;
   const ctx = c.getContext("2d");
-  ctx.fillStyle = "#f2ecdd";
+  ctx.fillStyle = "#f4f5f7";
   ctx.fillRect(0, 0, 256, 340);
   ctx.fillStyle = "#1a1a1c";
   ctx.font = "700 30px Arial, sans-serif";
@@ -2542,14 +2683,14 @@ function buildResumePaper() {
   // larger sheet so the resume reads as the hero object on the desk
   const sheet = new THREE.Mesh(
     new THREE.BoxGeometry(0.24, 0.004, 0.32),
-    new THREE.MeshStandardMaterial({ color: 0xd6cfbc, roughness: 0.96 })
+    new THREE.MeshStandardMaterial({ color: 0xe4e6ea, roughness: 0.96 })
   );
   sheet.castShadow = true;
   sheet.receiveShadow = true;
   g.add(sheet);
   const face = new THREE.Mesh(
     new THREE.PlaneGeometry(0.234, 0.312),
-    new THREE.MeshStandardMaterial({ map: tex, color: 0xdcd5c2, roughness: 0.96 })
+    new THREE.MeshStandardMaterial({ map: tex, color: 0xf1f3f6, roughness: 0.96 })
   );
   face.rotation.x = -Math.PI / 2;
   face.position.y = 0.0025;
@@ -2563,7 +2704,7 @@ function buildLineFollower() {
   // battery with strap, brass standoffs
   const g = new THREE.Group();
   const silver = new THREE.MeshStandardMaterial({ color: 0xb8bcc2, metalness: 0.9, roughness: 0.35 });
-  const gold = new THREE.MeshStandardMaterial({ color: 0xc9a24b, metalness: 0.9, roughness: 0.35 });
+  const gold = new THREE.MeshStandardMaterial({ color: 0x9d9789, metalness: 0.9, roughness: 0.35 });
   const blackPl = new THREE.MeshStandardMaterial({ color: 0x121317, roughness: 0.5, metalness: 0.15 });
 
   // chassis plate (matte black acrylic)
@@ -2700,7 +2841,7 @@ function buildEducationKit() {
   // guitar-teaching kit: felt-lined case with divided compartments, a mini
   // strung guitar, detached fretted neck, and labeled small parts
   const g = new THREE.Group();
-  const caseMat = woodMaterial(0x8a6844, 0.55);
+  const caseMat = woodMaterial(0x3d352d, 0.55);
   const feltMat = new THREE.MeshStandardMaterial({ color: 0x28323e, roughness: 0.98 });
   const metal = new THREE.MeshStandardMaterial({ color: 0xc8ccd2, metalness: 0.9, roughness: 0.3 });
   const W = 0.4, D = 0.28, wall = 0.012, hWall = 0.042;
@@ -2800,7 +2941,7 @@ function buildEducationKit() {
   sdShaft.position.set(0.13, 0.019, 0.028);
   g.add(sdShaft);
   const sdHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.005, 0.026, 10),
-    new THREE.MeshStandardMaterial({ color: 0xcc3333, roughness: 0.45 }));
+    new THREE.MeshStandardMaterial({ color: 0x2b66d9, roughness: 0.45 }));
   sdHandle.rotation.z = Math.PI / 2;
   sdHandle.rotation.y = 0.4;
   sdHandle.position.set(0.164, 0.019, 0.013);
