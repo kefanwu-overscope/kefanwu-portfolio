@@ -412,7 +412,7 @@ intrinsic front is +x, rotY 1.34 faces the desk), blueprint wall panel,
 ceiling cove LED strips, graphite rug (noise map + bump for plush),
 potted plant.
 
-### Exhibits — all 14 projects clickable (17 hotspots: + resume, skill paper, desk lamp)
+### Exhibits — all 14 projects clickable (16 hotspots: + resume + skill paper)
 
 > Gearbox was removed (main site + 3D). Right cabinet now holds 5 exhibits
 > with the bottom-right slot deliberately empty.
@@ -463,10 +463,19 @@ shelf cell (this is the anti-clipping mechanism; every exhibit passes a
   card (`.exp-label--wide`) listing `RESUME.skills`; clicking is a no-op
   (focusHotspot returns early on null html WITHOUT clearing the hover, so
   a tap on touch devices leaves the card visible).
-- **Desk lamp** = click-to-toggle hotspot (`action: "lamp"`, no marker,
-  invisible hit pad in the lamp group). `toggleDeskLamp()` switches
-  `lampLight` + the `lampLed`-named emissive disc; hover label wording
-  tracks the on/off state.
+- **Desk + bench lamps** emit NO light — both are decorative furniture only
+  (the `lampLight`/`lLight` PointLights and the desk-lamp click-to-toggle
+  were removed as "unnatural"; LED discs kept at a dim ~0.05 off-look). The
+  pendant (2.6) now carries the desk, so the resume stays readable. Don't
+  re-add task-lamp point lights.
+
+> Exhibit colors are corrected to the CAD/reference images via per-exhibit
+> `matTweak` in the ASSEMBLIES / SIDE_EXHIBITS / education entries: aura,
+> scanner, pool → blue printed (`0x2a55c8`); smelly → light aluminum;
+> telecaster → butterscotch wood (`0xd0a038`); education body split into its
+> own `printed` bucket (blue `0x2f5fbf`) with the neck kept maple `0xc9a86a`
+> (stl2glb_new.py education rules). To recolor a bucket, tweak here — do NOT
+> change the shared ASSEMBLY_MATS base colors.
 - Also note: a `Reflector` gloss strip set into the floor in front of the
   main cabinet (LOW_TIER gets a static glossy plane), and `runLightIntro()`
   — staged light-up on reveal (ambient → strips → spots → lamps), skipped

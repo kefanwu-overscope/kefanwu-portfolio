@@ -292,10 +292,7 @@ function initScene(canvas) {
   fill.position.set(-3, 2.2, 3);
   scene.add(fill);
 
-  // desk-lamp pool — kept soft so the resume print stays readable
-  const lampLight = new THREE.PointLight(0xffeedd, 1.0, 2.6, 2);
-  lampLight.position.set(-0.44, 1.1, -0.12);
-  scene.add(lampLight);
+  // (desk lamp is decorative furniture only — it emits no light)
 
   // display spots washing the cabinet
   [-0.7, 0, 0.7].forEach((x) => {
@@ -431,21 +428,6 @@ function initScene(canvas) {
   deskLamp.rotation.y = 0.5;
   scene.add(deskLamp);
   MODELS.deskLamp = deskLamp;
-  // the lamp is a click-to-toggle hotspot (no marker — it's furniture, not
-  // portfolio content); an invisible pad makes the thin stem easy to hit
-  const lampHit = new THREE.Mesh(
-    new THREE.BoxGeometry(0.38, 0.46, 0.2),
-    new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
-  );
-  lampHit.position.set(0.08, 0.22, 0);
-  deskLamp.add(lampHit);
-  NO_PREPASS.push(lampHit);
-  deskLamp.userData.hotspot = {
-    key: null, action: "lamp", label: "Desk Lamp", baseScale: 1,
-    center: new THREE.Box3().setFromObject(deskLamp).getCenter(new THREE.Vector3()),
-    marker: null, markerY: 0, phase: 0,
-  };
-  HOTSPOTS.push(deskLamp);
 
   // resume: the hero object on the desk — front and center, in the light
   placeRoot(buildResumePaper(), scene, {
@@ -461,8 +443,10 @@ function initScene(canvas) {
   // hero row (middle, eye level): javelin / steering / brake
   const ASSEMBLIES = [
     { file: "seat",     key: "carbonSeat", label: "Carbon fiber seat", size: 0.3,  axis: "y", bay: 0, row: 0, rotY: 0.4 },
-    { file: "aura",     key: "aura",       label: "AURA Swerve",       size: 0.29, axis: "y", bay: 1, row: 0, rotY: 0.35, rotZ: -Math.PI / 2 },
-    { file: "scanner",  key: "scanner",    label: "3D scanner",        size: 0.38, axis: "x", bay: 2, row: 0, rotY: 0.35 },
+    { file: "aura",     key: "aura",       label: "AURA Swerve",       size: 0.29, axis: "y", bay: 1, row: 0, rotY: 0.35, rotZ: -Math.PI / 2,
+      matTweak: { printed: { color: 0x2a55c8 } } }, // blue anodized plate + mounts
+    { file: "scanner",  key: "scanner",    label: "3D scanner",        size: 0.38, axis: "x", bay: 2, row: 0, rotY: 0.35,
+      matTweak: { printed: { color: 0x2a55c8 } } }, // blue printed brackets
     { file: "javelin",  key: "javelin",    label: "Javelin VTOL",      size: 0.44, axis: "x", bay: 0, row: 1, rotY: 0.6,
       matTweak: { aero: { color: 0x3a3e44, roughness: 0.5 }, printed: { color: 0x26292e }, dark: { color: 0x24272c } } },
     { file: "steering", key: "steering",   label: "Mk.8 Steering",     size: 0.32, axis: "y", bay: 1, row: 1, rotY: 0.5 },
@@ -484,7 +468,7 @@ function initScene(canvas) {
   });
   loadAssembly(loader, scene, "models/real/lineFollower.glb", {
     fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_lineFollower", projectKey: "lineFollower", label: "LineFollower robot",
-    targetSize: 0.3, axis: "z", pos: [CAB.bays[0], CAB.rows[2], CAB.frontZ], rotY: 0.45,
+    targetSize: 0.34, axis: "z", pos: [CAB.bays[0], CAB.rows[2], CAB.frontZ], rotY: 0.45,
   });
   placeRoot(buildCfdDisplay(artLoader), scene, {
     fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_ansysCfd", projectKey: "ansysCfd", label: "Agent-based CFD",
@@ -493,6 +477,7 @@ function initScene(canvas) {
   loadAssembly(loader, scene, "models/real/education.glb", {
     fit: [0.6, 0.46, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_education", projectKey: "education", label: "Guitar education kit",
     targetSize: 0.44, axis: "y", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotZ: Math.PI / 2, rotY: 0.3,
+    matTweak: { printed: { color: 0x2f5fbf, metalness: 0.1, roughness: 0.5 }, wood: { color: 0xc9a86a } }, // blue body, maple neck
   });
 
   /* ---------- side dressing ---------- */
@@ -507,11 +492,12 @@ function initScene(canvas) {
     { build: buildDriverSeat,  key: "seat",      label: "Driver seat",       size: 0.3,  bay: 0, row: 0 },
     { build: buildFtcBot,      key: "ftc",       label: "FTC robot",         size: 0.28, bay: 1, row: 0 },
     { file: "smelly",          key: "formlabs",  label: "Smelly",            size: 0.3,  axis: "y", bay: 0, row: 1, rotY: -Math.PI / 2 + 0.2,
-      matTweak: { printed: { color: 0x5a6068 } } },
+      matTweak: { printed: { color: 0x9aa0a8, metalness: 0.5, roughness: 0.45 }, steel: { color: 0xaeb4bc } } }, // light aluminum
     // the launcher's long axis is raw +y — lay it down along the shelf
     { file: "pool",            key: "pool",      label: "Pool Sniper",       size: 0.42, axis: "z", bay: 1, row: 1, rotX: -Math.PI / 2, rotY: -0.2,
-      matTweak: { printed: { color: 0x454b53 } } },
-    { file: "telecaster",      key: "telecaster", label: "Telecaster",       size: 0.42, axis: "y", bay: 0, row: 2, rotY: -Math.PI / 2 + 0.2 },
+      matTweak: { printed: { color: 0x2a55c8 } } }, // blue printed structure
+    { file: "telecaster",      key: "telecaster", label: "Telecaster",       size: 0.42, axis: "y", bay: 0, row: 2, rotY: -Math.PI / 2 + 0.2,
+      matTweak: { wood: { color: 0xd0a038 } } }, // butterscotch body + maple neck
   ];
   SIDE_EXHIBITS.forEach((s) => {
     const opts = {
@@ -740,17 +726,6 @@ function initScene(canvas) {
     setCursorHover = (on) => { hot = on; applyState(); };
   }
 
-  /* ---------- desk-lamp click toggle ---------- */
-  let lampOn = true;
-  const LAMP_LIGHT_ON = 1.0;
-  function toggleDeskLamp() {
-    lampOn = !lampOn;
-    lampLight.intensity = lampOn ? LAMP_LIGHT_ON : 0;
-    const led = deskLamp.getObjectByName("lampLed");
-    if (led) led.material.emissiveIntensity = lampOn ? 0.5 : 0.02;
-    sndClick();
-  }
-
   function setHover(root) {
     if (hovered === root) return;
     if (hovered) hovered.scale.setScalar(hovered.userData.hotspot.baseScale);
@@ -773,9 +748,7 @@ function initScene(canvas) {
           labelEl.classList.remove("exp-label--wide");
           const sub = hs.action === "resume"
             ? "Click to read"
-            : hs.action === "lamp"
-              ? (lampOn ? "Click to switch off" : "Click to switch on")
-              : (window.projectData && window.projectData[hs.key] && window.projectData[hs.key].kicker) || "";
+            : (window.projectData && window.projectData[hs.key] && window.projectData[hs.key].kicker) || "";
           labelEl.innerHTML = `<b>${hs.label}</b>` + (sub ? `<span>${sub}</span>` : "");
         }
         labelEl.hidden = false;
@@ -825,13 +798,6 @@ function initScene(canvas) {
 
   function focusHotspot(root) {
     const hs = root.userData.hotspot;
-    if (hs.action === "lamp") {
-      toggleDeskLamp();
-      if (labelEl && !labelEl.hidden) {
-        labelEl.innerHTML = `<b>${hs.label}</b><span>${lampOn ? "Click to switch off" : "Click to switch on"}</span>`;
-      }
-      return;
-    }
     const html =
       hs.action === "resume"
         ? resumeHTML(RESUME)
@@ -951,7 +917,7 @@ function initScene(canvas) {
     if (panelOpen) closePanel();
   });
 
-  window.__exp = { THREE, scene, camera, renderer, controls, composer, bloom, lampLight, key, hemi, models: MODELS, hotspots: HOTSPOTS, openPanel };
+  window.__exp = { THREE, scene, camera, renderer, controls, composer, bloom, key, hemi, models: MODELS, hotspots: HOTSPOTS, openPanel };
   console.info(`[experience] engineering office ready — ${HOTSPOTS.length} hotspots`);
 }
 
@@ -1321,7 +1287,7 @@ function buildRoom(scene) {
   );
   bulb.position.y = 2.37;
   pendant.add(bulb);
-  const pendantLight = new THREE.PointLight(0xe8eef8, 2.0, 4.0, 2);
+  const pendantLight = new THREE.PointLight(0xe8eef8, 2.6, 4.2, 2); // carries the desk now the lamps emit no light
   pendantLight.position.y = 2.32;
   pendant.add(pendantLight);
   pendant.position.set(0.15, 0, 0.35);
@@ -1578,9 +1544,8 @@ function buildModernDeskLamp() {
   g.add(head);
   const led = new THREE.Mesh(
     new THREE.CylinderGeometry(0.038, 0.038, 0.004, 22),
-    new THREE.MeshStandardMaterial({ color: 0xf6f7f9, emissive: 0xfff0e0, emissiveIntensity: 0.5 })
+    new THREE.MeshStandardMaterial({ color: 0xe8ebf0, emissive: 0xdfe6f0, emissiveIntensity: 0.05 })
   );
-  led.name = "lampLed"; // looked up by the click-to-toggle interaction
   led.position.copy(head.position).add(new THREE.Vector3(0, -0.011, 0));
   led.rotation.z = 0.14;
   g.add(led);
@@ -1604,14 +1569,11 @@ function buildLedBarLamp() {
   g.add(bar);
   const led = new THREE.Mesh(
     new THREE.BoxGeometry(0.27, 0.004, 0.026),
-    new THREE.MeshStandardMaterial({ color: 0xf6f7f9, emissive: 0xfff2e4, emissiveIntensity: 0.6 })
+    new THREE.MeshStandardMaterial({ color: 0xe8ebf0, emissive: 0xdfe6f0, emissiveIntensity: 0.06 })
   );
   led.position.set(-0.1, 0.347, 0.04);
   led.rotation.y = 0.1;
   g.add(led);
-  const lLight = new THREE.PointLight(0xfff1e2, 0.85, 2.4, 2);
-  lLight.position.set(-0.1, 0.32, 0.05);
-  g.add(lLight);
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
 }

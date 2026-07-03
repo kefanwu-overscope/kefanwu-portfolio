@@ -39,7 +39,8 @@ PROJECTS = [
         (r".", "steel"),                       # a lone brake rotor -> machined steel
     ], 90000),
     ("education", "Guitar Education", "V2 - *.STL", COMMON_SKIP, None, [
-        (r"body|neck|finger_board", "wood"),
+        (r"neck|finger_board", "wood"),        # maple neck + fretboard (tan)
+        (r"body", "printed"),                  # body kept separate -> blue via tweak
         (r"control_panel", "steel"),
         (r"pick_up|pickup", "dark"),
         (r"bridge|saddle|screw", "steel"),
