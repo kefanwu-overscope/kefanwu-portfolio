@@ -503,14 +503,13 @@ function initScene(canvas) {
   // multimeter + task lamp)
   scene.add(buildSideCabinet());
 
-  // six more projects in the right-wall cabinet (full 15 on display)
+  // five more projects in the right-wall cabinet (14 on display total)
   const SIDE_EXHIBITS = [
-    { build: buildGearboxV2,   key: "gearbox",   label: "2-speed gearbox",   size: 0.3,  bay: 0, row: 0 },
-    { build: buildDriverSeat,  key: "seat",      label: "Driver seat",       size: 0.3,  bay: 1, row: 0 },
+    { build: buildDriverSeat,  key: "seat",      label: "Driver seat",       size: 0.3,  bay: 0, row: 0 },
+    { build: buildFtcBot,      key: "ftc",       label: "FTC robot",         size: 0.28, bay: 1, row: 0 },
     { build: buildSmelly,      key: "formlabs",  label: "Smelly",            size: 0.28, bay: 0, row: 1 },
-    { build: buildFtcBot,      key: "ftc",       label: "FTC robot",         size: 0.28, bay: 1, row: 1 },
-    { build: buildPoolSniper,  key: "pool",      label: "Pool Sniper",       size: 0.32, bay: 0, row: 2 },
-    { build: buildTelecasterV2, key: "telecaster", label: "Telecaster",      size: 0.42, axis: "y", bay: 1, row: 2 },
+    { build: buildPoolSniper,  key: "pool",      label: "Pool Sniper",       size: 0.32, bay: 1, row: 1 },
+    { build: buildTelecasterV2, key: "telecaster", label: "Telecaster",      size: 0.42, axis: "y", bay: 0, row: 2 },
   ];
   SIDE_EXHIBITS.forEach((s) =>
     placeRoot(s.build(), scene, {
@@ -2425,78 +2424,6 @@ function buildSideCabinet() {
 
 function steelToolMat() {
   return new THREE.MeshStandardMaterial({ color: 0x9aa0a8, metalness: 0.9, roughness: 0.4 });
-}
-
-function buildGearboxV2() {
-  // enclosed 2-speed gearbox: ribbed housing, bearing bosses, input/output
-  // shafts with couplers, shift lever, sight window showing the gear pair
-  const g = new THREE.Group();
-  const caseMat = new THREE.MeshStandardMaterial({ color: 0x555a61, metalness: 0.85, roughness: 0.42 });
-  const steel = new THREE.MeshStandardMaterial({ color: 0x9a9da3, metalness: 0.95, roughness: 0.32 });
-  const dark = new THREE.MeshStandardMaterial({ color: 0x2c2f34, metalness: 0.8, roughness: 0.5 });
-
-  const housing = new THREE.Mesh(new RoundedBoxGeometry(0.26, 0.16, 0.13, 3, 0.016), caseMat);
-  housing.position.y = 0.1;
-  g.add(housing);
-  // cooling ribs on top
-  for (let i = 0; i < 5; i++) {
-    const rib = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.008, 0.012), caseMat);
-    rib.position.set(0, 0.185, -0.048 + i * 0.024);
-    g.add(rib);
-  }
-  // flange bolts around the case seam
-  for (let i = 0; i < 6; i++) {
-    const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.012, 8), dark);
-    bolt.rotation.x = Math.PI / 2;
-    bolt.position.set(-0.1 + i * 0.04, 0.055, 0.068);
-    g.add(bolt);
-  }
-  // bearing bosses + shafts (input high, output low)
-  const bossIn = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.032, 0.026, 18), caseMat);
-  bossIn.rotation.z = Math.PI / 2;
-  bossIn.position.set(-0.135, 0.135, 0);
-  g.add(bossIn);
-  const shaftIn = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.1, 14), steel);
-  shaftIn.rotation.z = Math.PI / 2;
-  shaftIn.position.set(-0.18, 0.135, 0);
-  g.add(shaftIn);
-  const couplerIn = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.03, 14), dark);
-  couplerIn.rotation.z = Math.PI / 2;
-  couplerIn.position.set(-0.215, 0.135, 0);
-  g.add(couplerIn);
-  const bossOut = new THREE.Mesh(new THREE.CylinderGeometry(0.034, 0.036, 0.026, 18), caseMat);
-  bossOut.rotation.z = Math.PI / 2;
-  bossOut.position.set(0.135, 0.07, 0);
-  g.add(bossOut);
-  const shaftOut = new THREE.Mesh(new THREE.CylinderGeometry(0.013, 0.013, 0.09, 14), steel);
-  shaftOut.rotation.z = Math.PI / 2;
-  shaftOut.position.set(0.175, 0.07, 0);
-  g.add(shaftOut);
-  const sprocketOut = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.012, 16), steel);
-  sprocketOut.rotation.z = Math.PI / 2;
-  sprocketOut.position.set(0.21, 0.07, 0);
-  g.add(sprocketOut);
-  // shift lever on top
-  const lever = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.006, 0.07, 10), steel);
-  lever.position.set(0.06, 0.22, -0.02);
-  lever.rotation.z = -0.3;
-  g.add(lever);
-  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.011, 12, 12), dark);
-  knob.position.set(0.0805, 0.253, -0.02);
-  g.add(knob);
-  // sight window: dark glass + the gear pair behind it
-  const win = new THREE.Mesh(new RoundedBoxGeometry(0.12, 0.08, 0.006, 2, 0.006),
-    new THREE.MeshPhysicalMaterial({ color: 0x1a2026, roughness: 0.1, transparent: true, opacity: 0.55 }));
-  win.position.set(0, 0.105, 0.066);
-  g.add(win);
-  [[-0.028, 0.03, 0.115], [0.03, 0.02, 0.095]].forEach(([x, r, y]) => {
-    const gearDisc = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 0.012, 20), steel);
-    gearDisc.rotation.x = Math.PI / 2;
-    gearDisc.position.set(x, y, 0.058);
-    g.add(gearDisc);
-  });
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  return g;
 }
 
 function buildDriverSeat() {

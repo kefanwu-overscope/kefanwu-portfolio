@@ -597,62 +597,6 @@ const projectData = {
       { src: "assets/line-follower-built.webp", alt: "Built line follower robot with dense wiring", caption: "Assembled prototype" }
     ]
   },
-  gearbox: {
-    kicker: "Transmission / packaging / fabrication",
-    title: "2-speed gearbox",
-    image: "assets/gearbox-exploded.webp",
-    summary:
-      "Functional two-speed gearbox with neutral, belt drive, helical gears, shifting mechanism, and a planned assembly path for a dense 53-part mechanism.",
-    highlights: [
-      "Designed a selector fork and selector mechanism to switch between first, neutral, and second.",
-      "Used helical gears for smoother contact and power transfer in the printed gearbox.",
-      "Validated shifting tolerances through three printed iteration bands before the final assembly.",
-      "Mapped assembly order in SolidWorks to manage 53 parts inside tight packaging.",
-      "Completed the build ahead of the deadline with detachable parts for size constraints."
-    ],
-    tools: ["SolidWorks", "3D printing", "Helical gears", "Belt drive", "Selector fork", "Tolerance iteration"],
-    details: [
-      {
-        title: "Objective",
-        points: [
-          "Designed and built a two-speed gearbox with a neutral position, smooth rotation, and a functional shift mechanism.",
-          "The project combined a gear system, belt system, and translating selector hardware inside a compact package.",
-          "A key constraint was finishing early enough to debug assembly and shift feel rather than only presenting CAD."
-        ]
-      },
-      {
-        title: "Shifting mechanism",
-        points: [
-          "Converted knob rotation into linear selector motion through a selector fork and slider architecture.",
-          "The selector engages different gear selectors to choose first, neutral, or second gear.",
-          "Helical gears were used to increase contact area and make power transfer feel smoother than a rough spur-gear demonstrator."
-        ]
-      },
-      {
-        title: "Tolerance and iteration",
-        points: [
-          "Printed multiple tolerance variations around the shifting interfaces instead of assuming nominal CAD clearances would work.",
-          "Tested loose and tight fits, then selected the tolerance window that shifted reliably without excessive backlash.",
-          "This directly addressed the common failure mode for printed transmissions: they look assembled but do not shift cleanly."
-        ]
-      },
-      {
-        title: "Integration",
-        points: [
-          "The final mechanism had more than 50 parts, so assembly order became a design variable, not an afterthought.",
-          "Used SolidWorks to reason through how parts could be installed, removed, and serviced inside the available space.",
-          "The result was a functioning gearbox that demonstrated packaging, kinematics, and build planning."
-        ]
-      }
-    ],
-    gallery: [
-      { src: "assets/gearbox-exploded.webp", alt: "Exploded view of two-speed gearbox CAD", caption: "Exploded assembly" },
-      { src: "assets/gearbox-assembly.webp", alt: "Two-speed gearbox exploded assembly render", caption: "Part architecture" },
-      { src: "assets/gearbox-section.webp", alt: "Section view of gearbox and shifter layout", caption: "Internal layout" },
-      { src: "assets/gearbox-render.webp", alt: "Gearbox render with helical gears and shafts", caption: "Gear train" },
-      { src: "assets/gearbox-shifter.webp", alt: "Close-up of gearbox helical gear", caption: "Gear detail" }
-    ]
-  },
   pool: {
     kicker: "Assistive mechanism / powertrain",
     title: "Pool Sniper",

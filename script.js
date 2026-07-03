@@ -48,8 +48,8 @@ const heroSkillDetails = {
   solidworks: {
     title: "SolidWorks",
     meta: "Parametric CAD",
-    image: "assets/gearbox-render.webp",
-    alt: "SolidWorks CAD render of a multi-shaft gearbox assembly",
+    image: "assets/cover-steering-system-cad.webp",
+    alt: "SolidWorks CAD render of the Mk.8 steering column assembly",
     text:
       "Assemblies, packaging studies, drawings, and design reviews that connect concept geometry to buildable hardware."
   },

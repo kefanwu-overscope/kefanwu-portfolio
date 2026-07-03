@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "portfolio-static",
+      "runtimeExecutable": "C:\\Users\\oc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "runtimeArgs": ["-m", "http.server", "4173", "--bind", "127.0.0.1"],
+      "port": 4173
+    }
+  ]
+}
