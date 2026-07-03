@@ -455,7 +455,8 @@ function initScene(canvas) {
   // real ergonomic mesh task chair (CC BY 4.0 — see ATTRIBUTIONS.txt);
   // replaces the old procedural buildErgoChair() stand-in
   loadModel(loader, scene, "models/ergonomic_mesh_office_chair/ergonomic_mesh_office_chair.glb", {
-    name: "chair", targetSize: 0.95, axis: "y", pos: [-0.25, 0, 1.05], rotY: Math.PI - 0.25,
+    // the GLB's intrinsic front is +x, so 1.34 rad turns it to face the desk
+    name: "chair", targetSize: 0.95, axis: "y", pos: [-0.25, 0, 1.05], rotY: 1.34,
   });
   // leafy plant tucked in the corner pocket between cabinet and bookshelf
   loadModel(loader, scene, "models/potted_plant_01/potted_plant_01.gltf", {
