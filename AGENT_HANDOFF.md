@@ -412,7 +412,10 @@ intrinsic front is +x, rotY 1.34 faces the desk), blueprint wall panel,
 ceiling cove LED strips, graphite rug (noise map + bump for plush),
 potted plant.
 
-### Exhibits — all 15 projects clickable (18 hotspots: + resume, skill paper, desk lamp)
+### Exhibits — all 14 projects clickable (17 hotspots: + resume, skill paper, desk lamp)
+
+> Gearbox was removed (main site + 3D). Right cabinet now holds 5 exhibits
+> with the bottom-right slot deliberately empty.
 
 Two cabinets. Every exhibit is placed by `placeRoot(root, scene, opts)`,
 which: normalizes scale to `targetSize` along `axis`, recenters on its
@@ -427,18 +430,30 @@ shelf cell (this is the anti-clipping mechanism; every exhibit passes a
   - REAL GLBs (`models/real/…`, loaded via `loadAssembly`): `carbonSeat`
     (seat.glb), `aura` (aura.glb, lower drivetrain half, rotated so wheels
     sit down), `scanner` (scanner.glb), `javelin` (javelin.glb, dark shell
-    tweak), `steering` (steering.glb).
-  - Procedural (`build…` in experience.js): `brakeSim` (buildBrakeRotor,
-    thermal-gradient disc), `lineFollower` (buildLineFollower),
-    `ansysCfd` (buildCfdDisplay — a monitor showing the CFD result),
-    `education` (buildEducationKit — guitar education kit).
-- **Right-wall cabinet** (2 bays × 3 rows, layout const `CAB2`), ALL
-  procedural: `gearbox` (buildGearboxV2), `seat` (buildDriverSeat — the
-  DRIVER seat/harness project, distinct from `carbonSeat`), `formlabs`
-  (buildSmelly — the "Smelly" perfume mixer), `ftc` (buildFtcBot), `pool`
-  (buildPoolSniper), `telecaster` (buildTelecasterV2).
+    tweak), `steering` (steering.glb), `brakeSim` (brakeSim.glb, steel
+    rotor), `lineFollower` (lineFollower.glb), `education` (education.glb,
+    guitar kit — stands vertical via rotZ=π/2).
+  - Procedural: `ansysCfd` (buildCfdDisplay — a monitor showing the CFD
+    result) is the only remaining procedural main-cabinet exhibit.
+- **Right-wall cabinet** (2 bays × 3 rows, layout const `CAB2`):
+  - REAL GLBs: `formlabs` (smelly.glb, perfume mixer), `pool` (pool.glb,
+    cue launcher), `telecaster` (telecaster.glb, stands vertical).
+  - Procedural: `seat` (buildDriverSeat — the DRIVER seat/harness project,
+    distinct from `carbonSeat`), `ftc` (buildFtcBot).
+  - `SIDE_EXHIBITS` entries carry either `build` (procedural) or `file`
+    (loads `models/real/<file>.glb` via loadAssembly).
+
+> The 6 new real GLBs were made by `tools/stl2glb_new.py` from per-part
+> SolidWorks STL exports in subfolders of `C:\Users\oc\Desktop\STL`
+> (Brake, Guitar Education, Line_Follower, Pool Sniper, Smelly, Telecaster).
+> Same `mat_<bucket>` scheme as `stl2glb.py`, plus two new buckets — `wood`
+> (guitar bodies/necks, pool cue) and `pcb` (Arduino/driver boards) — with
+> matching `ASSEMBLY_MATS` entries. Each is decimated (fast-simplification)
+> to ≤ ~50k tris / < 1 MB. The old procedural builders (buildBrakeRotor,
+> buildLineFollower, buildEducationKit, buildPoolSniper, buildSmelly,
+> buildTelecasterV2, makeThermalTexture) were removed.
 - **Resume** = a paper sheet on the desk (`buildResumePaper`, `action:
-  "resume"`), the 16th hotspot.
+  "resume"`).
 - **Skill paper** = `buildSkillPaper()` second printed sheet on the desk
   beside the resume (`action: "skills"`). Hover-only: shows a wide hover
   card (`.exp-label--wide`) listing `RESUME.skills`; clicking is a no-op

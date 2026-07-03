@@ -124,6 +124,10 @@ const ASSEMBLY_MATS = {
       clearcoatRoughness: 0.5,
     }),
   rubber: () => new THREE.MeshStandardMaterial({ color: 0x0d0e10, metalness: 0.0, roughness: 0.95 }),
+  // guitar bodies/necks + pool cue — the one warm note, kept restrained
+  wood: () => new THREE.MeshStandardMaterial({ color: 0x9a774a, metalness: 0.0, roughness: 0.5, envMapIntensity: 1.0 }),
+  // circuit boards (Arduino, driver/sensor PCBs)
+  pcb: () => new THREE.MeshStandardMaterial({ color: 0x1e5f3c, metalness: 0.2, roughness: 0.5, envMapIntensity: 1.0 }),
 };
 
 const MODELS = {};
@@ -479,22 +483,23 @@ function initScene(canvas) {
     })
   );
 
-  // procedural exhibits for projects without CAD exports
-  placeRoot(buildBrakeRotor(), scene, {
+  // real CAD exhibits (merged per-part STLs) + one procedural CFD monitor
+  loadAssembly(loader, scene, "models/real/brakeSim.glb", {
     fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[1] + 0.44, name: "ex_brakeSim", projectKey: "brakeSim", label: "FSAE Brake Sim",
-    targetSize: 0.26, axis: "x", pos: [CAB.bays[2], CAB.rows[1], CAB.frontZ], rotX: -Math.PI / 2, rotY: 0.15,
+    targetSize: 0.26, axis: "y", pos: [CAB.bays[2], CAB.rows[1], CAB.frontZ], rotY: Math.PI / 2 + 0.25,
+    matTweak: { steel: { color: 0x8b9199, roughness: 0.5 } },
   });
-  placeRoot(buildLineFollower(), scene, {
+  loadAssembly(loader, scene, "models/real/lineFollower.glb", {
     fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_lineFollower", projectKey: "lineFollower", label: "LineFollower robot",
-    targetSize: 0.3, axis: "x", pos: [CAB.bays[0], CAB.rows[2], CAB.frontZ], rotY: 0.45,
+    targetSize: 0.3, axis: "z", pos: [CAB.bays[0], CAB.rows[2], CAB.frontZ], rotY: 0.45,
   });
   placeRoot(buildCfdDisplay(artLoader), scene, {
     fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_ansysCfd", projectKey: "ansysCfd", label: "Agent-based CFD",
     targetSize: 0.34, axis: "x", pos: [CAB.bays[1], CAB.rows[2], CAB.frontZ], rotY: 0.25,
   });
-  placeRoot(buildEducationKit(), scene, {
-    fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_education", projectKey: "education", label: "Guitar education kit",
-    targetSize: 0.4, axis: "x", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotY: 0.3,
+  loadAssembly(loader, scene, "models/real/education.glb", {
+    fit: [0.6, 0.46, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_education", projectKey: "education", label: "Guitar education kit",
+    targetSize: 0.44, axis: "y", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotZ: Math.PI / 2, rotY: 0.3,
   });
 
   /* ---------- side dressing ---------- */
@@ -503,23 +508,28 @@ function initScene(canvas) {
   // multimeter + task lamp)
   scene.add(buildSideCabinet());
 
-  // five more projects in the right-wall cabinet (14 on display total)
+  // five more projects in the right-wall cabinet (14 on display total).
+  // `build` = procedural group; `file` = real CAD GLB via loadAssembly.
   const SIDE_EXHIBITS = [
     { build: buildDriverSeat,  key: "seat",      label: "Driver seat",       size: 0.3,  bay: 0, row: 0 },
     { build: buildFtcBot,      key: "ftc",       label: "FTC robot",         size: 0.28, bay: 1, row: 0 },
-    { build: buildSmelly,      key: "formlabs",  label: "Smelly",            size: 0.28, bay: 0, row: 1 },
-    { build: buildPoolSniper,  key: "pool",      label: "Pool Sniper",       size: 0.32, bay: 1, row: 1 },
-    { build: buildTelecasterV2, key: "telecaster", label: "Telecaster",      size: 0.42, axis: "y", bay: 0, row: 2 },
+    { file: "smelly",          key: "formlabs",  label: "Smelly",            size: 0.3,  axis: "y", bay: 0, row: 1, rotY: -Math.PI / 2 + 0.2 },
+    { file: "pool",            key: "pool",      label: "Pool Sniper",       size: 0.32, axis: "y", bay: 1, row: 1, rotY: -Math.PI / 2 + 0.2 },
+    { file: "telecaster",      key: "telecaster", label: "Telecaster",       size: 0.42, axis: "y", bay: 0, row: 2, rotY: -Math.PI / 2 + 0.2 },
   ];
-  SIDE_EXHIBITS.forEach((s) =>
-    placeRoot(s.build(), scene, {
+  SIDE_EXHIBITS.forEach((s) => {
+    const opts = {
       name: "ex_" + s.key, projectKey: s.key, label: s.label,
       targetSize: s.size, axis: s.axis || "x",
       fit: [0.34, 0.4, 0.58], // x depth into cabinet, z along the wall
       markerCap: CAB2.rows[s.row] + (s.row === 0 ? 0.36 : 0.44),
-      pos: [CAB2.frontX, CAB2.rows[s.row], CAB2.bays[s.bay]], rotY: -Math.PI / 2 + 0.25,
-    })
-  );
+      pos: [CAB2.frontX, CAB2.rows[s.row], CAB2.bays[s.bay]],
+      rotY: s.rotY !== undefined ? s.rotY : -Math.PI / 2 + 0.25,
+      rotZ: s.rotZ, rotX: s.rotX,
+    };
+    if (s.file) loadAssembly(loader, scene, `models/real/${s.file}.glb`, opts);
+    else placeRoot(s.build(), scene, opts);
+  });
   scene.add(buildWorkbench());
 
   // rolling tool chest beside the workbench
@@ -2454,185 +2464,6 @@ function buildDriverSeat() {
   return g;
 }
 
-function buildPoolSniper() {
-  // cue launcher: aluminum rail, spring-loaded carriage, cue shaft, trigger
-  // grip, and a 3-ball triangle beside it
-  const g = new THREE.Group();
-  const dark = new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.5, metalness: 0.4 });
-  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.35, metalness: 0.9 });
-
-  // extrusion rail on two feet
-  const rail = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.024, 0.03), alu);
-  rail.position.set(0, 0.045, 0);
-  g.add(rail);
-  [[-0.11], [0.11]].forEach(([x]) => {
-    const foot = new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.035, 0.06), dark);
-    foot.position.set(x, 0.018, 0);
-    g.add(foot);
-  });
-  // spring section around the cue, behind the carriage
-  for (let i = 0; i < 7; i++) {
-    const coil = new THREE.Mesh(new THREE.TorusGeometry(0.014, 0.0026, 8, 18), steelToolMat());
-    coil.rotation.y = Math.PI / 2;
-    coil.position.set(-0.105 + i * 0.012, 0.082, 0);
-    g.add(coil);
-  }
-  // carriage with cue clamp
-  const carriage = new THREE.Mesh(new RoundedBoxGeometry(0.05, 0.045, 0.045, 2, 0.008), dark);
-  carriage.position.set(0, 0.085, 0);
-  g.add(carriage);
-  // cue shaft through the carriage
-  const cue = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.007, 0.3, 12),
-    new THREE.MeshStandardMaterial({ color: 0x6b5a44, roughness: 0.5 }));
-  cue.rotation.z = Math.PI / 2;
-  cue.position.set(0.1, 0.085, 0);
-  g.add(cue);
-  const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.0052, 0.005, 0.012, 10),
-    new THREE.MeshStandardMaterial({ color: 0x2a6da8, roughness: 0.6 }));
-  tip.rotation.z = Math.PI / 2;
-  tip.position.set(0.256, 0.085, 0);
-  g.add(tip);
-  // trigger grip under the rail rear
-  const grip = new THREE.Mesh(new RoundedBoxGeometry(0.028, 0.07, 0.035, 2, 0.008), dark);
-  grip.position.set(-0.12, 0.0, 0);
-  grip.rotation.z = 0.3;
-  g.add(grip);
-  const trigger = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.024, 0.016), alu);
-  trigger.position.set(-0.095, 0.014, 0);
-  g.add(trigger);
-  // 3-ball triangle beside the rail
-  [[0.05, 0.055, 0xffffff], [0.085, 0.075, 0xc23c2e], [0.085, 0.035, 0x27408a]].forEach(([x, z, col]) => {
-    const ball = new THREE.Mesh(new THREE.SphereGeometry(0.016, 16, 16),
-      new THREE.MeshPhysicalMaterial({ color: col, roughness: 0.12, clearcoat: 0.85 }));
-    ball.position.set(x, 0.016, z);
-    g.add(ball);
-  });
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  return g;
-}
-
-function buildSmelly() {
-  // "Smelly" perfume mixer: base, dual-rail gantry, dispensing head, vials
-  const g = new THREE.Group();
-  const dark = new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.5, metalness: 0.4 });
-  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.35, metalness: 0.9 });
-  const base = new THREE.Mesh(new RoundedBoxGeometry(0.24, 0.02, 0.16, 2, 0.006), dark);
-  base.position.y = 0.01;
-  g.add(base);
-  [[-0.1], [0.1]].forEach(([x]) => {
-    const rail = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.18, 12), alu);
-    rail.position.set(x, 0.11, -0.04);
-    g.add(rail);
-  });
-  const beam = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.016, 0.02), dark);
-  beam.position.set(0, 0.2, -0.04);
-  g.add(beam);
-  const carriage = new THREE.Mesh(new RoundedBoxGeometry(0.04, 0.05, 0.03, 2, 0.006), dark);
-  carriage.position.set(0.03, 0.17, -0.04);
-  g.add(carriage);
-  const nozzle = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.002, 0.03, 10), alu);
-  nozzle.position.set(0.03, 0.13, -0.04);
-  g.add(nozzle);
-  // vial grid
-  [[-0.07, 0x8fd0b0], [-0.023, 0xd8b25a], [0.024, 0xc98fb0], [0.071, 0x8fb8d8]].forEach(([x, col]) => {
-    const vial = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.05, 14),
-      new THREE.MeshPhysicalMaterial({ color: col, roughness: 0.1, transparent: true, opacity: 0.7 }));
-    vial.position.set(x, 0.045, 0.03);
-    g.add(vial);
-    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.01, 12), dark);
-    cap.position.set(x, 0.075, 0.03);
-    g.add(cap);
-  });
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  return g;
-}
-
-function buildTelecasterV2() {
-  // Telecaster on an A-stand: single-cutaway slab body, bolt-on neck with
-  // headstock + tuners, pickguard, bridge plate, six strings
-  const g = new THREE.Group();
-  const body = new THREE.Shape();
-  // slimmer, more tele-like outline (units ~m, body ~0.19 tall)
-  body.moveTo(0.0, -0.095);
-  body.bezierCurveTo(0.055, -0.095, 0.068, -0.06, 0.064, -0.02);
-  body.bezierCurveTo(0.061, 0.008, 0.05, 0.02, 0.048, 0.04);
-  body.bezierCurveTo(0.045, 0.07, 0.028, 0.092, 0.006, 0.092);
-  body.bezierCurveTo(-0.02, 0.092, -0.034, 0.075, -0.04, 0.05);
-  body.bezierCurveTo(-0.046, 0.026, -0.06, 0.012, -0.063, -0.018);
-  body.bezierCurveTo(-0.068, -0.06, -0.055, -0.095, 0.0, -0.095);
-  const bodyMesh = new THREE.Mesh(
-    new THREE.ExtrudeGeometry(body, { depth: 0.03, bevelEnabled: true, bevelThickness: 0.005, bevelSize: 0.004, bevelSegments: 3 }),
-    new THREE.MeshPhysicalMaterial({ color: 0xd6a049, roughness: 0.24, metalness: 0.03, clearcoat: 0.9, clearcoatRoughness: 0.1 })
-  );
-  bodyMesh.position.set(0, 0.14, -0.015);
-  g.add(bodyMesh);
-  // pickguard (tele-ish polygon approximated with a lens shape)
-  const pgShape = new THREE.Shape();
-  pgShape.moveTo(-0.05, -0.03);
-  pgShape.bezierCurveTo(-0.055, 0.02, -0.03, 0.055, 0.005, 0.05);
-  pgShape.bezierCurveTo(-0.005, 0.02, -0.01, -0.02, 0.005, -0.055);
-  pgShape.bezierCurveTo(-0.02, -0.06, -0.045, -0.055, -0.05, -0.03);
-  const pgMesh = new THREE.Mesh(new THREE.ExtrudeGeometry(pgShape, { depth: 0.003, bevelEnabled: false }),
-    new THREE.MeshStandardMaterial({ color: 0xf5f0e0, roughness: 0.45 }));
-  pgMesh.position.set(-0.002, 0.14, 0.0165);
-  g.add(pgMesh);
-  const neckMat = new THREE.MeshStandardMaterial({ color: 0xb98d4f, roughness: 0.5 });
-  const neck = new THREE.Mesh(new RoundedBoxGeometry(0.026, 0.21, 0.016, 2, 0.006), neckMat);
-  neck.position.set(0, 0.33, -0.002);
-  g.add(neck);
-  // headstock: slim slab, tele profile-ish, 6 inline tuners
-  const head = new THREE.Mesh(new RoundedBoxGeometry(0.036, 0.062, 0.012, 2, 0.005), neckMat);
-  head.position.set(0.006, 0.465, -0.004);
-  head.rotation.z = -0.06;
-  g.add(head);
-  const tunerMat = new THREE.MeshStandardMaterial({ color: 0xc8ccd2, metalness: 0.9, roughness: 0.3 });
-  for (let i = 0; i < 6; i++) {
-    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.0022, 0.0022, 0.01, 8), tunerMat);
-    post.rotation.x = Math.PI / 2;
-    post.position.set(-0.004 + (i % 2) * 0.0, 0.44 + i * 0.0088, 0.004);
-    g.add(post);
-    const key = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.005, 0.003), tunerMat);
-    key.position.set(-0.014, 0.44 + i * 0.0088, -0.009);
-    g.add(key);
-  }
-  const fb = new THREE.Mesh(new THREE.BoxGeometry(0.027, 0.21, 0.003),
-    new THREE.MeshStandardMaterial({ color: 0x3a2614, roughness: 0.6 }));
-  fb.position.set(0, 0.33, 0.008);
-  g.add(fb);
-  // frets
-  for (let i = 0; i < 12; i++) {
-    const fret = new THREE.Mesh(new THREE.BoxGeometry(0.027, 0.0012, 0.0012), tunerMat);
-    fret.position.set(0, 0.245 + i * 0.016 - i * i * 0.0003, 0.0095);
-    g.add(fret);
-  }
-  const stringMat = new THREE.MeshStandardMaterial({ color: 0xc8ccd2, metalness: 0.9, roughness: 0.3 });
-  for (let i = 0; i < 6; i++) {
-    const s = new THREE.Mesh(new THREE.CylinderGeometry(0.0005, 0.0005, 0.36, 4), stringMat);
-    s.position.set(-0.0095 + i * 0.0038, 0.275, 0.012);
-    g.add(s);
-  }
-  const bridge = new THREE.Mesh(new RoundedBoxGeometry(0.04, 0.028, 0.006, 2, 0.003), tunerMat);
-  bridge.position.set(0, 0.095, 0.018);
-  g.add(bridge);
-  const strapPin = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.005, 0.008, 8), tunerMat);
-  strapPin.rotation.x = Math.PI / 2;
-  strapPin.position.set(0, 0.045, -0.015);
-  g.add(strapPin);
-  // A-stand
-  const standMat = new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.5, metalness: 0.5 });
-  [[-0.05, 0.05], [0.05, 0.05], [-0.05, -0.05], [0.05, -0.05]].forEach(([x, z]) => {
-    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.13, 8), standMat);
-    leg.position.set(x, 0.06, z - 0.01);
-    leg.rotation.x = z > 0 ? -0.35 : 0.35;
-    g.add(leg);
-  });
-  const cradle = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.008, 0.024), standMat);
-  cradle.position.set(0, 0.105, -0.008);
-  g.add(cradle);
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  return g;
-}
-
 function buildFtcBot() {
   // FTC robot: chassis, four mecanum wheels, vertical lift, claw, hub
   const g = new THREE.Group();
@@ -2907,116 +2738,6 @@ function buildResumePaper() {
   return g;
 }
 
-function buildLineFollower() {
-  // compact line-follower: chassis plate, Arduino Mega with headers, two
-  // micro gearmotors with hubbed wheels, front caster, 8-sensor IR bar,
-  // battery with strap, brass standoffs
-  const g = new THREE.Group();
-  const silver = new THREE.MeshStandardMaterial({ color: 0xb8bcc2, metalness: 0.9, roughness: 0.35 });
-  const gold = new THREE.MeshStandardMaterial({ color: 0x9d9789, metalness: 0.9, roughness: 0.35 });
-  const blackPl = new THREE.MeshStandardMaterial({ color: 0x121317, roughness: 0.5, metalness: 0.15 });
-
-  // chassis plate (matte black acrylic)
-  const deck = new THREE.Mesh(
-    new RoundedBoxGeometry(0.21, 0.006, 0.13, 2, 0.003),
-    new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.35, metalness: 0.1 })
-  );
-  deck.position.y = 0.032;
-  g.add(deck);
-
-  // Arduino Mega: blue PCB, black header rows, silver USB, gold pads
-  const pcb = new THREE.Mesh(new THREE.BoxGeometry(0.096, 0.004, 0.05),
-    new THREE.MeshStandardMaterial({ color: 0x1a4f8a, roughness: 0.4, metalness: 0.2 }));
-  pcb.position.set(-0.03, 0.04, 0);
-  g.add(pcb);
-  [-0.02, 0.02].forEach((dz) => {
-    const header = new THREE.Mesh(new THREE.BoxGeometry(0.085, 0.007, 0.006), blackPl);
-    header.position.set(-0.03, 0.045, dz);
-    g.add(header);
-  });
-  const usb = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.008, 0.012), silver);
-  usb.position.set(-0.072, 0.046, -0.012);
-  g.add(usb);
-  const chip = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.003, 0.014), blackPl);
-  chip.position.set(-0.02, 0.043, 0);
-  g.add(chip);
-
-  // brass standoffs
-  [[-0.07, -0.022], [-0.07, 0.022], [0.01, -0.022], [0.01, 0.022]].forEach(([sx, sz]) => {
-    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.0025, 0.0025, 0.008, 8), gold);
-    post.position.set(sx, 0.037, sz);
-    g.add(post);
-  });
-
-  // battery + strap
-  const batt = new THREE.Mesh(new RoundedBoxGeometry(0.055, 0.018, 0.032, 2, 0.004), blackPl);
-  batt.position.set(0.055, 0.045, 0.02);
-  g.add(batt);
-  const strap = new THREE.Mesh(new THREE.BoxGeometry(0.058, 0.02, 0.008),
-    new THREE.MeshStandardMaterial({ color: 0x2b3a55, roughness: 0.7 }));
-  strap.position.set(0.055, 0.045, 0.02);
-  g.add(strap);
-
-  // micro gearmotors (silver body + gold gearbox) + hubbed wheels
-  [-0.0755, 0.0755].forEach((z) => {
-    const side = Math.sign(z);
-    const motor = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.024, 12), silver);
-    motor.rotation.x = Math.PI / 2;
-    motor.position.set(-0.055, 0.026, z - side * 0.035);
-    g.add(motor);
-    const gearbox = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.01, 0.012), gold);
-    gearbox.position.set(-0.055, 0.026, z - side * 0.018);
-    g.add(gearbox);
-    // tire + hub + spokes
-    const tire = new THREE.Mesh(new THREE.TorusGeometry(0.0245, 0.0075, 12, 26),
-      new THREE.MeshStandardMaterial({ color: 0x0c0d10, roughness: 0.92 }));
-    tire.position.set(-0.055, 0.03, z);
-    g.add(tire);
-    const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.019, 0.019, 0.009, 18),
-      new THREE.MeshStandardMaterial({ color: 0xe8e8ea, roughness: 0.35, metalness: 0.3 }));
-    hub.rotation.x = Math.PI / 2;
-    hub.position.set(-0.055, 0.03, z);
-    g.add(hub);
-    for (let s = 0; s < 5; s++) {
-      const a = (s / 5) * Math.PI * 2;
-      const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.003, 0.001, 0.014), blackPl);
-      spoke.position.set(-0.055 + Math.cos(a) * 0.009, 0.03 + Math.sin(a) * 0.009, z + side * 0.005);
-      spoke.rotation.z = a;
-      g.add(spoke);
-    }
-  });
-
-  // front caster (bracket + ball)
-  const bracket = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.012, 0.016), silver);
-  bracket.position.set(0.085, 0.024, 0);
-  g.add(bracket);
-  const ball = new THREE.Mesh(new THREE.SphereGeometry(0.009, 14, 14),
-    new THREE.MeshStandardMaterial({ color: 0xd8dadc, metalness: 0.85, roughness: 0.25 }));
-  ball.position.set(0.085, 0.012, 0);
-  g.add(ball);
-
-  // 8-sensor IR bar on standoffs ahead of the chassis
-  const bar = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.004, 0.105), blackPl);
-  bar.position.set(0.1, 0.03, 0);
-  g.add(bar);
-  [[-0.012, 0.012]].forEach(() => {});
-  for (let i = 0; i < 8; i++) {
-    const zz = -0.044 + i * 0.0126;
-    const emitter = new THREE.Mesh(new THREE.CylinderGeometry(0.002, 0.002, 0.004, 8),
-      new THREE.MeshStandardMaterial({ color: i % 2 ? 0x2a2c33 : 0xd8e2ea, roughness: 0.4 }));
-    emitter.position.set(0.1, 0.026, zz);
-    g.add(emitter);
-  }
-  [[0.094, -0.048], [0.094, 0.048]].forEach(([sx, sz]) => {
-    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.002, 0.002, 0.01, 8), gold);
-    post.position.set(sx, 0.032, sz);
-    g.add(post);
-  });
-
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  return g;
-}
-
 function buildCfdDisplay(texLoader) {
   // small monitor on a stand showing the real Ansys pressure field render
   const g = new THREE.Group();
@@ -3042,185 +2763,6 @@ function buildCfdDisplay(texLoader) {
   screen.position.set(0, 0.16, 0.0078);
   screen.rotation.x = -0.06;
   g.add(screen);
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  return g;
-}
-
-function buildEducationKit() {
-  // guitar-teaching kit: felt-lined case with divided compartments, a mini
-  // strung guitar, detached fretted neck, and labeled small parts
-  const g = new THREE.Group();
-  const caseMat = woodMaterial(0x3d352d, 0.55);
-  const feltMat = new THREE.MeshStandardMaterial({ color: 0x28323e, roughness: 0.98 });
-  const metal = new THREE.MeshStandardMaterial({ color: 0xc8ccd2, metalness: 0.9, roughness: 0.3 });
-  const W = 0.4, D = 0.28, wall = 0.012, hWall = 0.042;
-
-  // case shell + felt floor
-  const bottom = new THREE.Mesh(new RoundedBoxGeometry(W, 0.014, D, 2, 0.004), caseMat);
-  bottom.position.y = 0.007;
-  g.add(bottom);
-  const felt = new THREE.Mesh(new THREE.BoxGeometry(W - 0.03, 0.003, D - 0.03), feltMat);
-  felt.position.y = 0.0155;
-  g.add(felt);
-  [[0, D / 2 - wall / 2], [0, -(D / 2 - wall / 2)]].forEach(([x, z]) => {
-    const m = new THREE.Mesh(new THREE.BoxGeometry(W, hWall, wall), caseMat);
-    m.position.set(x, hWall / 2 + 0.007, z);
-    g.add(m);
-  });
-  [[W / 2 - wall / 2, 0], [-(W / 2 - wall / 2), 0]].forEach(([x, z]) => {
-    const m = new THREE.Mesh(new THREE.BoxGeometry(wall, hWall, D - 2 * wall), caseMat);
-    m.position.set(x, hWall / 2 + 0.007, z);
-    g.add(m);
-  });
-  // interior dividers: guitar bay | neck bay | parts bays
-  const div1 = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.03, D - 2 * wall), caseMat);
-  div1.position.set(0.015, 0.022, 0);
-  g.add(div1);
-  const div2 = new THREE.Mesh(new THREE.BoxGeometry(W / 2 - 0.03, 0.03, 0.008), caseMat);
-  div2.position.set(0.105, 0.022, 0.0);
-  g.add(div2);
-
-  // mini strung guitar in the left bay
-  const guitar = new THREE.Group();
-  const body = new THREE.Shape();
-  body.moveTo(0, -0.07);
-  body.bezierCurveTo(0.042, -0.07, 0.05, -0.038, 0.046, -0.008);
-  body.bezierCurveTo(0.043, 0.016, 0.032, 0.024, 0.03, 0.042);
-  body.bezierCurveTo(0.027, 0.064, 0.014, 0.074, 0, 0.074);
-  body.bezierCurveTo(-0.014, 0.074, -0.027, 0.064, -0.03, 0.042);
-  body.bezierCurveTo(-0.032, 0.024, -0.043, 0.016, -0.046, -0.008);
-  body.bezierCurveTo(-0.05, -0.038, -0.042, -0.07, 0, -0.07);
-  const bodyMesh = new THREE.Mesh(
-    new THREE.ExtrudeGeometry(body, { depth: 0.018, bevelEnabled: true, bevelThickness: 0.003, bevelSize: 0.003, bevelSegments: 2 }),
-    new THREE.MeshPhysicalMaterial({ color: 0xc98f3f, roughness: 0.3, metalness: 0.04, clearcoat: 0.75, clearcoatRoughness: 0.15 })
-  );
-  bodyMesh.rotation.x = -Math.PI / 2;
-  guitar.add(bodyMesh);
-  const pick = new THREE.Mesh(new THREE.BoxGeometry(0.026, 0.004, 0.012),
-    new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.4 }));
-  pick.position.set(0, 0.024, 0.006);
-  guitar.add(pick);
-  const gBridge = new THREE.Mesh(new THREE.BoxGeometry(0.028, 0.005, 0.008), metal);
-  gBridge.position.set(0, 0.024, 0.045);
-  guitar.add(gBridge);
-  for (let i = 0; i < 4; i++) {
-    const s = new THREE.Mesh(new THREE.CylinderGeometry(0.00045, 0.00045, 0.115, 4), metal);
-    s.rotation.x = Math.PI / 2;
-    s.position.set(-0.0075 + i * 0.005, 0.0255, -0.012);
-    guitar.add(s);
-  }
-  guitar.position.set(-0.1, 0.017, 0.0);
-  guitar.rotation.y = 0.12;
-  g.add(guitar);
-
-  // detached neck with fret wires (top-right bay)
-  const neckG = new THREE.Group();
-  const neck = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.01, 0.026),
-    new THREE.MeshStandardMaterial({ color: 0xa8763c, roughness: 0.55 }));
-  neckG.add(neck);
-  const fb = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.003, 0.024),
-    new THREE.MeshStandardMaterial({ color: 0x3a2614, roughness: 0.6 }));
-  fb.position.y = 0.0065;
-  neckG.add(fb);
-  for (let i = 0; i < 9; i++) {
-    const fret = new THREE.Mesh(new THREE.BoxGeometry(0.0015, 0.0015, 0.024), metal);
-    fret.position.set(-0.07 + i * 0.016 + i * i * 0.0004, 0.008, 0);
-    neckG.add(fret);
-  }
-  neckG.position.set(0.105, 0.02, -0.075);
-  neckG.rotation.y = -0.06;
-  g.add(neckG);
-
-  // parts bays: string packets, winder, mini screwdriver, tuner pegs
-  [[0.05, 0.06, 0xd8b25a], [0.075, 0.075, 0xc9c9cf]].forEach(([px, pz, col]) => {
-    const packet = new THREE.Mesh(new THREE.BoxGeometry(0.034, 0.002, 0.034),
-      new THREE.MeshStandardMaterial({ color: col, roughness: 0.7 }));
-    packet.position.set(px, 0.018, pz);
-    packet.rotation.y = 0.3 + px;
-    g.add(packet);
-  });
-  const winder = new THREE.Mesh(new THREE.TorusGeometry(0.014, 0.004, 10, 20),
-    new THREE.MeshStandardMaterial({ color: 0x3f9e4f, roughness: 0.55 }));
-  winder.rotation.x = -Math.PI / 2;
-  winder.position.set(0.16, 0.02, 0.06);
-  g.add(winder);
-  const sdShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.0018, 0.0018, 0.05, 8), metal);
-  sdShaft.rotation.z = Math.PI / 2;
-  sdShaft.rotation.y = 0.4;
-  sdShaft.position.set(0.13, 0.019, 0.028);
-  g.add(sdShaft);
-  const sdHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.005, 0.026, 10),
-    new THREE.MeshStandardMaterial({ color: 0x2b66d9, roughness: 0.45 }));
-  sdHandle.rotation.z = Math.PI / 2;
-  sdHandle.rotation.y = 0.4;
-  sdHandle.position.set(0.164, 0.019, 0.013);
-  g.add(sdHandle);
-  for (let i = 0; i < 3; i++) {
-    const peg = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.016, 8), metal);
-    peg.rotation.x = Math.PI / 2;
-    peg.position.set(0.045 + i * 0.014, 0.018, -0.06);
-    g.add(peg);
-    const head = new THREE.Mesh(new THREE.SphereGeometry(0.0045, 8, 8),
-      new THREE.MeshStandardMaterial({ color: 0xf0ead8, roughness: 0.5 }));
-    head.position.set(0.045 + i * 0.014, 0.018, -0.069);
-    g.add(head);
-  }
-
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  return g;
-}
-
-function makeThermalTexture() {
-  const s = 512;
-  const c = document.createElement("canvas");
-  c.width = c.height = s;
-  const ctx = c.getContext("2d");
-  const g = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
-  g.addColorStop(0.0, "#3a3a40");
-  g.addColorStop(0.34, "#2c2c30");
-  g.addColorStop(0.5, "#7a1500");
-  g.addColorStop(0.66, "#ff5a00");
-  g.addColorStop(0.82, "#ffc23a");
-  g.addColorStop(0.93, "#ff6a12");
-  g.addColorStop(1.0, "#7a1500");
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, s, s);
-  ctx.strokeStyle = "rgba(10,6,4,0.9)";
-  ctx.lineWidth = 10;
-  for (let i = 0; i < 20; i++) {
-    const a = (i / 20) * Math.PI * 2;
-    ctx.beginPath();
-    ctx.moveTo(s / 2 + Math.cos(a) * s * 0.3, s / 2 + Math.sin(a) * s * 0.3);
-    ctx.lineTo(s / 2 + Math.cos(a) * s * 0.46, s / 2 + Math.sin(a) * s * 0.46);
-    ctx.stroke();
-  }
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
-}
-
-function buildBrakeRotor() {
-  const g = new THREE.Group();
-  const tex = makeThermalTexture();
-  const rotorMat = new THREE.MeshStandardMaterial({
-    map: tex,
-    emissiveMap: tex,
-    emissive: 0xffffff,
-    emissiveIntensity: 0.45,
-    metalness: 0.55,
-    roughness: 0.5,
-  });
-  const rotor = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.016, 60), rotorMat);
-  g.add(rotor);
-  const hubMat = new THREE.MeshStandardMaterial({ color: 0x2a2c30, metalness: 0.9, roughness: 0.35 });
-  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.03, 28), hubMat);
-  g.add(hub);
-  for (let i = 0; i < 5; i++) {
-    const a = (i / 5) * Math.PI * 2;
-    const bolt = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.034, 8), hubMat);
-    bolt.position.set(Math.cos(a) * 0.022, 0, Math.sin(a) * 0.022);
-    g.add(bolt);
-  }
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
 }
