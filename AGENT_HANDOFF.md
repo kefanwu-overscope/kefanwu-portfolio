@@ -405,11 +405,14 @@ columns, T-feet, keypad), two display cabinets (slim steel + tinted glass),
 electronics workbench (Bambu H2S built to the reference photo w/ top AMS 2
 spool bay, programmable PSU, soldering station, screwdriver set, multimeter,
 pegboard of MechE tools — rule/drill/Dremel/torque wrench/caliper/hex keys/
-hammer/cutters/tape, LED bar lamp), rolling 5-drawer tool chest, ergonomic
-task chair (axis-aligned, all parts intersecting), blueprint wall panel,
-ceiling cove LED strips, potted plant.
+hammer/cutters/tape/level/hex keys/square/adjustable wrench/strippers, LED
+bar lamp), rolling 5-drawer tool chest, real ergonomic mesh task chair
+(models/ergonomic_mesh_office_chair, CC BY 4.0 — see ATTRIBUTIONS.txt;
+intrinsic front is +x, rotY 1.34 faces the desk), blueprint wall panel,
+ceiling cove LED strips, graphite rug (noise map + bump for plush),
+potted plant.
 
-### Exhibits — all 15 projects clickable (16 hotspots incl. the resume)
+### Exhibits — all 15 projects clickable (17 hotspots incl. resume + skill wall)
 
 Two cabinets. Every exhibit is placed by `placeRoot(root, scene, opts)`,
 which: normalizes scale to `targetSize` along `axis`, recenters on its
@@ -436,6 +439,11 @@ shelf cell (this is the anti-clipping mechanism; every exhibit passes a
   (buildPoolSniper), `telecaster` (buildTelecasterV2).
 - **Resume** = a paper sheet on the desk (`buildResumePaper`, `action:
   "resume"`), the 16th hotspot.
+- **Skill wall** = `buildSkillWall()` board on the right wall (z ≈ 1.15,
+  `action: "skills"`), the 17th hotspot. Hover-only: shows a wide hover
+  card (`.exp-label--wide`) listing `RESUME.skills`; clicking is a no-op
+  (focusHotspot returns early on null html WITHOUT clearing the hover, so
+  a tap on touch devices leaves the card visible).
 
 > Exhibit `key` matches a `window.projectData` key so the panel content is
 > the SAME data as the homepage modal. Note the two seat keys: `carbonSeat`

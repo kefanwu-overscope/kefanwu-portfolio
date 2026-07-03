@@ -288,6 +288,32 @@ a {
   text-transform: uppercase;
   color: var(--muted);
 }
+/* wide variant: the skill wall's hover card lists the full matrix */
+.exp-label--wide {
+  white-space: normal;
+  width: 300px;
+  gap: 0.4rem;
+  padding: 0.7rem 0.85rem;
+}
+.exp-label--wide b {
+  margin-bottom: 0.15rem;
+}
+.exp-label .exp-label__row {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.exp-label .exp-label__row em {
+  display: block;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 0.74rem;
+  color: var(--ink);
+}
 
 /* ============ detail panel (project / resume) ============ */
 .exp-backdrop {

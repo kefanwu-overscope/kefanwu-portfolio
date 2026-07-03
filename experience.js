@@ -222,9 +222,9 @@ function initScene(canvas) {
   hideForPrepass(bokeh);
   const bloom = new UnrealBloomPass(
     new THREE.Vector2(window.innerWidth, window.innerHeight),
-    0.2, // strength — a whisper halo on true emitters only
+    0.16, // strength — a whisper halo on true emitters only
     0.45, // radius
-    0.82 // threshold — LED strips / pendant / chamber light, nothing else
+    0.85 // threshold — LED strips / pendant / chamber light, nothing else
   );
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
@@ -284,8 +284,8 @@ function initScene(canvas) {
   fill.position.set(-3, 2.2, 3);
   scene.add(fill);
 
-  // desk-lamp pool — near-neutral so the resume reads white, not amber
-  const lampLight = new THREE.PointLight(0xffeedd, 2.2, 2.6, 2);
+  // desk-lamp pool — kept soft so the resume print stays readable
+  const lampLight = new THREE.PointLight(0xffeedd, 1.4, 2.6, 2);
   lampLight.position.set(-0.44, 1.1, -0.12);
   scene.add(lampLight);
 
@@ -331,10 +331,36 @@ function initScene(canvas) {
   scene.add(contact);
 
   // low-pile graphite rug anchoring the desk + chair vignette, with a thin
-  // muted-blue inner border line (matte, no emissive)
+  // muted-blue inner border line (matte, no emissive); a speckled noise
+  // map doubles as bump so the pile reads plush instead of painted
+  const rugCanvas = document.createElement("canvas");
+  rugCanvas.width = rugCanvas.height = 256;
+  const rugCtx = rugCanvas.getContext("2d");
+  rugCtx.fillStyle = "#171a21";
+  rugCtx.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < 9000; i++) {
+    const a = Math.random();
+    rugCtx.fillStyle = `rgba(${14 + a * 30 | 0}, ${16 + a * 32 | 0}, ${22 + a * 40 | 0}, 0.6)`;
+    rugCtx.fillRect(Math.random() * 256, Math.random() * 256, 1.7, 1.7);
+  }
+  const rugMap = new THREE.CanvasTexture(rugCanvas);
+  rugMap.colorSpace = THREE.SRGBColorSpace;
+  rugMap.wrapS = rugMap.wrapT = THREE.RepeatWrapping;
+  rugMap.repeat.set(3, 2.2);
+  rugMap.anisotropy = MAXA;
+  const rugBump = new THREE.CanvasTexture(rugCanvas);
+  rugBump.wrapS = rugBump.wrapT = THREE.RepeatWrapping;
+  rugBump.repeat.set(3, 2.2);
   const rug = new THREE.Mesh(
     new RoundedBoxGeometry(2.3, 0.012, 1.7, 2, 0.006),
-    new THREE.MeshStandardMaterial({ color: 0x111318, roughness: 0.95, metalness: 0 })
+    new THREE.MeshStandardMaterial({
+      color: 0xd9dde4, // tints the dark speckle map back to graphite
+      map: rugMap,
+      bumpMap: rugBump,
+      bumpScale: 0.6,
+      roughness: 0.97,
+      metalness: 0,
+    })
   );
   rug.position.set(0, 0.006, 0.5);
   rug.receiveShadow = true;
@@ -451,6 +477,12 @@ function initScene(canvas) {
   const blueprint = buildBlueprintPanel();
   blueprint.position.set(0, 2.72, -1.5);
   scene.add(blueprint);
+
+  // skill matrix board on the right wall — hover reveals the full list
+  placeRoot(buildSkillWall(), scene, {
+    name: "skillWall", action: "skills", label: "Skill Matrix",
+    pos: [2.578, 1.0, 1.15], rotY: -Math.PI / 2,
+  });
 
   // real ergonomic mesh task chair (CC BY 4.0 — see ATTRIBUTIONS.txt);
   // replaces the old procedural buildErgoChair() stand-in
@@ -655,10 +687,21 @@ function initScene(canvas) {
       sndTick();
       if (labelEl) {
         const hs = hovered.userData.hotspot;
-        const sub = hs.action === "resume"
-          ? "Click to read"
-          : (window.projectData && window.projectData[hs.key] && window.projectData[hs.key].kicker) || "";
-        labelEl.innerHTML = `<b>${hs.label}</b>` + (sub ? `<span>${sub}</span>` : "");
+        if (hs.action === "skills") {
+          // the skill wall reveals the full matrix in a wide hover card
+          labelEl.classList.add("exp-label--wide");
+          labelEl.innerHTML =
+            `<b>${hs.label}</b>` +
+            RESUME.skills
+              .map((s) => `<span class="exp-label__row"><em>${s.group}</em>${s.items.join(" · ")}</span>`)
+              .join("");
+        } else {
+          labelEl.classList.remove("exp-label--wide");
+          const sub = hs.action === "resume"
+            ? "Click to read"
+            : (window.projectData && window.projectData[hs.key] && window.projectData[hs.key].kicker) || "";
+          labelEl.innerHTML = `<b>${hs.label}</b>` + (sub ? `<span>${sub}</span>` : "");
+        }
         labelEl.hidden = false;
       }
     } else {
@@ -705,7 +748,6 @@ function initScene(canvas) {
   });
 
   function focusHotspot(root) {
-    setHover(null);
     const hs = root.userData.hotspot;
     const html =
       hs.action === "resume"
@@ -713,7 +755,8 @@ function initScene(canvas) {
         : hs.key && window.projectData && window.projectData[hs.key]
           ? projectHTML(window.projectData[hs.key])
           : null;
-    if (!html) return;
+    if (!html) return; // hover-only hotspots (skill wall) keep their card
+    setHover(null);
 
     const c = hs.center;
     // approach from the room center, whatever wall the exhibit is on
@@ -762,9 +805,32 @@ function initScene(canvas) {
     document.documentElement.classList.add("exp-paper-open");
     setHover(null);
   }
+  function recenterPivot(pivot) {
+    // ease the showcase turntable spin back to its resting orientation
+    if (!pivot) return;
+    const tau = Math.PI * 2;
+    let delta = pivot.rotation.y % tau;
+    if (delta > Math.PI) delta -= tau;
+    if (delta < -Math.PI) delta += tau;
+    if (Math.abs(delta) < 0.001 || prefersReducedMotion) {
+      pivot.rotation.y = 0;
+      return;
+    }
+    const from = pivot.rotation.y;
+    const t0 = performance.now();
+    const dur = 600;
+    const step = (now) => {
+      if (panelOpen) return; // aborted by a re-open — the spin takes over
+      const k = Math.min(1, (now - t0) / dur);
+      pivot.rotation.y = from - delta * easeInOutCubic(k);
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
   function closePanel() {
     if (!panelOpen) return;
     panelOpen = false;
+    recenterPivot(focusedPivot);
     focusedPivot = null;
     sndWhoosh(0.4);
     document.documentElement.classList.remove("exp-panel-open");
@@ -1146,8 +1212,8 @@ function buildRoom(scene) {
 }
 
 function buildDesk() {
-  // modern executive desk: walnut slab on slim steel panel legs, dark desk
-  // mat, one slim drawer unit with aluminum bar pulls
+  // modern sit-stand desk: light lacquered slab on a silver lifting frame,
+  // dark desk mat, one slim drawer unit with aluminum bar pulls
   const g = new THREE.Group();
   const topY = 0.76;
   const thk = 0.045;
@@ -1159,7 +1225,7 @@ function buildDesk() {
 
   const top = new THREE.Mesh(
     new RoundedBoxGeometry(W, thk, D, 3, 0.008),
-    new THREE.MeshStandardMaterial({ color: 0x1f2126, roughness: 0.55, metalness: 0.25 })
+    new THREE.MeshStandardMaterial({ color: 0xc9ced6, roughness: 0.48, metalness: 0.06 })
   );
   top.position.set(0, topY - thk / 2, 0);
   top.castShadow = true;
@@ -1395,7 +1461,7 @@ function buildModernDeskLamp() {
   g.add(head);
   const led = new THREE.Mesh(
     new THREE.CylinderGeometry(0.038, 0.038, 0.004, 22),
-    new THREE.MeshStandardMaterial({ color: 0xf6f7f9, emissive: 0xfff0e0, emissiveIntensity: 1.2 })
+    new THREE.MeshStandardMaterial({ color: 0xf6f7f9, emissive: 0xfff0e0, emissiveIntensity: 0.85 })
   );
   led.position.copy(head.position).add(new THREE.Vector3(0, -0.011, 0));
   led.rotation.z = 0.14;
@@ -1420,12 +1486,12 @@ function buildLedBarLamp() {
   g.add(bar);
   const led = new THREE.Mesh(
     new THREE.BoxGeometry(0.27, 0.004, 0.026),
-    new THREE.MeshStandardMaterial({ color: 0xf6f7f9, emissive: 0xfff2e4, emissiveIntensity: 1.3 })
+    new THREE.MeshStandardMaterial({ color: 0xf6f7f9, emissive: 0xfff2e4, emissiveIntensity: 0.9 })
   );
   led.position.set(-0.1, 0.347, 0.04);
   led.rotation.y = 0.1;
   g.add(led);
-  const lLight = new THREE.PointLight(0xfff1e2, 1.7, 2.4, 2);
+  const lLight = new THREE.PointLight(0xfff1e2, 1.1, 2.4, 2);
   lLight.position.set(-0.1, 0.32, 0.05);
   g.add(lLight);
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
@@ -1551,16 +1617,16 @@ function buildWorkbench() {
   // spare spools on the lower shelf — all lying flat, one stacked pair
   [
     [-0.62, 0.05, 0x2b66d9],
-    [-0.44, -0.1, 0x8a8f96],
-    [-0.26, 0.08, 0x17181c],
-    [0.42, -0.05, 0xe8eaee],
+    [-0.44, -0.1, 0x3f9e4f],
+    [-0.26, 0.08, 0xe8eaee],
+    [0.42, -0.05, 0x8a8f96],
   ].forEach(([sx, sz, col]) => {
     const sp = makeMiniSpool(col);
     sp.scale.setScalar(1.6);
     sp.position.set(sx, 0.243, sz);
     g.add(sp);
   });
-  const spTop = makeMiniSpool(0x2b66d9);
+  const spTop = makeMiniSpool(0xd97b2b);
   spTop.scale.setScalar(1.6);
   spTop.position.set(-0.62, 0.302, 0.05); // stacked on the green one
   g.add(spTop);
@@ -2140,7 +2206,7 @@ function buildBambuPrinter() {
     ams.add(slot);
   }
   // spools row — same 1.6x scale as the spare spools on the bench shelf
-  [0xe8eaee, 0x2b66d9, 0x8a8f96, 0x17181c].forEach((col, i) => {
+  [0xe8eaee, 0x2b66d9, 0x2fa98c, 0xd97b2b].forEach((col, i) => {
     const sp = makeMiniSpool(col);
     sp.scale.setScalar(1.6);
     sp.rotation.z = Math.PI / 2;
@@ -2607,6 +2673,67 @@ function buildToolChest() {
     g.add(caster);
   });
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildSkillWall() {
+  // right-wall skill matrix: slim graphite slab, etched categories with
+  // blue index marks, aluminum standoff pins (full detail lives in the
+  // hover card driven by RESUME.skills)
+  const g = new THREE.Group();
+  const W = 1.35, H = 0.95;
+  const c = document.createElement("canvas");
+  c.width = 768;
+  c.height = 540;
+  const ctx = c.getContext("2d");
+  ctx.fillStyle = "#101216";
+  ctx.fillRect(0, 0, 768, 540);
+  ctx.fillStyle = "#3f8cff";
+  ctx.fillRect(48, 64, 46, 5);
+  ctx.fillStyle = "#f5f5f7";
+  ctx.font = "700 34px 'Inter Tight', 'Segoe UI', Arial, sans-serif";
+  ctx.fillText("SKILL MATRIX", 48, 116);
+  ctx.fillStyle = "#6e7277";
+  ctx.font = "500 17px 'IBM Plex Mono', Consolas, monospace";
+  ctx.fillText("HOVER FOR DETAIL", 48, 148);
+  RESUME.skills.forEach((s, i) => {
+    const col = i % 2;
+    const row = Math.floor(i / 2);
+    const x = 48 + col * 360;
+    const y = 226 + row * 96;
+    ctx.fillStyle = "#3f8cff";
+    ctx.fillRect(x, y - 16, 5, 20);
+    ctx.fillStyle = "#e8eaee";
+    ctx.font = "600 21px 'Inter', 'Segoe UI', Arial, sans-serif";
+    ctx.fillText(s.group, x + 16, y);
+    ctx.fillStyle = "#84888e";
+    ctx.font = "400 15px 'Inter', 'Segoe UI', Arial, sans-serif";
+    ctx.fillText(s.items.join(" · "), x + 16, y + 26);
+  });
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = MAXA;
+  const slab = new THREE.Mesh(
+    new RoundedBoxGeometry(W + 0.06, H + 0.06, 0.03, 2, 0.01),
+    new THREE.MeshStandardMaterial({ color: 0x17191d, roughness: 0.35, metalness: 0.4, envMapIntensity: 0.6 })
+  );
+  slab.castShadow = true;
+  g.add(slab);
+  const face = new THREE.Mesh(
+    new THREE.PlaneGeometry(W, H),
+    new THREE.MeshBasicMaterial({ map: tex, color: 0xc4ccd6 })
+  );
+  face.position.z = 0.017;
+  g.add(face);
+  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sy]) => {
+    const pin = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.008, 0.008, 0.02, 10),
+      new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.4, metalness: 0.9 })
+    );
+    pin.rotation.x = Math.PI / 2;
+    pin.position.set(sx * (W / 2 + 0.01), sy * (H / 2 + 0.01), -0.012);
+    g.add(pin);
+  });
   return g;
 }
 
