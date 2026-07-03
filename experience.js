@@ -22,6 +22,7 @@ import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js"
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { GTAOPass } from "three/addons/postprocessing/GTAOPass.js";
 import { BokehPass } from "three/addons/postprocessing/BokehPass.js";
+import { Reflector } from "three/addons/objects/Reflector.js";
 import { RESUME } from "./experience-data.js";
 
 document.documentElement.classList.add("exp-js");
@@ -222,9 +223,9 @@ function initScene(canvas) {
   hideForPrepass(bokeh);
   const bloom = new UnrealBloomPass(
     new THREE.Vector2(window.innerWidth, window.innerHeight),
-    0.16, // strength — a whisper halo on true emitters only
+    0.12, // strength — a whisper halo on true emitters only
     0.45, // radius
-    0.85 // threshold — LED strips / pendant / chamber light, nothing else
+    0.92 // threshold — strips/cove only; task-lamp discs must NOT halo
   );
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
@@ -245,7 +246,10 @@ function initScene(canvas) {
     if (revealed) return;
     revealed = true;
     revealScene();
-    if (!prefersReducedMotion) startIntro();
+    if (!prefersReducedMotion) {
+      runLightIntro();
+      startIntro();
+    }
   };
   manager.onLoad = doReveal;
   setTimeout(doReveal, 10000); // safety
@@ -285,7 +289,7 @@ function initScene(canvas) {
   scene.add(fill);
 
   // desk-lamp pool — kept soft so the resume print stays readable
-  const lampLight = new THREE.PointLight(0xffeedd, 1.4, 2.6, 2);
+  const lampLight = new THREE.PointLight(0xffeedd, 1.0, 2.6, 2);
   lampLight.position.set(-0.44, 1.1, -0.12);
   scene.add(lampLight);
 
@@ -313,6 +317,37 @@ function initScene(canvas) {
   const caseFillB = new THREE.PointLight(0xdfe8f4, 1.1, 2.8, 1.8);
   caseFillB.position.set(1.85, 1.45, -0.4);
   scene.add(caseFillB);
+
+  /* staged light-up on reveal: ambient -> LED strips -> spots -> lamps */
+  function runLightIntro() {
+    const jobs = [];
+    const stage = (obj, prop, delay, dur, from = 0) => {
+      const target = obj[prop];
+      obj[prop] = from;
+      jobs.push({ obj, prop, from, target, delay, dur });
+    };
+    [hemi, key, fill].forEach((l) => stage(l, "intensity", 0, 600, l.intensity * 0.25));
+    const seen = new Set();
+    scene.traverse((o) => {
+      if (o.isSpotLight) stage(o, "intensity", 450, 350);
+      else if (o.isPointLight) stage(o, "intensity", 700, 300);
+      else if (o.isMesh && o.material && o.material.emissive && o.material.emissiveIntensity > 0.4 && !seen.has(o.material)) {
+        seen.add(o.material);
+        stage(o.material, "emissiveIntensity", 250, 350);
+      }
+    });
+    const t0 = performance.now();
+    const tick = (now) => {
+      let live = false;
+      for (const j of jobs) {
+        const k = Math.min(1, Math.max(0, (now - t0 - j.delay) / j.dur));
+        if (k < 1) live = true;
+        j.obj[j.prop] = j.from + (j.target - j.from) * easeInOutCubic(k);
+      }
+      if (live) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
 
   /* ---------- room + rug ---------- */
   buildRoom(scene);
@@ -392,6 +427,28 @@ function initScene(canvas) {
   deskLamp.rotation.y = 0.5;
   scene.add(deskLamp);
   MODELS.deskLamp = deskLamp;
+  // the lamp is a click-to-toggle hotspot (no marker — it's furniture, not
+  // portfolio content); an invisible pad makes the thin stem easy to hit
+  const lampHit = new THREE.Mesh(
+    new THREE.BoxGeometry(0.38, 0.46, 0.2),
+    new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
+  );
+  lampHit.position.set(0.08, 0.22, 0);
+  deskLamp.add(lampHit);
+  NO_PREPASS.push(lampHit);
+  deskLamp.userData.hotspot = {
+    key: null, action: "lamp", label: "Desk Lamp", baseScale: 1,
+    center: new THREE.Box3().setFromObject(deskLamp).getCenter(new THREE.Vector3()),
+    marker: null, markerY: 0, phase: 0,
+  };
+  HOTSPOTS.push(deskLamp);
+
+  // slim monitor on the desk's right — dark CAD viewport (set dressing)
+  const monitor = buildDeskMonitor();
+  monitor.position.set(0.52, DESK_TOP, -0.22);
+  monitor.rotation.y = -0.32;
+  scene.add(monitor);
+  MODELS.monitor = monitor;
 
   // resume: the hero object on the desk — front and center, in the light
   placeRoot(buildResumePaper(), scene, {
@@ -478,10 +535,11 @@ function initScene(canvas) {
   blueprint.position.set(0, 2.72, -1.5);
   scene.add(blueprint);
 
-  // skill matrix board on the right wall — hover reveals the full list
-  placeRoot(buildSkillWall(), scene, {
-    name: "skillWall", action: "skills", label: "Skill Matrix",
-    pos: [2.578, 1.0, 1.15], rotY: -Math.PI / 2,
+  // skills: a second printed sheet beside the resume — hover reveals the
+  // full matrix card
+  placeRoot(buildSkillPaper(), scene, {
+    name: "skillPaper", action: "skills", label: "Skill Matrix",
+    pos: [0.33, DESK_TOP + 0.013, 0.2], rotY: -0.18,
   });
 
   // real ergonomic mesh task chair (CC BY 4.0 — see ATTRIBUTIONS.txt);
@@ -677,6 +735,17 @@ function initScene(canvas) {
     setCursorHover = (on) => { hot = on; applyState(); };
   }
 
+  /* ---------- desk-lamp click toggle ---------- */
+  let lampOn = true;
+  const LAMP_LIGHT_ON = 1.0;
+  function toggleDeskLamp() {
+    lampOn = !lampOn;
+    lampLight.intensity = lampOn ? LAMP_LIGHT_ON : 0;
+    const led = deskLamp.getObjectByName("lampLed");
+    if (led) led.material.emissiveIntensity = lampOn ? 0.5 : 0.02;
+    sndClick();
+  }
+
   function setHover(root) {
     if (hovered === root) return;
     if (hovered) hovered.scale.setScalar(hovered.userData.hotspot.baseScale);
@@ -699,7 +768,9 @@ function initScene(canvas) {
           labelEl.classList.remove("exp-label--wide");
           const sub = hs.action === "resume"
             ? "Click to read"
-            : (window.projectData && window.projectData[hs.key] && window.projectData[hs.key].kicker) || "";
+            : hs.action === "lamp"
+              ? (lampOn ? "Click to switch off" : "Click to switch on")
+              : (window.projectData && window.projectData[hs.key] && window.projectData[hs.key].kicker) || "";
           labelEl.innerHTML = `<b>${hs.label}</b>` + (sub ? `<span>${sub}</span>` : "");
         }
         labelEl.hidden = false;
@@ -749,6 +820,13 @@ function initScene(canvas) {
 
   function focusHotspot(root) {
     const hs = root.userData.hotspot;
+    if (hs.action === "lamp") {
+      toggleDeskLamp();
+      if (labelEl && !labelEl.hidden) {
+        labelEl.innerHTML = `<b>${hs.label}</b><span>${lampOn ? "Click to switch off" : "Click to switch on"}</span>`;
+      }
+      return;
+    }
     const html =
       hs.action === "resume"
         ? resumeHTML(RESUME)
@@ -1183,6 +1261,40 @@ function buildRoom(scene) {
   addCove(depth - 0.3, -sideX + 0.09, (front + back) / 2, Math.PI / 2);
   addCove(depth - 0.3, sideX - 0.09, (front + back) / 2, -Math.PI / 2);
 
+  // polished gloss strip set into the floor in front of the display wall —
+  // catches the vitrine light (true planar reflection on desktop tiers,
+  // a glossy dark panel on LOW_TIER)
+  const stripW = 2.6;
+  const stripD = 0.36;
+  let gloss;
+  if (!LOW_TIER) {
+    gloss = new Reflector(new THREE.PlaneGeometry(stripW, stripD), {
+      clipBias: 0.003,
+      textureWidth: 1024,
+      textureHeight: 512,
+      color: 0x2a2e34,
+    });
+  } else {
+    gloss = new THREE.Mesh(
+      new THREE.PlaneGeometry(stripW, stripD),
+      new THREE.MeshStandardMaterial({ color: 0x191c21, roughness: 0.12, metalness: 0.6, envMapIntensity: 1.2 })
+    );
+  }
+  gloss.rotation.x = -Math.PI / 2;
+  gloss.position.set(0, 0.003, -0.65);
+  scene.add(gloss);
+  const revealMat = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.4, metalness: 0.85 });
+  [
+    [stripW + 0.05, 0.022, 0, -0.65 - stripD / 2 - 0.011],
+    [stripW + 0.05, 0.022, 0, -0.65 + stripD / 2 + 0.011],
+    [0.022, stripD, -stripW / 2 - 0.011, -0.65],
+    [0.022, stripD, stripW / 2 + 0.011, -0.65],
+  ].forEach(([w, d, x, z]) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, 0.006, d), revealMat);
+    m.position.set(x, 0.004, z);
+    scene.add(m);
+  });
+
   // modern black pendant over the desk (neutral light)
   const pendant = new THREE.Group();
   const cord = new THREE.Mesh(
@@ -1461,8 +1573,9 @@ function buildModernDeskLamp() {
   g.add(head);
   const led = new THREE.Mesh(
     new THREE.CylinderGeometry(0.038, 0.038, 0.004, 22),
-    new THREE.MeshStandardMaterial({ color: 0xf6f7f9, emissive: 0xfff0e0, emissiveIntensity: 0.85 })
+    new THREE.MeshStandardMaterial({ color: 0xf6f7f9, emissive: 0xfff0e0, emissiveIntensity: 0.5 })
   );
+  led.name = "lampLed"; // looked up by the click-to-toggle interaction
   led.position.copy(head.position).add(new THREE.Vector3(0, -0.011, 0));
   led.rotation.z = 0.14;
   g.add(led);
@@ -1486,12 +1599,12 @@ function buildLedBarLamp() {
   g.add(bar);
   const led = new THREE.Mesh(
     new THREE.BoxGeometry(0.27, 0.004, 0.026),
-    new THREE.MeshStandardMaterial({ color: 0xf6f7f9, emissive: 0xfff2e4, emissiveIntensity: 0.9 })
+    new THREE.MeshStandardMaterial({ color: 0xf6f7f9, emissive: 0xfff2e4, emissiveIntensity: 0.6 })
   );
   led.position.set(-0.1, 0.347, 0.04);
   led.rotation.y = 0.1;
   g.add(led);
-  const lLight = new THREE.PointLight(0xfff1e2, 1.1, 2.4, 2);
+  const lLight = new THREE.PointLight(0xfff1e2, 0.85, 2.4, 2);
   lLight.position.set(-0.1, 0.32, 0.05);
   g.add(lLight);
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
@@ -2676,64 +2789,105 @@ function buildToolChest() {
   return g;
 }
 
-function buildSkillWall() {
-  // right-wall skill matrix: slim graphite slab, etched categories with
-  // blue index marks, aluminum standoff pins (full detail lives in the
-  // hover card driven by RESUME.skills)
+function buildSkillPaper() {
+  // second printed sheet on the desk: the skill matrix (hover shows the
+  // live card built from RESUME.skills)
   const g = new THREE.Group();
-  const W = 1.35, H = 0.95;
   const c = document.createElement("canvas");
-  c.width = 768;
-  c.height = 540;
+  c.width = 256;
+  c.height = 340;
   const ctx = c.getContext("2d");
-  ctx.fillStyle = "#101216";
-  ctx.fillRect(0, 0, 768, 540);
-  ctx.fillStyle = "#3f8cff";
-  ctx.fillRect(48, 64, 46, 5);
-  ctx.fillStyle = "#f5f5f7";
-  ctx.font = "700 34px 'Inter Tight', 'Segoe UI', Arial, sans-serif";
-  ctx.fillText("SKILL MATRIX", 48, 116);
-  ctx.fillStyle = "#6e7277";
-  ctx.font = "500 17px 'IBM Plex Mono', Consolas, monospace";
-  ctx.fillText("HOVER FOR DETAIL", 48, 148);
+  ctx.fillStyle = "#f4f5f7";
+  ctx.fillRect(0, 0, 256, 340);
+  ctx.fillStyle = "#1a1a1c";
+  ctx.font = "700 24px Arial, sans-serif";
+  ctx.fillText("SKILL MATRIX", 22, 42);
+  ctx.strokeStyle = "#3f8cff";
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(22, 58); ctx.lineTo(234, 58); ctx.stroke();
   RESUME.skills.forEach((s, i) => {
-    const col = i % 2;
-    const row = Math.floor(i / 2);
-    const x = 48 + col * 360;
-    const y = 226 + row * 96;
+    const y = 92 + i * 42;
     ctx.fillStyle = "#3f8cff";
-    ctx.fillRect(x, y - 16, 5, 20);
-    ctx.fillStyle = "#e8eaee";
-    ctx.font = "600 21px 'Inter', 'Segoe UI', Arial, sans-serif";
-    ctx.fillText(s.group, x + 16, y);
-    ctx.fillStyle = "#84888e";
-    ctx.font = "400 15px 'Inter', 'Segoe UI', Arial, sans-serif";
-    ctx.fillText(s.items.join(" · "), x + 16, y + 26);
+    ctx.fillRect(22, y - 11, 4, 14);
+    ctx.fillStyle = "#232327";
+    ctx.font = "700 13px Arial, sans-serif";
+    ctx.fillText(s.group, 34, y);
+    ctx.fillStyle = "#77777c";
+    ctx.font = "500 10px Arial, sans-serif";
+    ctx.fillText(s.items.join(" · "), 34, y + 15);
   });
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = MAXA;
-  const slab = new THREE.Mesh(
-    new RoundedBoxGeometry(W + 0.06, H + 0.06, 0.03, 2, 0.01),
-    new THREE.MeshStandardMaterial({ color: 0x17191d, roughness: 0.35, metalness: 0.4, envMapIntensity: 0.6 })
+  const sheet = new THREE.Mesh(
+    new THREE.BoxGeometry(0.21, 0.004, 0.28),
+    new THREE.MeshStandardMaterial({ color: 0xe4e6ea, roughness: 0.96 })
   );
-  slab.castShadow = true;
-  g.add(slab);
+  sheet.castShadow = true;
+  sheet.receiveShadow = true;
+  g.add(sheet);
   const face = new THREE.Mesh(
-    new THREE.PlaneGeometry(W, H),
-    new THREE.MeshBasicMaterial({ map: tex, color: 0xc4ccd6 })
+    new THREE.PlaneGeometry(0.205, 0.273),
+    new THREE.MeshStandardMaterial({ map: tex, color: 0xf1f3f6, roughness: 0.96 })
   );
-  face.position.z = 0.017;
+  face.rotation.x = -Math.PI / 2;
+  face.position.y = 0.0025;
   g.add(face);
-  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sy]) => {
-    const pin = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.008, 0.008, 0.02, 10),
-      new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.4, metalness: 0.9 })
-    );
-    pin.rotation.x = Math.PI / 2;
-    pin.position.set(sx * (W / 2 + 0.01), sy * (H / 2 + 0.01), -0.012);
-    g.add(pin);
-  });
+  return g;
+}
+
+function buildDeskMonitor() {
+  // slim 24" monitor showing a dark CAD viewport — pure set dressing
+  const g = new THREE.Group();
+  const dark = new THREE.MeshStandardMaterial({ color: 0x17191d, roughness: 0.4, metalness: 0.5 });
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.085, 0.012, 24), dark);
+  base.position.y = 0.006;
+  g.add(base);
+  const col = new THREE.Mesh(new RoundedBoxGeometry(0.028, 0.2, 0.02, 2, 0.006), dark);
+  col.position.set(0, 0.11, -0.012);
+  g.add(col);
+  const panel = new THREE.Mesh(new RoundedBoxGeometry(0.54, 0.315, 0.018, 2, 0.006), dark);
+  panel.position.set(0, 0.32, 0.01);
+  panel.castShadow = true;
+  g.add(panel);
+  const c = document.createElement("canvas");
+  c.width = 512;
+  c.height = 288;
+  const ctx = c.getContext("2d");
+  ctx.fillStyle = "#0c0e12";
+  ctx.fillRect(0, 0, 512, 288);
+  ctx.fillStyle = "#14171d";
+  ctx.fillRect(0, 0, 512, 26); // toolbar
+  ctx.fillStyle = "#1a1e26";
+  ctx.fillRect(392, 26, 120, 262); // feature tree
+  ctx.strokeStyle = "#3f8cff";
+  ctx.lineWidth = 1.6;
+  ctx.globalAlpha = 0.9;
+  ctx.strokeRect(96, 92, 160, 96); // wireframe bracket, isometric-ish
+  ctx.beginPath();
+  ctx.moveTo(96, 92); ctx.lineTo(146, 60); ctx.lineTo(306, 60); ctx.lineTo(256, 92);
+  ctx.moveTo(306, 60); ctx.lineTo(306, 156); ctx.lineTo(256, 188);
+  ctx.moveTo(146, 60); ctx.lineTo(146, 90);
+  ctx.stroke();
+  ctx.globalAlpha = 0.55;
+  ctx.beginPath(); ctx.arc(176, 140, 26, 0, 7); ctx.stroke();
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = "#3f8cff";
+  ctx.fillRect(0, 0, 512, 2);
+  ctx.fillStyle = "#6e7277";
+  ctx.font = "500 11px Consolas, monospace";
+  ctx.fillText("bracket_v8.sldprt", 12, 17);
+  ctx.fillStyle = "#3a3f48";
+  for (let i = 0; i < 7; i++) ctx.fillRect(404, 44 + i * 22, 96, 6);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = MAXA;
+  const screen = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.512, 0.288),
+    new THREE.MeshBasicMaterial({ map: tex, color: 0xb9c2cc })
+  );
+  screen.position.set(0, 0.32, 0.0195);
+  g.add(screen);
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
 }
 

@@ -412,7 +412,7 @@ intrinsic front is +x, rotY 1.34 faces the desk), blueprint wall panel,
 ceiling cove LED strips, graphite rug (noise map + bump for plush),
 potted plant.
 
-### Exhibits — all 15 projects clickable (17 hotspots incl. resume + skill wall)
+### Exhibits — all 15 projects clickable (18 hotspots: + resume, skill paper, desk lamp)
 
 Two cabinets. Every exhibit is placed by `placeRoot(root, scene, opts)`,
 which: normalizes scale to `targetSize` along `axis`, recenters on its
@@ -439,11 +439,20 @@ shelf cell (this is the anti-clipping mechanism; every exhibit passes a
   (buildPoolSniper), `telecaster` (buildTelecasterV2).
 - **Resume** = a paper sheet on the desk (`buildResumePaper`, `action:
   "resume"`), the 16th hotspot.
-- **Skill wall** = `buildSkillWall()` board on the right wall (z ≈ 1.15,
-  `action: "skills"`), the 17th hotspot. Hover-only: shows a wide hover
+- **Skill paper** = `buildSkillPaper()` second printed sheet on the desk
+  beside the resume (`action: "skills"`). Hover-only: shows a wide hover
   card (`.exp-label--wide`) listing `RESUME.skills`; clicking is a no-op
   (focusHotspot returns early on null html WITHOUT clearing the hover, so
   a tap on touch devices leaves the card visible).
+- **Desk lamp** = click-to-toggle hotspot (`action: "lamp"`, no marker,
+  invisible hit pad in the lamp group). `toggleDeskLamp()` switches
+  `lampLight` + the `lampLed`-named emissive disc; hover label wording
+  tracks the on/off state.
+- Also note: `buildDeskMonitor()` (decorative CAD-viewport monitor on the
+  desk), a `Reflector` gloss strip set into the floor in front of the main
+  cabinet (LOW_TIER gets a static glossy plane), and `runLightIntro()` —
+  staged light-up on reveal (ambient → strips → spots → lamps), skipped
+  under prefers-reduced-motion.
 
 > Exhibit `key` matches a `window.projectData` key so the panel content is
 > the SAME data as the homepage modal. Note the two seat keys: `carbonSeat`
