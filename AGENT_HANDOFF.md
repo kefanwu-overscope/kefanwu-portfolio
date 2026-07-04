@@ -412,7 +412,7 @@ intrinsic front is +x, rotY 1.34 faces the desk), blueprint wall panel,
 ceiling cove LED strips, graphite rug (noise map + bump for plush),
 potted plant.
 
-### Exhibits — all 14 projects clickable (16 hotspots: + resume + skill paper)
+### Exhibits — all 14 projects clickable (15 hotspots: + resume)
 
 > Gearbox was removed (main site + 3D). Right cabinet now holds 5 exhibits
 > with the bottom-right slot deliberately empty.
@@ -458,11 +458,17 @@ shelf cell (this is the anti-clipping mechanism; every exhibit passes a
 > it is laid flat with rotX=-π/2 (axis "z").
 - **Resume** = a paper sheet on the desk (`buildResumePaper`, `action:
   "resume"`).
-- **Skill paper** = `buildSkillPaper()` second printed sheet on the desk
-  beside the resume (`action: "skills"`). Hover-only: shows a wide hover
-  card (`.exp-label--wide`) listing `RESUME.skills`; clicking is a no-op
-  (focusHotspot returns early on null html WITHOUT clearing the hover, so
-  a tap on touch devices leaves the card visible).
+- The desk skill-matrix paper was REMOVED (was a distracting second sheet).
+  `buildSkillPaper()` is now unused dead code; the `action: "skills"` hover
+  branch in setHover is likewise dead but harmless.
+- **Bambu printer** (buildBambuPrinter, on the left bench): the shell is a
+  HOLLOW box (back+sides+top+bottom panels — NOT a solid RoundedBox, which
+  would occlude the interior), a dark bezel frames the door opening, and the
+  door is an unlit MeshBasicMaterial tint (a lit MeshPhysical glass washes
+  out with specular from the bright bench). Inside: a lit chamber, a glowing
+  blue part mid-print, and `MODELS.printerHead` (a Group: gantry carriage +
+  Z-post + nozzle + red hot-end) that the render loop sweeps in X. If you
+  re-solid the shell or drop the bezel, the door goes opaque again.
 - **Desk + bench lamps** emit NO light — both are decorative furniture only
   (the `lampLight`/`lLight` PointLights and the desk-lamp click-to-toggle
   were removed as "unnatural"; LED discs kept at a dim ~0.05 off-look). The

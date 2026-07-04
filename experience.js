@@ -478,9 +478,9 @@ function initScene(canvas) {
     targetSize: 0.34, axis: "x", pos: [CAB.bays[1], CAB.rows[2], CAB.frontZ], rotY: 0.25,
   });
   loadAssembly(loader, scene, "models/real/education.glb", {
-    // exploded parts layout (flat in x-y, thin in z -> faces the viewer)
+    // exploded parts layout, rotated 90deg CCW so the guitar lies horizontal
     fit: [0.62, 0.46, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_education", projectKey: "education", label: "Guitar education kit",
-    targetSize: 0.44, axis: "y", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotY: 0.12,
+    targetSize: 0.56, axis: "x", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotZ: Math.PI / 2, rotY: 0.12,
     matTweak: { printed: { color: 0x2f5fbf, metalness: 0.1, roughness: 0.5 }, wood: { color: 0xc9a86a } }, // blue body, maple neck
   });
 
@@ -498,8 +498,9 @@ function initScene(canvas) {
     { file: "smelly",          key: "formlabs",  label: "Smelly",            size: 0.3,  axis: "y", bay: 0, row: 1, rotY: -Math.PI / 2 + 0.2,
       matTweak: { printed: { color: 0x9aa0a8, metalness: 0.5, roughness: 0.45 }, steel: { color: 0xaeb4bc } } }, // light aluminum
     // the launcher's long axis is raw +y — lay it down along the shelf
-    // launcher long axis is raw +y; lay flat so a clear HousingSide faces out
-    { file: "pool",            key: "pool",      label: "Pool Sniper",       size: 0.42, axis: "z", bay: 1, row: 1, rotX: -Math.PI / 2, rotZ: -Math.PI / 2, rotY: -0.15,
+    // native X = floor-normal, Y = length, Z = width; rotate so the opaque
+    // floor plate faces down and the length runs along the shelf (z)
+    { file: "pool",            key: "pool",      label: "Pool Sniper",       size: 0.5, axis: "z", bay: 1, row: 1, rotZ: Math.PI / 2, rotY: -Math.PI / 2,
       matTweak: { printed: { color: 0x2a55c8 } } }, // blue printed structure, clear side windows
     { file: "telecaster",      key: "telecaster", label: "Telecaster",       size: 0.42, axis: "y", bay: 0, row: 2, rotY: -Math.PI / 2 + 0.2,
       matTweak: { printed: { color: 0xeef0f2, metalness: 0.0, roughness: 0.45 }, wood: { color: 0xc9a86a } } }, // white body, maple neck
@@ -530,13 +531,6 @@ function initScene(canvas) {
   const blueprint = buildBlueprintPanel();
   blueprint.position.set(0, 2.72, -1.5);
   scene.add(blueprint);
-
-  // skills: a second printed sheet beside the resume — hover reveals the
-  // full matrix card
-  placeRoot(buildSkillPaper(), scene, {
-    name: "skillPaper", action: "skills", label: "Skill Matrix",
-    pos: [0.33, DESK_TOP + 0.013, 0.2], rotY: -0.18,
-  });
 
   // real ergonomic mesh task chair (CC BY 4.0 — see ATTRIBUTIONS.txt);
   // replaces the old procedural buildErgoChair() stand-in
@@ -630,11 +624,9 @@ function initScene(canvas) {
       cp.y = Math.max(0.4, Math.min(3.15, cp.y));
     }
 
-    // Bambu printer: printhead sweeps while "printing"
+    // Bambu printer: print head sweeps across the bed while "printing"
     if (!prefersReducedMotion && MODELS.printerHead) {
-      const hx = Math.sin(t * 0.0032) * 0.16;
-      MODELS.printerHead.position.x = hx;
-      MODELS.printerHeadLed.position.x = hx;
+      MODELS.printerHead.position.x = Math.sin(t * 0.0032) * 0.13;
     }
 
     // focused exhibit slowly turns on its pedestal; DoF opens up
@@ -2154,77 +2146,117 @@ function buildBambuPrinter() {
   const trim = new THREE.MeshStandardMaterial({ color: 0x101114, roughness: 0.5, metalness: 0.4 });
   const W = 0.49, H = 0.6, D = 0.5;
 
-  // main shell (light silver), slightly rounded
-  const shell = new THREE.Mesh(new RoundedBoxGeometry(W, H, D, 3, 0.02), silver);
-  shell.position.y = H / 2 + 0.008;
-  shell.castShadow = true;
-  shell.receiveShadow = true;
-  g.add(shell);
+  // hollow shell (light silver): back + two sides + top + bottom, with the
+  // FRONT left open so the door glass actually reveals the lit chamber
+  // (a solid box here would block the view no matter how clear the door is)
+  const wall = 0.014, cy = H / 2 + 0.008;
+  [
+    [W, H, wall, 0, cy, -D / 2 + wall / 2],       // back
+    [wall, H, D, -W / 2 + wall / 2, cy, 0],       // left
+    [wall, H, D, W / 2 - wall / 2, cy, 0],        // right
+    [W, wall, D, 0, H + 0.008 - wall / 2, 0],     // top
+    [W, wall, D, 0, 0.008 + wall / 2, 0],         // bottom
+  ].forEach(([w, h, d, x, y, z]) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), silver);
+    m.position.set(x, y, z);
+    m.castShadow = true;
+    m.receiveShadow = true;
+    g.add(m);
+  });
   [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz]) => {
     const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.02, 0.018, 12), trim);
     foot.position.set(sx * (W / 2 - 0.05), 0.009, sz * (D / 2 - 0.05));
     g.add(foot);
   });
 
-  // dark front face panel
+  // dark front face — a BEZEL only (open where the glass door is, so the lit
+  // chamber shows through). Solid top band carries the screen + wordmark.
   const frontZ = D / 2 + 0.006;
-  const facePanel = new THREE.Mesh(new RoundedBoxGeometry(W - 0.02, H - 0.02, 0.014, 2, 0.008), darkFace);
-  facePanel.position.set(0, H / 2 + 0.008, D / 2);
-  g.add(facePanel);
+  const chamberW = W - 0.1, doorH = H * 0.66;
+  const doorY0 = 0.05, doorY1 = doorY0 + doorH;          // door opening in Y
+  const faceY0 = 0.018, faceY1 = H - 0.002, faceHW = (W - 0.02) / 2;
+  const bezel = [
+    [W - 0.02, faceY1 - doorY1, 0, (doorY1 + faceY1) / 2],   // top band (screen)
+    [W - 0.02, doorY0 - faceY0, 0, (faceY0 + doorY0) / 2],   // bottom lip
+    [faceHW - chamberW / 2, doorH, -(faceHW + chamberW / 2) / 2, (doorY0 + doorY1) / 2], // left rail
+    [faceHW - chamberW / 2, doorH,  (faceHW + chamberW / 2) / 2, (doorY0 + doorY1) / 2], // right rail
+  ];
+  bezel.forEach(([w, h, x, y]) => {
+    const m = new THREE.Mesh(new RoundedBoxGeometry(w, h, 0.014, 2, 0.006), darkFace);
+    m.position.set(x, y, D / 2);
+    g.add(m);
+  });
 
   // printing chamber behind the glass
-  const chamberW = W - 0.1, doorH = H * 0.66;
   const chamber = new THREE.Mesh(
     new THREE.BoxGeometry(chamberW, doorH, 0.34),
-    new THREE.MeshStandardMaterial({ color: 0x0a0b0d, roughness: 0.9, side: THREE.BackSide })
+    new THREE.MeshStandardMaterial({ color: 0x1b1e24, roughness: 0.85, side: THREE.BackSide })
   );
   chamber.position.set(0, doorH / 2 + 0.05, D / 2 - 0.18);
   g.add(chamber);
   const plate = new THREE.Mesh(
     new THREE.BoxGeometry(chamberW - 0.05, 0.006, 0.24),
-    new THREE.MeshStandardMaterial({ color: 0x8a8676, roughness: 0.5, metalness: 0.55 })
+    new THREE.MeshStandardMaterial({ color: 0x44484e, roughness: 0.5, metalness: 0.5 })
   );
   plate.position.set(0, 0.12, D / 2 - 0.19);
   g.add(plate);
-  const printMat = new THREE.MeshStandardMaterial({ color: 0x3f8cff, roughness: 0.5, metalness: 0.05 });
+  const printZ = D / 2 - 0.19;
+  const printMat = new THREE.MeshStandardMaterial({ color: 0x2f7fff, roughness: 0.5, metalness: 0.05, emissive: 0x2f7fff, emissiveIntensity: 0.55 });
+  // a small car mid-print on the bed (the top rows still "growing")
   const carBody = new THREE.Mesh(new RoundedBoxGeometry(0.12, 0.03, 0.055, 2, 0.007), printMat);
-  carBody.position.set(0, 0.138, D / 2 - 0.19);
+  carBody.position.set(0, 0.138, printZ);
   g.add(carBody);
-  const carCabin = new THREE.Mesh(new RoundedBoxGeometry(0.06, 0.02, 0.045, 2, 0.006), printMat);
-  carCabin.position.set(-0.008, 0.16, D / 2 - 0.19);
+  const carCabin = new THREE.Mesh(new RoundedBoxGeometry(0.06, 0.018, 0.045, 2, 0.006), printMat);
+  carCabin.position.set(-0.008, 0.157, printZ);
   g.add(carCabin);
   const railMat = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.35, metalness: 0.9 });
+  // top X-gantry rail
   const crossbar = new THREE.Mesh(new THREE.BoxGeometry(chamberW - 0.04, 0.012, 0.018), railMat);
-  crossbar.position.set(0, 0.34, D / 2 - 0.2);
+  crossbar.position.set(0, 0.34, printZ - 0.01);
   g.add(crossbar);
-  const head = new THREE.Mesh(new RoundedBoxGeometry(0.05, 0.065, 0.045, 2, 0.009),
+  // moving print head: carriage on the rail + Z-post + nozzle reaching down
+  // to the print surface, with a hot-end glow at the tip (sweeps in X)
+  const headGroup = new THREE.Group();
+  const carriage = new THREE.Mesh(new RoundedBoxGeometry(0.05, 0.03, 0.05, 2, 0.008), railMat);
+  carriage.position.set(0, 0.335, printZ - 0.004);
+  headGroup.add(carriage);
+  const post = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.14, 0.02),
     new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.4, metalness: 0.3 }));
-  head.position.set(0.04, 0.31, D / 2 - 0.19);
-  g.add(head);
-  const headLed = new THREE.Mesh(
-    new THREE.BoxGeometry(0.02, 0.005, 0.004),
-    new THREE.MeshStandardMaterial({ color: 0xff3344, emissive: 0xff3344, emissiveIntensity: 1.2 })
-  );
-  headLed.position.set(0.04, 0.288, D / 2 - 0.168);
-  g.add(headLed);
-  MODELS.printerHead = head;
-  MODELS.printerHeadLed = headLed;
+  post.position.set(0, 0.265, printZ);
+  headGroup.add(post);
+  const nozzleBlock = new THREE.Mesh(new RoundedBoxGeometry(0.05, 0.05, 0.045, 2, 0.009),
+    new THREE.MeshStandardMaterial({ color: 0x1b1d21, roughness: 0.4, metalness: 0.4 }));
+  nozzleBlock.position.set(0, 0.205, printZ);
+  headGroup.add(nozzleBlock);
+  const nozzle = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.009, 0.022, 10), railMat);
+  nozzle.position.set(0, 0.176, printZ);
+  headGroup.add(nozzle);
+  const headLed = new THREE.Mesh(new THREE.SphereGeometry(0.005, 10, 10),
+    new THREE.MeshStandardMaterial({ color: 0xff5533, emissive: 0xff4422, emissiveIntensity: 1.8 }));
+  headLed.position.set(0, 0.167, printZ);
+  headGroup.add(headLed);
+  g.add(headGroup);
+  MODELS.printerHead = headGroup;
   const chamberLed = new THREE.Mesh(
-    new THREE.BoxGeometry(chamberW - 0.05, 0.005, 0.008),
-    new THREE.MeshStandardMaterial({ color: 0xdfe8f4, emissive: 0xe8f0fa, emissiveIntensity: 1.0 })
+    new THREE.BoxGeometry(chamberW - 0.04, 0.006, 0.01),
+    new THREE.MeshStandardMaterial({ color: 0xf2f6fc, emissive: 0xeef4ff, emissiveIntensity: 2.2 })
   );
   chamberLed.position.set(0, doorH - 0.02, D / 2 - 0.05);
   g.add(chamberLed);
-  const inner = new THREE.PointLight(0xe8f0fa, 0.9, 0.8, 2);
+  const inner = new THREE.PointLight(0xeaf2ff, 0.95, 1.25, 2);
   inner.position.set(0, doorH - 0.06, D / 2 - 0.16);
   g.add(inner);
+  const inner2 = new THREE.PointLight(0xfff0e0, 0.5, 0.55, 2); // warm fill near the hot-end
+  inner2.position.set(0, 0.24, printZ);
+  g.add(inner2);
 
-  // tinted glass door over the lower 2/3 of the front + handle
+  // tinted door — unlit basic material so the bright bench can't wash it out
+  // with specular; you see cleanly through to the lit chamber
   const glass = new THREE.Mesh(
     new THREE.PlaneGeometry(chamberW, doorH),
-    new THREE.MeshPhysicalMaterial({
-      color: 0x232a33, roughness: 0.06, metalness: 0, envMapIntensity: 1.2,
-      transparent: true, opacity: 0.26, side: THREE.DoubleSide,
+    new THREE.MeshBasicMaterial({
+      color: 0x1c2530, transparent: true, opacity: 0.26,
+      side: THREE.DoubleSide, depthWrite: false,
     })
   );
   glass.position.set(0, doorH / 2 + 0.05, frontZ + 0.004);

@@ -111,8 +111,11 @@ for proj, sub, pat, skip, extra, rules, target in PROJECTS:
             buckets.setdefault(b, []).append(m)
         except Exception as e:
             print(f"   warn {os.path.basename(f)}: {e}"); skipped += 1
-    # merge each bucket, then decimate the whole exhibit down to `target`,
-    # distributing the budget across buckets by their face share
+    # merge each bucket, then decimate the whole exhibit down to `target`.
+    # Buckets already at/under SMALL_KEEP are kept full (a low-poly STL export
+    # like the guitar body only has ~5k faces — decimating it wrecks it); the
+    # remaining budget is spread across the heavy buckets by face share.
+    SMALL_KEEP = 12000
     merged = {}
     raw_total = 0
     for b, meshes in buckets.items():
@@ -120,12 +123,14 @@ for proj, sub, pat, skip, extra, rules, target in PROJECTS:
         mm.merge_vertices()
         merged[b] = mm
         raw_total += len(mm.faces)
-    ratio = min(1.0, target / raw_total) if raw_total else 1.0
+    small_total = sum(len(mm.faces) for mm in merged.values() if len(mm.faces) <= SMALL_KEEP)
+    large_total = raw_total - small_total
+    ratio = min(1.0, max(0, target - small_total) / large_total) if large_total else 1.0
     scene = trimesh.Scene()
     tris = 0
     for b, mm in merged.items():
-        tgt = max(300, int(len(mm.faces) * ratio))
-        mm = decimate(mm, tgt)
+        if len(mm.faces) > SMALL_KEEP:
+            mm = decimate(mm, max(300, int(len(mm.faces) * ratio)))
         tris += len(mm.faces)
         scene.add_geometry(mm, node_name=f"mat_{b}", geom_name=f"mat_{b}")
     out = os.path.join(OUT, f"{proj}.glb")
