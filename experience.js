@@ -503,18 +503,7 @@ function initScene(canvas) {
     { file: "pool",            key: "pool",      label: "Pool Sniper",       size: 0.5, axis: "z", bay: 1, row: 1, rotZ: Math.PI / 2, rotY: -Math.PI / 2,
       matTweak: { printed: { color: 0x2a55c8 } } }, // blue printed structure, clear side windows
     { file: "telecaster",      key: "telecaster", label: "Telecaster",       size: 0.42, axis: "y", bay: 0, row: 2, rotY: -Math.PI / 2 + 0.2,
-      matTweak: { printed: { color: 0xeef0f2, metalness: 0.0, roughness: 0.45 }, wood: { color: 0xc9a86a } }, // white body, maple neck
-      // the STL fuses the pickguard into the body solid, so add a red one
-      // (native mm space: on the body's +Z face, bridge->neck, off the nut pocket)
-      extraParts: (root) => {
-        const pg = new THREE.Mesh(
-          new RoundedBoxGeometry(250, 235, 5, 2, 2),
-          new THREE.MeshStandardMaterial({ color: 0xb42a2a, roughness: 0.32, metalness: 0.05 })
-        );
-        pg.position.set(172, 352, 71);
-        pg.castShadow = true;
-        root.add(pg);
-      } },
+      matTweak: { printed: { color: 0xeef0f2, metalness: 0.0, roughness: 0.45 }, wood: { color: 0xc9a86a } } }, // white body, maple neck
   ];
   SIDE_EXHIBITS.forEach((s) => {
     const opts = {
