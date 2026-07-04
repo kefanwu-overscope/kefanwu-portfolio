@@ -297,11 +297,11 @@ Asset/version refs (verbatim): CSS `styles.css?v=skill-matrix-20260619`; JS `scr
 - Windows gotchas: Python cannot write to `/tmp` — write temp files under `C:/Users/oc/AppData/Local/Temp/...`. In `python -c` strings use forward slashes / `os.path.join`, not escaped backslashes. Pasted screenshots land in `C:\Users\oc\AppData\Local\Packages\MicrosoftWindows.Client.Core_cw5n1h2txyewy\TempState\ScreenClip\`.
 
 ### Current cache versions (bump the matching one whenever you edit that file)
-- `styles.css?v=polish-20260701`
-- `script.js?v=polish-20260701`
-- `project-data.js?v=proj-shared-20260630` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html)
-- `experience.css?v=exp-bcd-20260703` (3D page styles — in experience.html)
-- `experience.js?v=exp-bcd-20260703` (3D page module — in experience.html)
+- `styles.css?v=polish-20260701` (in index.html)
+- `script.js?v=nogear-20260703` (in index.html)
+- `project-data.js?v=proj-nogear-20260703` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `experience.css?v=exp-lux-20260708` (3D page styles — in experience.html)
+- `experience.js?v=exp-noprops-20260704` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
@@ -410,12 +410,9 @@ bar lamp), rolling 5-drawer tool chest, real ergonomic mesh task chair
 (models/ergonomic_mesh_office_chair, CC BY 4.0 — see ATTRIBUTIONS.txt;
 intrinsic front is +x, rotY 1.34 faces the desk), blueprint wall panel,
 ceiling cove LED strips, graphite rug (noise map + bump for plush),
-potted plant. The right cabinet's bottom compartment (below the lowest
-shelf) holds two decorative motorsport props: a white racing helmet
-(models/racing_helmet, tinted white in-code with a dark visor) and an
-axial-flux/EMRAX-style motor (models/axial_flux_motor) — both CC BY 4.0,
-loaded via loadModel (no hotspot), lit by a dedicated `bottomFill` point
-light since that compartment has no shelf strip.
+potted plant. (The right cabinet's bottom compartment — below the lowest
+shelf — is currently empty; a helmet + motor prop set was tried there and
+removed.)
 
 ### Exhibits — all 14 projects clickable (15 hotspots: + resume)
 
@@ -433,11 +430,14 @@ shelf cell (this is the anti-clipping mechanism; every exhibit passes a
 
 - **Main back-wall cabinet** (3 bays × 3 rows, layout const `CAB`):
   - REAL GLBs (`models/real/…`, loaded via `loadAssembly`): `carbonSeat`
-    (seat.glb), `aura` (aura.glb, lower drivetrain half, rotated so wheels
-    sit down), `scanner` (scanner.glb), `javelin` (javelin.glb, dark shell
-    tweak), `steering` (steering.glb), `brakeSim` (brakeSim.glb, steel
-    rotor), `lineFollower` (lineFollower.glb), `education` (education.glb,
-    guitar kit — stands vertical via rotZ=π/2).
+    (seat.glb), `aura` (aura.glb — a HAND-TRIMMED SINGLE swerve module;
+    the full Drive_System STL has both modules and renders as a pair, so
+    aura is commented out of stl2glb.py — do NOT regenerate it), `scanner`
+    (scanner.glb, blue printed brackets + plywood base), `javelin`
+    (javelin.glb, dark shell), `steering` (steering.glb), `brakeSim`
+    (brakeSim.glb, silver rotor), `lineFollower` (lineFollower.glb, orange
+    wheels), `education` (education.glb — EXPLODED guitar kit, laid
+    horizontal via rotZ=π/2 + axis "x", blue body / maple neck).
   - Procedural: `ansysCfd` (buildCfdDisplay — a monitor showing the CFD
     result) is the only remaining procedural main-cabinet exhibit.
 - **Right-wall cabinet** (2 bays × 3 rows, layout const `CAB2`):

@@ -6,19 +6,11 @@ Project exhibits (models/real/*.glb):
 
 All furniture, tools, equipment (incl. the Bambu-style printer), and the
 room itself are procedurally modeled in-code — no third-party models,
-except the desk chair and the two right-cabinet props credited below.
+except the desk chair credited below.
 
 CC BY 4.0 (attribution required):
 - ergonomic_mesh_office_chair — "Ergonomic mesh office chair" by guillaumecrz
   (https://sketchfab.com/3d-models/ergonomic-mesh-office-chair-cd5ef0305d8545dd8cd934ebb99cf7d5),
-  licensed CC Attribution 4.0 (creativecommons.org/licenses/by/4.0/),
-  obtained via the Objaverse mirror (huggingface.co/datasets/allenai/objaverse).
-- racing_helmet — "racing Helmet" by nico67
-  (https://sketchfab.com/3d-models/racing-helmet-053c3092297c4054be87e10844d76861),
-  licensed CC Attribution 4.0 (creativecommons.org/licenses/by/4.0/),
-  obtained via the Objaverse mirror (huggingface.co/datasets/allenai/objaverse).
-- axial_flux_motor — "Brushless Motor" by Belzar Sirus
-  (https://sketchfab.com/3d-models/brushless-motor-618281bafead4ce29c81d63e5af8e3fd),
   licensed CC Attribution 4.0 (creativecommons.org/licenses/by/4.0/),
   obtained via the Objaverse mirror (huggingface.co/datasets/allenai/objaverse).
 
