@@ -410,7 +410,12 @@ bar lamp), rolling 5-drawer tool chest, real ergonomic mesh task chair
 (models/ergonomic_mesh_office_chair, CC BY 4.0 — see ATTRIBUTIONS.txt;
 intrinsic front is +x, rotY 1.34 faces the desk), blueprint wall panel,
 ceiling cove LED strips, graphite rug (noise map + bump for plush),
-potted plant.
+potted plant. The right cabinet's bottom compartment (below the lowest
+shelf) holds two decorative motorsport props: a white racing helmet
+(models/racing_helmet, tinted white in-code with a dark visor) and an
+axial-flux/EMRAX-style motor (models/axial_flux_motor) — both CC BY 4.0,
+loaded via loadModel (no hotspot), lit by a dedicated `bottomFill` point
+light since that compartment has no shelf strip.
 
 ### Exhibits — all 14 projects clickable (15 hotspots: + resume)
 

@@ -543,6 +543,30 @@ function initScene(canvas) {
     name: "plant", targetSize: 1.05, axis: "y", pos: [1.75, 0, -1.18], rotY: 0.6,
   });
 
+  // right-cabinet bottom compartment: motorsport set-dressing — a white
+  // racing helmet + an axial-flux (EMRAX-style) motor (both CC BY 4.0,
+  // see ATTRIBUTIONS.txt). Decorative, not clickable exhibits.
+  loadModel(loader, scene, "models/racing_helmet/racing_helmet.glb", {
+    name: "helmet", targetSize: 0.3, axis: "y", fit: [0.4, 0.5, 0.5], pos: [CAB2.frontX + 0.05, 0.1, CAB2.bays[0]], rotY: -Math.PI / 2 + 0.25,
+  }, (root) => {
+    root.traverse((o) => {
+      if (!o.isMesh || !o.material) return;
+      // generic material names: "Material" (no suffix) is the front visor;
+      // "hans_*" are the black HANS posts; everything else = white shell
+      const n = o.material.name || "";
+      if (n === "Material") { o.material.color.setHex(0x14171c); o.material.metalness = 0.4; o.material.roughness = 0.12; }
+      else if (/^hans/i.test(n)) o.material.color.setHex(0x1a1c20);
+      else { o.material.color.setHex(0xeef0f2); o.material.metalness = 0.1; o.material.roughness = 0.35; }
+    });
+  });
+  loadModel(loader, scene, "models/axial_flux_motor/axial_flux_motor.glb", {
+    name: "emrax", targetSize: 0.4, axis: "x", fit: [0.42, 0.5, 0.5], pos: [CAB2.frontX + 0.05, 0.13, CAB2.bays[1]], rotY: -Math.PI / 2 - 0.5,
+  });
+  // downlight so the otherwise-black bottom compartment reads
+  const bottomFill = new THREE.PointLight(0xe8eef6, 1.6, 1.5, 1.8);
+  bottomFill.position.set(2.28, 0.6, -0.4);
+  scene.add(bottomFill);
+
 
   /* ---------- resize ---------- */
   function onResize() {
