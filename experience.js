@@ -480,7 +480,7 @@ function initScene(canvas) {
   loadAssembly(loader, scene, "models/real/education.glb", {
     // exploded parts layout, rotated 90deg CCW so the guitar lies horizontal
     fit: [0.62, 0.46, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_education", projectKey: "education", label: "Guitar education kit",
-    targetSize: 0.56, axis: "x", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotZ: Math.PI / 2, rotY: 0.12,
+    targetSize: 0.44, axis: "x", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotZ: Math.PI / 2, rotY: 0.12,
     matTweak: { printed: { color: 0x2f5fbf, metalness: 0.1, roughness: 0.5 }, wood: { color: 0xc9a86a } }, // blue body, maple neck
   });
 
@@ -503,7 +503,18 @@ function initScene(canvas) {
     { file: "pool",            key: "pool",      label: "Pool Sniper",       size: 0.5, axis: "z", bay: 1, row: 1, rotZ: Math.PI / 2, rotY: -Math.PI / 2,
       matTweak: { printed: { color: 0x2a55c8 } } }, // blue printed structure, clear side windows
     { file: "telecaster",      key: "telecaster", label: "Telecaster",       size: 0.42, axis: "y", bay: 0, row: 2, rotY: -Math.PI / 2 + 0.2,
-      matTweak: { printed: { color: 0xeef0f2, metalness: 0.0, roughness: 0.45 }, wood: { color: 0xc9a86a } } }, // white body, maple neck
+      matTweak: { printed: { color: 0xeef0f2, metalness: 0.0, roughness: 0.45 }, wood: { color: 0xc9a86a } }, // white body, maple neck
+      // the STL fuses the pickguard into the body solid, so add a red one
+      // (native mm space: on the body's +Z face, bridge->neck, off the nut pocket)
+      extraParts: (root) => {
+        const pg = new THREE.Mesh(
+          new RoundedBoxGeometry(250, 235, 5, 2, 2),
+          new THREE.MeshStandardMaterial({ color: 0xb42a2a, roughness: 0.32, metalness: 0.05 })
+        );
+        pg.position.set(172, 352, 71);
+        pg.castShadow = true;
+        root.add(pg);
+      } },
   ];
   SIDE_EXHIBITS.forEach((s) => {
     const opts = {
@@ -513,7 +524,7 @@ function initScene(canvas) {
       markerCap: CAB2.rows[s.row] + (s.row === 0 ? 0.36 : 0.44),
       pos: [CAB2.frontX, CAB2.rows[s.row], CAB2.bays[s.bay]],
       rotY: s.rotY !== undefined ? s.rotY : -Math.PI / 2 + 0.25,
-      rotZ: s.rotZ, rotX: s.rotX, matTweak: s.matTweak,
+      rotZ: s.rotZ, rotX: s.rotX, matTweak: s.matTweak, extraParts: s.extraParts,
     };
     if (s.file) loadAssembly(loader, scene, `models/real/${s.file}.glb`, opts);
     else placeRoot(s.build(), scene, opts);
@@ -1092,6 +1103,10 @@ function loadAssembly(loader, scene, url, opts, onPlaced) {
         o.castShadow = true;
         o.receiveShadow = true;
       });
+      // procedural add-ons in the model's native (mm) space, so they scale
+      // and orient with the assembly (e.g. the Telecaster's red pickguard,
+      // which isn't a separate solid in the exported STL)
+      if (opts.extraParts) opts.extraParts(gltf.scene);
       placeRoot(gltf.scene, scene, opts, onPlaced);
     },
     undefined,
@@ -2210,19 +2225,19 @@ function buildBambuPrinter() {
   carCabin.position.set(-0.008, 0.157, printZ);
   g.add(carCabin);
   const railMat = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.35, metalness: 0.9 });
-  // top X-gantry rail
+  // X-gantry rail, lowered closer to the bed so the head isn't on a long drop
   const crossbar = new THREE.Mesh(new THREE.BoxGeometry(chamberW - 0.04, 0.012, 0.018), railMat);
-  crossbar.position.set(0, 0.34, printZ - 0.01);
+  crossbar.position.set(0, 0.285, printZ - 0.01);
   g.add(crossbar);
-  // moving print head: carriage on the rail + Z-post + nozzle reaching down
-  // to the print surface, with a hot-end glow at the tip (sweeps in X)
+  // moving print head: carriage on the rail + short Z-post + nozzle to the bed,
+  // with a hot-end glow at the tip (sweeps in X)
   const headGroup = new THREE.Group();
   const carriage = new THREE.Mesh(new RoundedBoxGeometry(0.05, 0.03, 0.05, 2, 0.008), railMat);
-  carriage.position.set(0, 0.335, printZ - 0.004);
+  carriage.position.set(0, 0.28, printZ - 0.004);
   headGroup.add(carriage);
-  const post = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.14, 0.02),
+  const post = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.06, 0.02),
     new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.4, metalness: 0.3 }));
-  post.position.set(0, 0.265, printZ);
+  post.position.set(0, 0.245, printZ);
   headGroup.add(post);
   const nozzleBlock = new THREE.Mesh(new RoundedBoxGeometry(0.05, 0.05, 0.045, 2, 0.009),
     new THREE.MeshStandardMaterial({ color: 0x1b1d21, roughness: 0.4, metalness: 0.4 }));
