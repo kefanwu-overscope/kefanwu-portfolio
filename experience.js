@@ -2752,16 +2752,23 @@ function projectHTML(p) {
       </figure>`
     )
     .join("");
+  // lead with the image grid so visitors see the project's photos first
+  // (mirrors the homepage project description); fall back to a single hero
+  // image only when a project has no gallery.
+  const lead = gallery
+    ? `<div class="exp-panel__gallery">${gallery}</div>`
+    : img
+      ? `<div class="exp-panel__media"><img src="${img}" alt="" loading="lazy"></div>`
+      : "";
   return `
     <button class="exp-panel__close" data-close aria-label="Close">&times;</button>
-    ${img ? `<div class="exp-panel__media"><img src="${img}" alt="" loading="lazy"></div>` : ""}
     <p class="exp-panel__kicker">${p.kicker || ""}</p>
     <h2 class="exp-panel__title">${p.title || ""}</h2>
     <p class="exp-panel__summary">${p.summary || ""}</p>
+    ${lead}
     ${hi ? `<h3 class="exp-panel__h3">Engineering signal</h3><ul class="exp-panel__list">${hi}</ul>` : ""}
     ${tools ? `<h3 class="exp-panel__h3">Tools and methods</h3><div class="exp-panel__chips">${tools}</div>` : ""}
     ${details}
-    ${gallery ? `<h3 class="exp-panel__h3">Gallery</h3><div class="exp-panel__gallery">${gallery}</div>` : ""}
   `;
 }
 
