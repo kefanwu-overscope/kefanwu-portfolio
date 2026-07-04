@@ -128,6 +128,8 @@ const ASSEMBLY_MATS = {
   wood: () => new THREE.MeshStandardMaterial({ color: 0x9a774a, metalness: 0.0, roughness: 0.5, envMapIntensity: 1.0 }),
   // circuit boards (Arduino, driver/sensor PCBs)
   pcb: () => new THREE.MeshStandardMaterial({ color: 0x1e5f3c, metalness: 0.2, roughness: 0.5, envMapIntensity: 1.0 }),
+  // clear acrylic windows (pool sniper housing)
+  glass: () => new THREE.MeshPhysicalMaterial({ color: 0xcfd6dc, roughness: 0.06, metalness: 0, transparent: true, opacity: 0.22, transmission: 0.6, side: THREE.DoubleSide }),
 };
 
 const MODELS = {};
@@ -444,9 +446,9 @@ function initScene(canvas) {
   const ASSEMBLIES = [
     { file: "seat",     key: "carbonSeat", label: "Carbon fiber seat", size: 0.3,  axis: "y", bay: 0, row: 0, rotY: 0.4 },
     { file: "aura",     key: "aura",       label: "AURA Swerve",       size: 0.29, axis: "y", bay: 1, row: 0, rotY: 0.35, rotZ: -Math.PI / 2,
-      matTweak: { printed: { color: 0x2a55c8 } } }, // blue anodized plate + mounts
+      matTweak: { printed: { color: 0x9299a1, metalness: 0.4, roughness: 0.45 } } }, // aluminum/grey structure
     { file: "scanner",  key: "scanner",    label: "3D scanner",        size: 0.38, axis: "x", bay: 2, row: 0, rotY: 0.35,
-      matTweak: { printed: { color: 0x2a55c8 } } }, // blue printed brackets
+      matTweak: { printed: { color: 0x2a55c8 }, wood: { color: 0xb08a4e, roughness: 0.7 } } }, // blue brackets, plywood base
     { file: "javelin",  key: "javelin",    label: "Javelin VTOL",      size: 0.44, axis: "x", bay: 0, row: 1, rotY: 0.6,
       matTweak: { aero: { color: 0x3a3e44, roughness: 0.5 }, printed: { color: 0x26292e }, dark: { color: 0x24272c } } },
     { file: "steering", key: "steering",   label: "Mk.8 Steering",     size: 0.32, axis: "y", bay: 1, row: 1, rotY: 0.5 },
@@ -464,19 +466,21 @@ function initScene(canvas) {
   loadAssembly(loader, scene, "models/real/brakeSim.glb", {
     fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[1] + 0.44, name: "ex_brakeSim", projectKey: "brakeSim", label: "FSAE Brake Sim",
     targetSize: 0.26, axis: "y", pos: [CAB.bays[2], CAB.rows[1], CAB.frontZ], rotY: Math.PI / 2 + 0.25,
-    matTweak: { steel: { color: 0x8b9199, roughness: 0.5 } },
+    matTweak: { steel: { color: 0xbcc2c9, roughness: 0.4, metalness: 1.0 } }, // bright silver rotor
   });
   loadAssembly(loader, scene, "models/real/lineFollower.glb", {
     fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_lineFollower", projectKey: "lineFollower", label: "LineFollower robot",
     targetSize: 0.34, axis: "z", pos: [CAB.bays[0], CAB.rows[2], CAB.frontZ], rotY: 0.45,
+    matTweak: { rubber: { color: 0xd9691e, roughness: 0.6 } }, // orange wheels
   });
   placeRoot(buildCfdDisplay(artLoader), scene, {
     fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_ansysCfd", projectKey: "ansysCfd", label: "Agent-based CFD",
     targetSize: 0.34, axis: "x", pos: [CAB.bays[1], CAB.rows[2], CAB.frontZ], rotY: 0.25,
   });
   loadAssembly(loader, scene, "models/real/education.glb", {
-    fit: [0.6, 0.46, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_education", projectKey: "education", label: "Guitar education kit",
-    targetSize: 0.44, axis: "y", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotZ: Math.PI / 2, rotY: 0.3,
+    // exploded parts layout (flat in x-y, thin in z -> faces the viewer)
+    fit: [0.62, 0.46, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_education", projectKey: "education", label: "Guitar education kit",
+    targetSize: 0.44, axis: "y", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotY: 0.12,
     matTweak: { printed: { color: 0x2f5fbf, metalness: 0.1, roughness: 0.5 }, wood: { color: 0xc9a86a } }, // blue body, maple neck
   });
 
@@ -494,10 +498,11 @@ function initScene(canvas) {
     { file: "smelly",          key: "formlabs",  label: "Smelly",            size: 0.3,  axis: "y", bay: 0, row: 1, rotY: -Math.PI / 2 + 0.2,
       matTweak: { printed: { color: 0x9aa0a8, metalness: 0.5, roughness: 0.45 }, steel: { color: 0xaeb4bc } } }, // light aluminum
     // the launcher's long axis is raw +y — lay it down along the shelf
-    { file: "pool",            key: "pool",      label: "Pool Sniper",       size: 0.42, axis: "z", bay: 1, row: 1, rotX: -Math.PI / 2, rotY: -0.2,
-      matTweak: { printed: { color: 0x2a55c8 } } }, // blue printed structure
+    // launcher long axis is raw +y; lay flat so a clear HousingSide faces out
+    { file: "pool",            key: "pool",      label: "Pool Sniper",       size: 0.42, axis: "z", bay: 1, row: 1, rotX: -Math.PI / 2, rotZ: -Math.PI / 2, rotY: -0.15,
+      matTweak: { printed: { color: 0x2a55c8 } } }, // blue printed structure, clear side windows
     { file: "telecaster",      key: "telecaster", label: "Telecaster",       size: 0.42, axis: "y", bay: 0, row: 2, rotY: -Math.PI / 2 + 0.2,
-      matTweak: { wood: { color: 0xd0a038 } } }, // butterscotch body + maple neck
+      matTweak: { printed: { color: 0xeef0f2, metalness: 0.0, roughness: 0.45 }, wood: { color: 0xc9a86a } } }, // white body, maple neck
   ];
   SIDE_EXHIBITS.forEach((s) => {
     const opts = {

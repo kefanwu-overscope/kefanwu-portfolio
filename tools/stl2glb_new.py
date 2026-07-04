@@ -38,7 +38,7 @@ PROJECTS = [
     ("brakeSim", "Brake", "*.STL", [], None, [
         (r".", "steel"),                       # a lone brake rotor -> machined steel
     ], 90000),
-    ("education", "Guitar Education", "V2 - *.STL", COMMON_SKIP, None, [
+    ("education", "Guitar Education", "exploded - *.STL", COMMON_SKIP, None, [
         (r"neck|finger_board", "wood"),        # maple neck + fretboard (tan)
         (r"body", "printed"),                  # body kept separate -> blue via tweak
         (r"control_panel", "steel"),
@@ -55,6 +55,7 @@ PROJECTS = [
         (r".", "printed"),                     # chassis, mounts, caster
     ], 120000),
     ("pool", "Pool Sniper", "*.STL", COMMON_SKIP, None, [
+        (r"housingside", "glass"),             # clear acrylic side windows
         (r"\bcue", "wood"),
         (r"motor\b|d_shaft_motor", "dark"),
         (r"rack|pinion|pulley|sprocket|shaft|stand_off|standoff|latchpin|"
@@ -62,9 +63,9 @@ PROJECTS = [
         (r".", "printed"),                     # housings, triggers, mounts, floor
     ], 110000),
     ("telecaster", "Telecaster", "telecaster - *.STL", COMMON_SKIP, None, [
-        (r"body|_neck", "wood"),
-        (r"\bnut\b", "printed"),
-        (r"string|spring|saddle|screw|bridge|tuner|avvolgitore|cassa|lever", "steel"),
+        (r"_neck", "wood"),                    # maple neck (kept wood)
+        (r"body", "printed"),                  # body kept separate -> white via tweak
+        (r"string|spring|saddle|screw|bridge|tuner|avvolgitore|cassa|lever|nut", "steel"),
         (r".", "printed"),
     ], 160000),
     ("smelly", "Smelly", "*.STL", SMELLY_SKIP, smelly_extra, [

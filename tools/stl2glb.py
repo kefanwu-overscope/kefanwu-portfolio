@@ -29,6 +29,7 @@ SKIP = [
 
 # (pattern, bucket) — first match wins; more specific first
 CLASS = [
+    (r"base-\d", "wood"),  # scanner plywood base plate (only "Base-2" matches)
     (r"wheel_6in", "rubber"),
     (r"brass", "brass"),
     (r"nosecone|tailcone|wing|naca", "aero"),
