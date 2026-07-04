@@ -630,7 +630,8 @@ function initScene(canvas) {
     }
 
     // focused exhibit slowly turns on its pedestal; DoF opens up
-    if (panelOpen && focusedPivot && !prefersReducedMotion) {
+    // (CFD is a flat monitor — turntabling it reads badly, so leave it still)
+    if (panelOpen && focusedPivot && !prefersReducedMotion && focusedPivot.userData.hotspot.key !== "ansysCfd") {
       focusedPivot.rotation.y += 0.0035;
     }
     if (bokeh) {
