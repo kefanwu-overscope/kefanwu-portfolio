@@ -11,7 +11,11 @@ os.makedirs(OUT, exist_ok=True)
 GROUPS = {
     "steering": "8-CP01-Steering - *.STL",
     "javelin":  "Javelin_V1 - *.STL",
-    "aura":     "Drive_System - *.STL",
+    # NOTE: aura is intentionally commented out. The full Drive_System STL set
+    # contains BOTH swerve modules, so re-exporting it makes the exhibit show a
+    # pair. The committed aura.glb is a hand-trimmed SINGLE module — do NOT
+    # regenerate it here (restore from git if it gets clobbered).
+    # "aura":   "Drive_System - *.STL",
     "scanner":  "SD_Scanner_Assem - *.STL",
     "seat":     "CF_Seat.STL",
 }
