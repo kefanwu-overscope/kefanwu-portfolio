@@ -2198,10 +2198,10 @@ function buildBambuPrinter() {
   // large tinted door, top control band with screen + wordmark, side logo,
   // and an AMS 2 unit on top with four visible spools under a smoked cover
   const g = new THREE.Group();
-  const silver = new THREE.MeshStandardMaterial({ color: 0xb4b7bc, roughness: 0.42, metalness: 0.35 });
-  const darkFace = new THREE.MeshStandardMaterial({ color: 0x1a1c20, roughness: 0.45, metalness: 0.4 });
+  const silver = new THREE.MeshStandardMaterial({ color: 0xb9b9bb, roughness: 0.44, metalness: 0.3 });
+  const darkFace = new THREE.MeshStandardMaterial({ color: 0x202227, roughness: 0.45, metalness: 0.4 });
   const trim = new THREE.MeshStandardMaterial({ color: 0x101114, roughness: 0.5, metalness: 0.4 });
-  const W = 0.49, H = 0.6, D = 0.5;
+  const W = 0.49, H = 0.62, D = 0.5;
 
   // hollow shell (light silver): back + two sides + top + bottom, with the
   // FRONT left open so the door glass actually reveals the lit chamber
@@ -2229,7 +2229,7 @@ function buildBambuPrinter() {
   // dark front face — a BEZEL only (open where the glass door is, so the lit
   // chamber shows through). Solid top band carries the screen + wordmark.
   const frontZ = D / 2 + 0.006;
-  const chamberW = W - 0.1, doorH = H * 0.66;
+  const chamberW = W - 0.05, doorH = H * 0.7; // wide, tall tinted door per the H2S reference
   const doorY0 = 0.05, doorY1 = doorY0 + doorH;          // door opening in Y
   const faceY0 = 0.018, faceY1 = H - 0.002, faceHW = (W - 0.02) / 2;
   const bezel = [
@@ -2322,46 +2322,70 @@ function buildBambuPrinter() {
   handle.position.set(chamberW / 2 - 0.012, doorH / 2 + 0.06, frontZ + 0.01);
   g.add(handle);
 
-  // top control band: touchscreen (left) + "Bambu H2S" wordmark
+  // top control band: large touchscreen (left, circular gauge + menu) and the
+  // "Bambu Lab H2S" wordmark (right), matching the H2S reference photo
   const ui = document.createElement("canvas");
-  ui.width = 96; ui.height = 64;
+  ui.width = 176; ui.height = 124;
   const uctx = ui.getContext("2d");
-  uctx.fillStyle = "#0c0f12"; uctx.fillRect(0, 0, 96, 64);
-  uctx.fillStyle = "#8ce04a"; uctx.fillRect(8, 8, 34, 22);
-  uctx.fillStyle = "#2a2f36"; uctx.fillRect(8, 40, 80, 8);
-  uctx.fillStyle = "#8ce04a"; uctx.fillRect(8, 40, 52, 8);
-  uctx.fillStyle = "#c9ced6"; uctx.font = "600 11px Arial"; uctx.fillText("66%", 66, 24);
+  uctx.fillStyle = "#0a0d10"; uctx.fillRect(0, 0, 176, 124);
+  // circular print-progress gauge (left)
+  const gx = 44, gy = 66, gr = 34;
+  uctx.lineWidth = 7; uctx.strokeStyle = "#233040";
+  uctx.beginPath(); uctx.arc(gx, gy, gr, 0, Math.PI * 2); uctx.stroke();
+  uctx.strokeStyle = "#22c39c";
+  uctx.beginPath(); uctx.arc(gx, gy, gr, -Math.PI / 2, -Math.PI / 2 + Math.PI * 1.32); uctx.stroke();
+  uctx.fillStyle = "#e8ecf2"; uctx.textAlign = "center"; uctx.font = "700 20px Arial";
+  uctx.fillText("66%", gx, gy + 7);
+  // menu rows (right)
+  uctx.textAlign = "left";
+  for (let r = 0; r < 4; r++) {
+    uctx.fillStyle = r === 0 ? "#16283a" : "#131922";
+    uctx.fillRect(96, 16 + r * 26, 68, 20);
+    uctx.fillStyle = r === 0 ? "#22c39c" : "#586675";
+    uctx.beginPath(); uctx.arc(106, 26 + r * 26, 4, 0, Math.PI * 2); uctx.fill();
+    uctx.fillStyle = "#9aa4b0"; uctx.fillRect(116, 24 + r * 26, 42, 4);
+  }
+  // status strip (temps)
+  uctx.fillStyle = "#22c39c"; uctx.font = "600 11px Arial";
+  uctx.fillText("210°  60°", 10, 16);
   const uiTex = new THREE.CanvasTexture(ui);
   uiTex.colorSpace = THREE.SRGBColorSpace;
-  const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.075, 0.05),
-    new THREE.MeshBasicMaterial({ map: uiTex, color: 0x969696 }));
-  screen.position.set(-W / 2 + 0.075, H - 0.065, frontZ + 0.009);
+  const scFrame = new THREE.Mesh(new RoundedBoxGeometry(0.126, 0.094, 0.006, 2, 0.004),
+    new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.5 }));
+  scFrame.position.set(-W / 2 + 0.088, H - 0.082, frontZ + 0.004);
+  g.add(scFrame);
+  const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.115, 0.082),
+    new THREE.MeshBasicMaterial({ map: uiTex, color: 0xcaccd0 }));
+  screen.position.set(-W / 2 + 0.088, H - 0.082, frontZ + 0.009);
   g.add(screen);
   const wm = document.createElement("canvas");
-  wm.width = 128; wm.height = 24;
+  wm.width = 200; wm.height = 40;
   const wctx = wm.getContext("2d");
-  wctx.fillStyle = "#1a1c20"; wctx.fillRect(0, 0, 128, 24);
-  wctx.fillStyle = "#8a9099"; wctx.font = "600 13px Arial";
-  wctx.fillText("Bambu  H2S", 30, 17);
+  wctx.textAlign = "right";
+  wctx.fillStyle = "#a9afb8"; wctx.font = "600 12px Arial"; wctx.fillText("Bambu Lab", 132, 26);
+  wctx.fillStyle = "#e8ebf0"; wctx.font = "700 26px Arial"; wctx.fillText("H2S", 190, 30);
   const wmTex = new THREE.CanvasTexture(wm);
   wmTex.colorSpace = THREE.SRGBColorSpace;
-  const mark = new THREE.Mesh(new THREE.PlaneGeometry(0.12, 0.0225), new THREE.MeshBasicMaterial({ map: wmTex, color: 0x9a9a9a }));
-  mark.position.set(0.04, H - 0.06, frontZ + 0.009);
+  const mark = new THREE.Mesh(new THREE.PlaneGeometry(0.15, 0.03), new THREE.MeshBasicMaterial({ map: wmTex, transparent: true }));
+  mark.position.set(W / 2 - 0.105, H - 0.062, frontZ + 0.009);
   g.add(mark);
 
   // Bambu Lab logo on the right side shell (two bars + wordmark)
   const lg = document.createElement("canvas");
   lg.width = 128; lg.height = 128;
   const lctx = lg.getContext("2d");
-  lctx.fillStyle = "#b4b7bc"; lctx.fillRect(0, 0, 128, 128);
-  lctx.fillStyle = "#17181c";
-  lctx.fillRect(50, 22, 12, 40);
-  lctx.fillRect(68, 30, 12, 32);
-  lctx.font = "600 13px Arial"; lctx.textAlign = "center";
-  lctx.fillText("Bambu Lab", 64, 88);
+  // transparent bg so only the dark mark shows on the silver side panel;
+  // the Bambu Lab mark = two vertical bars linked by a diagonal top cut
+  lctx.fillStyle = "#2b2d31";
+  lctx.fillRect(73, 26, 13, 58);   // right (tall) bar
+  lctx.fillRect(49, 42, 13, 42);   // left (short) bar
+  lctx.beginPath();                // diagonal linking the two bar tops
+  lctx.moveTo(49, 42); lctx.lineTo(86, 26); lctx.lineTo(86, 37); lctx.lineTo(62, 48); lctx.closePath(); lctx.fill();
+  lctx.fillStyle = "#34363b"; lctx.font = "600 13px Arial"; lctx.textAlign = "center";
+  lctx.fillText("Bambu Lab", 67, 104);
   const lgTex = new THREE.CanvasTexture(lg);
   lgTex.colorSpace = THREE.SRGBColorSpace;
-  const logo = new THREE.Mesh(new THREE.PlaneGeometry(0.16, 0.16), new THREE.MeshBasicMaterial({ map: lgTex, color: 0x9a9a9a }));
+  const logo = new THREE.Mesh(new THREE.PlaneGeometry(0.17, 0.17), new THREE.MeshBasicMaterial({ map: lgTex, transparent: true }));
   logo.position.set(W / 2 + 0.002, H * 0.5 + 0.05, -0.02);
   logo.rotation.y = Math.PI / 2;
   g.add(logo);
