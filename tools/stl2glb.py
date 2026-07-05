@@ -37,6 +37,9 @@ CLASS = [
     (r"wheel_6in", "rubber"),
     (r"brass", "brass"),
     (r"nosecone|tailcone|wing|naca", "aero"),
+    # scanner: the truss beam + EMG cover are light grey/white in the CAD,
+    # not printed-blue — route them to the aero (light grey) bucket
+    (r"horizonal_stablizer|emg_cover", "aero"),
     (r"cf_seat", "carbon"),
     (r"motor|servo|mg996|stepper|23hs32|encoder|camera|caddx|foxeer|gnss|matek|airspeed|tfmini|switch|estop|battery|sensor_mount_step", "dark"),
     (r"screw|nut|shaft|sprocket|bearing|coupling|pulley|tube|insert|joint|rack|narrco|nar0|tt11|qd_|lead|magnet-", "steel"),
@@ -50,6 +53,10 @@ def bucket_of(name):
         if re.search(pat, n):
             return b
     return "printed"
+
+# optional CLI filter: `python stl2glb.py scanner` regenerates only that project
+if len(sys.argv) > 1:
+    GROUPS = {k: v for k, v in GROUPS.items() if k in sys.argv[1:]}
 
 for proj, pat in GROUPS.items():
     files = sorted(glob.glob(os.path.join(SRC, pat)))

@@ -69,7 +69,9 @@ PROJECTS = [
     ("telecaster", "Telecaster", "telecaster - *.STL", COMMON_SKIP, None, [
         (r"_neck", "wood"),                    # maple neck (kept wood)
         (r"body", "printed"),                  # body kept separate -> white via tweak
-        (r"string|spring|saddle|screw|bridge|tuner|avvolgitore|cassa|lever|nut", "steel"),
+        # NOTE: the guitar nut is bone-white on the real build, so it is NOT
+        # in the steel list — it falls through to printed (white via tweak)
+        (r"string|spring|saddle|screw|bridge|tuner|avvolgitore|cassa|lever", "steel"),
         (r".", "printed"),
     ], 160000),
     ("smelly", "Smelly", "*.STL", SMELLY_SKIP, smelly_extra, [

@@ -451,7 +451,7 @@ function initScene(canvas) {
     { file: "aura",     key: "aura",       label: "AURA Swerve",       size: 0.29, axis: "y", bay: 1, row: 0, rotY: 0.35, rotZ: -Math.PI / 2,
       matTweak: { printed: { color: 0x9299a1, metalness: 0.4, roughness: 0.45 } } }, // aluminum/grey structure
     { file: "scanner",  key: "scanner",    label: "3D scanner",        size: 0.38, axis: "x", bay: 2, row: 0, rotY: 0.35,
-      matTweak: { printed: { color: 0x2a55c8 }, wood: { color: 0xd2bc92, roughness: 0.7 } } }, // blue brackets, light plywood base (photo)
+      matTweak: { printed: { color: 0x2a55c8 }, wood: { color: 0xdfd2b0, roughness: 0.7 } } }, // blue brackets, near-white plywood base (photo); truss + EMG cover ride the light-grey aero bucket
     { file: "javelin",  key: "javelin",    label: "Javelin VTOL",      size: 0.44, axis: "x", bay: 0, row: 1, rotY: 0.6,
       matTweak: { aero: { color: 0x3a3e44, roughness: 0.5 }, printed: { color: 0x26292e }, dark: { color: 0x24272c } } },
     { file: "steering", key: "steering",   label: "Mk.8 Steering",     size: 0.32, axis: "y", bay: 1, row: 1, rotY: 0.5 },
