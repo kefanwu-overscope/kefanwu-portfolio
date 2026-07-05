@@ -790,6 +790,86 @@ a {
   }
 }
 
+/* ============ drag hint (one-time: the scene can be dragged) ============ */
+.exp-draghint {
+  position: fixed;
+  left: 50%;
+  bottom: 2.2rem;
+  z-index: 60;
+  transform: translate(-50%, 14px);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1rem 0.5rem 0.7rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(12, 13, 16, 0.62);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  backdrop-filter: blur(14px) saturate(1.3);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 520ms var(--ease-out),
+    transform 520ms var(--ease-out);
+}
+.exp-draghint.is-on {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+/* auto-hide behind any open overlay (no JS coordination needed) */
+.exp-panel-open .exp-draghint,
+.exp-paper-open .exp-draghint,
+.exp-lightbox-open .exp-draghint {
+  opacity: 0 !important;
+  transform: translate(-50%, 14px) !important;
+}
+.exp-draghint__glyph {
+  display: inline-flex;
+  color: var(--blue);
+}
+.exp-draghint__glyph svg {
+  width: 46px;
+  height: 26px;
+  display: block;
+  overflow: visible;
+}
+.exp-draghint__grab {
+  animation: exp-drag-slide 2.1s ease-in-out infinite;
+}
+.exp-draghint__grab circle {
+  fill: rgba(63, 140, 255, 0.2);
+}
+.exp-draghint__chev {
+  opacity: 0.25;
+}
+.exp-draghint__chev--l {
+  animation: exp-drag-chev-l 2.1s ease-in-out infinite;
+}
+.exp-draghint__chev--r {
+  animation: exp-drag-chev-r 2.1s ease-in-out infinite;
+}
+.exp-draghint__text {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+@keyframes exp-drag-slide {
+  0%, 100% { transform: translateX(-7px); }
+  50% { transform: translateX(7px); }
+}
+@keyframes exp-drag-chev-l {
+  0%, 100% { opacity: 0.22; }
+  46% { opacity: 0.95; }
+}
+@keyframes exp-drag-chev-r {
+  0%, 100% { opacity: 0.22; }
+  96% { opacity: 0.95; }
+}
+
 /* ============ reduced motion ============ */
 @media (prefers-reduced-motion: reduce) {
   .exp-loader__bar i {
@@ -801,6 +881,14 @@ a {
   }
   .exp-panel {
     transition-duration: 0.001ms;
+  }
+  .exp-draghint__grab,
+  .exp-draghint__chev--l,
+  .exp-draghint__chev--r {
+    animation: none;
+  }
+  .exp-draghint__chev {
+    opacity: 0.7;
   }
 }
 
@@ -824,5 +912,13 @@ a {
   }
   .exp-panel__gallery {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .exp-draghint {
+    bottom: 1.4rem;
+    padding: 0.45rem 0.85rem 0.45rem 0.6rem;
+  }
+  .exp-draghint__text {
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
   }
 }

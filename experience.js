@@ -255,6 +255,8 @@ function initScene(canvas) {
     if (!prefersReducedMotion) {
       runLightIntro();
       startIntro();
+    } else {
+      setTimeout(showDragHint, 900);
     }
   };
   manager.onLoad = doReveal;
@@ -580,15 +582,17 @@ function initScene(canvas) {
     controls.target.set(0, 0.75, -0.1);
     let seen = false;
     try { seen = localStorage.getItem("kw_intro_seen") === "1"; } catch (e) {}
+    // once the camera settles at rest, invite the user to take control
+    const settle = () => setTimeout(showDragHint, 500);
     if (seen) {
-      startFlight(REST_POS, REST_TARGET, 1500);
+      startFlight(REST_POS, REST_TARGET, 1500, settle);
       return;
     }
     try { localStorage.setItem("kw_intro_seen", "1"); } catch (e) {}
     // guided sweep: right cabinet -> main cabinet -> resting pose
     startFlight(new THREE.Vector3(0.7, 1.5, 1.9), new THREE.Vector3(2.3, 1.2, -0.4), 1700, () => {
       startFlight(new THREE.Vector3(0.6, 1.45, 1.6), new THREE.Vector3(0, 1.2, -1.1), 1900, () => {
-        startFlight(REST_POS, REST_TARGET, 1500);
+        startFlight(REST_POS, REST_TARGET, 1500, settle);
       });
     });
   }
@@ -728,6 +732,33 @@ function initScene(canvas) {
     setCursorHover = (on) => { hot = on; applyState(); };
   }
 
+  /* ---------- one-time hint: the scene can be dragged to look around ---------- */
+  const dragHintEl = document.getElementById("exp-draghint");
+  let dragHintDone = false;
+  try { dragHintDone = localStorage.getItem("kw_drag_hint") === "1"; } catch (e) {}
+  if (dragHintEl && !FINE_POINTER) {
+    const t = dragHintEl.querySelector(".exp-draghint__text");
+    if (t) t.textContent = "Swipe to look around";
+  }
+  function showDragHint() {
+    if (dragHintDone || !dragHintEl || panelOpen) return;
+    dragHintEl.hidden = false;
+    requestAnimationFrame(() => dragHintEl.classList.add("is-on"));
+  }
+  function dismissDragHint() {
+    if (dragHintDone) return;
+    dragHintDone = true;
+    try { localStorage.setItem("kw_drag_hint", "1"); } catch (e) {}
+    if (!dragHintEl) return;
+    dragHintEl.classList.remove("is-on");
+    setTimeout(() => { if (dragHintEl) dragHintEl.hidden = true; }, 520);
+  }
+  // dismiss the moment the user actually drags to orbit the scene
+  renderer.domElement.addEventListener("pointermove", (ev) => {
+    if (dragHintDone || !downXY || !ev.buttons || panelOpen || flight) return;
+    if (Math.hypot(ev.clientX - downXY[0], ev.clientY - downXY[1]) > 8) dismissDragHint();
+  }, { passive: true });
+
   function setHover(root) {
     if (hovered === root) return;
     if (hovered) hovered.scale.setScalar(hovered.userData.hotspot.baseScale);
@@ -792,7 +823,10 @@ function initScene(canvas) {
     if (!downXY) return;
     const moved = Math.hypot(ev.clientX - downXY[0], ev.clientY - downXY[1]);
     downXY = null;
-    if (moved > 6 || panelOpen || flight) return;
+    if (moved > 6 || panelOpen || flight) {
+      if (moved > 6 && !panelOpen && !flight) dismissDragHint();
+      return;
+    }
     updatePointer(ev);
     const root = pickHotspot();
     if (root) focusHotspot(root);
