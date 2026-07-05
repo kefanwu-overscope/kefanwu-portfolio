@@ -238,7 +238,6 @@ const projectData = {
     ],
     gallery: [
       { src: "assets/seat-cad.webp", alt: "CAD model of a Formula SAE driver seat", caption: "Seat CAD" },
-      { src: "assets/seat-ergonomics-rig.webp", alt: "Driver ergonomics fit-check rig", caption: "Fit-check rig" },
       { src: "assets/seat-fea.webp", alt: "Seat support finite element analysis result", caption: "Seat analysis" },
       { src: "assets/fsae-mk7-cockpit.webp", alt: "Formula SAE cockpit and driver packaging image", caption: "Cockpit package" },
       { src: "assets/fsae-mk7-shop.webp", alt: "Olin Electric Motorsports car in a paddock setting", caption: "Vehicle context" }
