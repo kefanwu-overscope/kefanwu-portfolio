@@ -794,80 +794,113 @@ a {
 .exp-draghint {
   position: fixed;
   left: 50%;
-  bottom: 2.2rem;
+  bottom: 3rem;
   z-index: 60;
-  transform: translate(-50%, 14px);
+  transform: translate(-50%, 20px) scale(0.94);
+  transform-origin: 50% 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.5rem 1rem 0.5rem 0.7rem;
+  padding: 1rem 1.5rem 0.9rem;
   border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  background: rgba(12, 13, 16, 0.62);
-  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
-  -webkit-backdrop-filter: blur(14px) saturate(1.3);
-  backdrop-filter: blur(14px) saturate(1.3);
+  border-radius: 16px;
+  background: rgba(11, 12, 15, 0.72);
+  box-shadow: 0 20px 54px rgba(0, 0, 0, 0.55);
+  -webkit-backdrop-filter: blur(16px) saturate(1.35);
+  backdrop-filter: blur(16px) saturate(1.35);
   opacity: 0;
   pointer-events: none;
   transition:
-    opacity 520ms var(--ease-out),
-    transform 520ms var(--ease-out);
+    opacity 600ms var(--ease-out),
+    transform 600ms var(--ease-out);
 }
 .exp-draghint.is-on {
   opacity: 1;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, 0) scale(1);
+  animation: exp-drag-breathe 3s ease-in-out 0.7s infinite;
 }
 /* auto-hide behind any open overlay (no JS coordination needed) */
 .exp-panel-open .exp-draghint,
 .exp-paper-open .exp-draghint,
 .exp-lightbox-open .exp-draghint {
   opacity: 0 !important;
-  transform: translate(-50%, 14px) !important;
+  transform: translate(-50%, 20px) scale(0.94) !important;
+  animation: none !important;
 }
-.exp-draghint__glyph {
-  display: inline-flex;
-  color: var(--blue);
+.exp-draghint__demo {
+  position: relative;
+  width: 128px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.exp-draghint__glyph svg {
-  width: 46px;
-  height: 26px;
-  display: block;
-  overflow: visible;
-}
-.exp-draghint__grab {
-  animation: exp-drag-slide 2.1s ease-in-out infinite;
-}
-.exp-draghint__grab circle {
-  fill: rgba(63, 140, 255, 0.2);
+.exp-draghint__glow {
+  position: absolute;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(63, 140, 255, 0.34), rgba(63, 140, 255, 0) 68%);
+  animation: exp-drag-pulse 2.4s ease-in-out infinite;
 }
 .exp-draghint__chev {
-  opacity: 0.25;
+  position: absolute;
+  top: 50%;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.8rem;
+  line-height: 0;
+  color: var(--blue);
+  opacity: 0.2;
 }
-.exp-draghint__chev--l {
-  animation: exp-drag-chev-l 2.1s ease-in-out infinite;
+.exp-draghint__chev--l { left: 4px; }
+.exp-draghint__chev--r { right: 4px; }
+.exp-draghint__glide {
+  display: inline-flex;
+  animation: exp-drag-glide 2.4s ease-in-out infinite;
 }
-.exp-draghint__chev--r {
-  animation: exp-drag-chev-r 2.1s ease-in-out infinite;
+.exp-draghint__ring {
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  display: grid;
+  place-items: center;
+  background: rgba(63, 140, 255, 0.16);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.45);
+  animation: exp-drag-press 2.4s ease-in-out infinite;
+}
+.exp-draghint__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ink);
 }
 .exp-draghint__text {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--ink);
   white-space: nowrap;
 }
-@keyframes exp-drag-slide {
-  0%, 100% { transform: translateX(-7px); }
-  50% { transform: translateX(7px); }
+@keyframes exp-drag-glide {
+  0%, 100% { transform: translateX(-30px); }
+  50% { transform: translateX(30px); }
 }
-@keyframes exp-drag-chev-l {
-  0%, 100% { opacity: 0.22; }
-  46% { opacity: 0.95; }
+@keyframes exp-drag-press {
+  0%, 100% { transform: scale(0.82); }
+  22%, 78% { transform: scale(1); }
 }
-@keyframes exp-drag-chev-r {
-  0%, 100% { opacity: 0.22; }
-  96% { opacity: 0.95; }
+@keyframes exp-drag-pulse {
+  0%, 100% { opacity: 0.45; transform: scale(0.88); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+@keyframes exp-drag-breathe {
+  0%, 100% { box-shadow: 0 20px 54px rgba(0, 0, 0, 0.55); }
+  50% { box-shadow: 0 20px 54px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(63, 140, 255, 0.3); }
 }
 
 /* ============ reduced motion ============ */
@@ -882,13 +915,14 @@ a {
   .exp-panel {
     transition-duration: 0.001ms;
   }
-  .exp-draghint__grab,
-  .exp-draghint__chev--l,
-  .exp-draghint__chev--r {
+  .exp-draghint.is-on,
+  .exp-draghint__glide,
+  .exp-draghint__ring,
+  .exp-draghint__glow {
     animation: none;
   }
   .exp-draghint__chev {
-    opacity: 0.7;
+    opacity: 0.55;
   }
 }
 
@@ -914,11 +948,11 @@ a {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .exp-draghint {
-    bottom: 1.4rem;
-    padding: 0.45rem 0.85rem 0.45rem 0.6rem;
+    bottom: 2rem;
+    padding: 0.85rem 1.2rem 0.75rem;
   }
   .exp-draghint__text {
-    font-size: 0.66rem;
-    letter-spacing: 0.1em;
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
   }
 }

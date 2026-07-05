@@ -24,7 +24,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
     />
-    <link rel="stylesheet" href="experience.css?v=exp-draghint-20260705" />
+    <link rel="stylesheet" href="experience.css?v=exp-draghint2-20260705" />
 
     <!-- Three.js import map (pinned, single CDN). -->
     <script type="importmap">
@@ -62,12 +62,13 @@
 
     <!-- one-time hint: the scene can be dragged to look around -->
     <div class="exp-draghint" id="exp-draghint" hidden aria-hidden="true">
-      <span class="exp-draghint__glyph" aria-hidden="true">
-        <svg viewBox="0 0 46 26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-          <path class="exp-draghint__chev exp-draghint__chev--l" d="M9 7 L4 13 L9 19" />
-          <path class="exp-draghint__chev exp-draghint__chev--r" d="M37 7 L42 13 L37 19" />
-          <g class="exp-draghint__grab"><circle cx="23" cy="13" r="5" /></g>
-        </svg>
+      <span class="exp-draghint__demo" aria-hidden="true">
+        <span class="exp-draghint__glow"></span>
+        <span class="exp-draghint__chev exp-draghint__chev--l">&#8249;</span>
+        <span class="exp-draghint__chev exp-draghint__chev--r">&#8250;</span>
+        <span class="exp-draghint__glide">
+          <span class="exp-draghint__ring"><span class="exp-draghint__dot"></span></span>
+        </span>
       </span>
       <span class="exp-draghint__text">Drag to look around</span>
     </div>
@@ -98,6 +99,6 @@
     </noscript>
 
     <script src="project-data.js?v=proj-norig-20260705"></script>
-    <script type="module" src="experience.js?v=exp-draghint-20260705"></script>
+    <script type="module" src="experience.js?v=exp-draghint2-20260705"></script>
   </body>
 </html>

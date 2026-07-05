@@ -255,6 +255,7 @@ function initScene(canvas) {
     if (!prefersReducedMotion) {
       runLightIntro();
       startIntro();
+      setTimeout(showDragHint, 1600); // self-guards until the entry flight ends, so it always fires
     } else {
       setTimeout(showDragHint, 900);
     }
@@ -582,17 +583,15 @@ function initScene(canvas) {
     controls.target.set(0, 0.75, -0.1);
     let seen = false;
     try { seen = localStorage.getItem("kw_intro_seen") === "1"; } catch (e) {}
-    // once the camera settles at rest, invite the user to take control
-    const settle = () => setTimeout(showDragHint, 500);
     if (seen) {
-      startFlight(REST_POS, REST_TARGET, 1500, settle);
+      startFlight(REST_POS, REST_TARGET, 1500);
       return;
     }
     try { localStorage.setItem("kw_intro_seen", "1"); } catch (e) {}
     // guided sweep: right cabinet -> main cabinet -> resting pose
     startFlight(new THREE.Vector3(0.7, 1.5, 1.9), new THREE.Vector3(2.3, 1.2, -0.4), 1700, () => {
       startFlight(new THREE.Vector3(0.6, 1.45, 1.6), new THREE.Vector3(0, 1.2, -1.1), 1900, () => {
-        startFlight(REST_POS, REST_TARGET, 1500, settle);
+        startFlight(REST_POS, REST_TARGET, 1500);
       });
     });
   }
@@ -742,6 +741,7 @@ function initScene(canvas) {
   }
   function showDragHint() {
     if (dragHintDone || !dragHintEl || panelOpen) return;
+    if (flight) { setTimeout(showDragHint, 350); return; } // wait out the entry flight, then invite control
     dragHintEl.hidden = false;
     requestAnimationFrame(() => dragHintEl.classList.add("is-on"));
   }
