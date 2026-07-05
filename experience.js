@@ -753,7 +753,7 @@ function initScene(canvas) {
     if (dragHintDone || !dragHintEl || panelOpen) return;
     dragHintEl.hidden = false;
     requestAnimationFrame(() => dragHintEl.classList.add("is-on"));
-    setTimeout(dismissDragHint, 14000); // don't nag forever if they never drag
+    setTimeout(dismissDragHint, 3000); // auto-dismiss after 3s
   }
   function dismissDragHint() {
     if (dragHintDone) return;

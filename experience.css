@@ -794,10 +794,10 @@ a {
 .exp-draghint {
   position: fixed;
   left: 50%;
-  bottom: 3rem;
+  top: 50%;
   z-index: 60;
-  transform: translate(-50%, 20px) scale(0.94);
-  transform-origin: 50% 100%;
+  transform: translate(-50%, -50%) scale(0.9);
+  transform-origin: 50% 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -805,27 +805,28 @@ a {
   padding: 1rem 1.5rem 0.9rem;
   border: 1px solid var(--line-strong);
   border-radius: 16px;
-  background: rgba(11, 12, 15, 0.72);
-  box-shadow: 0 20px 54px rgba(0, 0, 0, 0.55);
+  background: rgba(11, 12, 15, 0.46);
+  box-shadow: 0 20px 54px rgba(0, 0, 0, 0.4);
   -webkit-backdrop-filter: blur(16px) saturate(1.35);
   backdrop-filter: blur(16px) saturate(1.35);
   opacity: 0;
   pointer-events: none;
   transition:
-    opacity 600ms var(--ease-out),
-    transform 600ms var(--ease-out);
+    opacity 500ms var(--ease-out),
+    transform 500ms var(--ease-out);
 }
 .exp-draghint.is-on {
-  opacity: 1;
-  transform: translate(-50%, 0) scale(1);
-  animation: exp-drag-breathe 3s ease-in-out 0.7s infinite;
+  /* semi-transparent, centered on screen */
+  opacity: 0.9;
+  transform: translate(-50%, -50%) scale(1);
+  animation: exp-drag-breathe 3s ease-in-out 0.6s infinite;
 }
 /* auto-hide behind any open overlay (no JS coordination needed) */
 .exp-panel-open .exp-draghint,
 .exp-paper-open .exp-draghint,
 .exp-lightbox-open .exp-draghint {
   opacity: 0 !important;
-  transform: translate(-50%, 20px) scale(0.94) !important;
+  transform: translate(-50%, -50%) scale(0.9) !important;
   animation: none !important;
 }
 .exp-draghint__demo {
@@ -948,7 +949,6 @@ a {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .exp-draghint {
-    bottom: 2rem;
     padding: 0.85rem 1.2rem 0.75rem;
   }
   .exp-draghint__text {
