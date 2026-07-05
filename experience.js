@@ -451,7 +451,7 @@ function initScene(canvas) {
     { file: "aura",     key: "aura",       label: "AURA Swerve",       size: 0.29, axis: "y", bay: 1, row: 0, rotY: 0.35, rotZ: -Math.PI / 2,
       matTweak: { printed: { color: 0x9299a1, metalness: 0.4, roughness: 0.45 } } }, // aluminum/grey structure
     { file: "scanner",  key: "scanner",    label: "3D scanner",        size: 0.38, axis: "x", bay: 2, row: 0, rotY: 0.35,
-      matTweak: { printed: { color: 0x2a55c8 }, wood: { color: 0xb08a4e, roughness: 0.7 } } }, // blue brackets, plywood base
+      matTweak: { printed: { color: 0x2a55c8 }, wood: { color: 0xd2bc92, roughness: 0.7 } } }, // blue brackets, light plywood base (photo)
     { file: "javelin",  key: "javelin",    label: "Javelin VTOL",      size: 0.44, axis: "x", bay: 0, row: 1, rotY: 0.6,
       matTweak: { aero: { color: 0x3a3e44, roughness: 0.5 }, printed: { color: 0x26292e }, dark: { color: 0x24272c } } },
     { file: "steering", key: "steering",   label: "Mk.8 Steering",     size: 0.32, axis: "y", bay: 1, row: 1, rotY: 0.5 },
@@ -474,7 +474,10 @@ function initScene(canvas) {
   loadAssembly(loader, scene, "models/real/lineFollower.glb", {
     fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_lineFollower", projectKey: "lineFollower", label: "LineFollower robot",
     targetSize: 0.34, axis: "z", pos: [CAB.bays[0], CAB.rows[2], CAB.frontZ], rotY: 0.45,
-    matTweak: { rubber: { color: 0xd9691e, roughness: 0.6 } }, // orange wheels
+    // photo-matched: bright orange tires, Arduino-teal main PCB, silver
+    // motors + silver/white battery wrap (both live in the "dark" bucket)
+    matTweak: { rubber: { color: 0xe8883a, roughness: 0.6 }, pcb: { color: 0x146e80 },
+      dark: { color: 0x9a9ea3, metalness: 0.6, roughness: 0.45 } },
   });
   placeRoot(buildCfdDisplay(artLoader), scene, {
     fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_ansysCfd", projectKey: "ansysCfd", label: "Agent-based CFD",
@@ -484,7 +487,9 @@ function initScene(canvas) {
     // exploded parts layout, rotated 90deg CCW so the guitar lies horizontal
     fit: [0.62, 0.46, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_education", projectKey: "education", label: "Guitar education kit",
     targetSize: 0.44, axis: "x", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotZ: Math.PI / 2, rotY: 0.12,
-    matTweak: { printed: { color: 0x2f5fbf, metalness: 0.1, roughness: 0.5 }, wood: { color: 0xc9a86a } }, // blue body, maple neck
+    // photo-matched: dark matte navy body (render's bright blue is a preset),
+    // walnut-brown neck/fingerboard, chrome panel/bridge via the steel bucket
+    matTweak: { printed: { color: 0x2e3a55, metalness: 0.05, roughness: 0.6 }, wood: { color: 0x5c4632, roughness: 0.6 } },
   });
 
   /* ---------- side dressing ---------- */
@@ -503,14 +508,20 @@ function initScene(canvas) {
       matTweak: { steel: { color: 0xccd2da, metalness: 0.5, roughness: 0.44 } } }, // light brushed aluminum, reclined bucket facing the room
     { build: buildFtcBot,      key: "ftc",       label: "FTC robot",         size: 0.28, bay: 1, row: 0 },
     { file: "smelly",          key: "formlabs",  label: "Smelly",            size: 0.3,  axis: "y", bay: 0, row: 1, rotY: -Math.PI / 2 + 0.2,
-      matTweak: { printed: { color: 0x9aa0a8, metalness: 0.5, roughness: 0.45 }, steel: { color: 0xaeb4bc } } }, // light aluminum
+      // photo-matched: the printed frame/gantry is white FDM plastic, not
+      // aluminum; rods/lead screws stay bright steel
+      matTweak: { printed: { color: 0xe7e5e0, metalness: 0.0, roughness: 0.5 }, steel: { color: 0xaeb4bc } } },
     // the launcher's long axis is raw +y — lay it down along the shelf
     // native X = floor-normal, Y = length, Z = width; rotate so the opaque
     // floor plate faces down and the length runs along the shelf (z)
     { file: "pool",            key: "pool",      label: "Pool Sniper",       size: 0.5, axis: "z", bay: 1, row: 1, rotZ: Math.PI / 2, rotY: -Math.PI / 2,
-      matTweak: { printed: { color: 0x2a55c8 } } }, // blue printed structure, clear side windows
+      // photo-matched: the build photo shows raw machined-aluminum plates
+      // (the blue in the CAD renders is only the rack/pinion drive parts);
+      // the cue itself is a silver metallic rod in the CAD
+      matTweak: { printed: { color: 0x9a9691, metalness: 0.35, roughness: 0.55 },
+        wood: { color: 0xaeb0b3, metalness: 0.8, roughness: 0.4 } } },
     { file: "telecaster",      key: "telecaster", label: "Telecaster",       size: 0.42, axis: "y", bay: 0, row: 2, rotY: -Math.PI / 2 + 0.2,
-      matTweak: { printed: { color: 0xeef0f2, metalness: 0.0, roughness: 0.45 }, wood: { color: 0xc9a86a } } }, // white body, maple neck
+      matTweak: { printed: { color: 0xe9e6da, metalness: 0.0, roughness: 0.45 }, wood: { color: 0xa97c4c, roughness: 0.55 } } }, // warm white body, honey-maple neck (photos)
   ];
   SIDE_EXHIBITS.forEach((s) => {
     const opts = {
@@ -2527,14 +2538,17 @@ function buildFtcBot() {
   const carriage = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.03, 0.02), dark);
   carriage.position.set(0, 0.2, -0.04);
   g.add(carriage);
+  // claw fingers are red on the real robot (competition photos)
+  const red = new THREE.MeshStandardMaterial({ color: 0xc5342c, roughness: 0.5, metalness: 0.1 });
   [[-0.02, 0.25], [0.02, -0.25]].forEach(([x, rot]) => {
-    const finger = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.05, 0.03), dark);
+    const finger = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.05, 0.03), red);
     finger.position.set(x, 0.185, -0.015);
     finger.rotation.z = rot;
     g.add(finger);
   });
+  // REV control hub is black on the real robot (was stylized blue)
   const hub = new THREE.Mesh(new RoundedBoxGeometry(0.07, 0.02, 0.05, 2, 0.005),
-    new THREE.MeshStandardMaterial({ color: 0x27408a, roughness: 0.45 }));
+    new THREE.MeshStandardMaterial({ color: 0x212226, roughness: 0.5 }));
   hub.position.set(0.04, 0.065, 0.03);
   g.add(hub);
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
