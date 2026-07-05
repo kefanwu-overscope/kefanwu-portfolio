@@ -550,10 +550,7 @@ function initScene(canvas) {
   scene.add(chest);
   MODELS.chest = chest;
 
-  // technical schematic panel above the main cabinet
-  const blueprint = buildBlueprintPanel();
-  blueprint.position.set(0, 2.58, -1.5); // low enough to read from the rest pose
-  scene.add(blueprint);
+  // (removed: the race-car schematic blueprint panel above the main cabinet)
 
   // real ergonomic mesh task chair (CC BY 4.0 — see ATTRIBUTIONS.txt);
   // replaces the old procedural buildErgoChair() stand-in
@@ -2911,8 +2908,7 @@ function buildResumePaper() {
   g.add(sheet);
   const face = new THREE.Mesh(
     new THREE.PlaneGeometry(0.234, 0.312),
-    // faint self-glow so the resume reads as the lit focal point on the desk
-    new THREE.MeshStandardMaterial({ map: tex, color: 0xf1f3f6, roughness: 0.96, emissive: 0xf4f6f9, emissiveMap: tex, emissiveIntensity: 0.22 })
+    new THREE.MeshStandardMaterial({ map: tex, color: 0xf1f3f6, roughness: 0.96 })
   );
   face.rotation.x = -Math.PI / 2;
   face.position.y = 0.0025;
