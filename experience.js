@@ -542,7 +542,7 @@ function initScene(canvas) {
 
   // rolling tool chest beside the workbench
   const chest = buildToolChest();
-  chest.position.set(-2.22, 0, 0.95);
+  chest.position.set(-2.22, 0, 1.06); // clear of the workbench front edge (was 0.95 -> back clipped the bench)
   chest.rotation.y = Math.PI / 2;
   scene.add(chest);
   MODELS.chest = chest;
@@ -2257,6 +2257,11 @@ function buildBambuPrinter() {
   );
   plate.position.set(0, 0.12, D / 2 - 0.19);
   g.add(plate);
+  // heated bed carrier under the build plate
+  const bed = new THREE.Mesh(new THREE.BoxGeometry(chamberW - 0.03, 0.01, 0.26),
+    new THREE.MeshStandardMaterial({ color: 0x141519, roughness: 0.6, metalness: 0.4 }));
+  bed.position.set(0, 0.111, D / 2 - 0.19);
+  g.add(bed);
   const printZ = D / 2 - 0.19;
   const printMat = new THREE.MeshStandardMaterial({ color: 0x2f7fff, roughness: 0.5, metalness: 0.05, emissive: 0x2f7fff, emissiveIntensity: 0.55 });
   // a small car mid-print on the bed (the top rows still "growing")
@@ -2292,8 +2297,32 @@ function buildBambuPrinter() {
     new THREE.MeshStandardMaterial({ color: 0xff5533, emissive: 0xff4422, emissiveIntensity: 1.8 }));
   headLed.position.set(0, 0.167, printZ);
   headGroup.add(headLed);
+  // toolhead fan shroud (the chunky Bambu hot-end cover) with a fan face
+  const shroud = new THREE.Mesh(new RoundedBoxGeometry(0.06, 0.058, 0.022, 2, 0.006),
+    new THREE.MeshStandardMaterial({ color: 0x202226, roughness: 0.42, metalness: 0.35 }));
+  shroud.position.set(0, 0.206, printZ + 0.03);
+  headGroup.add(shroud);
+  const fan = new THREE.Mesh(new THREE.CircleGeometry(0.016, 16),
+    new THREE.MeshStandardMaterial({ color: 0x0d0e10, roughness: 0.5, metalness: 0.2 }));
+  fan.position.set(0, 0.209, printZ + 0.042);
+  headGroup.add(fan);
   g.add(headGroup);
   MODELS.printerHead = headGroup;
+  // CoreXY gantry ends (Y-rails + carriages) and rear Z lead screws — makes
+  // the lit chamber read as a real machine through the door
+  const gantryMat = new THREE.MeshStandardMaterial({ color: 0x2a2c30, roughness: 0.4, metalness: 0.5 });
+  const screwMat = new THREE.MeshStandardMaterial({ color: 0x8a8f96, roughness: 0.35, metalness: 0.95 });
+  [-1, 1].forEach((s) => {
+    const yrail = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.014, 0.26), gantryMat);
+    yrail.position.set(s * (chamberW / 2 - 0.02), 0.292, printZ - 0.02);
+    g.add(yrail);
+    const yc = new THREE.Mesh(new RoundedBoxGeometry(0.024, 0.022, 0.034, 2, 0.004), gantryMat);
+    yc.position.set(s * (chamberW / 2 - 0.02), 0.286, printZ - 0.01);
+    g.add(yc);
+    const screw = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.23, 10), screwMat);
+    screw.position.set(s * (chamberW / 2 - 0.035), 0.225, -0.06);
+    g.add(screw);
+  });
   const chamberLed = new THREE.Mesh(
     new THREE.BoxGeometry(chamberW - 0.04, 0.006, 0.01),
     new THREE.MeshStandardMaterial({ color: 0xf2f6fc, emissive: 0xeef4ff, emissiveIntensity: 2.2 })
