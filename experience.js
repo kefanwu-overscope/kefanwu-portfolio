@@ -487,9 +487,9 @@ function initScene(canvas) {
     // exploded parts layout, rotated 90deg CCW so the guitar lies horizontal
     fit: [0.62, 0.46, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_education", projectKey: "education", label: "Guitar education kit",
     targetSize: 0.44, axis: "x", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotZ: Math.PI / 2, rotY: 0.12,
-    // photo-matched: dark matte navy body (render's bright blue is a preset),
-    // walnut-brown neck/fingerboard, chrome panel/bridge via the steel bucket
-    matTweak: { printed: { color: 0x2e3a55, metalness: 0.05, roughness: 0.6 }, wood: { color: 0x5c4632, roughness: 0.6 } },
+    // photo-matched, lightened per feedback: medium navy body and a lighter
+    // walnut neck/fingerboard; chrome panel/bridge via the steel bucket
+    matTweak: { printed: { color: 0x3d5180, metalness: 0.05, roughness: 0.55 }, wood: { color: 0x7d6144, roughness: 0.6 } },
   });
 
   /* ---------- side dressing ---------- */
@@ -515,10 +515,12 @@ function initScene(canvas) {
     // native X = floor-normal, Y = length, Z = width; rotate so the opaque
     // floor plate faces down and the length runs along the shelf (z)
     { file: "pool",            key: "pool",      label: "Pool Sniper",       size: 0.5, axis: "z", bay: 1, row: 1, rotZ: Math.PI / 2, rotY: -Math.PI / 2,
-      // photo-matched: the build photo shows raw machined-aluminum plates
-      // (the blue in the CAD renders is only the rack/pinion drive parts);
-      // the cue itself is a silver metallic rod in the CAD
-      matTweak: { printed: { color: 0x9a9691, metalness: 0.35, roughness: 0.55 },
+      // CAD-matched buckets (pool.glb re-exported with split buckets):
+      // printed = the blue parts only (rack, pinion, cue cradle, brackets);
+      // aero = dark-grey housings/plates/floor; steel = bright hardware;
+      // the cue itself is a silver metallic rod
+      matTweak: { printed: { color: 0x2a5fc4, metalness: 0.05, roughness: 0.5 },
+        aero: { color: 0x84827e, metalness: 0.5, roughness: 0.5 },
         wood: { color: 0xaeb0b3, metalness: 0.8, roughness: 0.4 } } },
     { file: "telecaster",      key: "telecaster", label: "Telecaster",       size: 0.42, axis: "y", bay: 0, row: 2, rotY: -Math.PI / 2 + 0.2,
       matTweak: { printed: { color: 0xe9e6da, metalness: 0.0, roughness: 0.45 }, wood: { color: 0xa97c4c, roughness: 0.55 } } }, // warm white body, honey-maple neck (photos)

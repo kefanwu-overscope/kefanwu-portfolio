@@ -3,7 +3,7 @@ of C:\\Users\\oc\\Desktop\\STL) into per-project GLBs with material buckets
 encoded as mesh names (mat_<bucket>), matching tools/stl2glb.py's scheme so
 three.js assigns the same ASSEMBLY_MATS. Aggressive skip lists keep fastener
 spam and modeled motor internals out of the shelf exhibits."""
-import os, glob, re
+import os, glob, re, sys
 import numpy as np
 import trimesh
 
@@ -56,11 +56,15 @@ PROJECTS = [
     ], 120000),
     ("pool", "Pool Sniper", "*.STL", COMMON_SKIP, None, [
         (r"housingside", "glass"),             # clear acrylic side windows
-        (r"\bcue", "wood"),
+        # blue printed parts per the CAD renders: rack, pinion gear, cue
+        # cradle, and the triangular bracket/tester structures
+        (r"rackpart|pinionpart|cue_base|angle tester|trigger_structure", "printed"),
+        (r"\bcue", "wood"),                    # the cue rod itself (silver via tweak)
         (r"motor\b|d_shaft_motor", "dark"),
-        (r"rack|pinion|pulley|sprocket|shaft|stand_off|standoff|latchpin|"
-         r"sheet_metal|front plate|offset front|90128a|3310-|1309-", "steel"),
-        (r".", "printed"),                     # housings, triggers, mounts, floor
+        # bright-silver hardware: standoffs, sprockets, bearings, pulleys, plates
+        (r"stand_off|standoff|latchpin|idle_pulley|offset front|front plate|"
+         r"90128a|3310-|1309-|2800-", "steel"),
+        (r".", "aero"),                        # dark-grey housings/plates/triggers/floor
     ], 110000),
     ("telecaster", "Telecaster", "telecaster - *.STL", COMMON_SKIP, None, [
         (r"_neck", "wood"),                    # maple neck (kept wood)
@@ -93,6 +97,10 @@ def decimate(mesh, target_faces):
     except Exception as e:
         print(f"   warn decimate: {e}")
     return mesh
+
+# optional CLI filter: `python stl2glb_new.py pool` regenerates only that project
+if len(sys.argv) > 1:
+    PROJECTS = [p for p in PROJECTS if p[0] in sys.argv[1:]]
 
 for proj, sub, pat, skip, extra, rules, target in PROJECTS:
     files = sorted(glob.glob(os.path.join(SRC, sub, pat)))
