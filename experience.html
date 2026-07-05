@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Step into Kefan Wu's interactive 3D desk: a warm engineering study where a folder opens the resume and project models open case studies. A WebGL companion to the main portfolio."
+      content="Step into Kefan Wu's interactive 3D studio: an engineering room where the resume sits on the desk and project models open full case studies. A WebGL companion to the main portfolio."
     />
     <!-- The static homepage is the canonical, crawlable surface. -->
     <link rel="canonical" href="https://www.kefanwu.com/" />
-    <meta property="og:title" content="Kefan Wu — Interactive 3D Desk" />
+    <meta property="og:title" content="Kefan Wu — Interactive 3D Studio" />
     <meta
       property="og:description"
-      content="An interactive 3D engineering study: click the folder for the resume, click project models for case studies."
+      content="An interactive 3D engineering studio: click the resume on the desk, click project models for case studies."
     />
     <meta property="og:image" content="assets/hero-fsae-track.webp" />
     <meta property="og:type" content="website" />
-    <title>Kefan Wu | Interactive 3D Desk</title>
+    <title>Kefan Wu | Interactive 3D Studio</title>
     <link rel="icon" href="assets/favicon_custom.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,7 +24,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
     />
-    <link rel="stylesheet" href="experience.css?v=exp-cab-20260705" />
+    <link rel="stylesheet" href="experience.css?v=exp-polish-20260705" />
 
     <!-- Three.js import map (pinned, single CDN). -->
     <script type="importmap">
@@ -72,6 +72,14 @@
       </span>
       <span class="exp-draghint__text">Drag to look around</span>
     </div>
+    <!-- follow-up hint: exhibits open case studies -->
+    <div class="exp-draghint exp-draghint--click" id="exp-clickhint" hidden aria-hidden="true">
+      <span class="exp-draghint__demo" aria-hidden="true">
+        <span class="exp-draghint__glow"></span>
+        <span class="exp-draghint__ring"><span class="exp-draghint__dot"></span></span>
+      </span>
+      <span class="exp-draghint__text">Click an exhibit to open its case study</span>
+    </div>
 
     <!-- The 3D scene -->
     <div class="exp-stage" aria-hidden="true">
@@ -79,26 +87,26 @@
     </div>
 
     <!-- Accessible heading (visually hidden; the experience is the canvas) -->
-    <h1 class="sr-only">Kefan Wu — interactive 3D engineering desk</h1>
+    <h1 class="sr-only">Kefan Wu — interactive 3D engineering studio</h1>
 
     <!-- Brief loader; fades out once the scene is ready -->
     <div class="exp-loader" id="exp-loader" role="status" aria-live="polite">
       <div class="exp-loader__inner">
         <span class="exp-loader__mark">KW</span>
         <span class="exp-loader__bar"><i></i></span>
-        <span class="exp-loader__text">Entering the workshop</span>
+        <span class="exp-loader__text">Entering the studio</span>
       </div>
     </div>
 
     <noscript>
       <div style="text-align:center;color:#a1a1a6;padding:3rem 1.5rem;font-family:sans-serif">
-        <h2 style="font-weight:700">Kefan Wu — Interactive 3D Desk</h2>
+        <h2 style="font-weight:700">Kefan Wu — Interactive 3D Studio</h2>
         <p>This interactive 3D view needs JavaScript.</p>
         <p><a href="index.html" style="color:#3f8cff">View the classic portfolio &rarr;</a></p>
       </div>
     </noscript>
 
     <script src="project-data.js?v=proj-norig-20260705"></script>
-    <script type="module" src="experience.js?v=exp-cab-20260705"></script>
+    <script type="module" src="experience.js?v=exp-polish-20260705"></script>
   </body>
 </html>

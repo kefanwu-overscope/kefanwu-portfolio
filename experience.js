@@ -163,8 +163,10 @@ function initScene(canvas) {
   scene.background = new THREE.Color(COL.bg);
   scene.fog = new THREE.Fog(COL.bg, 7, 18);
 
-  const REST_POS = new THREE.Vector3(1.45, 1.35, 2.25);
-  const REST_TARGET = new THREE.Vector3(0, 0.95, -0.3);
+  // rest pose: pulled back + raised so the full cabinet, desk and a hint of
+  // both side walls read at once (invites orbiting)
+  const REST_POS = new THREE.Vector3(1.55, 1.58, 2.6);
+  const REST_TARGET = new THREE.Vector3(0, 1.08, -0.1);
   const FLY_POS = new THREE.Vector3(2.1, 1.8, 2.9);
 
   const camera = new THREE.PerspectiveCamera(
@@ -428,8 +430,10 @@ function initScene(canvas) {
 
   // modern LED desk lamp (procedural), warm pool on the resume
   const deskLamp = buildModernDeskLamp();
-  deskLamp.position.set(-0.62, DESK_TOP, -0.16);
-  deskLamp.rotation.y = 0.5;
+  // far left + forward so it no longer blocks the cabinet's bottom-left bay
+  // (LineFollower) from the rest camera
+  deskLamp.position.set(-0.8, DESK_TOP, 0.12);
+  deskLamp.rotation.y = 0.9;
   scene.add(deskLamp);
   MODELS.deskLamp = deskLamp;
 
@@ -548,7 +552,7 @@ function initScene(canvas) {
 
   // technical schematic panel above the main cabinet
   const blueprint = buildBlueprintPanel();
-  blueprint.position.set(0, 2.72, -1.5);
+  blueprint.position.set(0, 2.58, -1.5); // low enough to read from the rest pose
   scene.add(blueprint);
 
   // real ergonomic mesh task chair (CC BY 4.0 — see ATTRIBUTIONS.txt);
@@ -765,6 +769,23 @@ function initScene(canvas) {
     if (!dragHintEl) return;
     dragHintEl.classList.remove("is-on");
     setTimeout(() => { if (dragHintEl) dragHintEl.hidden = true; }, 620);
+    setTimeout(showClickHint, 1000); // teach the second verb: click an exhibit
+  }
+  // one-time follow-up hint: exhibits are clickable
+  const clickHintEl = document.getElementById("exp-clickhint");
+  let clickHintDone = false;
+  function showClickHint() {
+    if (clickHintDone || !clickHintEl || panelOpen) return;
+    clickHintEl.hidden = false;
+    requestAnimationFrame(() => clickHintEl.classList.add("is-on"));
+    setTimeout(dismissClickHint, 5000);
+  }
+  function dismissClickHint() {
+    if (clickHintDone) return;
+    clickHintDone = true;
+    if (!clickHintEl) return;
+    clickHintEl.classList.remove("is-on");
+    setTimeout(() => { if (clickHintEl) clickHintEl.hidden = true; }, 620);
   }
   // dismiss the moment the user actually drags to orbit the scene
   renderer.domElement.addEventListener("pointermove", (ev) => {
@@ -864,12 +885,14 @@ function initScene(canvas) {
     const focusPos = c.clone().addScaledVector(dir, 1.0);
     focusPos.y = Math.max(c.y + 0.06, 0.98);
     if (hs.action === "resume") focusPos.set(c.x + 0.28, c.y + 0.5, c.z + 0.75);
-    // bias the look right of the object so it sits left of the panel
+    // bias the look right of the object so it settles in the left third of
+    // the viewport, clear of the case-study panel
     const right = new THREE.Vector3(0, 1, 0).cross(dir).normalize();
-    const focusLook = c.clone().addScaledVector(right, 0.2);
+    const focusLook = c.clone().addScaledVector(right, 0.3);
 
     panelOpen = true;
     focusedPivot = hs.key ? root : null;
+    currentProjectKey = hs.key || null;
     sndClick();
     sndWhoosh();
     const open = hs.action === "resume" ? openPaper : openPanel;
@@ -885,10 +908,44 @@ function initScene(canvas) {
     }
   }
 
+  // fixed tour order for prev/next navigation (matches cabinet layout)
+  const PROJECT_ORDER = ["carbonSeat", "aura", "scanner", "javelin", "steering", "brakeSim",
+    "lineFollower", "ansysCfd", "education", "seat", "ftc", "formlabs", "pool", "telecaster"];
+  let currentProjectKey = null;
+  function stepProject(dir) {
+    if (!currentProjectKey) return;
+    const n = PROJECT_ORDER.length;
+    let idx = PROJECT_ORDER.indexOf(currentProjectKey);
+    for (let step = 1; step <= n; step++) {
+      const key = PROJECT_ORDER[(idx + dir * step + n * step) % n];
+      const pivot = HOTSPOTS.find((h) => h.userData.hotspot.key === key);
+      if (pivot) {
+        panelOpen = false;
+        recenterPivot(focusedPivot);
+        focusedPivot = null;
+        focusHotspot(pivot);
+        return;
+      }
+    }
+  }
   function openPanel(html) {
     if (!panelEl) return;
     panelOpen = true;
+    dismissClickHint();
     panelEl.innerHTML = html;
+    // prev / next tour bar (projects only — the resume sheet has no nav)
+    if (currentProjectKey) {
+      const idx = PROJECT_ORDER.indexOf(currentProjectKey);
+      const nav = document.createElement("div");
+      nav.className = "exp-panel__navbar";
+      nav.innerHTML =
+        `<button type="button" data-nav="-1" aria-label="Previous project">&larr; Prev</button>` +
+        `<span>${String(idx + 1).padStart(2, "0")} / ${PROJECT_ORDER.length}</span>` +
+        `<button type="button" data-nav="1" aria-label="Next project">Next &rarr;</button>`;
+      nav.querySelectorAll("[data-nav]").forEach((b) =>
+        b.addEventListener("click", () => { sndClick(); stepProject(+b.dataset.nav); }));
+      panelEl.appendChild(nav);
+    }
     panelEl.scrollTop = 0;
     panelEl.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", closePanel));
     document.documentElement.classList.add("exp-panel-open");
@@ -897,6 +954,7 @@ function initScene(canvas) {
   function openPaper(html) {
     if (!paperEl) return;
     panelOpen = true;
+    dismissClickHint();
     paperEl.innerHTML = html;
     paperEl.scrollTop = 0;
     paperEl.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", closePanel));
@@ -942,21 +1000,50 @@ function initScene(canvas) {
       startFlight(REST_POS, REST_TARGET, 750);
     }
   }
-  // gallery lightbox: click a panel shot to enlarge it
+  // gallery lightbox: click a panel shot to enlarge; browse with arrows
   const lightboxEl = document.getElementById("exp-lightbox");
+  let lbShots = [], lbIdx = 0;
   function closeLightbox() {
     document.documentElement.classList.remove("exp-lightbox-open");
+  }
+  function renderLightbox() {
+    const s = lbShots[lbIdx];
+    if (!s) return;
+    lightboxEl.innerHTML =
+      `<button type="button" class="exp-lightbox__btn exp-lightbox__close" data-lb="close" aria-label="Close">&times;</button>` +
+      (lbShots.length > 1
+        ? `<button type="button" class="exp-lightbox__btn exp-lightbox__prev" data-lb="-1" aria-label="Previous image">&lsaquo;</button>` +
+          `<button type="button" class="exp-lightbox__btn exp-lightbox__next" data-lb="1" aria-label="Next image">&rsaquo;</button>`
+        : "") +
+      `<img src="${s.src}" alt="" /><p>${s.cap}${lbShots.length > 1 ? `<span class="exp-lightbox__count">${lbIdx + 1} / ${lbShots.length}</span>` : ""}</p>`;
+  }
+  function stepLightbox(d) {
+    lbIdx = (lbIdx + d + lbShots.length) % lbShots.length;
+    renderLightbox();
+    sndTick();
   }
   if (panelEl && lightboxEl) {
     panelEl.addEventListener("click", (ev) => {
       const img = ev.target.closest(".exp-panel__shot img");
       if (!img) return;
-      const cap = img.closest("figure")?.querySelector("figcaption")?.textContent || "";
-      lightboxEl.innerHTML = `<img src="${img.src}" alt="" /><p>${cap}</p>`;
+      const all = Array.from(panelEl.querySelectorAll(".exp-panel__shot img"));
+      lbShots = all.map((im) => ({ src: im.src, cap: im.closest("figure")?.querySelector("figcaption")?.textContent || "" }));
+      lbIdx = Math.max(0, all.indexOf(img));
+      renderLightbox();
       document.documentElement.classList.add("exp-lightbox-open");
       sndClick();
     });
-    lightboxEl.addEventListener("click", closeLightbox);
+    lightboxEl.addEventListener("click", (ev) => {
+      const b = ev.target.closest("[data-lb]");
+      if (!b) return closeLightbox();
+      if (b.dataset.lb === "close") return closeLightbox();
+      stepLightbox(+b.dataset.lb);
+    });
+    window.addEventListener("keydown", (e) => {
+      if (!document.documentElement.classList.contains("exp-lightbox-open")) return;
+      if (e.key === "ArrowLeft") stepLightbox(-1);
+      if (e.key === "ArrowRight") stepLightbox(1);
+    });
   }
 
   if (backdropEl) backdropEl.addEventListener("click", closePanel);
@@ -1009,7 +1096,16 @@ function sndWhoosh(mul = 1) { tone(240, 0.32, 0.018 * mul, "sine", 90); }
 function initSoundToggle() {
   const btn = document.getElementById("exp-sound");
   if (!btn) return;
-  const paint = () => { btn.textContent = sndMuted ? "\uD83D\uDD07" : "\uD83D\uDD0A"; btn.setAttribute("aria-label", sndMuted ? "Enable sound" : "Mute sound"); };
+  // monochrome SVG speaker (a color emoji is the one loud non-Apple element)
+  const SPK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6.5 9H3v6h3.5L11 19V5z" fill="currentColor" stroke="none"/>';
+  const paint = () => {
+    btn.innerHTML = SPK + (sndMuted
+      ? '<line x1="15" y1="9.5" x2="21" y2="14.5"/><line x1="21" y1="9.5" x2="15" y2="14.5"/></svg>'
+      : '<path d="M15 9a4 4 0 0 1 0 6"/><path d="M17.5 6.5a8 8 0 0 1 0 11"/></svg>');
+    btn.setAttribute("aria-label", sndMuted ? "Enable sound" : "Mute sound");
+    btn.setAttribute("aria-pressed", String(!sndMuted));
+    btn.classList.toggle("is-on", !sndMuted);
+  };
   paint();
   btn.addEventListener("click", () => {
     sndMuted = !sndMuted;
@@ -1329,19 +1425,21 @@ function buildDesk() {
 
   const top = new THREE.Mesh(
     new RoundedBoxGeometry(W, thk, D, 3, 0.008),
-    new THREE.MeshStandardMaterial({ color: 0xc9ced6, roughness: 0.48, metalness: 0.06 })
+    // slightly deeper grey so the slab stops being the brightest plane in frame
+    new THREE.MeshStandardMaterial({ color: 0xbfc4cc, roughness: 0.52, metalness: 0.06 })
   );
   top.position.set(0, topY - thk / 2, 0);
   top.castShadow = true;
   top.receiveShadow = true;
   g.add(top);
 
-  // dark desk mat under the work area
+  // dark desk mat — sized as a frame around the resume (~1.5x the sheet),
+  // not a giant slab that swallows it
   const mat = new THREE.Mesh(
-    new RoundedBoxGeometry(1.05, 0.006, 0.52, 2, 0.006),
+    new RoundedBoxGeometry(0.44, 0.006, 0.5, 2, 0.006),
     new THREE.MeshStandardMaterial({ color: 0x141519, roughness: 0.72, metalness: 0.05 })
   );
-  mat.position.set(0, topY + 0.003, 0.08);
+  mat.position.set(0.02, topY + 0.003, 0.16);
   mat.receiveShadow = true;
   g.add(mat);
 
@@ -2054,6 +2152,45 @@ function buildWorkbench() {
     psu.add(jack);
   });
   psu.position.set(0.42, TOP_Y, -0.16);
+
+  /* ---- cables + wall power strip (a bench without wires reads as a prop) ---- */
+  const cable = (pts, r, col) =>
+    new THREE.Mesh(
+      new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map((p) => new THREE.Vector3(...p))), 28, r, 8),
+      new THREE.MeshStandardMaterial({ color: col, roughness: 0.6, metalness: 0.05 })
+    );
+  // wall power strip above the bench back edge
+  const strip = new THREE.Mesh(new RoundedBoxGeometry(0.3, 0.05, 0.028, 2, 0.006),
+    new THREE.MeshStandardMaterial({ color: 0x1b1d21, roughness: 0.5, metalness: 0.3 }));
+  strip.position.set(-0.06, 0.98, -0.302);
+  g.add(strip);
+  for (let i = 0; i < 4; i++) {
+    const sock = new THREE.Mesh(new THREE.CylinderGeometry(0.0085, 0.0085, 0.006, 12),
+      new THREE.MeshStandardMaterial({ color: 0x0c0d10, roughness: 0.6 }));
+    sock.rotation.x = Math.PI / 2;
+    sock.position.set(-0.165 + i * 0.073, 0.98, -0.286);
+    g.add(sock);
+  }
+  // printer mains lead: printer rear -> sag -> strip
+  g.add(cable([[-0.5, 0.84, -0.18], [-0.38, 0.86, -0.27], [-0.22, 0.9, -0.295], [-0.14, 0.965, -0.293]], 0.0045, 0x17181c));
+  // PSU test leads: front jacks draped onto the bench (red + black)
+  g.add(cable([[0.375, 0.845, -0.085], [0.33, 0.815, 0.02], [0.3, 0.786, 0.1], [0.24, 0.784, 0.14]], 0.003, 0xb3342e));
+  g.add(cable([[0.4, 0.845, -0.085], [0.37, 0.81, 0.04], [0.33, 0.786, 0.12], [0.28, 0.784, 0.17]], 0.003, 0x141519));
+  // PSU mains into the strip
+  g.add(cable([[0.36, 0.82, -0.24], [0.22, 0.88, -0.29], [0.05, 0.958, -0.293]], 0.0042, 0x17181c));
+
+  /* ---- spare J-hooks filling the pegboard's empty lower band ---- */
+  const hookMat = new THREE.MeshStandardMaterial({ color: 0x8f959d, roughness: 0.4, metalness: 0.85 });
+  const mkHook = (hx, hy) => {
+    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.05, 8), hookMat);
+    stem.rotation.x = Math.PI / 2 - 0.25; // slight upward tilt
+    stem.position.set(hx, hy, bz + 0.006);
+    g.add(stem);
+    const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.02, 8), hookMat);
+    tip.position.set(hx, hy + 0.016, bz + 0.028);
+    g.add(tip);
+  };
+  [-0.66, -0.5, -0.34, -0.18, 0.02, 0.22, 0.42, 0.62].forEach((hx) => mkHook(hx, 1.06));
   psu.rotation.y = -0.06;
   g.add(psu);
 
@@ -2428,6 +2565,34 @@ function buildBambuPrinter() {
   });
   ams.position.set(0, H + 0.016, -0.02);
   g.add(ams);
+  // PTFE feed tube: AMS lid down into the body top (the spools must connect)
+  const tubePts = [
+    new THREE.Vector3(0.16, H + 0.07, -0.12),
+    new THREE.Vector3(0.225, H + 0.1, -0.1),
+    new THREE.Vector3(0.235, H + 0.03, -0.05),
+    new THREE.Vector3(0.2, H + 0.005, -0.02),
+  ];
+  const tube = new THREE.Mesh(
+    new THREE.TubeGeometry(new THREE.CatmullRomCurve3(tubePts), 24, 0.0045, 8),
+    new THREE.MeshStandardMaterial({ color: 0xdfe2e6, roughness: 0.5, metalness: 0.05 })
+  );
+  g.add(tube);
+  // thin door frame around the glass + a side vent slot
+  const doorFrameMat = new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.5, metalness: 0.35 });
+  [
+    [chamberW + 0.016, 0.008, 0, doorY1 + 0.004],
+    [chamberW + 0.016, 0.008, 0, doorY0 - 0.004],
+    [0.008, doorH + 0.016, -chamberW / 2 - 0.004, (doorY0 + doorY1) / 2],
+    [0.008, doorH + 0.016, chamberW / 2 + 0.004, (doorY0 + doorY1) / 2],
+  ].forEach(([w, h, x, y]) => {
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.006), doorFrameMat);
+    bar.position.set(x, y, frontZ + 0.006);
+    g.add(bar);
+  });
+  const vent = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.05, 0.26),
+    new THREE.MeshStandardMaterial({ color: 0x24262b, roughness: 0.7, metalness: 0.2 }));
+  vent.position.set(W / 2 + 0.001, H - 0.12, -0.08);
+  g.add(vent);
 
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
@@ -2722,11 +2887,17 @@ function buildResumePaper() {
   ctx.strokeStyle = "#3f8cff";
   ctx.lineWidth = 3;
   ctx.beginPath(); ctx.moveTo(22, 104); ctx.lineTo(234, 104); ctx.stroke();
-  ctx.fillStyle = "#8d8d92";
-  for (let y = 128; y < 320; y += 16) {
-    const w = 150 + ((y * 37) % 62);
-    ctx.fillRect(22, y, w, 4.5);
-  }
+  // real section structure (readable at fly-in distance, not lorem bars)
+  const section = (title, y, rows) => {
+    ctx.fillStyle = "#26282c"; ctx.font = "700 12px Arial, sans-serif";
+    ctx.fillText(title, 22, y);
+    ctx.fillStyle = "#9a9aa0";
+    rows.forEach((w, i) => ctx.fillRect(22, y + 10 + i * 11, w, 3.5));
+  };
+  section("EDUCATION", 126, [188, 140]);
+  section("EXPERIENCE", 174, [200, 176, 152]);
+  section("PROJECTS", 232, [196, 168, 184]);
+  section("SKILLS", 290, [204, 148]);
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
 
@@ -2740,7 +2911,8 @@ function buildResumePaper() {
   g.add(sheet);
   const face = new THREE.Mesh(
     new THREE.PlaneGeometry(0.234, 0.312),
-    new THREE.MeshStandardMaterial({ map: tex, color: 0xf1f3f6, roughness: 0.96 })
+    // faint self-glow so the resume reads as the lit focal point on the desk
+    new THREE.MeshStandardMaterial({ map: tex, color: 0xf1f3f6, roughness: 0.96, emissive: 0xf4f6f9, emissiveMap: tex, emissiveIntensity: 0.22 })
   );
   face.rotation.x = -Math.PI / 2;
   face.position.y = 0.0025;
