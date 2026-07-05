@@ -493,7 +493,11 @@ function initScene(canvas) {
   // five more projects in the right-wall cabinet (14 on display total).
   // `build` = procedural group; `file` = real CAD GLB via loadAssembly.
   const SIDE_EXHIBITS = [
-    { build: buildDriverSeat,  key: "seat",      label: "Driver seat",       size: 0.3,  bay: 0, row: 0 },
+    // real CAD (7-CP06-P00-SEAT.STL -> driverseat.glb): bent-sheet aluminum
+    // seat. Native axes: x=width, z=back height, y=face normal. Stand it up
+    // (z->up) with rotX, then face the room with rotY.
+    { file: "driverseat",      key: "seat",      label: "Driver seat",       size: 0.34, axis: "y", bay: 0, row: 0, rotX: -Math.PI / 2, rotY: 0, rotZ: Math.PI / 2,
+      matTweak: { steel: { color: 0xccd2da, metalness: 0.5, roughness: 0.44 } } }, // light brushed aluminum, seating face to room
     { build: buildFtcBot,      key: "ftc",       label: "FTC robot",         size: 0.28, bay: 1, row: 0 },
     { file: "smelly",          key: "formlabs",  label: "Smelly",            size: 0.3,  axis: "y", bay: 0, row: 1, rotY: -Math.PI / 2 + 0.2,
       matTweak: { printed: { color: 0x9aa0a8, metalness: 0.5, roughness: 0.45 }, steel: { color: 0xaeb4bc } } }, // light aluminum
@@ -2434,34 +2438,6 @@ function buildSideCabinet() {
 
 function steelToolMat() {
   return new THREE.MeshStandardMaterial({ color: 0x9aa0a8, metalness: 0.9, roughness: 0.4 });
-}
-
-function buildDriverSeat() {
-  // aluminum FSAE driver seat: bent-sheet pan + reclined back, side flanges
-  const g = new THREE.Group();
-  const alu = new THREE.MeshStandardMaterial({ color: 0xb0b4ba, metalness: 0.9, roughness: 0.38, side: THREE.DoubleSide });
-  const pan = new THREE.Mesh(new RoundedBoxGeometry(0.2, 0.012, 0.2, 2, 0.005), alu);
-  pan.position.set(0, 0.05, 0.04);
-  pan.rotation.x = -0.12;
-  g.add(pan);
-  const backr = new THREE.Mesh(new RoundedBoxGeometry(0.2, 0.3, 0.012, 2, 0.005), alu);
-  backr.position.set(0, 0.19, -0.07);
-  backr.rotation.x = 0.32;
-  g.add(backr);
-  [[-0.095], [0.095]].forEach(([x]) => {
-    const flange = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.12, 0.16), alu);
-    flange.position.set(x, 0.1, -0.02);
-    flange.rotation.x = 0.25;
-    g.add(flange);
-  });
-  // mounting rails
-  [[-0.06], [0.06]].forEach(([x]) => {
-    const rail = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.02, 0.2), new THREE.MeshStandardMaterial({ color: 0x2c2f34, metalness: 0.8, roughness: 0.5 }));
-    rail.position.set(x, 0.012, 0.03);
-    g.add(rail);
-  });
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  return g;
 }
 
 function buildFtcBot() {
