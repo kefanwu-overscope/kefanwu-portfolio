@@ -256,8 +256,9 @@ function initScene(canvas) {
       runLightIntro();
       startIntro();
     }
-    // the drag hint is armed by the render loop once the camera first rests
-    // (frame-driven, so it can't be missed like a timer/callback could)
+    // show the drag invitation immediately once the scene is loaded (doReveal
+    // is reliably called via manager.onLoad, with a safety timeout fallback)
+    showDragHint();
   };
   manager.onLoad = doReveal;
   setTimeout(doReveal, 10000); // safety
@@ -630,14 +631,6 @@ function initScene(canvas) {
       cp.y = Math.max(0.4, Math.min(3.15, cp.y));
     }
 
-    // drag hint: arm once the camera first comes to rest after the reveal,
-    // then fire from the frame loop (a timer/callback could be missed; a
-    // frame can't — and a background tab simply defers it until visible)
-    if (dragHintArm === null && revealed && !flight) dragHintArm = t + 900;
-    if (dragHintArm !== null && dragHintArm !== Infinity && t >= dragHintArm && !panelOpen) {
-      dragHintArm = Infinity;
-      showDragHint();
-    }
 
     // Bambu printer: print head sweeps across the bed while "printing"
     if (!prefersReducedMotion && MODELS.printerHead) {
@@ -744,7 +737,6 @@ function initScene(canvas) {
   // per page-load only (no localStorage): every visit gets the invitation
   // until the visitor actually drags — a refresh brings it back
   let dragHintDone = false;
-  let dragHintArm = null; // null = not armed; a timestamp = fire then; Infinity = fired
   if (dragHintEl && !FINE_POINTER) {
     const t = dragHintEl.querySelector(".exp-draghint__text");
     if (t) t.textContent = "Swipe to look around";
@@ -753,7 +745,7 @@ function initScene(canvas) {
     if (dragHintDone || !dragHintEl || panelOpen) return;
     dragHintEl.hidden = false;
     requestAnimationFrame(() => dragHintEl.classList.add("is-on"));
-    setTimeout(dismissDragHint, 3000); // auto-dismiss after 3s
+    setTimeout(dismissDragHint, 5000); // auto-dismiss after 5s (or sooner on first drag)
   }
   function dismissDragHint() {
     if (dragHintDone) return;
