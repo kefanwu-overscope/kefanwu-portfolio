@@ -635,7 +635,11 @@ function initScene(canvas) {
         if (done) done();
       }
     } else {
-      controls.update();
+      // OrbitControls.update() ignores `enabled` and force-applies its
+      // min/max-distance + azimuth clamps — after a fly-in (camera ~1.0 from
+      // the exhibit, minDistance 1.4) that reads as a sudden zoom jump. Only
+      // update while the user actually has control.
+      if (controls.enabled) controls.update();
       // hard-clamp the camera inside the room shell so no orbit/zoom
       // combination can ever peek past a wall
       const cp = camera.position;
