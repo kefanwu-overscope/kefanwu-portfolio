@@ -22,7 +22,6 @@ import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js"
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { GTAOPass } from "three/addons/postprocessing/GTAOPass.js";
 import { BokehPass } from "three/addons/postprocessing/BokehPass.js";
-import { Reflector } from "three/addons/objects/Reflector.js";
 import { RESUME } from "./experience-data.js";
 
 document.documentElement.classList.add("exp-js");
@@ -1286,39 +1285,7 @@ function buildRoom(scene) {
   addCove(depth - 0.3, -sideX + 0.09, (front + back) / 2, Math.PI / 2);
   addCove(depth - 0.3, sideX - 0.09, (front + back) / 2, -Math.PI / 2);
 
-  // polished gloss strip set into the floor in front of the display wall —
-  // catches the vitrine light (true planar reflection on desktop tiers,
-  // a glossy dark panel on LOW_TIER)
-  const stripW = 2.6;
-  const stripD = 0.36;
-  let gloss;
-  if (!LOW_TIER) {
-    gloss = new Reflector(new THREE.PlaneGeometry(stripW, stripD), {
-      clipBias: 0.003,
-      textureWidth: 1024,
-      textureHeight: 512,
-      color: 0x2a2e34,
-    });
-  } else {
-    gloss = new THREE.Mesh(
-      new THREE.PlaneGeometry(stripW, stripD),
-      new THREE.MeshStandardMaterial({ color: 0x191c21, roughness: 0.12, metalness: 0.6, envMapIntensity: 1.2 })
-    );
-  }
-  gloss.rotation.x = -Math.PI / 2;
-  gloss.position.set(0, 0.003, -0.65);
-  scene.add(gloss);
-  const revealMat = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.4, metalness: 0.85 });
-  [
-    [stripW + 0.05, 0.022, 0, -0.65 - stripD / 2 - 0.011],
-    [stripW + 0.05, 0.022, 0, -0.65 + stripD / 2 + 0.011],
-    [0.022, stripD, -stripW / 2 - 0.011, -0.65],
-    [0.022, stripD, stripW / 2 + 0.011, -0.65],
-  ].forEach(([w, d, x, z]) => {
-    const m = new THREE.Mesh(new THREE.BoxGeometry(w, 0.006, d), revealMat);
-    m.position.set(x, 0.004, z);
-    scene.add(m);
-  });
+  // (removed: the polished floor reflector strip in front of the display wall)
 
   // modern black pendant over the desk (neutral light)
   const pendant = new THREE.Group();
@@ -1427,11 +1394,11 @@ function buildDisplayCabinet() {
   const H = 2.2;
   const D = 0.54;
   const z = CAB.z;
-  const frameMat = new THREE.MeshStandardMaterial({ color: 0x1d1f23, roughness: 0.45, metalness: 0.5, envMapIntensity: 0.5 });
+  const frameMat = new THREE.MeshStandardMaterial({ color: 0x2e3138, roughness: 0.45, metalness: 0.5, envMapIntensity: 0.5 });
   const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.45, metalness: 0.85 });
 
   // matte back panel
-  const back = new THREE.Mesh(new THREE.BoxGeometry(W, H, 0.02), new THREE.MeshStandardMaterial({ color: 0x141518, roughness: 0.7, metalness: 0.2 }));
+  const back = new THREE.Mesh(new THREE.BoxGeometry(W, H, 0.02), new THREE.MeshStandardMaterial({ color: 0x34373e, roughness: 0.7, metalness: 0.2 }));
   back.position.set(0, H / 2, z - D / 2 + 0.01);
   back.receiveShadow = true;
   g.add(back);
@@ -1464,7 +1431,7 @@ function buildDisplayCabinet() {
 
   // tinted glass shelves with aluminum front edge + cool light strips
   const glassMat = new THREE.MeshPhysicalMaterial({
-    color: 0x31404f,
+    color: 0x3a4b5c,
     roughness: 0.05,
     metalness: 0,
     transparent: true,
@@ -2482,11 +2449,11 @@ function buildSideCabinet() {
   const W = 1.6; // along z
   const H = 2.2;
   const D = 0.5;
-  const frameMat = new THREE.MeshStandardMaterial({ color: 0x1d1f23, roughness: 0.45, metalness: 0.5, envMapIntensity: 0.5 });
+  const frameMat = new THREE.MeshStandardMaterial({ color: 0x2e3138, roughness: 0.45, metalness: 0.5, envMapIntensity: 0.5 });
   const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.45, metalness: 0.85 });
 
   const back = new THREE.Mesh(new THREE.BoxGeometry(0.02, H, W),
-    new THREE.MeshStandardMaterial({ color: 0x141518, roughness: 0.7, metalness: 0.2 }));
+    new THREE.MeshStandardMaterial({ color: 0x34373e, roughness: 0.7, metalness: 0.2 }));
   back.position.set(D / 2 - 0.01, H / 2, 0);
   back.receiveShadow = true;
   g.add(back);
@@ -2514,7 +2481,7 @@ function buildSideCabinet() {
   g.add(div);
 
   const glassMat = new THREE.MeshPhysicalMaterial({
-    color: 0x31404f, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.3,
+    color: 0x3a4b5c, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.3,
     envMapIntensity: 1.3, clearcoat: 0.5, clearcoatRoughness: 0.08,
   });
   CAB2.rows.forEach((y) => {
