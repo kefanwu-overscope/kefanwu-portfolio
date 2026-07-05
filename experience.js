@@ -667,6 +667,11 @@ function initScene(canvas) {
     // Genshin-style interact markers: bob + pulse, hidden while busy
     const busy = panelOpen || !!flight;
     for (const h of HOTSPOTS) {
+      // eased hover scale (an instant 6% pop read as a flash on click)
+      const target = h === hovered && !busy ? h.userData.hotspot.baseScale * 1.06 : h.userData.hotspot.baseScale;
+      if (Math.abs(h.scale.x - target) > 0.0004) {
+        h.scale.setScalar(h.scale.x + (target - h.scale.x) * 0.16);
+      }
       const m = h.userData.hotspot.marker;
       if (!m) continue;
       m.visible = !busy;
@@ -792,10 +797,8 @@ function initScene(canvas) {
 
   function setHover(root) {
     if (hovered === root) return;
-    if (hovered) hovered.scale.setScalar(hovered.userData.hotspot.baseScale);
-    hovered = root;
+    hovered = root; // scale eases toward its target in the render loop (no pop)
     if (hovered) {
-      hovered.scale.setScalar(hovered.userData.hotspot.baseScale * 1.06);
       setCursorHover(true);
       sndTick();
       if (labelEl) {
@@ -882,10 +885,14 @@ function initScene(canvas) {
     const focusPos = c.clone().addScaledVector(dir, 1.0);
     focusPos.y = Math.max(c.y + 0.06, 0.98);
     if (hs.action === "resume") focusPos.set(c.x + 0.28, c.y + 0.5, c.z + 0.75);
-    // bias the look right of the object so it settles in the left third of
-    // the viewport, clear of the case-study panel
+    // land the exhibit at the center of the viewport strip LEFT of the panel,
+    // whatever the screen width: offset the look target so the model's NDC x
+    // equals -(panel width fraction). d=1.0 matches the focusPos distance.
     const right = new THREE.Vector3(0, 1, 0).cross(dir).normalize();
-    const focusLook = c.clone().addScaledVector(right, 0.3);
+    const panelFrac = hs.action === "resume" ? 0 :
+      Math.min(Math.min(window.innerWidth * 0.94, 900) / window.innerWidth, 0.55);
+    const lookOff = panelFrac * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect;
+    const focusLook = c.clone().addScaledVector(right, lookOff);
 
     panelOpen = true;
     focusedPivot = hs.key ? root : null;
