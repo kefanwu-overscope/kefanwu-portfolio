@@ -496,8 +496,8 @@ function initScene(canvas) {
     // real CAD (7-CP06-P00-SEAT.STL -> driverseat.glb): bent-sheet aluminum
     // seat. Native axes: x=width, z=back height, y=face normal. Stand it up
     // (z->up) with rotX, then face the room with rotY.
-    { file: "driverseat",      key: "seat",      label: "Driver seat",       size: 0.34, axis: "y", bay: 0, row: 0, rotX: -Math.PI / 2, rotY: 0, rotZ: Math.PI / 2,
-      matTweak: { steel: { color: 0xccd2da, metalness: 0.5, roughness: 0.44 } } }, // light brushed aluminum, seating face to room
+    { file: "driverseat",      key: "seat",      label: "Driver seat",       size: 0.34, axis: "y", bay: 0, row: 0, rotX: Math.PI / 2, rotY: -Math.PI / 2 + 0.4, rotZ: Math.PI / 2,
+      matTweak: { steel: { color: 0xccd2da, metalness: 0.5, roughness: 0.44 } } }, // light brushed aluminum, reclined bucket facing the room
     { build: buildFtcBot,      key: "ftc",       label: "FTC robot",         size: 0.28, bay: 1, row: 0 },
     { file: "smelly",          key: "formlabs",  label: "Smelly",            size: 0.3,  axis: "y", bay: 0, row: 1, rotY: -Math.PI / 2 + 0.2,
       matTweak: { printed: { color: 0x9aa0a8, metalness: 0.5, roughness: 0.45 }, steel: { color: 0xaeb4bc } } }, // light aluminum
@@ -2448,21 +2448,40 @@ function buildFtcBot() {
   const chassis = new THREE.Mesh(new RoundedBoxGeometry(0.2, 0.02, 0.16, 2, 0.005), alu);
   chassis.position.y = 0.045;
   g.add(chassis);
-  // mecanum wheels: cylinder + angled rollers
-  [[-0.085, -0.07], [0.085, -0.07], [-0.085, 0.07], [0.085, 0.07]].forEach(([x, z]) => {
-    const wheel = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.02, 16),
-      new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.7 }));
-    wheel.rotation.z = Math.PI / 2;
-    wheel.position.set(x, 0.032, z);
-    g.add(wheel);
-    for (let r = 0; r < 5; r++) {
-      const a = (r / 5) * Math.PI * 2;
-      const roller = new THREE.Mesh(new THREE.CapsuleGeometry(0.005, 0.014, 3, 8),
-        new THREE.MeshStandardMaterial({ color: 0x53565c, roughness: 0.6 }));
-      roller.position.set(x + (x > 0 ? 0.011 : -0.011), 0.032 + Math.sin(a) * 0.026, z + Math.cos(a) * 0.026);
-      roller.rotation.x = a + 0.8;
-      g.add(roller);
+  // mecanum wheels: small hub + rollers ON the rim at 45deg (the rollers are
+  // the tread — no solid tyre cylinder to poke through them), mounted flush
+  // outside the chassis so nothing clips
+  const hubMat = new THREE.MeshStandardMaterial({ color: 0x1a1c20, roughness: 0.55, metalness: 0.5 });
+  const rollerMat = new THREE.MeshStandardMaterial({ color: 0x53565c, roughness: 0.55, metalness: 0.3 });
+  const wheelUp = new THREE.Vector3(0, 1, 0);
+  function mecanumWheel(hand) {
+    const wheel = new THREE.Group();
+    const hubR = 0.015, hubW = 0.02, ringR = 0.028;
+    const hub = new THREE.Mesh(new THREE.CylinderGeometry(hubR, hubR, hubW, 18), hubMat); // axis = local y
+    wheel.add(hub);
+    [-1, 1].forEach((s) => {
+      const disc = new THREE.Mesh(new THREE.CylinderGeometry(hubR * 1.2, hubR * 1.2, 0.002, 18), hubMat);
+      disc.position.y = (s * hubW) / 2;
+      wheel.add(disc);
+    });
+    const N = 10;
+    for (let i = 0; i < N; i++) {
+      const a = (i / N) * Math.PI * 2;
+      const roller = new THREE.Mesh(new THREE.CapsuleGeometry(0.0055, 0.015, 4, 8), rollerMat);
+      roller.position.set(ringR * Math.cos(a), 0, ringR * Math.sin(a));
+      // long axis = tangent blended 45deg toward the wheel axis (mecanum);
+      // `hand` mirrors the tilt on the left vs right wheels
+      const dir = new THREE.Vector3(-hand * Math.sin(a), 1, hand * Math.cos(a)).normalize();
+      roller.quaternion.setFromUnitVectors(wheelUp, dir);
+      wheel.add(roller);
     }
+    return wheel;
+  }
+  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz]) => {
+    const w = mecanumWheel(sx);
+    w.rotation.z = Math.PI / 2;                 // spin axis -> world x
+    w.position.set(sx * 0.112, 0.034, sz * 0.07); // flush just outside the chassis side
+    g.add(w);
   });
   // vertical lift + claw
   [[-0.03], [0.03]].forEach(([x]) => {
