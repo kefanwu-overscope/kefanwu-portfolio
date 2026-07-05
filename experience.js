@@ -255,10 +255,9 @@ function initScene(canvas) {
     if (!prefersReducedMotion) {
       runLightIntro();
       startIntro();
-      setTimeout(showDragHint, 1600); // self-guards until the entry flight ends, so it always fires
-    } else {
-      setTimeout(showDragHint, 900);
     }
+    // the drag hint is armed by the render loop once the camera first rests
+    // (frame-driven, so it can't be missed like a timer/callback could)
   };
   manager.onLoad = doReveal;
   setTimeout(doReveal, 10000); // safety
@@ -631,6 +630,15 @@ function initScene(canvas) {
       cp.y = Math.max(0.4, Math.min(3.15, cp.y));
     }
 
+    // drag hint: arm once the camera first comes to rest after the reveal,
+    // then fire from the frame loop (a timer/callback could be missed; a
+    // frame can't — and a background tab simply defers it until visible)
+    if (dragHintArm === null && revealed && !flight) dragHintArm = t + 900;
+    if (dragHintArm !== null && dragHintArm !== Infinity && t >= dragHintArm && !panelOpen) {
+      dragHintArm = Infinity;
+      showDragHint();
+    }
+
     // Bambu printer: print head sweeps across the bed while "printing"
     if (!prefersReducedMotion && MODELS.printerHead) {
       MODELS.printerHead.position.x = Math.sin(t * 0.0032) * 0.13;
@@ -733,25 +741,26 @@ function initScene(canvas) {
 
   /* ---------- one-time hint: the scene can be dragged to look around ---------- */
   const dragHintEl = document.getElementById("exp-draghint");
+  // per page-load only (no localStorage): every visit gets the invitation
+  // until the visitor actually drags — a refresh brings it back
   let dragHintDone = false;
-  try { dragHintDone = localStorage.getItem("kw_drag_hint") === "1"; } catch (e) {}
+  let dragHintArm = null; // null = not armed; a timestamp = fire then; Infinity = fired
   if (dragHintEl && !FINE_POINTER) {
     const t = dragHintEl.querySelector(".exp-draghint__text");
     if (t) t.textContent = "Swipe to look around";
   }
   function showDragHint() {
     if (dragHintDone || !dragHintEl || panelOpen) return;
-    if (flight) { setTimeout(showDragHint, 350); return; } // wait out the entry flight, then invite control
     dragHintEl.hidden = false;
     requestAnimationFrame(() => dragHintEl.classList.add("is-on"));
+    setTimeout(dismissDragHint, 14000); // don't nag forever if they never drag
   }
   function dismissDragHint() {
     if (dragHintDone) return;
     dragHintDone = true;
-    try { localStorage.setItem("kw_drag_hint", "1"); } catch (e) {}
     if (!dragHintEl) return;
     dragHintEl.classList.remove("is-on");
-    setTimeout(() => { if (dragHintEl) dragHintEl.hidden = true; }, 520);
+    setTimeout(() => { if (dragHintEl) dragHintEl.hidden = true; }, 620);
   }
   // dismiss the moment the user actually drags to orbit the scene
   renderer.domElement.addEventListener("pointermove", (ev) => {
@@ -953,7 +962,7 @@ function initScene(canvas) {
     if (panelOpen) closePanel();
   });
 
-  window.__exp = { THREE, scene, camera, renderer, controls, composer, bloom, key, hemi, models: MODELS, hotspots: HOTSPOTS, openPanel };
+  window.__exp = { THREE, scene, camera, renderer, controls, composer, bloom, key, hemi, models: MODELS, hotspots: HOTSPOTS, openPanel, showDragHint };
   console.info(`[experience] engineering office ready — ${HOTSPOTS.length} hotspots`);
 }
 
