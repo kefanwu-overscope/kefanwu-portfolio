@@ -117,15 +117,23 @@ const ASSEMBLY_MATS = {
   dark: () => new THREE.MeshStandardMaterial({ color: 0x1a1c20, metalness: 0.55, roughness: 0.45, envMapIntensity: 1.4 }),
   printed: () => new THREE.MeshStandardMaterial({ color: 0x2c3038, metalness: 0.12, roughness: 0.58, envMapIntensity: 1.2 }),
   aero: () => new THREE.MeshStandardMaterial({ color: 0xd8dadc, metalness: 0.05, roughness: 0.42, envMapIntensity: 1.2 }),
-  carbon: () =>
-    new THREE.MeshPhysicalMaterial({
-      map: makeCarbonTwillTexture(),
-      color: 0xbfc2c6, // tint over the dark weave map
-      metalness: 0.25,
-      roughness: 0.62, // matte prepreg finish
-      clearcoat: 0.12,
-      clearcoatRoughness: 0.5,
-    }),
+  carbon: () => {
+    // self-lit through the twill map: the weave stays readable inside the
+    // dim bay without flattening into grey plastic
+    const twill = makeCarbonTwillTexture();
+    return new THREE.MeshPhysicalMaterial({
+      map: twill,
+      color: 0xd8dce2,
+      emissiveMap: twill,
+      emissive: 0xaab4c4,
+      emissiveIntensity: 1.1,
+      metalness: 0.3,
+      roughness: 0.5,
+      clearcoat: 0.4,
+      clearcoatRoughness: 0.25,
+      envMapIntensity: 2.4,
+    });
+  },
   rubber: () => new THREE.MeshStandardMaterial({ color: 0x0d0e10, metalness: 0.0, roughness: 0.95 }),
   // guitar bodies/necks + pool cue — the one warm note, kept restrained
   wood: () => new THREE.MeshStandardMaterial({ color: 0x9a774a, metalness: 0.0, roughness: 0.5, envMapIntensity: 1.0 }),
@@ -447,6 +455,21 @@ function initScene(canvas) {
   deskLamp.rotation.y = 0.9;
   scene.add(deskLamp);
   MODELS.deskLamp = deskLamp;
+  // pseudo-hotspot: interact marker + hover label + click = room light switch
+  {
+    const bb = new THREE.Box3().setFromObject(deskLamp);
+    const center = bb.getCenter(new THREE.Vector3());
+    const marker = makeInteractMarker();
+    const markerY = bb.max.y + 0.07;
+    marker.position.set(center.x, markerY, center.z);
+    scene.add(marker);
+    NO_PREPASS.push(marker);
+    deskLamp.userData.hotspot = {
+      key: null, action: "lamp", label: "Room lights", baseScale: 1,
+      center, marker, markerY, phase: Math.random() * Math.PI * 2,
+    };
+    HOTSPOTS.push(deskLamp);
+  }
 
   // resume: the hero object on the desk — front and center, in the light
   placeRoot(buildResumePaper(), scene, {
@@ -573,6 +596,17 @@ function initScene(canvas) {
   let lightsOn = true;
   let bakedMats = [];
   const LM = { on2k: null, off2k: null, on4k: null, off4k: null, probeOn: null, probeOff: null };
+  // night-mode practicals: warm pool over the workbench (its lamp + printer
+  // read as the only bench light) and the desk lamp's own LEDs glow warm
+  const benchGlow = new THREE.PointLight(0xffd9a8, 0, 1.7, 2);
+  benchGlow.position.set(-2.3, 1.25, -1.1);
+  scene.add(benchGlow);
+  const lampLeds = [];
+  if (MODELS.deskLamp) MODELS.deskLamp.traverse((o) => {
+    if (o.isMesh && o.material && o.material.emissive && o.material.emissiveIntensity > 0 && o.material.emissiveIntensity < 0.3) {
+      lampLeds.push(o.material);
+    }
+  });
   function flipRows(tex) {
     // .hdr loads bottom-up vs glTF's top-down UV convention — flip in place
     const { data, width, height } = tex.image;
@@ -600,12 +634,13 @@ function initScene(canvas) {
     if (probe) scene.environment = probe;
     // real-time lights serve the exhibits; dim them with the room
     const want = lightsOn
-      ? { key: 1.35, hemi: 0.95, fill: 0.3, env: 0.5 }
-      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35 };
-    const from = { key: key.intensity, hemi: hemi.intensity, fill: fill.intensity, env: scene.environmentIntensity };
+      ? { key: 1.35, hemi: 0.95, fill: 0.3, env: 0.5, bench: 0 }
+      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95 };
+    lampLeds.forEach((m) => { m.emissiveIntensity = lightsOn ? 0.05 : 1.5; });
+    const from = { key: key.intensity, hemi: hemi.intensity, fill: fill.intensity, env: scene.environmentIntensity, bench: benchGlow.intensity };
     if (prefersReducedMotion || !animate) {
       key.intensity = want.key; hemi.intensity = want.hemi; fill.intensity = want.fill;
-      scene.environmentIntensity = want.env;
+      scene.environmentIntensity = want.env; benchGlow.intensity = want.bench;
       return;
     }
     const t0 = performance.now();
@@ -616,6 +651,7 @@ function initScene(canvas) {
       hemi.intensity = from.hemi + (want.hemi - from.hemi) * e;
       fill.intensity = from.fill + (want.fill - from.fill) * e;
       scene.environmentIntensity = from.env + (want.env - from.env) * e;
+      benchGlow.intensity = from.bench + (want.bench - from.bench) * e;
       if (k < 1) requestAnimationFrame(step);
     })(t0);
   }
@@ -931,7 +967,9 @@ function initScene(canvas) {
           labelEl.classList.remove("exp-label--wide");
           const sub = hs.action === "resume"
             ? "Click to read"
-            : (window.projectData && window.projectData[hs.key] && window.projectData[hs.key].kicker) || "";
+            : hs.action === "lamp"
+              ? "Click to toggle the lights"
+              : (window.projectData && window.projectData[hs.key] && window.projectData[hs.key].kicker) || "";
           labelEl.innerHTML = `<b>${hs.label}</b>` + (sub ? `<span>${sub}</span>` : "");
         }
         labelEl.hidden = false;
@@ -961,12 +999,7 @@ function initScene(canvas) {
   renderer.domElement.addEventListener("pointermove", (ev) => {
     updatePointer(ev);
     if (panelOpen || flight) return;
-    const h = pickHotspot();
-    setHover(h);
-    // pointer affordance over the lamp light-switch
-    if (!h && USE_BAKED && MODELS.deskLamp && raycaster.intersectObject(MODELS.deskLamp, true).length) {
-      setCursorHover(true);
-    }
+    setHover(pickHotspot()); // the lamp is a pseudo-hotspot -> label + cursor for free
   });
   // the hover card would otherwise stay stuck when the pointer exits the
   // canvas (topbar, panel, window edge) without another canvas pointermove
@@ -984,11 +1017,10 @@ function initScene(canvas) {
     }
     updatePointer(ev);
     const root = pickHotspot();
-    if (root) { focusHotspot(root); return; }
+    if (!root) return;
     // the desk lamp is the room's light switch
-    if (USE_BAKED && MODELS.deskLamp && raycaster.intersectObject(MODELS.deskLamp, true).length) {
-      toggleRoomLights();
-    }
+    if (root.userData.hotspot.action === "lamp") { toggleRoomLights(); return; }
+    focusHotspot(root);
   });
 
   function focusHotspot(root) {
@@ -2729,8 +2761,8 @@ function buildBambuPrinter() {
 
 /* right-wall display cabinet layout (2 bays x 3 rows) */
 const CAB2 = {
-  x: 2.42, // cabinet center x (against the right wall)
-  frontX: 2.4, // exhibit center x (centered on the glass boards)
+  x: 2.26, // cabinet center x (back panel at 2.50, clear of the 2.52 wainscot face)
+  frontX: 2.24, // exhibit center x (centered on the glass boards)
   bays: [-0.75, -0.05], // z centers
   rows: [1.68, 1.2, 0.72],
   rowH: 0.48,

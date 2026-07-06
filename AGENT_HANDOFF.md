@@ -555,6 +555,22 @@ an `assert s < e` ORDER check, then rewrite the file with
   `hotspots.length`, click-simulate via projected bbox centers, inspect
   `composer.passes`).
 
+### Baked lighting (2026-07-05, tools/bake/)
+- The architecture layer (room shell, rug, desk, tool chest — tagged `bk_*`
+  in experience.js) is PRE-BAKED via Blender Cycles: `USE_BAKED=true` hides
+  the procedural originals and loads `models/baked/room-baked.glb` with HDR
+  lightmaps (`lightMap`, uv1/channel=1, rows flipped, intensity 0.6).
+  Cabinets, workbench and all exhibits stay real-time; `probe-*.hdr` (baked
+  in-room 360) replaces the Poly Haven HDRI so reflections match. GTAO is
+  disabled when baked. 2K maps block the loader; 4K stream in idle (desktop
+  only). TWO light states exist — the DESK LAMP is a pseudo-hotspot
+  (action:"lamp") that toggles bright workshop vs. night mode (baked
+  lamp-pool + real-time benchGlow + lamp LEDs). Pipeline: run
+  tools/bake/export_static.js in the browser -> `blender --background
+  --python tools/bake/bake.py -- bake-layer.glb outdir on|off 4096`
+  (portable Blender in C:\Users\oc\.cache\blender\, OPTIX GPU). Re-bake after
+  ANY architecture/layout change; exhibits/cabinets don't need it.
+
 ### Gotchas
 
 - STL-derived GLBs carry NO UVs; `boxProjectUVs` generates them (used for
