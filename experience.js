@@ -242,9 +242,9 @@ function initScene(canvas) {
   hideForPrepass(bokeh);
   const bloom = new UnrealBloomPass(
     new THREE.Vector2(window.innerWidth, window.innerHeight),
-    0.12, // strength — a whisper halo on true emitters only
-    0.45, // radius
-    0.92 // threshold — strips/cove only; task-lamp discs must NOT halo
+    0.09, // strength — a whisper halo on true emitters only
+    0.4, // radius
+    0.96 // threshold — near-clipping emitters only; no wash off white surfaces
   );
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
@@ -279,7 +279,8 @@ function initScene(canvas) {
   setupTextures(manager);
 
   const pmrem = new THREE.PMREMGenerator(renderer);
-  new HDRLoader(manager).load("hdri/wooden_lounge_1k.hdr", (tex) => {
+  if (!USE_BAKED) new HDRLoader(manager).load("hdri/wooden_lounge_1k.hdr", (tex) => {
+    // legacy HDRI environment — replaced by the baked in-room probe
     scene.environment = pmrem.fromEquirectangular(tex).texture;
     scene.environmentIntensity = 0.22; // keep the HDRI's warm-wood cast subtle
     tex.dispose();
@@ -313,8 +314,10 @@ function initScene(canvas) {
   // (desk lamp is decorative furniture only — it emits no light)
 
   // display spots washing the cabinet
+  // low intensity + full penumbra + wide cone = even museum wash, no hot
+  // pool on the center bay
   [-0.7, 0, 0.7].forEach((x) => {
-    const spot = new THREE.SpotLight(0xe8ecf4, 3.4, 6, 0.46, 0.75, 1.6);
+    const spot = new THREE.SpotLight(0xe8ecf4, 1.9, 6, 0.56, 1.0, 1.6);
     spot.position.set(x, 2.55, 0.45);
     spot.target.position.set(x, 1.0, CAB.z);
     scene.add(spot);
@@ -322,7 +325,7 @@ function initScene(canvas) {
   });
   // right-wall cabinet gets its own pair of spots
   [-0.75, -0.05].forEach((z) => {
-    const spot = new THREE.SpotLight(0xe8ecf4, 3.0, 6, 0.46, 0.75, 1.6);
+    const spot = new THREE.SpotLight(0xe8ecf4, 1.8, 6, 0.56, 1.0, 1.6);
     spot.position.set(0.9, 2.55, z + 0.3);
     spot.target.position.set(2.3, 1.0, z);
     scene.add(spot);
@@ -593,7 +596,7 @@ function initScene(canvas) {
      matching baked 360 environment probe. Two light states are baked — the
      desk lamp is the room's light switch. Set USE_BAKED=false to fall back
      to the fully procedural room. */
-  let lightsOn = true;
+  let lightsOn = false; // night mode is the default — the lamp switches day on
   let bakedMats = [];
   const LM = { on2k: null, off2k: null, on4k: null, off4k: null, probeOn: null, probeOff: null };
   // night-mode practicals: warm pool over the workbench (its lamp + printer
@@ -630,7 +633,7 @@ function initScene(canvas) {
   function applyLightState(animate) {
     const lm = lightsOn ? (LM.on4k || LM.on2k) : (LM.off4k || LM.off2k);
     if (lm) bakedMats.forEach((m) => { m.lightMap = lm; m.needsUpdate = true; });
-    const probe = lightsOn ? LM.probeOn : (LM.probeOff || LM.probeOn);
+    const probe = lightsOn ? (LM.probeOn || LM.probeOff) : (LM.probeOff || LM.probeOn);
     if (probe) scene.environment = probe;
     // real-time lights serve the exhibits; dim them with the room
     const want = lightsOn
@@ -667,13 +670,14 @@ function initScene(canvas) {
       o.traverse((m) => { if ((m.name || "").indexOf("bk_") === 0) tagged = true; });
       if (tagged) o.visible = false;
     });
+    applyLightState(false); // real-time lights to night values immediately
     const hdrl = new HDRLoader(manager);
-    hdrl.load("models/baked/lightmap-on-2k.hdr", (t) => { LM.on2k = prepLM(t); applyLightState(false); });
-    hdrl.load("models/baked/probe-on.hdr", (t) => {
+    hdrl.load("models/baked/lightmap-off-2k.hdr", (t) => { LM.off2k = prepLM(t); applyLightState(false); });
+    hdrl.load("models/baked/probe-off.hdr", (t) => {
       t.mapping = THREE.EquirectangularReflectionMapping;
-      LM.probeOn = t;
+      LM.probeOff = t;
       scene.environment = t;
-      scene.environmentIntensity = 0.5;
+      applyLightState(false);
     });
     loader.load("models/baked/room-baked.glb", (gltf) => {
       gltf.scene.traverse((o) => {
@@ -691,11 +695,11 @@ function initScene(canvas) {
     // idle upgrades: 4K lightmap, then the lights-off set
     const later = new HDRLoader(); // NOT on the manager — don't block the loader UI
     setTimeout(() => {
-      later.load("models/baked/lightmap-off-2k.hdr", (t) => { LM.off2k = prepLM(t); });
-      later.load("models/baked/probe-off.hdr", (t) => { t.mapping = THREE.EquirectangularReflectionMapping; LM.probeOff = t; });
+      later.load("models/baked/lightmap-on-2k.hdr", (t) => { LM.on2k = prepLM(t); });
+      later.load("models/baked/probe-on.hdr", (t) => { t.mapping = THREE.EquirectangularReflectionMapping; LM.probeOn = t; });
       if (!LOW_TIER) { // phones stay on 2K — don't pull 15MB+ maps over mobile data
-        later.load("models/baked/lightmap-on-4k.hdr", (t) => { LM.on4k = prepLM(t); if (lightsOn) applyLightState(false); });
         later.load("models/baked/lightmap-off-4k.hdr", (t) => { LM.off4k = prepLM(t); if (!lightsOn) applyLightState(false); });
+        later.load("models/baked/lightmap-on-4k.hdr", (t) => { LM.on4k = prepLM(t); if (lightsOn) applyLightState(false); });
       }
     }, 4000);
   }
@@ -2528,7 +2532,7 @@ function buildBambuPrinter() {
   bed.position.set(0, 0.111, D / 2 - 0.19);
   g.add(bed);
   const printZ = D / 2 - 0.19;
-  const printMat = new THREE.MeshStandardMaterial({ color: 0x2f7fff, roughness: 0.5, metalness: 0.05, emissive: 0x2f7fff, emissiveIntensity: 0.55 });
+  const printMat = new THREE.MeshStandardMaterial({ color: 0x2f7fff, roughness: 0.5, metalness: 0.05, emissive: 0x2f7fff, emissiveIntensity: 0.35 });
   // a small car mid-print on the bed (the top rows still "growing")
   const carBody = new THREE.Mesh(new RoundedBoxGeometry(0.12, 0.03, 0.055, 2, 0.007), printMat);
   carBody.position.set(0, 0.138, printZ);
@@ -2588,16 +2592,18 @@ function buildBambuPrinter() {
     screw.position.set(s * (chamberW / 2 - 0.035), 0.225, -0.06);
     g.add(screw);
   });
+  // restrained chamber light: below the bloom threshold, short throw so the
+  // glow stays INSIDE the enclosure instead of haloing the bench
   const chamberLed = new THREE.Mesh(
     new THREE.BoxGeometry(chamberW - 0.04, 0.006, 0.01),
-    new THREE.MeshStandardMaterial({ color: 0xf2f6fc, emissive: 0xeef4ff, emissiveIntensity: 2.2 })
+    new THREE.MeshStandardMaterial({ color: 0xf2f6fc, emissive: 0xeef4ff, emissiveIntensity: 0.75 })
   );
   chamberLed.position.set(0, doorH - 0.02, D / 2 - 0.05);
   g.add(chamberLed);
-  const inner = new THREE.PointLight(0xeaf2ff, 0.95, 1.25, 2);
+  const inner = new THREE.PointLight(0xeaf2ff, 0.38, 0.8, 2);
   inner.position.set(0, doorH - 0.06, D / 2 - 0.16);
   g.add(inner);
-  const inner2 = new THREE.PointLight(0xfff0e0, 0.5, 0.55, 2); // warm fill near the hot-end
+  const inner2 = new THREE.PointLight(0xfff0e0, 0.28, 0.5, 2); // warm fill near the hot-end
   inner2.position.set(0, 0.24, printZ);
   g.add(inner2);
 
