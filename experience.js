@@ -691,15 +691,38 @@ function initScene(canvas) {
       scene.environment = t;
       applyLightState(false);
     });
+    // baked surfaces keep their imported PBR materials (roughness/metalness
+    // survive the Blender round trip) so they still show speculars and probe
+    // reflections — but live on light-layer 1 so the real-time lights can't
+    // double-light what the lightmap already carries
+    camera.layers.enable(1);
     loader.load("models/baked/room-baked.glb", (gltf) => {
+      const pt = TEX.loadPBR("painted_plaster_wall");
+      const fMap = pt.map.clone(); fMap.repeat.set(8, 8); fMap.needsUpdate = true;
+      const fNor = pt.normalMap.clone(); fNor.repeat.set(8, 8); fNor.needsUpdate = true;
+      const fRgh = pt.roughnessMap.clone(); fRgh.repeat.set(8, 8); fRgh.needsUpdate = true;
       gltf.scene.traverse((o) => {
         if (!o.isMesh) return;
-        const src = o.material;
-        o.material = new THREE.MeshBasicMaterial({ color: src.color ? src.color.clone() : new THREE.Color(0x888888), lightMapIntensity: 0.6 });
-        if (src.transparent) { o.material.transparent = true; o.material.opacity = src.opacity; }
+        const m = o.material;
+        m.lightMapIntensity = 0.6;
+        m.envMapIntensity = 0.5;
+        // Blender rewrites baseColor on texture-stripped materials, so match
+        // the two big textured surfaces by GEOMETRY instead: the floor is the
+        // 16x16 plane, the walls are the only >3m-tall slabs
+        o.geometry.computeBoundingBox();
+        const s = o.geometry.boundingBox.getSize(new THREE.Vector3());
+        if (s.x > 10 && s.z > 10 && s.y < 0.5) {
+          m.map = fMap; m.normalMap = fNor; m.roughnessMap = fRgh;
+          m.color.setHex(COL.floorTint);
+        } else if (s.y > 3 && Math.max(s.x, s.z) > 4) {
+          m.map = pt.map; m.normalMap = pt.normalMap; m.roughnessMap = pt.roughnessMap;
+          m.color.setHex(COL.wallTint);
+        }
+        m.needsUpdate = true;
+        o.layers.set(1);
         o.castShadow = false;
         o.receiveShadow = false;
-        bakedMats.push(o.material);
+        bakedMats.push(m);
       });
       scene.add(gltf.scene);
       applyLightState(false);
