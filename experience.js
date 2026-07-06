@@ -339,14 +339,17 @@ function initScene(canvas) {
     const l = new THREE.RectAreaLight(0xdfe8f4, intensity, w, 0.05);
     return l;
   };
-  CAB.rows.forEach((y) => {
-    const l = stripLight(2.2, 9.0);
+  // LOW_TIER: one taller-reach strip per cabinet instead of one per row
+  const mainRows = LOW_TIER ? [CAB.rows[1]] : CAB.rows;
+  const sideRows = LOW_TIER ? [CAB2.rows[1]] : CAB2.rows;
+  mainRows.forEach((y) => {
+    const l = stripLight(2.2, LOW_TIER ? 14 : 9.0);
     l.position.set(0, y + 0.42, CAB.z + 0.34);
     scene.add(l);
     l.lookAt(0, y + 0.06, CAB.z); // ~45° down-back: lights faces AND backs
   });
-  CAB2.rows.forEach((y) => {
-    const l = stripLight(1.4, 8.5);
+  sideRows.forEach((y) => {
+    const l = stripLight(1.4, LOW_TIER ? 13 : 8.5);
     l.position.set(CAB2.x - 0.34, y + 0.42, -0.4);
     scene.add(l);
     l.lookAt(CAB2.x, y + 0.06, -0.4);
@@ -616,6 +619,16 @@ function initScene(canvas) {
   const benchGlow = new THREE.PointLight(0xffd9a8, 0, 1.7, 2);
   benchGlow.position.set(-2.3, 1.25, -1.1);
   scene.add(benchGlow);
+  // museum follow-spot: fades in on the focused exhibit while its panel is
+  // open (real-time layer only — the baked room ignores it)
+  const focusSpot = new THREE.SpotLight(0xf2f5fa, 0, 3.5, 0.42, 0.85, 1.4);
+  scene.add(focusSpot);
+  scene.add(focusSpot.target);
+  // crossfade uniforms shared by every baked material: lightMap blends
+  // toward lightMapB by lmMix, so the lamp toggle FADES between light states
+  const lmMix = { value: 0 };
+  const lmB = { value: null };
+  const blueLines = []; // rug LED inlay materials (baked GLB), glow at night
   const lampLeds = [];
   if (MODELS.deskLamp) MODELS.deskLamp.traverse((o) => {
     if (o.isMesh && o.material && o.material.emissive && o.material.emissiveIntensity > 0 && o.material.emissiveIntensity < 0.3) {
@@ -644,14 +657,28 @@ function initScene(canvas) {
   }
   function applyLightState(animate) {
     const lm = lightsOn ? (LM.on4k || LM.on2k) : (LM.off4k || LM.off2k);
-    if (lm) bakedMats.forEach((m) => { m.lightMap = lm; m.needsUpdate = true; });
+    const lmCurrent = bakedMats.length ? bakedMats[0].lightMap : null;
+    const fadeLm = !!(lm && lmCurrent && lm !== lmCurrent && animate && !prefersReducedMotion);
+    if (lm && !fadeLm) {
+      bakedMats.forEach((m) => { m.lightMap = lm; });
+      if (!lmB.value) lmB.value = lm; // keep the B sampler bound
+      lmMix.value = 0;
+    } else if (fadeLm) {
+      lmB.value = lm;
+      lmMix.value = 0;
+    }
     const probe = lightsOn ? (LM.probeOn || LM.probeOff) : (LM.probeOff || LM.probeOn);
     if (probe) scene.environment = probe;
     // real-time lights serve the exhibits; dim them with the room
     const want = lightsOn
-      ? { key: 1.35, hemi: 0.95, fill: 0.3, env: 0.5, bench: 0 }
+      ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0 } // day grade: strips + bake carry the room
       : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95 };
     lampLeds.forEach((m) => { m.emissiveIntensity = lightsOn ? 0.05 : 1.5; });
+    blueLines.forEach((m) => {
+      m.emissive = m.emissive || new THREE.Color(0x2b4d80);
+      m.emissive.setHex(0x3f8cff);
+      m.emissiveIntensity = lightsOn ? 0.12 : 1.1; // LED inlay glows at night
+    });
     const from = { key: key.intensity, hemi: hemi.intensity, fill: fill.intensity, env: scene.environmentIntensity, bench: benchGlow.intensity };
     if (prefersReducedMotion || !animate) {
       key.intensity = want.key; hemi.intensity = want.hemi; fill.intensity = want.fill;
@@ -659,15 +686,21 @@ function initScene(canvas) {
       return;
     }
     const t0 = performance.now();
+    const DUR = fadeLm ? 800 : 450; // lightmap crossfade reads best a bit slower
     (function step(now) {
-      const k = Math.min(1, (now - t0) / 450);
+      const k = Math.min(1, (now - t0) / DUR);
       const e = easeInOutCubic(k);
       key.intensity = from.key + (want.key - from.key) * e;
       hemi.intensity = from.hemi + (want.hemi - from.hemi) * e;
       fill.intensity = from.fill + (want.fill - from.fill) * e;
       scene.environmentIntensity = from.env + (want.env - from.env) * e;
       benchGlow.intensity = from.bench + (want.bench - from.bench) * e;
+      if (fadeLm) lmMix.value = e;
       if (k < 1) requestAnimationFrame(step);
+      else if (fadeLm) {
+        bakedMats.forEach((m) => { m.lightMap = lm; });
+        lmMix.value = 0;
+      }
     })(t0);
   }
   function toggleRoomLights() {
@@ -718,6 +751,18 @@ function initScene(canvas) {
           m.map = pt.map; m.normalMap = pt.normalMap; m.roughnessMap = pt.roughnessMap;
           m.color.setHex(COL.wallTint);
         }
+        // the rug's blue LED inlay lines glow for real at night
+        if (m.color && m.color.getHexString() === "2b4d80") blueLines.push(m);
+        m.onBeforeCompile = (sh) => {
+          sh.uniforms.lightMapB = lmB;
+          sh.uniforms.lmMix = lmMix;
+          sh.fragmentShader = sh.fragmentShader
+            .replace("#include <common>", "#include <common>\nuniform sampler2D lightMapB;\nuniform float lmMix;")
+            .replace(
+              "vec4 lightMapTexel = texture2D( lightMap, vLightMapUv );",
+              "vec4 lightMapTexel = mix( texture2D( lightMap, vLightMapUv ), texture2D( lightMapB, vLightMapUv ), lmMix );"
+            );
+        };
         m.needsUpdate = true;
         o.layers.set(1);
         o.castShadow = false;
@@ -845,6 +890,14 @@ function initScene(canvas) {
     // (CFD is a flat monitor — turntabling it reads badly, so leave it still)
     if (panelOpen && focusedPivot && !prefersReducedMotion && focusedPivot.userData.hotspot.key !== "ansysCfd") {
       focusedPivot.rotation.y += 0.0035;
+    }
+    // museum follow-spot eases onto the focused exhibit
+    const spotWant = panelOpen && focusedPivot ? 2.4 : 0;
+    focusSpot.intensity += (spotWant - focusSpot.intensity) * 0.06;
+    if (focusedPivot) {
+      const fc = focusedPivot.userData.hotspot.center;
+      focusSpot.position.set(fc.x * 0.7, fc.y + 0.9, fc.z * 0.7 + 0.35);
+      focusSpot.target.position.copy(fc);
     }
     if (bokeh) {
       const want = panelOpen && focusedPivot ? 0.00022 : 0.0;
