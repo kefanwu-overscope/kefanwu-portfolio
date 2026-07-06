@@ -392,7 +392,7 @@ no bundler, no install.
 | `experience-data.js` | exports `RESUME` (used) and `HERO_PROJECTS` (LEGACY — no longer imported after the 2026-07-03 cleanup; safe to ignore or delete). |
 | `tools/stl2glb.py` | offline STL→GLB merge pipeline (trimesh) for the real CAD exhibits. |
 | `models/real/*.glb` | 5 real merged assemblies (aura, javelin, scanner, seat, steering). |
-| `models/potted_plant_01/`, `hdri/`, `textures/` | the only third-party assets (Poly Haven CC0; see `ATTRIBUTIONS.txt`). Everything else is procedural. |
+| `hdri/`, `textures/` | the only third-party assets (Poly Haven CC0; see `ATTRIBUTIONS.txt`). Everything else is procedural. |
 
 ### Scene
 
@@ -409,10 +409,10 @@ hammer/cutters/tape/level/hex keys/square/adjustable wrench/strippers, LED
 bar lamp), rolling 5-drawer tool chest, real ergonomic mesh task chair
 (models/ergonomic_mesh_office_chair, CC BY 4.0 — see ATTRIBUTIONS.txt;
 intrinsic front is +x, rotY 1.34 faces the desk), blueprint wall panel,
-ceiling cove LED strips, graphite rug (noise map + bump for plush),
-potted plant. (The right cabinet's bottom compartment — below the lowest
-shelf — is currently empty; a helmet + motor prop set was tried there and
-removed.)
+ceiling cove LED strips, graphite rug (noise map + bump for plush).
+(The right cabinet's bottom compartment — below the lowest shelf — is
+currently empty; a helmet + motor prop set was tried there and removed.
+The potted plant was removed 2026-07-06 per owner request.)
 
 ### Exhibits — all 14 projects clickable (15 hotspots: + resume)
 

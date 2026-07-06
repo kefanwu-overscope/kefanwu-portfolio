@@ -324,7 +324,7 @@ function initScene(canvas) {
     scene.add(spot);
     scene.add(spot.target);
   });
-  [-0.75, -0.05].forEach((z) => {
+  CAB2.bays.forEach((z) => {
     const spot = new THREE.SpotLight(0xe8ecf4, 0.85, 6, 0.56, 1.0, 1.6);
     spot.position.set(0.9, 2.55, z + 0.3);
     spot.target.position.set(2.3, 1.0, z);
@@ -350,9 +350,9 @@ function initScene(canvas) {
   });
   sideRows.forEach((y) => {
     const l = stripLight(1.4, LOW_TIER ? 13 : 8.5);
-    l.position.set(CAB2.x - 0.34, y + 0.42, -0.4);
+    l.position.set(CAB2.x - 0.34, y + 0.42, CAB2.z);
     scene.add(l);
-    l.lookAt(CAB2.x, y + 0.06, -0.4);
+    l.lookAt(CAB2.x, y + 0.06, CAB2.z);
   });
 
   /* staged light-up on reveal: ambient -> LED strips -> spots -> lamps */
@@ -621,7 +621,7 @@ function initScene(canvas) {
   scene.add(benchGlow);
   // museum follow-spot: fades in on the focused exhibit while its panel is
   // open (real-time layer only — the baked room ignores it)
-  const focusSpot = new THREE.SpotLight(0xf2f5fa, 0, 3.5, 0.42, 0.85, 1.4);
+  const focusSpot = new THREE.SpotLight(0xf2f5fa, 0, 3.5, 0.5, 1.0, 1.7);
   scene.add(focusSpot);
   scene.add(focusSpot.target);
   // night spot on the resume itself — the paper is real-time, the matching
@@ -799,11 +799,6 @@ function initScene(canvas) {
     // the GLB's intrinsic front is +x, so 1.34 rad turns it to face the desk
     name: "chair", targetSize: 0.95, axis: "y", pos: [-0.25, 0, 1.05], rotY: 1.34,
   });
-  // leafy plant tucked in the corner pocket between cabinet and bookshelf
-  loadModel(loader, scene, "models/potted_plant_01/potted_plant_01.gltf", {
-    name: "plant", targetSize: 1.05, axis: "y", pos: [1.75, 0, -1.18], rotY: 0.6,
-  });
-
 
   /* ---------- resize ---------- */
   function onResize() {
@@ -843,7 +838,7 @@ function initScene(canvas) {
     }
     try { localStorage.setItem("kw_intro_seen", "1"); } catch (e) {}
     // guided sweep: right cabinet -> main cabinet -> resting pose
-    startFlight(new THREE.Vector3(0.7, 1.5, 1.9), new THREE.Vector3(2.3, 1.2, -0.4), 1700, () => {
+    startFlight(new THREE.Vector3(0.7, 1.5, 1.9), new THREE.Vector3(2.3, 1.2, CAB2.z), 1700, () => {
       startFlight(new THREE.Vector3(0.6, 1.45, 1.6), new THREE.Vector3(0, 1.2, -1.1), 1900, () => {
         startFlight(REST_POS, REST_TARGET, 1500);
       });
@@ -901,11 +896,11 @@ function initScene(canvas) {
       focusedPivot.rotation.y += 0.0035;
     }
     // museum follow-spot eases onto the focused exhibit
-    const spotWant = panelOpen && focusedPivot ? 2.4 : 0;
+    const spotWant = panelOpen && focusedPivot ? 1.6 : 0;
     focusSpot.intensity += (spotWant - focusSpot.intensity) * 0.06;
     if (focusedPivot) {
       const fc = focusedPivot.userData.hotspot.center;
-      focusSpot.position.set(fc.x * 0.7, fc.y + 0.9, fc.z * 0.7 + 0.35);
+      focusSpot.position.set(fc.x * 0.7, fc.y + 1.1, fc.z * 0.7 + 0.35);
       focusSpot.target.position.copy(fc);
     }
     if (bokeh) {
@@ -1683,7 +1678,7 @@ function buildDesk() {
   const D = 0.9;
   // silver sit-stand frame under a matte-black slab (Jarvis/Fully language)
   const steelPanel = new THREE.MeshStandardMaterial({ color: 0x8f959d, roughness: 0.35, metalness: 0.9 });
-  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.45, metalness: 0.85 });
+  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.65, metalness: 0.55 });
 
   const top = new THREE.Mesh(
     new RoundedBoxGeometry(W, thk, D, 3, 0.008),
@@ -1755,7 +1750,6 @@ function buildDisplayCabinet() {
   const D = 0.54;
   const z = CAB.z;
   const frameMat = new THREE.MeshStandardMaterial({ color: 0x2e3138, roughness: 0.45, metalness: 0.5, envMapIntensity: 0.5 });
-  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.45, metalness: 0.85 });
 
   // matte back panel
   const back = new THREE.Mesh(new THREE.BoxGeometry(W, H, 0.02), new THREE.MeshStandardMaterial({ color: 0x34373e, roughness: 0.7, metalness: 0.2 }));
@@ -1790,24 +1784,27 @@ function buildDisplayCabinet() {
   });
 
   // tinted glass shelves with aluminum front edge + cool light strips
+  // roughness/clearcoatRoughness kept off the mirror end and env gain modest:
+  // near-mirror glass sparkles into subpixel fireflies under the follow-spot
   const glassMat = new THREE.MeshPhysicalMaterial({
     color: 0x3a4b5c,
-    roughness: 0.05,
+    roughness: 0.16,
     metalness: 0,
     transparent: true,
     opacity: 0.3,
-    envMapIntensity: 1.3,
-    clearcoat: 0.5,
-    clearcoatRoughness: 0.08,
+    envMapIntensity: 0.7,
+    clearcoat: 0.15,
+    clearcoatRoughness: 0.28,
   });
   CAB.rows.forEach((y) => {
-    const board = new THREE.Mesh(new THREE.BoxGeometry(W - 0.09, 0.014, D - 0.08), glassMat);
+    // rounded edges: a sharp 90° glass corner breaks into dashed specular
+    // fireflies under the follow-spot at fly-in distance
+    const board = new THREE.Mesh(new RoundedBoxGeometry(W - 0.09, 0.014, D - 0.08, 2, 0.004), glassMat);
     board.position.set(0, y - 0.007, z);
     board.receiveShadow = true;
     g.add(board);
-    const edge = new THREE.Mesh(new THREE.BoxGeometry(W - 0.09, 0.016, 0.014), alu);
-    edge.position.set(0, y - 0.007, z + D / 2 - 0.045);
-    g.add(edge);
+    // (no aluminum front-edge bar: a subpixel-thin bar in front of the LED
+    // strip aliases into a dashed sparkle line at fly-in distance)
     const strip = new THREE.Mesh(
       new THREE.BoxGeometry(W - 0.16, 0.008, 0.014),
       new THREE.MeshStandardMaterial({ color: 0x6a7078, emissive: 0xbcd7ff, emissiveIntensity: 1.15 })
@@ -2866,7 +2863,8 @@ function buildBambuPrinter() {
 const CAB2 = {
   x: 2.26, // cabinet center x (back panel at 2.50, clear of the 2.52 wainscot face)
   frontX: 2.24, // exhibit center x (centered on the glass boards)
-  bays: [-0.75, -0.05], // z centers
+  z: -0.1, // cabinet center z (shifted +0.3 off the back corner for breathing room)
+  bays: [-0.45, 0.25], // z centers (cabinet center z ± 0.35)
   rows: [1.68, 1.2, 0.72],
   rowH: 0.48,
 };
@@ -2879,7 +2877,6 @@ function buildSideCabinet() {
   const H = 2.2;
   const D = 0.5;
   const frameMat = new THREE.MeshStandardMaterial({ color: 0x2e3138, roughness: 0.45, metalness: 0.5, envMapIntensity: 0.5 });
-  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.45, metalness: 0.85 });
 
   const back = new THREE.Mesh(new THREE.BoxGeometry(0.02, H, W),
     new THREE.MeshStandardMaterial({ color: 0x34373e, roughness: 0.7, metalness: 0.2 }));
@@ -2910,17 +2907,14 @@ function buildSideCabinet() {
   g.add(div);
 
   const glassMat = new THREE.MeshPhysicalMaterial({
-    color: 0x3a4b5c, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.3,
-    envMapIntensity: 1.3, clearcoat: 0.5, clearcoatRoughness: 0.08,
+    color: 0x3a4b5c, roughness: 0.16, metalness: 0, transparent: true, opacity: 0.3,
+    envMapIntensity: 0.7, clearcoat: 0.15, clearcoatRoughness: 0.28,
   });
   CAB2.rows.forEach((y) => {
-    const board = new THREE.Mesh(new THREE.BoxGeometry(D - 0.08, 0.014, W - 0.08), glassMat);
+    const board = new THREE.Mesh(new RoundedBoxGeometry(D - 0.08, 0.014, W - 0.08, 2, 0.004), glassMat);
     board.position.set(0, y - 0.007, 0);
     board.receiveShadow = true;
     g.add(board);
-    const edge = new THREE.Mesh(new THREE.BoxGeometry(0.014, 0.016, W - 0.08), alu);
-    edge.position.set(-D / 2 + 0.04, y - 0.007, 0);
-    g.add(edge);
     const strip = new THREE.Mesh(
       new THREE.BoxGeometry(0.014, 0.008, W - 0.14),
       new THREE.MeshStandardMaterial({ color: 0x6a7078, emissive: 0xbcd7ff, emissiveIntensity: 1.15 })
@@ -2929,7 +2923,7 @@ function buildSideCabinet() {
     g.add(strip);
   });
 
-  g.position.set(CAB2.x, 0, -0.4);
+  g.position.set(CAB2.x, 0, CAB2.z);
   return g;
 }
 
@@ -3010,7 +3004,7 @@ function buildToolChest() {
   // rolling tool chest: graphite body, five drawers with aluminum pulls
   const g = new THREE.Group();
   const body = new THREE.MeshStandardMaterial({ color: 0x212429, roughness: 0.42, metalness: 0.55 });
-  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.45, metalness: 0.85 });
+  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.65, metalness: 0.55 });
   const shell = new THREE.Mesh(new RoundedBoxGeometry(0.55, 0.72, 0.42, 2, 0.014), body);
   shell.position.y = 0.42;
   shell.castShadow = true;
@@ -3047,9 +3041,11 @@ function buildSkillPaper() {
   // live card built from RESUME.skills)
   const g = new THREE.Group();
   const c = document.createElement("canvas");
-  c.width = 256;
-  c.height = 340;
+  // 4x supersampled, same treatment as the resume sheet
+  c.width = 1024;
+  c.height = 1360;
   const ctx = c.getContext("2d");
+  ctx.scale(4, 4);
   ctx.fillStyle = "#f4f5f7";
   ctx.fillRect(0, 0, 256, 340);
   ctx.fillStyle = "#1a1a1c";
@@ -3071,6 +3067,7 @@ function buildSkillPaper() {
   });
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = MAXA; // flat sheet, grazing view
   const sheet = new THREE.Mesh(
     new THREE.BoxGeometry(0.21, 0.004, 0.28),
     new THREE.MeshStandardMaterial({ color: 0xe4e6ea, roughness: 0.96 })
@@ -3136,9 +3133,12 @@ function buildResumePaper() {
   // A4-ish sheet lying flat on the desk with a printed resume header
   const g = new THREE.Group();
   const c = document.createElement("canvas");
-  c.width = 256;
-  c.height = 340;
+  // 4x supersampled so the text stays crisp at fly-in distance; drawing
+  // coordinates below stay in the original 256x340 space via ctx.scale
+  c.width = 1024;
+  c.height = 1360;
   const ctx = c.getContext("2d");
+  ctx.scale(4, 4);
   ctx.fillStyle = "#f4f5f7";
   ctx.fillRect(0, 0, 256, 340);
   ctx.fillStyle = "#1a1a1c";
@@ -3164,6 +3164,7 @@ function buildResumePaper() {
   section("SKILLS", 290, [204, 148]);
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = MAXA; // the sheet lies flat — grazing view needs aniso
 
   // larger sheet so the resume reads as the hero object on the desk
   const sheet = new THREE.Mesh(
@@ -3199,6 +3200,12 @@ function buildCfdDisplay(texLoader) {
   g.add(bezel);
   const tex = texLoader.load("assets/ansys-cfd-pressure.webp");
   tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = MAXA; // screen is viewed at an angle — aniso keeps it sharp
+  // the source render is 16:9-ish (1800x1013) but the panel is 1.58:1 —
+  // crop the texture horizontally instead of squashing it
+  const crop = (0.245 / 0.155) / (1800 / 1013);
+  tex.repeat.set(crop, 1);
+  tex.offset.set((1 - crop) / 2, 0);
   // unlit screen, dimmed below the bloom threshold so it reads as an LCD,
   // not a light fixture
   const screen = new THREE.Mesh(

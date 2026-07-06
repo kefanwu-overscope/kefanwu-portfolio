@@ -2,7 +2,7 @@
 // (or via preview_eval) with a local receiver listening on 127.0.0.1:4199.
 // Collects the STATIC bake layer — room shell, cabinets, desk, desk lamp,
 // workbench, tool chest — and posts it as static-room.glb. Excludes all
-// exhibit pivots (they rotate), the chair + plant (third-party, real-time),
+// exhibit pivots (they rotate), the chair (third-party, real-time),
 // and lights (rebuilt in Blender).
 (async function () {
   const e = window.__exp;

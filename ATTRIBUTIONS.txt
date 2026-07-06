@@ -14,9 +14,6 @@ CC BY 4.0 (attribution required):
   licensed CC Attribution 4.0 (creativecommons.org/licenses/by/4.0/),
   obtained via the Objaverse mirror (huggingface.co/datasets/allenai/objaverse).
 
-CC0 (public domain, credited as courtesy):
-- potted_plant_01 — Poly Haven (polyhaven.com)
-
 HDRI:
 - wooden_lounge — Poly Haven (CC0)
 
