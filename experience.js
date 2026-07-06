@@ -30,6 +30,10 @@ document.documentElement.classList.add("exp-js");
 const LOW_TIER =
   window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 820;
 
+// baked lighting (Blender/Cycles, tools/bake/): swap the architecture layer
+// for a lightmapped GLB; false = fully procedural fallback
+const USE_BAKED = true;
+
 const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
 ).matches;
@@ -199,7 +203,7 @@ function initScene(canvas) {
   composer.addPass(new RenderPass(scene, camera));
   // ambient occlusion: contact darkening in corners/seams (desktop only)
   let gtao = null;
-  if (!LOW_TIER) {
+  if (!LOW_TIER && !USE_BAKED) { // baked lightmaps already carry AO
     gtao = new GTAOPass(scene, camera, window.innerWidth, window.innerHeight);
     gtao.output = GTAOPass.OUTPUT.Default;
     // contact-scale AO only — the default 0.25 m radius at full blend crushes
@@ -436,7 +440,7 @@ function initScene(canvas) {
 
   // modern LED desk lamp (procedural), warm pool on the resume
   const deskLamp = buildModernDeskLamp();
-  deskLamp.name = "bk_lamp";
+  deskLamp.name = "lampSwitch"; // real-time + clickable: toggles the room lights
   // far left + forward so it no longer blocks the cabinet's bottom-left bay
   // (LineFollower) from the rest camera
   deskLamp.position.set(-0.8, DESK_TOP, 0.12);
@@ -559,6 +563,106 @@ function initScene(canvas) {
   MODELS.chest = chest;
 
   // (removed: the race-car schematic blueprint panel above the main cabinet)
+
+  /* ---------- baked lighting (Blender/Cycles pipeline, tools/bake/) ----------
+     The architecture layer (bk_* tagged) is swapped for a pre-baked GLB with
+     a 2nd-UV lightmap; cabinets/workbench/exhibits stay real-time and get a
+     matching baked 360 environment probe. Two light states are baked — the
+     desk lamp is the room's light switch. Set USE_BAKED=false to fall back
+     to the fully procedural room. */
+  let lightsOn = true;
+  let bakedMats = [];
+  const LM = { on2k: null, off2k: null, on4k: null, off4k: null, probeOn: null, probeOff: null };
+  function flipRows(tex) {
+    // .hdr loads bottom-up vs glTF's top-down UV convention — flip in place
+    const { data, width, height } = tex.image;
+    const stride = width * 4;
+    const tmp = new data.constructor(stride);
+    for (let y = 0; y < height >> 1; y++) {
+      const a = y * stride, b = (height - 1 - y) * stride;
+      tmp.set(data.subarray(a, a + stride));
+      data.copyWithin(a, b, b + stride);
+      data.set(tmp, b);
+    }
+    tex.needsUpdate = true;
+    return tex;
+  }
+  function prepLM(tex) {
+    flipRows(tex);
+    tex.channel = 1;
+    tex.colorSpace = THREE.LinearSRGBColorSpace;
+    return tex;
+  }
+  function applyLightState(animate) {
+    const lm = lightsOn ? (LM.on4k || LM.on2k) : (LM.off4k || LM.off2k);
+    if (lm) bakedMats.forEach((m) => { m.lightMap = lm; m.needsUpdate = true; });
+    const probe = lightsOn ? LM.probeOn : (LM.probeOff || LM.probeOn);
+    if (probe) scene.environment = probe;
+    // real-time lights serve the exhibits; dim them with the room
+    const want = lightsOn
+      ? { key: 1.35, hemi: 0.95, fill: 0.3, env: 0.5 }
+      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35 };
+    const from = { key: key.intensity, hemi: hemi.intensity, fill: fill.intensity, env: scene.environmentIntensity };
+    if (prefersReducedMotion || !animate) {
+      key.intensity = want.key; hemi.intensity = want.hemi; fill.intensity = want.fill;
+      scene.environmentIntensity = want.env;
+      return;
+    }
+    const t0 = performance.now();
+    (function step(now) {
+      const k = Math.min(1, (now - t0) / 450);
+      const e = easeInOutCubic(k);
+      key.intensity = from.key + (want.key - from.key) * e;
+      hemi.intensity = from.hemi + (want.hemi - from.hemi) * e;
+      fill.intensity = from.fill + (want.fill - from.fill) * e;
+      scene.environmentIntensity = from.env + (want.env - from.env) * e;
+      if (k < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+  function toggleRoomLights() {
+    lightsOn = !lightsOn;
+    sndClick();
+    applyLightState(true);
+  }
+  if (USE_BAKED) {
+    // hide the procedural originals
+    scene.children.forEach((o) => {
+      let tagged = false;
+      o.traverse((m) => { if ((m.name || "").indexOf("bk_") === 0) tagged = true; });
+      if (tagged) o.visible = false;
+    });
+    const hdrl = new HDRLoader(manager);
+    hdrl.load("models/baked/lightmap-on-2k.hdr", (t) => { LM.on2k = prepLM(t); applyLightState(false); });
+    hdrl.load("models/baked/probe-on.hdr", (t) => {
+      t.mapping = THREE.EquirectangularReflectionMapping;
+      LM.probeOn = t;
+      scene.environment = t;
+      scene.environmentIntensity = 0.5;
+    });
+    loader.load("models/baked/room-baked.glb", (gltf) => {
+      gltf.scene.traverse((o) => {
+        if (!o.isMesh) return;
+        const src = o.material;
+        o.material = new THREE.MeshBasicMaterial({ color: src.color ? src.color.clone() : new THREE.Color(0x888888), lightMapIntensity: 0.6 });
+        if (src.transparent) { o.material.transparent = true; o.material.opacity = src.opacity; }
+        o.castShadow = false;
+        o.receiveShadow = false;
+        bakedMats.push(o.material);
+      });
+      scene.add(gltf.scene);
+      applyLightState(false);
+    });
+    // idle upgrades: 4K lightmap, then the lights-off set
+    const later = new HDRLoader(); // NOT on the manager — don't block the loader UI
+    setTimeout(() => {
+      later.load("models/baked/lightmap-off-2k.hdr", (t) => { LM.off2k = prepLM(t); });
+      later.load("models/baked/probe-off.hdr", (t) => { t.mapping = THREE.EquirectangularReflectionMapping; LM.probeOff = t; });
+      if (!LOW_TIER) { // phones stay on 2K — don't pull 15MB+ maps over mobile data
+        later.load("models/baked/lightmap-on-4k.hdr", (t) => { LM.on4k = prepLM(t); if (lightsOn) applyLightState(false); });
+        later.load("models/baked/lightmap-off-4k.hdr", (t) => { LM.off4k = prepLM(t); if (!lightsOn) applyLightState(false); });
+      }
+    }, 4000);
+  }
 
   // real ergonomic mesh task chair (CC BY 4.0 — see ATTRIBUTIONS.txt);
   // replaces the old procedural buildErgoChair() stand-in
@@ -857,7 +961,12 @@ function initScene(canvas) {
   renderer.domElement.addEventListener("pointermove", (ev) => {
     updatePointer(ev);
     if (panelOpen || flight) return;
-    setHover(pickHotspot());
+    const h = pickHotspot();
+    setHover(h);
+    // pointer affordance over the lamp light-switch
+    if (!h && USE_BAKED && MODELS.deskLamp && raycaster.intersectObject(MODELS.deskLamp, true).length) {
+      setCursorHover(true);
+    }
   });
   // the hover card would otherwise stay stuck when the pointer exits the
   // canvas (topbar, panel, window edge) without another canvas pointermove
@@ -875,7 +984,11 @@ function initScene(canvas) {
     }
     updatePointer(ev);
     const root = pickHotspot();
-    if (root) focusHotspot(root);
+    if (root) { focusHotspot(root); return; }
+    // the desk lamp is the room's light switch
+    if (USE_BAKED && MODELS.deskLamp && raycaster.intersectObject(MODELS.deskLamp, true).length) {
+      toggleRoomLights();
+    }
   });
 
   function focusHotspot(root) {
