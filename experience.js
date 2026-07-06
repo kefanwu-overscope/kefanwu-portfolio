@@ -357,7 +357,9 @@ function initScene(canvas) {
   }
 
   /* ---------- room + rug ---------- */
-  buildRoom(scene);
+  // tag every room-shell mesh for the bake pipeline ("bk_" names let the
+  // exporter select them and P2 hide them when the baked GLB is active)
+  buildRoom({ add: (o) => { o.traverse((m) => { if (m.isMesh && !m.name) m.name = "bk_room"; }); scene.add(o); } });
 
   const contact = new THREE.Mesh(
     new THREE.PlaneGeometry(2.6, 1.5),
@@ -404,6 +406,7 @@ function initScene(canvas) {
       metalness: 0,
     })
   );
+  rug.name = "bk_room";
   rug.position.set(0, 0.006, 0.5);
   rug.receiveShadow = true;
   scene.add(rug);
@@ -416,6 +419,7 @@ function initScene(canvas) {
     [0.02, rugIn.d, rugIn.w / 2 - 0.01, 0.5],
   ].forEach(([w, d, x, z]) => {
     const line = new THREE.Mesh(new THREE.BoxGeometry(w, 0.002, d), rugLine);
+    line.name = "bk_room";
     line.position.set(x, 0.0125, z);
     scene.add(line);
   });
@@ -426,10 +430,13 @@ function initScene(canvas) {
 
   /* ---------- desk (procedural, PBR) + desk props ---------- */
   const DESK_TOP = 0.76;
-  scene.add(buildDesk());
+  const deskGroup = buildDesk();
+  deskGroup.name = "bk_desk";
+  scene.add(deskGroup);
 
   // modern LED desk lamp (procedural), warm pool on the resume
   const deskLamp = buildModernDeskLamp();
+  deskLamp.name = "bk_lamp";
   // far left + forward so it no longer blocks the cabinet's bottom-left bay
   // (LineFollower) from the rest camera
   deskLamp.position.set(-0.8, DESK_TOP, 0.12);
@@ -545,6 +552,7 @@ function initScene(canvas) {
 
   // rolling tool chest beside the workbench
   const chest = buildToolChest();
+  chest.name = "bk_chest";
   chest.position.set(-2.22, 0, 1.06); // clear of the workbench front edge (was 0.95 -> back clipped the bench)
   chest.rotation.y = Math.PI / 2;
   scene.add(chest);

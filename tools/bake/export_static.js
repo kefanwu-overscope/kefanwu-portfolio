@@ -7,15 +7,14 @@
 (async function () {
   const e = window.__exp;
   const mod = await import("https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/exporters/GLTFExporter.js");
-  const pivots = new Set(e.hotspots);
+  // bake layer = the "architecture": objects tagged bk_* in experience.js
+  // (room shell, rug, desk, desk lamp, tool chest). Cabinets + workbench
+  // stay real-time.
   const statics = [];
   e.scene.children.forEach((o) => {
-    if (o.isLight || pivots.has(o)) return;
-    if (o.name === "Sketchfab_Scene" || o.name === "Scene") return; // chair + plant
-    let meshes = 0;
-    o.traverse((m) => { if (m.isMesh) meshes++; });
-    if (!meshes) return;
-    statics.push(o);
+    let tagged = false;
+    o.traverse((m) => { if ((m.name || "").startsWith("bk_")) tagged = true; });
+    if (tagged) statics.push(o);
   });
   const buf = await new mod.GLTFExporter().parseAsync(statics, { binary: true });
   const u8 = new Uint8Array(buf), CH = 0x8000, parts = [];
