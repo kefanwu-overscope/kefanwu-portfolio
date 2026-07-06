@@ -624,6 +624,13 @@ function initScene(canvas) {
   const focusSpot = new THREE.SpotLight(0xf2f5fa, 0, 3.5, 0.42, 0.85, 1.4);
   scene.add(focusSpot);
   scene.add(focusSpot.target);
+  // night spot on the resume itself — the paper is real-time, the matching
+  // warm pool on the desk below is baked into the OFF lightmap
+  const resumeSpot = new THREE.SpotLight(0xffe0b8, 0, 1.8, 0.3, 0.7, 1.2);
+  resumeSpot.position.set(0.3, 1.8, 0.9);
+  resumeSpot.target.position.set(0.02, 0.78, 0.16);
+  scene.add(resumeSpot);
+  scene.add(resumeSpot.target);
   // crossfade uniforms shared by every baked material: lightMap blends
   // toward lightMapB by lmMix, so the lamp toggle FADES between light states
   const lmMix = { value: 0 };
@@ -671,18 +678,19 @@ function initScene(canvas) {
     if (probe) scene.environment = probe;
     // real-time lights serve the exhibits; dim them with the room
     const want = lightsOn
-      ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0 } // day grade: strips + bake carry the room
-      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95 };
+      ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0, resume: 0 } // day grade: strips + bake carry the room
+      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 1.6 };
     lampLeds.forEach((m) => { m.emissiveIntensity = lightsOn ? 0.05 : 1.5; });
     blueLines.forEach((m) => {
       m.emissive = m.emissive || new THREE.Color(0x2b4d80);
       m.emissive.setHex(0x3f8cff);
       m.emissiveIntensity = lightsOn ? 0.12 : 1.1; // LED inlay glows at night
     });
-    const from = { key: key.intensity, hemi: hemi.intensity, fill: fill.intensity, env: scene.environmentIntensity, bench: benchGlow.intensity };
+    const from = { key: key.intensity, hemi: hemi.intensity, fill: fill.intensity, env: scene.environmentIntensity, bench: benchGlow.intensity, resume: resumeSpot.intensity };
     if (prefersReducedMotion || !animate) {
       key.intensity = want.key; hemi.intensity = want.hemi; fill.intensity = want.fill;
       scene.environmentIntensity = want.env; benchGlow.intensity = want.bench;
+      resumeSpot.intensity = want.resume;
       return;
     }
     const t0 = performance.now();
@@ -695,6 +703,7 @@ function initScene(canvas) {
       fill.intensity = from.fill + (want.fill - from.fill) * e;
       scene.environmentIntensity = from.env + (want.env - from.env) * e;
       benchGlow.intensity = from.bench + (want.bench - from.bench) * e;
+      resumeSpot.intensity = from.resume + (want.resume - from.resume) * e;
       if (fadeLm) lmMix.value = e;
       if (k < 1) requestAnimationFrame(step);
       else if (fadeLm) {

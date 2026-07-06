@@ -36,6 +36,9 @@ else:
     # lights-off mood: the desk lamp is the only warm source, plus faint
     # cabinet-strip spill so the room stays navigable
     area("lamp_pool", -0.78, -0.18, 1.16, 0.16, 0.16, 9, (1.0, 0.82, 0.6))
+    # warm pool centered on the RESUME so the primary CTA stays inviting at
+    # night (paired with a real-time spot on the paper itself)
+    area("resume_pool", 0.02, -0.16, 1.5, 0.34, 0.44, 7, (1.0, 0.87, 0.68))
     area("cab_glow", 0.0, 1.05, 1.7, 2.2, 0.4, 5, (0.78, 0.86, 1.0))
     area("fill", 0.0, -2.6, 3.1, 1.6, 1.2, 1.2, (0.7, 0.8, 1.0))
 
