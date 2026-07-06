@@ -19,6 +19,7 @@ import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.j
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+import { RectAreaLightUniformsLib } from "three/addons/lights/RectAreaLightUniformsLib.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { GTAOPass } from "three/addons/postprocessing/GTAOPass.js";
 import { BokehPass } from "three/addons/postprocessing/BokehPass.js";
@@ -314,31 +315,42 @@ function initScene(canvas) {
   // (desk lamp is decorative furniture only — it emits no light)
 
   // display spots washing the cabinet
-  // low intensity + full penumbra + wide cone = even museum wash, no hot
-  // pool on the center bay
+  // gentle front spots for modeling/speculars only — the actual case light
+  // comes from the shelf strips below
   [-0.7, 0, 0.7].forEach((x) => {
-    const spot = new THREE.SpotLight(0xe8ecf4, 1.9, 6, 0.56, 1.0, 1.6);
+    const spot = new THREE.SpotLight(0xe8ecf4, 0.9, 6, 0.56, 1.0, 1.6);
     spot.position.set(x, 2.55, 0.45);
     spot.target.position.set(x, 1.0, CAB.z);
     scene.add(spot);
     scene.add(spot.target);
   });
-  // right-wall cabinet gets its own pair of spots
   [-0.75, -0.05].forEach((z) => {
-    const spot = new THREE.SpotLight(0xe8ecf4, 1.8, 6, 0.56, 1.0, 1.6);
+    const spot = new THREE.SpotLight(0xe8ecf4, 0.85, 6, 0.56, 1.0, 1.6);
     spot.position.set(0.9, 2.55, z + 0.3);
     spot.target.position.set(2.3, 1.0, z);
     scene.add(spot);
     scene.add(spot.target);
   });
-  // shadowless in-case fills so the exhibits read against the dark backs
-  // (the shelf strips are emissive decals only — they cast no real light)
-  const caseFillA = new THREE.PointLight(0xdfe8f4, 1.3, 3.2, 1.8);
-  caseFillA.position.set(0, 1.55, -0.55);
-  scene.add(caseFillA);
-  const caseFillB = new THREE.PointLight(0xdfe8f4, 1.1, 2.8, 1.8);
-  caseFillB.position.set(1.85, 1.45, -0.4);
-  scene.add(caseFillB);
+  // real strip lights: one RectAreaLight per shelf row, sitting exactly at
+  // each row's LED strip and washing DOWN into the bay — the light visibly
+  // originates from the strips, not from the case center
+  RectAreaLightUniformsLib.init();
+  const stripLight = (w, intensity) => {
+    const l = new THREE.RectAreaLight(0xdfe8f4, intensity, w, 0.05);
+    return l;
+  };
+  CAB.rows.forEach((y) => {
+    const l = stripLight(2.2, 9.0);
+    l.position.set(0, y + 0.42, CAB.z + 0.34);
+    scene.add(l);
+    l.lookAt(0, y + 0.06, CAB.z); // ~45° down-back: lights faces AND backs
+  });
+  CAB2.rows.forEach((y) => {
+    const l = stripLight(1.4, 8.5);
+    l.position.set(CAB2.x - 0.34, y + 0.42, -0.4);
+    scene.add(l);
+    l.lookAt(CAB2.x, y + 0.06, -0.4);
+  });
 
   /* staged light-up on reveal: ambient -> LED strips -> spots -> lamps */
   function runLightIntro() {
