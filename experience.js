@@ -267,7 +267,12 @@ function initScene(canvas) {
     revealed = true;
     revealScene();
     if (!prefersReducedMotion) {
-      runLightIntro();
+      let seenBefore = false;
+      try { seenBefore = localStorage.getItem("kw_intro_seen") === "1"; } catch (e) {}
+      // first visit: cold-boot choreography synced to the guided flight;
+      // returning visitors keep the quick staged ramp
+      if (seenBefore) runLightIntro();
+      else runBootIntro();
       startIntro();
     }
     // show the drag invitation immediately once the scene is loaded (doReveal
@@ -342,17 +347,20 @@ function initScene(canvas) {
   // LOW_TIER: one taller-reach strip per cabinet instead of one per row
   const mainRows = LOW_TIER ? [CAB.rows[1]] : CAB.rows;
   const sideRows = LOW_TIER ? [CAB2.rows[1]] : CAB2.rows;
+  const caseStrips = { main: [], side: [] }; // kept for the boot choreography
   mainRows.forEach((y) => {
     const l = stripLight(2.2, LOW_TIER ? 14 : 9.0);
     l.position.set(0, y + 0.42, CAB.z + 0.34);
     scene.add(l);
     l.lookAt(0, y + 0.06, CAB.z); // ~45° down-back: lights faces AND backs
+    caseStrips.main.push(l);
   });
   sideRows.forEach((y) => {
     const l = stripLight(1.4, LOW_TIER ? 13 : 8.5);
     l.position.set(CAB2.x - 0.34, y + 0.42, CAB2.z);
     scene.add(l);
     l.lookAt(CAB2.x, y + 0.06, CAB2.z);
+    caseStrips.side.push(l);
   });
 
   /* staged light-up on reveal: ambient -> LED strips -> spots -> lamps */
@@ -384,6 +392,129 @@ function initScene(canvas) {
       if (live) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
+  }
+
+  /* first-visit cold boot: the room powers on in sync with the guided flight.
+     Rug LEDs trace on, each cabinet's strips strike alive as the camera
+     passes it, and the desk lamp "clicks" last — landing the warm pool on
+     the resume and implicitly teaching the light switch. Timings follow the
+     intro flight legs (1700 + 1900 + 1500 ms). */
+  let bootRaf = 0;
+  let bootRestore = null;
+  function cancelBoot() {
+    if (!bootTakeover) return;
+    bootTakeover = false;
+    if (bootRaf) cancelAnimationFrame(bootRaf);
+    if (bootRestore) bootRestore();
+    bootRestore = null;
+  }
+  function runBootIntro() {
+    if (bootTakeover) return; // re-entry would capture mid-boot values as targets
+    bootTakeover = true;
+    const easeOut = (k) => 1 - Math.pow(1 - k, 3);
+    const lin = (k) => k;
+    // gather the players
+    const caseSpots = [];
+    const stripMats = { main: [], side: [] };
+    const wp = new THREE.Vector3();
+    scene.traverse((o) => {
+      if (o.isSpotLight && o.distance === 6) {
+        caseSpots.push({ l: o, target: o.position.x < 0.85 ? 0.9 : 0.85 });
+      } else if (o.isMesh && o.material && o.material.emissive && o.material.emissive.getHexString() === "bcd7ff") {
+        o.getWorldPosition(wp);
+        (wp.x > 1.5 ? stripMats.side : stripMats.main).push(o.material);
+      }
+    });
+    const exposure0 = renderer.toneMappingExposure;
+    const bloom0 = bloom.strength;
+    const night = { key: key.intensity, hemi: hemi.intensity, fill: fill.intensity, env: scene.environmentIntensity };
+    // black out, then boot
+    renderer.toneMappingExposure = 0.12;
+    key.intensity = 0; hemi.intensity = 0; fill.intensity = 0;
+    scene.environmentIntensity = 0.06;
+    caseSpots.forEach((s) => { s.l.intensity = 0; });
+    caseStrips.main.concat(caseStrips.side).forEach((l) => { l.userData.bootTarget = l.intensity; l.intensity = 0; });
+    stripMats.main.concat(stripMats.side).forEach((m) => { m.emissiveIntensity = 0; });
+    blueLines.forEach((m) => { m.emissiveIntensity = 0; });
+    lampLeds.forEach((m) => { m.emissiveIntensity = 0; });
+    benchGlow.intensity = 0; resumeSpot.intensity = 0; moonSpot.intensity = 0;
+    bakedMats.forEach((m) => { m.lightMapIntensity = 0.15; });
+    // if the user grabs the light switch mid-boot, snap the pieces that
+    // applyLightState doesn't own to their steady-state values
+    bootRestore = () => {
+      renderer.toneMappingExposure = exposure0;
+      bloom.strength = bloom0;
+      caseSpots.forEach((s) => { s.l.intensity = s.target; });
+      caseStrips.main.concat(caseStrips.side).forEach((l) => { l.intensity = l.userData.bootTarget; });
+      stripMats.main.concat(stripMats.side).forEach((m) => { m.emissiveIntensity = 1.15; });
+      bakedMats.forEach((m) => { m.lightMapIntensity = 0.6; });
+    };
+    // fluorescent-strike intensity curve: two dips, then settle
+    const STRIKE = [0, 1.5, 0.25, 1.15, 1];
+    const strike = (k) => {
+      const x = k * (STRIKE.length - 1), i = Math.min(STRIKE.length - 2, x | 0);
+      return STRIKE[i] + (STRIKE[i + 1] - STRIKE[i]) * (x - i);
+    };
+    const segs = [];
+    const seg = (delay, dur, fn, ez) => segs.push({ delay, dur, fn, ez: ez || easeInOutCubic });
+    // iris adaptation: exposure opens like an eye adjusting to a dark room
+    seg(0, 1500, (k) => { renderer.toneMappingExposure = 0.12 + (exposure0 - 0.12) * k; }, easeOut);
+    // the baked light pools warm up as if coming from the fixtures
+    seg(200, 2400, (k) => { bakedMats.forEach((m) => { m.lightMapIntensity = 0.15 + 0.45 * k; }); });
+    seg(300, 1200, (k) => {
+      key.intensity = night.key * k; hemi.intensity = night.hemi * k; fill.intensity = night.fill * k;
+      scene.environmentIntensity = 0.06 + (night.env - 0.06) * k;
+    });
+    // rug LED inlay traces on line by line
+    blueLines.forEach((m, i) => seg(250 + i * 130, 480, (k) => { m.emissiveIntensity = 1.1 * k; }, easeOut));
+    // cabinet strips strike row by row as the camera passes each cabinet:
+    // right cabinet during flight leg 1, main cabinet during leg 2
+    const strikeRow = (light, mats, delay) => seg(delay, 300, (k) => {
+      const s = strike(k);
+      if (light) light.intensity = light.userData.bootTarget * s;
+      mats.forEach((m) => { m.emissiveIntensity = 1.15 * s; });
+    }, lin);
+    const nSide = Math.max(stripMats.side.length, caseStrips.side.length);
+    for (let i = 0; i < nSide; i++) {
+      strikeRow(i < caseStrips.side.length ? caseStrips.side[i] : null,
+        i < stripMats.side.length ? [stripMats.side[i]] : [], 850 + i * 170);
+    }
+    const nMain = Math.max(stripMats.main.length, caseStrips.main.length);
+    for (let i = 0; i < nMain; i++) {
+      strikeRow(i < caseStrips.main.length ? caseStrips.main[i] : null,
+        i < stripMats.main.length ? [stripMats.main[i]] : [], 2250 + i * 170);
+    }
+    // gentle case spots once both cabinets are alive
+    seg(3350, 550, (k) => caseSpots.forEach((s) => { s.l.intensity = s.target * k; }));
+    // the moon reveals itself as the camera settles toward the rest pose
+    seg(3600, 900, (k) => { moonSpot.intensity = MOON_NIGHT * k; });
+    // final beat at flight landing: the lamp clicks on — snappy, not eased —
+    // and the warm pool blooms up on the resume
+    seg(5050, 90, (k) => lampLeds.forEach((m) => { m.emissiveIntensity = 1.5 * k; }), lin);
+    seg(5080, 320, (k) => { benchGlow.intensity = 0.95 * k; }, easeOut);
+    seg(5100, 420, (k) => {
+      resumeSpot.intensity = 1.6 * (k < 0.6 ? (k / 0.6) * 1.18 : 1.18 - 0.18 * ((k - 0.6) / 0.4));
+    }, lin);
+    seg(5100, 500, (k) => { bloom.strength = bloom0 + 0.08 * Math.sin(Math.PI * k); }, lin);
+
+    const t0 = performance.now();
+    const TOTAL = 5700;
+    const bt = (now) => {
+      if (!bootTakeover) return;
+      const el = now - t0;
+      for (const s of segs) {
+        const k = Math.min(1, Math.max(0, (el - s.delay) / s.dur));
+        s.fn(s.ez(k));
+      }
+      if (el < TOTAL) {
+        bootRaf = requestAnimationFrame(bt);
+      } else {
+        bootTakeover = false;
+        bootRestore = null;
+        applyLightState(false); // land exactly on the canonical night state
+      }
+    };
+    bootRaf = requestAnimationFrame(bt);
   }
 
   /* ---------- room + rug ---------- */
@@ -631,6 +762,131 @@ function initScene(canvas) {
   resumeSpot.target.position.set(0.02, 0.78, 0.16);
   scene.add(resumeSpot);
   scene.add(resumeSpot.target);
+
+  /* ---- L5 wow pass: moonlight gobo + visible resume beam + dust ---- */
+  // cold moonlight through an unseen window: a canvas-drawn window-frame
+  // gobo projected across the rug and the desk's front edge (night only)
+  const MOON_NIGHT = 11;
+  const moonSpot = new THREE.SpotLight(0xbfd4ff, 0, 0, 0.38, 0.4, 1.1);
+  moonSpot.map = (() => {
+    const s = 256, c = document.createElement("canvas");
+    c.width = c.height = s;
+    const x = c.getContext("2d");
+    x.fillStyle = "#000";
+    x.fillRect(0, 0, s, s);
+    try { x.filter = "blur(7px)"; } catch (e) {}
+    x.fillStyle = "#fff";
+    const mg = 62, gap = 12, w = (s - 2 * mg - gap) / 2;
+    [[mg, mg], [mg + w + gap, mg], [mg, mg + w + gap], [mg + w + gap, mg + w + gap]]
+      .forEach(([px, py]) => x.fillRect(px, py, w, w));
+    const t = new THREE.CanvasTexture(c);
+    t.colorSpace = THREE.SRGBColorSpace;
+    return t;
+  })();
+  moonSpot.position.set(-1.5, 3.3, 2.9);
+  moonSpot.target.position.set(0.85, 0, 0.7);
+  // (r185 gates lights by CAMERA layers only, and the camera has layer 1 on —
+  // so this spot lights the baked floor/rug with no layer setup needed)
+  scene.add(moonSpot);
+  scene.add(moonSpot.target);
+
+  // the resume spot becomes a visible warm cone with dust drifting inside it;
+  // both follow resumeSpot.intensity, so the lamp toggle fades them for free
+  let resumeCone = null, dustPts = null;
+  const dustTime = { value: 0 };
+  if (!LOW_TIER) {
+    const CONE_LEN = 1.3;
+    const spotP = resumeSpot.position, spotT = resumeSpot.target.position;
+    const beamDir = new THREE.Vector3().subVectors(spotT, spotP).normalize();
+    const coneGeo = new THREE.ConeGeometry(0.3, CONE_LEN, 40, 1, true);
+    coneGeo.translate(0, -CONE_LEN / 2, 0); // apex at the spot, opening down-beam
+    const coneMat = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+      uniforms: { uAmt: { value: 0 }, uTime: dustTime },
+      vertexShader: [
+        "varying vec3 vNrm; varying vec3 vView; varying float vA;",
+        "void main(){",
+        "  vNrm = normalMatrix * normal;",
+        "  vec4 mv = modelViewMatrix * vec4(position, 1.0);",
+        "  vView = -mv.xyz;",
+        "  vA = clamp(-position.y / 1.3, 0.0, 1.0);",
+        "  gl_Position = projectionMatrix * mv;",
+        "}",
+      ].join("\n"),
+      fragmentShader: [
+        // NOTE: every pow() base is clamped away from 0 — GLSL pow(0, y) is
+        // undefined (NaN on ANGLE/D3D), and ONE NaN pixel in the HDR buffer
+        // smears through UnrealBloom's mip chain into a fully white frame
+        "varying vec3 vNrm; varying vec3 vView; varying float vA;",
+        "uniform float uAmt; uniform float uTime;",
+        "void main(){",
+        "  float body = pow(max(abs(dot(normalize(vNrm), normalize(vView))), 1e-4), 1.4);",
+        "  float axial = smoothstep(0.0, 0.14, vA) * pow(max(1.0 - vA, 1e-4), 1.6);",
+        "  float flutter = 0.9 + 0.1 * sin(vA * 6.0 - uTime * 0.7);",
+        "  float a = uAmt * body * axial * flutter;",
+        "  if (!(a >= 0.0)) a = 0.0;",
+        "  gl_FragColor = vec4(1.0, 0.88, 0.72, min(a, 1.0));",
+        "}",
+      ].join("\n"),
+    });
+    resumeCone = new THREE.Mesh(coneGeo, coneMat);
+    resumeCone.position.copy(spotP);
+    resumeCone.quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), beamDir);
+    resumeCone.renderOrder = 20;
+    scene.add(resumeCone);
+
+    const N = 46;
+    const dPos = new Float32Array(N * 3), dSeed = new Float32Array(N);
+    for (let i = 0; i < N; i++) {
+      const s = 0.18 + 0.78 * Math.random();
+      const p = new THREE.Vector3().lerpVectors(spotP, spotT, s);
+      const r = (0.04 + 0.2 * s) * Math.sqrt(Math.random());
+      const a = Math.random() * Math.PI * 2;
+      p.x += Math.cos(a) * r;
+      p.z += Math.sin(a) * r;
+      dPos.set([p.x, p.y, p.z], i * 3);
+      dSeed[i] = Math.random() * 100;
+    }
+    const dustGeo = new THREE.BufferGeometry();
+    dustGeo.setAttribute("position", new THREE.BufferAttribute(dPos, 3));
+    dustGeo.setAttribute("seed", new THREE.BufferAttribute(dSeed, 1));
+    const dustMat = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      uniforms: { uAmt: { value: 0 }, uTime: dustTime, uPix: { value: renderer.getPixelRatio() } },
+      vertexShader: [
+        "attribute float seed; varying float vSeed;",
+        "uniform float uTime; uniform float uPix;",
+        "void main(){",
+        "  vSeed = seed;",
+        "  vec3 p = position;",
+        "  p.x += sin(uTime * 0.31 + seed * 17.0) * 0.018;",
+        "  p.z += cos(uTime * 0.23 + seed * 23.0) * 0.018;",
+        "  p.y += sin(uTime * 0.17 + seed * 29.0) * 0.025;",
+        "  vec4 mv = modelViewMatrix * vec4(p, 1.0);",
+        "  gl_PointSize = min((0.9 + fract(seed * 7.3)) * uPix * (2.4 / -mv.z) * 2.0, 6.0 * uPix);",
+        "  gl_Position = projectionMatrix * mv;",
+        "}",
+      ].join("\n"),
+      fragmentShader: [
+        "varying float vSeed; uniform float uTime; uniform float uAmt;",
+        "void main(){",
+        "  vec2 d = gl_PointCoord - 0.5;",
+        "  float a = smoothstep(0.5, 0.12, length(d));",
+        "  float tw = 0.55 + 0.45 * sin(uTime * (0.6 + fract(vSeed * 3.1)) + vSeed * 37.0);",
+        "  gl_FragColor = vec4(1.0, 0.92, 0.78, a * tw * uAmt * 0.35);",
+        "}",
+      ].join("\n"),
+    });
+    dustPts = new THREE.Points(dustGeo, dustMat);
+    dustPts.renderOrder = 21;
+    dustPts.frustumCulled = false;
+    scene.add(dustPts);
+    // keep the invisible beam volume out of the DoF depth pre-pass — the
+    // override material would render it as opaque geometry
+    NO_PREPASS.push(resumeCone, dustPts);
+  }
+  // set while the first-visit boot choreography owns the light levels
+  let bootTakeover = false;
   // crossfade uniforms shared by every baked material: lightMap blends
   // toward lightMapB by lmMix, so the lamp toggle FADES between light states
   const lmMix = { value: 0 };
@@ -678,19 +934,21 @@ function initScene(canvas) {
     if (probe) scene.environment = probe;
     // real-time lights serve the exhibits; dim them with the room
     const want = lightsOn
-      ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0, resume: 0 } // day grade: strips + bake carry the room
-      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 1.6 };
+      ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0, resume: 0, moon: 0 } // day grade: strips + bake carry the room
+      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 1.6, moon: MOON_NIGHT };
+    if (bootTakeover) return; // the boot choreography owns the levels; it lands on these values
     lampLeds.forEach((m) => { m.emissiveIntensity = lightsOn ? 0.05 : 1.5; });
     blueLines.forEach((m) => {
       m.emissive = m.emissive || new THREE.Color(0x2b4d80);
       m.emissive.setHex(0x3f8cff);
       m.emissiveIntensity = lightsOn ? 0.12 : 1.1; // LED inlay glows at night
     });
-    const from = { key: key.intensity, hemi: hemi.intensity, fill: fill.intensity, env: scene.environmentIntensity, bench: benchGlow.intensity, resume: resumeSpot.intensity };
+    const from = { key: key.intensity, hemi: hemi.intensity, fill: fill.intensity, env: scene.environmentIntensity, bench: benchGlow.intensity, resume: resumeSpot.intensity, moon: moonSpot.intensity };
     if (prefersReducedMotion || !animate) {
       key.intensity = want.key; hemi.intensity = want.hemi; fill.intensity = want.fill;
       scene.environmentIntensity = want.env; benchGlow.intensity = want.bench;
       resumeSpot.intensity = want.resume;
+      moonSpot.intensity = want.moon;
       return;
     }
     const t0 = performance.now();
@@ -704,6 +962,7 @@ function initScene(canvas) {
       scene.environmentIntensity = from.env + (want.env - from.env) * e;
       benchGlow.intensity = from.bench + (want.bench - from.bench) * e;
       resumeSpot.intensity = from.resume + (want.resume - from.resume) * e;
+      moonSpot.intensity = from.moon + (want.moon - from.moon) * e;
       if (fadeLm) lmMix.value = e;
       if (k < 1) requestAnimationFrame(step);
       else if (fadeLm) {
@@ -715,6 +974,7 @@ function initScene(canvas) {
   function toggleRoomLights() {
     lightsOn = !lightsOn;
     sndClick();
+    cancelBoot(); // hand over cleanly if the boot choreography is mid-flight
     applyLightState(true);
   }
   if (USE_BAKED) {
@@ -932,7 +1192,30 @@ function initScene(canvas) {
       }
     }
 
+    // the resume beam + dust breathe with the spot (day mode fades them out)
+    if (resumeCone) {
+      const amt = Math.max(0, Math.min(1, resumeSpot.intensity / 1.6));
+      resumeCone.material.uniforms.uAmt.value = amt * 0.16;
+      dustPts.material.uniforms.uAmt.value = amt;
+      if (!prefersReducedMotion) dustTime.value = t * 0.001;
+    }
+    // sub-2% 1/f flicker on the warm practicals so the still room doesn't
+    // read as a screenshot (applied around the render, then unwound)
+    let flk = 0;
+    if (!prefersReducedMotion) {
+      flk = 1 + 0.013 * Math.sin(t * 0.00071) + 0.009 * Math.sin(t * 0.00173) + 0.006 * Math.sin(t * 0.00347);
+      resumeSpot.intensity *= flk;
+      benchGlow.intensity *= flk;
+      lampLeds.forEach((m) => { m.emissiveIntensity *= flk; });
+    }
+
     composer.render();
+
+    if (flk) {
+      resumeSpot.intensity /= flk;
+      benchGlow.intensity /= flk;
+      lampLeds.forEach((m) => { m.emissiveIntensity /= flk; });
+    }
   });
 
   /* ---------- interaction ---------- */
@@ -1310,7 +1593,7 @@ function initScene(canvas) {
     if (panelOpen) closePanel();
   });
 
-  window.__exp = { THREE, scene, camera, renderer, controls, composer, bloom, key, hemi, models: MODELS, hotspots: HOTSPOTS, openPanel, showDragHint };
+  window.__exp = { THREE, scene, camera, renderer, controls, composer, bloom, key, hemi, models: MODELS, hotspots: HOTSPOTS, openPanel, showDragHint, runBootIntro };
   console.info(`[experience] engineering office ready — ${HOTSPOTS.length} hotspots`);
 }
 

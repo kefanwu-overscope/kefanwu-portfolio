@@ -571,6 +571,26 @@ an `assert s < e` ORDER check, then rewrite the file with
   (portable Blender in C:\Users\oc\.cache\blender\, OPTIX GPU). Re-bake after
   ANY architecture/layout change; exhibits/cabinets don't need it.
 
+### L5 wow pass (2026-07-06, experience.js)
+- MOONLIGHT GOBO: `moonSpot` (cold blue, canvas-drawn 2x2 window-frame map,
+  `MOON_NIGHT=11`) projects across the rug; `layers.enable(1)` so it reaches
+  the baked floor. Night-only via applyLightState `want.moon`.
+- RESUME BEAM + DUST: visible additive cone + 46 drifting dust Points over
+  the resume, skipped on LOW_TIER; opacity follows `resumeSpot.intensity`
+  in the tick so the lamp toggle fades them for free. IMPORTANT: every GLSL
+  `pow()` base is clamped `max(x, 1e-4)` — `pow(0, y)` is NaN on ANGLE/D3D
+  and ONE NaN pixel turns the whole frame white through UnrealBloom's mips.
+- 1/f FLICKER: sub-2% multiplier on resumeSpot/benchGlow/lampLeds applied
+  before `composer.render()` and unwound right after.
+- COLD BOOT (`runBootIntro`): first visit only (localStorage kw_intro_seen
+  read in doReveal BEFORE startIntro sets it) — near-black open, exposure
+  iris 0.12->1.3, rug LED trace, per-row strip strikes timed to the flight
+  legs (side 850ms+, main 2250ms+), moon at 3.6s, lamp click + resume-pool
+  bloom at 5.1s, lands on `applyLightState(false)` at 5.7s. `bootTakeover`
+  makes applyLightState a no-op meanwhile; `cancelBoot()` (called by the
+  lamp toggle) snaps non-applyLightState-owned values via `bootRestore`.
+  Returning visitors keep the old `runLightIntro` ramp. QA: `__exp.runBootIntro()`.
+
 ### Gotchas
 
 - STL-derived GLBs carry NO UVs; `boxProjectUVs` generates them (used for
