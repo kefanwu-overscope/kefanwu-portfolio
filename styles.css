@@ -2638,16 +2638,18 @@ html { scrollbar-gutter: stable; }
 .gallery-item::after,
 .nav-toggle::after { content: none; }
 
-/* ---- card renders read as backlit lightboxes, not white holes ---- */
+/* ---- card renders: the container stays PURE WHITE to match the renders'
+       own white background (any tint or img-only filter reads as a grey
+       letterbox edge around the artwork); the vignette overlays the WHOLE
+       tile uniformly, so there is no boundary to see ---- */
 .card-media--contain {
-  background: linear-gradient(180deg, #f7f9fc, #e9edf4);
-  box-shadow: inset 0 0 0 1px rgba(9, 14, 24, 0.05);
+  background: #ffffff;
 }
 .card-media--contain::after {
   opacity: 1;
-  background: radial-gradient(120% 90% at 50% 38%, transparent 55%, rgba(10, 16, 28, 0.1));
+  background: radial-gradient(130% 100% at 50% 40%, transparent 60%, rgba(10, 16, 28, 0.09));
 }
-.card-media--contain img { filter: brightness(0.985) saturate(0.98); }
+.card-media--contain img { filter: none; }
 
 /* ---- project card typography: mono index + outcome subtitle ---- */
 .project-body { gap: 0.4rem; padding: 0.95rem 1.05rem 1.1rem; }
