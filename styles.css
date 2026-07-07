@@ -910,12 +910,7 @@ h2 {
   z-index: 2;
   margin-top: clamp(-3rem, -4vh, -1.4rem);
   padding: clamp(4.4rem, 7vw, 6rem) 0 clamp(2.7rem, 5vw, 3.8rem);
-  background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.96) 0%, rgba(0, 0, 0, 0.68) 5.5rem, transparent 13rem),
-    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    rgba(255, 255, 255, 0.012);
-  background-size: auto, 96px 96px, 96px 96px, auto;
+  background: #000;
 }
 
 .systems::after {
@@ -925,10 +920,7 @@ h2 {
   height: clamp(10.5rem, 21vh, 16rem);
   content: "";
   background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.66) 20%, rgba(0, 0, 0, 0.4) 45%, rgba(0, 0, 0, 0.18) 70%, rgba(0, 0, 0, 0.06) 88%, transparent 100%),
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: auto, 96px 96px, 96px 96px;
+    linear-gradient(180deg, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.66) 20%, rgba(0, 0, 0, 0.4) 45%, rgba(0, 0, 0, 0.18) 70%, rgba(0, 0, 0, 0.06) 88%, transparent 100%);
   pointer-events: none;
 }
 
@@ -2679,6 +2671,11 @@ html { scrollbar-gutter: stable; }
   border: 1px solid rgba(63, 140, 255, 0.4);
   color: var(--ink);
   text-decoration: none;
+}
+/* the studio tile earns a double-wide cell once the grid can spare two
+   columns (guarded so it never overflows the single-column mobile grid) */
+@media (min-width: 640px) {
+  .project-card--studio { grid-column: span 2; }
 }
 .project-card--studio .project-body {
   padding: 1.35rem 1.2rem;
