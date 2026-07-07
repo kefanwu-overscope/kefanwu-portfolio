@@ -266,6 +266,23 @@ function initScene(canvas) {
     if (revealed) return;
     revealed = true;
     revealScene();
+    // deep link: experience.html#<projectKey> flies straight to that exhibit
+    // (the homepage case-study panels link here) — visitors with a specific
+    // destination skip the cinematic intro and keep it for a later visit
+    const dlKey = decodeURIComponent((location.hash || "").slice(1));
+    const dlPivot = dlKey && HOTSPOTS.find((h) => h.userData.hotspot.key === dlKey);
+    if (dlPivot) {
+      camera.position.copy(REST_POS);
+      camera.lookAt(REST_TARGET);
+      controls.target.copy(REST_TARGET);
+      if (!prefersReducedMotion) {
+        runLightIntro();
+        setTimeout(() => focusHotspot(dlPivot), 650);
+      } else {
+        focusHotspot(dlPivot);
+      }
+      return;
+    }
     if (!prefersReducedMotion) {
       let seenBefore = false;
       try { seenBefore = localStorage.getItem("kw_intro_seen") === "1"; } catch (e) {}

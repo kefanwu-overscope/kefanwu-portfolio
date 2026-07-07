@@ -7,7 +7,7 @@ const projectData = {
     title: "Mk.8 steering system",
     image: "assets/cover-steering-system.webp",
     summary:
-      "Cockpit steering package translating driver input to rack motion through a dual U-joint linkage, redesigned bearing cages, chassis mounts, and serviceable sensor packaging.",
+      "Mk.8 steering column redesign: matched 27.5-degree dual U-joints cancel rotational speed ripple, the wheel sits 3.5 inches closer and 15 degrees more upright than Mk.7, and every part maps to a shop process — lathe shafts, waterjet mounts, CNC bearing cages, TIG-welded chassis integration.",
     highlights: [
       "Mechanical Lead context with steering work grounded in Mk.8 cockpit ownership and full-vehicle integration.",
       "Matched dual U-joint bend angles to reduce rotational velocity ripple through the steering column.",

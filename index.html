@@ -23,7 +23,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
     />
-    <link rel="stylesheet" href="styles.css?v=polish-20260701" />
+    <link rel="stylesheet" href="styles.css?v=mainwow-20260707" />
     <script>document.documentElement.classList.add("js");</script>
   </head>
   <body>
@@ -44,7 +44,7 @@
         <a href="#work">Projects</a>
         <a href="#skills">Skills</a>
         <a href="#motorsport">Motorsport</a>
-        <a href="#capabilities">Contribution</a>
+        <a href="#capabilities">Capabilities</a>
         <a href="#contact">Contact</a>
         <a href="experience.html" class="nav-experience">3D Studio</a>
       </nav>
@@ -65,12 +65,12 @@
             <div class="hero-skill-track">
               <span>Arduino</span><span>TIG Welding</span><span>AutoCAD</span><span>Topology Study</span>
               <span>SolidWorks</span><span>MATLAB</span><span>FEA</span><span>CFD</span>
-              <span>CNC Mill</span><span>Lathe</span><span>Waterjet</span><span>Carbon Fiber</span><span>Team Management</span><span>Vibe Coding</span>
+              <span>CNC Mill</span><span>Lathe</span><span>Waterjet</span><span>Carbon Fiber</span><span>Team Management</span><span>AI-Assisted Eng</span>
             </div>
             <div class="hero-skill-track" aria-hidden="true">
               <span>Arduino</span><span>TIG Welding</span><span>AutoCAD</span><span>Topology Study</span>
               <span>SolidWorks</span><span>MATLAB</span><span>FEA</span><span>CFD</span>
-              <span>CNC Mill</span><span>Lathe</span><span>Waterjet</span><span>Carbon Fiber</span><span>Team Management</span><span>Vibe Coding</span>
+              <span>CNC Mill</span><span>Lathe</span><span>Waterjet</span><span>Carbon Fiber</span><span>Team Management</span><span>AI-Assisted Eng</span>
             </div>
           </div>
           <h1 id="hero-title">
@@ -78,13 +78,16 @@
             <span class="line"><span class="stage" style="--stage: 3">Wu</span></span>
           </h1>
           <p class="hero-copy stage" style="--stage: 4">
-            Mechanical engineering student at Olin College, leading mechanical
-            systems for Olin Electric Motorsports and building tested hardware
-            across motorsport, robotics, and fabrication.
+            I lead the mechanical program for Olin's Formula SAE electric car —
+            owning brakes, steering, and cockpit from MATLAB load models to
+            machined, welded hardware on track. Off the car: a 300 km/h VTOL
+            drone, an AI agent that runs Ansys CFD headlessly, and a shop full
+            of things that work.
           </p>
           <div class="hero-actions stage" style="--stage: 5">
             <a class="button primary" href="#work" data-magnetic>View projects</a>
-            <a class="button secondary" href="#motorsport" data-magnetic>FSAE program</a>
+            <a class="button studio" href="experience.html" data-magnetic>Enter the 3D Studio</a>
+            <a class="button secondary" href="assets/kefan-wu-resume.pdf" download data-magnetic>Resume (PDF)</a>
           </div>
         </div>
         <div class="hero-stats stage" style="--stage: 7" aria-label="Portfolio metrics">
@@ -93,12 +96,12 @@
             <span>Olin Electric Motorsports</span>
           </div>
           <div>
-            <strong><span data-count="15">15</span></strong>
+            <strong><span data-count="14">14</span></strong>
             <span>Engineering projects</span>
           </div>
           <div>
-            <strong><span data-count="19">19</span>+</strong>
-            <span>Technical skills</span>
+            <strong><span data-count="25">25</span>%</strong>
+            <span>Rotor mass cut at 3.0 FoS</span>
           </div>
           <div>
             <strong>&gt;<span data-count="30">30</span></strong>
@@ -116,7 +119,7 @@
         <div class="section-shell">
           <div class="section-head compact" data-reveal>
             <div>
-              <p class="section-kicker">Selected work</p>
+              <p class="section-kicker">01 / Selected work</p>
               <h2 id="systems-title">Projects</h2>
             </div>
           </div>
@@ -136,7 +139,9 @@
                 <img src="assets/cover-steering-system-cad.webp" alt="Formula SAE steering column CAD with dual U-joints, quick-release wheel, and steering rack" loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
+                <p class="project-meta">01 / Motorsport</p>
                 <h3>Mk.8 steering system</h3>
+                <p class="project-sub">Matched 27.5° dual U-joints cancel speed ripple; the wheel sits 3.5 in closer, 15° more upright than Mk.7.</p>
               </div>
             </article>
 
@@ -145,7 +150,9 @@
                 <img src="assets/cover-javelin.webp" alt="Javelin high-speed VTOL tail-sitter drone, front view with four motors in an X" loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
+                <p class="project-meta">02 / Robotics</p>
                 <h3>Javelin VTOL drone</h3>
+                <p class="project-sub">300 km/h tail-sitter with zero control surfaces — every maneuver from differential thrust.</p>
               </div>
             </article>
 
@@ -153,9 +160,13 @@
               <div class="card-media card-media--contain">
                 <img src="assets/cover-ansys-cfd.webp" alt="Ansys Fluent pressure coefficient result on a VTOL drone model" loading="lazy" decoding="async" />
               </div>
-              <div class="project-body project-body--inline">
+              <div class="project-body">
+                <p class="project-meta">03 / Analysis</p>
+                <div class="title-row">
                 <h3>Agent-based CFD</h3>
                 <a class="project-download project-download--icon" href="assets/claude_ansys_cfd.zip" download aria-label="Download claude_ansys_cfd package" title="Download package"></a>
+                </div>
+                <p class="project-sub">Teaching package that lets an AI agent run headless Ansys Fluent — verified scripts, 11 documented failure modes.</p>
               </div>
             </article>
 
@@ -164,7 +175,9 @@
                 <img src="assets/cover-carbon-fiber-seat-cad.webp" alt="Carbon fiber cockpit seat CAD render showing the layup contours and mounting cutout" loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
+                <p class="project-meta">04 / Motorsport</p>
                 <h3>Carbon fiber seat</h3>
+                <p class="project-sub">Composite shoulder-support shell designed for load paths and race-weekend repairability.</p>
               </div>
             </article>
 
@@ -173,7 +186,9 @@
                 <img src="assets/oem-brake-fea.webp" alt="Brake rotor finite element analysis result" loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
+                <p class="project-meta">05 / Motorsport</p>
                 <h3>FSAE Brake Sim</h3>
+                <p class="project-sub">22-lap MATLAB thermal model justified a 25% rotor mass cut at a 3.0 factor of safety.</p>
               </div>
             </article>
 
@@ -182,7 +197,9 @@
                 <img src="assets/scanner-live-7.webp" alt="Gantry-based 3D scanner prototype" loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
+                <p class="project-meta">06 / Robotics</p>
                 <h3>3D scanner</h3>
+                <p class="project-sub">LiDAR gantry scanner — 2,206 points, under 3% error after calibration.</p>
               </div>
             </article>
 
@@ -191,7 +208,9 @@
                 <img src="assets/cover-smelly-cad.webp" alt="Smelly automated perfume-mixing machine CAD with dual lead-screw gantry and dispensing head" loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
+                <p class="project-meta">07 / Robotics</p>
                 <h3>Smelly</h3>
+                <p class="project-sub">Perfume-mixing vending machine; gantry and actuators designed, printed, and debugged in 2.5 days.</p>
               </div>
             </article>
 
@@ -200,7 +219,9 @@
                 <img src="assets/cover-aura-swerve-cad.webp" alt="AURA swerve drive module CAD with steering motor, drive wheel, and gearmotor" loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
+                <p class="project-meta">08 / Robotics</p>
                 <h3>AURA swerve drive</h3>
+                <p class="project-sub">Independent front swerve modules for a 300 lb autonomous cart — waterjet, TIG-welded A36 steel.</p>
               </div>
             </article>
 
@@ -209,7 +230,9 @@
                 <img src="assets/cover-line-follower-cad.webp" alt="CAD assembly of the line follower robot: chassis, Arduino Mega, dual gearmotors, wheels, and IR sensor boards" loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
+                <p class="project-meta">09 / Robotics</p>
                 <h3>LineFollower robot</h3>
+                <p class="project-sub">Controller, drivers, sensors, and power packaged on a palm-size chassis.</p>
               </div>
             </article>
 
@@ -218,7 +241,9 @@
                 <img src="assets/pool-sniper-white.webp" alt="CAD render of Pool Sniper cue launcher" loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
+                <p class="project-meta">10 / Robotics</p>
                 <h3>Pool Sniper</h3>
+                <p class="project-sub">Assistive cue launcher with laser aiming and variable-force release.</p>
               </div>
             </article>
 
@@ -227,7 +252,9 @@
                 <img src="assets/cover-aluminum-seat-white.webp" alt="Formula SAE aluminum seat finite element analysis cover" loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
+                <p class="project-meta">11 / Motorsport</p>
                 <h3>Driver seat and harness</h3>
+                <p class="project-sub">Cockpit fit validated across ~20 drivers; six-point harness on dedicated chassis tabs.</p>
               </div>
             </article>
 
@@ -236,7 +263,9 @@
                 <img src="assets/cover-guitar-education-cad.webp" alt="CAD layout of the guitar education kit: neck, body, pickups, bridge, control plate, and pickguard" loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
+                <p class="project-meta">12 / Product</p>
                 <h3>Guitar education kit</h3>
+                <p class="project-sub">~$100 STEAM kit — 8th/9th graders build a playable guitar in about 45 minutes.</p>
               </div>
             </article>
 
@@ -245,7 +274,9 @@
                 <img src="assets/cover-telecaster.webp" alt="Finished Telecaster-style guitar in a case" loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
+                <p class="project-meta">13 / Fabrication</p>
                 <h3>Telecaster guitar</h3>
+                <p class="project-sub">Walnut/maple body: glued blank, ShopBot CNC, multi-coat finish, working electronics.</p>
               </div>
             </article>
 
@@ -254,9 +285,20 @@
                 <img src="assets/cover-ftc-robot.webp" alt="FTC robot competing on a field with cone scoring elements" loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
+                <p class="project-meta">14 / Robotics</p>
                 <h3>FTC robot</h3>
+                <p class="project-sub">Massachusetts Championship winning alliance — cone intake, string-driven lift, mecanum drive.</p>
               </div>
             </article>
+
+            <a class="project-card project-card--studio" href="experience.html" aria-label="Enter the interactive 3D studio">
+              <div class="project-body">
+                <p class="project-meta">14 EXHIBITS &middot; INTERACTIVE</p>
+                <h3>Walk the studio</h3>
+                <p class="project-sub">Every project above, as a 3D exhibit in a night-lit room. The resume is on the desk.</p>
+                <span class="studio-cta" aria-hidden="true">Enter the 3D Studio &rarr;</span>
+              </div>
+            </a>
           </div>
         </div>
       </section>
@@ -264,7 +306,7 @@
       <!-- ============ SKILL MATRIX ============ -->
       <section id="skills" class="skills-matrix section-shell" aria-labelledby="skills-title">
         <div class="section-head" data-reveal>
-          <p class="section-kicker">Skills</p>
+          <p class="section-kicker">02 / Toolchain</p>
           <h2 id="skills-title">Skill matrix</h2>
         </div>
         <div class="matrix-grid" data-reveal-group>
@@ -311,7 +353,8 @@
           <article class="matrix-cell" data-reveal>
             <h3>Software &amp; leadership</h3>
             <ul>
-              <li>Vibe coding</li>
+              <li>AI-assisted engineering (PyFluent, headless CFD)</li>
+              <li>Python</li>
               <li>Team management</li>
             </ul>
           </article>
@@ -319,6 +362,12 @@
       </section>
 
       <section id="motorsport" class="featured section-shell" aria-label="Mechanical lead role detail">
+        <div class="section-head compact" data-reveal>
+          <div>
+            <p class="section-kicker">03 / Formula SAE</p>
+            <h2>Motorsport</h2>
+          </div>
+        </div>
         <div class="feature-grid" data-reveal-group>
           <article class="feature-panel media-large" data-reveal="scale">
             <img src="assets/fsae-mk7-track.webp" alt="Olin Electric Motorsports race car on track" loading="lazy" decoding="async" data-parallax />
@@ -331,9 +380,9 @@
             <p class="section-kicker">Role</p>
             <h3>Mechanical Lead</h3>
             <p>
-              Managing cross-functional subteams across suspension, chassis,
-              aerodynamics, and drivetrain while carrying deep roots in vehicle
-              dynamics, CAD/CAM, and precision manufacturing.
+              Leading 30+ engineers across suspension, chassis, aero, and
+              drivetrain, while personally owning the brake, steering, and
+              cockpit systems.
             </p>
             <dl class="spec-list">
               <div>
@@ -373,7 +422,8 @@
       <!-- ============ CAPABILITIES ============ -->
       <section id="capabilities" class="capabilities section-shell" aria-labelledby="capabilities-title">
         <div class="section-head" data-reveal>
-          <h2 id="capabilities-title">Contribution</h2>
+          <p class="section-kicker">04 / How I contribute</p>
+          <h2 id="capabilities-title">Capabilities</h2>
         </div>
 
         <div class="capability-grid" data-reveal-group>
@@ -381,27 +431,45 @@
             <span>TEAM</span>
             <h3>Team management</h3>
             <p>Subsystem ownership, task breakdown, design reviews, fabrication planning, and cross-team execution.</p>
+            <a class="cap-proof" href="#motorsport">See: FSAE program &rarr;</a>
           </article>
           <article class="capability" data-reveal>
             <span>CAD</span>
             <h3>Mechanical architecture</h3>
             <p>SolidWorks assemblies, exploded views, cockpit packaging, linkage design, and DFM iteration.</p>
+            <a class="cap-proof" href="#work" data-open-project="steering">See: Mk.8 steering &rarr;</a>
           </article>
           <article class="capability" data-reveal>
             <span>SHOP</span>
             <h3>Fabrication</h3>
             <p>CNC, lathe, waterjet, 3D printing, laser cutting, soldering, wiring, fit checks, and assembly.</p>
+            <a class="cap-proof" href="#work" data-open-project="telecaster">See: Telecaster build &rarr;</a>
           </article>
           <article class="capability" data-reveal>
             <span>CAE</span>
             <h3>Simulation and modeling</h3>
             <p>MATLAB thermal models, FEA, topology studies, parameter sweeps, and data-backed decisions.</p>
+            <a class="cap-proof" href="#work" data-open-project="brakeSim">See: FSAE Brake Sim &rarr;</a>
           </article>
           <article class="capability" data-reveal>
             <span>CTRL</span>
             <h3>Controls and integration</h3>
             <p>Arduino, ESP32, Raspberry Pi, stepper drivers, LiDAR, sensors, shielding, and debugging.</p>
+            <a class="cap-proof" href="#work" data-open-project="scanner">See: 3D scanner &rarr;</a>
           </article>
+        </div>
+      </section>
+
+      <!-- ============ 3D STUDIO BANNER ============ -->
+      <section class="studio-banner" aria-label="Interactive 3D studio invitation">
+        <div class="section-shell studio-banner__inner" data-reveal>
+          <p class="section-kicker">One more thing</p>
+          <h2>You've read the case studies.<br />Now walk the floor.</h2>
+          <p class="studio-banner__copy">
+            An interactive 3D studio — the resume is on the desk, and all 14
+            projects are exhibits. Click one and the camera flies you in.
+          </p>
+          <a class="button studio" href="experience.html" data-magnetic>Enter the 3D Studio &rarr;</a>
         </div>
       </section>
 
@@ -409,13 +477,13 @@
       <section id="contact" class="contact" aria-labelledby="contact-title">
         <div class="section-shell contact-grid">
           <div data-reveal>
-            <p class="section-kicker">Contact</p>
+            <p class="section-kicker">05 / Contact</p>
             <h2 id="contact-title">Let's build cool stuff.</h2>
-            <p>Open to mechanical engineering internships and project conversations.</p>
+            <p>Seeking a Summer 2027 mechanical engineering internship — vehicle systems, robotics, or manufacturing. Email me and I'll reply within a day.</p>
           </div>
           <div class="contact-actions" data-reveal>
             <a class="button primary" href="mailto:kwu@olin.edu" data-magnetic>kwu@olin.edu</a>
-            <a class="button secondary" href="mailto:kefanwu8888@gmail.com" data-magnetic>kefanwu8888@gmail.com</a>
+            <a class="button secondary" href="assets/kefan-wu-resume.pdf" download data-magnetic>Download resume (PDF)</a>
             <a class="button secondary" href="https://www.linkedin.com/in/kefan-wu-olin/" target="_blank" rel="noreferrer" data-magnetic>LinkedIn</a>
           </div>
         </div>
@@ -450,6 +518,7 @@
           <p id="modal-kicker" class="section-kicker"></p>
           <h2 id="modal-title"></h2>
           <p id="modal-summary"></p>
+          <a id="modal-studio-link" class="modal-studio-link" href="experience.html">View this exhibit in the 3D Studio <span aria-hidden="true">&rarr;</span></a>
           <div id="modal-gallery" class="modal-gallery" aria-label="Project image gallery"></div>
           <div class="modal-columns">
             <div>
@@ -466,7 +535,7 @@
       </article>
     </div>
 
-    <script src="project-data.js?v=proj-norig-20260705"></script>
-    <script src="script.js?v=nogear-20260703"></script>
+    <script src="project-data.js?v=proj-steering-20260707"></script>
+    <script src="script.js?v=mainwow-20260707"></script>
   </body>
 </html>

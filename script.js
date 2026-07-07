@@ -117,13 +117,13 @@ const heroSkillDetails = {
     text:
       "Task breakdown, design reviews, fabrication planning, and cross-team execution from CAD to tested assemblies."
   },
-  "vibe coding": {
-    title: "Vibe Coding",
-    meta: "AI-assisted development",
+  "ai-assisted eng": {
+    title: "AI-Assisted Engineering",
+    meta: "PyFluent / headless CFD / automation",
     image: "assets/skill-vibe-coding.jpg",
     alt: "Code on a dark screen with blue and red ambient lighting",
     text:
-      "Rapid AI-paired prototyping — turning intent into working scripts, tools, and automation for simulation, data wrangling, and hardware workflows."
+      "AI-paired engineering automation — working scripts, tools, and pipelines for simulation (headless Ansys via PyFluent), data wrangling, and hardware workflows."
   },
   "3d printing": {
     title: "3D Printing",
@@ -297,7 +297,7 @@ let scrollTicking = false;
 function updateScrollEffects() {
   const max = document.documentElement.scrollHeight - window.innerHeight;
   const ratio = max > 0 ? window.scrollY / max : 0;
-  progress.style.width = `${ratio * 100}%`;
+  progress.style.transform = `scaleX(${ratio})`; // compositor-only
   header.classList.toggle("is-scrolled", window.scrollY > 24);
 
   // gentle parallax on flagged media (slight overscale hides the travel)
@@ -420,15 +420,23 @@ const counterObserver = new IntersectionObserver(
         el.textContent = target.toFixed(decimals);
         return;
       }
-      const duration = 900;
-      const start = performance.now();
-      const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
-      const tick = (now) => {
-        const p = Math.min((now - start) / duration, 1);
-        el.textContent = (target * easeOutCubic(p)).toFixed(decimals);
-        if (p < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
+      // hero stats sit behind a staged reveal — hold the count until the bar
+      // is actually visible, then roll statelier than the in-page counters
+      const inHero = Boolean(el.closest(".hero-stats"));
+      const duration = inHero ? 1200 : 900;
+      const delay = inHero ? 1000 : 0;
+      const ease = inHero
+        ? (t) => 1 - Math.pow(1 - t, 4)
+        : (t) => 1 - Math.pow(1 - t, 3);
+      setTimeout(() => {
+        const start = performance.now();
+        const tick = (now) => {
+          const p = Math.min((now - start) / duration, 1);
+          el.textContent = (target * ease(p)).toFixed(decimals);
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }, delay);
     });
   },
   { threshold: 0.5 }
@@ -450,7 +458,7 @@ const isInteractiveCardTarget = (event) =>
 // unique view-transition-name per card => cards glide (FLIP) between
 // filter states in browsers with the View Transitions API
 cards.forEach((card) => {
-  card.style.viewTransitionName = `card-${card.dataset.project}`;
+  card.style.viewTransitionName = `card-${card.dataset.project || "studio"}`;
 });
 
 filters.forEach((button) => {
@@ -459,7 +467,10 @@ filters.forEach((button) => {
     const apply = () => {
       filters.forEach((item) => item.classList.toggle("active", item === button));
       cards.forEach((card) => {
-        const show = filter === "all" || card.dataset.category.includes(filter);
+        // the studio tile stays visible under every filter (it links to all 14)
+        const show = filter === "all"
+          || card.classList.contains("project-card--studio")
+          || (card.dataset.category || "").includes(filter);
         card.classList.toggle("is-hidden", !show);
       });
     };
@@ -485,9 +496,13 @@ filters.forEach((button) => {
 let tiltFrame = null;
 
 cards.forEach((card) => {
-  card.tabIndex = 0;
-  card.setAttribute("role", "button");
-  card.setAttribute("aria-label", `Open ${card.querySelector("h3")?.textContent || "project"} case study`);
+  const isStudioTile = card.classList.contains("project-card--studio");
+  if (!isStudioTile) {
+    // the studio tile is a real <a>: natively focusable, no modal role
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", `Open ${card.querySelector("h3")?.textContent || "project"} case study`);
+  }
 
   card.addEventListener("pointerenter", () => {
     if (!finePointer.matches || reducedMotion.matches) return;
@@ -513,17 +528,19 @@ cards.forEach((card) => {
     card.style.transform = "";
   });
 
-  card.addEventListener("click", (event) => {
-    if (isInteractiveCardTarget(event)) return;
-    openModal(card.dataset.project);
-  });
-  card.addEventListener("keydown", (event) => {
-    if (isInteractiveCardTarget(event)) return;
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
+  if (!isStudioTile) {
+    card.addEventListener("click", (event) => {
+      if (isInteractiveCardTarget(event)) return;
       openModal(card.dataset.project);
-    }
-  });
+    });
+    card.addEventListener("keydown", (event) => {
+      if (isInteractiveCardTarget(event)) return;
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openModal(card.dataset.project);
+      }
+    });
+  }
 
   card.querySelectorAll(".project-download").forEach((link) => {
     link.addEventListener("click", (event) => event.stopPropagation());
@@ -534,13 +551,19 @@ cards.forEach((card) => {
 /* ============ magnetic buttons ============ */
 
 document.querySelectorAll("[data-magnetic]").forEach((el) => {
+  el.addEventListener("pointerenter", () => {
+    if (!finePointer.matches || reducedMotion.matches) return;
+    // soften the first movement so the pull eases in instead of stepping
+    el.style.transition = "transform 160ms cubic-bezier(0.33, 1, 0.68, 1)";
+    setTimeout(() => { el.style.transition = ""; }, 180);
+  });
   el.addEventListener("pointermove", (event) => {
     if (!finePointer.matches || reducedMotion.matches) return;
     const rect = el.getBoundingClientRect();
     const dx = event.clientX - rect.left - rect.width / 2;
     const dy = event.clientY - rect.top - rect.height / 2;
     const clamp = (v, m) => Math.max(-m, Math.min(m, v));
-    el.style.transform = `translate(${clamp(dx * 0.18, 6)}px, ${clamp(dy * 0.3, 5)}px)`;
+    el.style.transform = `translate(${clamp(dx * 0.08, 10)}px, ${clamp(dy * 0.12, 7)}px)`;
   });
   el.addEventListener("pointerleave", () => {
     el.style.transition = "transform 500ms cubic-bezier(0.16, 1, 0.3, 1)";
@@ -653,16 +676,38 @@ function openModal(projectKey) {
   modalKicker.textContent = project.kicker;
   modalTitle.textContent = project.title;
   modalSummary.textContent = project.summary;
+  const studioLink = document.querySelector("#modal-studio-link");
+  if (studioLink) studioLink.href = `experience.html#${projectKey}`;
   fillList(modalHighlights, project.highlights);
   fillList(modalTools, project.tools);
   renderDetails(project);
   renderGallery(project);
   modalPanel.scrollTop = 0;
   modalScrub.setup(project.scrub, project);
-  modal.classList.remove("is-closing");
-  modal.setAttribute("aria-hidden", "false");
-  body.classList.add("modal-open");
-  modal.querySelector(".modal-close").focus();
+  const showDom = () => {
+    modal.classList.remove("is-closing");
+    modal.setAttribute("aria-hidden", "false");
+    body.classList.add("modal-open");
+    modal.querySelector(".modal-close").focus();
+  };
+  // shared-element morph: the clicked card's cover glides into the modal hero
+  const cardEl = document.querySelector(`.project-card[data-project="${projectKey}"]`);
+  const cardImg = cardEl?.querySelector(".card-media img");
+  if (document.startViewTransition && !reducedMotion.matches && cardImg) {
+    const prevCardName = cardEl.style.viewTransitionName;
+    cardEl.style.viewTransitionName = "none"; // only the image pair morphs
+    cardImg.style.viewTransitionName = "case-hero";
+    modalImage.style.viewTransitionName = "case-hero";
+    document
+      .startViewTransition(showDom)
+      .finished.finally(() => {
+        cardImg.style.viewTransitionName = "";
+        modalImage.style.viewTransitionName = "";
+        cardEl.style.viewTransitionName = prevCardName;
+      });
+  } else {
+    showDom();
+  }
 }
 
 function closeModal() {
@@ -687,6 +732,14 @@ function closeModal() {
 
 modal.querySelectorAll("[data-close-modal]").forEach((element) => {
   element.addEventListener("click", closeModal);
+});
+
+// capability "See: ..." proof links open the matching case study directly
+document.querySelectorAll("[data-open-project]").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    openModal(link.dataset.openProject);
+  });
 });
 
 document.addEventListener("keydown", (event) => {
@@ -841,6 +894,8 @@ const modalScrub = {
     }
     modalSpec.replaceChildren(frag);
     modalSpec.hidden = false;
+    this.smooth = null;
+    this.lastIdx = -1;
     modal.classList.add("modal--scrub");
   },
   pause() {
@@ -866,13 +921,26 @@ const modalScrub = {
   render() {
     if (!this.active || this.paused || scrubReduce.matches) return;
     const t = this.progress();
-    const idx = Math.round(t * (this.count - 1)) + 1;
+    // damped frame glide: fast wheel ticks ease between frames instead of
+    // teleporting 8-10 frames — reads like turning a CAD turntable
+    const targetIdx = t * (this.count - 1);
+    if (this.smooth == null) this.smooth = targetIdx;
+    this.smooth += (targetIdx - this.smooth) * 0.24;
+    if (Math.abs(targetIdx - this.smooth) < 0.5) this.smooth = targetIdx;
+    const idx = Math.round(this.smooth) + 1;
     if (idx !== this.lastIdx) {
       this.lastIdx = idx;
       modalScrubImg.src = this.url(idx);
     }
     if (modalScrubBar) modalScrubBar.style.width = (t * 100).toFixed(1) + "%";
     if (modalMedia) modalMedia.classList.toggle("modal-media--scrubbed", t > 0.04);
+    if (this.smooth !== targetIdx && !this.rafPending) {
+      this.rafPending = true;
+      requestAnimationFrame(() => {
+        this.rafPending = false;
+        this.render();
+      });
+    }
   },
 };
 modalScrub.onScroll = function () {
