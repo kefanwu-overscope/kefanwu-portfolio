@@ -606,16 +606,27 @@ function initScene(canvas) {
   MODELS.deskLamp = deskLamp;
   // pseudo-hotspot: interact marker + hover label + click = room light switch
   {
+    deskLamp.updateMatrixWorld(true);
     const bb = new THREE.Box3().setFromObject(deskLamp);
     const center = bb.getCenter(new THREE.Vector3());
+    const size = bb.getSize(new THREE.Vector3());
+    // generous invisible hitbox (child of the lamp, like every exhibit) —
+    // the thin stem/head alone made clicks miss half the time, and it
+    // extends up so clicking the floating marker also toggles
+    const hit = new THREE.Mesh(
+      new THREE.BoxGeometry(size.x + 0.1, size.y + 0.18, size.z + 0.1),
+      new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
+    );
+    deskLamp.add(hit);
+    hit.position.copy(deskLamp.worldToLocal(center.clone().add(new THREE.Vector3(0, 0.05, 0))));
     const marker = makeInteractMarker();
-    const markerY = bb.max.y + 0.07;
-    marker.position.set(center.x, markerY, center.z);
-    scene.add(marker);
-    NO_PREPASS.push(marker);
+    deskLamp.add(marker);
+    const mLocal = deskLamp.worldToLocal(new THREE.Vector3(center.x, bb.max.y + 0.07, center.z));
+    marker.position.copy(mLocal);
+    NO_PREPASS.push(hit, marker);
     deskLamp.userData.hotspot = {
       key: null, action: "lamp", label: "Room lights", baseScale: 1,
-      center, marker, markerY, phase: Math.random() * Math.PI * 2,
+      center, marker, markerY: mLocal.y, phase: Math.random() * Math.PI * 2,
     };
     HOTSPOTS.push(deskLamp);
   }
@@ -790,103 +801,10 @@ function initScene(canvas) {
   scene.add(moonSpot);
   scene.add(moonSpot.target);
 
-  // the resume spot becomes a visible warm cone with dust drifting inside it;
-  // both follow resumeSpot.intensity, so the lamp toggle fades them for free
-  let resumeCone = null, dustPts = null;
-  const dustTime = { value: 0 };
-  if (!LOW_TIER) {
-    const CONE_LEN = 1.3;
-    const spotP = resumeSpot.position, spotT = resumeSpot.target.position;
-    const beamDir = new THREE.Vector3().subVectors(spotT, spotP).normalize();
-    const coneGeo = new THREE.ConeGeometry(0.3, CONE_LEN, 40, 1, true);
-    coneGeo.translate(0, -CONE_LEN / 2, 0); // apex at the spot, opening down-beam
-    const coneMat = new THREE.ShaderMaterial({
-      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
-      uniforms: { uAmt: { value: 0 }, uTime: dustTime },
-      vertexShader: [
-        "varying vec3 vNrm; varying vec3 vView; varying float vA;",
-        "void main(){",
-        "  vNrm = normalMatrix * normal;",
-        "  vec4 mv = modelViewMatrix * vec4(position, 1.0);",
-        "  vView = -mv.xyz;",
-        "  vA = clamp(-position.y / 1.3, 0.0, 1.0);",
-        "  gl_Position = projectionMatrix * mv;",
-        "}",
-      ].join("\n"),
-      fragmentShader: [
-        // NOTE: every pow() base is clamped away from 0 — GLSL pow(0, y) is
-        // undefined (NaN on ANGLE/D3D), and ONE NaN pixel in the HDR buffer
-        // smears through UnrealBloom's mip chain into a fully white frame
-        "varying vec3 vNrm; varying vec3 vView; varying float vA;",
-        "uniform float uAmt; uniform float uTime;",
-        "void main(){",
-        "  float body = pow(max(abs(dot(normalize(vNrm), normalize(vView))), 1e-4), 1.4);",
-        "  float axial = smoothstep(0.0, 0.14, vA) * pow(max(1.0 - vA, 1e-4), 1.6);",
-        "  float flutter = 0.9 + 0.1 * sin(vA * 6.0 - uTime * 0.7);",
-        "  float a = uAmt * body * axial * flutter;",
-        "  if (!(a >= 0.0)) a = 0.0;",
-        "  gl_FragColor = vec4(1.0, 0.88, 0.72, min(a, 1.0));",
-        "}",
-      ].join("\n"),
-    });
-    resumeCone = new THREE.Mesh(coneGeo, coneMat);
-    resumeCone.position.copy(spotP);
-    resumeCone.quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), beamDir);
-    resumeCone.renderOrder = 20;
-    scene.add(resumeCone);
-
-    const N = 46;
-    const dPos = new Float32Array(N * 3), dSeed = new Float32Array(N);
-    for (let i = 0; i < N; i++) {
-      const s = 0.18 + 0.78 * Math.random();
-      const p = new THREE.Vector3().lerpVectors(spotP, spotT, s);
-      const r = (0.04 + 0.2 * s) * Math.sqrt(Math.random());
-      const a = Math.random() * Math.PI * 2;
-      p.x += Math.cos(a) * r;
-      p.z += Math.sin(a) * r;
-      dPos.set([p.x, p.y, p.z], i * 3);
-      dSeed[i] = Math.random() * 100;
-    }
-    const dustGeo = new THREE.BufferGeometry();
-    dustGeo.setAttribute("position", new THREE.BufferAttribute(dPos, 3));
-    dustGeo.setAttribute("seed", new THREE.BufferAttribute(dSeed, 1));
-    const dustMat = new THREE.ShaderMaterial({
-      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-      uniforms: { uAmt: { value: 0 }, uTime: dustTime, uPix: { value: renderer.getPixelRatio() } },
-      vertexShader: [
-        "attribute float seed; varying float vSeed;",
-        "uniform float uTime; uniform float uPix;",
-        "void main(){",
-        "  vSeed = seed;",
-        "  vec3 p = position;",
-        "  p.x += sin(uTime * 0.31 + seed * 17.0) * 0.018;",
-        "  p.z += cos(uTime * 0.23 + seed * 23.0) * 0.018;",
-        "  p.y += sin(uTime * 0.17 + seed * 29.0) * 0.025;",
-        "  vec4 mv = modelViewMatrix * vec4(p, 1.0);",
-        "  gl_PointSize = min((0.9 + fract(seed * 7.3)) * uPix * (2.4 / -mv.z) * 2.0, 6.0 * uPix);",
-        "  gl_Position = projectionMatrix * mv;",
-        "}",
-      ].join("\n"),
-      fragmentShader: [
-        "varying float vSeed; uniform float uTime; uniform float uAmt;",
-        "void main(){",
-        "  vec2 d = gl_PointCoord - 0.5;",
-        "  float a = smoothstep(0.5, 0.12, length(d));",
-        "  float tw = 0.55 + 0.45 * sin(uTime * (0.6 + fract(vSeed * 3.1)) + vSeed * 37.0);",
-        "  gl_FragColor = vec4(1.0, 0.92, 0.78, a * tw * uAmt * 0.35);",
-        "}",
-      ].join("\n"),
-    });
-    dustPts = new THREE.Points(dustGeo, dustMat);
-    dustPts.renderOrder = 21;
-    dustPts.frustumCulled = false;
-    scene.add(dustPts);
-    // keep the invisible beam volume out of the DoF depth pre-pass — the
-    // override material would render it as opaque geometry
-    NO_PREPASS.push(resumeCone, dustPts);
-  }
   // set while the first-visit boot choreography owns the light levels
   let bootTakeover = false;
+  // bumped by every applyLightState call; stale step closures bail on mismatch
+  let lightGen = 0;
   // crossfade uniforms shared by every baked material: lightMap blends
   // toward lightMapB by lmMix, so the lamp toggle FADES between light states
   const lmMix = { value: 0 };
@@ -919,6 +837,10 @@ function initScene(canvas) {
     return tex;
   }
   function applyLightState(animate) {
+    // generation counter: a newer call (toggle or instant set) invalidates
+    // any still-running step closure — without this, two quick lamp clicks
+    // let the FIRST fade finish last and commit the wrong grade
+    const gen = ++lightGen;
     const lm = lightsOn ? (LM.on4k || LM.on2k) : (LM.off4k || LM.off2k);
     const lmCurrent = bakedMats.length ? bakedMats[0].lightMap : null;
     const fadeLm = !!(lm && lmCurrent && lm !== lmCurrent && animate && !prefersReducedMotion);
@@ -954,6 +876,7 @@ function initScene(canvas) {
     const t0 = performance.now();
     const DUR = fadeLm ? 800 : 450; // lightmap crossfade reads best a bit slower
     (function step(now) {
+      if (gen !== lightGen) return; // superseded by a newer light-state call
       const k = Math.min(1, (now - t0) / DUR);
       const e = easeInOutCubic(k);
       key.intensity = from.key + (want.key - from.key) * e;
@@ -1192,13 +1115,6 @@ function initScene(canvas) {
       }
     }
 
-    // the resume beam + dust breathe with the spot (day mode fades them out)
-    if (resumeCone) {
-      const amt = Math.max(0, Math.min(1, resumeSpot.intensity / 1.6));
-      resumeCone.material.uniforms.uAmt.value = amt * 0.16;
-      dustPts.material.uniforms.uAmt.value = amt;
-      if (!prefersReducedMotion) dustTime.value = t * 0.001;
-    }
     // sub-2% 1/f flicker on the warm practicals so the still room doesn't
     // read as a screenshot (applied around the render, then unwound)
     let flk = 0;

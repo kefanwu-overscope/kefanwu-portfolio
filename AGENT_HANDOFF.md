@@ -575,11 +575,11 @@ an `assert s < e` ORDER check, then rewrite the file with
 - MOONLIGHT GOBO: `moonSpot` (cold blue, canvas-drawn 2x2 window-frame map,
   `MOON_NIGHT=11`) projects across the rug; `layers.enable(1)` so it reaches
   the baked floor. Night-only via applyLightState `want.moon`.
-- RESUME BEAM + DUST: visible additive cone + 46 drifting dust Points over
-  the resume, skipped on LOW_TIER; opacity follows `resumeSpot.intensity`
-  in the tick so the lamp toggle fades them for free. IMPORTANT: every GLSL
-  `pow()` base is clamped `max(x, 1e-4)` — `pow(0, y)` is NaN on ANGLE/D3D
-  and ONE NaN pixel turns the whole frame white through UnrealBloom's mips.
+- (REMOVED 2026-07-06 per owner: the visible resume beam cone + dust motes
+  read as artificial. LESSON that still applies to ANY future custom
+  shader: clamp every GLSL `pow()` base with `max(x, 1e-4)` — `pow(0, y)`
+  is NaN on ANGLE/D3D and ONE NaN pixel turns the whole frame white
+  through UnrealBloom's mip chain.)
 - 1/f FLICKER: sub-2% multiplier on resumeSpot/benchGlow/lampLeds applied
   before `composer.render()` and unwound right after.
 - COLD BOOT (`runBootIntro`): first visit only (localStorage kw_intro_seen
@@ -590,6 +590,11 @@ an `assert s < e` ORDER check, then rewrite the file with
   makes applyLightState a no-op meanwhile; `cancelBoot()` (called by the
   lamp toggle) snaps non-applyLightState-owned values via `bootRestore`.
   Returning visitors keep the old `runLightIntro` ramp. QA: `__exp.runBootIntro()`.
+- LAMP SWITCH UX (2026-07-06): the lamp pseudo-hotspot has a generous
+  invisible hitbox + its marker is a CHILD of the lamp (both raycastable),
+  because the bare stem/head made clicks miss. applyLightState carries a
+  `lightGen` generation counter so rapid double-toggles can't let a stale
+  800ms crossfade step commit the wrong grade.
 
 ### Gotchas
 
