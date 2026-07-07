@@ -1,0 +1,10 @@
+# never let autocrlf touch binary assets
+*.pdf binary
+*.webp binary
+*.glb binary
+*.gltf text
+*.hdr binary
+*.png binary
+*.jpg binary
+*.zip binary
+*.bin binary
