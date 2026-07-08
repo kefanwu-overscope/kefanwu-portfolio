@@ -681,82 +681,87 @@ an `assert s < e` ORDER check, then rewrite the file with
 
 ## Direct Prompt For A New Agent
 
-Use this prompt to hand off the project:
+Paste the block below to hand the project to another agent.
 
 ```text
-You are taking over Kefan Wu's static portfolio website.
+You are taking over maintenance and development of Kefan Wu's engineering
+portfolio website. Kefan is a Mechanical Engineering student (Olin College '28)
+and Mechanical Lead at Olin Electric Motorsports (Formula SAE).
 
-Work directory:
-C:\Users\oc\Desktop\WEBSITE\portfolio-site
+WORKSPACE & DEPLOY
+- Local project: C:\Users\oc\Desktop\WEBSITE\portfolio-site
+- Live: https://www.kefanwu.com  (Vercel auto-deploys on push to `main`)
+- GitHub: https://github.com/kefanwu-overscope/kefanwu-portfolio.git  (branch: main)
+- Vercel: https://kefanwu-portfolio.vercel.app
+- Plain static site: NO framework, NO build step, NO npm install.
 
-Live site:
-https://www.kefanwu.com
+TWO SURFACES
+- index.html  (canonical, recruiter-facing homepage)  + styles.css + script.js
+- experience.html  (interactive 3D "studio", three.js r0.185, buildless via a
+  jsDelivr import map)  + experience.css + experience.js
+- project-data.js  = shared case-study data, loaded by BOTH pages (bump its
+  cache string in BOTH when edited)
+- experience-data.js = RESUME text + curated hero exhibits for the 3D page
 
-GitHub/Vercel:
-- Git remote: https://github.com/kefanwu-overscope/kefanwu-portfolio.git
-- Branch: main
-- Vercel auto-deploys after git push to main.
+STANDING RULES (do these automatically, without being reminded)
+1. Communicate WITH THE USER IN CHINESE. ALL site-visible content stays ENGLISH.
+2. After every VERIFIED change, commit AND push to `main` — do not ask first.
+   End each commit message with a Co-Authored-By trailer (this repo has used
+   "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"; use your own model
+   identity).
+3. Cache-busting: every file you edit carries a `?v=<label>-YYYYMMDD>` query
+   string in the HTML — bump it. For the 3D page bump BOTH experience.css and
+   experience.js in experience.html. project-data.js is referenced by both
+   pages. After deploy, `curl` the live URL to confirm the new string is served.
+4. If you spawn subagents, use Sonnet 5 at xhigh reasoning effort.
+5. Design language: restrained premium black / blue (#3f8cff) / white
+   engineering aesthetic (Apple/SpaceX). NO purple, NO videos, NO hobby framing
+   (frame hobby-adjacent work as engineering / CAD / fabrication / analysis).
+   Prefer real project assets. Keep recruiter readability high. Preserve desktop
+   layout unless asked; for mobile-only tweaks stay inside @media (max-width:720px).
 
-User preferences:
-- Website must remain English.
-- Style must remain black, restrained, premium, Apple/SpaceX-inspired, engineering-focused.
-- No video.
-- Do not add personal hobby sections or hobby framing.
-- Use real project images where possible.
-- Avoid purple/flamboyant effects, decorative orbs, and overdesigned marketing layouts.
-- Keep recruiter readability high.
-- Use concise engineering language.
-- Preserve desktop layout unless explicitly asked.
-- For mobile readability, change only rules inside @media (max-width: 720px) unless asked otherwise.
+ENVIRONMENT (Windows 11, this machine)
+- Bash tool = Git Bash (POSIX sh). PowerShell 5.1 also available. Mind CRLF and
+  use forward slashes in scripts.
+- There is NO node and NO python on PATH. For scripting/tooling use Blender's
+  bundled Python:
+  C:\Users\oc\.cache\blender\blender-4.5.9-windows-x64\4.5\python\bin\python.exe
+  (has trimesh, scipy, rtree, pillow, reportlab installed).
+- Headless Blender for lightmap baking:
+  C:\Users\oc\.cache\blender\blender-4.5.9-windows-x64\blender.exe (OPTIX GPU).
+  Bake pipeline lives in tools/bake/.
+- SolidWorks STL exports: C:\Users\oc\Desktop\STL. STL->GLB scripts in tools/.
 
-Important files:
-- index.html: page structure, hero ticker labels, project card order, visible card copy.
-- styles.css: all visual styling, responsive CSS, transitions, scroll cue, skill glass cards.
-- script.js: projectData modal content, heroSkillDetails hover cards, filters, reveal/counter interactions.
-- assets/: local images and downloadable ZIP assets.
+VERIFICATION
+- Use the preview tools (start the "portfolio" launch config -> http://localhost:4173/).
+  Prefer preview_inspect + preview_eval (read computed styles / bounding boxes)
+  over preview_screenshot, which renders tiny and TIMES OUT on the WebGL 3D page.
+- The 3D page needs a special capture technique (composer.render() +
+  canvas.toDataURL POST to a local receiver, snapsrv.py) because screenshots
+  fail on the backgrounded WebGL canvas — see AGENT_HANDOFF.md. Always confirm
+  window.__exp exists and there are no console errors after editing experience.js.
+- Check desktop AND mobile; verify no horizontal overflow.
 
-Current key content:
-- Hero ticker skills: Arduino, TIG Welding, AutoCAD, Topology Study, SolidWorks, MATLAB, FEA, CFD, CNC Mill, Lathe, Waterjet, Carbon Fiber, Team Management, Vibe Coding.
-- ESP32 was intentionally removed only from the hero ticker, but may still appear in project/tool descriptions.
-- Hero copy: "Mechanical engineering student at Olin College, leading mechanical systems for Olin Electric Motorsports and building tested hardware across motorsport, robotics, and fabrication."
-- Projects card order (15 cards, current): Mk.8 steering system; Javelin VTOL drone; Agent-based CFD; Carbon fiber seat; FSAE Brake Sim; 3D scanner; Smelly; AURA swerve drive; LineFollower robot; 2-speed gearbox; Pool Sniper; Driver seat and harness; Guitar education kit; Telecaster guitar; FTC robot. (Wankel engine housing and Noise reduction algorithm were removed; cards now show image + name only.)
-- After Projects comes a Skill matrix section (#skills); the old full-bleed OEM "set-piece" was removed. The Olin Electric Motorsports link now lives in the Mechanical Lead detail section (.featured, id="motorsport") as .oem-link → https://olinelectricmotorsports.com/. assets/oem-mk7-track.jpg is now orphaned.
-- AURA swerve drive has a scroll-scrubbed exploded-view image sequence INSIDE its modal (assets/aura_explode/frame_001..060.webp, modalScrub controller) — not a video, not on the cover.
-- Card cover treatment is uniform 4:3: default object-fit contain on dark tile, .card-media--fill = cover, .card-media--contain = white tile. Fix proportion complaints via these classes, not by resizing images.
-- Capabilities heading is "Contribution"; cards are Team management, Mechanical architecture, Fabrication, Simulation and modeling, Controls and integration.
-- Contact heading is "Let's build cool stuff."
+READ FIRST (in the repo)
+- AGENT_HANDOFF.md — THE working reference: file map, DOM/ID map, current
+  cache-version strings, recent changes, full 3D-studio internals, and the bake
+  + tooling pipelines. Read it before touching anything.
+- README.md, PROJECT_DOCUMENTATION.md, ATTRIBUTIONS.txt.
+Do not trust older docs over the actual current code — inspect files before editing.
 
-Workflow:
-1. Inspect current files before editing. Do not rely on older docs without checking current code.
-2. Make small scoped edits with apply_patch.
-3. Update CSS/JS cache query strings in index.html when changing styles.css or script.js.
-4. Run:
-   & 'C:\Users\oc\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' --check script.js
-5. Preview with:
-   & 'C:\Users\oc\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -m http.server 4173 --bind 127.0.0.1
-6. Check http://localhost:4173 returns 200.
-7. Browser-check desktop 1440x900 and mobile 390x844, especially no horizontal overflow.
-8. Clean _qa-* temporary files.
-9. Commit and push to main only after verification.
-10. Confirm https://www.kefanwu.com returns 200 after Vercel deploy.
-
-Be careful:
-- Project cards are duplicated conceptually between index.html visible cards and script.js modal data.
-- Section transition bugs have previously appeared around Hero -> Projects and Projects -> Motorsport; inspect visually if touching .hero, .systems, or .set-piece.
-- Hero stats bar rounded corners were previously clipped; preserve overflow/spacing around it.
-- Do not reintroduce the old right-side scroll strip.
-
-There is also a SECOND surface: the interactive 3D page (experience.html /
-experience.css / experience.js / experience-data.js), reached from the nav
-link "3D Desk". It is a buildless three.js scene. The static homepage stays
-canonical and recruiter-facing; the 3D page is the immersive extra. See the
-dedicated "3D Experience Page" section above for its full architecture,
-exhibit map (all 15 projects are clickable; 5 are real CAD GLBs, 10 are
-procedural), interaction model (project side panel; resume rises as a paper
-sheet; lightbox; guided intro; optional sound), render pipeline
-(GTAO + Bokeh + bloom, LOW_TIER for mobile), and the anchored-Python-splice
-editing workflow with its anchor-ORDER footgun. When editing it: bump BOTH
-experience.css and experience.js cache strings in experience.html to a new
-exp-<label>-<date>, verify window.__exp in the browser + no console errors,
-then push and curl the live experience.html for the new cache string.
+CURRENT STATE (2026-07-07; verify with `git log` / the live site)
+- Homepage was refreshed with a 3D-studio conversion funnel: hero CTA "Enter the
+  3D Studio", nav pill, deep links (experience.html#<projectKey> flies to that
+  exhibit), per-modal cross-links, a "Walk the studio" grid tile spanning two
+  columns, and a pre-Contact banner. Cards gained outcome subtitles; a resume
+  PDF (assets/kefan-wu-resume.pdf) was generated from site data — Kefan may
+  replace it with his own file at the same path. "Vibe coding" was renamed to
+  "AI-assisted engineering". Hero title is vertically centered; Projects section
+  background is solid black.
+- 3D studio: an L5 lighting "wow" pass (cold-boot intro, moonlight gobo), a
+  reliable desk-lamp light switch, and a carbon-seat seam fix landed recently.
+  All 14 projects are clickable exhibits; the resume sits on the desk.
+- A dated local backup exists at
+  C:\Users\oc\Desktop\kefanwu-portfolio-backup-2026-07-07 (full git bundle +
+  source snapshot zip). Re-run a backup after major changes.
 ```
