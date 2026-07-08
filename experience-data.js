@@ -1,26 +1,9 @@
 /* ============================================================
    experience-data.js  (ES module)
-   Configuration for the 3D desk experience:
-   - HERO_PROJECTS: the curated desk objects (-> projectData keys)
-   - RESUME: condensed resume rendered into the folder panel
+   RESUME — condensed resume rendered into the 3D desk's resume sheet.
    Rich case-study content is read from window.projectData
-   (shared with the homepage; see project-data.js wiring later).
+   (shared with the homepage; see project-data.js wiring).
    ============================================================ */
-
-// Brand accent reused in 3D + overlays.
-export const ACCENT = 0x3f8cff;
-
-// The 7 curated hero objects on the desk. `key` matches a projectData key.
-// `model` is the in-scene builder/asset id resolved by experience.js.
-export const HERO_PROJECTS = [
-  { key: "steering",   label: "Mk.8 Steering",  tag: "FSAE / steering",        model: "steering" },
-  { key: "javelin",    label: "Javelin VTOL",   tag: "Aerospace / VTOL",       model: "drone" },
-  { key: "carbonSeat", label: "Carbon Seat",    tag: "Composites",             model: "seat" },
-  { key: "brakeSim",   label: "Brake Sim",      tag: "Thermal model",          model: "brakeDisc" },
-  { key: "scanner",    label: "3D Scanner",     tag: "LiDAR / capture",        model: "scanner" },
-  { key: "aura",       label: "AURA Swerve",    tag: "Swerve drive",           model: "swerve" },
-  { key: "ansysCfd",   label: "Agent-based CFD", tag: "CFD automation",        model: "monitor" },
-];
 
 // Condensed resume, composed from on-site information (English only).
 export const RESUME = {

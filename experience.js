@@ -3252,55 +3252,6 @@ function buildToolChest() {
   return g;
 }
 
-function buildSkillPaper() {
-  // second printed sheet on the desk: the skill matrix (hover shows the
-  // live card built from RESUME.skills)
-  const g = new THREE.Group();
-  const c = document.createElement("canvas");
-  // 4x supersampled, same treatment as the resume sheet
-  c.width = 1024;
-  c.height = 1360;
-  const ctx = c.getContext("2d");
-  ctx.scale(4, 4);
-  ctx.fillStyle = "#f4f5f7";
-  ctx.fillRect(0, 0, 256, 340);
-  ctx.fillStyle = "#1a1a1c";
-  ctx.font = "700 24px Arial, sans-serif";
-  ctx.fillText("SKILL MATRIX", 22, 42);
-  ctx.strokeStyle = "#3f8cff";
-  ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.moveTo(22, 58); ctx.lineTo(234, 58); ctx.stroke();
-  RESUME.skills.forEach((s, i) => {
-    const y = 92 + i * 42;
-    ctx.fillStyle = "#3f8cff";
-    ctx.fillRect(22, y - 11, 4, 14);
-    ctx.fillStyle = "#232327";
-    ctx.font = "700 13px Arial, sans-serif";
-    ctx.fillText(s.group, 34, y);
-    ctx.fillStyle = "#77777c";
-    ctx.font = "500 10px Arial, sans-serif";
-    ctx.fillText(s.items.join(" · "), 34, y + 15);
-  });
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = MAXA; // flat sheet, grazing view
-  const sheet = new THREE.Mesh(
-    new THREE.BoxGeometry(0.21, 0.004, 0.28),
-    new THREE.MeshStandardMaterial({ color: 0xe4e6ea, roughness: 0.96 })
-  );
-  sheet.castShadow = true;
-  sheet.receiveShadow = true;
-  g.add(sheet);
-  const face = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.205, 0.273),
-    new THREE.MeshStandardMaterial({ map: tex, color: 0xf1f3f6, roughness: 0.96 })
-  );
-  face.rotation.x = -Math.PI / 2;
-  face.position.y = 0.0025;
-  g.add(face);
-  return g;
-}
-
 function buildBlueprintPanel() {
   // wide technical schematic panel (Mk.8 line drawing) above the cabinet
   const c = document.createElement("canvas");
