@@ -172,13 +172,20 @@ Before deployment, verify:
 
 ## Maintenance Notes
 
-Most content updates should happen in `script.js` inside the `projectData` object.
+> Note: case-study content now lives in **`project-data.js`** (the shared
+> `projectData` object), NOT in `script.js`. It is loaded by both `index.html`
+> (before `script.js`) and `experience.html` (before `experience.js`). The site
+> also has a second surface — the interactive 3D studio at `experience.html`,
+> where all 14 projects are clickable exhibits. See `AGENT_HANDOFF.md` for the
+> full current reference (file map, IDs, cache versions, 3D internals).
+
+Most content updates should happen in `project-data.js` inside the `projectData` object.
 
 To add or revise a project:
 
 1. Add optimized images to `assets/`.
 2. Add or update the matching project card in `index.html`.
-3. Add or update the case-study data in `script.js`.
+3. Add or update the case-study data in `project-data.js` (bump its cache string).
 4. Re-run the QA checklist.
 
 To revise homepage positioning:

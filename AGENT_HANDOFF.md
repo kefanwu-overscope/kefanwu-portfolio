@@ -252,6 +252,75 @@ Asset/version refs (verbatim): CSS `styles.css?v=skill-matrix-20260619`; JS `scr
 
 ## Recent Important Changes
 
+### 2026-07-07 homepage refresh + 3D-studio conversion funnel (approved by Kefan)
+The homepage got a full pass to sell outcomes and funnel visitors into the 3D
+studio. Everything below is LIVE.
+
+- **3D-studio entry points (was ONE nav link, now six):**
+  - Hero has a co-primary CTA `Enter the 3D Studio` (`.button.studio` — blue
+    outline + pulsing live-dot). Hero now has exactly two CTAs: `View projects`
+    and `Enter the 3D Studio` (the `Resume (PDF)` hero button was removed
+    2026-07-07 per Kefan; the resume download still lives in Contact).
+  - Nav `.nav-experience` restyled as the only pill in the header (mono, blue
+    border, pulse dot).
+  - **Deep links:** `experience.html#<projectKey>` flies straight to that
+    exhibit and opens its case study, skipping the cinematic intro. Handled in
+    `experience.js` `doReveal()` — reads `location.hash`, finds the pivot in
+    `HOTSPOTS` by `userData.hotspot.key`, calls `focusHotspot()`. The 14 keys
+    match `data-project` attrs, `projectData` keys, and `PROJECT_ORDER`.
+  - Every case-study modal has `#modal-studio-link` ("View this exhibit in the
+    3D Studio") — `openModal()` sets its href to `experience.html#<key>`.
+  - 15th grid tile `.project-card--studio` ("Walk the studio", `studio-teaser.webp`
+    background, spans 2 columns at ≥640px, visible under every filter) — it's an
+    `<a>`, not a modal card (script.js guards it out of the modal handlers).
+  - Full-width `.studio-banner` before Contact.
+- **Content:** outcome-driven hero copy (later trimmed to just the title cluster);
+  every project card gained a mono index line (`.project-meta`, "01 / Motorsport")
+  + one-line outcome subtitle (`.project-sub`); stats bar fixed to 14 projects /
+  19+ skills / >30 engineers led; steering summary rewritten with numbers;
+  `Vibe coding` renamed everywhere to **AI-assisted engineering** (hero ticker,
+  skill matrix cell, `heroSkillDetails` key is now `ai-assisted eng`); Contact
+  asks for a Summer 2027 internship; Capabilities cards gained `See: …` proof
+  links (`data-open-project` opens the matching modal).
+- **New assets:** `assets/studio-teaser.webp` (in-engine night render of the
+  studio, reused by the tile + banner) and `assets/kefan-wu-resume.pdf`
+  (generated from the RESUME data via reportlab; Kefan may replace with his own
+  file at the same path). `.gitattributes` added to mark binaries.
+- **Visual coherence:** brand blue deployed (progress bar, active filter, stats
+  numerals, global `:focus-visible` ring); project cards are solid surfaces
+  (glass/sheen reserved for floating chrome); fluid type scale + `--text-title`;
+  `.card-media--contain` kept PURE WHITE so CAD renders blend (any tint/img
+  filter shows a grey letterbox edge — do NOT re-add one); Projects section
+  background is solid `#000` (blueprint grid lines removed).
+- **Motion:** card→modal shared-element morph (View Transitions, `case-hero`);
+  `scrollbar-gutter: stable` kills the modal-open jump; damped scrub frame glide;
+  hero counters wait for their reveal (tabular-nums); magnetic buttons eased;
+  progress bar is compositor-only (`transform: scaleX`). All new motion is gated
+  behind `@media (prefers-reduced-motion: no-preference)`.
+- **Hero layout (2026-07-07):** `.hero` uses `align-content: space-between` so
+  the eyebrow + ticker pin to the top and the stats bar sinks to the floor;
+  `.hero h1` has `margin-top: clamp(2.5rem,15vh,11rem)` so the title sits near
+  the vertical middle; stats cells a touch taller; hero image `object-position:
+  50% 70%` rides the car up on wide/short viewports so the stats bar never
+  covers it (no effect on standard/tall viewports).
+
+### 2026-07-06 3D-studio fixes (see also the L5 section below)
+- Carbon seat (`models/real/seat.glb`) seam spikes fixed: the CF_Seat STL has
+  19 non-manifold center-seam edges, so ANY position-smoothing (Loop subdiv,
+  Taubin) explodes there. Re-exported with `tools/stl2glb_carbonseat.py` using
+  `trimesh.graph.smooth_shade` (vertex-normal smoothing only, geometry
+  untouched). The faceted look was flat shading, never a topology problem.
+- Desk-lamp light switch made reliable: generous invisible hitbox (child of the
+  lamp) + the interact marker parented to the lamp; `applyLightState` carries a
+  `lightGen` counter so rapid double-toggles can't strand the wrong grade.
+- The resume volumetric beam cone + dust motes were REMOVED (read as artificial);
+  the warm resume spot stays. The potted plant was removed. Right cabinet shifted
+  +0.3 along the wall (`CAB2.z`). Shelf-edge aluminum bars removed (they aliased
+  into a dashed sparkle line under the follow-spot). Desk papers + CFD screen
+  supersampled/anisotropic.
+
+### Older changes
+
 - `ESP32` was removed from the hero skill ticker only. Do not remove ESP32 from project/tool descriptions unless requested.
 - Added hero ticker skills:
   - `TIG Welding`, image `assets/skill-tig-welding.jpg`.
@@ -297,11 +366,11 @@ Asset/version refs (verbatim): CSS `styles.css?v=skill-matrix-20260619`; JS `scr
 - Windows gotchas: Python cannot write to `/tmp` — write temp files under `C:/Users/oc/AppData/Local/Temp/...`. In `python -c` strings use forward slashes / `os.path.join`, not escaped backslashes. Pasted screenshots land in `C:\Users\oc\AppData\Local\Packages\MicrosoftWindows.Client.Core_cw5n1h2txyewy\TempState\ScreenClip\`.
 
 ### Current cache versions (bump the matching one whenever you edit that file)
-- `styles.css?v=polish-20260701` (in index.html)
-- `script.js?v=nogear-20260703` (in index.html)
-- `project-data.js?v=proj-nogear-20260703` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-lux-20260708` (3D page styles — in experience.html)
-- `experience.js?v=exp-noprops-20260704` (3D page module — in experience.html)
+- `styles.css?v=herocenter-20260707` (in index.html)
+- `script.js?v=mainwow-20260707` (in index.html)
+- `project-data.js?v=proj-steering-20260707` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `experience.css?v=exp-deeplink-20260707` (3D page styles — in experience.html)
+- `experience.js?v=exp-deeplink-20260707` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
