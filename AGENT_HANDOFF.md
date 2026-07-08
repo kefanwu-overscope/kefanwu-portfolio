@@ -55,8 +55,8 @@ Static homepage (canonical, recruiter-facing):
 
 Interactive 3D page (immersive companion; see the "3D Experience Page" section below):
 - `experience.html` / `experience.css` / `experience.js` - the buildless three.js scene.
-- `experience-data.js` - exports `RESUME` (used); `HERO_PROJECTS` is legacy/unused.
-- `models/real/*.glb` - 5 real SolidWorks assemblies; `tools/stl2glb.py` builds them; `ATTRIBUTIONS.txt` credits the few CC0 assets.
+- `experience-data.js` - exports ONLY `RESUME`. The legacy `HERO_PROJECTS` array and the unused `ACCENT` constant were deleted 2026-07-08.
+- `models/real/*.glb` - 12 real SolidWorks assemblies; `tools/stl2glb*.py` scripts build them; `ATTRIBUTIONS.txt` credits the few CC0 assets.
 
 Docs:
 - `README.md` - short local preview and deploy notes.
@@ -65,45 +65,47 @@ Docs:
 
 ## Current Site Structure
 
-1. Header/nav: Projects, Skills, Motorsport, Contribution, Contact.
+1. Header/nav (6 items): Projects, Skills, Motorsport, Capabilities, Contact, and a pill link `3D Studio` (`a.nav-experience` → `experience.html`). Note "Capabilities" was formerly labeled "Contribution" everywhere (nav link, `<h2>`, id `capabilities-title`) — it is "Capabilities" now, live text and id both.
 2. Hero:
    - Background: `assets/hero-fsae-track.webp`.
    - Eyebrow: `Mechanical Lead / Olin Electric Motorsports / MechE @ Olin College '28`.
-   - Skill ticker:
-     `Arduino`, `TIG Welding`, `AutoCAD`, `Topology Study`, `SolidWorks`, `MATLAB`, `FEA`, `CFD`, `CNC Mill`, `Lathe`, `Waterjet`, `Carbon Fiber`, `Team Management`, `Vibe Coding`.
-   - Hero copy:
-     `Mechanical engineering student at Olin College, leading mechanical systems for Olin Electric Motorsports and building tested hardware across motorsport, robotics, and fabrication.`
-   - CTA buttons: `View projects`, `FSAE program`.
-   - Stats: `15 Engineering projects`, `19+ Technical skills`, `>30 Engineers led`, `Mechanical Lead / Olin Electric Motorsports`.
+   - Skill ticker (two tracks, visible + `aria-hidden`, 14 spans each):
+     `Arduino`, `TIG Welding`, `AutoCAD`, `Topology Study`, `SolidWorks`, `MATLAB`, `FEA`, `CFD`, `CNC Mill`, `Lathe`, `Waterjet`, `Carbon Fiber`, `Team Management`, `AI-Assisted Eng` (renamed from `Vibe Coding` on 2026-07-07).
+   - Hero title: `h1#hero-title`, two lines "Kefan" / "Wu".
+   - CTA buttons: exactly two — `View projects` (`a.button.primary` → `#work`) and `Enter the 3D Studio` (`a.button.studio` → `experience.html`). There is NO `FSAE program` CTA and NO hero `Resume (PDF)` button.
+   - Stats (4 cells): `Mechanical Lead / Olin Electric Motorsports`; `14 Engineering projects` (`data-count="14"`); `19+ Technical skills` (`data-count="19"`); `>30 Engineers led` (`data-count="30"`).
+   - Scroll cue `Scroll` → `#work`.
 3. Projects section:
    - Kicker only: `Projects`.
    - Filter chips: All, Motorsport, Robotics, Product, Analysis, Fabrication.
-   - Card order:
-     Current actual order (15 cards): `Mk.8 steering system`, `Javelin VTOL drone`, `Agent-based CFD`, `Carbon fiber seat`, `FSAE Brake Sim`, `3D scanner`, `Smelly`, `AURA swerve drive`, `LineFollower robot`, `2-speed gearbox`, `Pool Sniper`, `Driver seat and harness`, `Guitar education kit`, `Telecaster guitar`, `FTC robot`.
-   - `Javelin VTOL drone` (`data-project="javelin"`) added right after steering: high-speed tail-sitter VTOL drone (300 km/h target, differential thrust, no control surfaces). Source: `C:\Users\oc\Desktop\Javeline\` (`Javelin_Project_Overview.md` + `Javelin_pics/`). Cover `assets/cover-javelin.webp`; gallery `javelin-3q/nose/motor/rear/outdoor.webp`. Modal lead `assets/javelin-3q.webp`. `card-media--fill` (photo on gray studio bg).
+   - Card order (14 project cards, NO `gearbox` — it was removed from both the main site and the 3D studio):
+     `Mk.8 steering system`, `Javelin VTOL drone`, `Agent-based CFD`, `Carbon fiber seat`, `FSAE Brake Sim`, `3D scanner`, `Smelly`, `AURA swerve drive`, `LineFollower robot`, `Pool Sniper`, `Driver seat and harness`, `Guitar education kit`, `Telecaster guitar`, `FTC robot`.
+   - Every card also carries a mono index line (`.project-meta`, e.g. "01 / Motorsport") and a one-line outcome subtitle (`.project-sub`).
+   - PLUS a 15th grid tile that is NOT a project: `a.project-card.project-card--studio` ("Walk the studio", → `experience.html`), spans 2 columns at ≥640px, visible under every filter, guarded out of the modal handlers in `script.js`. So there are 14 real projects + 1 studio teaser tile = 15 card-shaped elements in the grid.
+   - `Javelin VTOL drone` (`data-project="javelin"`) sits right after steering: high-speed tail-sitter VTOL drone (300 km/h target, differential thrust, no control surfaces). Source: `C:\Users\oc\Desktop\Javeline\` (`Javelin_Project_Overview.md` + `Javelin_pics/`). Cover `assets/cover-javelin.webp`; gallery `javelin-3q/nose/motor/rear/outdoor.webp`. Modal lead `assets/javelin-3q.webp`. `card-media--fill` (photo on gray studio bg).
      - Material accuracy: the airframe is **3D-printed PPA-CF and PC-FR** (carbon-filled nylon), with **carbon-fiber rods only as wing/tail spars** — it is NOT a full carbon-fiber layup. Tools chips read `3D printing (PPA-CF / PC-FR)` and `Carbon-rod reinforcement`; gallery caption is `Printed PPA-CF / PC-FR`. Do not relabel this as a "carbon airframe".
 4. Skill matrix (`#skills`, `.skills-matrix`), placed right after Projects:
    - Heading `Skill matrix`. Six category cells (`.matrix-cell`) of skill chips:
      CAD & modeling, Simulation & analysis, CNC & machining, Fabrication & composites, Electronics & controls, Software & leadership.
    - Each chip (`.matrix-cell li`) is wired into the same `heroSkillDetails` hover-card system as the ticker (`initHeroSkillCards` includes `.matrix-cell li`); chips are keyboard-focusable. Three new entries were added for chips not in the ticker: `3d printing` (`assets/skill-3d-printing.jpg`), `esp32` (`assets/skill-esp32.jpg`) — both Unsplash, free commercial, local — and `embedded sensors` (reuses `assets/line-follower-white.webp`). Keep every matrix chip label matching a lowercase key in `heroSkillDetails`.
-   - Replaced the old full-bleed `Olin Electric Motorsports` set-piece (removed because it felt redundant/abrupt). The `.set-piece` CSS/JS still exists but is unused; `assets/oem-mk7-track.jpg` is now orphaned.
-5. Mechanical Lead detail section (`.featured`, now carries `id="motorsport"`):
+   - The old full-bleed `Olin Electric Motorsports` set-piece was removed (felt redundant/abrupt). `.set-piece` CSS/JS has since been fully removed too (not just unused), and the orphaned `assets/oem-mk7-track.jpg` image was deleted in the 2026-07-08 asset cleanup.
+5. Mechanical Lead detail section (`.featured`, carries `id="motorsport"`):
    - Role panel and three media panels (compact 3-column layout).
    - The `Visit Olin Electric Motorsports ↗` link lives here now (`.oem-link`), preserving the OEM link.
-   - Nav `Motorsport` and the hero `FSAE program` CTA both point to `#motorsport` (this section).
+   - Nav `Motorsport` points to `#motorsport` (this section). (There is no hero CTA to this section anymore — see hero CTAs above.)
 6. Capabilities:
-   - Heading: `Contribution`.
+   - Heading: `Capabilities` (renamed from `Contribution`).
    - Five cards in one row on desktop:
-     `Team management`, `Mechanical architecture`, `Fabrication`, `Simulation and modeling`, `Controls and integration`.
+     `Team management`, `Mechanical architecture`, `Fabrication`, `Simulation and modeling`, `Controls and integration` — each with a `.cap-proof` "See: …" link; some use `data-open-project` to open the matching case-study modal.
 7. Contact:
    - Heading: `Let's build cool stuff.`
-   - Links: `kwu@olin.edu`, `kefanwu8888@gmail.com`, LinkedIn.
+   - Links: `kwu@olin.edu` (mailto, button primary) · `Download resume (PDF)` (→ `assets/kefan-wu-resume.pdf`, download, button secondary) · LinkedIn (button secondary, opens new tab). The old `kefanwu8888@gmail.com` button was REMOVED from the homepage contact section. Footer still links LinkedIn only.
 
 ## DOM / Anchor / ID Reference
 
-_Verified 2026-06-29 token-by-token against `index.html` + `script.js`. Re-verify before trusting if the files have changed since._
+_Originally verified 2026-06-29 against `index.html` + `script.js`; reconciled 2026-07-08 to match the actual current DOM (14 projects, no gearbox, "Capabilities" naming, 3D Studio nav/CTA). Re-verify before trusting if the files have changed since._
 
-> ⚠️ **Footgun:** Section ids do **NOT** match their visible names. "Projects" = `id="work"` (there is no `#projects`). "Contribution" = `id="capabilities"`. Also: the kicker on `#work` literally reads "Projects" but is `id="systems-title"`. Always navigate by id, not by visible label.
+> ⚠️ **Footgun:** Section ids do **NOT** match their visible names. "Projects" = `id="work"` (there is no `#projects`). "Capabilities" = `id="capabilities"` (this section was labeled "Contribution" in older docs/screenshots — the live text and id have both been "Capabilities" for a while now). Also: the kicker on `#work` literally reads "Projects" but is `id="systems-title"`. Always navigate by id, not by visible label.
 
 ### Section / landmark map (DOM order)
 
@@ -115,8 +117,8 @@ _Verified 2026-06-29 token-by-token against `index.html` + `script.js`. Re-verif
 | Hero | `section.hero` | — (h1 is `hero-title`) | (not linked) |
 | Projects | `section.systems` | `work` | nav `Projects` → `#work`; hero CTA `View projects` → `#work`; scroll cue `Scroll` → `#work` |
 | Skills | `section.skills-matrix.section-shell` | `skills` | nav `Skills` → `#skills` |
-| Motorsport | `section.featured.section-shell` | `motorsport` | nav `Motorsport` → `#motorsport`; hero CTA `FSAE program` → `#motorsport` |
-| Contribution | `section.capabilities.section-shell` | `capabilities` | nav `Contribution` → `#capabilities` |
+| Motorsport | `section.featured.section-shell` | `motorsport` | nav `Motorsport` → `#motorsport` |
+| Capabilities | `section.capabilities.section-shell` | `capabilities` | nav `Capabilities` → `#capabilities` |
 | Contact | `section.contact` | `contact` | nav `Contact` → `#contact` |
 | (footer) | `footer.site-footer` | — | (not linked) |
 | Case-study modal | `div.modal` | `project-modal` | (opened by JS, not an href) |
@@ -129,35 +131,37 @@ _Verified 2026-06-29 token-by-token against `index.html` + `script.js`. Re-verif
 | `Projects` (nav) | `#work` | Projects `section#work` |
 | `Skills` (nav) | `#skills` | Skills `section#skills` |
 | `Motorsport` (nav) | `#motorsport` | Motorsport `section#motorsport` |
-| `Contribution` (nav) | `#capabilities` | Contribution `section#capabilities` |
+| `Capabilities` (nav) | `#capabilities` | Capabilities `section#capabilities` |
 | `Contact` (nav) | `#contact` | Contact `section#contact` |
-| `View projects` (hero CTA, `button primary`, `data-magnetic`) | `#work` | Projects `section#work` |
-| `FSAE program` (hero CTA, `button secondary`, `data-magnetic`) | `#motorsport` | Motorsport `section#motorsport` |
+| `3D Studio` (nav pill, `a.nav-experience`) | `experience.html` | 3D studio page |
+| `View projects` (hero CTA, `a.button.primary`, `data-magnetic`) | `#work` | Projects `section#work` |
+| `Enter the 3D Studio` (hero CTA, `a.button.studio`, `data-magnetic`) | `experience.html` | 3D studio page |
 | `Scroll` (scroll-cue, `a.scroll-cue.stage`) | `#work` | Projects `section#work` |
 
-All in-page hash anchors resolve — **no broken `#` targets**. Nav container is `id="site-nav"`. There is also a `.nav-toggle` button (read by JS).
+There is NO `FSAE program` CTA anymore — the hero has exactly two CTAs (`View projects`, `Enter the 3D Studio`). All in-page hash anchors resolve — **no broken `#` targets**. Nav container is `id="site-nav"`. There is also a `.nav-toggle` button (read by JS).
 
 ### Project cards
 
-Container: `<div id="project-cards" class="project-grid" data-reveal-group>`. Each card is `<article class="project-card" data-project="…" data-category="…">` with an `<h3>` title. **15 cards total.** Open value passed to JS `openModal()` = `data-project`.
+Container: `<div id="project-cards" class="project-grid" data-reveal-group>`. Each card is `<article class="project-card" data-project="…" data-category="…">` with an `<h3>` title, a mono `.project-meta` index line, and a `.project-sub` outcome subtitle. **14 project cards total** (there is also a non-project 15th grid tile — see below). Open value passed to JS `openModal()` = `data-project`. There is NO `gearbox` project anywhere — it was removed from both the main site and the 3D studio.
 
 | # | data-project | `<h3>` visible | data-category tokens | card-media variant | Notes |
 |---|---|---|---|---|---|
 | 1 | `steering` | Mk.8 steering system | `motorsport analysis fabrication` | `card-media card-media--contain` | |
 | 2 | `javelin` | Javelin VTOL drone | `robotics analysis fabrication` | `card-media card-media--fill` | |
-| 3 | `ansysCfd` | Agent-based CFD | `analysis software` | `card-media card-media--contain` | **download icon** (`a.project-download.project-download--icon` → `assets/claude_ansys_cfd.zip`); body is `project-body project-body--inline`; only card with `software` token |
+| 3 | `ansysCfd` | Agent-based CFD | `analysis software` | `card-media card-media--contain` | **download icon** (`a.project-download.project-download--icon` → `assets/claude_ansys_cfd.zip`); title sits inside `.title-row`; only card with `software` token |
 | 4 | `carbonSeat` | Carbon fiber seat | `motorsport product fabrication` | `card-media card-media--contain` | |
 | 5 | `brakeSim` | FSAE Brake Sim | `motorsport analysis` | `card-media card-media--fill` | |
 | 6 | `scanner` | 3D scanner | `robotics analysis` | `card-media card-media--fill` | |
 | 7 | `formlabs` | Smelly | `robotics product` | `card-media card-media--contain` | (h3 "Smelly", data-project `formlabs`) |
-| 8 | `aura` | AURA swerve drive | `robotics product fabrication` | `card-media card-media--contain` | scroll-scrub/exploded modal (drives `modal-scrub-*` + `modal-spec`) |
+| 8 | `aura` | AURA swerve drive | `robotics product fabrication` | `card-media card-media--contain` | scroll-scrub/exploded modal (drives `modal-scrub-*` + `modal-spec`); 60-frame image sequence `assets/aura_explode/frame_001..060.webp` |
 | 9 | `lineFollower` | LineFollower robot | `robotics product fabrication` | `card-media card-media--contain` | |
-| 10 | `gearbox` | 2-speed gearbox | `product fabrication` | `card-media card-media--contain` | |
-| 11 | `pool` | Pool Sniper | `robotics product fabrication` | `card-media card-media--contain` | |
-| 12 | `seat` | Driver seat and harness | `motorsport product fabrication` | `card-media card-media--contain` | |
-| 13 | `education` | Guitar education kit | `product fabrication` | `card-media card-media--contain` | |
-| 14 | `telecaster` | Telecaster guitar | `fabrication product` | plain `card-media` | |
-| 15 | `ftc` | FTC robot | `robotics fabrication` | plain `card-media` | |
+| 10 | `pool` | Pool Sniper | `robotics product fabrication` | `card-media card-media--contain` | |
+| 11 | `seat` | Driver seat and harness | `motorsport product fabrication` | `card-media card-media--contain` | |
+| 12 | `education` | Guitar education kit | `product fabrication` | `card-media card-media--contain` | |
+| 13 | `telecaster` | Telecaster guitar | `fabrication product` | plain `card-media` | |
+| 14 | `ftc` | FTC robot | `robotics fabrication` | plain `card-media` | |
+
+Plus a 15th grid tile that is NOT a project: `a.project-card.project-card--studio` ("Walk the studio" → `experience.html`), spans 2 columns at ≥640px, visible under every filter, guarded out of the modal-open handlers in `script.js`.
 
 ### Filter chips
 
@@ -166,11 +170,11 @@ Container: `<div class="filter-bar" role="list" aria-label="Filter case studies"
 | Chip label | data-filter | Matches data-category token(s) |
 |---|---|---|
 | All | `all` | special — matches every card (not a category token) |
-| Motorsport | `motorsport` | `motorsport` (cards 1, 4, 5, 12) |
-| Robotics | `robotics` | `robotics` (cards 2, 6, 7, 8, 9, 11, 15) |
-| Product | `product` | `product` (cards 4, 7, 8, 9, 10, 11, 12, 13, 14) |
+| Motorsport | `motorsport` | `motorsport` (cards 1, 4, 5, 11) |
+| Robotics | `robotics` | `robotics` (cards 2, 6, 7, 8, 9, 10, 14) |
+| Product | `product` | `product` (cards 4, 7, 8, 9, 10, 11, 12, 13) |
 | Analysis | `analysis` | `analysis` (cards 1, 2, 3, 5, 6) |
-| Fabrication | `fabrication` | `fabrication` (cards 1, 2, 4, 8, 9, 10, 11, 12, 13, 14, 15) |
+| Fabrication | `fabrication` | `fabrication` (cards 1, 2, 4, 8, 9, 10, 11, 12, 13, 14) |
 
 **Full set of distinct category tokens (6):** `analysis`, `fabrication`, `motorsport`, `product`, `robotics`, `software`.
 ⚠️ `software` has **no filter chip** — it appears only on card #3 (`ansysCfd`), which is still reachable via the `Analysis` chip (it also carries `analysis`).
@@ -214,12 +218,12 @@ Structural class / attr selectors used by script.js (one line each):
 - `.modal-panel`, `.modal-media`, `.modal-close` — modal layout / focus targets.
 - `.hero-skill-track span` — ticker labels; `.hero h1` — hero headline; `.scroll-cue` / `.scroll-cue:not(.is-gone)` — scroll cue state.
 - `.matrix-cell li` — skill matrix items; `.skill-card-kicker` / `.skill-card-text` — skill card text nodes.
-- `.progress`, `.site-header`, `.set-piece` — scroll-progress / header / set-piece animation targets.
+- `.progress`, `.site-header` — scroll-progress / header animation targets. (`.set-piece` was fully removed from CSS and JS — do not look for it anymore.)
 - `.nav-toggle` + `.site-nav` — mobile nav toggle.
 
 ### Hero / stats anchors
 
-- **Ticker:** strip `div.hero-skill-strip.stage`; track class `hero-skill-track` (no id) — **two** tracks (visible + `aria-hidden` duplicate), each with **14** `<span>` labels: Arduino, TIG Welding, AutoCAD, Topology Study, SolidWorks, MATLAB, FEA, CFD, CNC Mill, Lathe, Waterjet, Carbon Fiber, Team Management, Vibe Coding.
+- **Ticker:** strip `div.hero-skill-strip.stage`; track class `hero-skill-track` (no id) — **two** tracks (visible + `aria-hidden` duplicate), each with **14** `<span>` labels: Arduino, TIG Welding, AutoCAD, Topology Study, SolidWorks, MATLAB, FEA, CFD, CNC Mill, Lathe, Waterjet, Carbon Fiber, Team Management, AI-Assisted Eng (renamed from Vibe Coding).
 - **Eyebrow:** `p.eyebrow.stage` — "Mechanical Lead / Olin Electric Motorsports / MechE @ Olin College '28".
 - **Headline:** `<h1 id="hero-title">`; inner `span.line > span.stage` ×2 → "Kefan", "Wu".
 - **Stats bar** (`div.hero-stats.stage`), in order:
@@ -227,16 +231,16 @@ Structural class / attr selectors used by script.js (one line each):
 | Strong content | data-count | Label (verbatim) |
 |---|---|---|
 | `Mechanical Lead` (`strong.stat-word`) | (none) | Olin Electric Motorsports |
-| `15` | `data-count="15"` | Engineering projects |
+| `14` | `data-count="14"` | Engineering projects |
 | `19`+ (trailing `+` outside span) | `data-count="19"` | Technical skills |
 | `>30` (leading `>` before span) | `data-count="30"` | Engineers led |
 
 ### Contact & downloadable assets
 
-- Contact section: `<section id="contact" class="contact" aria-labelledby="contact-title">`; kicker `p.section-kicker` "Contact"; `<h2 id="contact-title">Let's build cool stuff.</h2>`; sub-copy "Open to mechanical engineering internships and project conversations."
-- Contact links (`div.contact-actions`): `mailto:kwu@olin.edu` ("kwu@olin.edu", `button primary`) · `mailto:kefanwu8888@gmail.com` ("kefanwu8888@gmail.com", `button secondary`) · `https://www.linkedin.com/in/kefan-wu-olin/` ("LinkedIn", `button secondary`, `target="_blank"`).
+- Contact section: `<section id="contact" class="contact" aria-labelledby="contact-title">`; kicker `p.section-kicker` "05 / Contact"; `<h2 id="contact-title">Let's build cool stuff.</h2>`; sub-copy "Seeking a Summer 2027 mechanical engineering internship — vehicle systems, robotics, or manufacturing. Email me and I'll reply within a day."
+- Contact links (`div.contact-actions`): `mailto:kwu@olin.edu` ("kwu@olin.edu", `button primary`) · `assets/kefan-wu-resume.pdf` ("Download resume (PDF)", `button secondary`, `download`) · `https://www.linkedin.com/in/kefan-wu-olin/` ("LinkedIn", `button secondary`, `target="_blank"`). The old `mailto:kefanwu8888@gmail.com` button was REMOVED from the homepage contact section.
 - Footer also links `https://www.linkedin.com/in/kefan-wu-olin/` ("LinkedIn").
-- **Download asset:** `href="assets/claude_ansys_cfd.zip"` (`a.project-download.project-download--icon`, `download`, `aria-label="Download claude_ansys_cfd package"`) — lives on project card #3 `data-project="ansysCfd"` (`<h3>Agent-based CFD</h3>`). Only `.zip`/download on the page.
+- **Download asset:** `href="assets/claude_ansys_cfd.zip"` (`a.project-download.project-download--icon`, `download`, `aria-label="Download claude_ansys_cfd package"`) — lives on project card #3 `data-project="ansysCfd"` (`<h3>Agent-based CFD</h3>`). Plus the Contact resume PDF (`assets/kefan-wu-resume.pdf`, download) — the only two `download` links on the page.
 - External: OEM `https://olinelectricmotorsports.com/` ("Visit Olin Electric Motorsports ↗", `target="_blank"`) in the Motorsport section.
 
 ### Leftover id anchors (not detailed above)
@@ -246,11 +250,31 @@ Structural class / attr selectors used by script.js (one line each):
 | `site-nav` | nav | header nav container (JS `.site-nav` toggle target) |
 | `systems-title` | `p.section-kicker` | kicker text "Projects" inside `#work` (NOT the section id) |
 | `skills-title` | `h2` | "Skill matrix" |
-| `capabilities-title` | `h2` | "Contribution" heading inside `#capabilities` |
+| `capabilities-title` | `h2` | "Capabilities" heading inside `#capabilities` (this section was previously labeled "Contribution" — that name is gone from the live site) |
 
-Asset/version refs (verbatim): CSS `styles.css?v=skill-matrix-20260619`; JS `script.js?v=javelin-mat-20260620`; page title "Kefan Wu | Mechanical Engineering Portfolio".
+Asset/version refs — see "Current cache versions" below for the authoritative, up-to-date strings; page title is "Kefan Wu | Mechanical Engineering Portfolio".
 
 ## Recent Important Changes
+
+### 2026-07-08 doc-truth + cleanup pass
+- `AGENT_HANDOFF.md` reconciled to the actual current state: 14 projects (no
+  `gearbox` — it was removed earlier and this doc had not caught up), the
+  "Current Site Structure" and "DOM / Anchor / ID Reference" sections were
+  heavily rewritten (the old 2026-06-29 DOM table was stale and
+  self-contradictory against the newer 2026-07-07 changelog entry below it).
+- 33 orphaned asset files pruned from `assets/`: the entire `gearbox-*`,
+  `wankel-*`, and `noise-*` families; `oem-mk7-track.jpg` / `oem-track.webp` /
+  `hero-oem.webp`; `skill-bambu` / `skill-form4` / `skill-matlab` /
+  `skill-solidworks.webp`; plus `cover-aluminum-seat-trim.webp`,
+  `cover-ansys-cfd-fit.webp`, `cover-noise-reduction.webp`,
+  `education-kit-white.webp`, `fsae-mk7-build.webp`,
+  `linkedin-cockpit-seat.webp`, `ansys-cfd-cp-top.webp`,
+  `ansys-cfd-pressure-top.webp`, `scanner-gantry.webp`.
+- Dead code removed: `experience.js` `buildSkillPaper()` (the desk skill-matrix
+  paper it built was already removed; the function itself was unused); and in
+  `experience-data.js` the unused `HERO_PROJECTS` array and `ACCENT` constant.
+- `experience.css` / `experience.js` cache strings bumped to
+  `exp-cleanup-20260708` (from `exp-deeplink-20260707`).
 
 ### 2026-07-07 homepage refresh + 3D-studio conversion funnel (approved by Kefan)
 The homepage got a full pass to sell outcomes and funnel visitors into the 3D
@@ -325,10 +349,10 @@ studio. Everything below is LIVE.
 - Added hero ticker skills:
   - `TIG Welding`, image `assets/skill-tig-welding.jpg`.
   - `Team Management`, image `assets/skill-team-management.jpg`.
-  - `Vibe Coding`, image `assets/skill-vibe-coding.jpg` (Unsplash, free commercial license, downloaded locally). Hover-card key is `vibe coding` in `heroSkillDetails`. Skills stat bumped to `19+`.
+  - `Vibe Coding`, image `assets/skill-vibe-coding.jpg` (Unsplash, free commercial license, downloaded locally). Hover-card key was `vibe coding` in `heroSkillDetails` at the time. Skills stat bumped to `19+`. (This ticker entry was later renamed to `AI-Assisted Eng` on 2026-07-07 — see below; the `heroSkillDetails` key is now `ai-assisted eng`, and there is no `vibe coding` key anymore.)
 - Replaced four hover-card skill images (in `heroSkillDetails`):
   - `CFD` -> own render `assets/ansys-cfd-pressure.webp`.
-  - `SolidWorks` -> own render `assets/gearbox-render.webp` (was `seat-cad.webp`).
+  - `SolidWorks` -> own render, at the time `assets/gearbox-render.webp` (was `seat-cad.webp`). That image has since been deleted along with the rest of the `gearbox-*` asset family (2026-07-08 orphan cleanup, after the gearbox project itself was removed); the `solidworks` key in `heroSkillDetails` now points at `assets/cover-steering-system-cad.webp`.
   - `CNC Mill` -> `assets/skill-cnc-mill.jpg` (Unsplash, free commercial, local).
   - `Lathe` -> `assets/skill-lathe.jpg` (Unsplash, free commercial, local).
   - These replaced external Wikimedia hotlinks; prefer local assets / Unsplash (no attribution) over CC BY-SA hotlinks.
@@ -341,7 +365,7 @@ studio. Everything below is LIVE.
   - `assets/ansys-cfd-wall-shear.webp`
   - `assets/ansys-cfd-agent-orchestration.webp`
   - `assets/ansys-cfd-smooth-cp-validation.webp`
-- Olin Electric Motorsports background uses the local image copied from the OEM site: `assets/oem-mk7-track.jpg`.
+- ~~Olin Electric Motorsports background uses the local image copied from the OEM site: `assets/oem-mk7-track.jpg`.~~ Stale: that set-piece was removed (see 2026-07-01 entry below) and `assets/oem-mk7-track.jpg` was deleted as an orphaned asset in the 2026-07-08 cleanup pass. There is no OEM background image on the page anymore.
 
 ## Cover Images, Modal Media, and Tooling
 
@@ -367,10 +391,10 @@ studio. Everything below is LIVE.
 
 ### Current cache versions (bump the matching one whenever you edit that file)
 - `styles.css?v=herocenter-20260707` (in index.html)
-- `script.js?v=mainwow-20260707` (in index.html)
+- `script.js?v=herotrim-20260707` (in index.html)
 - `project-data.js?v=proj-steering-20260707` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-deeplink-20260707` (3D page styles — in experience.html)
-- `experience.js?v=exp-deeplink-20260707` (3D page module — in experience.html)
+- `experience.css?v=exp-cleanup-20260708` (3D page styles — in experience.html)
+- `experience.js?v=exp-cleanup-20260708` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
@@ -390,7 +414,7 @@ studio. Everything below is LIVE.
   - `index.html` controls visible card order and cover content.
   - `script.js` controls modal/case-study content through `projectData`.
 - Hero skill hover cards are in `script.js` under `heroSkillDetails`.
-- Section transition/fade issues are mainly in `styles.css` around `.hero::after`, `.systems`, `.systems::after`, `.set-piece`, and `.set-piece-sticky`.
+- Section transition/fade issues are mainly in `styles.css` around `.hero::after`, `.systems`, and `.systems::after`. (`.set-piece` / `.set-piece-sticky` no longer exist — fully removed 2026-07-01.)
 - Mobile readability changes should stay inside the `@media (max-width: 720px)` block.
 - Clean temporary QA files before finishing: `_qa-*.png`, `_qa-*.log`, etc.
 
@@ -444,8 +468,9 @@ Invoke-WebRequest https://www.kefanwu.com -UseBasicParsing
 ## 3D Experience Page (experience.html) — as of 2026-07-03
 
 An interactive WebGL "hardcore engineering office" companion to the static
-site, reached from the homepage nav link **`3D Desk`**
-(`<a href="experience.html" class="nav-experience">` in `index.html`). The
+site, reached from the homepage nav link **`3D Studio`**
+(`<a href="experience.html" class="nav-experience">` in `index.html`) and the
+hero CTA **`Enter the 3D Studio`**. The
 static homepage stays the canonical, recruiter-facing surface (the 3D page
 sets `<link rel="canonical" href="https://www.kefanwu.com/">`); this page is
 the "wow" layer. It is buildless: `three@0.185.0` via a jsDelivr importmap,
@@ -457,10 +482,10 @@ no bundler, no install.
 |---|---|
 | `experience.html` | shell: topbar (KW brand, sound toggle, "All projects", "View classic site"), loader, overlay containers (`#exp-label`, `#exp-backdrop`, `#exp-panel`, `#exp-paper`, `#exp-lightbox`), `#exp-canvas`, importmap. |
 | `experience.css` | all overlay styling. Palette tokens MIRROR the site (`--bg #0b0c0e`, `--ink #f5f5f7`, `--blue #3f8cff`). Key blocks: `.exp-panel` (project side panel), `.exp-sheet` (picked-up resume), `.exp-lightbox`, `.exp-label` (hover info card), `.exp-sound`. |
-| `experience.js` | ~2600-line ES module: the whole scene. Sole data import is `RESUME` from `experience-data.js`; case-study content comes from `window.projectData` (set by `project-data.js`, loaded classic-script BEFORE the module). |
-| `experience-data.js` | exports `RESUME` (used) and `HERO_PROJECTS` (LEGACY — no longer imported after the 2026-07-03 cleanup; safe to ignore or delete). |
-| `tools/stl2glb.py` | offline STL→GLB merge pipeline (trimesh) for the real CAD exhibits. |
-| `models/real/*.glb` | 5 real merged assemblies (aura, javelin, scanner, seat, steering). |
+| `experience.js` | ~3500-line ES module: the whole scene. Sole data import is `RESUME` from `experience-data.js`; case-study content comes from `window.projectData` (set by `project-data.js`, loaded classic-script BEFORE the module). |
+| `experience-data.js` | exports ONLY `RESUME`. The legacy `HERO_PROJECTS` array and the unused `ACCENT` constant (no longer imported after the 2026-07-03 cleanup) were DELETED on 2026-07-08. |
+| `tools/stl2glb.py` / `stl2glb_new.py` / `stl2glb_carbonseat.py` / `stl2glb_seat.py` | offline STL→GLB merge pipelines (trimesh) for the real CAD exhibits. |
+| `models/real/*.glb` | 12 real merged assemblies: aura, brakeSim, driverseat, education, javelin, lineFollower, pool, scanner, seat, smelly, steering, telecaster. (The original `stl2glb.py` batch produced 5 of these — aura, javelin, scanner, seat, steering — the other 7 were added later by the other `stl2glb_*.py` scripts.) |
 | `hdri/`, `textures/` | the only third-party assets (Poly Haven CC0; see `ATTRIBUTIONS.txt`). Everything else is procedural. |
 
 ### Scene
@@ -483,7 +508,13 @@ ceiling cove LED strips, graphite rug (noise map + bump for plush).
 currently empty; a helmet + motor prop set was tried there and removed.
 The potted plant was removed 2026-07-06 per owner request.)
 
-### Exhibits — all 14 projects clickable (15 hotspots: + resume)
+### Exhibits — all 14 projects clickable (15 content hotspots: + resume; 16 at runtime including the lamp pseudo-hotspot)
+
+> `HOTSPOTS.length` is 16 at runtime and the boot `console.info` prints 16 —
+> that's 14 project exhibits + the resume (`action:"resume"`) = 15 CONTENT
+> hotspots, PLUS the desk-lamp pseudo-hotspot (`action:"lamp"`, `key:null`)
+> which is also stored in the `HOTSPOTS` array. If you see "15 hotspots"
+> in older notes it means the 15 content ones, not the raw array length.
 
 > Gearbox was removed (main site + 3D). Right cabinet now holds 5 exhibits
 > with the bottom-right slot deliberately empty.
@@ -533,8 +564,8 @@ shelf cell (this is the anti-clipping mechanism; every exhibit passes a
 - **Resume** = a paper sheet on the desk (`buildResumePaper`, `action:
   "resume"`).
 - The desk skill-matrix paper was REMOVED (was a distracting second sheet).
-  `buildSkillPaper()` is now unused dead code; the `action: "skills"` hover
-  branch in setHover is likewise dead but harmless.
+  `buildSkillPaper()` was later deleted entirely (2026-07-08 cleanup pass);
+  there is no `action: "skills"` branch in the code anymore.
 - **Bambu printer** (buildBambuPrinter, on the left bench): the shell is a
   HOLLOW box (back+sides+top+bottom panels — NOT a solid RoundedBox, which
   would occlude the interior), a dark bezel frames the door opening, and the
@@ -619,10 +650,12 @@ an `assert s < e` ORDER check, then rewrite the file with
   exactly once.
 - Serve over http (the http.server command above) — it's an ES module, so
   `file://` won't load it. Verify in the browser: `window.__exp` exposes
-  `{ scene, camera, renderer, controls, composer, models, hotspots, THREE }`
+  `{ THREE, scene, camera, renderer, controls, composer, bloom, key, hemi,
+  models, hotspots, openPanel, showDragHint, runBootIntro }`
   for scripted checks (used heavily during QA — e.g. read
-  `hotspots.length`, click-simulate via projected bbox centers, inspect
-  `composer.passes`).
+  `hotspots.length` (16 at runtime — see the Exhibits section above),
+  click-simulate via projected bbox centers, inspect `composer.passes`,
+  or call `openPanel(...)` / `runBootIntro()` directly).
 
 ### Baked lighting (2026-07-05, tools/bake/)
 - The architecture layer (room shell, rug, desk, tool chest — tagged `bk_*`
@@ -736,10 +769,13 @@ VERIFICATION
 - Use the preview tools (start the "portfolio" launch config -> http://localhost:4173/).
   Prefer preview_inspect + preview_eval (read computed styles / bounding boxes)
   over preview_screenshot, which renders tiny and TIMES OUT on the WebGL 3D page.
-- The 3D page needs a special capture technique (composer.render() +
-  canvas.toDataURL POST to a local receiver, snapsrv.py) because screenshots
-  fail on the backgrounded WebGL canvas — see AGENT_HANDOFF.md. Always confirm
-  window.__exp exists and there are no console errors after editing experience.js.
+- Plain screenshots of the WebGL canvas are unreliable (the composer-rendered
+  canvas often reads back blank/backgrounded). There is currently NO
+  `snapsrv.py` or other capture-receiver script in this repo — do not assume
+  one exists. Prefer `preview_eval` / `preview_inspect` and `window.__exp` for
+  QA (read `hotspots.length`, `camera.position`, `composer.passes`, etc.) over
+  screenshotting the 3D canvas. Always confirm `window.__exp` exists and there
+  are no console errors after editing experience.js.
 - Check desktop AND mobile; verify no horizontal overflow.
 
 READ FIRST (in the repo)
