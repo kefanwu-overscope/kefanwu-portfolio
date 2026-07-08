@@ -523,7 +523,9 @@ button {
 }
 
 .hero h1 {
-  margin: 0;
+  /* eyebrow + ticker stay pinned at the top (space-between); this margin
+     drops the title toward the vertical middle of the hero */
+  margin: clamp(2.5rem, 15vh, 11rem) 0 0;
   font-family: var(--font-display);
   font-size: var(--text-display);
   font-weight: 800;
