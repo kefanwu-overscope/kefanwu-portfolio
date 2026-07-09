@@ -256,6 +256,24 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
+### 2026-07-08 (later) studio banner REMOVED; orbit rebuilt flicker-free
+- Kefan: the banner's in-view frame loop flickered / read as low-FPS →
+  the whole pre-Contact "One more thing" `.studio-banner` section was
+  REMOVED (HTML + its CSS block + the @media-print reference). The studio
+  funnel keeps its other entry points (hero CTA, nav pill, deep links,
+  modal cross-links, grid tile).
+- The orbit animation on the "Walk the studio" tile was REBUILT: the old
+  `background-image` URL swap repainted the tile every step (the flicker
+  source). `initStudioOrbit()` now injects a `.studio-orbit` layer of 10
+  stacked `<img>` frames and cross-fades opacity (compositor-only):
+  420ms/frame + 360ms linear dissolve = smooth slow pan. The layer carries
+  its own copy of the tile's darkening gradient (`.studio-orbit::after`)
+  and sits under `.project-body` (z-index 1); the layer itself fades in/out
+  via CSS on `:hover`/`:focus-visible`. Same gating (desktop + fine pointer
+  + motion; static teaser otherwise). Frame assets and the re-capture
+  recipe below are unchanged.
+- Cache strings: styles.css + script.js → `orbitfix-20260708`.
+
 ### 2026-07-08 homepage polish + studio-orbit teaser (approved by Kefan)
 A design/a11y/copy/SEO polish pass across the homepage. All LIVE.
 - **Type/layout:** raised the fluid-type ceilings (`--text-display` 7.5→9rem,
@@ -345,7 +363,8 @@ studio. Everything below is LIVE.
   - 15th grid tile `.project-card--studio` ("Walk the studio", `studio-teaser.webp`
     background, spans 2 columns at ≥640px, visible under every filter) — it's an
     `<a>`, not a modal card (script.js guards it out of the modal handlers).
-  - Full-width `.studio-banner` before Contact.
+  - Full-width `.studio-banner` before Contact. (REMOVED 2026-07-08 per Kefan
+    — its frame loop flickered; see the newest changelog entry.)
 - **Content:** outcome-driven hero copy (later trimmed to just the title cluster);
   every project card gained a mono index line (`.project-meta`, "01 / Motorsport")
   + one-line outcome subtitle (`.project-sub`); stats bar fixed to 14 projects /
@@ -438,8 +457,8 @@ studio. Everything below is LIVE.
 - Windows gotchas: Python cannot write to `/tmp` — write temp files under `C:/Users/oc/AppData/Local/Temp/...`. In `python -c` strings use forward slashes / `os.path.join`, not escaped backslashes. Pasted screenshots land in `C:\Users\oc\AppData\Local\Packages\MicrosoftWindows.Client.Core_cw5n1h2txyewy\TempState\ScreenClip\`.
 
 ### Current cache versions (bump the matching one whenever you edit that file)
-- `styles.css?v=polish-20260708` (in index.html)
-- `script.js?v=studio-20260708` (in index.html)
+- `styles.css?v=orbitfix-20260708` (in index.html)
+- `script.js?v=orbitfix-20260708` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-cleanup-20260708` (3D page styles — in experience.html)
 - `experience.js?v=exp-cleanup-20260708` (3D page module — in experience.html)
