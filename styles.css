@@ -2742,9 +2742,43 @@ html { scrollbar-gutter: stable; }
   .project-card--studio { grid-column: span 2; }
 }
 .project-card--studio .project-body {
+  position: relative; /* stacks the copy above the injected orbit layer */
+  z-index: 1;
   padding: 1.35rem 1.2rem;
   min-height: 15rem;
   justify-content: flex-end;
+}
+/* orbit frame layer injected by script.js (initStudioOrbit): stacked <img>
+   frames cross-faded via opacity — compositor-only, no background repaint
+   (the old background-image swap flickered). The layer's own ::after
+   re-applies the tile's darkening gradient so the copy stays legible. */
+.studio-orbit {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 420ms var(--ease-out);
+  pointer-events: none;
+}
+.project-card--studio:hover .studio-orbit,
+.project-card--studio:focus-visible .studio-orbit { opacity: 1; }
+.studio-orbit img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 360ms linear;
+}
+.studio-orbit img.is-on { opacity: 1; }
+.studio-orbit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(4, 8, 16, 0.5), rgba(2, 4, 10, 0.82));
 }
 .project-card--studio .project-meta { color: var(--blue-bright); }
 .project-card--studio:hover,
@@ -2808,34 +2842,6 @@ html { scrollbar-gutter: stable; }
   box-shadow: 0 0 8px var(--blue-glow);
   animation: studio-pulse 2.4s ease-in-out infinite;
 }
-
-/* ---- end-of-page studio banner ---- */
-.studio-banner {
-  position: relative;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.66), rgba(0, 0, 0, 0.8)),
-    url("assets/studio-teaser.webp") center / cover;
-}
-.studio-banner__inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.1rem;
-  padding-block: clamp(4rem, 9vw, 6.5rem);
-  text-align: center;
-}
-.studio-banner h2 {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem);
-  font-weight: 700;
-  line-height: 1.08;
-  text-wrap: balance;
-}
-.studio-banner__copy { margin: 0; max-width: 52ch; color: var(--muted); }
-.studio-banner .section-kicker { color: var(--blue-bright); }
 
 /* ---- case-study cross-link into the studio ---- */
 .modal-studio-link {
@@ -2966,7 +2972,6 @@ html { scrollbar-gutter: stable; }
   .progress,
   .modal-close,
   .hero-skill-strip,
-  .studio-banner,
   .nav-experience {
     display: none !important;
   }

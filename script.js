@@ -972,20 +972,23 @@ modalScrub.onScroll = function () {
 };
 
 /* -----------------------------------------------------------------
-   Studio orbit micro-animation
-   Gently pans the 3D-studio still on the "Walk the studio" tile (on
-   hover / keyboard focus) and the pre-Contact studio banner (while in
-   view), so the link to the interactive page reads as alive rather
-   than a flat photo. Frames were captured from the real experience.html
-   scene and are lazy-loaded on first activation. Desktop + motion only;
-   mobile and prefers-reduced-motion keep the static CSS teaser. Only the
-   image layer of the existing background is swapped, so the darkening
-   gradient (and text legibility) is untouched.
+   Studio orbit micro-animation ("Walk the studio" tile)
+   On hover / keyboard focus the tile slowly pans across a 10-frame
+   orbit captured from the real experience.html scene. Implementation:
+   stacked <img> frames cross-faded via opacity (.studio-orbit in
+   styles.css) — compositor-only work, so no flicker; the earlier
+   background-image swap repainted the tile every step and flickered.
+   Frames lazy-build on first activation. Desktop + fine pointer +
+   motion only; mobile and prefers-reduced-motion keep the static
+   CSS teaser. (The pre-Contact studio banner was removed 2026-07-08.)
 ------------------------------------------------------------------ */
 (function initStudioOrbit() {
   const motionOK = matchMedia("(prefers-reduced-motion: no-preference)").matches;
   const desktop = matchMedia("(hover: hover) and (pointer: fine)").matches;
   if (!motionOK || !desktop) return;
+
+  const tile = document.querySelector(".project-card--studio");
+  if (!tile) return;
 
   const N = 10;
   const pad = (i) => (i < 10 ? "0" + i : "" + i);
@@ -993,71 +996,57 @@ modalScrub.onScroll = function () {
   const order = [];
   for (let i = 0; i < N; i++) order.push(i);
   for (let i = N - 2; i > 0; i--) order.push(i);
-  const urls = order.map((i) => `assets/studio_orbit/frame_${pad(i)}.webp`);
 
-  let loading = null;
-  const preload = () => {
-    if (loading) return loading;
-    loading = Promise.all(
-      [...new Set(urls)].map(
-        (u) =>
-          new Promise((res) => {
-            const im = new Image();
-            im.onload = im.onerror = () => res();
-            im.src = u;
-          })
-      )
-    );
-    return loading;
-  };
-
-  const gradientOf = (el) => {
-    const bg = getComputedStyle(el).backgroundImage;
-    const cut = bg.lastIndexOf(", url(");
-    return cut > 0 ? bg.slice(0, cut) : null;
-  };
-
-  const attach = (el, mode) => {
-    let timer = null;
-    let idx = 0;
-    let grad = null;
-    const step = () => {
-      if (grad == null) return;
-      el.style.backgroundImage = `${grad}, url("${urls[idx]}")`;
-      idx = (idx + 1) % urls.length;
-    };
-    const start = async () => {
-      if (timer) return;
-      await preload();
-      if (grad == null) grad = gradientOf(el);
-      if (grad == null || timer) return;
-      step();
-      timer = setInterval(step, 130);
-    };
-    const stop = () => {
-      if (timer) {
-        clearInterval(timer);
-        timer = null;
+  let frames = null;
+  let building = null;
+  const build = () => {
+    if (building) return building;
+    building = new Promise((resolve) => {
+      const layer = document.createElement("div");
+      layer.className = "studio-orbit";
+      layer.setAttribute("aria-hidden", "true");
+      frames = [];
+      let loaded = 0;
+      for (let i = 0; i < N; i++) {
+        const im = new Image();
+        im.decoding = "async";
+        im.alt = "";
+        im.onload = im.onerror = () => {
+          loaded += 1;
+          if (loaded === N) resolve();
+        };
+        im.src = `assets/studio_orbit/frame_${pad(i)}.webp`;
+        frames.push(im);
+        layer.appendChild(im);
       }
-      idx = 0;
-      el.style.backgroundImage = "";
-    };
-    if (mode === "hover") {
-      el.addEventListener("pointerenter", start);
-      el.addEventListener("pointerleave", stop);
-      el.addEventListener("focusin", start);
-      el.addEventListener("focusout", stop);
-    } else {
-      const io = new IntersectionObserver(
-        (entries) => entries.forEach((e) => (e.isIntersecting ? start() : stop())),
-        { threshold: 0.35 }
-      );
-      io.observe(el);
+      tile.prepend(layer);
+    });
+    return building;
+  };
+
+  let timer = null;
+  let step = 0;
+  const tick = () => {
+    const current = order[step];
+    frames.forEach((f, i) => f.classList.toggle("is-on", i === current));
+    step = (step + 1) % order.length;
+  };
+  const start = async () => {
+    if (timer) return;
+    await build();
+    if (timer) return;
+    step = 0;
+    tick();
+    timer = setInterval(tick, 420);
+  };
+  const stop = () => {
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
     }
   };
-
-  const tile = document.querySelector(".project-card--studio");
-  if (tile) attach(tile, "hover");
-  const banner = document.querySelector(".studio-banner");
-  if (banner) attach(banner, "inview");
+  tile.addEventListener("pointerenter", start);
+  tile.addEventListener("pointerleave", stop);
+  tile.addEventListener("focusin", start);
+  tile.addEventListener("focusout", stop);
 })();
