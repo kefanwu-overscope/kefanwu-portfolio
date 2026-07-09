@@ -326,11 +326,13 @@ window.addEventListener(
 );
 updateScrollEffects();
 
-window.addEventListener(
-  "scroll",
-  () => scrollCue?.classList.add("is-gone"),
-  { passive: true, once: true }
-);
+const onCueScroll = () => {
+  if (window.scrollY > 80) {
+    scrollCue?.classList.add("is-gone");
+    window.removeEventListener("scroll", onCueScroll);
+  }
+};
+window.addEventListener("scroll", onCueScroll, { passive: true });
 
 /* ============ mobile nav ============ */
 
@@ -465,7 +467,11 @@ filters.forEach((button) => {
   button.addEventListener("click", () => {
     const filter = button.dataset.filter;
     const apply = () => {
-      filters.forEach((item) => item.classList.toggle("active", item === button));
+      filters.forEach((item) => {
+        const isActive = item === button;
+        item.classList.toggle("active", isActive);
+        item.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
       cards.forEach((card) => {
         // the studio tile stays visible under every filter (it links to all 14)
         const show = filter === "all"
@@ -507,6 +513,7 @@ cards.forEach((card) => {
   card.addEventListener("pointerenter", () => {
     if (!finePointer.matches || reducedMotion.matches) return;
     card.style.transition = "border-color 200ms, box-shadow 200ms";
+    card.style.willChange = "transform";
   });
 
   card.addEventListener("pointermove", (event) => {
@@ -526,18 +533,19 @@ cards.forEach((card) => {
   card.addEventListener("pointerleave", () => {
     card.style.transition = "";
     card.style.transform = "";
+    card.style.willChange = "";
   });
 
   if (!isStudioTile) {
     card.addEventListener("click", (event) => {
       if (isInteractiveCardTarget(event)) return;
-      openModal(card.dataset.project);
+      openModal(card.dataset.project, card);
     });
     card.addEventListener("keydown", (event) => {
       if (isInteractiveCardTarget(event)) return;
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
-        openModal(card.dataset.project);
+        openModal(card.dataset.project, card);
       }
     });
   }
@@ -563,14 +571,14 @@ document.querySelectorAll("[data-magnetic]").forEach((el) => {
     const dx = event.clientX - rect.left - rect.width / 2;
     const dy = event.clientY - rect.top - rect.height / 2;
     const clamp = (v, m) => Math.max(-m, Math.min(m, v));
-    el.style.transform = `translate(${clamp(dx * 0.08, 10)}px, ${clamp(dy * 0.12, 7)}px)`;
+    el.style.transform = `translate(${clamp(dx * 0.08, rect.width * 0.06)}px, ${clamp(dy * 0.12, rect.height * 0.12)}px)`;
   });
   el.addEventListener("pointerleave", () => {
-    el.style.transition = "transform 500ms cubic-bezier(0.16, 1, 0.3, 1)";
+    el.style.transition = "transform 320ms cubic-bezier(0.16, 1, 0.3, 1)";
     el.style.transform = "";
     setTimeout(() => {
       el.style.transition = "";
-    }, 500);
+    }, 320);
   });
 });
 
@@ -649,7 +657,7 @@ function renderGallery(project) {
 
       const image = document.createElement("img");
       image.src = item.src;
-      image.alt = item.alt || "";
+      image.alt = item.alt || item.caption || (project.title ? project.title + " image" : "Project image");
       image.loading = "lazy";
       button.append(image);
 
@@ -667,7 +675,7 @@ function renderGallery(project) {
   );
 }
 
-function openModal(projectKey) {
+function openModal(projectKey, sourceCard = null) {
   const project = projectData[projectKey];
   if (!project) return;
   lastFocusedElement = document.activeElement;
@@ -706,6 +714,14 @@ function openModal(projectKey) {
         cardEl.style.viewTransitionName = prevCardName;
       });
   } else {
+    // non-Chrome fallback: grow the modal panel from the clicked card's
+    // on-screen center; default to a neutral origin for programmatic opens
+    if (sourceCard) {
+      const r = sourceCard.getBoundingClientRect();
+      modalPanel.style.transformOrigin = `${((r.left + r.width / 2) / window.innerWidth) * 100}% ${((r.top + r.height / 2) / window.innerHeight) * 100}%`;
+    } else {
+      modalPanel.style.transformOrigin = "50% 40%";
+    }
     showDom();
   }
 }

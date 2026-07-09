@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Kefan Wu">
+  <rect width="64" height="64" rx="12" fill="#000000"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="10.5" fill="none" stroke="#3f8cff" stroke-width="2"/>
+  <text x="32" y="34" text-anchor="middle" dominant-baseline="central" font-family="'Inter Tight', Inter, Arial, sans-serif" font-weight="800" font-size="28" letter-spacing="-1" fill="#f5f5f7">KW</text>
+</svg>

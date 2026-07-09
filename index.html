@@ -15,7 +15,8 @@
     <meta property="og:image" content="assets/hero-fsae-track.webp" />
     <meta property="og:type" content="website" />
     <title>Kefan Wu | Mechanical Engineering Portfolio</title>
-    <link rel="icon" href="assets/favicon_custom.png" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="assets/favicon_custom.png" sizes="any" />
     <link rel="preload" as="image" href="assets/hero-fsae-track.webp" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,7 +24,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
     />
-    <link rel="stylesheet" href="styles.css?v=herocenter-20260707" />
+    <link rel="stylesheet" href="styles.css?v=polish-20260708" />
     <script>document.documentElement.classList.add("js");</script>
   </head>
   <body>
@@ -59,7 +60,7 @@
         <div class="hero-shade" aria-hidden="true"></div>
         <div class="hero-content">
           <p class="eyebrow stage" style="--stage: 0">
-            Mechanical Lead / Olin Electric Motorsports / MechE @ Olin College '28
+            <span style="white-space: nowrap">Mechanical Lead</span> / <span style="white-space: nowrap">Olin Electric Motorsports</span> / <span style="white-space: nowrap">MechE @ Olin College '28</span>
           </p>
           <div class="hero-skill-strip stage" style="--stage: 1" aria-label="Engineering tools and skills">
             <div class="hero-skill-track">
@@ -77,7 +78,10 @@
             <span class="line"><span class="stage" style="--stage: 2">Kefan</span></span>
             <span class="line"><span class="stage" style="--stage: 3">Wu</span></span>
           </h1>
-          <div class="hero-actions stage" style="--stage: 4">
+          <p class="hero-copy stage" style="--stage: 4">
+            I design, build, and test race-car systems, robots, and machined hardware — from load cases to finished parts.
+          </p>
+          <div class="hero-actions stage" style="--stage: 5">
             <a class="button primary" href="#work" data-magnetic>View projects</a>
             <a class="button studio" href="experience.html" data-magnetic>Enter the 3D Studio</a>
           </div>
@@ -117,12 +121,12 @@
           </div>
 
           <div class="filter-bar" role="list" aria-label="Filter case studies" data-reveal>
-            <button class="filter active" type="button" data-filter="all">All</button>
-            <button class="filter" type="button" data-filter="motorsport">Motorsport</button>
-            <button class="filter" type="button" data-filter="robotics">Robotics</button>
-            <button class="filter" type="button" data-filter="product">Product</button>
-            <button class="filter" type="button" data-filter="analysis">Analysis</button>
-            <button class="filter" type="button" data-filter="fabrication">Fabrication</button>
+            <button class="filter active" type="button" data-filter="all" aria-pressed="true">All</button>
+            <button class="filter" type="button" data-filter="motorsport" aria-pressed="false">Motorsport</button>
+            <button class="filter" type="button" data-filter="robotics" aria-pressed="false">Robotics</button>
+            <button class="filter" type="button" data-filter="product" aria-pressed="false">Product</button>
+            <button class="filter" type="button" data-filter="analysis" aria-pressed="false">Analysis</button>
+            <button class="filter" type="button" data-filter="fabrication" aria-pressed="false">Fabrication</button>
           </div>
 
           <div id="project-cards" class="project-grid" data-reveal-group>
@@ -353,11 +357,11 @@
         </div>
       </section>
 
-      <section id="motorsport" class="featured section-shell" aria-label="Mechanical lead role detail">
+      <section id="motorsport" class="featured section-shell" aria-labelledby="motorsport-title">
         <div class="section-head compact" data-reveal>
           <div>
             <p class="section-kicker">03 / Formula SAE</p>
-            <h2>Motorsport</h2>
+            <h2 id="motorsport-title">Motorsport</h2>
           </div>
         </div>
         <div class="feature-grid" data-reveal-group>
@@ -456,7 +460,7 @@
       <section class="studio-banner" aria-label="Interactive 3D studio invitation">
         <div class="section-shell studio-banner__inner" data-reveal>
           <p class="section-kicker">One more thing</p>
-          <h2>You've read the case studies.<br />Now walk the floor.</h2>
+          <h2>You've read the case studies. Now walk the floor.</h2>
           <p class="studio-banner__copy">
             An interactive 3D studio — the resume is on the desk, and all 14
             projects are exhibits. Click one and the camera flies you in.
@@ -487,6 +491,8 @@
         <span>&copy; 2026 Kefan Wu</span>
         <span>Olin College of Engineering - Needham, MA</span>
         <a href="https://www.linkedin.com/in/kefan-wu-olin/" target="_blank" rel="noreferrer">LinkedIn</a>
+        <a href="experience.html">3D Studio &rarr;</a>
+        <span style="font-family: var(--font-mono); color: var(--muted); font-size: 0.8rem; letter-spacing: 0.04em">Built solo · vanilla HTML/CSS/JS · updated Jul 2026</span>
       </div>
     </footer>
 
@@ -527,7 +533,19 @@
       </article>
     </div>
 
-    <script src="project-data.js?v=proj-steering-20260707"></script>
-    <script src="script.js?v=herotrim-20260707"></script>
+    <script src="project-data.js?v=polish-20260708"></script>
+    <script src="script.js?v=polish-20260708"></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Kefan Wu",
+      "url": "https://www.kefanwu.com/",
+      "jobTitle": "Mechanical Engineering Student · Mechanical Lead, Olin Electric Motorsports",
+      "alumniOf": { "@type": "CollegeOrUniversity", "name": "Olin College of Engineering" },
+      "sameAs": ["https://www.linkedin.com/in/kefan-wu-olin/"],
+      "knowsAbout": ["Mechanical design", "SolidWorks", "FEA", "CFD", "MATLAB", "CNC machining", "Carbon fiber composites", "Formula SAE", "Robotics"]
+    }
+    </script>
   </body>
 </html>

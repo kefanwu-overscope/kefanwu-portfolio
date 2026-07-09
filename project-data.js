@@ -196,11 +196,11 @@ const projectData = {
     summary:
       "Cockpit seat and harness package focused on driver fit, lateral support, mount reliability, fast service access, and rules-driven packaging.",
     highlights: [
-      "Separated driver fit, support, and harness routing into explicit design requirements.",
-      "Used CAD body positioning, physical fit studies, and feedback from roughly 20 drivers of varying heights.",
-      "Accounted for both shortest and tallest drivers with booster strategy and mounting-point flexibility.",
-      "Designed around welded chassis tabs, multiple seat mounting points, and dedicated harness interfaces.",
-      "Treated ergonomics as an engineering input rather than a final comfort pass."
+      "Validated cockpit fit across ~20 drivers of varying heights with CAD body positioning and physical fit studies.",
+      "Accommodated the shortest-to-tallest driver range through a booster strategy and flexible mounting points.",
+      "Upgraded restraint to a six-buckle harness with an anti-submarine belt on a dedicated chassis bar.",
+      "Mounted the seat on welded chassis tabs and multiple hard points for reliable retention and fast service access.",
+      "Packaged the seat inside the cockpit template alongside the steering column, pedal tray, and bodywork."
     ],
     tools: ["SolidWorks", "Cockpit fit study", "Driver measurements", "Harness routing", "Mount design"],
     details: [
@@ -250,11 +250,11 @@ const projectData = {
     summary:
       "Composite-focused seat and bodywork support work improving shoulder support, driver retention, repairability, and manufacturability.",
     highlights: [
-      "Added upper-seat support thinking around shoulders and hip flanges rather than only a simple pan.",
-      "Connected carbon fiber layup choices to stiffness, weight, repairability, and driver support.",
-      "Kept bodywork service access and removal in the same design conversation as the seat geometry.",
-      "Framed the composite work around load paths and fit, not styling.",
-      "Used Mk.7 build context to inform Mk.8 cockpit improvements."
+      "Added a carbon shoulder- and hip-support shell above the seat pan for upper-body retention under cornering load.",
+      "Chose the carbon-fiber layup for stiffness-to-weight where driver retention mattered more than a metal pan.",
+      "Designed the shell and bodywork to remove, repair, and reassemble within a race weekend.",
+      "Sized the geometry around real layup and trimming limits rather than CAD-only surfaces.",
+      "Used the Mk.7 build to target the Mk.8 cockpit's actual support and service pain points."
     ],
     tools: ["Composite layup planning", "Carbon fiber", "Bodywork DFM", "Driver ergonomics", "Repairability review"],
     details: [
@@ -557,11 +557,11 @@ const projectData = {
     summary:
       "Compact line-following robot packaging an Arduino Mega, drive hardware, sensors, and dense wiring into a small mobile platform.",
     highlights: [
-      "Packaged controller, sensors, motor drivers, battery, and wheels in a tight chassis footprint.",
-      "Used front sensing and a compact two-wheel drive layout for line-following behavior.",
-      "Kept wiring short and serviceable so debugging stayed possible after assembly.",
-      "Shows electromechanical integration across controls, chassis packaging, power, and physical build.",
-      "Updated photos from the project folder are now included in the gallery."
+      "Packaged an Arduino Mega, motor drivers, battery, sensors, and drive into a palm-size chassis.",
+      "Ran stable low-speed line tracking with front-mounted sensing and a compact two-wheel differential drive.",
+      "Kept wire runs short and serviceable so the build stayed debuggable after assembly.",
+      "Tuned sensor thresholds, driver wiring, and drive balance into repeatable tracking on the assembled robot.",
+      "Demonstrates hands-on electromechanical integration — controls, packaging, power, and build — at small scale."
     ],
     tools: ["Arduino Mega", "Motor drivers", "Sensor packaging", "Embedded wiring", "Mobile robotics"],
     details: [
@@ -577,7 +577,7 @@ const projectData = {
         title: "Mechanical packaging",
         points: [
           "Used a small chassis footprint with visible controller, wiring, and drive modules stacked around the wheelbase.",
-          "The updated photos show the main packaging challenge: many electrical interfaces in very limited space.",
+          "The main packaging challenge was fitting many electrical interfaces into very limited space.",
           "The build rewards short wire runs, clear connector routing, and accessible components for iteration."
         ]
       },
