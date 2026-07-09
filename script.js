@@ -972,15 +972,14 @@ modalScrub.onScroll = function () {
 };
 
 /* -----------------------------------------------------------------
-   Studio orbit micro-animation ("Walk the studio" tile)
-   On hover / keyboard focus the tile slowly pans across a 10-frame
-   orbit captured from the real experience.html scene. Implementation:
-   stacked <img> frames cross-faded via opacity (.studio-orbit in
-   styles.css) — compositor-only work, so no flicker; the earlier
-   background-image swap repainted the tile every step and flickered.
-   Frames lazy-build on first activation. Desktop + fine pointer +
-   motion only; mobile and prefers-reduced-motion keep the static
-   CSS teaser. (The pre-Contact studio banner was removed 2026-07-08.)
+   Studio hover drift ("Walk the studio" tile)
+   On hover / keyboard focus the tile fades in a single still of the
+   real 3D studio (assets/studio-hover.webp) with a slow CSS Ken Burns
+   drift (.studio-orbit in styles.css) — transform-only, so it can't
+   flicker. Frame-sequence loops were tried twice and flickered; don't
+   reintroduce them. JS only lazy-injects the layer on first intent so
+   mobile / reduced-motion users never download the image; the fade-in
+   and the drift are pure CSS (:hover / :focus-visible).
 ------------------------------------------------------------------ */
 (function initStudioOrbit() {
   const motionOK = matchMedia("(prefers-reduced-motion: no-preference)").matches;
@@ -990,63 +989,28 @@ modalScrub.onScroll = function () {
   const tile = document.querySelector(".project-card--studio");
   if (!tile) return;
 
-  const N = 10;
-  const pad = (i) => (i < 10 ? "0" + i : "" + i);
-  // forward, then back = seamless ping-pong loop
-  const order = [];
-  for (let i = 0; i < N; i++) order.push(i);
-  for (let i = N - 2; i > 0; i--) order.push(i);
-
-  let frames = null;
-  let building = null;
+  let built = false;
   const build = () => {
-    if (building) return building;
-    building = new Promise((resolve) => {
+    if (built) return;
+    built = true;
+    const im = new Image();
+    im.decoding = "async";
+    im.alt = "";
+    im.src = "assets/studio-hover.webp";
+    const insert = () => {
       const layer = document.createElement("div");
       layer.className = "studio-orbit";
       layer.setAttribute("aria-hidden", "true");
-      frames = [];
-      let loaded = 0;
-      for (let i = 0; i < N; i++) {
-        const im = new Image();
-        im.decoding = "async";
-        im.alt = "";
-        im.onload = im.onerror = () => {
-          loaded += 1;
-          if (loaded === N) resolve();
-        };
-        im.src = `assets/studio_orbit/frame_${pad(i)}.webp`;
-        frames.push(im);
-        layer.appendChild(im);
-      }
+      layer.appendChild(im);
       tile.prepend(layer);
-    });
-    return building;
+    };
+    // insert once loaded so the layer never fades in over a half-loaded
+    // image (NOT img.decode() — it can hang for detached images in
+    // backgrounded tabs; onload is reliable and the decode cost of a
+    // 47KB webp is negligible on first paint)
+    im.onload = insert;
+    im.onerror = insert;
   };
-
-  let timer = null;
-  let step = 0;
-  const tick = () => {
-    const current = order[step];
-    frames.forEach((f, i) => f.classList.toggle("is-on", i === current));
-    step = (step + 1) % order.length;
-  };
-  const start = async () => {
-    if (timer) return;
-    await build();
-    if (timer) return;
-    step = 0;
-    tick();
-    timer = setInterval(tick, 420);
-  };
-  const stop = () => {
-    if (timer) {
-      clearInterval(timer);
-      timer = null;
-    }
-  };
-  tile.addEventListener("pointerenter", start);
-  tile.addEventListener("pointerleave", stop);
-  tile.addEventListener("focusin", start);
-  tile.addEventListener("focusout", stop);
+  tile.addEventListener("pointerenter", build, { once: true });
+  tile.addEventListener("focusin", build, { once: true });
 })();

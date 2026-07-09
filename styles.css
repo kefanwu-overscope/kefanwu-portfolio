@@ -2748,10 +2748,12 @@ html { scrollbar-gutter: stable; }
   min-height: 15rem;
   justify-content: flex-end;
 }
-/* orbit frame layer injected by script.js (initStudioOrbit): stacked <img>
-   frames cross-faded via opacity — compositor-only, no background repaint
-   (the old background-image swap flickered). The layer's own ::after
-   re-applies the tile's darkening gradient so the copy stays legible. */
+/* hover layer injected by script.js (initStudioOrbit): ONE still of the 3D
+   studio with a slow Ken Burns drift (transform only — GPU-composited,
+   60fps). Frame sequences were tried twice and flickered (background-image
+   swaps repaint; opacity cross-fades dip to ~75% coverage mid-blend) — do
+   NOT bring them back. The layer's own ::after re-applies the tile's
+   darkening gradient so the copy stays legible. */
 .studio-orbit {
   position: absolute;
   inset: 0;
@@ -2770,15 +2772,22 @@ html { scrollbar-gutter: stable; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0;
-  transition: opacity 360ms linear;
+  transform-origin: 50% 45%;
+  animation: studio-pan 26s ease-in-out infinite alternate;
+  animation-play-state: paused;
+  will-change: transform;
 }
-.studio-orbit img.is-on { opacity: 1; }
+.project-card--studio:hover .studio-orbit img,
+.project-card--studio:focus-visible .studio-orbit img { animation-play-state: running; }
 .studio-orbit::after {
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(rgba(4, 8, 16, 0.5), rgba(2, 4, 10, 0.82));
+}
+@keyframes studio-pan {
+  from { transform: scale(1.07) translateX(2.4%); }
+  to   { transform: scale(1.16) translateX(-2.8%); }
 }
 .project-card--studio .project-meta { color: var(--blue-bright); }
 .project-card--studio:hover,
