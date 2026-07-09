@@ -256,6 +256,54 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
+### 2026-07-08 homepage polish + studio-orbit teaser (approved by Kefan)
+A design/a11y/copy/SEO polish pass across the homepage. All LIVE.
+- **Type/layout:** raised the fluid-type ceilings (`--text-display` 7.5→9rem,
+  `--text-h2` 3.75→4.4rem — ramps unchanged, so headings grow on ≥1240px
+  screens without shrinking anywhere); added `--pad-section` /
+  `--pad-section-lg` rhythm tokens; `.dark-panel h3` → `--text-title`; dropped
+  the dead 3.2rem modal-h2 rule; `text-wrap: balance` on headings.
+- **Motion:** `:active` press feedback (scale on chips/links, brightness on
+  buttons — buttons use filter to avoid the JS magnetic transform); keyboard
+  `.project-card:focus-visible` lift; capped reveal stagger; card image-zoom
+  800→500ms; magnetic pull scales with button size; non-Chrome modal grows
+  from the clicked card (transform-origin); `will-change` on the card tilt;
+  scroll-cue waits for >80px.
+- **A11y:** 44px touch targets (mobile `.filter`, `.cap-proof`); filter
+  `aria-pressed`; `#motorsport` now `aria-labelledby` its heading; gallery
+  images always get an alt; eyebrow wraps only at the slashes.
+- **Copy:** hero value-prop subhead restored (`.hero-copy`, "…race-car
+  systems, robots, and machined hardware — from load cases to finished parts.")
+  — NOTE this re-adds a line trimmed on 2026-07-07, per Kefan's explicit
+  request. Rewrote seat / carbonSeat / lineFollower highlights to lead with
+  outcomes; removed a placeholder ("updated photos…") bullet.
+- **Premium/SEO:** `::selection`, dark scrollbar, `@media print`; SVG favicon
+  (`favicon.svg`, KW monogram); Person JSON-LD; footer signature line; new
+  `robots.txt`, `sitemap.xml`, on-brand `404.html`.
+- **Studio-orbit teaser (the "wow" bit):** the "Walk the studio" tile and the
+  pre-Contact studio banner now gently pan a 10-frame orbit of the REAL 3D
+  scene instead of a flat photo. Frames live in `assets/studio_orbit/frame_00
+  ..09.webp` (1280×800 night renders, captured from experience.html via
+  `composer.render()` + `canvas.toDataURL` POSTed to a throwaway local receiver
+  — see below). `initStudioOrbit()` in script.js swaps ONLY the image layer of
+  each element's existing background (the darkening gradient stays on top, so
+  text legibility is untouched), ping-pong loop, lazy-loaded on first
+  activation. Tile→hover/focus, banner→scroll-into-view. Desktop + fine-pointer
+  + motion only; mobile and reduced-motion keep the static `studio-teaser.webp`.
+  To RE-CAPTURE frames: run a tiny POST receiver (a scratch `snapsrv.py` that
+  b64-decodes POST bodies into `assets/studio_orbit/`), load experience.html in
+  the preview, wait for `window.__exp`, then loop azimuth (rest ≈0.61, radius
+  ≈3.81, target (0,0.75,-0.1)) setting `camera.position`+`lookAt`,
+  `composer.render()`, `toDataURL('image/webp')`, and `fetch(..., {mode:'no-cors'})`
+  each frame. (There is still no committed snapsrv.py — it's a throwaway.)
+- Cache strings after this pass: see "Current cache versions" (styles.css
+  `polish-20260708`, script.js `studio-20260708`, project-data.js
+  `polish-20260708`). NOT applied (Kefan deferred): external-hotlink skill
+  images (#2), `--quiet` contrast (#3), ticker pause control (#4), card-hover
+  tool chips (#9), designed OG share card (#11). heads-up: the AutoCAD
+  skill-hover image (paintingvalley.com hotlink) is now CORS-blocked/broken
+  live — part of #2.
+
 ### 2026-07-08 doc-truth + cleanup pass
 - `AGENT_HANDOFF.md` reconciled to the actual current state: 14 projects (no
   `gearbox` — it was removed earlier and this doc had not caught up), the
@@ -390,9 +438,9 @@ studio. Everything below is LIVE.
 - Windows gotchas: Python cannot write to `/tmp` — write temp files under `C:/Users/oc/AppData/Local/Temp/...`. In `python -c` strings use forward slashes / `os.path.join`, not escaped backslashes. Pasted screenshots land in `C:\Users\oc\AppData\Local\Packages\MicrosoftWindows.Client.Core_cw5n1h2txyewy\TempState\ScreenClip\`.
 
 ### Current cache versions (bump the matching one whenever you edit that file)
-- `styles.css?v=herocenter-20260707` (in index.html)
-- `script.js?v=herotrim-20260707` (in index.html)
-- `project-data.js?v=proj-steering-20260707` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `styles.css?v=polish-20260708` (in index.html)
+- `script.js?v=studio-20260708` (in index.html)
+- `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-cleanup-20260708` (3D page styles — in experience.html)
 - `experience.js?v=exp-cleanup-20260708` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
