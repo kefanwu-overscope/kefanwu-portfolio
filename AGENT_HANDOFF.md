@@ -256,6 +256,28 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
+### 2026-07-09 studio tile: frame loop → single-still Ken Burns (final)
+- Kefan reported the tile STILL flickered after the cross-fade rebuild. Root
+  cause: mid-blend, two ~50%-opacity frames cover only ~75% of the tile, so
+  the backdrop pulses through on every change; adjacent frames also ghost.
+  Discrete frames are structurally flicker-prone — **do not reintroduce frame
+  sequences on this tile** (two attempts, both flickered; the CSS comment at
+  `.studio-orbit` says the same).
+- Now: ONE still (`assets/studio-hover.webp` = the old middle orbit frame)
+  with a 26s ease-in-out alternate Ken Burns drift (`@keyframes studio-pan`,
+  scale 1.07→1.16 + lateral drift), transform-only/GPU. Layer fades in on
+  `:hover`/`:focus-visible`; drift runs via `animation-play-state` (paused by
+  default, resumes where it stopped). script.js `initStudioOrbit()` only
+  lazy-injects the `<img>` on first hover/focus intent — insert on `onload`,
+  NOT `img.decode()` (decode() can hang for detached images in backgrounded
+  tabs). The 9 other orbit frames were deleted (~420KB); the re-capture
+  recipe below still works if a new still is ever needed.
+- Cache strings: styles.css + script.js → `kenburns-20260709`.
+- Verification caveat learned here: the preview pane is a BACKGROUND tab —
+  Chromium freezes CSS-animation clocks when `document.hidden` (getAnimations
+  currentTime stays 0), so CSS animation playback cannot be observed there
+  (JS timers still run). Verify bindings/rules instead, or check live.
+
 ### 2026-07-08 (later) studio banner REMOVED; orbit rebuilt flicker-free
 - Kefan: the banner's in-view frame loop flickered / read as low-FPS →
   the whole pre-Contact "One more thing" `.studio-banner` section was
@@ -457,8 +479,8 @@ studio. Everything below is LIVE.
 - Windows gotchas: Python cannot write to `/tmp` — write temp files under `C:/Users/oc/AppData/Local/Temp/...`. In `python -c` strings use forward slashes / `os.path.join`, not escaped backslashes. Pasted screenshots land in `C:\Users\oc\AppData\Local\Packages\MicrosoftWindows.Client.Core_cw5n1h2txyewy\TempState\ScreenClip\`.
 
 ### Current cache versions (bump the matching one whenever you edit that file)
-- `styles.css?v=orbitfix-20260708` (in index.html)
-- `script.js?v=orbitfix-20260708` (in index.html)
+- `styles.css?v=kenburns-20260709` (in index.html)
+- `script.js?v=kenburns-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-cleanup-20260708` (3D page styles — in experience.html)
 - `experience.js?v=exp-cleanup-20260708` (3D page module — in experience.html)
