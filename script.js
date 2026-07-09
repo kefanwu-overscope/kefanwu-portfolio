@@ -32,8 +32,8 @@ const heroSkillDetails = {
   autocad: {
     title: "AutoCAD",
     meta: "Fabrication drawings",
-    image: "https://paintingvalley.com/drawings/autocad-mechanical-drawings-34.png",
-    alt: "Mechanical CAD drawing with dimensions",
+    image: "assets/cover-steering-system-cad.webp",
+    alt: "CAD assembly of the Mk.8 steering system used for fabrication drawings",
     text:
       "2D layouts, DXF cleanup, shop-ready profiles, and fabrication handoff details before parts hit the machine."
   },
