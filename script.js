@@ -970,3 +970,94 @@ modalScrub.onScroll = function () {
     });
   }
 };
+
+/* -----------------------------------------------------------------
+   Studio orbit micro-animation
+   Gently pans the 3D-studio still on the "Walk the studio" tile (on
+   hover / keyboard focus) and the pre-Contact studio banner (while in
+   view), so the link to the interactive page reads as alive rather
+   than a flat photo. Frames were captured from the real experience.html
+   scene and are lazy-loaded on first activation. Desktop + motion only;
+   mobile and prefers-reduced-motion keep the static CSS teaser. Only the
+   image layer of the existing background is swapped, so the darkening
+   gradient (and text legibility) is untouched.
+------------------------------------------------------------------ */
+(function initStudioOrbit() {
+  const motionOK = matchMedia("(prefers-reduced-motion: no-preference)").matches;
+  const desktop = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (!motionOK || !desktop) return;
+
+  const N = 10;
+  const pad = (i) => (i < 10 ? "0" + i : "" + i);
+  // forward, then back = seamless ping-pong loop
+  const order = [];
+  for (let i = 0; i < N; i++) order.push(i);
+  for (let i = N - 2; i > 0; i--) order.push(i);
+  const urls = order.map((i) => `assets/studio_orbit/frame_${pad(i)}.webp`);
+
+  let loading = null;
+  const preload = () => {
+    if (loading) return loading;
+    loading = Promise.all(
+      [...new Set(urls)].map(
+        (u) =>
+          new Promise((res) => {
+            const im = new Image();
+            im.onload = im.onerror = () => res();
+            im.src = u;
+          })
+      )
+    );
+    return loading;
+  };
+
+  const gradientOf = (el) => {
+    const bg = getComputedStyle(el).backgroundImage;
+    const cut = bg.lastIndexOf(", url(");
+    return cut > 0 ? bg.slice(0, cut) : null;
+  };
+
+  const attach = (el, mode) => {
+    let timer = null;
+    let idx = 0;
+    let grad = null;
+    const step = () => {
+      if (grad == null) return;
+      el.style.backgroundImage = `${grad}, url("${urls[idx]}")`;
+      idx = (idx + 1) % urls.length;
+    };
+    const start = async () => {
+      if (timer) return;
+      await preload();
+      if (grad == null) grad = gradientOf(el);
+      if (grad == null || timer) return;
+      step();
+      timer = setInterval(step, 130);
+    };
+    const stop = () => {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+      idx = 0;
+      el.style.backgroundImage = "";
+    };
+    if (mode === "hover") {
+      el.addEventListener("pointerenter", start);
+      el.addEventListener("pointerleave", stop);
+      el.addEventListener("focusin", start);
+      el.addEventListener("focusout", stop);
+    } else {
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((e) => (e.isIntersecting ? start() : stop())),
+        { threshold: 0.35 }
+      );
+      io.observe(el);
+    }
+  };
+
+  const tile = document.querySelector(".project-card--studio");
+  if (tile) attach(tile, "hover");
+  const banner = document.querySelector(".studio-banner");
+  if (banner) attach(banner, "inview");
+})();
