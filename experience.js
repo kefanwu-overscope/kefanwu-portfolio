@@ -1209,9 +1209,11 @@ function initScene(canvas) {
   let downXY = null;
   const panelEl = document.getElementById("exp-panel");
   const paperEl = document.getElementById("exp-paper");
+  const paperProxyEl = document.getElementById("exp-paper-proxy");
   const backdropEl = document.getElementById("exp-backdrop");
   const labelEl = document.getElementById("exp-label");
-  const PAPER_LIFT_MS = 560;
+  const PAPER_LIFT_MS = 500;
+  const PAPER_SWAP_MS = 160;
   let activePaperPivot = null;
   let paperAnimGen = 0;
 
@@ -1420,23 +1422,26 @@ function initScene(canvas) {
     currentProjectKey = hs.key || null;
     sndClick();
     sndWhoosh();
-    const open = hs.action === "resume" ? openPaper : openPanel;
+    // Lay out the heavy DOM résumé and raster proxy during the camera move,
+    // before either becomes visible, so the pickup animation stays compositor-only.
+    if (hs.action === "resume") preparePaperContent(html, root);
     if (prefersReducedMotion) {
       camera.position.copy(focusPos);
       controls.target.copy(focusLook);
       controls.enabled = false;
       camera.lookAt(focusLook);
-      open(html, root);
+      if (hs.action === "resume") openPaper(root);
+      else openPanel(html);
     } else {
       if (hs.action === "resume") {
         // Approach the physical sheet first, then lift it from its final
         // on-screen desk position. Project panels keep their overlapping open.
         startFlight(focusPos, focusLook, 850, () => {
-          if (panelOpen) open(html, root);
+          if (panelOpen) openPaper(root);
         });
       } else {
         startFlight(focusPos, focusLook, 850);
-        setTimeout(() => open(html, root), 680);
+        setTimeout(() => openPanel(html), 680);
       }
     }
   }
@@ -1513,8 +1518,38 @@ function initScene(canvas) {
     }
     applyPanelContent();
   }
+  function preparePaperContent(html, pivot) {
+    if (!paperEl) return;
+    const rootClass = document.documentElement.classList;
+    rootClass.remove("exp-paper-active", "exp-paper-lifted", "exp-paper-open");
+    if (paperProxyEl) paperProxyEl.classList.remove("is-ready", "is-pickup");
+
+    paperEl.innerHTML = html;
+    paperEl.scrollTop = 0;
+    paperEl.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", closePanel));
+    activePaperPivot = pivot;
+
+    if (!paperProxyEl) return;
+    const source = pivot && pivot.userData.hotspot && pivot.userData.hotspot.pickupObject;
+    const sourceCanvas = source && source.userData.resumeCanvas;
+    if (sourceCanvas && paperProxyEl.dataset.rasterized !== "1") {
+      paperProxyEl.width = 768;
+      paperProxyEl.height = 1020;
+      const proxyCtx = paperProxyEl.getContext("2d", { alpha: false });
+      proxyCtx.drawImage(sourceCanvas, 0, 0, paperProxyEl.width, paperProxyEl.height);
+      paperProxyEl.dataset.rasterized = "1";
+    }
+
+    // Preserve the physical sheet's aspect ratio instead of stretching its
+    // pixels to the taller mobile scroll viewport. The detailed DOM can grow
+    // only after the proxy has stopped moving.
+    const proxyWidth = paperEl.offsetWidth;
+    paperProxyEl.style.setProperty("--paper-proxy-width", `${proxyWidth}px`);
+    paperProxyEl.style.setProperty("--paper-proxy-height", `${proxyWidth * (340 / 256)}px`);
+  }
+
   function applyPaperPickupPose(pivot) {
-    if (!paperEl || !pivot) return null;
+    if (!paperProxyEl || !pivot) return null;
     const source = pivot.userData.hotspot && pivot.userData.hotspot.pickupObject;
     if (!source) return null;
 
@@ -1544,54 +1579,63 @@ function initScene(canvas) {
     const flatHeight = Math.max(1, width * (0.32 / 0.24));
     const heightRatio = THREE.MathUtils.clamp(height / flatHeight, 0.25, 1);
     const tilt = THREE.MathUtils.clamp(Math.acos(heightRatio) * 180 / Math.PI, 28, 68);
-    const scale = THREE.MathUtils.clamp(width / Math.max(1, paperEl.offsetWidth), 0.08, 0.72);
+    const scale = THREE.MathUtils.clamp(width / Math.max(1, paperProxyEl.offsetWidth), 0.08, 0.72);
 
-    paperEl.style.setProperty("--paper-pickup-x", `${(centerX - window.innerWidth / 2).toFixed(2)}px`);
-    paperEl.style.setProperty("--paper-pickup-y", `${(centerY - window.innerHeight / 2).toFixed(2)}px`);
-    paperEl.style.setProperty("--paper-pickup-scale", scale.toFixed(4));
-    paperEl.style.setProperty("--paper-pickup-rotate", `${angle.toFixed(2)}deg`);
-    paperEl.style.setProperty("--paper-pickup-tilt", `${tilt.toFixed(2)}deg`);
+    paperProxyEl.style.setProperty("--paper-pickup-x", `${(centerX - window.innerWidth / 2).toFixed(2)}px`);
+    paperProxyEl.style.setProperty("--paper-pickup-y", `${(centerY - window.innerHeight / 2).toFixed(2)}px`);
+    paperProxyEl.style.setProperty("--paper-pickup-scale", scale.toFixed(4));
+    paperProxyEl.style.setProperty("--paper-pickup-rotate", `${angle.toFixed(2)}deg`);
+    paperProxyEl.style.setProperty("--paper-pickup-tilt", `${tilt.toFixed(2)}deg`);
     return source;
   }
 
   function clearPaperPickupPose() {
-    if (!paperEl) return;
+    if (!paperProxyEl) return;
     ["--paper-pickup-x", "--paper-pickup-y", "--paper-pickup-scale",
-      "--paper-pickup-rotate", "--paper-pickup-tilt"]
-      .forEach((name) => paperEl.style.removeProperty(name));
+      "--paper-pickup-rotate", "--paper-pickup-tilt",
+      "--paper-proxy-width", "--paper-proxy-height"]
+      .forEach((name) => paperProxyEl.style.removeProperty(name));
   }
 
-  function openPaper(html, pivot) {
-    if (!paperEl) return;
+  function openPaper(pivot) {
+    if (!paperEl || !paperProxyEl) return;
     panelOpen = true;
     paperReturning = false;
     dismissClickHint();
-    document.documentElement.classList.remove("exp-paper-open");
-    paperEl.classList.remove("is-pickup-ready");
-    paperEl.innerHTML = html;
-    paperEl.scrollTop = 0;
-    paperEl.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", closePanel));
-    activePaperPivot = pivot;
-    const source = applyPaperPickupPose(pivot);
-    if (pivot) pivot.visible = true;
+    activePaperPivot = pivot || activePaperPivot;
+    const source = applyPaperPickupPose(activePaperPivot);
+    if (activePaperPivot) activePaperPivot.visible = true;
+    const rootClass = document.documentElement.classList;
+    rootClass.remove("exp-paper-lifted", "exp-paper-open");
+    rootClass.add("exp-paper-active");
     const gen = ++paperAnimGen;
-    // Commit the projected desk pose before the open class drives the lift.
-    void paperEl.offsetWidth;
-    paperEl.classList.add("is-pickup-ready");
+
+    // Commit the desk pose, then animate only the flat canvas proxy.
+    paperProxyEl.classList.remove("is-ready", "is-pickup");
+    void paperProxyEl.offsetWidth;
+    paperProxyEl.classList.add("is-ready", "is-pickup");
     setHover(null);
 
     const lift = () => {
       if (gen !== paperAnimGen || !panelOpen) return;
-      // Hide the whole 3D hotspot (sheet + marker) once the DOM sheet takes it.
-      if (source && pivot) pivot.visible = false;
-      document.documentElement.classList.add("exp-paper-open");
-      const focusClose = () => {
-        if (gen !== paperAnimGen || !document.documentElement.classList.contains("exp-paper-open")) return;
-        const closeBtn = paperEl.querySelector(".exp-sheet__close");
-        if (closeBtn) closeBtn.focus();
+      if (source && activePaperPivot) activePaperPivot.visible = false;
+      rootClass.add("exp-paper-lifted");
+
+      const revealContent = () => {
+        if (gen !== paperAnimGen || !panelOpen) return;
+        paperProxyEl.classList.remove("is-pickup");
+        rootClass.add("exp-paper-open");
+        const finishSwap = () => {
+          if (gen !== paperAnimGen || !panelOpen) return;
+          paperProxyEl.classList.remove("is-ready", "is-pickup");
+          const closeBtn = paperEl.querySelector(".exp-sheet__close");
+          if (closeBtn) closeBtn.focus();
+        };
+        if (prefersReducedMotion) finishSwap();
+        else setTimeout(finishSwap, PAPER_SWAP_MS);
       };
-      if (prefersReducedMotion) focusClose();
-      else setTimeout(focusClose, PAPER_LIFT_MS);
+      if (prefersReducedMotion) revealContent();
+      else setTimeout(revealContent, PAPER_LIFT_MS);
     };
     if (prefersReducedMotion) lift();
     else requestAnimationFrame(lift);
@@ -1620,7 +1664,8 @@ function initScene(canvas) {
   }
   function closePanel() {
     if (!panelOpen) return;
-    const closingPaper = !!activePaperPivot && paperEl && paperEl.classList.contains("is-pickup-ready");
+    const rootClass = document.documentElement.classList;
+    const closingPaper = !!activePaperPivot && !!paperProxyEl && rootClass.contains("exp-paper-active");
     const closingPaperPivot = activePaperPivot;
     if (closingPaper) applyPaperPickupPose(closingPaperPivot);
     const closeGen = ++paperAnimGen;
@@ -1628,8 +1673,7 @@ function initScene(canvas) {
     recenterPivot(focusedPivot);
     focusedPivot = null;
     sndWhoosh(0.4);
-    document.documentElement.classList.remove("exp-panel-open");
-    document.documentElement.classList.remove("exp-paper-open");
+    rootClass.remove("exp-panel-open");
 
     const returnToRoom = () => {
       if (pendingDragHintOnClose) { pendingDragHintOnClose = false; showDragHint(); }
@@ -1646,20 +1690,40 @@ function initScene(canvas) {
 
     if (closingPaper) {
       paperReturning = true;
+      // Put the already-rasterized proxy behind the DOM sheet at the settled
+      // pose, cross-fade to it, then move only that bitmap back to the desk.
+      rootClass.add("exp-paper-active", "exp-paper-lifted");
+      paperProxyEl.classList.remove("is-pickup");
+      paperProxyEl.classList.add("is-ready");
+      void paperProxyEl.offsetWidth;
+      rootClass.remove("exp-paper-open");
+
       const landPaper = () => {
         if (closeGen !== paperAnimGen) return;
         if (closingPaperPivot) closingPaperPivot.visible = true;
-        paperEl.classList.remove("is-pickup-ready");
+        rootClass.remove("exp-paper-active", "exp-paper-lifted", "exp-paper-open");
+        paperProxyEl.classList.remove("is-ready", "is-pickup");
         clearPaperPickupPose();
         activePaperPivot = null;
         paperReturning = false;
         returnToRoom();
       };
-      if (prefersReducedMotion) landPaper();
-      else setTimeout(landPaper, PAPER_LIFT_MS);
+
+      const returnProxy = () => {
+        if (closeGen !== paperAnimGen) return;
+        rootClass.remove("exp-paper-lifted");
+        if (prefersReducedMotion) landPaper();
+        else setTimeout(landPaper, PAPER_LIFT_MS);
+      };
+      if (prefersReducedMotion) returnProxy();
+      else setTimeout(returnProxy, PAPER_SWAP_MS);
       return;
     }
 
+    rootClass.remove("exp-paper-active", "exp-paper-lifted", "exp-paper-open");
+    if (paperProxyEl) paperProxyEl.classList.remove("is-ready", "is-pickup");
+    if (activePaperPivot) activePaperPivot.visible = true;
+    clearPaperPickupPose();
     activePaperPivot = null;
     paperReturning = false;
     returnToRoom();
@@ -3578,7 +3642,8 @@ function buildBlueprintPanel() {
 }
 
 function buildResumePaper() {
-  // A4-ish sheet lying flat on the desk with a printed resume header
+  // A4-ish sheet lying flat on the desk. This same canvas is reused by the
+  // DOM pickup proxy, so the paper cannot visibly change during the handoff.
   const g = new THREE.Group();
   const c = document.createElement("canvas");
   // 4x supersampled so the text stays crisp at fly-in distance; drawing
@@ -3587,29 +3652,94 @@ function buildResumePaper() {
   c.height = 1360;
   const ctx = c.getContext("2d");
   ctx.scale(4, 4);
-  ctx.fillStyle = "#f4f5f7";
+  const bg = ctx.createLinearGradient(0, 0, 0, 340);
+  bg.addColorStop(0, "#fafbfd");
+  bg.addColorStop(1, "#eef0f4");
+  ctx.fillStyle = bg;
   ctx.fillRect(0, 0, 256, 340);
-  ctx.fillStyle = "#1a1a1c";
-  ctx.font = "700 30px Arial, sans-serif";
-  ctx.fillText("KEFAN WU", 22, 46);
-  ctx.font = "500 13px Arial, sans-serif";
-  ctx.fillStyle = "#5a5a5e";
-  ctx.fillText("Mechanical Lead — Olin Electric", 22, 70);
-  ctx.fillText("Motorsports · MechE @ Olin '28", 22, 88);
-  ctx.strokeStyle = "#3f8cff";
-  ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.moveTo(22, 104); ctx.lineTo(234, 104); ctx.stroke();
-  // real section structure (readable at fly-in distance, not lorem bars)
-  const section = (title, y, rows) => {
-    ctx.fillStyle = "#26282c"; ctx.font = "700 12px Arial, sans-serif";
-    ctx.fillText(title, 22, y);
-    ctx.fillStyle = "#9a9aa0";
-    rows.forEach((w, i) => ctx.fillRect(22, y + 10 + i * 11, w, 3.5));
+  ctx.textBaseline = "alphabetic";
+
+  const wrap = (text, maxWidth, maxLines = Infinity) => {
+    const words = String(text || "").split(/\s+/);
+    const lines = [];
+    let line = "";
+    for (let i = 0; i < words.length; i++) {
+      const trial = line ? `${line} ${words[i]}` : words[i];
+      if (line && ctx.measureText(trial).width > maxWidth) {
+        lines.push(line);
+        line = words[i];
+        if (lines.length === maxLines - 1) {
+          const rest = [line, ...words.slice(i + 1)].join(" ");
+          let clipped = rest;
+          while (clipped && ctx.measureText(`${clipped}…`).width > maxWidth) clipped = clipped.slice(0, -1);
+          lines.push(`${clipped.trim()}…`);
+          return lines;
+        }
+      } else {
+        line = trial;
+      }
+    }
+    if (line && lines.length < maxLines) lines.push(line);
+    return lines;
   };
-  section("EDUCATION", 126, [188, 140]);
-  section("EXPERIENCE", 174, [200, 176, 152]);
-  section("PROJECTS", 232, [196, 168, 184]);
-  section("SKILLS", 290, [204, 148]);
+  const textBlock = (text, x, y, maxWidth, lineHeight, maxLines = Infinity) => {
+    const lines = wrap(text, maxWidth, maxLines);
+    lines.forEach((line, i) => ctx.fillText(line, x, y + i * lineHeight));
+    return y + lines.length * lineHeight;
+  };
+  const sectionLabel = (label, y) => {
+    ctx.fillStyle = "#6b7077";
+    ctx.font = "700 5.3px 'Courier New', monospace";
+    ctx.fillText(label.toUpperCase(), 20, y);
+  };
+
+  ctx.fillStyle = "#0f1114";
+  ctx.font = "800 15px Arial, sans-serif";
+  ctx.fillText(RESUME.name, 20, 30);
+  ctx.fillStyle = "#565b63";
+  ctx.font = "500 6.8px Arial, sans-serif";
+  let y = textBlock(`${RESUME.role} — ${RESUME.meta}`, 20, 43, 216, 8.2, 2);
+  y += 1.5;
+  ctx.fillStyle = "#3f8cff";
+  ctx.fillRect(20, y, 216, 1.5);
+
+  ctx.fillStyle = "#1d1f24";
+  ctx.font = "400 6.8px Arial, sans-serif";
+  y = textBlock(RESUME.summary, 20, y + 10, 216, 9, 5) + 5;
+
+  sectionLabel("Highlights", y);
+  y += 10;
+  ctx.font = "400 6.5px Arial, sans-serif";
+  (RESUME.highlights || []).forEach((item) => {
+    const lines = wrap(item, 207, 2);
+    ctx.fillStyle = "#3f8cff";
+    ctx.fillRect(20, y - 4.4, 2.5, 2.5);
+    ctx.fillStyle = "#1d1f24";
+    lines.forEach((line, i) => ctx.fillText(line, 27, y + i * 8));
+    y += lines.length * 8 + 3;
+  });
+
+  sectionLabel("Skills", y + 2);
+  y += 13;
+  (RESUME.skills || []).forEach((skill) => {
+    ctx.fillStyle = "#1d1f24";
+    ctx.font = "700 5.3px Arial, sans-serif";
+    ctx.fillText(skill.group, 20, y);
+    ctx.fillStyle = "#565b63";
+    ctx.font = "400 5.3px Arial, sans-serif";
+    const items = wrap((skill.items || []).join(" · "), 130, 1)[0] || "";
+    ctx.fillText(items, 106, y);
+    y += 10;
+  });
+
+  sectionLabel("Contact", y + 3);
+  ctx.fillStyle = "#1d5cc4";
+  ctx.font = "400 5.3px Arial, sans-serif";
+  textBlock((RESUME.contact || []).map((item) => item.label).join(" · "), 20, y + 14, 216, 7, 2);
+
+  // Retain the source canvas on the physical sheet group. openPaper() copies
+  // it once into the lightweight overlay canvas; no DOM snapshot is needed.
+  g.userData.resumeCanvas = c;
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = MAXA; // the sheet lies flat — grazing view needs aniso

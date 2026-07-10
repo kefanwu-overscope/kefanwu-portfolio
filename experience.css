@@ -754,22 +754,24 @@ a {
 }
 
 /* ============ picked-up resume sheet ============ */
-.exp-sheet {
+/* Only this flat canvas moves. The full, scrollable DOM résumé stays centered
+   and fades in after the lift, avoiding a large mid-animation re-raster. */
+.exp-sheet-proxy {
   --paper-pickup-x: 0px;
   --paper-pickup-y: 32vh;
   --paper-pickup-scale: 0.18;
   --paper-pickup-rotate: 0deg;
   --paper-pickup-tilt: 58deg;
+  --paper-proxy-width: min(92vw, 540px);
+  --paper-proxy-height: min(86vh, 717px);
   position: fixed;
   z-index: 72;
   top: 50%;
   left: 50%;
-  width: min(92vw, 540px);
-  max-height: 86vh;
-  overflow-y: auto;
-  padding: 2.6rem 2.6rem 2.2rem;
-  background: linear-gradient(180deg, #fafbfd, #eef0f4);
-  color: #1d1f24;
+  width: var(--paper-proxy-width);
+  height: var(--paper-proxy-height);
+  display: block;
+  background: #f4f5f7;
   border-radius: 4px;
   box-shadow:
     0 2px 0 rgba(255, 255, 255, 0.5) inset,
@@ -788,28 +790,65 @@ a {
   visibility: hidden;
   pointer-events: none;
   transition:
-    transform 560ms var(--ease-out),
-    opacity 160ms var(--ease-out);
+    transform 500ms var(--ease-out),
+    opacity 160ms linear,
+    visibility 0s linear 160ms;
   transform-origin: 50% 50%;
   backface-visibility: hidden;
   will-change: transform, opacity;
+  contain: strict;
 }
-.exp-sheet.is-pickup-ready {
+.exp-sheet-proxy.is-ready {
   opacity: 1;
   visibility: visible;
+  transition-delay: 0s;
 }
-.exp-paper-open .exp-sheet {
+.exp-sheet-proxy.is-pickup {
+  transition:
+    transform 500ms var(--ease-out),
+    opacity 0s linear,
+    visibility 0s linear;
+}
+.exp-paper-lifted .exp-sheet-proxy {
   transform:
     translate(-50%, -50%)
     perspective(900px)
     rotateZ(0deg)
     rotateX(0deg)
     scale(1);
+}
+.exp-sheet {
+  position: fixed;
+  z-index: 73;
+  top: 50%;
+  left: 50%;
+  width: min(92vw, 540px);
+  max-height: 86vh;
+  overflow-y: auto;
+  padding: 2.6rem 2.6rem 2.2rem;
+  background: linear-gradient(180deg, #fafbfd, #eef0f4);
+  color: #1d1f24;
+  border-radius: 4px;
+  box-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.5) inset,
+    0 30px 80px rgba(0, 0, 0, 0.65),
+    0 6px 18px rgba(0, 0, 0, 0.4);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 160ms linear,
+    visibility 0s linear 160ms;
+  contain: layout paint style;
+}
+.exp-paper-open .exp-sheet {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  transition-delay: 0s;
 }
-.exp-paper-open .exp-backdrop {
+.exp-paper-active .exp-backdrop {
   opacity: 1;
   pointer-events: auto;
 }
@@ -995,7 +1034,7 @@ a {
 }
 /* auto-hide behind any open overlay (no JS coordination needed) */
 .exp-panel-open .exp-draghint,
-.exp-paper-open .exp-draghint,
+.exp-paper-active .exp-draghint,
 .exp-lightbox-open .exp-draghint {
   opacity: 0 !important;
   transform: translate(-50%, -50%) scale(0.9) !important;
@@ -1088,7 +1127,7 @@ a {
   .exp-panel {
     transition-duration: 0.001ms;
   }
-  .exp-sheet, .exp-backdrop, .exp-lightbox {
+  .exp-sheet, .exp-sheet-proxy, .exp-backdrop, .exp-lightbox {
     transition-duration: 0.001ms !important;
   }
   .exp-draghint.is-on,
