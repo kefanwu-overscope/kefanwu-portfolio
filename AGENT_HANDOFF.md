@@ -256,6 +256,19 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
+### 2026-07-09 (latest) cabinets → grey open-pore wood
+- Per Kefan: both display cabinets went from near-black steel to GREY wood
+  (Mercedes-interior open-pore look). New texture
+  `textures/dark_wood/dark_wood_diff_grey_1k.jpg` = the Poly Haven dark_wood
+  diffuse desaturated/lifted/cooled offline via PIL (recipe in the commit);
+  it shares the original's normal/roughness maps. `setupTextures` has a
+  `grey_wood` slug; `woodMaterial(tint, rough, slug)` gained the optional
+  slug param. Cabinet frames use tint 0xd9dde2 rough 0.62, back panels
+  0x9aa0a6 / 0.72. The tinted-glass shelves + LED strips are untouched
+  (Kefan explicitly likes them — do not restyle). An earlier warm-walnut
+  tint was tried and rejected mid-flight in favor of grey. Cache:
+  `exp-greywood-20260709`.
+
 ### 2026-07-09 (later) two-surface aesthetic pass (Kefan-approved item list)
 31 approved items from a 6-lens review of both pages. Highlights:
 - **Homepage tokens:** border alphas → --line-subtle/--line/--line-mid/
@@ -528,8 +541,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-aesthetics-20260709` (3D page styles — in experience.html)
-- `experience.js?v=exp-aesthetics-20260709` (3D page module — in experience.html)
+- `experience.css?v=exp-greywood-20260709` (3D page styles — in experience.html)
+- `experience.js?v=exp-greywood-20260709` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
