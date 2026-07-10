@@ -515,10 +515,11 @@ function initScene(canvas) {
     seg(3600, 900, (k) => { moonSpot.intensity = MOON_NIGHT * k; });
     // final beat at flight landing: the lamp clicks on — snappy, not eased —
     // and the warm pool blooms up on the resume
-    seg(5050, 90, (k) => lampLeds.forEach((m) => { m.emissiveIntensity = 1.5 * k; }), lin);
+    seg(5050, 90, (k) => lampLeds.forEach((m) => { m.emissiveIntensity = 2.4 * k; }), lin);
     seg(5080, 320, (k) => { benchGlow.intensity = 0.95 * k; }, easeOut);
+    // overshoot slightly then settle on applyLightState's night value (2.8)
     seg(5100, 420, (k) => {
-      resumeSpot.intensity = 1.6 * (k < 0.6 ? (k / 0.6) * 1.18 : 1.18 - 0.18 * ((k - 0.6) / 0.4));
+      resumeSpot.intensity = 2.8 * (k < 0.6 ? (k / 0.6) * 1.18 : 1.18 - 0.18 * ((k - 0.6) / 0.4));
     }, lin);
     seg(5100, 500, (k) => { bloom.strength = bloom0 + 0.08 * Math.sin(Math.PI * k); }, lin);
 
@@ -626,7 +627,9 @@ function initScene(canvas) {
   // far left + forward so it no longer blocks the cabinet's bottom-left bay
   // (LineFollower) from the rest camera
   deskLamp.position.set(-0.8, DESK_TOP, 0.12);
-  deskLamp.rotation.y = 0.9;
+  // aim the cantilever arm straight down the desk at the résumé, so the head
+  // reaches out over the paper (it used to point off across the room)
+  deskLamp.rotation.y = -0.05;
   scene.add(deskLamp);
   MODELS.deskLamp = deskLamp;
   // pseudo-hotspot: interact marker + hover label + click = room light switch
@@ -791,11 +794,28 @@ function initScene(canvas) {
   const focusSpot = new THREE.SpotLight(0xf2f5fa, 0, 3.5, 0.5, 1.0, 1.7);
   scene.add(focusSpot);
   scene.add(focusSpot.target);
-  // night spot on the resume itself — the paper is real-time, the matching
-  // warm pool on the desk below is baked into the OFF lightmap
-  const resumeSpot = new THREE.SpotLight(0xffe0b8, 0, 1.8, 0.3, 0.7, 1.2);
-  resumeSpot.position.set(0.3, 1.8, 0.9);
-  resumeSpot.target.position.set(0.02, 0.78, 0.16);
+  // the desk lamp's actual light. Kefan 2026-07-09: this spot used to hang in
+  // mid-air in FRONT of the desk (0.3, 1.8, 0.9), so the lamp read as pure
+  // decoration and the resume was barely lit. It now originates at the lamp's
+  // LED head and rakes down onto the paper — the lamp is the desk's light.
+  // (This is the ONE task-lamp light in the room; the bench lamp stays dark.)
+  // angle/penumbra tuned by render: 0.40 keeps the pool ON the paper instead
+  // of washing the whole desk top (the desk is baked-bright already)
+  const resumeSpot = new THREE.SpotLight(0xffdcae, 0, 2.4, 0.4, 0.45, 1.6);
+  deskLamp.updateMatrixWorld(true);
+  resumeSpot.position
+    .copy(deskLamp.localToWorld(deskLamp.userData.headLocal.clone()))
+    .add(new THREE.Vector3(0, -0.008, 0));
+  resumeSpot.target.position.set(0.02, 0.775, 0.16);
+  if (!LOW_TIER) {
+    // shadows sell the source: the paper, tray and pen throw away from the lamp
+    resumeSpot.castShadow = true;
+    resumeSpot.shadow.mapSize.set(1024, 1024);
+    resumeSpot.shadow.camera.near = 0.05;
+    resumeSpot.shadow.camera.far = 2.4;
+    resumeSpot.shadow.bias = -0.0009;
+    resumeSpot.shadow.normalBias = 0.02;
+  }
   scene.add(resumeSpot);
   scene.add(resumeSpot.target);
 
@@ -882,9 +902,11 @@ function initScene(canvas) {
     // real-time lights serve the exhibits; dim them with the room
     const want = lightsOn
       ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0, resume: 0, moon: 0, pendant: 2.6 } // day grade: strips + bake carry the room
-      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 1.6, moon: MOON_NIGHT, pendant: 0.7 };
+      // night: the desk lamp (resume) is the dominant practical, the pendant
+      // recedes to a whisper so the lamp's pool owns the desk
+      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 2.8, moon: MOON_NIGHT, pendant: 0.3 };
     if (bootTakeover) return; // the boot choreography owns the levels; it lands on these values
-    lampLeds.forEach((m) => { m.emissiveIntensity = lightsOn ? 0.05 : 1.5; });
+    lampLeds.forEach((m) => { m.emissiveIntensity = lightsOn ? 0.05 : 2.4; });
     blueLines.forEach((m) => {
       m.emissive = m.emissive || new THREE.Color(0x2b4d80);
       m.emissive.setHex(0x3f8cff);
@@ -2071,7 +2093,7 @@ function buildDisplayCabinet() {
   const frameMat = woodMaterial(0xd9dde2, 0.62, "grey_wood");
 
   // wood back panel, a step deeper than the frame so the bays read as cavities
-  const back = new THREE.Mesh(new THREE.BoxGeometry(W, H, 0.02), woodMaterial(0x9aa0a6, 0.72, "grey_wood"));
+  const back = new THREE.Mesh(new THREE.BoxGeometry(W, H, 0.02), woodMaterial(0xb9bfc6, 0.72, "grey_wood"));
   back.position.set(0, H / 2, z - D / 2 + 0.01);
   back.receiveShadow = true;
   g.add(back);
@@ -2232,10 +2254,12 @@ function buildModernDeskLamp() {
   base.position.y = 0.006;
   g.add(base);
 
-  // vertical column, rising from the base EDGE (not the center)
+  // vertical column, rising from the base EDGE (not the center). Tall enough
+  // that the head clears the desk clutter and rakes DOWN onto the paper —
+  // the arm carries the room's only desk light (see resumeSpot in initScene).
   const colX = -0.032;
   const colBottom = new THREE.Vector3(colX, 0.012, 0);
-  const colTop = new THREE.Vector3(colX, 0.012 + 0.24, 0);
+  const colTop = new THREE.Vector3(colX, 0.012 + 0.4, 0);
   g.add(segment(colBottom, colTop, 0.008));
 
   // small joint sphere where the arm pivots at the column top
@@ -2245,8 +2269,8 @@ function buildModernDeskLamp() {
 
   // horizontal cantilever arm through the joint: a short counterweight tail
   // behind, a long reach out over the desk in front
-  const armBack = colTop.clone().add(new THREE.Vector3(-0.05, 0, 0));
-  const armFront = colTop.clone().add(new THREE.Vector3(0.21, 0, 0.015));
+  const armBack = colTop.clone().add(new THREE.Vector3(-0.07, 0, 0));
+  const armFront = colTop.clone().add(new THREE.Vector3(0.34, 0, 0.015));
   g.add(segment(armBack, armFront, 0.007));
 
   // counterweight puck on the back end of the arm
@@ -2272,6 +2296,9 @@ function buildModernDeskLamp() {
   );
   led.position.copy(dropBottom).add(new THREE.Vector3(0, -0.012, 0));
   g.add(led);
+
+  // where initScene hangs the real task light (the LED's own position)
+  g.userData.headLocal = led.position.clone();
 
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
@@ -3225,7 +3252,7 @@ function buildSideCabinet() {
   const frameMat = woodMaterial(0xd9dde2, 0.62, "grey_wood");
 
   const back = new THREE.Mesh(new THREE.BoxGeometry(0.02, H, W),
-    woodMaterial(0x9aa0a6, 0.72, "grey_wood"));
+    woodMaterial(0xb9bfc6, 0.72, "grey_wood"));
   back.position.set(D / 2 - 0.01, H / 2, 0);
   back.receiveShadow = true;
   g.add(back);
