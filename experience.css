@@ -755,6 +755,11 @@ a {
 
 /* ============ picked-up resume sheet ============ */
 .exp-sheet {
+  --paper-pickup-x: 0px;
+  --paper-pickup-y: 32vh;
+  --paper-pickup-scale: 0.18;
+  --paper-pickup-rotate: 0deg;
+  --paper-pickup-tilt: 58deg;
   position: fixed;
   z-index: 72;
   top: 50%;
@@ -770,18 +775,38 @@ a {
     0 2px 0 rgba(255, 255, 255, 0.5) inset,
     0 30px 80px rgba(0, 0, 0, 0.65),
     0 6px 18px rgba(0, 0, 0, 0.4);
-  transform: translate(-50%, 60%) rotateX(24deg) scale(0.85);
+  transform:
+    translate(
+      calc(-50% + var(--paper-pickup-x)),
+      calc(-50% + var(--paper-pickup-y))
+    )
+    perspective(900px)
+    rotateZ(var(--paper-pickup-rotate))
+    rotateX(var(--paper-pickup-tilt))
+    scale(var(--paper-pickup-scale));
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
   transition:
-    transform 620ms var(--ease-out),
-    opacity 380ms var(--ease-out);
-  transform-origin: 50% 100%;
-  perspective: 900px;
+    transform 560ms var(--ease-out),
+    opacity 160ms var(--ease-out);
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+.exp-sheet.is-pickup-ready {
+  opacity: 1;
+  visibility: visible;
 }
 .exp-paper-open .exp-sheet {
-  transform: translate(-50%, -50%) rotateX(0deg) scale(1);
+  transform:
+    translate(-50%, -50%)
+    perspective(900px)
+    rotateZ(0deg)
+    rotateX(0deg)
+    scale(1);
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
 }
 .exp-paper-open .exp-backdrop {

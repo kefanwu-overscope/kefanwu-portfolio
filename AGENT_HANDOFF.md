@@ -256,7 +256,22 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-09 (latest) quieter grey display cabinets
+### 2026-07-09 (latest) résumé now lifts from the physical desk sheet
+- The résumé overlay no longer enters from the bottom of the viewport. On
+  activation, the camera first finishes its desk approach; `openPaper()` then
+  projects the four corners of the real 3D sheet through the current camera and
+  writes its screen position, scale, in-plane angle, and perspective tilt into
+  CSS custom properties. The DOM sheet starts exactly there and lifts to the
+  centered reading position over 560ms.
+- The 3D résumé pivot (including its interact marker) is hidden only after the
+  DOM sheet takes over. Close reverses the transform, restores the physical
+  sheet at the desk, and only then flies the camera back to the room. Resize is
+  safe because the pickup pose is projected again immediately before closing.
+- Reduced-motion still opens/closes effectively instantly. Pointer and keyboard
+  input are gated during the return-to-desk beat. Cache:
+  `exp-resumepickup-20260709`.
+
+### 2026-07-09 quieter grey display cabinets
 - Per Kefan: the grey wood across both cabinets was visually too busy. The
   selected direction is **solid satin-grey frames + slightly deeper,
   low-contrast grey-wood backs**, with the existing tinted-glass shelves and
@@ -587,8 +602,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-quietwood-20260709` (3D page styles — in experience.html)
-- `experience.js?v=exp-quietwood-20260709` (3D page module — in experience.html)
+- `experience.css?v=exp-resumepickup-20260709` (3D page styles — in experience.html)
+- `experience.js?v=exp-resumepickup-20260709` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
@@ -802,9 +817,10 @@ shelf cell (this is the anti-clipping mechanism; every exhibit passes a
   section, and the gallery. The focused exhibit slowly turntables while the
   panel is open, and depth-of-field eases open (background blurs).
 - **Click a gallery image** → `#exp-lightbox` full-screen viewer w/ caption.
-- **Click the resume** → the camera dips to the desk and a paper sheet
-  (`#exp-paper` / `.exp-sheet`, `resumeHTML` from `RESUME`) RISES up to the
-  viewer like picking the page up (dark ink on paper, blue rule). This is
+- **Click the resume** → the camera dips to the desk, then the DOM paper
+  (`#exp-paper` / `.exp-sheet`, `resumeHTML` from `RESUME`) starts at the
+  projected screen pose of the real 3D desk sheet and lifts into reading
+  position. Closing puts it back before the camera returns. This is
   intentionally NOT the side panel.
 - **Close**: Esc or backdrop (Esc closes the lightbox first if open, else
   the panel/sheet), then the camera flies back to rest.
