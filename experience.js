@@ -74,9 +74,9 @@ function setupTextures(manager) {
   const cache = {};
   const DEFS = {
     dark_wood: { rep: [2, 1], base: "textures/dark_wood/dark_wood", maps: ["diff_1k.jpg", "nor_gl_1k.jpg", "rough_1k.jpg"] },
-    // desaturated grey variant of the same wood (Mercedes-interior open-pore
-    // look, cabinets); shares the colorless normal/roughness maps
-    grey_wood: { rep: [2, 1], base: "textures/dark_wood/dark_wood", maps: ["diff_grey_1k.jpg", "nor_gl_1k.jpg", "rough_1k.jpg"] },
+    // Subdued grey open-pore veneer for cabinet back panels only. One large
+    // repeat keeps the grain calm behind the exhibits instead of striping it.
+    grey_wood: { rep: [1, 1], base: "textures/dark_wood/dark_wood", maps: ["diff_grey_1k.jpg", "nor_gl_1k.jpg", "rough_1k.jpg"] },
     painted_plaster_wall: { rep: [3, 2], base: "textures/painted_plaster_wall/painted_plaster_wall", maps: ["diff_1k.jpg", "nor_gl_1k.jpg", "rough_1k.jpg"] },
   };
   function loadPBR(slug) {
@@ -108,6 +108,20 @@ function woodMaterial(tint = COL.woodTint, rough = 0.8, slug = "dark_wood") {
     roughness: rough,
     metalness: 0.0,
   });
+}
+
+function cabinetFrameMaterial() {
+  return new THREE.MeshStandardMaterial({
+    color: 0x9da3aa,
+    roughness: 0.6,
+    metalness: 0.0,
+  });
+}
+
+function cabinetBackMaterial() {
+  const mat = woodMaterial(0xb9bfc6, 0.78, "grey_wood");
+  mat.normalScale.set(0.3, 0.3);
+  return mat;
 }
 const brassMat = () =>
   new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.3, metalness: 1.0 });
@@ -2081,19 +2095,17 @@ function buildDesk() {
 }
 
 function buildDisplayCabinet() {
-  // modern display wall: grey open-pore wood casework (Mercedes-interior
-  // look, real PBR maps), tinted glass shelves with cool light strips + blue
-  // accent. Kefan 2026-07-09: near-black steel frame read too dark — grey
-  // wood; the glass shelves stay untouched.
+  // Modern display wall: satin-grey structure with a subdued grey open-pore
+  // veneer back. Tinted glass shelves and cool light strips stay untouched.
   const g = new THREE.Group();
   const W = 2.36;
   const H = 2.2;
   const D = 0.54;
   const z = CAB.z;
-  const frameMat = woodMaterial(0xd9dde2, 0.62, "grey_wood");
+  const frameMat = cabinetFrameMaterial();
 
-  // wood back panel, a step deeper than the frame so the bays read as cavities
-  const back = new THREE.Mesh(new THREE.BoxGeometry(W, H, 0.02), woodMaterial(0xb9bfc6, 0.72, "grey_wood"));
+  // Wood remains only on the back panel, a step deeper than the satin frame.
+  const back = new THREE.Mesh(new THREE.BoxGeometry(W, H, 0.02), cabinetBackMaterial());
   back.position.set(0, H / 2, z - D / 2 + 0.01);
   back.receiveShadow = true;
   g.add(back);
@@ -3243,16 +3255,16 @@ const CAB2 = {
 };
 
 function buildSideCabinet() {
-  // second display cabinet on the right wall — same casework language as the
-  // main one: grey open-pore wood frame, tinted glass shelves, cool strips
+  // Second display cabinet on the right wall — the same quiet satin-grey
+  // structure, subdued veneer back, tinted glass shelves, and cool strips.
   const g = new THREE.Group();
   const W = 1.6; // along z
   const H = 2.2;
   const D = 0.5;
-  const frameMat = woodMaterial(0xd9dde2, 0.62, "grey_wood");
+  const frameMat = cabinetFrameMaterial();
 
   const back = new THREE.Mesh(new THREE.BoxGeometry(0.02, H, W),
-    woodMaterial(0xb9bfc6, 0.72, "grey_wood"));
+    cabinetBackMaterial());
   back.position.set(D / 2 - 0.01, H / 2, 0);
   back.receiveShadow = true;
   g.add(back);

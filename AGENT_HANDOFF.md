@@ -256,7 +256,21 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-09 (latest) the desk lamp now REALLY lights the résumé
+### 2026-07-09 (latest) quieter grey display cabinets
+- Per Kefan: the grey wood across both cabinets was visually too busy. The
+  selected direction is **solid satin-grey frames + slightly deeper,
+  low-contrast grey-wood backs**, with the existing tinted-glass shelves and
+  blue/cool LED strips left exactly as they were.
+- Cabinet sides, tops, plinths, and dividers now use a texture-free satin-grey
+  `MeshStandardMaterial` (`0x9da3aa`, roughness 0.60). Wood is limited to the
+  two back panels (`0xb9bfc6`, roughness 0.78).
+- `dark_wood_diff_grey_1k.jpg` keeps the same neutral mean but has 42% of the
+  former contrast. `grey_wood` repeat is `[1,1]` (was `[2,1]`) and cabinet-back
+  normal scale is 0.30, so the grain stays legible up close without competing
+  with the exhibits or shelf lighting.
+- Cache: `exp-quietwood-20260709`.
+
+### 2026-07-09 the desk lamp now REALLY lights the résumé
 - ⚠️ **This reverses the old "task lamps emit no light" rule for the DESK
   lamp.** Kefan asked for it explicitly (in the dark room the lamp's light
   was invisible and never touched the paper). Do NOT "fix" it back. The
@@ -298,6 +312,8 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
   (Kefan explicitly likes them — do not restyle). An earlier warm-walnut
   tint was tried and rejected mid-flight in favor of grey. Cache:
   `exp-greywood-20260709`.
+- Later the same day, the grain was quieted and limited to the back panels;
+  see the latest `exp-quietwood-20260709` entry above.
 
 ### 2026-07-09 (later) two-surface aesthetic pass (Kefan-approved item list)
 31 approved items from a 6-lens review of both pages. Highlights:
@@ -571,8 +587,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-desklamp-20260709` (3D page styles — in experience.html)
-- `experience.js?v=exp-desklamp-20260709` (3D page module — in experience.html)
+- `experience.css?v=exp-quietwood-20260709` (3D page styles — in experience.html)
+- `experience.js?v=exp-quietwood-20260709` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
@@ -673,7 +689,8 @@ wall). The camera is OrbitControls-limited (azimuth ±0.32π, distance
 1.4–3.2, polar clamped) AND additionally hard-clamped to the room's
 interior AABB every frame in the render loop — no orbit/zoom combination
 can see past a wall. All furniture is procedural: sit-stand desk (telescopic
-columns, T-feet, keypad), two display cabinets (slim steel + tinted glass),
+columns, T-feet, keypad), two display cabinets (satin-grey frames + subdued
+grey open-pore wood backs + tinted glass),
 electronics workbench (Bambu H2S built to the reference photo w/ top AMS 2
 spool bay, programmable PSU, soldering station, screwdriver set, multimeter,
 pegboard of MechE tools — rule/drill/Dremel/torque wrench/caliper/hex keys/
