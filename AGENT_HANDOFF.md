@@ -256,7 +256,37 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-09 (latest) cabinets → grey open-pore wood
+### 2026-07-09 (latest) the desk lamp now REALLY lights the résumé
+- ⚠️ **This reverses the old "task lamps emit no light" rule for the DESK
+  lamp.** Kefan asked for it explicitly (in the dark room the lamp's light
+  was invisible and never touched the paper). Do NOT "fix" it back. The
+  BENCH lamp still emits no light.
+- Root cause of the old look: `resumeSpot` sat at `(0.3, 1.8, 0.9)` — in
+  mid-air in FRONT of the desk, nowhere near the lamp — and the cantilever
+  arm barely reached over the desk.
+- Now: `buildModernDeskLamp` has a taller column (0.24→0.40) and longer arm
+  (0.21→0.34) and exposes `g.userData.headLocal` (the LED's local position).
+  `deskLamp.rotation.y` 0.9→-0.05 aims the arm straight down the desk at the
+  paper. In initScene, `resumeSpot` is placed at
+  `deskLamp.localToWorld(headLocal)` (world ≈ -0.49, 1.13, 0.15), targets the
+  résumé, and `castShadow` on desktop (`!LOW_TIER`, 1024², bias -0.0009).
+- Tuned by rendered frames (values are load-bearing, don't drift):
+  angle **0.40**, penumbra **0.45**, decay 1.6, distance 2.4; night
+  intensity **2.8** (3.5+ blows out the résumé body copy); pendant night
+  0.7→**0.3**; lamp LED emissive night 1.5→**2.4**. `runBootIntro`'s
+  lamp-click beat was updated from the stale 1.6 to land on 2.8.
+- Useful fact learned while debugging: kill every real-time light and the
+  **desk stays bright but the résumé paper goes dark** — the desk top's
+  brightness is the pre-baked OFF lightmap, the paper is real-time-only.
+  So the lamp can never make a strong *pool on the desk* without a re-bake;
+  it CAN own the paper, which is what matters. Don't chase desk contrast by
+  raising the spot — narrow the cone instead.
+- Grey cabinet wood lightened: `dark_wood_diff_grey_1k.jpg` regenerated at
+  ~150 mean luminance (was ~94), neutral (R−B≈2), grain range 111..184
+  preserved; back-panel tint 0x9aa0a6→0xb9bfc6. Cache:
+  `exp-desklamp-20260709`.
+
+### 2026-07-09 cabinets → grey open-pore wood
 - Per Kefan: both display cabinets went from near-black steel to GREY wood
   (Mercedes-interior open-pore look). New texture
   `textures/dark_wood/dark_wood_diff_grey_1k.jpg` = the Poly Haven dark_wood
@@ -541,8 +571,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-greywood-20260709` (3D page styles — in experience.html)
-- `experience.js?v=exp-greywood-20260709` (3D page module — in experience.html)
+- `experience.css?v=exp-desklamp-20260709` (3D page styles — in experience.html)
+- `experience.js?v=exp-desklamp-20260709` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
