@@ -256,7 +256,49 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-10 (latest) smooth, identity-stable résumé pickup
+### 2026-07-10 (latest) résumé pickup rebuilt as a TRUE 3D lift (proxy deleted)
+- Kefan reported the proxy-based pickup still felt janky and the résumé still
+  visibly "changed" on pickup/return. Root cause was structural: ANY
+  screen-space DOM proxy diverges from the WebGL render (raw sRGB canvas vs
+  ACES-tone-mapped warm-lit sheet; CSS-compositor clock vs rAF clock; CSS
+  `perspective(900px)` vs the real camera projection). So the whole
+  `#exp-paper-proxy` channel was DELETED (HTML canvas element, `.exp-sheet-proxy`
+  CSS, projection JS) and replaced with an in-engine pickup:
+  - `beginPaperLift()` flies the REAL paper pivot in world space from its desk
+    pose to a camera-facing "held" pose. `computePaperHold()` back-projects the
+    DOM sheet's `getBoundingClientRect()` into camera space (distance chosen to
+    fit the rect on BOTH axes; width + top edge anchored, X centered), so the
+    printed 3D face lands pixel-aligned with the DOM sheet — verified exact to
+    0.1px at 1280×720 and 390×844. The held target is recomputed per frame
+    while the camera is still flying, so the two motions overlap (lift starts
+    430ms into the 850ms approach) and converge — one continuous
+    reach-and-pick-up, sequenced entirely on RENDER-LOOP time (no wall-clock
+    timers for motion; a busy main thread can't desync it).
+  - The face material carries `emissiveMap` from build time (intensity 0 = no
+    change on the desk; ramping it is a uniform write, NO shader recompile).
+    Held glow calibrated by pixel sampling vs the DOM's #fafbfd: night 0.7
+    (~239 sRGB; 1.0 matched white exactly but bloom washed the small type),
+    day 0.5 (the held sheet faces AWAY from the key light).
+  - DOM sheet (`.exp-sheet`) fades in at lift-progress 0.78 over 220ms with the
+    backdrop, covering the identical rect; the pivot is hidden only after the
+    fade. `.exp-sheet` width gained a `calc(86vh * 0.75)` term so short
+    viewports keep the physical 3:4 aspect (else the DOM was 14% wider at the
+    swap). The sheet is pre-painted during the approach (inline
+    `visibility:visible` + `will-change:opacity`).
+  - Close reverses it: DOM+backdrop fade out revealing the sheet (re-aligned to
+    the CURRENT camera/viewport first — resize-safe), then it flies back to a
+    `userData.deskPose` captured once (return lands with posErr/quatErr = 0)
+    while the camera pulls away. Esc mid-lift turns the sheet around from
+    wherever it is (return duration scales with distance). Bokeh now focuses on
+    the held sheet (aperture 0.0012) so the room falls off behind it.
+  - QA affordance: the render loop is a named `tick(t, forced)` and
+    `__exp.pump(t)` hand-steps frames with synthetic timestamps — the ONLY way
+    to drive/verify the scene in a backgrounded preview tab where rAF never
+    fires. Verified: open/close cycles, Esc mid-lift, project-panel regression,
+    day/night sampling, mobile 390×844 (no overflow), desktop 1280×720.
+  - Cache: `exp-pickup3d-20260710`.
+
+### 2026-07-10 smooth, identity-stable résumé pickup (SUPERSEDED same day — proxy deleted, see above)
 - Kefan reported two regressions in the projected pickup: the animation was
   visibly janky, and the résumé appeared to change while being picked up or
   returned. Root causes: the full scrollable DOM résumé (many text nodes,
@@ -621,8 +663,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-resumeproxy-20260710` (3D page styles — in experience.html)
-- `experience.js?v=exp-resumeproxy-20260710` (3D page module — in experience.html)
+- `experience.css?v=exp-pickup3d-20260710` (3D page styles — in experience.html)
+- `experience.js?v=exp-pickup3d-20260710` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
@@ -708,8 +750,8 @@ no bundler, no install.
 
 | File | Role |
 |---|---|
-| `experience.html` | shell: topbar (KW brand, sound toggle, "All projects", "View classic site"), loader, overlay containers (`#exp-label`, `#exp-backdrop`, `#exp-panel`, `#exp-paper-proxy`, `#exp-paper`, `#exp-lightbox`), `#exp-canvas`, importmap. |
-| `experience.css` | all overlay styling. Palette tokens MIRROR the site (`--bg #0b0c0e`, `--ink #f5f5f7`, `--blue #3f8cff`). Key blocks: `.exp-panel` (project side panel), `.exp-sheet-proxy` (moving raster résumé), `.exp-sheet` (settled interactive résumé), `.exp-lightbox`, `.exp-label` (hover info card), `.exp-sound`. |
+| `experience.html` | shell: topbar (KW brand, sound toggle, "All projects", "View classic site"), loader, overlay containers (`#exp-label`, `#exp-backdrop`, `#exp-panel`, `#exp-paper`, `#exp-lightbox`), `#exp-canvas`, importmap. (`#exp-paper-proxy` was deleted 2026-07-10 — the pickup is now animated on the real 3D sheet.) |
+| `experience.css` | all overlay styling. Palette tokens MIRROR the site (`--bg #0b0c0e`, `--ink #f5f5f7`, `--blue #3f8cff`). Key blocks: `.exp-panel` (project side panel), `.exp-sheet` (interactive résumé that cross-fades in over the held 3D sheet), `.exp-lightbox`, `.exp-label` (hover info card), `.exp-sound`. (`.exp-sheet-proxy` was deleted 2026-07-10.) |
 | `experience.js` | ~3500-line ES module: the whole scene. Sole data import is `RESUME` from `experience-data.js`; case-study content comes from `window.projectData` (set by `project-data.js`, loaded classic-script BEFORE the module). |
 | `experience-data.js` | exports ONLY `RESUME`. The legacy `HERO_PROJECTS` array and the unused `ACCENT` constant (no longer imported after the 2026-07-03 cleanup) were DELETED on 2026-07-08. |
 | `tools/stl2glb.py` / `stl2glb_new.py` / `stl2glb_carbonseat.py` / `stl2glb_seat.py` | offline STL→GLB merge pipelines (trimesh) for the real CAD exhibits. |
@@ -836,12 +878,12 @@ shelf cell (this is the anti-clipping mechanism; every exhibit passes a
   section, and the gallery. The focused exhibit slowly turntables while the
   panel is open, and depth-of-field eases open (background blurs).
 - **Click a gallery image** → `#exp-lightbox` full-screen viewer w/ caption.
-- **Click the resume** → the camera dips to the desk, then a lightweight canvas
-  (`#exp-paper-proxy`) that is pixel-identical to the physical 3D sheet lifts
-  from its projected screen pose. After it stops, the interactive DOM résumé
-  (`#exp-paper` / `.exp-sheet`, `resumeHTML` from `RESUME`) cross-fades in.
-  Closing reverses that handoff before the proxy returns to the desk. This is
-  intentionally NOT the side panel.
+- **Click the resume** → the camera dips to the desk while the REAL 3D sheet
+  lifts off it in world space (motions overlap) and settles facing the camera,
+  pixel-aligned with where the DOM résumé will sit. The interactive DOM résumé
+  (`#exp-paper` / `.exp-sheet`, `resumeHTML` from `RESUME`) then cross-fades in
+  over it. Closing reverses the handoff and flies the sheet back to its desk
+  pose while the camera pulls away. This is intentionally NOT the side panel.
 - **Close**: Esc or backdrop (Esc closes the lightbox first if open, else
   the panel/sheet), then the camera flies back to rest.
 - **First visit**: a guided camera sweep (right cabinet → main cabinet →

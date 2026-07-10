@@ -754,75 +754,18 @@ a {
 }
 
 /* ============ picked-up resume sheet ============ */
-/* Only this flat canvas moves. The full, scrollable DOM résumé stays centered
-   and fades in after the lift, avoiding a large mid-animation re-raster. */
-.exp-sheet-proxy {
-  --paper-pickup-x: 0px;
-  --paper-pickup-y: 32vh;
-  --paper-pickup-scale: 0.18;
-  --paper-pickup-rotate: 0deg;
-  --paper-pickup-tilt: 58deg;
-  --paper-proxy-width: min(92vw, 540px);
-  --paper-proxy-height: min(86vh, 717px);
-  position: fixed;
-  z-index: 72;
-  top: 50%;
-  left: 50%;
-  width: var(--paper-proxy-width);
-  height: var(--paper-proxy-height);
-  display: block;
-  background: #f4f5f7;
-  border-radius: 4px;
-  box-shadow:
-    0 2px 0 rgba(255, 255, 255, 0.5) inset,
-    0 30px 80px rgba(0, 0, 0, 0.65),
-    0 6px 18px rgba(0, 0, 0, 0.4);
-  transform:
-    translate(
-      calc(-50% + var(--paper-pickup-x)),
-      calc(-50% + var(--paper-pickup-y))
-    )
-    perspective(900px)
-    rotateZ(var(--paper-pickup-rotate))
-    rotateX(var(--paper-pickup-tilt))
-    scale(var(--paper-pickup-scale));
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition:
-    transform 500ms var(--ease-out),
-    opacity 160ms linear,
-    visibility 0s linear 160ms;
-  transform-origin: 50% 50%;
-  backface-visibility: hidden;
-  will-change: transform, opacity;
-  contain: strict;
-}
-.exp-sheet-proxy.is-ready {
-  opacity: 1;
-  visibility: visible;
-  transition-delay: 0s;
-}
-.exp-sheet-proxy.is-pickup {
-  transition:
-    transform 500ms var(--ease-out),
-    opacity 0s linear,
-    visibility 0s linear;
-}
-.exp-paper-lifted .exp-sheet-proxy {
-  transform:
-    translate(-50%, -50%)
-    perspective(900px)
-    rotateZ(0deg)
-    rotateX(0deg)
-    scale(1);
-}
+/* The pickup itself is animated on the REAL 3D sheet inside the canvas
+   (world-space flight to a camera-facing "held" pose — see beginPaperLift in
+   experience.js). This DOM sheet only cross-fades in on top of the settled
+   3D paper, at the same on-screen rect, for crisp scrollable text. */
 .exp-sheet {
   position: fixed;
   z-index: 73;
   top: 50%;
   left: 50%;
-  width: min(92vw, 540px);
+  /* the 86vh*0.75 term keeps the sheet at the physical paper's 3:4 aspect on
+     short viewports, so the 3D->DOM handoff stays pixel-aligned in width too */
+  width: min(92vw, 540px, calc(86vh * 0.75));
   max-height: 86vh;
   overflow-y: auto;
   padding: 2.6rem 2.6rem 2.2rem;
@@ -838,9 +781,12 @@ a {
   visibility: hidden;
   pointer-events: none;
   transition:
-    opacity 160ms linear,
-    visibility 0s linear 160ms;
+    opacity 220ms linear,
+    visibility 0s linear 220ms;
   contain: layout paint style;
+  /* keep an own compositor layer so the pre-painted sheet fades in without
+     a main-thread raster hitch mid-choreography */
+  will-change: opacity;
 }
 .exp-paper-open .exp-sheet {
   opacity: 1;
@@ -1127,7 +1073,7 @@ a {
   .exp-panel {
     transition-duration: 0.001ms;
   }
-  .exp-sheet, .exp-sheet-proxy, .exp-backdrop, .exp-lightbox {
+  .exp-sheet, .exp-backdrop, .exp-lightbox {
     transition-duration: 0.001ms !important;
   }
   .exp-draghint.is-on,

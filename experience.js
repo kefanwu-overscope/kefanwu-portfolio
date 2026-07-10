@@ -1096,8 +1096,10 @@ function initScene(canvas) {
     running = !document.hidden;
   });
 
-  renderer.setAnimationLoop((t) => {
-    if (!running) return;
+  // named + exposed (see window.__exp.pump) so QA can hand-step frames with
+  // synthetic timestamps in a backgrounded tab, where rAF never fires
+  const tick = (t, forced) => {
+    if (!running && !forced) return;
 
     if (flight) {
       if (flight.start === null) flight.start = t;
@@ -1133,6 +1135,47 @@ function initScene(canvas) {
     }
 
 
+    // résumé pickup: fly the REAL sheet between its desk pose and the
+    // camera-facing held pose. Runs on the same clock as the render (no
+    // compositor/CSS divergence), with a slight arc so it reads as a hand
+    // lifting the paper rather than a linear glide.
+    if (paperMotion && activePaperPivot) {
+      const pm = paperMotion;
+      const pv = activePaperPivot;
+      if (pm.t0 === null) pm.t0 = t;
+      const k = Math.min(Math.max((t - pm.t0 - (pm.delay || 0)) / pm.dur, 0), 1);
+      const e = easeInOutCubic(k);
+      const face = paperHold && paperHold.face;
+      if (pm.mode === "lift") {
+        // the held target tracks the still-moving camera and converges
+        paperHoldTargetWorld(paperHold, PM_POS, PM_QUAT);
+        pv.position.lerpVectors(pm.fromPos, PM_POS, e);
+        pv.quaternion.slerpQuaternions(pm.fromQuat, PM_QUAT, e);
+        pv.position.y += Math.sin(Math.PI * k) * 0.045;
+        if (face) face.material.emissiveIntensity = paperGlowTarget() * e;
+        if (!pm.domShown && k >= PAPER_DOM_FADE_AT) {
+          pm.domShown = true;
+          showPaperDom(pm.gen);
+        }
+        if (k >= 1) paperMotion = null;
+      } else {
+        pv.position.lerpVectors(pm.fromPos, pm.toPos, e);
+        pv.quaternion.slerpQuaternions(pm.fromQuat, pm.toQuat, e);
+        pv.position.y += Math.sin(Math.PI * k) * 0.03;
+        if (face) face.material.emissiveIntensity = pm.fromGlow * (1 - e);
+        if (k >= 1) {
+          // land EXACTLY on the remembered desk pose
+          pv.position.copy(pm.toPos);
+          pv.quaternion.copy(pm.toQuat);
+          if (face) face.material.emissiveIntensity = 0;
+          paperMotion = null;
+          paperHold = null;
+          activePaperPivot = null;
+          paperReturning = false;
+        }
+      }
+    }
+
     // Bambu printer: print head sweeps across the bed while "printing"
     if (!prefersReducedMotion && MODELS.printerHead) {
       MODELS.printerHead.position.x = Math.sin(t * 0.0032) * 0.13;
@@ -1152,16 +1195,20 @@ function initScene(canvas) {
       focusSpot.target.position.copy(fc);
     }
     if (bokeh) {
-      const want = panelOpen && focusedPivot ? 0.0018 : 0.0;
+      const paperFocus = panelOpen && activePaperPivot && paperHold;
+      const want = panelOpen && focusedPivot ? 0.0018 : paperFocus ? 0.0012 : 0.0;
       const u = bokeh.uniforms;
       u.aperture.value += (want - u.aperture.value) * 0.08;
       if (panelOpen && focusedPivot) {
         u.focus.value = camera.position.distanceTo(focusedPivot.userData.hotspot.center);
+      } else if (paperFocus) {
+        // reading pose: keep the held sheet tack-sharp, let the room fall off
+        u.focus.value = camera.position.distanceTo(paperHold.face.getWorldPosition(PM_V1));
       }
     }
 
     // Genshin-style interact markers: bob + pulse, hidden while busy
-    const busy = panelOpen || !!flight;
+    const busy = panelOpen || !!flight || paperReturning;
     for (const h of HOTSPOTS) {
       // eased hover scale (an instant 6% pop read as a flash on click)
       const target = h === hovered && !busy ? h.userData.hotspot.baseScale * 1.06 : h.userData.hotspot.baseScale;
@@ -1197,7 +1244,8 @@ function initScene(canvas) {
       benchGlow.intensity /= flk;
       lampLeds.forEach((m) => { m.emissiveIntensity /= flk; });
     }
-  });
+  };
+  renderer.setAnimationLoop(tick);
 
   /* ---------- interaction ---------- */
   const raycaster = new THREE.Raycaster();
@@ -1209,13 +1257,24 @@ function initScene(canvas) {
   let downXY = null;
   const panelEl = document.getElementById("exp-panel");
   const paperEl = document.getElementById("exp-paper");
-  const paperProxyEl = document.getElementById("exp-paper-proxy");
   const backdropEl = document.getElementById("exp-backdrop");
   const labelEl = document.getElementById("exp-label");
-  const PAPER_LIFT_MS = 500;
-  const PAPER_SWAP_MS = 160;
+  /* ---- résumé pickup: the REAL 3D sheet flies to a camera-facing pose ----
+     The camera approach and the lift overlap (one continuous reach-and-pick-
+     up); the DOM sheet cross-fades in only once the paper has settled at the
+     exact same on-screen rect, so nothing visibly "changes" mid-motion. */
+  const PAPER_LIFT_DELAY_MS = 430; // lift starts while the camera still moves
+  const PAPER_LIFT_MS = 900;       // desk -> held-in-front-of-camera flight
+  const PAPER_RETURN_MS = 820;     // held -> desk (runs with the camera return)
+  const PAPER_SWAP_MS = 240;       // DOM sheet opacity cross-fade (CSS: 220ms)
+  const PAPER_DOM_FADE_AT = 0.78;  // lift progress at which the DOM fades in
   let activePaperPivot = null;
   let paperAnimGen = 0;
+  let paperMotion = null; // in-flight lift/return tween, driven by the render loop
+  let paperHold = null;   // projection of the DOM sheet rect into camera space
+  const PM_POS = new THREE.Vector3();
+  const PM_QUAT = new THREE.Quaternion();
+  const PM_V1 = new THREE.Vector3();
 
   /* ---------- custom cursor: ring + dot over the canvas (fine pointers) ---------- */
   const FINE_POINTER = window.matchMedia("(pointer: fine)").matches;
@@ -1430,15 +1489,16 @@ function initScene(canvas) {
       controls.target.copy(focusLook);
       controls.enabled = false;
       camera.lookAt(focusLook);
-      if (hs.action === "resume") openPaper(root);
+      if (hs.action === "resume") openPaperInstant();
       else openPanel(html);
     } else {
       if (hs.action === "resume") {
-        // Approach the physical sheet first, then lift it from its final
-        // on-screen desk position. Project panels keep their overlapping open.
-        startFlight(focusPos, focusLook, 850, () => {
-          if (panelOpen) openPaper(root);
-        });
+        // One continuous reach-and-pick-up: the camera dips toward the desk
+        // and, mid-approach, the physical sheet starts rising to meet it.
+        // Sequenced on RENDER-LOOP time (not wall-clock timers), so a busy
+        // main thread can never desync the two motions.
+        startFlight(focusPos, focusLook, 850);
+        beginPaperLift(PAPER_LIFT_DELAY_MS);
       } else {
         startFlight(focusPos, focusLook, 850);
         setTimeout(() => openPanel(html), 680);
@@ -1521,124 +1581,131 @@ function initScene(canvas) {
   function preparePaperContent(html, pivot) {
     if (!paperEl) return;
     const rootClass = document.documentElement.classList;
-    rootClass.remove("exp-paper-active", "exp-paper-lifted", "exp-paper-open");
-    if (paperProxyEl) paperProxyEl.classList.remove("is-ready", "is-pickup");
+    rootClass.remove("exp-paper-active", "exp-paper-open");
 
     paperEl.innerHTML = html;
     paperEl.scrollTop = 0;
     paperEl.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", closePanel));
     activePaperPivot = pivot;
-
-    if (!paperProxyEl) return;
-    const source = pivot && pivot.userData.hotspot && pivot.userData.hotspot.pickupObject;
-    const sourceCanvas = source && source.userData.resumeCanvas;
-    if (sourceCanvas && paperProxyEl.dataset.rasterized !== "1") {
-      paperProxyEl.width = 768;
-      paperProxyEl.height = 1020;
-      const proxyCtx = paperProxyEl.getContext("2d", { alpha: false });
-      proxyCtx.drawImage(sourceCanvas, 0, 0, paperProxyEl.width, paperProxyEl.height);
-      paperProxyEl.dataset.rasterized = "1";
+    // remember the sheet's resting pose once — every pickup returns EXACTLY
+    // here, so repeated open/close cycles can never drift the paper
+    if (pivot && !pivot.userData.deskPose) {
+      pivot.userData.deskPose = { pos: pivot.position.clone(), quat: pivot.quaternion.clone() };
     }
-
-    // Preserve the physical sheet's aspect ratio instead of stretching its
-    // pixels to the taller mobile scroll viewport. The detailed DOM can grow
-    // only after the proxy has stopped moving.
-    const proxyWidth = paperEl.offsetWidth;
-    paperProxyEl.style.setProperty("--paper-proxy-width", `${proxyWidth}px`);
-    paperProxyEl.style.setProperty("--paper-proxy-height", `${proxyWidth * (340 / 256)}px`);
+    // pre-paint the (transparent) sheet during the camera approach so its
+    // later fade-in is compositor-only; visibility:hidden would skip painting
+    paperEl.style.visibility = "visible";
   }
 
-  function applyPaperPickupPose(pivot) {
-    if (!paperProxyEl || !pivot) return null;
-    const source = pivot.userData.hotspot && pivot.userData.hotspot.pickupObject;
-    if (!source) return null;
-
-    source.updateWorldMatrix(true, true);
+  // Project the DOM sheet's on-screen rect into camera space: at what
+  // distance/offset must the physical sheet float so its printed face lands
+  // pixel-aligned with the DOM sheet (width + top edge match, centered X)?
+  function computePaperHold(pivot) {
+    if (!paperEl || !pivot) return null;
+    const root = pivot.userData.hotspot && pivot.userData.hotspot.pickupObject;
+    const face = root && root.userData.resumeFace;
+    if (!face) return null;
+    pivot.updateWorldMatrix(true, true);
     camera.updateMatrixWorld(true);
-    const localCorners = [
-      new THREE.Vector3(-0.12, 0.003, -0.16),
-      new THREE.Vector3( 0.12, 0.003, -0.16),
-      new THREE.Vector3( 0.12, 0.003,  0.16),
-      new THREE.Vector3(-0.12, 0.003,  0.16),
-    ];
-    const points = localCorners.map((corner) => {
-      const p = source.localToWorld(corner).project(camera);
-      return {
-        x: (p.x * 0.5 + 0.5) * window.innerWidth,
-        y: (-p.y * 0.5 + 0.5) * window.innerHeight,
-      };
-    });
-    if (points.some((p) => !Number.isFinite(p.x) || !Number.isFinite(p.y))) return source;
-
-    const dist = (a, b) => Math.hypot(b.x - a.x, b.y - a.y);
-    const width = (dist(points[0], points[1]) + dist(points[3], points[2])) * 0.5;
-    const height = (dist(points[0], points[3]) + dist(points[1], points[2])) * 0.5;
-    const centerX = points.reduce((sum, p) => sum + p.x, 0) / points.length;
-    const centerY = points.reduce((sum, p) => sum + p.y, 0) / points.length;
-    const angle = Math.atan2(points[1].y - points[0].y, points[1].x - points[0].x) * 180 / Math.PI;
-    const flatHeight = Math.max(1, width * (0.32 / 0.24));
-    const heightRatio = THREE.MathUtils.clamp(height / flatHeight, 0.25, 1);
-    const tilt = THREE.MathUtils.clamp(Math.acos(heightRatio) * 180 / Math.PI, 28, 68);
-    const scale = THREE.MathUtils.clamp(width / Math.max(1, paperProxyEl.offsetWidth), 0.08, 0.72);
-
-    paperProxyEl.style.setProperty("--paper-pickup-x", `${(centerX - window.innerWidth / 2).toFixed(2)}px`);
-    paperProxyEl.style.setProperty("--paper-pickup-y", `${(centerY - window.innerHeight / 2).toFixed(2)}px`);
-    paperProxyEl.style.setProperty("--paper-pickup-scale", scale.toFixed(4));
-    paperProxyEl.style.setProperty("--paper-pickup-rotate", `${angle.toFixed(2)}deg`);
-    paperProxyEl.style.setProperty("--paper-pickup-tilt", `${tilt.toFixed(2)}deg`);
-    return source;
+    const rect = paperEl.getBoundingClientRect();
+    if (!rect.width || !rect.height) return null;
+    const ws = face.getWorldScale(PM_V1);
+    const worldW = 0.234 * Math.abs(ws.x);
+    const worldH = 0.312 * Math.abs(ws.y);
+    const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    const W = window.innerWidth, H = window.innerHeight;
+    // fit the sheet inside the DOM rect on BOTH axes (short viewports are
+    // height-limited); larger distance = smaller on screen
+    const distW = worldW * H / (2 * tanV * rect.width);
+    const distH = worldH * H / (2 * tanV * rect.height);
+    const dist = Math.max(camera.near + 0.12, distW, distH);
+    const ppw = H / (2 * dist * tanV); // px per world unit at that distance
+    // top-align with the DOM sheet: both layouts lead with the same name
+    // block, so anchoring the top edge keeps the headline visually pinned
+    const cxPx = rect.left + rect.width / 2;
+    const cyPx = rect.top + (worldH * ppw) / 2;
+    const ndcX = (cxPx / W) * 2 - 1;
+    const ndcY = 1 - (cyPx / H) * 2;
+    const localFacePos = new THREE.Vector3(
+      ndcX * dist * tanV * camera.aspect,
+      ndcY * dist * tanV,
+      -dist
+    );
+    // constant hierarchy offsets pivot->face (valid whatever placeRoot did)
+    const qPivot = pivot.getWorldQuaternion(new THREE.Quaternion());
+    const qFace = face.getWorldQuaternion(new THREE.Quaternion());
+    const qOffInv = qPivot.clone().invert().multiply(qFace).invert();
+    const pScale = pivot.getWorldScale(new THREE.Vector3()).x || 1;
+    const faceInPivot = face.getWorldPosition(new THREE.Vector3())
+      .sub(pivot.getWorldPosition(new THREE.Vector3()))
+      .applyQuaternion(qPivot.clone().invert())
+      .divideScalar(pScale);
+    return { face, dist, localFacePos, qOffInv, faceInPivot, pScale };
   }
 
-  function clearPaperPickupPose() {
-    if (!paperProxyEl) return;
-    ["--paper-pickup-x", "--paper-pickup-y", "--paper-pickup-scale",
-      "--paper-pickup-rotate", "--paper-pickup-tilt",
-      "--paper-proxy-width", "--paper-proxy-height"]
-      .forEach((name) => paperProxyEl.style.removeProperty(name));
+  // World-space pivot pose that puts the printed face at the held position,
+  // upright and square to the CURRENT camera (recomputed per frame while the
+  // camera is still flying, so the lift converges on the final framing).
+  function paperHoldTargetWorld(hold, outPos, outQuat) {
+    camera.updateMatrixWorld(true);
+    const facePos = hold.localFacePos.clone().applyMatrix4(camera.matrixWorld);
+    const camQ = camera.getWorldQuaternion(new THREE.Quaternion());
+    // face plane local +Z (its normal) -> at the viewer; local +Y (texture
+    // top) -> screen up: in camera space that is the identity orientation
+    outQuat.copy(camQ).multiply(hold.qOffInv);
+    const off = hold.faceInPivot.clone().multiplyScalar(hold.pScale).applyQuaternion(outQuat);
+    outPos.copy(facePos).sub(off);
   }
 
-  function openPaper(pivot) {
-    if (!paperEl || !paperProxyEl) return;
-    panelOpen = true;
-    paperReturning = false;
-    dismissClickHint();
-    activePaperPivot = pivot || activePaperPivot;
-    const source = applyPaperPickupPose(activePaperPivot);
-    if (activePaperPivot) activePaperPivot.visible = true;
+  function paperGlowTarget() {
+    // Calibrated by sampling the rendered sheet against the DOM sheet's
+    // #fafbfd: night 0.7 -> ~239 sRGB (vs 250 DOM — imperceptible across the
+    // 220ms cross-fade) while keeping body text crisp; 1.0 matched the white
+    // exactly but UnrealBloom washed out the small type. Day still needs 0.5:
+    // the held sheet faces the camera, AWAY from the key light (~167 sRGB
+    // unassisted; +143 sRGB per emissive unit, sampled).
+    return lightsOn ? 0.5 : 0.7;
+  }
+
+  // Cross-fade the interactive DOM sheet in over the settled 3D paper.
+  function showPaperDom(gen) {
+    if (!paperEl || gen !== paperAnimGen || !panelOpen) return;
     const rootClass = document.documentElement.classList;
-    rootClass.remove("exp-paper-lifted", "exp-paper-open");
-    rootClass.add("exp-paper-active");
-    const gen = ++paperAnimGen;
-
-    // Commit the desk pose, then animate only the flat canvas proxy.
-    paperProxyEl.classList.remove("is-ready", "is-pickup");
-    void paperProxyEl.offsetWidth;
-    paperProxyEl.classList.add("is-ready", "is-pickup");
-    setHover(null);
-
-    const lift = () => {
+    rootClass.add("exp-paper-active", "exp-paper-open");
+    const finishSwap = () => {
       if (gen !== paperAnimGen || !panelOpen) return;
-      if (source && activePaperPivot) activePaperPivot.visible = false;
-      rootClass.add("exp-paper-lifted");
-
-      const revealContent = () => {
-        if (gen !== paperAnimGen || !panelOpen) return;
-        paperProxyEl.classList.remove("is-pickup");
-        rootClass.add("exp-paper-open");
-        const finishSwap = () => {
-          if (gen !== paperAnimGen || !panelOpen) return;
-          paperProxyEl.classList.remove("is-ready", "is-pickup");
-          const closeBtn = paperEl.querySelector(".exp-sheet__close");
-          if (closeBtn) closeBtn.focus();
-        };
-        if (prefersReducedMotion) finishSwap();
-        else setTimeout(finishSwap, PAPER_SWAP_MS);
-      };
-      if (prefersReducedMotion) revealContent();
-      else setTimeout(revealContent, PAPER_LIFT_MS);
+      // fully covered by the opaque DOM sheet now — stop rendering it
+      if (activePaperPivot) activePaperPivot.visible = false;
+      const closeBtn = paperEl.querySelector(".exp-sheet__close");
+      if (closeBtn) closeBtn.focus();
     };
-    if (prefersReducedMotion) lift();
-    else requestAnimationFrame(lift);
+    if (prefersReducedMotion) finishSwap();
+    else setTimeout(finishSwap, PAPER_SWAP_MS);
+  }
+
+  // Lift the REAL sheet off the desk: world-space flight from the desk pose
+  // to the camera-facing held pose. Runs in the render loop (same clock as
+  // the scene), overlapping the tail of the camera approach.
+  function beginPaperLift(delayMs) {
+    const pivot = activePaperPivot;
+    if (!pivot || !panelOpen) return;
+    const gen = ++paperAnimGen;
+    // camera-independent: derived from the DOM rect + lens only, so it can
+    // be computed at click time and the loop starts the lift after `delay`
+    paperHold = computePaperHold(pivot);
+    if (!paperHold) { showPaperDom(gen); return; } // degraded fallback
+    paperMotion = {
+      mode: "lift", gen, t0: null, dur: PAPER_LIFT_MS, delay: delayMs || 0,
+      fromPos: pivot.position.clone(), fromQuat: pivot.quaternion.clone(),
+      domShown: false,
+    };
+  }
+
+  function openPaperInstant() {
+    // reduced motion: no flight, no lift — sheet appears, paper hides
+    const gen = ++paperAnimGen;
+    if (activePaperPivot) activePaperPivot.visible = false;
+    showPaperDom(gen);
   }
   function recenterPivot(pivot) {
     // ease the showcase turntable spin back to its resting orientation
@@ -1665,9 +1732,7 @@ function initScene(canvas) {
   function closePanel() {
     if (!panelOpen) return;
     const rootClass = document.documentElement.classList;
-    const closingPaper = !!activePaperPivot && !!paperProxyEl && rootClass.contains("exp-paper-active");
     const closingPaperPivot = activePaperPivot;
-    if (closingPaper) applyPaperPickupPose(closingPaperPivot);
     const closeGen = ++paperAnimGen;
     panelOpen = false;
     recenterPivot(focusedPivot);
@@ -1688,42 +1753,70 @@ function initScene(canvas) {
       }
     };
 
-    if (closingPaper) {
-      paperReturning = true;
-      // Put the already-rasterized proxy behind the DOM sheet at the settled
-      // pose, cross-fade to it, then move only that bitmap back to the desk.
-      rootClass.add("exp-paper-active", "exp-paper-lifted");
-      paperProxyEl.classList.remove("is-pickup");
-      paperProxyEl.classList.add("is-ready");
-      void paperProxyEl.offsetWidth;
-      rootClass.remove("exp-paper-open");
+    if (closingPaperPivot) {
+      const pivot = closingPaperPivot;
+      const desk = pivot.userData.deskPose;
+      const root = pivot.userData.hotspot && pivot.userData.hotspot.pickupObject;
+      const face = root && root.userData.resumeFace;
+      const domOpen = rootClass.contains("exp-paper-open");
 
-      const landPaper = () => {
-        if (closeGen !== paperAnimGen) return;
-        if (closingPaperPivot) closingPaperPivot.visible = true;
-        rootClass.remove("exp-paper-active", "exp-paper-lifted", "exp-paper-open");
-        paperProxyEl.classList.remove("is-ready", "is-pickup");
-        clearPaperPickupPose();
+      if (prefersReducedMotion || !desk) {
+        paperMotion = null;
+        paperHold = null;
+        if (desk) { pivot.position.copy(desk.pos); pivot.quaternion.copy(desk.quat); }
+        if (face) face.material.emissiveIntensity = 0;
+        pivot.visible = true;
+        rootClass.remove("exp-paper-active", "exp-paper-open");
+        if (paperEl) paperEl.style.visibility = "";
         activePaperPivot = null;
         paperReturning = false;
         returnToRoom();
+        return;
+      }
+
+      paperReturning = true;
+      const startReturn = () => {
+        if (closeGen !== paperAnimGen) return;
+        if (paperEl) paperEl.style.visibility = "";
+        // scale the flight time to how far the sheet actually is from the
+        // desk, so an early Esc doesn't crawl back in slow motion
+        const away = pivot.position.distanceTo(desk.pos);
+        const dur = THREE.MathUtils.clamp(PAPER_RETURN_MS * (away / 0.7), 280, PAPER_RETURN_MS);
+        paperMotion = {
+          mode: "return", gen: closeGen, t0: null, dur,
+          fromPos: pivot.position.clone(), fromQuat: pivot.quaternion.clone(),
+          toPos: desk.pos.clone(), toQuat: desk.quat.clone(),
+          fromGlow: face ? face.material.emissiveIntensity : 0,
+        };
+        returnToRoom(); // the sheet lands while the camera pulls away
       };
 
-      const returnProxy = () => {
-        if (closeGen !== paperAnimGen) return;
-        rootClass.remove("exp-paper-lifted");
-        if (prefersReducedMotion) landPaper();
-        else setTimeout(landPaper, PAPER_LIFT_MS);
-      };
-      if (prefersReducedMotion) returnProxy();
-      else setTimeout(returnProxy, PAPER_SWAP_MS);
+      if (domOpen && !paperMotion) {
+        // Re-align the held sheet to the CURRENT camera/viewport (guards a
+        // resize while reading), reveal it under the fading DOM, then fly it
+        // back. Backdrop and DOM fade together, masking the handoff.
+        const hold = computePaperHold(pivot);
+        if (hold) {
+          paperHold = hold;
+          paperHoldTargetWorld(hold, PM_POS, PM_QUAT);
+          pivot.position.copy(PM_POS);
+          pivot.quaternion.copy(PM_QUAT);
+          if (face) face.material.emissiveIntensity = paperGlowTarget();
+        }
+        pivot.visible = true;
+        rootClass.remove("exp-paper-active", "exp-paper-open");
+        setTimeout(startReturn, PAPER_SWAP_MS * 0.75);
+      } else {
+        // closed mid-lift: turn around from wherever the sheet is right now
+        paperMotion = null;
+        rootClass.remove("exp-paper-active", "exp-paper-open");
+        startReturn();
+      }
       return;
     }
 
-    rootClass.remove("exp-paper-active", "exp-paper-lifted", "exp-paper-open");
-    if (paperProxyEl) paperProxyEl.classList.remove("is-ready", "is-pickup");
-    if (activePaperPivot) activePaperPivot.visible = true;
-    clearPaperPickupPose();
+    rootClass.remove("exp-paper-active", "exp-paper-open");
+    if (paperEl) paperEl.style.visibility = "";
     activePaperPivot = null;
     paperReturning = false;
     returnToRoom();
@@ -1830,7 +1923,7 @@ function initScene(canvas) {
   // path the pointer uses when it leaves the canvas
   renderer.domElement.addEventListener("blur", () => setHover(null));
 
-  window.__exp = { THREE, scene, camera, renderer, controls, composer, bloom, key, hemi, models: MODELS, hotspots: HOTSPOTS, openPanel, showDragHint, runBootIntro };
+  window.__exp = { THREE, scene, camera, renderer, controls, composer, bloom, key, hemi, models: MODELS, hotspots: HOTSPOTS, openPanel, showDragHint, runBootIntro, pump: (t) => tick(t, true) };
   console.info(`[experience] engineering office ready — ${HOTSPOTS.length} hotspots`);
 }
 
@@ -3737,9 +3830,6 @@ function buildResumePaper() {
   ctx.font = "400 5.3px Arial, sans-serif";
   textBlock((RESUME.contact || []).map((item) => item.label).join(" · "), 20, y + 14, 216, 7, 2);
 
-  // Retain the source canvas on the physical sheet group. openPaper() copies
-  // it once into the lightweight overlay canvas; no DOM snapshot is needed.
-  g.userData.resumeCanvas = c;
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = MAXA; // the sheet lies flat — grazing view needs aniso
@@ -3752,13 +3842,22 @@ function buildResumePaper() {
   sheet.castShadow = true;
   sheet.receiveShadow = true;
   g.add(sheet);
+  // The emissiveMap is wired at build time with intensity 0 (zero visual
+  // contribution on the desk) so the pickup can brighten the sheet at night
+  // by ramping a uniform — no shader recompile, no mid-animation hitch.
   const face = new THREE.Mesh(
     new THREE.PlaneGeometry(0.234, 0.312),
-    new THREE.MeshStandardMaterial({ map: tex, color: 0xf1f3f6, roughness: 0.96 })
+    new THREE.MeshStandardMaterial({
+      map: tex, color: 0xf1f3f6, roughness: 0.96,
+      emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0,
+    })
   );
   face.rotation.x = -Math.PI / 2;
   face.position.y = 0.0025;
   g.add(face);
+  // the pickup animation needs the printed face: its world pose defines the
+  // sheet's on-screen rect, and its emissiveIntensity is the night glow ramp
+  g.userData.resumeFace = face;
   return g;
 }
 
