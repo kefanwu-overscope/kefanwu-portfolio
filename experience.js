@@ -74,6 +74,9 @@ function setupTextures(manager) {
   const cache = {};
   const DEFS = {
     dark_wood: { rep: [2, 1], base: "textures/dark_wood/dark_wood", maps: ["diff_1k.jpg", "nor_gl_1k.jpg", "rough_1k.jpg"] },
+    // desaturated grey variant of the same wood (Mercedes-interior open-pore
+    // look, cabinets); shares the colorless normal/roughness maps
+    grey_wood: { rep: [2, 1], base: "textures/dark_wood/dark_wood", maps: ["diff_grey_1k.jpg", "nor_gl_1k.jpg", "rough_1k.jpg"] },
     painted_plaster_wall: { rep: [3, 2], base: "textures/painted_plaster_wall/painted_plaster_wall", maps: ["diff_1k.jpg", "nor_gl_1k.jpg", "rough_1k.jpg"] },
   };
   function loadPBR(slug) {
@@ -95,8 +98,8 @@ function setupTextures(manager) {
   TEX = { loadPBR };
 }
 
-function woodMaterial(tint = COL.woodTint, rough = 0.8) {
-  const t = TEX.loadPBR("dark_wood");
+function woodMaterial(tint = COL.woodTint, rough = 0.8, slug = "dark_wood") {
+  const t = TEX.loadPBR(slug);
   return new THREE.MeshStandardMaterial({
     color: tint,
     map: t.map,
@@ -2056,17 +2059,19 @@ function buildDesk() {
 }
 
 function buildDisplayCabinet() {
-  // modern display wall: slim black-steel frame, tinted glass shelves with
-  // aluminum edges, matte back panel, cool light strips + blue accent
+  // modern display wall: grey open-pore wood casework (Mercedes-interior
+  // look, real PBR maps), tinted glass shelves with cool light strips + blue
+  // accent. Kefan 2026-07-09: near-black steel frame read too dark — grey
+  // wood; the glass shelves stay untouched.
   const g = new THREE.Group();
   const W = 2.36;
   const H = 2.2;
   const D = 0.54;
   const z = CAB.z;
-  const frameMat = new THREE.MeshStandardMaterial({ color: 0x2e3138, roughness: 0.45, metalness: 0.5, envMapIntensity: 0.5 });
+  const frameMat = woodMaterial(0xd9dde2, 0.62, "grey_wood");
 
-  // matte back panel
-  const back = new THREE.Mesh(new THREE.BoxGeometry(W, H, 0.02), new THREE.MeshStandardMaterial({ color: 0x34373e, roughness: 0.7, metalness: 0.2 }));
+  // wood back panel, a step deeper than the frame so the bays read as cavities
+  const back = new THREE.Mesh(new THREE.BoxGeometry(W, H, 0.02), woodMaterial(0x9aa0a6, 0.72, "grey_wood"));
   back.position.set(0, H / 2, z - D / 2 + 0.01);
   back.receiveShadow = true;
   g.add(back);
@@ -3211,16 +3216,16 @@ const CAB2 = {
 };
 
 function buildSideCabinet() {
-  // second display cabinet on the right wall — same modern language as the
-  // main one: slim steel frame, tinted glass shelves, cool light strips
+  // second display cabinet on the right wall — same casework language as the
+  // main one: grey open-pore wood frame, tinted glass shelves, cool strips
   const g = new THREE.Group();
   const W = 1.6; // along z
   const H = 2.2;
   const D = 0.5;
-  const frameMat = new THREE.MeshStandardMaterial({ color: 0x2e3138, roughness: 0.45, metalness: 0.5, envMapIntensity: 0.5 });
+  const frameMat = woodMaterial(0xd9dde2, 0.62, "grey_wood");
 
   const back = new THREE.Mesh(new THREE.BoxGeometry(0.02, H, W),
-    new THREE.MeshStandardMaterial({ color: 0x34373e, roughness: 0.7, metalness: 0.2 }));
+    woodMaterial(0x9aa0a6, 0.72, "grey_wood"));
   back.position.set(D / 2 - 0.01, H / 2, 0);
   back.receiveShadow = true;
   g.add(back);
