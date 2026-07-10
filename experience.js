@@ -115,7 +115,7 @@ const ASSEMBLY_MATS = {
   // so the CAD exhibits stay readable at the scene's low global env level
   steel: () => new THREE.MeshStandardMaterial({ color: 0x9aa0a8, metalness: 1.0, roughness: 0.45, envMapIntensity: 1.8 }),
   brass: () => new THREE.MeshStandardMaterial({ color: 0x9d9789, metalness: 1.0, roughness: 0.35, envMapIntensity: 1.6 }),
-  dark: () => new THREE.MeshStandardMaterial({ color: 0x1a1c20, metalness: 0.55, roughness: 0.45, envMapIntensity: 1.4 }),
+  dark: () => new THREE.MeshStandardMaterial({ color: 0x1a1c20, metalness: 0.15, roughness: 0.5, envMapIntensity: 1.4 }),
   printed: () => new THREE.MeshStandardMaterial({ color: 0x2c3038, metalness: 0.12, roughness: 0.58, envMapIntensity: 1.2 }),
   aero: () => new THREE.MeshStandardMaterial({ color: 0xd8dadc, metalness: 0.05, roughness: 0.42, envMapIntensity: 1.2 }),
   carbon: () => {
@@ -130,9 +130,9 @@ const ASSEMBLY_MATS = {
       emissiveIntensity: 1.1,
       metalness: 0.3,
       roughness: 0.5,
-      clearcoat: 0.4,
+      clearcoat: 0.7,
       clearcoatRoughness: 0.25,
-      envMapIntensity: 2.4,
+      envMapIntensity: 2.6,
     });
   },
   rubber: () => new THREE.MeshStandardMaterial({ color: 0x0d0e10, metalness: 0.0, roughness: 0.95 }),
@@ -212,7 +212,7 @@ function initScene(canvas) {
   composer.addPass(new RenderPass(scene, camera));
   // ambient occlusion: contact darkening in corners/seams (desktop only)
   let gtao = null;
-  if (!LOW_TIER && !USE_BAKED) { // baked lightmaps already carry AO
+  if (!LOW_TIER) { // baked lightmaps already carry AO
     gtao = new GTAOPass(scene, camera, window.innerWidth, window.innerHeight);
     gtao.output = GTAOPass.OUTPUT.Default;
     // contact-scale AO only — the default 0.25 m radius at full blend crushes
@@ -224,7 +224,7 @@ function initScene(canvas) {
   // depth of field, opened up only while an exhibit is focused
   let bokeh = null;
   if (!LOW_TIER) {
-    bokeh = new BokehPass(scene, camera, { focus: 2.2, aperture: 0.0, maxblur: 0.008 });
+    bokeh = new BokehPass(scene, camera, { focus: 2.2, aperture: 0.0, maxblur: 0.018 });
     composer.addPass(bokeh);
   }
   // hide pick-proxies + marker sprites while GTAO/Bokeh re-render the scene
@@ -262,6 +262,9 @@ function initScene(canvas) {
     if (txtEl) txtEl.textContent = "Loading " + pct + "%";
   };
   let revealed = false;
+  // one-shot: set when a flow (deep link) skips the normal drag-hint timing;
+  // checked once in closePanel() so the hint still surfaces exactly once
+  let pendingDragHintOnClose = false;
   const doReveal = () => {
     if (revealed) return;
     revealed = true;
@@ -275,6 +278,8 @@ function initScene(canvas) {
       camera.position.copy(REST_POS);
       camera.lookAt(REST_TARGET);
       controls.target.copy(REST_TARGET);
+      try { localStorage.setItem("kw_intro_seen", "1"); } catch (e) {}
+      pendingDragHintOnClose = true; // panel opens immediately; show the hint once they close it
       if (!prefersReducedMotion) {
         runLightIntro();
         setTimeout(() => focusHotspot(dlPivot), 650);
@@ -290,11 +295,11 @@ function initScene(canvas) {
       // returning visitors keep the quick staged ramp
       if (seenBefore) runLightIntro();
       else runBootIntro();
-      startIntro();
+      startIntro(); // the drag hint fires from startIntro()'s final flight leg, once the camera actually lands
+    } else {
+      // no flight to wait for under reduced motion — show it immediately
+      showDragHint();
     }
-    // show the drag invitation immediately once the scene is loaded (doReveal
-    // is reliably called via manager.onLoad, with a safety timeout fallback)
-    showDragHint();
   };
   manager.onLoad = doReveal;
   setTimeout(doReveal, 10000); // safety
@@ -663,11 +668,11 @@ function initScene(canvas) {
   const ASSEMBLIES = [
     { file: "seat",     key: "carbonSeat", label: "Carbon fiber seat", size: 0.3,  axis: "y", bay: 0, row: 0, rotY: 0.4 },
     { file: "aura",     key: "aura",       label: "AURA Swerve",       size: 0.29, axis: "y", bay: 1, row: 0, rotY: 0.35, rotZ: -Math.PI / 2,
-      matTweak: { printed: { color: 0x9299a1, metalness: 0.4, roughness: 0.45 } } }, // aluminum/grey structure
+      matTweak: { printed: { color: 0x9299a1, metalness: 0.05, roughness: 0.45 } } }, // aluminum/grey structure
     { file: "scanner",  key: "scanner",    label: "3D scanner",        size: 0.38, axis: "x", bay: 2, row: 0, rotY: 0.35,
       matTweak: { printed: { color: 0x2a55c8 }, wood: { color: 0xdfd2b0, roughness: 0.7 } } }, // blue brackets, near-white plywood base (photo); truss + EMG cover ride the light-grey aero bucket
     { file: "javelin",  key: "javelin",    label: "Javelin VTOL",      size: 0.44, axis: "x", bay: 0, row: 1, rotY: 0.6,
-      matTweak: { aero: { color: 0x3a3e44, roughness: 0.5 }, printed: { color: 0x26292e }, dark: { color: 0x24272c } } },
+      matTweak: { aero: { color: 0x3a3e44, roughness: 0.4, envMapIntensity: 1.6 }, printed: { color: 0x26292e }, dark: { color: 0x24272c } } },
     { file: "steering", key: "steering",   label: "Mk.8 Steering",     size: 0.32, axis: "y", bay: 1, row: 1, rotY: 0.5 },
   ];
   ASSEMBLIES.forEach((a) =>
@@ -719,7 +724,7 @@ function initScene(canvas) {
     // seat. Native axes: x=width, z=back height, y=face normal. Stand it up
     // (z->up) with rotX, then face the room with rotY.
     { file: "driverseat",      key: "seat",      label: "Driver seat",       size: 0.34, axis: "y", bay: 0, row: 0, rotX: Math.PI / 2, rotY: -Math.PI / 2 + 0.4, rotZ: Math.PI / 2,
-      matTweak: { steel: { color: 0xccd2da, metalness: 0.5, roughness: 0.44 } } }, // light brushed aluminum, reclined bucket facing the room
+      matTweak: { steel: { color: 0xccd2da, metalness: 0.85, roughness: 0.35 } } }, // light brushed aluminum, reclined bucket facing the room
     { build: buildFtcBot,      key: "ftc",       label: "FTC robot",         size: 0.28, bay: 1, row: 0 },
     { file: "smelly",          key: "formlabs",  label: "Smelly",            size: 0.3,  axis: "y", bay: 0, row: 1, rotY: -Math.PI / 2 + 0.2,
       // photo-matched: the printed frame/gantry is white FDM plastic, not
@@ -775,7 +780,7 @@ function initScene(canvas) {
   const LM = { on2k: null, off2k: null, on4k: null, off4k: null, probeOn: null, probeOff: null };
   // night-mode practicals: warm pool over the workbench (its lamp + printer
   // read as the only bench light) and the desk lamp's own LEDs glow warm
-  const benchGlow = new THREE.PointLight(0xffd9a8, 0, 1.7, 2);
+  const benchGlow = new THREE.PointLight(0xe8ecf2, 0, 1.7, 2);
   benchGlow.position.set(-2.3, 1.25, -1.1);
   scene.add(benchGlow);
   // museum follow-spot: fades in on the focused exhibit while its panel is
@@ -873,8 +878,8 @@ function initScene(canvas) {
     if (probe) scene.environment = probe;
     // real-time lights serve the exhibits; dim them with the room
     const want = lightsOn
-      ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0, resume: 0, moon: 0 } // day grade: strips + bake carry the room
-      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 1.6, moon: MOON_NIGHT };
+      ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0, resume: 0, moon: 0, pendant: 2.6 } // day grade: strips + bake carry the room
+      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 1.6, moon: MOON_NIGHT, pendant: 0.7 };
     if (bootTakeover) return; // the boot choreography owns the levels; it lands on these values
     lampLeds.forEach((m) => { m.emissiveIntensity = lightsOn ? 0.05 : 1.5; });
     blueLines.forEach((m) => {
@@ -882,12 +887,13 @@ function initScene(canvas) {
       m.emissive.setHex(0x3f8cff);
       m.emissiveIntensity = lightsOn ? 0.12 : 1.1; // LED inlay glows at night
     });
-    const from = { key: key.intensity, hemi: hemi.intensity, fill: fill.intensity, env: scene.environmentIntensity, bench: benchGlow.intensity, resume: resumeSpot.intensity, moon: moonSpot.intensity };
+    const from = { key: key.intensity, hemi: hemi.intensity, fill: fill.intensity, env: scene.environmentIntensity, bench: benchGlow.intensity, resume: resumeSpot.intensity, moon: moonSpot.intensity, pendant: MODELS.pendantLight.intensity };
     if (prefersReducedMotion || !animate) {
       key.intensity = want.key; hemi.intensity = want.hemi; fill.intensity = want.fill;
       scene.environmentIntensity = want.env; benchGlow.intensity = want.bench;
       resumeSpot.intensity = want.resume;
       moonSpot.intensity = want.moon;
+      MODELS.pendantLight.intensity = want.pendant;
       return;
     }
     const t0 = performance.now();
@@ -903,6 +909,7 @@ function initScene(canvas) {
       benchGlow.intensity = from.bench + (want.bench - from.bench) * e;
       resumeSpot.intensity = from.resume + (want.resume - from.resume) * e;
       moonSpot.intensity = from.moon + (want.moon - from.moon) * e;
+      MODELS.pendantLight.intensity = from.pendant + (want.pendant - from.pendant) * e;
       if (fadeLm) lmMix.value = e;
       if (k < 1) requestAnimationFrame(step);
       else if (fadeLm) {
@@ -1033,14 +1040,14 @@ function initScene(canvas) {
     let seen = false;
     try { seen = localStorage.getItem("kw_intro_seen") === "1"; } catch (e) {}
     if (seen) {
-      startFlight(REST_POS, REST_TARGET, 1500);
+      startFlight(REST_POS, REST_TARGET, 1500, showDragHint);
       return;
     }
     try { localStorage.setItem("kw_intro_seen", "1"); } catch (e) {}
     // guided sweep: right cabinet -> main cabinet -> resting pose
     startFlight(new THREE.Vector3(0.7, 1.5, 1.9), new THREE.Vector3(2.3, 1.2, CAB2.z), 1700, () => {
       startFlight(new THREE.Vector3(0.6, 1.45, 1.6), new THREE.Vector3(0, 1.2, -1.1), 1900, () => {
-        startFlight(REST_POS, REST_TARGET, 1500);
+        startFlight(REST_POS, REST_TARGET, 1500, showDragHint);
       });
     });
   }
@@ -1104,7 +1111,7 @@ function initScene(canvas) {
       focusSpot.target.position.copy(fc);
     }
     if (bokeh) {
-      const want = panelOpen && focusedPivot ? 0.00022 : 0.0;
+      const want = panelOpen && focusedPivot ? 0.0018 : 0.0;
       const u = bokeh.uniforms;
       u.aperture.value += (want - u.aperture.value) * 0.08;
       if (panelOpen && focusedPivot) {
@@ -1377,7 +1384,7 @@ function initScene(canvas) {
       open(html);
     } else {
       startFlight(focusPos, focusLook, 850);
-      setTimeout(() => open(html), 500);
+      setTimeout(() => open(html), 680);
     }
   }
 
@@ -1385,6 +1392,10 @@ function initScene(canvas) {
   const PROJECT_ORDER = ["carbonSeat", "aura", "scanner", "javelin", "steering", "brakeSim",
     "lineFollower", "ansysCfd", "education", "seat", "ftc", "formlabs", "pool", "telecaster"];
   let currentProjectKey = null;
+  // set for the duration of a stepProject() → openPanel() call so openPanel
+  // knows to cross-fade the content swap instead of hard-cutting it (the
+  // very first panel open must keep its untouched CSS slide-in)
+  let isStepTransition = false;
   function stepProject(dir) {
     if (!currentProjectKey) return;
     const n = PROJECT_ORDER.length;
@@ -1394,8 +1405,10 @@ function initScene(canvas) {
       const pivot = HOTSPOTS.find((h) => h.userData.hotspot.key === key);
       if (pivot) {
         panelOpen = false;
+        if (focusedPivot) focusedPivot.rotation.y = 0;
         recenterPivot(focusedPivot);
         focusedPivot = null;
+        isStepTransition = true;
         focusHotspot(pivot);
         return;
       }
@@ -1405,24 +1418,47 @@ function initScene(canvas) {
     if (!panelEl) return;
     panelOpen = true;
     dismissClickHint();
-    panelEl.innerHTML = html;
-    // prev / next tour bar (projects only — the resume sheet has no nav)
-    if (currentProjectKey) {
-      const idx = PROJECT_ORDER.indexOf(currentProjectKey);
-      const nav = document.createElement("div");
-      nav.className = "exp-panel__navbar";
-      nav.innerHTML =
-        `<button type="button" data-nav="-1" aria-label="Previous project">&larr; Prev</button>` +
-        `<span>${String(idx + 1).padStart(2, "0")} / ${PROJECT_ORDER.length}</span>` +
-        `<button type="button" data-nav="1" aria-label="Next project">Next &rarr;</button>`;
-      nav.querySelectorAll("[data-nav]").forEach((b) =>
-        b.addEventListener("click", () => { sndClick(); stepProject(+b.dataset.nav); }));
-      panelEl.appendChild(nav);
+    const applyPanelContent = () => {
+      panelEl.innerHTML = html;
+      // prev / next tour bar (projects only — the resume sheet has no nav)
+      if (currentProjectKey) {
+        const idx = PROJECT_ORDER.indexOf(currentProjectKey);
+        const nav = document.createElement("div");
+        nav.className = "exp-panel__navbar";
+        nav.innerHTML =
+          `<button type="button" data-nav="-1" aria-label="Previous project">&larr; Prev</button>` +
+          `<span>${String(idx + 1).padStart(2, "0")} / ${PROJECT_ORDER.length}</span>` +
+          `<button type="button" data-nav="1" aria-label="Next project">Next &rarr;</button>`;
+        nav.querySelectorAll("[data-nav]").forEach((b) =>
+          b.addEventListener("click", () => { sndClick(); stepProject(+b.dataset.nav); }));
+        panelEl.appendChild(nav);
+      }
+      panelEl.scrollTop = 0;
+      panelEl.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", closePanel));
+      document.documentElement.classList.add("exp-panel-open");
+      setHover(null);
+      // keyboard users land on the close button, not lost in the canvas
+      const closeBtn = panelEl.querySelector(".exp-panel__close");
+      if (closeBtn) closeBtn.focus();
+    };
+    if (isStepTransition) {
+      // Prev/Next: fade the outgoing content out, swap, then fade in —
+      // only this path; the first-open slide-in stays untouched below
+      isStepTransition = false;
+      panelEl.style.transition = "opacity 150ms";
+      panelEl.style.opacity = "0";
+      setTimeout(() => {
+        applyPanelContent();
+        panelEl.style.transition = "opacity 200ms";
+        panelEl.style.opacity = "1";
+        setTimeout(() => {
+          panelEl.style.opacity = "";
+          panelEl.style.transition = "";
+        }, 200);
+      }, 150);
+      return;
     }
-    panelEl.scrollTop = 0;
-    panelEl.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", closePanel));
-    document.documentElement.classList.add("exp-panel-open");
-    setHover(null);
+    applyPanelContent();
   }
   function openPaper(html) {
     if (!paperEl) return;
@@ -1433,6 +1469,9 @@ function initScene(canvas) {
     paperEl.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", closePanel));
     document.documentElement.classList.add("exp-paper-open");
     setHover(null);
+    // keyboard users land on the close button, not lost in the canvas
+    const closeBtn = paperEl.querySelector(".exp-sheet__close");
+    if (closeBtn) closeBtn.focus();
   }
   function recenterPivot(pivot) {
     // ease the showcase turntable spin back to its resting orientation
@@ -1464,6 +1503,8 @@ function initScene(canvas) {
     sndWhoosh(0.4);
     document.documentElement.classList.remove("exp-panel-open");
     document.documentElement.classList.remove("exp-paper-open");
+    if (pendingDragHintOnClose) { pendingDragHintOnClose = false; showDragHint(); }
+    renderer.domElement.focus(); // return focus to the stage once the overlay is gone
     if (prefersReducedMotion) {
       camera.position.copy(REST_POS);
       controls.target.copy(REST_TARGET);
@@ -1526,6 +1567,55 @@ function initScene(canvas) {
     if (panelOpen) closePanel();
   });
 
+  /* ---------- keyboard navigation layer (additive; mirrors the pointer flow) ----------
+     Cycle order: the 14 project pivots (PROJECT_ORDER), then résumé, then the
+     lamp switch. Rebuilt fresh on every keypress (not snapshotted once) —
+     the real-CAD exhibits attach to HOTSPOTS asynchronously as their GLTFs
+     finish loading, so a one-time snapshot at init would miss most of them.
+     Arrow keys move a highlight through the EXISTING hover path (setHover);
+     Enter/Space activates exactly what pointerup does. */
+  let kbIndex = -1;
+  function kbOrder() {
+    const order = [];
+    PROJECT_ORDER.forEach((key) => {
+      const pivot = HOTSPOTS.find((h) => h.userData.hotspot.key === key);
+      if (pivot) order.push(pivot);
+    });
+    const resumePivot = HOTSPOTS.find((h) => h.userData.hotspot.action === "resume");
+    if (resumePivot) order.push(resumePivot);
+    const lampPivot = HOTSPOTS.find((h) => h.userData.hotspot.action === "lamp");
+    if (lampPivot) order.push(lampPivot);
+    return order;
+  }
+  function kbBusy() {
+    return !!flight || panelOpen || document.documentElement.classList.contains("exp-lightbox-open");
+  }
+  function kbHighlight(order, next) {
+    kbIndex = ((next % order.length) + order.length) % order.length;
+    setHover(order[kbIndex]);
+  }
+  renderer.domElement.addEventListener("keydown", (e) => {
+    if (kbBusy()) return;
+    const order = kbOrder();
+    if (!order.length) return;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      e.preventDefault();
+      kbHighlight(order, kbIndex + 1);
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      e.preventDefault();
+      kbHighlight(order, kbIndex - 1);
+    } else if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+      if (kbIndex < 0 || kbIndex >= order.length) return;
+      e.preventDefault();
+      const root = order[kbIndex];
+      if (root.userData.hotspot.action === "lamp") { toggleRoomLights(); return; }
+      focusHotspot(root);
+    }
+  });
+  // losing keyboard focus on the stage clears the keyboard highlight, same
+  // path the pointer uses when it leaves the canvas
+  renderer.domElement.addEventListener("blur", () => setHover(null));
+
   window.__exp = { THREE, scene, camera, renderer, controls, composer, bloom, key, hemi, models: MODELS, hotspots: HOTSPOTS, openPanel, showDragHint, runBootIntro };
   console.info(`[experience] engineering office ready — ${HOTSPOTS.length} hotspots`);
 }
@@ -1569,12 +1659,9 @@ function sndWhoosh(mul = 1) { tone(240, 0.32, 0.018 * mul, "sine", 90); }
 function initSoundToggle() {
   const btn = document.getElementById("exp-sound");
   if (!btn) return;
-  // monochrome SVG speaker (a color emoji is the one loud non-Apple element)
-  const SPK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6.5 9H3v6h3.5L11 19V5z" fill="currentColor" stroke="none"/>';
+  // markup owns the two inline SVGs (.snd-off / .snd-on); CSS toggles which
+  // one shows off the .is-on class — this only ever flips the class + label
   const paint = () => {
-    btn.innerHTML = SPK + (sndMuted
-      ? '<line x1="15" y1="9.5" x2="21" y2="14.5"/><line x1="21" y1="9.5" x2="15" y2="14.5"/></svg>'
-      : '<path d="M15 9a4 4 0 0 1 0 6"/><path d="M17.5 6.5a8 8 0 0 1 0 11"/></svg>');
     btn.setAttribute("aria-label", sndMuted ? "Enable sound" : "Mute sound");
     btn.setAttribute("aria-pressed", String(!sndMuted));
     btn.classList.toggle("is-on", !sndMuted);
@@ -1659,9 +1746,19 @@ function placeRoot(root, scene, opts, onPlaced) {
     // Genshin-style interact marker floating above the object
     // (capped so it never pokes through the shelf above)
     const capY = opts.markerCap !== undefined ? opts.markerCap : Infinity;
-    const markerY = Math.min(bb.max.y + 0.09, capY) - center.y;
     const marker = makeInteractMarker();
-    marker.position.set(0, markerY, 0);
+    let markerY, markerX = 0, markerZ = 0;
+    if (opts.action === "resume") {
+      // the resume sheet is flat on the desk — a centered marker floats
+      // directly over the printed text, so push it to the paper's
+      // top-right corner and keep it low, just above the desk surface
+      markerX = 0.12;
+      markerZ = 0.10;
+      markerY = 0.05;
+    } else {
+      markerY = Math.min(bb.max.y + 0.09, capY) - center.y;
+    }
+    marker.position.set(markerX, markerY, markerZ);
     pivot.add(marker);
     NO_PREPASS.push(hitbox, marker);
 
@@ -1880,6 +1977,7 @@ function buildRoom(scene) {
   const pendantLight = new THREE.PointLight(0xe8eef8, 2.6, 4.2, 2); // carries the desk now the lamps emit no light
   pendantLight.position.y = 2.32;
   pendant.add(pendantLight);
+  MODELS.pendantLight = pendantLight; // exposed so applyLightState (initScene scope) can drive it
   pendant.position.set(0.15, 0, 0.35);
   scene.add(pendant);
 }
@@ -2109,40 +2207,67 @@ function buildErgoChair() {
 }
 
 function buildModernDeskLamp() {
-  // minimal modern desk lamp: puck base, slim angled stem, flat LED head
+  // modern cantilever task lamp (Dyson-Lightcycle-like): round base, a
+  // column rising from the base EDGE, a horizontal arm swinging over the
+  // desk with a counterweight tail, and a slim head hanging off a drop-link
+  // with the LED strip embedded on its underside. Group origin (0,0,0) sits
+  // on the desk top, same pivot convention as the previous build.
   const g = new THREE.Group();
   const body = new THREE.MeshStandardMaterial({ color: 0x1d1f23, roughness: 0.38, metalness: 0.7 });
-  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.062, 0.016, 24), body);
-  base.position.y = 0.008;
-  g.add(base);
-  function segment(p0, p1, r) {
+  function segment(p0, p1, r, segs = 12) {
     const dir = new THREE.Vector3().subVectors(p1, p0);
-    const mesh = new THREE.Mesh(new THREE.CylinderGeometry(r, r, dir.length(), 12), body);
+    const mesh = new THREE.Mesh(new THREE.CylinderGeometry(r, r, dir.length(), segs), body);
     mesh.position.copy(p0).addScaledVector(dir, 0.5);
     mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
     return mesh;
   }
-  const P0 = new THREE.Vector3(0, 0.016, 0);
-  const P1 = new THREE.Vector3(0.05, 0.34, 0);
-  const P2 = new THREE.Vector3(0.2, 0.36, 0.02);
-  g.add(segment(P0, P1, 0.008));
-  g.add(segment(P1, P2, 0.007));
-  [P1].forEach((pt) => {
-    const j = new THREE.Mesh(new THREE.SphereGeometry(0.011, 12, 12), body);
-    j.position.copy(pt);
-    g.add(j);
-  });
-  const head = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 0.018, 22), body);
-  head.position.copy(P2).add(new THREE.Vector3(0.02, -0.004, 0));
-  head.rotation.z = 0.14;
+
+  // round base
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.012, 28), body);
+  base.position.y = 0.006;
+  g.add(base);
+
+  // vertical column, rising from the base EDGE (not the center)
+  const colX = -0.032;
+  const colBottom = new THREE.Vector3(colX, 0.012, 0);
+  const colTop = new THREE.Vector3(colX, 0.012 + 0.24, 0);
+  g.add(segment(colBottom, colTop, 0.008));
+
+  // small joint sphere where the arm pivots at the column top
+  const joint = new THREE.Mesh(new THREE.SphereGeometry(0.011, 14, 14), body);
+  joint.position.copy(colTop);
+  g.add(joint);
+
+  // horizontal cantilever arm through the joint: a short counterweight tail
+  // behind, a long reach out over the desk in front
+  const armBack = colTop.clone().add(new THREE.Vector3(-0.05, 0, 0));
+  const armFront = colTop.clone().add(new THREE.Vector3(0.21, 0, 0.015));
+  g.add(segment(armBack, armFront, 0.007));
+
+  // counterweight puck on the back end of the arm
+  const weight = new THREE.Mesh(new THREE.SphereGeometry(0.02, 14, 14), body);
+  weight.position.copy(armBack);
+  g.add(weight);
+
+  // drop-link: the head hangs a little below the arm's front end
+  const dropBottom = armFront.clone().add(new THREE.Vector3(0, -0.02, 0));
+  g.add(segment(armFront, dropBottom, 0.005, 8));
+
+  // slim lamp head (horizontal tube), perpendicular to the arm
+  const head = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.13, 20), body);
+  head.position.copy(dropBottom);
+  head.rotation.x = Math.PI / 2;
   g.add(head);
+
+  // LED strip embedded on the head's underside (same look the light-state
+  // code keys off: emissive material, intensity in the dim "off" range)
   const led = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.038, 0.038, 0.004, 22),
+    new THREE.BoxGeometry(0.02, 0.006, 0.11),
     new THREE.MeshStandardMaterial({ color: 0xe8ebf0, emissive: 0xdfe6f0, emissiveIntensity: 0.05 })
   );
-  led.position.copy(head.position).add(new THREE.Vector3(0, -0.011, 0));
-  led.rotation.z = 0.14;
+  led.position.copy(dropBottom).add(new THREE.Vector3(0, -0.012, 0));
   g.add(led);
+
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
 }

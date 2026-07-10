@@ -104,13 +104,19 @@ a {
   width: 2rem;
   height: 2rem;
   border: 1px solid var(--line-strong);
-  border-radius: var(--radius-small);
+  border-radius: 0;
+  background: var(--ink);
+  color: #080808;
   font-size: 0.82rem;
+  font-weight: 800;
   letter-spacing: 0.06em;
 }
 
 .exp-brand .brand-name {
-  font-size: 0.98rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .exp-classic-link {
@@ -118,19 +124,31 @@ a {
   align-items: center;
   gap: 0.45rem;
   padding: 0.55rem 0.95rem;
-  font-size: 0.82rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
   font-weight: 500;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--ink);
-  border: 1px solid var(--line-strong);
+  border: 1px solid rgba(63, 140, 255, 0.45);
   border-radius: 999px;
-  background: rgba(12, 13, 16, 0.55);
+  background: rgba(63, 140, 255, 0.14);
   backdrop-filter: blur(10px) saturate(140%);
   -webkit-backdrop-filter: blur(10px) saturate(140%);
   transition:
     border-color var(--dur-fast) var(--ease-out),
     background var(--dur-fast) var(--ease-out),
     transform var(--dur-fast) var(--ease-out);
+}
+
+.exp-classic-link::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--blue);
+  margin-right: 0.5rem;
 }
 
 .exp-classic-link:hover,
@@ -156,6 +174,10 @@ a {
   display: block;
   width: 100%;
   height: 100%;
+}
+#exp-canvas:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: -2px;
 }
 
 /* ============ loader (fades out when scene ready) ============ */
@@ -414,9 +436,9 @@ a {
 .exp-panel__kicker {
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--amber);
+  color: var(--muted);
   margin: 0 0 0.5rem;
 }
 .exp-panel__title {
@@ -451,12 +473,28 @@ a {
 }
 .exp-panel__list {
   margin: 0;
-  padding-left: 1.1rem;
+  padding-left: 0;
+  list-style: none;
   color: var(--muted);
   line-height: 1.5;
   font-size: 0.92rem;
   display: grid;
   gap: 0.5rem;
+}
+.exp-panel__list li {
+  position: relative;
+  padding-left: 1rem;
+}
+.exp-panel__list li::before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 0.42rem;
+  height: 0.42rem;
+  margin: 0;
+  background: var(--blue);
 }
 .exp-panel__chips {
   display: flex;
@@ -628,6 +666,15 @@ a {
   height: 16px;
   display: block;
 }
+.exp-sound .snd-on {
+  display: none;
+}
+.exp-sound.is-on .snd-on {
+  display: block;
+}
+.exp-sound.is-on .snd-off {
+  display: none;
+}
 .exp-sound.is-on {
   color: var(--blue);
   border-color: rgba(63, 140, 255, 0.5);
@@ -792,11 +839,27 @@ a {
 }
 .exp-sheet__list {
   margin: 0;
-  padding-left: 1.1rem;
+  padding-left: 0;
+  list-style: none;
   display: grid;
   gap: 0.4rem;
   font-size: 0.92rem;
   line-height: 1.5;
+}
+.exp-sheet__list li {
+  position: relative;
+  padding-left: 1rem;
+}
+.exp-sheet__list li::before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 0.42rem;
+  height: 0.42rem;
+  margin: 0;
+  background: var(--blue);
 }
 .exp-sheet__skills {
   display: grid;
@@ -999,6 +1062,9 @@ a {
   }
   .exp-panel {
     transition-duration: 0.001ms;
+  }
+  .exp-sheet, .exp-backdrop, .exp-lightbox {
+    transition-duration: 0.001ms !important;
   }
   .exp-draghint.is-on,
   .exp-draghint__glide,
