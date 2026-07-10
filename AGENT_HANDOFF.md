@@ -256,6 +256,52 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
+### 2026-07-09 (later) two-surface aesthetic pass (Kefan-approved item list)
+31 approved items from a 6-lens review of both pages. Highlights:
+- **Homepage tokens:** border alphas → --line-subtle/--line/--line-mid/
+  --line-strong/--line-bright; shadows → --shadow-sm/md/lg; near-blacks →
+  --ink-dark/--bg-recessed. `.project-sub` clamp 2→3 lines (+ellipsis) — the
+  2-line clamp had been silently cutting the outcome metric on 13/14 cards.
+  Only the nav pill keeps the studio-pulse animation. h1 tracking -0.015em;
+  .hero-copy text-wrap:balance; --mx/--my now drive a card-hover spotlight.
+- **Fixed bugs:** index.html favicon href pointed at assets/favicon.svg
+  (the file lives at the ROOT — href="favicon.svg"); AutoCAD skill-hover
+  image (CORS-broken paintingvalley hotlink) → local steering CAD render;
+  stepProject left the outgoing exhibit stuck mid-spin (rotation now resets
+  synchronously); GTAO was accidentally disabled globally by the USE_BAKED
+  gate (now `if (!LOW_TIER)`).
+- **3D night grade:** benchGlow recolored 0xffd9a8→0xe8ecf2 (cool LED, so
+  moon/resume/strips read as 3 zones); pendant joined applyLightState
+  (day 2.6 / night 0.7); carbon bucket clearcoat 0.7 + envMapIntensity 2.6,
+  javelin aero tweak envMapIntensity 1.6 (dark exhibits readable at night);
+  `dark` bucket metalness 0.55→0.15 (painted, not raw metal), aura printed
+  →0.05, driverseat steel →0.85; Bokeh aperture target 0.00022→0.0018,
+  maxblur 0.008→0.018 (DoF actually visible now); resume marker offset to
+  the sheet's corner.
+- **Desk lamp REBUILT** (buildModernDeskLamp): cantilever task lamp — round
+  base, edge column, joint sphere, arm + counterweight, slim LED head. Same
+  pivot/hitbox/lampLeds registration; still emits no light.
+- **Interaction:** drag hint now waits for the intro to land; deep links set
+  kw_intro_seen + show hints after panel close; Prev/Next cross-fades panel
+  content (150/200ms) and resets the outgoing turntable; panel opens at
+  680ms of the 850ms flight.
+- **KEYBOARD LAYER (new):** #exp-canvas is focusable (tabindex=0,
+  role=application); Arrow keys cycle PROJECT_ORDER + resume + lamp via the
+  existing setHover path (kbOrder() rebuilds per-keypress because GLB
+  hotspots attach asynchronously — do NOT snapshot it once); Enter/Space
+  activates; panel got role=dialog aria-modal, focus moves to its close
+  button and returns to the canvas on close. Keys are ignored while
+  flight/panel/lightbox is active (so they no-op during the intro).
+- **Sound toggle:** two inline SVGs (.snd-off/.snd-on) swapped by the
+  .is-on class — initSoundToggle never touches innerHTML now; no emoji.
+- **Overlay parity:** panel kicker muted+0.08em (was blue+0.2em); branded
+  square bullets on panel lists; reduced-motion covers .exp-sheet/backdrop/
+  lightbox; brand mark + return-link mirror the homepage; experience.html
+  got favicon.svg + og:image=studio-hover.webp (1280×800).
+- Cache: styles/script `aesthetics-20260709`; experience
+  `exp-aesthetics-20260709`. NOT approved/deferred: B5-B7, C5/C6/C8/C10,
+  D1/D7/D9, E3/E5/E6/E7, and the OG-card/ticker-pause/--quiet backlog.
+
 ### 2026-07-09 studio tile: frame loop → single-still Ken Burns (final)
 - Kefan reported the tile STILL flickered after the cross-fade rebuild. Root
   cause: mid-blend, two ~50%-opacity frames cover only ~75% of the tile, so
@@ -479,11 +525,11 @@ studio. Everything below is LIVE.
 - Windows gotchas: Python cannot write to `/tmp` — write temp files under `C:/Users/oc/AppData/Local/Temp/...`. In `python -c` strings use forward slashes / `os.path.join`, not escaped backslashes. Pasted screenshots land in `C:\Users\oc\AppData\Local\Packages\MicrosoftWindows.Client.Core_cw5n1h2txyewy\TempState\ScreenClip\`.
 
 ### Current cache versions (bump the matching one whenever you edit that file)
-- `styles.css?v=kenburns-20260709` (in index.html)
-- `script.js?v=kenburns-20260709` (in index.html)
+- `styles.css?v=aesthetics-20260709` (in index.html)
+- `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-cleanup-20260708` (3D page styles — in experience.html)
-- `experience.js?v=exp-cleanup-20260708` (3D page module — in experience.html)
+- `experience.css?v=exp-aesthetics-20260709` (3D page styles — in experience.html)
+- `experience.js?v=exp-aesthetics-20260709` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
