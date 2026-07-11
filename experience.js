@@ -1611,6 +1611,176 @@ function initScene(canvas) {
     paperEl.style.visibility = "visible";
   }
 
+  /* ---- DOM-parity sheet snapshot ----
+     The desk sheet's printed texture is a dense Arial mini-layout that looks
+     right as a room prop, but it is NOT what the DOM résumé looks like — a
+     cross-fade between the two visibly switches typography and font size
+     (Kefan's second ghosting report). For the pickup flight the face instead
+     wears a snapshot rasterized FROM the laid-out DOM sheet itself: every
+     rendered text line is drawn at its measured client rect with its computed
+     font (the Google webfonts are document-loaded, so canvas 2D can use
+     them), making the held 3D sheet and the DOM that fades in over it
+     glyph-identical. Geometry is MEASURED from the live layout, never
+     re-implemented, so future resumeHTML/CSS edits stay in sync for free. */
+  let sheetSnap = null; // { width, tex } — rebuilt when the sheet width changes
+  function buildSheetSnapshot() {
+    if (!paperEl) return null;
+    const rect = paperEl.getBoundingClientRect();
+    const W = Math.round(rect.width);
+    if (!W || !rect.height) return null;
+    if (sheetSnap && sheetSnap.width === W) return sheetSnap.tex;
+    const texW = 1024;
+    const texH = Math.round(texW * (0.312 / 0.234)); // exact printed-face aspect
+    const scale = texW / rect.width;
+    const c = document.createElement("canvas");
+    c.width = texW;
+    c.height = texH;
+    const ctx = c.getContext("2d");
+    // same surface as .exp-sheet: the gradient spans the FULL sheet height;
+    // the texture just crops at the face's 3:4 extent — exactly the region
+    // of the DOM sheet the physical paper covers (width + top aligned)
+    const bg = ctx.createLinearGradient(0, 0, 0, rect.height * scale);
+    bg.addColorStop(0, "#fafbfd");
+    bg.addColorStop(1, "#eef0f4");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, texW, texH);
+    const X = (v) => (v - rect.left) * scale;
+    const Y = (v) => (v - rect.top) * scale;
+
+    // painted boxes: the blue rule + the list bullets (::before pseudos)
+    paperEl.querySelectorAll(".exp-sheet__rule").forEach((el) => {
+      const r = el.getBoundingClientRect();
+      ctx.fillStyle = getComputedStyle(el).backgroundColor;
+      ctx.fillRect(X(r.left), Y(r.top), r.width * scale, Math.max(1, r.height * scale));
+    });
+    paperEl.querySelectorAll(".exp-sheet__list li").forEach((el) => {
+      const ps = getComputedStyle(el, "::before");
+      const w = parseFloat(ps.width), h = parseFloat(ps.height);
+      if (!w || !h || ps.backgroundColor === "rgba(0, 0, 0, 0)") return;
+      const r = el.getBoundingClientRect();
+      ctx.fillStyle = ps.backgroundColor;
+      ctx.fillRect(
+        X(r.left + (parseFloat(ps.left) || 0)),
+        Y(r.top + (parseFloat(ps.top) || 0)),
+        w * scale, h * scale
+      );
+    });
+
+    // text: split every text node into its rendered line fragments (grouped
+    // by each character's line-box top) and draw each at its measured rect
+    const range = document.createRange();
+    const walker = document.createTreeWalker(paperEl, NodeFilter.SHOW_TEXT, {
+      acceptNode: (n) =>
+        n.data.trim() && n.parentElement && !n.parentElement.closest(".exp-sheet__close")
+          ? NodeFilter.FILTER_ACCEPT
+          : NodeFilter.FILTER_REJECT,
+    });
+    let node;
+    while ((node = walker.nextNode())) {
+      const cs = getComputedStyle(node.parentElement);
+      const fontPx = parseFloat(cs.fontSize) * scale;
+      ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${fontPx}px ${cs.fontFamily}`;
+      const lsRaw = parseFloat(cs.letterSpacing);
+      const lsPx = Number.isFinite(lsRaw) ? lsRaw * scale : 0;
+      let manualLS = false;
+      if ("letterSpacing" in ctx) {
+        ctx.letterSpacing = `${lsPx}px`;
+      } else {
+        // Safari <16.4 / Firefox <116: no canvas tracking — draw those runs
+        // char-by-char below so the mono section labels keep their spacing
+        manualLS = lsPx !== 0;
+      }
+      ctx.fillStyle = cs.color;
+      const met = ctx.measureText("Mg");
+      // legacy engines without fontBoundingBox*: approximate from the actual
+      // ink extents of "Mg" before falling back to a generic ratio
+      const asc = met.fontBoundingBoxAscent ||
+        (met.actualBoundingBoxAscent && met.actualBoundingBoxAscent * 1.06) || fontPx * 0.8;
+      const desc = met.fontBoundingBoxDescent ||
+        (met.actualBoundingBoxDescent && met.actualBoundingBoxDescent * 1.1) || fontPx * 0.22;
+      const underline = (cs.textDecorationLine || "").includes("underline");
+      const upper = cs.textTransform === "uppercase";
+      const s = node.data;
+      const drawFrag = (a, b) => {
+        while (a < b && /\s/.test(s[a])) a++;   // collapsed at wrap points —
+        while (b > a && /\s/.test(s[b - 1])) b--; // must not shift the glyphs
+        if (a >= b) return;
+        range.setStart(node, a);
+        range.setEnd(node, b);
+        const fr = range.getBoundingClientRect();
+        if (!fr.width) return;
+        // center the glyph box inside the measured line box, like CSS leading
+        const baseline = Y(fr.top) + (fr.height * scale - (asc + desc)) / 2 + asc;
+        const text = upper ? s.slice(a, b).toUpperCase() : s.slice(a, b);
+        if (manualLS) {
+          let x = X(fr.left);
+          for (const ch of text) {
+            ctx.fillText(ch, x, baseline);
+            x += ctx.measureText(ch).width + lsPx;
+          }
+        } else {
+          ctx.fillText(text, X(fr.left), baseline);
+        }
+        if (underline) {
+          const off = parseFloat(cs.textUnderlineOffset) || 0;
+          ctx.fillRect(X(fr.left), baseline + Math.max(1.5, off * scale), fr.width * scale, Math.max(1, fontPx / 15));
+        }
+      };
+      let runStart = -1, runTop = 0;
+      for (let i = 0; i < s.length; i++) {
+        range.setStart(node, i);
+        range.setEnd(node, i + 1);
+        const rr = range.getClientRects()[0];
+        if (!rr || !rr.width) continue; // collapsed whitespace
+        if (runStart < 0) { runStart = i; runTop = rr.top; }
+        else if (Math.abs(rr.top - runTop) > 1.5) { // wrapped to a new line
+          drawFrag(runStart, i);
+          runStart = i;
+          runTop = rr.top;
+        }
+      }
+      if (runStart >= 0) drawFrag(runStart, s.length);
+    }
+
+    if (sheetSnap && sheetSnap.tex) sheetSnap.tex.dispose();
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = MAXA;
+    sheetSnap = { width: W, tex };
+    return tex;
+  }
+
+  // The snapshot is the sheet's ONE permanent texture — desk, flight and
+  // held all show the exact same document, so there is no content switch at
+  // any point of the interaction (Kefan's request: the résumé IS the
+  // model's skin). buildResumePaper()'s Arial canvas only bridges the few
+  // hundred ms until the webfonts are ready and this first snapshot lands.
+  function applySheetTexture() {
+    const pivot = HOTSPOTS.find((h) => h.userData.hotspot.action === "resume");
+    const root = pivot && pivot.userData.hotspot.pickupObject;
+    const face = root && root.userData.resumeFace;
+    if (!face) return;
+    const snap = buildSheetSnapshot();
+    if (snap && face.material.map !== snap) {
+      face.material.map = snap;
+      face.material.emissiveMap = snap;
+      renderer.initTexture(snap); // upload now, never during an interaction
+    }
+  }
+  // seed the hidden DOM sheet at startup so the snapshot can be rasterized
+  // before the visitor's first interaction (visibility:hidden still lays out)
+  if (paperEl && !paperEl.innerHTML.trim()) paperEl.innerHTML = resumeHTML(RESUME);
+  if (document.fonts && document.fonts.ready) {
+    // (re)build once the real webfonts are in — a snapshot taken against
+    // fallback-font layout must not survive the reflow
+    document.fonts.ready.then(() => {
+      if (sheetSnap) sheetSnap.width = -1;
+      applySheetTexture();
+    });
+  } else {
+    applySheetTexture();
+  }
+
   // Project the DOM sheet's on-screen rect into camera space: at what
   // distance/offset must the physical sheet float so its printed face lands
   // pixel-aligned with the DOM sheet (width + top edge match, centered X)?
@@ -1708,6 +1878,10 @@ function initScene(canvas) {
     // be computed at click time and the loop starts the lift after `delay`
     paperHold = computePaperHold(pivot);
     if (!paperHold) { showPaperDom(gen); return; } // degraded fallback
+    // the sheet permanently wears the DOM-parity snapshot (applySheetTexture)
+    // — this only refreshes it if the viewport width changed since it was
+    // built (width-cached: O(1) no-op on the common path)
+    applySheetTexture();
     paperMotion = {
       mode: "lift", gen, t0: null, dur: PAPER_LIFT_MS, delay: delayMs || 0,
       fromPos: pivot.position.clone(), fromQuat: pivot.quaternion.clone(),
@@ -1821,6 +1995,9 @@ function initScene(canvas) {
           pivot.quaternion.copy(PM_QUAT);
           if (face) face.material.emissiveIntensity = paperGlowTarget();
         }
+        // a resize while reading reflows the DOM sheet — refresh the parity
+        // snapshot too (width-cached: free when nothing changed)
+        applySheetTexture();
         pivot.visible = true;
         rootClass.remove("exp-paper-active", "exp-paper-open");
         setTimeout(startReturn, PAPER_SWAP_MS * 0.75);
@@ -3753,8 +3930,10 @@ function buildBlueprintPanel() {
 }
 
 function buildResumePaper() {
-  // A4-ish sheet lying flat on the desk. This same canvas is reused by the
-  // DOM pickup proxy, so the paper cannot visibly change during the handoff.
+  // A4-ish sheet lying flat on the desk. The Arial canvas drawn here is only
+  // a BOOT PLACEHOLDER: once the webfonts are ready, applySheetTexture()
+  // permanently replaces it with the DOM-parity snapshot (the sheet then
+  // shows the exact same document as the interactive résumé, everywhere).
   const g = new THREE.Group();
   const c = document.createElement("canvas");
   // 4x supersampled so the text stays crisp at fly-in distance; drawing

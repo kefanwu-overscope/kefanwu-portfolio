@@ -256,7 +256,45 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-10 (latest) pickup ghosting fix — three compounding causes
+### 2026-07-10 (latest) the résumé IS the model's texture — one skin, zero switches
+- After the motion-ghost fixes Kefan still saw the résumé "switch layout and
+  font size" mid-pickup. Root cause: the desk sheet's printed texture was a
+  dense Arial mini-layout while the DOM sheet is Inter with looser leading —
+  the cross-fade itself WAS the switch. Per Kefan's own suggestion ("把简历
+  当建模贴图"), the DOM-derived snapshot is now the sheet's ONE PERMANENT
+  texture: desk prop, pickup flight, and held pose all show the exact same
+  document. There is no texture swap at any point of the interaction, and the
+  earlier blur-in mitigation stays removed (plain 220ms opacity dissolve over
+  a glyph-identical layer).
+- `buildSheetSnapshot()` (experience.js, above computePaperHold): rasterizes
+  the laid-out DOM sheet into a 1024×1365 CanvasTexture — bg gradient,
+  `.exp-sheet__rule`, `li::before` bullets, then every text node split into
+  per-LINE fragments (per-character `Range.getClientRects` top-grouping,
+  whitespace trimmed at wrap points) drawn at its measured client rect with
+  its computed font. The Google webfonts are document-loaded so canvas 2D
+  uses the real Inter/Inter Tight/IBM Plex Mono. Geometry is MEASURED from
+  the live layout — resumeHTML/CSS edits stay in sync for free. Legacy-engine
+  fallbacks (from the adversarial review): manual per-char tracking when
+  `ctx.letterSpacing` is missing (Safari <16.4 / Firefox <116), and
+  `actualBoundingBox*`-based ascent/descent when `fontBoundingBox*` is.
+- `applySheetTexture()` wiring: paperEl's DOM is seeded at startup (hidden
+  layout), and on `document.fonts.ready` the snapshot is built, pre-uploaded
+  (`renderer.initTexture`) and assigned to `face.material.map`+`emissiveMap`
+  permanently. `buildResumePaper()`'s Arial canvas is ONLY a boot placeholder
+  for the few hundred ms before fonts land. beginPaperLift/closePanel call
+  `applySheetTexture()` again purely as a width-refresh (snapshot cached by
+  sheet width, old texture disposed on rebuild — O(1) no-op normally), which
+  also covers resize-while-reading.
+- Note the desk prop consequence: the sheet shows the DOM layout top-cropped
+  to the paper's 3:4 coverage (bigger type, possibly cut above the contact
+  line on tall viewports) instead of the old full-page Arial mini. This is
+  intentional — do not "fix" it back, it is what makes the pickup seamless.
+- Verified (Chromium, `__exp.pump`): texture identity constant across the
+  whole cycle (rest→click→lift→held→Esc→landing, same uuid), desk close-up
+  render reads correctly, landing posErr 0, no console errors, mobile 390×844
+  rebuilds the snapshot at its own width. Cache: `exp-papertex-20260710`.
+
+### 2026-07-10 pickup ghosting fix — three compounding causes
 - Kefan approved the 3D pickup but reported ghosting (虚影) during lift AND
   return. Three verified causes, all fixed (cache `exp-noghost-20260710`):
   1. **Arc term had max speed at the endpoints.** The lift bow was
@@ -280,10 +318,10 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
   4. **Cross-fade double-text (residual, found by adversarial review).** The
      canvas texture (Arial, own wrap) and the DOM sheet (Inter, CSS reflow)
      typeset the same copy with different line breaks — a plain dissolve
-     briefly shows two legible text layers. `.exp-sheet` now BLURS IN
-     (`filter: blur(6px) -> 0` over 240ms, reversed on close), so only one
-     layer is ever sharp and the swap reads as a focus pull. Do not remove
-     the blur without solving the typography mismatch some other way.
+     briefly showed two legible text layers. First mitigated with a
+     `blur(6px)` fade-in; SUPERSEDED the same day by the DOM-parity snapshot
+     (see the newest entry above), which solved the mismatch properly — the
+     blur was removed again.
   - Verified by frame-stepped measurement (`__exp.pump`): fade-start slide
     0.1px, aperture 0 at every sampled lift/return frame, landing tail
     velocity 0, exact desk pose restore, clean classes; race stress tests
@@ -703,8 +741,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-noghost-20260710` (3D page styles — in experience.html)
-- `experience.js?v=exp-noghost-20260710` (3D page module — in experience.html)
+- `experience.css?v=exp-papertex-20260710` (3D page styles — in experience.html)
+- `experience.js?v=exp-papertex-20260710` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
