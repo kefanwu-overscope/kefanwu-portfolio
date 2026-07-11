@@ -1793,7 +1793,13 @@ function initScene(canvas) {
     camera.updateMatrixWorld(true);
     const rect = paperEl.getBoundingClientRect();
     if (!rect.width || !rect.height) return null;
-    const ws = face.getWorldScale(PM_V1);
+    // The pivot can still carry the 6% hover scale-up at click time (users
+    // hover to click!) while the render loop eases it back to baseScale
+    // during the flight. Measure as if it had already settled — otherwise
+    // the held distance is ~6% too far and the sheet lands smaller than the
+    // DOM, popping at the swap (Kefan's "end-of-pickup flash").
+    const hoverK = pivot.scale.x / ((pivot.userData.hotspot && pivot.userData.hotspot.baseScale) || 1) || 1;
+    const ws = face.getWorldScale(PM_V1).divideScalar(hoverK);
     const worldW = 0.234 * Math.abs(ws.x);
     const worldH = 0.312 * Math.abs(ws.y);
     const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
@@ -1819,12 +1825,15 @@ function initScene(canvas) {
     const qPivot = pivot.getWorldQuaternion(new THREE.Quaternion());
     const qFace = face.getWorldQuaternion(new THREE.Quaternion());
     const qOffInv = qPivot.clone().invert().multiply(qFace).invert();
-    const pScale = pivot.getWorldScale(new THREE.Vector3()).x || 1;
+    // extract the face's pivot-local offset with the CURRENT scale (that is
+    // what the measured world positions carry), but store the SETTLED scale
+    // for reconstruction at the held pose, where the hover ease has decayed
+    const pScaleNow = pivot.getWorldScale(new THREE.Vector3()).x || 1;
     const faceInPivot = face.getWorldPosition(new THREE.Vector3())
       .sub(pivot.getWorldPosition(new THREE.Vector3()))
       .applyQuaternion(qPivot.clone().invert())
-      .divideScalar(pScale);
-    return { face, dist, localFacePos, qOffInv, faceInPivot, pScale };
+      .divideScalar(pScaleNow);
+    return { face, dist, localFacePos, qOffInv, faceInPivot, pScale: pScaleNow / hoverK };
   }
 
   // World-space pivot pose that puts the printed face at the held position,
@@ -1874,6 +1883,9 @@ function initScene(canvas) {
     const pivot = activePaperPivot;
     if (!pivot || !panelOpen) return;
     const gen = ++paperAnimGen;
+    // settle the hover scale-up NOW (reads as press feedback) so the sheet's
+    // real size matches the hold math for the whole flight
+    pivot.scale.setScalar((pivot.userData.hotspot && pivot.userData.hotspot.baseScale) || 1);
     // camera-independent: derived from the DOM rect + lens only, so it can
     // be computed at click time and the loop starts the lift after `delay`
     paperHold = computePaperHold(pivot);
