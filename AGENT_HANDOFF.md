@@ -256,7 +256,47 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-10 (latest) résumé pickup rebuilt as a TRUE 3D lift (proxy deleted)
+### 2026-07-10 (latest) pickup ghosting fix — three compounding causes
+- Kefan approved the 3D pickup but reported ghosting (虚影) during lift AND
+  return. Three verified causes, all fixed (cache `exp-noghost-20260710`):
+  1. **Arc term had max speed at the endpoints.** The lift bow was
+     `sin(pi*k)*0.045` — its derivative peaks exactly at k=1, so the sheet was
+     still dropping ~310px/s when the DOM cross-fade started (measured 19.1px
+     of on-screen slide during the fade → double-exposed text). Both arcs now
+     ride the EASED value (`sin(pi*e)`), which has zero end-slope. Measured
+     slide after the fix: **0.1px**. Also gives a soft landing on the desk.
+  2. **Reading-DoF opened during the motion.** Bokeh gather-bleed smears the
+     bright moving sheet into the blurred room. Now gated on
+     `paperSettled = ... && !paperMotion` — aperture stays 0 through the whole
+     lift and only eases in once the sheet is still.
+  3. **Stale-focus defocus on close (the worst one).** After closePanel,
+     `want=0` eased the aperture out at 8%/frame (~0.4s tail) while the focus
+     uniform stayed STUCK at the held distance (~0.47m, empty air) — the whole
+     return flight rendered defocused. closePanel now hard-zeros
+     `bokeh.uniforms.aperture.value` under the overlay fade, and the focus
+     stays pinned to the sheet whenever `activePaperPivot && paperHold` exists.
+  - `PAPER_DOM_FADE_AT` raised 0.78 → 0.93 (at 0.78, ~40px of path-slide
+    remained during the fade even before the arc term).
+  4. **Cross-fade double-text (residual, found by adversarial review).** The
+     canvas texture (Arial, own wrap) and the DOM sheet (Inter, CSS reflow)
+     typeset the same copy with different line breaks — a plain dissolve
+     briefly shows two legible text layers. `.exp-sheet` now BLURS IN
+     (`filter: blur(6px) -> 0` over 240ms, reversed on close), so only one
+     layer is ever sharp and the swap reads as a focus pull. Do not remove
+     the blur without solving the typography mismatch some other way.
+  - Verified by frame-stepped measurement (`__exp.pump`): fade-start slide
+    0.1px, aperture 0 at every sampled lift/return frame, landing tail
+    velocity 0, exact desk pose restore, clean classes; race stress tests
+    (Esc in the 430ms delay window / mid-lift / during the DOM fade, double
+    click, click during return, interrupted-return resume) all land posErr 0.
+    A 3-lens adversarial review workflow (Sonnet, xhigh) confirmed the
+    diagnosis, independently re-found the arc bug, verdicted the patch
+    regression-free, and ruled out reflector/shadow/GTAO/MSAA/flicker/bloom
+    as residual sources (bloom stays untouched: the moving sheet sits below
+    the 0.96 linear threshold mid-flight, and gating bloom globally would
+    pop every other emitter's halo).
+
+### 2026-07-10 résumé pickup rebuilt as a TRUE 3D lift (proxy deleted)
 - Kefan reported the proxy-based pickup still felt janky and the résumé still
   visibly "changed" on pickup/return. Root cause was structural: ANY
   screen-space DOM proxy diverges from the WebGL render (raw sRGB canvas vs
@@ -663,8 +703,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-pickup3d-20260710` (3D page styles — in experience.html)
-- `experience.js?v=exp-pickup3d-20260710` (3D page module — in experience.html)
+- `experience.css?v=exp-noghost-20260710` (3D page styles — in experience.html)
+- `experience.js?v=exp-noghost-20260710` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

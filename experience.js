@@ -1151,7 +1151,11 @@ function initScene(canvas) {
         paperHoldTargetWorld(paperHold, PM_POS, PM_QUAT);
         pv.position.lerpVectors(pm.fromPos, PM_POS, e);
         pv.quaternion.slerpQuaternions(pm.fromQuat, PM_QUAT, e);
-        pv.position.y += Math.sin(Math.PI * k) * 0.045;
+        // arc rides the EASED value: sin(pi*k) had max vertical speed exactly
+        // at k=1 (~310px/s of drop right at the DOM swap — measured 19px of
+        // slide during the fade, the main ghosting source); sin(pi*e) has
+        // zero end-slope, so the bow dies out with the rest of the motion
+        pv.position.y += Math.sin(Math.PI * e) * 0.045;
         if (face) face.material.emissiveIntensity = paperGlowTarget() * e;
         if (!pm.domShown && k >= PAPER_DOM_FADE_AT) {
           pm.domShown = true;
@@ -1161,7 +1165,7 @@ function initScene(canvas) {
       } else {
         pv.position.lerpVectors(pm.fromPos, pm.toPos, e);
         pv.quaternion.slerpQuaternions(pm.fromQuat, pm.toQuat, e);
-        pv.position.y += Math.sin(Math.PI * k) * 0.03;
+        pv.position.y += Math.sin(Math.PI * e) * 0.03; // zero end-slope: eases ONTO the desk
         if (face) face.material.emissiveIntensity = pm.fromGlow * (1 - e);
         if (k >= 1) {
           // land EXACTLY on the remembered desk pose
@@ -1195,14 +1199,18 @@ function initScene(canvas) {
       focusSpot.target.position.copy(fc);
     }
     if (bokeh) {
-      const paperFocus = panelOpen && activePaperPivot && paperHold;
-      const want = panelOpen && focusedPivot ? 0.0018 : paperFocus ? 0.0012 : 0.0;
+      // Reading-DoF opens ONLY once the sheet has fully settled: while the
+      // bright sheet is MOVING, the bokeh gather bleeds it into the blurred
+      // background as a trailing halo — reads as ghosting.
+      const paperSettled = panelOpen && activePaperPivot && paperHold && !paperMotion;
+      const want = panelOpen && focusedPivot ? 0.0018 : paperSettled ? 0.0012 : 0.0;
       const u = bokeh.uniforms;
       u.aperture.value += (want - u.aperture.value) * 0.08;
       if (panelOpen && focusedPivot) {
         u.focus.value = camera.position.distanceTo(focusedPivot.userData.hotspot.center);
-      } else if (paperFocus) {
-        // reading pose: keep the held sheet tack-sharp, let the room fall off
+      } else if (activePaperPivot && paperHold) {
+        // pin focus to the sheet whenever it exists, so any residual
+        // easing-out aperture can never defocus the paper itself
         u.focus.value = camera.position.distanceTo(paperHold.face.getWorldPosition(PM_V1));
       }
     }
@@ -1267,7 +1275,13 @@ function initScene(canvas) {
   const PAPER_LIFT_MS = 900;       // desk -> held-in-front-of-camera flight
   const PAPER_RETURN_MS = 820;     // held -> desk (runs with the camera return)
   const PAPER_SWAP_MS = 240;       // DOM sheet opacity cross-fade (CSS: 220ms)
-  const PAPER_DOM_FADE_AT = 0.78;  // lift progress at which the DOM fades in
+  // 0.93, measured (frame-stepped via __exp.pump): on-screen sheet slide
+  // between the fade-start frame and full settle was 40.3px at the original
+  // 0.78 (double-exposed the two text layers — Kefan's "ghosting" report),
+  // 19.1px at 0.93 while the arc term still rode raw k, and 0.1px at 0.93
+  // with the arc riding the eased value. Keep the arc on `e` (see the
+  // paperMotion block) or this number regresses.
+  const PAPER_DOM_FADE_AT = 0.93;  // lift progress at which the DOM fades in
   let activePaperPivot = null;
   let paperAnimGen = 0;
   let paperMotion = null; // in-flight lift/return tween, driven by the render loop
@@ -1754,6 +1768,10 @@ function initScene(canvas) {
     };
 
     if (closingPaperPivot) {
+      // Kill the reading-DoF instantly, under the overlay fade: the eased-out
+      // aperture kept a ~0.4s tail with focus STUCK at the held distance, so
+      // the whole return flight rendered defocused (the "put-down" ghosting).
+      if (bokeh) bokeh.uniforms.aperture.value = 0;
       const pivot = closingPaperPivot;
       const desk = pivot.userData.deskPose;
       const root = pivot.userData.hotspot && pivot.userData.hotspot.pickupObject;

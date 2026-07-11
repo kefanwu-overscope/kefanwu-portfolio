@@ -778,18 +778,26 @@ a {
     0 6px 18px rgba(0, 0, 0, 0.4);
   transform: translate(-50%, -50%);
   opacity: 0;
+  /* blur-in kills the one remaining cross-fade artifact: the canvas-textured
+     3D sheet (Arial) and this DOM sheet (Inter) typeset the same copy with
+     different line breaks, so a plain dissolve briefly double-exposes two
+     legible text layers. Blurred-in, only ONE layer is ever sharp — the swap
+     reads as a focus pull instead of a ghost. */
+  filter: blur(6px);
   visibility: hidden;
   pointer-events: none;
   transition:
     opacity 220ms linear,
+    filter 240ms var(--ease-out),
     visibility 0s linear 220ms;
   contain: layout paint style;
   /* keep an own compositor layer so the pre-painted sheet fades in without
      a main-thread raster hitch mid-choreography */
-  will-change: opacity;
+  will-change: opacity, filter;
 }
 .exp-paper-open .exp-sheet {
   opacity: 1;
+  filter: blur(0);
   visibility: visible;
   pointer-events: auto;
   transition-delay: 0s;
