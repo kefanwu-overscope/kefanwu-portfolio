@@ -388,14 +388,14 @@ function initScene(canvas) {
   const sideRows = LOW_TIER ? [CAB2.rows[1]] : CAB2.rows;
   const caseStrips = { main: [], side: [] }; // kept for the boot choreography
   mainRows.forEach((y) => {
-    const l = stripLight(2.2, LOW_TIER ? 16.5 : 11.5); // brighter: exhibits read too dim (Kefan)
+    const l = stripLight(2.2, LOW_TIER ? 19 : 13.5); // brighter x2: exhibits read too dim (Kefan, twice)
     l.position.set(0, y + 0.42, CAB.z + 0.34);
     scene.add(l);
     l.lookAt(0, y + 0.06, CAB.z); // ~45° down-back: lights faces AND backs
     caseStrips.main.push(l);
   });
   sideRows.forEach((y) => {
-    const l = stripLight(1.4, LOW_TIER ? 15.5 : 10.8);
+    const l = stripLight(1.4, LOW_TIER ? 18 : 12.7);
     l.position.set(CAB2.x - 0.34, y + 0.42, CAB2.z);
     scene.add(l);
     l.lookAt(CAB2.x, y + 0.06, CAB2.z);
@@ -531,9 +531,9 @@ function initScene(canvas) {
     // and the warm pool blooms up on the resume
     seg(5050, 90, (k) => lampLeds.forEach((m) => { m.emissiveIntensity = 2.4 * k; }), lin);
     seg(5080, 320, (k) => { benchGlow.intensity = 0.95 * k; }, easeOut);
-    // overshoot slightly then settle on applyLightState's night value (2.8)
+    // overshoot slightly then settle on applyLightState's night value (1.5)
     seg(5100, 420, (k) => {
-      resumeSpot.intensity = 2.8 * (k < 0.6 ? (k / 0.6) * 1.18 : 1.18 - 0.18 * ((k - 0.6) / 0.4));
+      resumeSpot.intensity = 1.5 * (k < 0.6 ? (k / 0.6) * 1.18 : 1.18 - 0.18 * ((k - 0.6) / 0.4));
     }, lin);
     seg(5100, 500, (k) => { bloom.strength = bloom0 + 0.08 * Math.sin(Math.PI * k); }, lin);
 
@@ -918,7 +918,10 @@ function initScene(canvas) {
       ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0, resume: 0, moon: 0, pendant: 2.6 } // day grade: strips + bake carry the room
       // night: the desk lamp (resume) is the dominant practical, the pendant
       // recedes to a whisper so the lamp's pool owns the desk
-      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 2.8, moon: MOON_NIGHT, pendant: 0.3 };
+      // resume 1.5, NOT higher: sampled at 2.8 the pool washed out the sheet's
+      // upper half (DOM-parity texture has more white than the old Arial mini);
+      // at 1.5 every section reads while the pool still owns the mat (Kefan)
+      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 1.5, moon: MOON_NIGHT, pendant: 0.3 };
     if (bootTakeover) return; // the boot choreography owns the levels; it lands on these values
     lampLeds.forEach((m) => { m.emissiveIntensity = lightsOn ? 0.05 : 2.4; });
     blueLines.forEach((m) => {

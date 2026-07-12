@@ -256,7 +256,19 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-11 (latest) studio polish pass (6 Kefan items)
+### 2026-07-11 (latest) light tune: lamp pool down, strips up again
+- **resumeSpot night 2.8 → 1.5** (applyLightState + the runBootIntro
+  lamp-click beat, which must always land on the same value). At 2.8 the pool
+  washed out the upper half of the desk résumé — the DOM-parity texture has
+  more white area than the old Arial mini, so the old tuning over-exposed it.
+  Sampled/screenshotted at 2.8/2.0/1.5: 1.5 keeps every section readable with
+  the pool still owning the mat. Do not raise without re-checking legibility
+  of the SHEET, not just the pool.
+- **Cabinet strips up again** (second Kefan request): main 11.5→13.5, side
+  10.8→12.7 (LOW_TIER 19/18).
+- Cache: `exp-lighttune-20260711`.
+
+### 2026-07-11 studio polish pass (6 Kefan items)
 - **Click-hint shorter:** `showClickHint`'s auto-dismiss 5000→2500ms.
 - **Cabinet exhibits brighter:** the per-row `RectAreaLight` strip intensities
   bumped — main 9.0→11.5, side 8.5→10.8 (LOW_TIER 14/13→16.5/15.5). Exhibits
@@ -795,8 +807,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-studiotweaks-20260711` (3D page styles — in experience.html)
-- `experience.js?v=exp-studiotweaks-20260711` (3D page module — in experience.html)
+- `experience.css?v=exp-lighttune-20260711` (3D page styles — in experience.html)
+- `experience.js?v=exp-lighttune-20260711` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
