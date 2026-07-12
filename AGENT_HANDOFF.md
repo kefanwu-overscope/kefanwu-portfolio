@@ -256,7 +256,49 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-12 (latest) REVERTED: 360° orbit + Boston window (Kefan: "太乱了")
+### 2026-07-12 (latest) realism set-dressing (Kefan approved A3/A5/B1/tire/C2/C4/C5/C6)
+- From a 3-lens realism audit; Kefan approved by number. All NEW geometry is
+  REAL-TIME (no `bk_` tags) so it renders over the baked room with no re-bake.
+- Printer internals (`buildBambuPrinter`): **A3** CoreXY idler pulleys at the
+  crossbar ends + two thin timing-belt strips (static — sweep delta is minor);
+  **A5** chamber timelapse camera (top-front corner), toolhead inspection lens
+  on the shroud (child of `headGroup`, rides the sweep), rear circulation-fan
+  grille (canvas disc on interior back wall), Z-screw coupler collars, teal
+  status-LED strip on the bottom bezel lip.
+- **B1** `buildWeldingCart()` at (1.62, 0, -1.14) rotY 0.35 — corner pocket
+  between the cabinets (x 1.25..1.98, z -1.45..-0.92). TIG machine in brand
+  blue w/ emissive "142 A" canvas face, argon cylinder + brass valve + twin
+  gauges + ARGON stencil + strap, torch on the handle w/ cable loop. Camera
+  can never reach it: azimuth ±0.32π keeps camera z > target.z (-0.1).
+- **Hoosier tire** `buildHoosierTire()` at (1.62, 1.72, -1.44) on the back
+  wall. Slick = plain torus (accurate). Lettering: transparent RingGeometry
+  at z=0.0757 — just PROUD of the torus crest (0.075); at the sidewall midline
+  the letters bury inside the tire's bulge (first attempt showed only dashes).
+  Bottom-arc text rotates `a - π/2` (tops inward) or it reads upside down.
+  Bracket plate slimmed to 0.05×0.12 @ y 0.15 — a wide plate showed through
+  the hub hole.
+- **C2** `buildFloorJoints()` — saw-cut strips at x ±1.7 / z 0.6, 2.6, y
+  0.0015 (under the rug they're occluded by it). **C4** `buildBenchMat()` —
+  ESD mat (-1.66, -0.2) w/ grid canvas + green ground lead + copper lug (rug
+  ends at x -1.15, no overlap). **C5** `buildChestTopProps()` — torque wrench
+  / folded safety glasses / parts tray+bolts as a standalone group at the
+  chest's world pose (-2.22, 0.791, 1.06) rotY π/2 — the chest itself is
+  bk_chest (baked, procedural original hidden) so props CAN'T live inside
+  buildToolChest. **C6** desk-lamp cord: desk top is y=0.766, back edge
+  z=-0.45 (measured via Box3, NOT -0.29 as eyeballed — first cord dove into
+  the desktop); cord stays at y≈0.771 until z -0.42, then drops behind.
+- NOT approved (do not add unasked): A1/A2 filament tube + drag chain, A4
+  purge tower, B2 stock rack, B3 banner, B4 tire stack, C1 shelf placards,
+  C3 conduit, C7 laptop. Engine stand / second toolbox explicitly rejected
+  by audit (adjacent to previously-removed props).
+- QA notes: in-chamber captures need `controls.minDistance` temporarily
+  dropped (1.4 pushes the camera out); night shots of dark props need a
+  temporary key/hemi boost or a throwaway PointLight (remove after). snapsrv
+  POSTs from the page need `mode: "no-cors"`. Verified: corner + tire + cord
+  + mat + joints + chest top + chamber internals via canvas captures, console
+  clean. Cache: `exp-realism1-20260712`.
+
+### 2026-07-12 REVERTED: 360° orbit + Boston window (Kefan: "太乱了")
 - Kefan reverted the whole 360°/window experiment same-day. Removed:
   `makeBostonSkylineTexture` + `buildCityWindow` (+ its scene.add), the
   `windowGlow` SpotLight and all its applyLightState/boot wiring
@@ -1035,8 +1077,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-nowindow-20260712` (3D page styles — in experience.html)
-- `experience.js?v=exp-nowindow-20260712` (3D page module — in experience.html)
+- `experience.css?v=exp-realism1-20260712` (3D page styles — in experience.html)
+- `experience.js?v=exp-realism1-20260712` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
