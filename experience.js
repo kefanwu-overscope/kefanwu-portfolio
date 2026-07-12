@@ -912,7 +912,10 @@ function initScene(canvas) {
       lmMix.value = 0;
     }
     const probe = lightsOn ? (LM.probeOn || LM.probeOff) : (LM.probeOff || LM.probeOn);
-    if (probe) scene.environment = probe;
+    // instant paths swap the environment now; the animated fade swaps it at
+    // its MIDPOINT instead — an instant reflection/ambient jump at the very
+    // start of the fade was one of the toggle's visible "steps"
+    if (probe && (!animate || prefersReducedMotion)) scene.environment = probe;
     // real-time lights serve the exhibits; dim them with the room
     const want = lightsOn
       ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0, resume: 0, moon: 0, pendant: 2.6 } // day grade: strips + bake carry the room
@@ -923,23 +926,36 @@ function initScene(canvas) {
       // at 1.5 every section reads while the pool still owns the mat (Kefan)
       : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 1.5, moon: MOON_NIGHT, pendant: 0.3 };
     if (bootTakeover) return; // the boot choreography owns the levels; it lands on these values
-    lampLeds.forEach((m) => { m.emissiveIntensity = lightsOn ? 0.05 : 2.4; });
     blueLines.forEach((m) => {
       m.emissive = m.emissive || new THREE.Color(0x2b4d80);
       m.emissive.setHex(0x3f8cff);
-      m.emissiveIntensity = lightsOn ? 0.12 : 1.1; // LED inlay glows at night
     });
-    const from = { key: key.intensity, hemi: hemi.intensity, fill: fill.intensity, env: scene.environmentIntensity, bench: benchGlow.intensity, resume: resumeSpot.intensity, moon: moonSpot.intensity, pendant: MODELS.pendantLight.intensity };
+    // the LED strips and the rug inlay used to SNAP to their new values while
+    // everything else eased — the pops at fade start read as jank. They ride
+    // the same eased step now.
+    const wantLed = lightsOn ? 0.05 : 2.4;
+    const wantBlue = lightsOn ? 0.12 : 1.1; // LED inlay glows at night
+    const from = {
+      key: key.intensity, hemi: hemi.intensity, fill: fill.intensity,
+      env: scene.environmentIntensity, bench: benchGlow.intensity,
+      resume: resumeSpot.intensity, moon: moonSpot.intensity,
+      pendant: MODELS.pendantLight.intensity,
+      led: lampLeds.length ? lampLeds[0].emissiveIntensity : wantLed,
+      blue: blueLines.length ? blueLines[0].emissiveIntensity : wantBlue,
+    };
     if (prefersReducedMotion || !animate) {
       key.intensity = want.key; hemi.intensity = want.hemi; fill.intensity = want.fill;
       scene.environmentIntensity = want.env; benchGlow.intensity = want.bench;
       resumeSpot.intensity = want.resume;
       moonSpot.intensity = want.moon;
       MODELS.pendantLight.intensity = want.pendant;
+      lampLeds.forEach((m) => { m.emissiveIntensity = wantLed; });
+      blueLines.forEach((m) => { m.emissiveIntensity = wantBlue; });
       return;
     }
     const t0 = performance.now();
     const DUR = fadeLm ? 800 : 450; // lightmap crossfade reads best a bit slower
+    let probeSwapped = !probe;
     (function step(now) {
       if (gen !== lightGen) return; // superseded by a newer light-state call
       const k = Math.min(1, (now - t0) / DUR);
@@ -952,6 +968,10 @@ function initScene(canvas) {
       resumeSpot.intensity = from.resume + (want.resume - from.resume) * e;
       moonSpot.intensity = from.moon + (want.moon - from.moon) * e;
       MODELS.pendantLight.intensity = from.pendant + (want.pendant - from.pendant) * e;
+      lampLeds.forEach((m) => { m.emissiveIntensity = from.led + (wantLed - from.led) * e; });
+      blueLines.forEach((m) => { m.emissiveIntensity = from.blue + (wantBlue - from.blue) * e; });
+      // swap the environment probe mid-fade, hidden inside the moving grade
+      if (!probeSwapped && k >= 0.5) { probeSwapped = true; scene.environment = probe; }
       if (fadeLm) lmMix.value = e;
       if (k < 1) requestAnimationFrame(step);
       else if (fadeLm) {
@@ -1030,14 +1050,23 @@ function initScene(canvas) {
       scene.add(gltf.scene);
       applyLightState(false);
     });
-    // idle upgrades: 4K lightmap, then the lights-off set
+    // idle upgrades: 4K lightmap, then the lights-off set. Everything loaded
+    // here is PRE-UPLOADED/pre-filtered now — first use used to happen in the
+    // middle of the lamp toggle, where the GPU upload (4K HDR) and the
+    // equirect->PMREM conversion made the crossfade visibly hitch.
     const later = new HDRLoader(); // NOT on the manager — don't block the loader UI
     setTimeout(() => {
-      later.load("models/baked/lightmap-on-2k.hdr", (t) => { LM.on2k = prepLM(t); });
-      later.load("models/baked/probe-on.hdr", (t) => { t.mapping = THREE.EquirectangularReflectionMapping; LM.probeOn = t; });
+      later.load("models/baked/lightmap-on-2k.hdr", (t) => { LM.on2k = prepLM(t); renderer.initTexture(LM.on2k); });
+      later.load("models/baked/probe-on.hdr", (t) => {
+        t.mapping = THREE.EquirectangularReflectionMapping;
+        const pg = new THREE.PMREMGenerator(renderer);
+        LM.probeOn = pg.fromEquirectangular(t).texture; // pre-filtered, swap is free
+        pg.dispose();
+        t.dispose();
+      });
       if (!LOW_TIER) { // phones stay on 2K — don't pull 15MB+ maps over mobile data
         later.load("models/baked/lightmap-off-4k.hdr", (t) => { LM.off4k = prepLM(t); if (!lightsOn) applyLightState(false); });
-        later.load("models/baked/lightmap-on-4k.hdr", (t) => { LM.on4k = prepLM(t); if (lightsOn) applyLightState(false); });
+        later.load("models/baked/lightmap-on-4k.hdr", (t) => { LM.on4k = prepLM(t); renderer.initTexture(LM.on4k); if (lightsOn) applyLightState(false); });
       }
     }, 4000);
   }
@@ -1163,9 +1192,14 @@ function initScene(canvas) {
         // (during the pre-lift delay, camera diving in), then hold it CONSTANT
         // for the whole travel. Ramping during the flight made a glow sweep
         // across the moving sheet (amplified by bloom) — the "flash" Kefan saw.
+        // The lamp pool DIMS in step (light handoff): otherwise pool+emissive
+        // stack past the bloom threshold and the sheet flares at click.
         if (face) {
           const warmup = pm.delay ? Math.min(1, (t - pm.t0) / pm.delay) : 1;
           face.material.emissiveIntensity = paperGlowTarget() * warmup;
+          if (paperSpotRest !== null) {
+            resumeSpot.intensity = paperSpotRest + (SPOT_DIM - paperSpotRest) * warmup;
+          }
         }
         if (!pm.domShown && k >= PAPER_DOM_FADE_AT) {
           pm.domShown = true;
@@ -1176,15 +1210,26 @@ function initScene(canvas) {
         pv.position.lerpVectors(pm.fromPos, pm.toPos, e);
         pv.quaternion.slerpQuaternions(pm.fromQuat, pm.toQuat, e);
         pv.position.y += Math.sin(Math.PI * e) * 0.03; // zero end-slope: eases ONTO the desk
-        // hold the glow CONSTANT through the return travel (no fade sweep on
-        // the moving sheet); it drops to the desk baseline only at landing,
-        // where the lamp pool already lights the paper so the cut is masked
-        if (face) face.material.emissiveIntensity = pm.fromGlow;
+        // hold the glow CONSTANT through the travel, then let it hand off to
+        // the lamp pool over the LAST stretch of the descent — by then the
+        // sheet is back inside the (already restored) pool and nearly still,
+        // so total luminance stays level instead of stepping at touchdown
+        if (face) {
+          const handoff = e < 0.82 ? 1 : 1 - (e - 0.82) / 0.18;
+          face.material.emissiveIntensity = pm.fromGlow * handoff;
+        }
+        if (paperSpotRest !== null) {
+          resumeSpot.intensity = SPOT_DIM + (paperSpotRest - SPOT_DIM) * e;
+        }
         if (k >= 1) {
           // land EXACTLY on the remembered desk pose
           pv.position.copy(pm.toPos);
           pv.quaternion.copy(pm.toQuat);
           if (face) face.material.emissiveIntensity = 0;
+          if (paperSpotRest !== null) {
+            resumeSpot.intensity = paperSpotRest;
+            paperSpotRest = null;
+          }
           paperMotion = null;
           paperHold = null;
           activePaperPivot = null;
@@ -1253,9 +1298,12 @@ function initScene(canvas) {
     // sub-2% 1/f flicker on the warm practicals so the still room doesn't
     // read as a screenshot (applied around the render, then unwound)
     let flk = 0;
+    // the sheet's light must be rock steady through the whole pickup cycle —
+    // the pool flicker crossing the moving page read as "light flicker"
+    const spotSteady = !!(paperMotion || activePaperPivot);
     if (!prefersReducedMotion) {
       flk = 1 + 0.013 * Math.sin(t * 0.00071) + 0.009 * Math.sin(t * 0.00173) + 0.006 * Math.sin(t * 0.00347);
-      resumeSpot.intensity *= flk;
+      if (!spotSteady) resumeSpot.intensity *= flk;
       benchGlow.intensity *= flk;
       lampLeds.forEach((m) => { m.emissiveIntensity *= flk; });
     }
@@ -1263,7 +1311,7 @@ function initScene(canvas) {
     composer.render();
 
     if (flk) {
-      resumeSpot.intensity /= flk;
+      if (!spotSteady) resumeSpot.intensity /= flk;
       benchGlow.intensity /= flk;
       lampLeds.forEach((m) => { m.emissiveIntensity /= flk; });
     }
@@ -1301,6 +1349,13 @@ function initScene(canvas) {
   let paperAnimGen = 0;
   let paperMotion = null; // in-flight lift/return tween, driven by the render loop
   let paperHold = null;   // projection of the DOM sheet rect into camera space
+  // The lamp pool and the sheet's emissive HAND OFF to each other: stacking
+  // them (pool 1.5 + emissive 0.7) crossed the bloom threshold and flashed
+  // the sheet right at click; and a full pool flickering/cutting across the
+  // rising sheet read as light flicker. The pool dims to this floor while
+  // the page "wakes", and takes back over during the return.
+  const SPOT_DIM = 0.35;
+  let paperSpotRest = null; // resumeSpot level to restore after the cycle
   const PM_POS = new THREE.Vector3();
   const PM_QUAT = new THREE.Quaternion();
   const PM_V1 = new THREE.Vector3();
@@ -1901,6 +1956,8 @@ function initScene(canvas) {
     // settle the hover scale-up NOW (reads as press feedback) so the sheet's
     // real size matches the hold math for the whole flight
     pivot.scale.setScalar((pivot.userData.hotspot && pivot.userData.hotspot.baseScale) || 1);
+    // remember the lamp-pool level to restore after the cycle (light handoff)
+    if (paperSpotRest === null) paperSpotRest = resumeSpot.intensity;
     // camera-independent: derived from the DOM rect + lens only, so it can
     // be computed at click time and the loop starts the lift after `delay`
     paperHold = computePaperHold(pivot);
@@ -1984,6 +2041,7 @@ function initScene(canvas) {
         paperHold = null;
         if (desk) { pivot.position.copy(desk.pos); pivot.quaternion.copy(desk.quat); }
         if (face) face.material.emissiveIntensity = 0;
+        if (paperSpotRest !== null) { resumeSpot.intensity = paperSpotRest; paperSpotRest = null; }
         pivot.visible = true;
         rootClass.remove("exp-paper-active", "exp-paper-open");
         if (paperEl) paperEl.style.visibility = "";

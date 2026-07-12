@@ -802,6 +802,11 @@ a {
 .exp-paper-active .exp-backdrop {
   opacity: 1;
   pointer-events: auto;
+  /* click-to-close catcher only — NO dim. A dimming veil fading in between
+     the bright 3D sheet and the fading-in DOM sheet made the paper dip dark
+     then recover (read as flicker/ghosting during the swap). Depth separation
+     while reading comes from the bokeh blur, same as the project panel. */
+  background: transparent;
 }
 .exp-sheet__close {
   position: absolute;

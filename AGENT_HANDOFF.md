@@ -256,7 +256,38 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-11 (latest) light tune: lamp pool down, strips up again
+### 2026-07-11 (latest) pickup light-handoff + smooth lamp toggle
+- Kefan: pickup still showed "light flicker + ghosting"; the lamp toggle fade
+  was janky. Three structural causes found and fixed:
+  1. **Backdrop dim veil during the swap.** `.exp-paper-active .exp-backdrop`
+     dimmed the scene 60% while the DOM sheet faded in ABOVE it — the bright
+     3D sheet dipped dark then recovered through the semi-transparent DOM
+     (read as flicker/ghosting). The paper backdrop is now `background:
+     transparent` (click-catcher only), same decision the project panel made
+     long ago; depth separation comes from the bokeh blur.
+  2. **Pool+emissive bloom stack at click.** The emissive warm-up (0→0.7 on
+     the desk) STACKED with the 1.5 lamp pool and crossed the bloom threshold
+     — the sheet flared right at click. Now a LIGHT HANDOFF: during the
+     warm-up the pool dims 1.5→`SPOT_DIM` (0.35) in step with the emissive
+     rise (paper luminance measured monotonic 203→228, no spike); the pool
+     ramps back during the return and the emissive glides out over the last
+     18% of the descent (touchdown measured 232→203 over ~200ms, no step).
+     `paperSpotRest` remembers the pool level; restored on every close path.
+     The 1/f flicker skips resumeSpot for the whole pickup cycle
+     (`spotSteady`).
+  3. **Lamp toggle pops.** lampLeds (2.4↔0.05) and the rug blue lines
+     (1.1↔0.12) used to SNAP at fade start — they now ride the same eased
+     step; the environment probe swaps at the fade MIDPOINT instead of the
+     start; the idle-loaded day assets are pre-uploaded (`renderer
+     .initTexture`) and the day probe is pre-filtered via PMREMGenerator at
+     load, so the first toggle can't hitch on a GPU upload/convert.
+- QA note: `applyLightState`'s crossfade is rAF-driven — FROZEN in a
+  backgrounded preview tab. To drive it deterministically, patch
+  `window.requestAnimationFrame` to queue callbacks and flush them with
+  synthetic timestamps (see this session's transcript for the recipe).
+- Cache: `exp-smoothlight-20260711`.
+
+### 2026-07-11 light tune: lamp pool down, strips up again
 - **resumeSpot night 2.8 → 1.5** (applyLightState + the runBootIntro
   lamp-click beat, which must always land on the same value). At 2.8 the pool
   washed out the upper half of the desk résumé — the DOM-parity texture has
@@ -807,8 +838,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-lighttune-20260711` (3D page styles — in experience.html)
-- `experience.js?v=exp-lighttune-20260711` (3D page module — in experience.html)
+- `experience.css?v=exp-smoothlight-20260711` (3D page styles — in experience.html)
+- `experience.js?v=exp-smoothlight-20260711` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
