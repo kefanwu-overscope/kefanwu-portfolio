@@ -256,7 +256,27 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-11 (latest) lightmap-blend fix, moon handoff, rim fix
+### 2026-07-11 (latest) full-bleed sheet: aspect stretch kills the bottom band
+- Kefan's screenshot showed a grey band under the résumé: on content-fit
+  viewports the DOM sheet is slightly taller than 3:4 (e.g. 540×732), so the
+  paper left a ~12px uncovered strip at the bottom where the blurred scene
+  flickered through during the cross-fade.
+- `computePaperHold` now stretches the pivot along the sheet's long axis
+  (`pivot.scale.z`, clamp 1–1.08) to the DOM rect's aspect, and
+  `buildSheetSnapshot` extends the texture by the SAME factor (cache keyed on
+  width+texH) — the paper backs the DOM FULL-BLEED. Measured flush ≤0.8px on
+  all four edges at 810×1070 (dB exactly 0) and 1280×720 (all 0.0). worldW/H
+  are measured via direct face-edge world distances (getWorldScale smears
+  non-uniform scale through rotated hierarchies). Scale restored to baseScale
+  at landing and in the reduced-motion close (verified scaleZ back to 1,
+  posErr 0).
+- Mobile (92vw sheets, aspect ~2.0) stays clamped at 1.08 → top-aligned
+  partial coverage as before, now 72% of the sheet, with a known ±2px edge
+  residual at full clamp (reconstruction approximation along the stretched
+  axis) — imperceptible in the 220ms dissolve; do not chase it below that.
+- Cache: `exp-fullbleed-20260711`.
+
+### 2026-07-11 lightmap-blend fix, moon handoff, rim fix
 - **The lamp toggle's "one dark frame at the end" was a from-day-one shader
   bug:** `onBeforeCompile` receives the fragment source BEFORE `#include`
   expansion, so the old code that string-replaced the EXPANDED lightmap line
@@ -862,8 +882,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-lmfix-20260711` (3D page styles — in experience.html)
-- `experience.js?v=exp-lmfix-20260711` (3D page module — in experience.html)
+- `experience.css?v=exp-fullbleed-20260711` (3D page styles — in experience.html)
+- `experience.js?v=exp-fullbleed-20260711` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

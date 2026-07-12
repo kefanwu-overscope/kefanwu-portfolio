@@ -1237,9 +1237,11 @@ function initScene(canvas) {
           moonSpot.intensity = paperMoonRest * e; // moon rises back with the return
         }
         if (k >= 1) {
-          // land EXACTLY on the remembered desk pose
+          // land EXACTLY on the remembered desk pose (and undo the full-bleed
+          // aspect stretch — the desk prop is a true 3:4 sheet)
           pv.position.copy(pm.toPos);
           pv.quaternion.copy(pm.toQuat);
+          pv.scale.setScalar((pv.userData.hotspot && pv.userData.hotspot.baseScale) || 1);
           if (face) face.material.emissiveIntensity = 0;
           if (paperSpotRest !== null) {
             resumeSpot.intensity = paperSpotRest;
@@ -1723,9 +1725,14 @@ function initScene(canvas) {
     const rect = paperEl.getBoundingClientRect();
     const W = Math.round(rect.width);
     if (!W || !rect.height) return null;
-    if (sheetSnap && sheetSnap.width === W) return sheetSnap.tex;
+    // The physical sheet is stretched along its long axis (≤8%, see
+    // computePaperHold) so it backs the DOM sheet FULL-BLEED on viewports
+    // where the content-fit DOM is slightly taller than 3:4 — the texture
+    // must cover the same extended span or the glyphs would smear.
+    const stretch = THREE.MathUtils.clamp((rect.height / rect.width) / (0.312 / 0.234), 1, 1.08);
     const texW = 1024;
-    const texH = Math.round(texW * (0.312 / 0.234)); // exact printed-face aspect
+    const texH = Math.round(texW * (0.312 / 0.234) * stretch);
+    if (sheetSnap && sheetSnap.width === W && sheetSnap.texH === texH) return sheetSnap.tex;
     const scale = texW / rect.width;
     const c = document.createElement("canvas");
     c.width = texW;
@@ -1841,7 +1848,7 @@ function initScene(canvas) {
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.anisotropy = MAXA;
-    sheetSnap = { width: W, tex };
+    sheetSnap = { width: W, texH, tex };
     return tex;
   }
 
@@ -1894,9 +1901,26 @@ function initScene(canvas) {
     // the held distance is ~6% too far and the sheet lands smaller than the
     // DOM, popping at the swap (Kefan's "end-of-pickup flash").
     const hoverK = pivot.scale.x / ((pivot.userData.hotspot && pivot.userData.hotspot.baseScale) || 1) || 1;
-    const ws = face.getWorldScale(PM_V1).divideScalar(hoverK);
-    const worldW = 0.234 * Math.abs(ws.x);
-    const worldH = 0.312 * Math.abs(ws.y);
+    // Stretch the sheet along its long axis (pivot-local z) to the DOM
+    // sheet's aspect, so the paper backs the DOM FULL-BLEED: content-fit
+    // viewports make the DOM slightly taller than 3:4, and the uncovered
+    // bottom strip flickered scene-through during the cross-fade (Kefan's
+    // bottom-band report). Clamped ≤8% — taller sheets (mobile 92vw) keep
+    // the top-aligned partial coverage instead of a silly 50% stretch.
+    // buildSheetSnapshot extends the texture by the SAME factor. Restored
+    // to baseScale at landing.
+    const baseScale = (pivot.userData.hotspot && pivot.userData.hotspot.baseScale) || 1;
+    const stretch = THREE.MathUtils.clamp((rect.height / rect.width) / (0.312 / 0.234), 1, 1.08);
+    pivot.scale.z = baseScale * hoverK * stretch;
+    pivot.updateWorldMatrix(true, true);
+    // measure the face edges DIRECTLY: getWorldScale decomposes the world
+    // matrix, and with the non-uniform z-stretch inside a rotated hierarchy
+    // the decomposition smears the stretch across axes (~1.3% width error at
+    // the 1.08 clamp — visible on mobile)
+    const worldW = face.localToWorld(new THREE.Vector3(-0.117, 0, 0))
+      .distanceTo(face.localToWorld(new THREE.Vector3(0.117, 0, 0))) / hoverK;
+    const worldH = face.localToWorld(new THREE.Vector3(0, -0.156, 0))
+      .distanceTo(face.localToWorld(new THREE.Vector3(0, 0.156, 0))) / hoverK;
     const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
     const W = window.innerWidth, H = window.innerHeight;
     // fit the sheet inside the DOM rect on BOTH axes (short viewports are
@@ -2066,6 +2090,7 @@ function initScene(canvas) {
         paperMotion = null;
         paperHold = null;
         if (desk) { pivot.position.copy(desk.pos); pivot.quaternion.copy(desk.quat); }
+        pivot.scale.setScalar((pivot.userData.hotspot && pivot.userData.hotspot.baseScale) || 1);
         if (face) face.material.emissiveIntensity = 0;
         if (paperSpotRest !== null) { resumeSpot.intensity = paperSpotRest; paperSpotRest = null; }
         if (paperMoonRest !== null) { moonSpot.intensity = paperMoonRest; paperMoonRest = null; }
