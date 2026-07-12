@@ -1034,11 +1034,20 @@ function initScene(canvas) {
         m.onBeforeCompile = (sh) => {
           sh.uniforms.lightMapB = lmB;
           sh.uniforms.lmMix = lmMix;
+          // onBeforeCompile sees the fragment source BEFORE #include expansion,
+          // so the patched line must be injected by expanding the chunk
+          // ourselves — replacing the expanded line directly silently no-ops
+          // (this was broken since the system was built: the toggle only faded
+          // the real-time lights, then the lightmap SNAPPED at the end — the
+          // "one dark frame" Kefan reported)
           sh.fragmentShader = sh.fragmentShader
             .replace("#include <common>", "#include <common>\nuniform sampler2D lightMapB;\nuniform float lmMix;")
             .replace(
-              "vec4 lightMapTexel = texture2D( lightMap, vLightMapUv );",
-              "vec4 lightMapTexel = mix( texture2D( lightMap, vLightMapUv ), texture2D( lightMapB, vLightMapUv ), lmMix );"
+              "#include <lights_fragment_maps>",
+              THREE.ShaderChunk.lights_fragment_maps.replace(
+                "vec4 lightMapTexel = texture2D( lightMap, vLightMapUv );",
+                "vec4 lightMapTexel = mix( texture2D( lightMap, vLightMapUv ), texture2D( lightMapB, vLightMapUv ), lmMix );"
+              )
             );
         };
         m.needsUpdate = true;
@@ -1200,6 +1209,9 @@ function initScene(canvas) {
           if (paperSpotRest !== null) {
             resumeSpot.intensity = paperSpotRest + (SPOT_DIM - paperSpotRest) * warmup;
           }
+          if (paperMoonRest !== null) {
+            moonSpot.intensity = paperMoonRest * (1 - warmup);
+          }
         }
         if (!pm.domShown && k >= PAPER_DOM_FADE_AT) {
           pm.domShown = true;
@@ -1221,6 +1233,9 @@ function initScene(canvas) {
         if (paperSpotRest !== null) {
           resumeSpot.intensity = SPOT_DIM + (paperSpotRest - SPOT_DIM) * e;
         }
+        if (paperMoonRest !== null) {
+          moonSpot.intensity = paperMoonRest * e; // moon rises back with the return
+        }
         if (k >= 1) {
           // land EXACTLY on the remembered desk pose
           pv.position.copy(pm.toPos);
@@ -1229,6 +1244,10 @@ function initScene(canvas) {
           if (paperSpotRest !== null) {
             resumeSpot.intensity = paperSpotRest;
             paperSpotRest = null;
+          }
+          if (paperMoonRest !== null) {
+            moonSpot.intensity = paperMoonRest;
+            paperMoonRest = null;
           }
           paperMotion = null;
           paperHold = null;
@@ -1356,6 +1375,12 @@ function initScene(canvas) {
   // the page "wakes", and takes back over during the return.
   const SPOT_DIM = 0.35;
   let paperSpotRest = null; // resumeSpot level to restore after the cycle
+  // The moon gobo (window-frame pattern, intensity 11 at night) sweeps the
+  // rug AND the air in front of the desk — exactly the corridor the sheet
+  // lifts through. Its bright squares painted a moving wash across the page
+  // (the flicker/ghost wash in Kefan's screenshot), so it yields during the
+  // pickup cycle and rises back with the return.
+  let paperMoonRest = null;
   const PM_POS = new THREE.Vector3();
   const PM_QUAT = new THREE.Quaternion();
   const PM_V1 = new THREE.Vector3();
@@ -1956,8 +1981,9 @@ function initScene(canvas) {
     // settle the hover scale-up NOW (reads as press feedback) so the sheet's
     // real size matches the hold math for the whole flight
     pivot.scale.setScalar((pivot.userData.hotspot && pivot.userData.hotspot.baseScale) || 1);
-    // remember the lamp-pool level to restore after the cycle (light handoff)
+    // remember the lamp-pool + moon levels to restore after the cycle
     if (paperSpotRest === null) paperSpotRest = resumeSpot.intensity;
+    if (paperMoonRest === null) paperMoonRest = moonSpot.intensity;
     // camera-independent: derived from the DOM rect + lens only, so it can
     // be computed at click time and the loop starts the lift after `delay`
     paperHold = computePaperHold(pivot);
@@ -2042,6 +2068,7 @@ function initScene(canvas) {
         if (desk) { pivot.position.copy(desk.pos); pivot.quaternion.copy(desk.quat); }
         if (face) face.material.emissiveIntensity = 0;
         if (paperSpotRest !== null) { resumeSpot.intensity = paperSpotRest; paperSpotRest = null; }
+        if (paperMoonRest !== null) { moonSpot.intensity = paperMoonRest; paperMoonRest = null; }
         pivot.visible = true;
         rootClass.remove("exp-paper-active", "exp-paper-open");
         if (paperEl) paperEl.style.visibility = "";
@@ -4144,9 +4171,11 @@ function buildResumePaper() {
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = MAXA; // the sheet lies flat — grazing view needs aniso
 
-  // larger sheet so the resume reads as the hero object on the desk
+  // backing slab matches the printed face EXACTLY (0.234 x 0.312): any
+  // overhang sticks out past the pixel-aligned DOM sheet during the pickup
+  // cross-fade and reads as a white rim around the résumé (Kefan)
   const sheet = new THREE.Mesh(
-    new THREE.BoxGeometry(0.24, 0.004, 0.32),
+    new THREE.BoxGeometry(0.234, 0.004, 0.312),
     new THREE.MeshStandardMaterial({ color: 0xe4e6ea, roughness: 0.96 })
   );
   sheet.castShadow = true;

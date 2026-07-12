@@ -256,7 +256,31 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-11 (latest) pickup light-handoff + smooth lamp toggle
+### 2026-07-11 (latest) lightmap-blend fix, moon handoff, rim fix
+- **The lamp toggle's "one dark frame at the end" was a from-day-one shader
+  bug:** `onBeforeCompile` receives the fragment source BEFORE `#include`
+  expansion, so the old code that string-replaced the EXPANDED lightmap line
+  silently no-oped — the lmMix/lightMapB crossfade NEVER worked. The toggle
+  only faded the real-time lights, then the lightmap pointer swap at the end
+  committed the whole baked day/night difference in ONE frame (31% of the
+  night-direction luminance change). Fixed by expanding
+  `THREE.ShaderChunk.lights_fragment_maps` ourselves and patching the line
+  inside it. Measured: both directions now ease continuously (105.9↔62.0)
+  with ZERO terminal jump. If three.js is ever upgraded, re-verify this
+  chunk's contents.
+- **Moon gobo yields during the pickup** (`paperMoonRest`, same mechanism as
+  the pool handoff): the window-frame gobo (intensity 11) sweeps the air in
+  front of the desk — exactly the sheet's flight corridor — and painted a
+  moving bright wash across the page (the flicker/ghost wash in Kefan's
+  screenshot). It fades out during the 430ms warm-up, stays 0 while reading,
+  and rises back with the return (exact restore at landing). Held-sheet
+  uniformity measured 214–225 across five sample points.
+- **White rim gone:** the backing slab was 0.24×0.32 under a 0.234×0.312
+  printed face — the 2.6% overhang stuck out past the pixel-aligned DOM sheet
+  during the cross-fade. The slab now matches the face exactly.
+- Cache: `exp-lmfix-20260711`.
+
+### 2026-07-11 pickup light-handoff + smooth lamp toggle
 - Kefan: pickup still showed "light flicker + ghosting"; the lamp toggle fade
   was janky. Three structural causes found and fixed:
   1. **Backdrop dim veil during the swap.** `.exp-paper-active .exp-backdrop`
@@ -838,8 +862,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-smoothlight-20260711` (3D page styles — in experience.html)
-- `experience.js?v=exp-smoothlight-20260711` (3D page module — in experience.html)
+- `experience.css?v=exp-lmfix-20260711` (3D page styles — in experience.html)
+- `experience.js?v=exp-lmfix-20260711` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
