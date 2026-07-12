@@ -256,7 +256,44 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-11 (latest) marker v3: centered over the résumé, contrast backing
+### 2026-07-11 (latest) studio modeling pass + Boston window + 360° orbit
+- **Full 360° orbit:** `controls.min/maxAzimuthAngle` unlocked to ±Infinity
+  (was ±0.32π). The per-frame AABB clamp still keeps the camera inside the
+  shell. All four walls have content (cabinet back / workbench left / right
+  cabinet / window front) so every heading reads.
+- **Boston night-skyline window** (front wall, `buildCityWindow` +
+  `makeBostonSkylineTexture`): a large 3.2×1.8 picture window mounted as a
+  BACKLIT PANEL on the interior face of the front wall (z≈front−0.02..0.06),
+  NOT a real hole and NOT tagged `bk_`, so it is added outside the bake
+  wrapper and shows whether or not the baked room is active. From inside the
+  camera is clamped away from the wall, so it reads exactly like a real
+  window. Skyline is a procedural 2048×1152 canvas (deep-navy sky, horizon
+  glow, layered downtown silhouettes with scattered warm/cool lit windows, a
+  central tapered tower + red antenna, stepped Pru-ish block, harbor
+  reflection) on an unlit MeshBasic (self-lit city). Frame = dark aluminium
+  mullions (2×2 panes) + sill. Glass = faint top-left corner sheen only (a
+  full diagonal streak read as a searchlight — do NOT reintroduce it).
+  Always-night in BOTH light states (the lamp toggles the ROOM lights, not
+  day/night), which keeps 夜景 coherent.
+- **P2–P7 modeling** (all in the workbench / printer builders):
+  - P2 printer: the mid-print object is now a recognizable engineering
+    bracket (base + bolt bosses + upright web + 45° gusset + a lighter
+    translucent top "growing" layer) instead of a blue box; textured PEI
+    build plate (dot-grid canvas).
+  - P3/P4 printer: door bar handle on standoffs + two hinges (knuckles+pins);
+    screen UI gained a print-job slot (bracket thumbnail + "L 142/215").
+  - P5 multimeter: its OWN coiled red/black probe leads + probe pens, clearly
+    separate from the PSU leads.
+  - P6 soldering station: brass-wool tip-cleaner pot + yellow sponge tray +
+    a sagging iron cable.
+  - P7: a compact bench **oscilloscope** (graticule screen with live yellow
+    sine + cyan square traces, knob column, BNC inputs) back-row between
+    printer and PSU.
+- Cache: `exp-window-20260711`. **Re-bake still pending** — see the next
+  entry once done; the window's city-glow SPILL onto the room is NOT yet
+  baked (the panel is self-lit only).
+
+### 2026-07-11 marker v3: centered over the résumé, contrast backing
 - The résumé marker moved from the sheet's top-right corner (read as
   detached) to CENTERED directly over the sheet (markerX/Z = 0,
   markerY = 0.16 — high enough to never cover the print from any camera).
@@ -894,8 +931,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-marker2-20260711` (3D page styles — in experience.html)
-- `experience.js?v=exp-marker2-20260711` (3D page module — in experience.html)
+- `experience.css?v=exp-window-20260711` (3D page styles — in experience.html)
+- `experience.js?v=exp-window-20260711` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

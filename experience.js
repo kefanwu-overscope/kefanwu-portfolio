@@ -215,8 +215,12 @@ function initScene(canvas) {
   controls.maxDistance = 3.2;
   controls.minPolarAngle = 0.46;
   controls.maxPolarAngle = Math.PI / 2 - 0.05;
-  controls.minAzimuthAngle = -Math.PI * 0.32;
-  controls.maxAzimuthAngle = Math.PI * 0.32;
+  // full 360° orbit — the room is enclosed on all four walls (cabinet back,
+  // workbench left, right cabinet, and now the Boston window front), so every
+  // heading has content. The per-frame AABB clamp still keeps the camera
+  // inside the shell, so no heading can peek past a wall.
+  controls.minAzimuthAngle = -Infinity;
+  controls.maxAzimuthAngle = Infinity;
   controls.target.copy(REST_TARGET);
   controls.update();
 
@@ -561,6 +565,10 @@ function initScene(canvas) {
   // tag every room-shell mesh for the bake pipeline ("bk_" names let the
   // exporter select them and P2 hide them when the baked GLB is active)
   buildRoom({ add: (o) => { o.traverse((m) => { if (m.isMesh && !m.name) m.name = "bk_room"; }); scene.add(o); } });
+  // Boston night-skyline window on the front wall — added OUTSIDE the bake
+  // wrapper (no bk_ tag) so it stays visible whether or not the baked room is
+  // active. It's a backlit panel on the interior wall face; see buildCityWindow.
+  scene.add(buildCityWindow());
 
   const contact = new THREE.Mesh(
     new THREE.PlaneGeometry(2.6, 1.5),
@@ -2463,6 +2471,184 @@ function loadAssembly(loader, scene, url, opts, onPlaced) {
 /* ============================================================
    room
    ============================================================ */
+function makeBostonSkylineTexture() {
+  // Procedural Boston night skyline (no external asset / no CORS): deep-navy
+  // sky with a warm horizon glow, layered downtown silhouettes with a scatter
+  // of lit windows, a couple of recognizable towers (a stepped Prudential-ish
+  // block + a tapered glass tower with an antenna), and a faint harbor
+  // reflection. Unlit (MeshBasic) so it reads as self-lit city at night.
+  const W = 2048, H = 1152;
+  const c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const x = c.getContext("2d");
+  const horizon = H * 0.66;
+
+  // --- sky gradient ---
+  const sky = x.createLinearGradient(0, 0, 0, horizon);
+  sky.addColorStop(0, "#05070f");
+  sky.addColorStop(0.55, "#0a1122");
+  sky.addColorStop(0.85, "#132038");
+  sky.addColorStop(1, "#20304e");
+  x.fillStyle = sky;
+  x.fillRect(0, 0, W, horizon);
+  // faint stars
+  for (let i = 0; i < 90; i++) {
+    const sx = (i * 733) % W, sy = (i * 271) % (horizon * 0.6);
+    x.fillStyle = `rgba(200,215,240,${0.05 + (i % 5) * 0.03})`;
+    x.fillRect(sx, sy, 1.4, 1.4);
+  }
+  // warm sodium glow along the horizon (city light pollution)
+  const glow = x.createRadialGradient(W * 0.52, horizon, 40, W * 0.52, horizon, W * 0.5);
+  glow.addColorStop(0, "rgba(90,70,40,0.5)");
+  glow.addColorStop(0.4, "rgba(50,45,55,0.22)");
+  glow.addColorStop(1, "rgba(40,45,60,0)");
+  x.fillStyle = glow;
+  x.fillRect(0, horizon - H * 0.4, W, H * 0.4);
+
+  const litWindows = (bx, by, bw, bh, density, warmBias) => {
+    const cell = 13, pad = 5;
+    for (let wy = by + pad; wy < by + bh - pad; wy += cell) {
+      for (let wx = bx + pad; wx < bx + bw - pad; wx += cell) {
+        if (Math.random() > density) continue;
+        const warm = Math.random() < warmBias;
+        const a = 0.35 + Math.random() * 0.5;
+        x.fillStyle = warm ? `rgba(255,205,130,${a})` : `rgba(190,215,255,${a * 0.85})`;
+        x.fillRect(wx, wy, cell - 6, cell - 7);
+      }
+    }
+  };
+  // --- distant haze layer (lighter, sparse) ---
+  let hx = -40;
+  while (hx < W + 40) {
+    const bw = 40 + Math.random() * 70, bh = 90 + Math.random() * 190;
+    x.fillStyle = "#141d30";
+    x.fillRect(hx, horizon - bh, bw, bh);
+    litWindows(hx, horizon - bh, bw, bh, 0.06, 0.4);
+    hx += bw + 8 + Math.random() * 16;
+  }
+  // --- main downtown silhouettes ---
+  const drawTower = (bx, bw, bh, col, density) => {
+    x.fillStyle = col;
+    x.fillRect(bx, horizon - bh, bw, bh);
+    litWindows(bx, horizon - bh, bw, bh, density, 0.5);
+    return { bx, bw, bh };
+  };
+  let bx2 = -30;
+  const skyline = [];
+  while (bx2 < W + 30) {
+    const bw = 60 + Math.random() * 120;
+    const bh = 130 + Math.random() * 260;
+    skyline.push(drawTower(bx2, bw, bh, Math.random() < 0.5 ? "#080c16" : "#0b1120", 0.16));
+    bx2 += bw + 4 + Math.random() * 10;
+  }
+  // Prudential-ish stepped block (left of center, tall)
+  drawTower(W * 0.34, 150, 560, "#0a0f1c", 0.2);
+  x.fillStyle = "#0a0f1c"; x.fillRect(W * 0.355, horizon - 620, 118, 70); // setback crown
+  // 200 Clarendon / Hancock-ish tapered glass tower (center, tallest) + antenna
+  const tw = 130, tx = W * 0.5, tbh = 640;
+  const grad = x.createLinearGradient(tx, horizon - tbh, tx + tw, horizon);
+  grad.addColorStop(0, "#0c1424"); grad.addColorStop(1, "#0a1120");
+  x.fillStyle = grad; x.fillRect(tx, horizon - tbh, tw, tbh);
+  litWindows(tx, horizon - tbh, tw, tbh, 0.22, 0.35);
+  x.strokeStyle = "rgba(120,150,200,0.25)"; x.lineWidth = 2; // vertical glass mullions
+  for (let mx = tx + 16; mx < tx + tw; mx += 20) { x.beginPath(); x.moveTo(mx, horizon - tbh); x.lineTo(mx, horizon); x.stroke(); }
+  x.strokeStyle = "rgba(210,90,90,0.8)"; x.lineWidth = 3; // antenna + red aircraft light
+  x.beginPath(); x.moveTo(tx + tw / 2, horizon - tbh); x.lineTo(tx + tw / 2, horizon - tbh - 70); x.stroke();
+  x.fillStyle = "rgba(255,80,70,0.9)"; x.beginPath(); x.arc(tx + tw / 2, horizon - tbh - 70, 4, 0, Math.PI * 2); x.fill();
+
+  // --- harbor / river reflection (bottom band) ---
+  const water = x.createLinearGradient(0, horizon, 0, H);
+  water.addColorStop(0, "#0c1524");
+  water.addColorStop(1, "#060a12");
+  x.fillStyle = water;
+  x.fillRect(0, horizon, W, H - horizon);
+  x.save();
+  x.globalAlpha = 0.18;
+  x.scale(1, -1);
+  x.drawImage(c, 0, -horizon, W, horizon, 0, -horizon - (H - horizon), W, horizon);
+  x.restore();
+  // horizontal ripple streaks
+  for (let i = 0; i < 60; i++) {
+    const ry = horizon + Math.random() * (H - horizon);
+    x.fillStyle = `rgba(120,140,180,${0.02 + Math.random() * 0.04})`;
+    x.fillRect(0, ry, W, 1);
+  }
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = MAXA;
+  return tex;
+}
+
+function buildCityWindow() {
+  // A large picture window on the interior face of the FRONT wall (z≈front),
+  // looking out on the Boston night skyline. Mounted as a backlit panel just
+  // inside the wall: the camera is hard-clamped inside the room, so from every
+  // angle this reads exactly like a window with a hole — no re-bake needed for
+  // the geometry. (The re-bake adds the city glow SPILL onto the room.)
+  // NOT tagged bk_ and added OUTSIDE buildRoom, so USE_BAKED never hides it.
+  const g = new THREE.Group();
+  const front = 3.6;
+  const cx = 0, cy = 1.9, ow = 3.2, oh = 1.8; // opening
+
+  // skyline panel (furthest back, nearest the wall)
+  const sky = new THREE.Mesh(
+    new THREE.PlaneGeometry(ow, oh),
+    new THREE.MeshBasicMaterial({ map: makeBostonSkylineTexture() })
+  );
+  sky.rotation.y = Math.PI; // front face -> into the room
+  sky.position.set(cx, cy, front - 0.02);
+  g.add(sky);
+
+  // glass: faint cool tint + a soft diagonal reflection streak, so the pane
+  // reads as glazing rather than an open hole
+  const glassCanvas = document.createElement("canvas");
+  glassCanvas.width = 256; glassCanvas.height = 256;
+  {
+    const gx = glassCanvas.getContext("2d");
+    gx.clearRect(0, 0, 256, 256);
+    // a faint sheen confined to the TOP-LEFT corner only — enough to read as
+    // glazing, not a searchlight streaking across the skyline
+    const st = gx.createRadialGradient(40, 40, 8, 40, 40, 150);
+    st.addColorStop(0, "rgba(180,200,230,0.09)");
+    st.addColorStop(0.5, "rgba(170,195,230,0.03)");
+    st.addColorStop(1, "rgba(150,180,220,0)");
+    gx.fillStyle = st; gx.fillRect(0, 0, 256, 256);
+  }
+  const glassTex = new THREE.CanvasTexture(glassCanvas);
+  glassTex.colorSpace = THREE.SRGBColorSpace;
+  const glass = new THREE.Mesh(
+    new THREE.PlaneGeometry(ow, oh),
+    new THREE.MeshBasicMaterial({ map: glassTex, transparent: true, opacity: 0.5, depthWrite: false })
+  );
+  glass.rotation.y = Math.PI;
+  glass.position.set(cx, cy, front - 0.05);
+  g.add(glass);
+
+  // frame + mullions (dark aluminum), mounted on the interior face
+  const frameMat = new THREE.MeshStandardMaterial({ color: 0x14161b, roughness: 0.5, metalness: 0.6 });
+  const bar = (w, h, px, py, pz) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.05), frameMat);
+    m.position.set(px, py, pz);
+    m.castShadow = true; m.receiveShadow = true;
+    g.add(m);
+  };
+  const fz = front - 0.06, t = 0.09;
+  bar(ow + 2 * t, t, cx, cy + oh / 2 + t / 2, fz);       // top
+  bar(ow + 2 * t, t, cx, cy - oh / 2 - t / 2, fz);       // bottom
+  bar(t, oh + 2 * t, cx - ow / 2 - t / 2, cy, fz);       // left
+  bar(t, oh + 2 * t, cx + ow / 2 + t / 2, cy, fz);       // right
+  bar(0.05, oh, cx, cy, fz);                              // center vertical mullion
+  bar(ow, 0.05, cx, cy, fz);                             // center horizontal mullion
+  // sill ledge protruding slightly into the room
+  const sill = new THREE.Mesh(new THREE.BoxGeometry(ow + 2 * t + 0.06, 0.05, 0.11), frameMat);
+  sill.position.set(cx, cy - oh / 2 - t, front - 0.11);
+  sill.castShadow = true; sill.receiveShadow = true;
+  g.add(sill);
+
+  return g;
+}
+
 function buildRoom(scene) {
   // graphite engineering office: sealed-concrete floor, dark plaster walls
   // with a steel lower band, fully enclosed (incl. front wall) so no camera
@@ -3508,6 +3694,34 @@ function buildWorkbench() {
   ironTip.rotation.z = 1.15;
   ironTip.position.set(0.07, 0.032, 0.02);
   solder.add(ironTip);
+  // brass-wool tip cleaner pot + yellow sponge tray on the station top
+  const cleanPot = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.018, 0.02, 14), steel);
+  cleanPot.position.set(-0.045, 0.085, -0.03);
+  solder.add(cleanPot);
+  const wool = new THREE.Mesh(new THREE.SphereGeometry(0.013, 10, 8),
+    new THREE.MeshStandardMaterial({ color: 0xb08d3e, roughness: 0.85 }));
+  wool.scale.y = 0.55;
+  wool.position.set(-0.045, 0.095, -0.03);
+  solder.add(wool);
+  const spongeTray = new THREE.Mesh(new RoundedBoxGeometry(0.046, 0.008, 0.046, 2, 0.003), darkPlastic);
+  spongeTray.position.set(-0.038, 0.079, 0.025);
+  solder.add(spongeTray);
+  const sponge = new THREE.Mesh(new RoundedBoxGeometry(0.038, 0.009, 0.038, 2, 0.003),
+    new THREE.MeshStandardMaterial({ color: 0xd8c14a, roughness: 0.95 }));
+  sponge.position.set(-0.038, 0.087, 0.025);
+  solder.add(sponge);
+  // iron cable: handle end sags to the bench and loops back into the station
+  const ironCable = new THREE.Mesh(
+    new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0.175, 0.085, 0.02),
+      new THREE.Vector3(0.205, 0.03, 0.055),
+      new THREE.Vector3(0.15, 0.004, 0.1),
+      new THREE.Vector3(0.08, 0.01, 0.075),
+      new THREE.Vector3(0.062, 0.03, 0.045),
+    ]), 28, 0.0022, 8),
+    new THREE.MeshStandardMaterial({ color: 0x1c2743, roughness: 0.6, metalness: 0.05 })
+  );
+  solder.add(ironCable);
   solder.position.set(0.72, TOP_Y, -0.08);
   solder.rotation.y = 0.18;
   g.add(solder);
@@ -3548,9 +3762,91 @@ function buildWorkbench() {
     new THREE.MeshStandardMaterial({ color: 0xe8e8ea, roughness: 0.4 }));
   dialMark.position.set(0, 0.026, 0.014);
   meter.add(dialMark);
+  // the meter's OWN probe leads (red + black) coiled loosely beside it —
+  // plugged into its bottom jacks, clearly separate from the PSU's leads
+  const probeLead = (side, col) => {
+    const jack = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.006, 8),
+      new THREE.MeshStandardMaterial({ color: col, roughness: 0.5 }));
+    jack.position.set(side * 0.014, 0.012, 0.072);
+    meter.add(jack);
+    const lead = new THREE.Mesh(
+      new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
+        new THREE.Vector3(side * 0.014, 0.01, 0.075),
+        new THREE.Vector3(side * 0.05, 0.003, 0.115),
+        new THREE.Vector3(side * 0.105, 0.003, 0.09),
+        new THREE.Vector3(side * 0.115, 0.003, 0.03),
+        new THREE.Vector3(side * 0.08, 0.003, -0.01),
+      ]), 30, 0.0018, 8),
+      new THREE.MeshStandardMaterial({ color: col, roughness: 0.55, metalness: 0.05 })
+    );
+    meter.add(lead);
+    // probe pen resting at the end of the lead
+    const pen = new THREE.Mesh(new THREE.CylinderGeometry(0.0032, 0.0042, 0.055, 10),
+      new THREE.MeshStandardMaterial({ color: col, roughness: 0.45 }));
+    pen.rotation.x = Math.PI / 2;
+    pen.rotation.z = side * 0.35;
+    pen.position.set(side * 0.075, 0.0042, -0.035);
+    meter.add(pen);
+    const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.0008, 0.0016, 0.02, 6), toolSteel);
+    tip.rotation.x = Math.PI / 2;
+    tip.rotation.z = side * 0.35;
+    tip.position.set(side * 0.062, 0.0042, -0.068);
+    meter.add(tip);
+  };
+  probeLead(1, 0xb3342e);
+  probeLead(-1, 0x141519);
   meter.position.set(0.24, TOP_Y, 0.16);
   meter.rotation.y = 0.5;
   g.add(meter);
+
+  // compact bench oscilloscope (back row, between printer and PSU): dark
+  // body, graticule screen with two live traces, knob column, BNC inputs
+  const scope = new THREE.Group();
+  const scBody = new THREE.Mesh(new RoundedBoxGeometry(0.175, 0.115, 0.085, 2, 0.008), darkPlastic);
+  scBody.position.y = 0.0575;
+  scope.add(scBody);
+  const scCanvas = document.createElement("canvas");
+  scCanvas.width = 128; scCanvas.height = 80;
+  {
+    const oc = scCanvas.getContext("2d");
+    oc.fillStyle = "#060a0d"; oc.fillRect(0, 0, 128, 80);
+    oc.strokeStyle = "#14283a"; oc.lineWidth = 1;
+    for (let x = 0; x <= 128; x += 16) { oc.beginPath(); oc.moveTo(x, 0); oc.lineTo(x, 80); oc.stroke(); }
+    for (let y = 0; y <= 80; y += 16) { oc.beginPath(); oc.moveTo(0, y); oc.lineTo(128, y); oc.stroke(); }
+    // CH1: yellow sine
+    oc.strokeStyle = "#e8c33c"; oc.lineWidth = 2; oc.beginPath();
+    for (let x = 0; x <= 128; x++) { const y = 28 - Math.sin(x * 0.16) * 12; x === 0 ? oc.moveTo(x, y) : oc.lineTo(x, y); }
+    oc.stroke();
+    // CH2: cyan square wave
+    oc.strokeStyle = "#3fc9e0"; oc.lineWidth = 2; oc.beginPath();
+    for (let x = 0; x <= 128; x++) { const y = ((x >> 4) & 1) ? 62 : 48; x === 0 ? oc.moveTo(x, y) : oc.lineTo(x, y); }
+    oc.stroke();
+    oc.fillStyle = "#9aa4b0"; oc.font = "600 8px Arial";
+    oc.fillText("CH1 2V", 4, 10); oc.fillText("500us", 96, 10);
+  }
+  const scTex = new THREE.CanvasTexture(scCanvas);
+  scTex.colorSpace = THREE.SRGBColorSpace;
+  const scScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 0.062),
+    new THREE.MeshStandardMaterial({ map: scTex, color: 0x8f9298, emissive: 0xffffff, emissiveMap: scTex, emissiveIntensity: 0.55 }));
+  scScreen.position.set(-0.028, 0.062, 0.0435);
+  scope.add(scScreen);
+  // knob column on the right of the screen
+  [[0.062, 0.088, 0.011], [0.062, 0.06, 0.011], [0.048, 0.031, 0.006], [0.074, 0.031, 0.006]].forEach(([kx, ky, kr]) => {
+    const kn = new THREE.Mesh(new THREE.CylinderGeometry(kr, kr, 0.012, 14), steel);
+    kn.rotation.x = Math.PI / 2;
+    kn.position.set(kx, ky, 0.045);
+    scope.add(kn);
+  });
+  // BNC inputs under the screen
+  [-0.05, -0.015].forEach((bx) => {
+    const bnc = new THREE.Mesh(new THREE.CylinderGeometry(0.0055, 0.0055, 0.012, 10), toolSteel);
+    bnc.rotation.x = Math.PI / 2;
+    bnc.position.set(bx, 0.018, 0.045);
+    scope.add(bnc);
+  });
+  scope.position.set(0.08, TOP_Y, -0.16);
+  scope.rotation.y = 0.05;
+  g.add(scope);
 
   // LED bar bench lamp (clean single-stem design)
   const benchLamp = buildLedBarLamp();
@@ -3636,9 +3932,31 @@ function buildBambuPrinter() {
   );
   chamber.position.set(0, doorH / 2 + 0.05, D / 2 - 0.18);
   g.add(chamber);
+  // textured build plate: dark PEI sheet with a faint machined dot grid
+  const bedCanvas = document.createElement("canvas");
+  bedCanvas.width = bedCanvas.height = 128;
+  {
+    const bctx = bedCanvas.getContext("2d");
+    bctx.fillStyle = "#3c4046";
+    bctx.fillRect(0, 0, 128, 128);
+    // subtle speckle
+    for (let i = 0; i < 340; i++) {
+      const v = 56 + ((i * 37) % 26);
+      bctx.fillStyle = `rgb(${v},${v + 3},${v + 7})`;
+      bctx.fillRect((i * 53) % 128, (i * 91) % 128, 1, 1);
+    }
+    // faint alignment dot grid
+    bctx.fillStyle = "rgba(150,158,168,0.5)";
+    for (let gxx = 10; gxx < 128; gxx += 18)
+      for (let gyy = 10; gyy < 128; gyy += 18) {
+        bctx.beginPath(); bctx.arc(gxx, gyy, 1.1, 0, Math.PI * 2); bctx.fill();
+      }
+  }
+  const bedTex = new THREE.CanvasTexture(bedCanvas);
+  bedTex.colorSpace = THREE.SRGBColorSpace;
   const plate = new THREE.Mesh(
     new THREE.BoxGeometry(chamberW - 0.05, 0.006, 0.24),
-    new THREE.MeshStandardMaterial({ color: 0x44484e, roughness: 0.5, metalness: 0.5 })
+    new THREE.MeshStandardMaterial({ map: bedTex, color: 0xb9bec6, roughness: 0.55, metalness: 0.45 })
   );
   plate.position.set(0, 0.12, D / 2 - 0.19);
   g.add(plate);
@@ -3649,13 +3967,32 @@ function buildBambuPrinter() {
   g.add(bed);
   const printZ = D / 2 - 0.19;
   const printMat = new THREE.MeshStandardMaterial({ color: 0x2f7fff, roughness: 0.5, metalness: 0.05, emissive: 0x2f7fff, emissiveIntensity: 0.35 });
-  // a small car mid-print on the bed (the top rows still "growing")
-  const carBody = new THREE.Mesh(new RoundedBoxGeometry(0.12, 0.03, 0.055, 2, 0.007), printMat);
-  carBody.position.set(0, 0.138, printZ);
-  g.add(carBody);
-  const carCabin = new THREE.Mesh(new RoundedBoxGeometry(0.06, 0.018, 0.045, 2, 0.006), printMat);
-  carCabin.position.set(-0.008, 0.157, printZ);
-  g.add(carCabin);
+  // mid-print: a recognizable ENGINEERING BRACKET (base plate + bolt bosses +
+  // upright web + 45° gusset), echoing the blue printed parts in the cabinet
+  const brBase = new THREE.Mesh(new RoundedBoxGeometry(0.105, 0.01, 0.058, 2, 0.004), printMat);
+  brBase.position.set(0, 0.128, printZ);
+  g.add(brBase);
+  [-1, 1].forEach((s) => {
+    const boss = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.011, 0.012, 12), printMat);
+    boss.position.set(s * 0.036, 0.138, printZ + 0.016);
+    g.add(boss);
+  });
+  const brWeb = new THREE.Mesh(new THREE.BoxGeometry(0.095, 0.042, 0.008), printMat);
+  brWeb.position.set(0, 0.148, printZ - 0.02);
+  g.add(brWeb);
+  const brGusset = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.008, 0.032), printMat);
+  brGusset.position.set(0, 0.145, printZ - 0.005);
+  brGusset.rotation.x = -0.72; // leans from the base up to the web
+  g.add(brGusset);
+  // unfinished top layers of the web: lighter, slightly translucent — the
+  // slice the head is currently laying down
+  const brTop = new THREE.Mesh(new THREE.BoxGeometry(0.095, 0.005, 0.008),
+    new THREE.MeshStandardMaterial({
+      color: 0x5f9dff, roughness: 0.45, transparent: true, opacity: 0.75,
+      emissive: 0x3f8cff, emissiveIntensity: 0.5,
+    }));
+  brTop.position.set(0, 0.1715, printZ - 0.02);
+  g.add(brTop);
   const railMat = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.35, metalness: 0.9 });
   // X-gantry rail, lowered closer to the bed so the head isn't on a long drop
   const crossbar = new THREE.Mesh(new THREE.BoxGeometry(chamberW - 0.04, 0.012, 0.018), railMat);
@@ -3734,9 +4071,27 @@ function buildBambuPrinter() {
   );
   glass.position.set(0, doorH / 2 + 0.05, frontZ + 0.004);
   g.add(glass);
-  const handle = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.09, 0.01), trim);
-  handle.position.set(chamberW / 2 - 0.012, doorH / 2 + 0.06, frontZ + 0.01);
-  g.add(handle);
+  // door bar handle on two standoffs (right edge) — reads as grabbable
+  const handleMat = new THREE.MeshStandardMaterial({ color: 0x24262b, roughness: 0.35, metalness: 0.6 });
+  [-0.045, 0.045].forEach((dy) => {
+    const standoff = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.016, 10), handleMat);
+    standoff.rotation.x = Math.PI / 2;
+    standoff.position.set(chamberW / 2 - 0.016, doorH / 2 + 0.06 + dy, frontZ + 0.012);
+    g.add(standoff);
+  });
+  const handleBar = new THREE.Mesh(new THREE.CapsuleGeometry(0.006, 0.11, 4, 10), handleMat);
+  handleBar.position.set(chamberW / 2 - 0.016, doorH / 2 + 0.06, frontZ + 0.021);
+  g.add(handleBar);
+  // two hinges on the left edge: knuckle blocks + a vertical pin
+  [-0.22, 0.22].forEach((dy) => {
+    const knuckle = new THREE.Mesh(new RoundedBoxGeometry(0.014, 0.034, 0.014, 2, 0.003), handleMat);
+    knuckle.position.set(-chamberW / 2 - 0.002, doorH / 2 + 0.05 + dy, frontZ + 0.006);
+    g.add(knuckle);
+    const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.0035, 0.0035, 0.044, 8),
+      new THREE.MeshStandardMaterial({ color: 0x8f959d, roughness: 0.3, metalness: 0.9 }));
+    pin.position.set(-chamberW / 2 - 0.002, doorH / 2 + 0.05 + dy, frontZ + 0.012);
+    g.add(pin);
+  });
 
   // top control band: large touchscreen (left, circular gauge + menu) and the
   // "Bambu Lab H2S" wordmark (right), matching the H2S reference photo
@@ -3752,15 +4107,23 @@ function buildBambuPrinter() {
   uctx.beginPath(); uctx.arc(gx, gy, gr, -Math.PI / 2, -Math.PI / 2 + Math.PI * 1.32); uctx.stroke();
   uctx.fillStyle = "#e8ecf2"; uctx.textAlign = "center"; uctx.font = "700 20px Arial";
   uctx.fillText("66%", gx, gy + 7);
-  // menu rows (right)
+  // menu rows (right, top three slots)
   uctx.textAlign = "left";
-  for (let r = 0; r < 4; r++) {
+  for (let r = 0; r < 3; r++) {
     uctx.fillStyle = r === 0 ? "#16283a" : "#131922";
     uctx.fillRect(96, 16 + r * 26, 68, 20);
     uctx.fillStyle = r === 0 ? "#22c39c" : "#586675";
     uctx.beginPath(); uctx.arc(106, 26 + r * 26, 4, 0, Math.PI * 2); uctx.fill();
     uctx.fillStyle = "#9aa4b0"; uctx.fillRect(116, 24 + r * 26, 42, 4);
   }
+  // print-job slot (bottom right): part thumbnail + layer counter
+  uctx.fillStyle = "#131922"; uctx.fillRect(96, 94, 68, 24);
+  uctx.fillStyle = "#2f7fff";
+  uctx.fillRect(101, 106, 16, 3);                 // thumbnail: bracket base
+  uctx.fillRect(101, 99, 16, 3);                  // bracket web
+  uctx.fillRect(106, 102, 3, 5);                  // gusset link
+  uctx.fillStyle = "#9aa4b0"; uctx.font = "600 10px Arial";
+  uctx.fillText("L 142/215", 122, 109);
   // status strip (temps)
   uctx.fillStyle = "#22c39c"; uctx.font = "600 11px Arial";
   uctx.fillText("210°  60°", 10, 16);
