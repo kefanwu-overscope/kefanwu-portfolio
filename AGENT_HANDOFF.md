@@ -256,7 +256,49 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-12 (latest) REAL Hoosier tire from Kefan's STEP file
+### 2026-07-12 (latest) STRICT tire + wall helmets + fire extinguisher
+- Kefan: tire must be STRICTLY the STEP model, NO wheel; E2 extinguisher
+  approved (small, ON THE FLOOR near the cabinet); hang a welding helmet and
+  a white racing helmet on the wall. Source STLs live in `Desktop\stl\`
+  (tire re-export, 15-part welding-helmet set, 24 MB GT3 helmet) — NOT
+  committed; GLBs in models/ are.
+- **The "no helmet props" rule is SUPERSEDED** — Kefan explicitly asked for
+  these two wall helmets (2026-07-12). Do not remove them.
+- `models/tire-hoosier-step.glb` (4.6 MB, 150k tris) replaces the deleted
+  tire-hoosier.glb. Pipeline: scratchpad `bl_tire2.py` — weld, detect the
+  raised sidewall lettering at FULL res (radius-binned base surface, faces
+  >0.25 mm proud w/ axial normals, band r 0.157–0.191 — wider band painted
+  the bead sawtooth ring white), paint it factory white, THEN decimate.
+  buildHoosierTire() now has NO wheel/ring code; bracket only. Bracket
+  gotchas (all review-caught): plate corners must fit inside the band
+  annulus 0.127<r<0.2032 (span y 0.128..0.198); the tire circle at the
+  arm's x=±0.09 bottoms at y=-0.182 not -0.203; lip near face 0.110 vs
+  widest sidewall 0.108.
+- `models/helmet-weld.glb` (1.3 MB, bl_weld.py: 13 assembly-coord STLs
+  joined, per-part materials by filename — Component157 IS the lens
+  cartridge) and `models/helmet-gt3.glb` (2.1 MB, bl_gt3.py: separate-loose
+  -parts + debug-hue inspect pass, part 16 = visor smoke, 2/4/10/27/28 dark)
+  hang on the back-wall pocket (GT3 at x -1.76 open middle, weld at -1.38
+  near the cabinet). Both GLBs pre-oriented face+Z/up+Y (Blender: rotX 90°
+  then rotZ -90°, or already-correct; glTF export is Y-up).
+  buildWallHelmet(loader, url, wallDz, yaw, neckPoint): peg+base stay
+  wall-aligned and only the helmet mesh yaws (group yaw tilted the base off
+  the wall); neckPoint is PER MODEL — GT3 (deep shell) needs (0,-0.03,-0.06)
+  or the peg tip pokes out under the chin bar (review blocker).
+- buildFireExtinguisher() at (-1.33, 0, -0.9): ~0.44 m tall, levers hinge
+  10 mm into the head edge (not through it), nozzle axis distance 0.0631 >
+  body 0.052 + tip 0.009. Deeper pocket spots vanish behind the desk.
+- STEP→mesh how-to: `pip install cadquery-ocp` into the codex Python, then
+  scratchpad step2stl.py; STL sets export in shared assembly coords so a
+  plain join reassembles them. Blender previews via EEVEE headless PNGs are
+  the fast iteration loop for orientation/material mapping (debug-hue trick:
+  color part i by hsv((i*0.37)%1) and read indexes off the render).
+- Verified: pp5-* captures + 3-lens adversarial workflow round 2 (caught:
+  bracket tab above the tread, arms floating 2.2 cm, GT3 peg nub, lever/
+  nozzle clipping — all fixed). Console clean. Cache:
+  `exp-stepprops-20260712`.
+
+### 2026-07-12 REAL Hoosier tire from Kefan's STEP file (SUPERSEDED — see above; the GLB name below is the OLD deleted one)
 - Kefan supplied `Desktop\WEBSITE\hoosier-16x7-5-10-fsae-tire-1.snapshot.1\`
   `Hoosier 16x7.5-10 LC0.STEP` (27 MB B-rep, GrabCAD snapshot — do NOT
   commit it). Pipeline: `scratchpad/step2stl.py` (OCP a.k.a. OpenCascade
@@ -1139,8 +1181,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-realtire-20260712` (3D page styles — in experience.html)
-- `experience.js?v=exp-realtire-20260712` (3D page module — in experience.html)
+- `experience.css?v=exp-stepprops-20260712` (3D page styles — in experience.html)
+- `experience.js?v=exp-stepprops-20260712` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

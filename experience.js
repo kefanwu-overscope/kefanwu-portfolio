@@ -801,6 +801,28 @@ function initScene(canvas) {
   const hoosier = buildHoosierTire(loader);
   hoosier.position.set(1.62, 1.72, -1.405); // tire back (half-width 0.108) flush with the wainscot face (-1.515)
   scene.add(hoosier);
+  // wall helmets on the back-wall pocket left of the main cabinet (Kefan's
+  // STLs): welding helmet + white GT3 racing helmet, each on a steel peg
+  // white GT3 takes the open middle of the pocket (visible from every
+  // allowed camera angle); the dark weld helmet sits nearer the cabinet —
+  // the cabinet flank occludes that slot from right-of-center views and the
+  // dark shell on the white wall still reads from the remaining angles
+  // GT3 peg tip sits in the shell's REAR half — at z 0.005 it poked out
+  // below the chin bar (the GT3 runs much deeper than the weld helmet)
+  const gt3Helmet = buildWallHelmet(loader, "models/helmet-gt3.glb", -0.195, 0.16,
+    new THREE.Vector3(0, -0.03, -0.06));
+  gt3Helmet.position.set(-1.76, 1.54, -1.32); // depth 0.36 -> back near the wall (-1.515)
+  scene.add(gt3Helmet);
+  const weldHelmet = buildWallHelmet(loader, "models/helmet-weld.glb", -0.155, 0.06,
+    new THREE.Vector3(0, -0.045, 0.005));
+  weldHelmet.position.set(-1.38, 1.54, -1.36); // right edge clears the cabinet flank (-1.19)
+  scene.add(weldHelmet);
+  // E2: small fire extinguisher on the floor at the main cabinet's left-front
+  // corner — deeper in the pocket it vanished behind the desk from most angles
+  const fireExt = buildFireExtinguisher();
+  fireExt.position.set(-1.33, 0, -0.9);
+  fireExt.rotation.y = 0.35;
+  scene.add(fireExt);
   scene.add(buildFloorJoints()); // C2: saw-cut control joints in the slab
   scene.add(buildBenchMat());    // C4: ESD mat + ground lead at the bench
   // C5: lived-in chest top — the chest itself is baked, props ride on top
@@ -4578,94 +4600,154 @@ function buildWeldingCart() {
 }
 
 function buildHoosierTire(loader) {
-  // REAL Hoosier 16x7.5-10 LC0 — Kefan's STEP tessellated to 36k tris
-  // (tools: scratchpad step2stl.py via OCP + bl_tire.py; real scale:
-  // OD 0.4065 m, width 0.216 m, bore r 0.127 = 10" wheel), on a wall bracket.
+  // STRICT per Kefan: the REAL Hoosier 16x7.5-10 LC0 STL as-is — NO wheel,
+  // NO decal ring. Molded sidewall lettering ships in the mesh; the raised
+  // script is factory-painted white in the GLB (tools: scratchpad
+  // bl_tire2.py — detection binned per radius on the full-res mesh).
+  // Real scale: OD 0.4064 m, width 0.216 m, bore r 0.127.
   const g = new THREE.Group();
-  loader.load("models/tire-hoosier.glb", (gltf) => {
+  loader.load("models/tire-hoosier-step.glb", (gltf) => {
     const tire = gltf.scene;
     tire.rotation.x = Math.PI / 2; // GLB is Y-up; this group wants the axis on +Z
     tire.traverse((o) => {
       if (o.isMesh) {
         o.castShadow = true;
         o.receiveShadow = true;
-        o.material.roughness = 0.88;
-        o.material.metalness = 0.02;
       }
     });
     g.add(tire);
   });
-  // sidewall lettering: arc text drawn per-character on a transparent canvas
-  const sw = document.createElement("canvas");
-  sw.width = sw.height = 512;
-  {
-    const s = sw.getContext("2d");
-    s.clearRect(0, 0, 512, 512);
-    const arcText = (text, radius, startA, endA, font, fill, flip) => {
-      s.font = font; s.fillStyle = fill;
-      s.textAlign = "center"; s.textBaseline = "middle";
-      const step = (endA - startA) / (text.length - 1);
-      for (let i = 0; i < text.length; i++) {
-        const a = startA + step * i;
-        s.save();
-        s.translate(256 + Math.cos(a) * radius, 256 + Math.sin(a) * radius);
-        s.rotate(a + (flip ? -Math.PI / 2 : Math.PI / 2)); // bottom arc: tops point inward
-        s.fillText(text[i], 0, 0);
-        s.restore();
-      }
-    };
-    // top arc: HOOSIER — bottom arc: the compound (Kefan: it's a Hoosier R20)
-    arcText("HOOSIER", 222, -Math.PI * 0.82, -Math.PI * 0.18, "700 52px Arial", "rgba(240,240,242,0.95)");
-    arcText("R20", 222, Math.PI * 0.58, Math.PI * 0.42, "700 42px Arial", "rgba(240,240,242,0.9)", true);
-  }
-  const swTex = new THREE.CanvasTexture(sw);
-  swTex.colorSpace = THREE.SRGBColorSpace;
-  // flat ring just PROUD of the sidewall's widest point (half-width 0.108);
-  // letters at world r ≈ 0.17 (canvas r 222 of 256 ↔ ring outer 0.196)
-  const ring = new THREE.Mesh(new THREE.RingGeometry(0.14, 0.196, 48),
-    new THREE.MeshBasicMaterial({ map: swTex, transparent: true, depthWrite: false }));
-  ring.position.z = 0.110; // 2 mm proud of the real sidewall's widest point (0.108)
-  g.add(ring);
-  // machined 10" FSAE wheel filling the real bore (r 0.127): barrel, five
-  // spokes on a dished face, center-lock hub + blue anodized nut
-  const rimMat = new THREE.MeshStandardMaterial({ color: 0xb9bec6, roughness: 0.32, metalness: 0.85, side: THREE.DoubleSide });
-  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.128, 0.128, 0.19, 32, 1, true), rimMat);
-  barrel.rotation.x = Math.PI / 2;
-  g.add(barrel);
-  const spokeMat = new THREE.MeshStandardMaterial({ color: 0xa8adb5, roughness: 0.35, metalness: 0.8 });
-  for (let sp = 0; sp < 5; sp++) {
-    const arm = new THREE.Group();
-    arm.rotation.z = (sp / 5) * Math.PI * 2 + 0.3;
-    const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.115, 0.016), spokeMat);
-    spoke.position.set(0, 0.0745, 0.05);
-    arm.add(spoke);
-    g.add(arm);
-  }
-  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.034, 0.034, 0.03, 18), spokeMat);
-  hub.rotation.x = Math.PI / 2;
-  hub.position.z = 0.05;
-  g.add(hub);
-  const lockNut = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.022, 6),
-    new THREE.MeshStandardMaterial({ color: 0x2a55c8, roughness: 0.35, metalness: 0.7 }));
-  lockNut.rotation.x = Math.PI / 2;
-  lockNut.position.z = 0.072;
-  g.add(lockNut);
-  // steel wall bracket: slim plate hidden behind the tire band (a wide plate
-  // showed through the hub hole) + two cradle arms UNDER the tire (the old
-  // arms sat inside the tire body) with lips in front of the sidewall
+  // steel wall bracket: slim plate hidden behind the tire band + two cradle
+  // arms UNDER the tire with lips in front of the sidewall
   const brMat = new THREE.MeshStandardMaterial({ color: 0x2a2d33, roughness: 0.45, metalness: 0.75 });
-  const plate = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.12, 0.012), brMat);
-  plate.position.set(0, 0.15, -0.103); // wall face is at local z = -0.11
+  // plate corners must stay INSIDE the band annulus (bore 0.127 < r < OD
+  // 0.2032): span y 0.128..0.198 -> corner radii 0.130 and 0.200
+  const plate = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.07, 0.012), brMat);
+  plate.position.set(0, 0.163, -0.103);
   g.add(plate);
   [-1, 1].forEach((sd) => {
-    const arm = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.016, 0.27), brMat);
-    arm.position.set(sd * 0.09, -0.212, 0.005); // tire bottom is y = -0.203
+    // the tire's circle at x = ±0.09 bottoms out at y = -sqrt(0.2032² - 0.09²)
+    // = -0.182 (NOT -0.203, that's only at x = 0 — v1 floated 2.2 cm low)
+    const arm = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.016, 0.24), brMat);
+    arm.position.set(sd * 0.09, -0.19, 0.0); // top face -0.182 meets the tread
     g.add(arm);
     const lip = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.05, 0.016), brMat);
-    lip.position.set(sd * 0.09, -0.19, 0.138);
+    lip.position.set(sd * 0.09, -0.157, 0.118); // near face 0.110, just past the widest sidewall (0.108)
     g.add(lip);
   });
-  g.traverse((o) => { if (o.isMesh && o.geometry.type !== "RingGeometry") { o.castShadow = true; o.receiveShadow = true; } });
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildWallHelmet(loader, url, wallDz, yaw, neckPoint) {
+  // wall-hung helmet (Kefan's STLs -> GLB, tools: scratchpad bl_weld.py /
+  // bl_gt3.py). GLBs are pre-oriented: face +Z, up +Y.
+  // The peg + base plate stay WALL-ALIGNED (only the helmet mesh yaws —
+  // rotating the whole group tilted the base plate off the wall plane).
+  // neckPoint = peg tip in helmet-local space, tuned PER MODEL: a shared tip
+  // poked out below the GT3's chin bar (review blocker).
+  const g = new THREE.Group();
+  const pegMat = new THREE.MeshStandardMaterial({ color: 0x2a2d33, roughness: 0.4, metalness: 0.8 });
+  const a = new THREE.Vector3(0, -0.14, wallDz + 0.008); // wall end
+  const b = neckPoint.clone();                            // inside the shell
+  const dir = b.clone().sub(a);
+  const peg = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, dir.length(), 10), pegMat);
+  peg.position.copy(a).addScaledVector(dir, 0.5);
+  peg.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
+  g.add(peg);
+  const pegBase = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.028, 0.012, 12), pegMat);
+  pegBase.rotation.x = Math.PI / 2;
+  pegBase.position.set(0, -0.14, wallDz + 0.006);
+  g.add(pegBase);
+  loader.load(url, (gltf) => {
+    const h = gltf.scene;
+    h.rotation.set(-0.08, yaw, 0); // resting on the peg, nose a touch up
+    h.traverse((o) => {
+      if (o.isMesh) {
+        o.castShadow = true;
+        o.receiveShadow = true;
+      }
+    });
+    g.add(h);
+  });
+  return g;
+}
+
+function buildFireExtinguisher() {
+  // small 5 lb ABC extinguisher on the floor (E2, Kefan: keep it small, on
+  // the ground near the cabinet) — body, dome, valve + levers, hose, gauge
+  const g = new THREE.Group();
+  const red = new THREE.MeshStandardMaterial({ color: 0x9e1f1a, roughness: 0.35, metalness: 0.15 });
+  const darkHw = new THREE.MeshStandardMaterial({ color: 0x1c1e22, roughness: 0.5, metalness: 0.4 });
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.052, 0.052, 0.30, 20), red);
+  body.position.y = 0.17;
+  g.add(body);
+  const dome = new THREE.Mesh(new THREE.SphereGeometry(0.052, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2), red);
+  dome.position.y = 0.32;
+  g.add(dome);
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.054, 0.056, 0.02, 20), darkHw);
+  base.position.y = 0.01;
+  g.add(base);
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.035, 10),
+    new THREE.MeshStandardMaterial({ color: 0x8f959d, roughness: 0.35, metalness: 0.85 }));
+  neck.position.y = 0.385;
+  g.add(neck);
+  // valve head + carry/squeeze levers
+  const head = new THREE.Mesh(new RoundedBoxGeometry(0.045, 0.028, 0.03, 2, 0.006), darkHw);
+  head.position.y = 0.41;
+  g.add(head);
+  // levers hinge at the head's left edge — only ~10 mm inserts into the head
+  // (v1 ran them straight through the whole head box)
+  [[0.020, 0.06], [0.0, -0.02]].forEach(([dy, tilt]) => {
+    const lever = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.008, 0.022), darkHw);
+    lever.position.set(-0.0525, 0.412 + dy, 0);
+    lever.rotation.z = tilt;
+    g.add(lever);
+  });
+  // pressure gauge on the neck front
+  const gaugeRim = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.008, 12), darkHw);
+  gaugeRim.rotation.x = Math.PI / 2;
+  gaugeRim.position.set(0, 0.397, 0.016);
+  g.add(gaugeRim);
+  const gaugeFace = new THREE.Mesh(new THREE.CircleGeometry(0.008, 12),
+    new THREE.MeshStandardMaterial({ color: 0xe8eaee, roughness: 0.4 }));
+  gaugeFace.position.set(0, 0.397, 0.0205);
+  g.add(gaugeFace);
+  // hose from the valve, clipped down the side
+  const hose = new THREE.Mesh(
+    new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0.022, 0.41, 0),
+      new THREE.Vector3(0.062, 0.37, 0.01),
+      new THREE.Vector3(0.064, 0.24, 0.015),
+      new THREE.Vector3(0.062, 0.12, 0.012),
+    ]), 24, 0.0055, 8),
+    darkHw
+  );
+  g.add(hose);
+  // axis distance 0.0631 > body r 0.052 + tip r 0.009 — clear of the body
+  const nozzleTip = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.006, 0.03, 10), darkHw);
+  nozzleTip.position.set(0.062, 0.098, 0.012);
+  g.add(nozzleTip);
+  // instruction label band
+  const labelCanvas = document.createElement("canvas");
+  labelCanvas.width = 64; labelCanvas.height = 64;
+  {
+    const lc = labelCanvas.getContext("2d");
+    lc.fillStyle = "#f2f3f5"; lc.fillRect(0, 0, 64, 64);
+    lc.fillStyle = "#c03a30"; lc.fillRect(0, 0, 64, 18);
+    lc.fillStyle = "#ffffff"; lc.font = "700 11px Arial"; lc.textAlign = "center";
+    lc.fillText("FIRE", 32, 13);
+    lc.fillStyle = "#3a3e45";
+    for (let i = 0; i < 4; i++) lc.fillRect(8, 26 + i * 9, 48, 3);
+  }
+  const labelTex = new THREE.CanvasTexture(labelCanvas);
+  labelTex.colorSpace = THREE.SRGBColorSpace;
+  const label = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.0525, 0.0525, 0.09, 20, 1, true, -0.55, 1.1),
+    new THREE.MeshBasicMaterial({ map: labelTex, transparent: false }));
+  label.position.y = 0.20;
+  g.add(label);
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
 }
 
