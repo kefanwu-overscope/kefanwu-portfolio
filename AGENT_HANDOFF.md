@@ -256,7 +256,41 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-10 (latest) hover-scale fix — the LAST end-of-pickup flash
+### 2026-07-11 (latest) studio polish pass (6 Kefan items)
+- **Click-hint shorter:** `showClickHint`'s auto-dismiss 5000→2500ms.
+- **Cabinet exhibits brighter:** the per-row `RectAreaLight` strip intensities
+  bumped — main 9.0→11.5, side 8.5→10.8 (LOW_TIER 14/13→16.5/15.5). Exhibits
+  read too dim before. Tune HERE (the strips ARE the exhibit lighting), not
+  via ambient/env.
+- **Desk-lamp head now AIMS at the résumé:** the lamp sits at desk-left
+  (x=-0.8, kept there so it doesn't block the LineFollower bay) while the
+  résumé is at desk-center, so the old straight-down head pointed nowhere near
+  the pool it cast. `buildModernDeskLamp` now hangs the drop-link + head + LED
+  in a `headGroup` tilted `rotation.z = 0.95 rad` toward the paper; the head
+  visibly rakes down-forward along the beam. `headLocal` (where `resumeSpot`
+  originates) is recomputed via `g.worldToLocal(led world pos)` AFTER the tilt,
+  so the spot still starts at the LED. Light direction/target unchanged — only
+  the geometry now matches it. If you move the lamp or résumé, re-derive the
+  tilt.
+- **Multimeter no longer wired to the PSU:** the PSU test leads used to drape
+  all the way to the multimeter (x~0.24), reading as one wired rig. They now
+  coil on the bench right in front of the PSU (x 0.4–0.54) and the multimeter
+  sits standalone.
+- **Résumé pickup "flash" removed:** the face emissive used to ramp 0→target
+  DURING the lift/return travel, so a glow swept across the moving sheet
+  (bloom-amplified). Now the warm-up runs only during the pre-lift delay while
+  the sheet is STILL ON THE DESK (`warmup = min(1,(t-t0)/delay)`), then holds
+  CONSTANT for the whole travel; return holds constant too and only cuts to 0
+  at landing (in the lamp pool, so the cut is masked). Measured: emissive
+  reaches 0.7 by the time y leaves 0.775, constant through the flight.
+- **Interact marker readable on white:** `makeInteractMarker` switched from
+  AdditiveBlending (invisible on the white CFD monitor / résumé) to
+  NormalBlending with a dark contour behind the brand-blue diamond ring and a
+  dark-edged white core; pulse opacity floor raised (0.62–0.88). Reads on both
+  dark wood and white exhibits now.
+- Cache: `exp-studiotweaks-20260711` (css + js).
+
+### 2026-07-10 hover-scale fix — the LAST end-of-pickup flash
 - Kefan still saw a flash at the very end of the pickup (screenshot showed
   the DOM sheet ~6% larger than the 3D sheet behind it, vertically offset).
   Root cause: users HOVER before clicking, so the pivot carries the 6% hover
@@ -761,8 +795,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-hoverfix-20260710` (3D page styles — in experience.html)
-- `experience.js?v=exp-hoverfix-20260710` (3D page module — in experience.html)
+- `experience.css?v=exp-studiotweaks-20260711` (3D page styles — in experience.html)
+- `experience.js?v=exp-studiotweaks-20260711` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

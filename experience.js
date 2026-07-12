@@ -388,14 +388,14 @@ function initScene(canvas) {
   const sideRows = LOW_TIER ? [CAB2.rows[1]] : CAB2.rows;
   const caseStrips = { main: [], side: [] }; // kept for the boot choreography
   mainRows.forEach((y) => {
-    const l = stripLight(2.2, LOW_TIER ? 14 : 9.0);
+    const l = stripLight(2.2, LOW_TIER ? 16.5 : 11.5); // brighter: exhibits read too dim (Kefan)
     l.position.set(0, y + 0.42, CAB.z + 0.34);
     scene.add(l);
     l.lookAt(0, y + 0.06, CAB.z); // ~45° down-back: lights faces AND backs
     caseStrips.main.push(l);
   });
   sideRows.forEach((y) => {
-    const l = stripLight(1.4, LOW_TIER ? 13 : 8.5);
+    const l = stripLight(1.4, LOW_TIER ? 15.5 : 10.8);
     l.position.set(CAB2.x - 0.34, y + 0.42, CAB2.z);
     scene.add(l);
     l.lookAt(CAB2.x, y + 0.06, CAB2.z);
@@ -1156,7 +1156,14 @@ function initScene(canvas) {
         // slide during the fade, the main ghosting source); sin(pi*e) has
         // zero end-slope, so the bow dies out with the rest of the motion
         pv.position.y += Math.sin(Math.PI * e) * 0.045;
-        if (face) face.material.emissiveIntensity = paperGlowTarget() * e;
+        // Brighten the page to its held level WHILE IT IS STILL ON THE DESK
+        // (during the pre-lift delay, camera diving in), then hold it CONSTANT
+        // for the whole travel. Ramping during the flight made a glow sweep
+        // across the moving sheet (amplified by bloom) — the "flash" Kefan saw.
+        if (face) {
+          const warmup = pm.delay ? Math.min(1, (t - pm.t0) / pm.delay) : 1;
+          face.material.emissiveIntensity = paperGlowTarget() * warmup;
+        }
         if (!pm.domShown && k >= PAPER_DOM_FADE_AT) {
           pm.domShown = true;
           showPaperDom(pm.gen);
@@ -1166,7 +1173,10 @@ function initScene(canvas) {
         pv.position.lerpVectors(pm.fromPos, pm.toPos, e);
         pv.quaternion.slerpQuaternions(pm.fromQuat, pm.toQuat, e);
         pv.position.y += Math.sin(Math.PI * e) * 0.03; // zero end-slope: eases ONTO the desk
-        if (face) face.material.emissiveIntensity = pm.fromGlow * (1 - e);
+        // hold the glow CONSTANT through the return travel (no fade sweep on
+        // the moving sheet); it drops to the desk baseline only at landing,
+        // where the lamp pool already lights the paper so the cut is masked
+        if (face) face.material.emissiveIntensity = pm.fromGlow;
         if (k >= 1) {
           // land EXACTLY on the remembered desk pose
           pv.position.copy(pm.toPos);
@@ -1229,7 +1239,9 @@ function initScene(canvas) {
       if (!busy && !prefersReducedMotion) {
         const ph = h.userData.hotspot.phase;
         m.position.y = h.userData.hotspot.markerY + Math.sin(t * 0.0024 + ph) * 0.016;
-        m.material.opacity = 0.26 + 0.2 * (0.5 + 0.5 * Math.sin(t * 0.003 + ph));
+        // higher floor than the old additive marker: normal blending needs
+        // more opacity to stay legible, especially on white exhibits
+        m.material.opacity = 0.62 + 0.26 * (0.5 + 0.5 * Math.sin(t * 0.003 + ph));
         const s = h === hovered ? 0.06 : 0.042;
         m.scale.setScalar(s);
       }
@@ -1371,7 +1383,7 @@ function initScene(canvas) {
     if (clickHintDone || !clickHintEl || panelOpen) return;
     clickHintEl.hidden = false;
     requestAnimationFrame(() => clickHintEl.classList.add("is-on"));
-    setTimeout(dismissClickHint, 5000);
+    setTimeout(dismissClickHint, 2500); // brief nudge, then get out of the way
   }
   function dismissClickHint() {
     if (clickHintDone) return;
@@ -2766,15 +2778,25 @@ function buildModernDeskLamp() {
   weight.position.copy(armBack);
   g.add(weight);
 
-  // drop-link: the head hangs a little below the arm's front end
-  const dropBottom = armFront.clone().add(new THREE.Vector3(0, -0.02, 0));
-  g.add(segment(armFront, dropBottom, 0.005, 8));
+  // Head assembly hangs off the arm's front and TILTS toward the résumé, so
+  // the lamp visibly aims where its light actually lands. The paper sits well
+  // to the +x side of the lamp (lamp at desk-left, résumé at desk-center), so
+  // a straight-down head looked wrong — head pointing down while the pool fell
+  // off to the right (Kefan). This tilt rotates the head's underside to face
+  // the beam direction (LED origin -> résumé), computed from the fixed layout.
+  const HEAD_TILT = 0.95; // rad about +z: aims the LED underside at the paper
+  const headGroup = new THREE.Group();
+  headGroup.position.copy(armFront);
+  headGroup.rotation.z = HEAD_TILT;
+
+  // drop-link (short neck) from the arm joint down into the head
+  headGroup.add(segment(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, -0.02, 0), 0.005, 8));
 
   // slim lamp head (horizontal tube), perpendicular to the arm
   const head = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.13, 20), body);
-  head.position.copy(dropBottom);
+  head.position.set(0, -0.02, 0);
   head.rotation.x = Math.PI / 2;
-  g.add(head);
+  headGroup.add(head);
 
   // LED strip embedded on the head's underside (same look the light-state
   // code keys off: emissive material, intensity in the dim "off" range)
@@ -2782,11 +2804,14 @@ function buildModernDeskLamp() {
     new THREE.BoxGeometry(0.02, 0.006, 0.11),
     new THREE.MeshStandardMaterial({ color: 0xe8ebf0, emissive: 0xdfe6f0, emissiveIntensity: 0.05 })
   );
-  led.position.copy(dropBottom).add(new THREE.Vector3(0, -0.012, 0));
-  g.add(led);
+  led.position.set(0, -0.032, 0);
+  headGroup.add(led);
+  g.add(headGroup);
 
-  // where initScene hangs the real task light (the LED's own position)
-  g.userData.headLocal = led.position.clone();
+  // where initScene hangs the real task light (the LED's position in g-space,
+  // after the head tilt — g is this subtree's root so worldToLocal is g-local)
+  g.updateMatrixWorld(true);
+  g.userData.headLocal = g.worldToLocal(led.getWorldPosition(new THREE.Vector3()));
 
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
@@ -2818,25 +2843,38 @@ function buildLedBarLamp() {
 }
 
 function makeInteractMarker() {
-  // Genshin-style prompt: soft glow + diamond outline + white core (site blue)
+  // Genshin-style prompt: soft blue glow + diamond ring + white core.
+  // Built to read on BOTH dark exhibits AND white ones (CFD monitor, résumé):
+  // additive blending vanished against white, so this uses NORMAL blending
+  // with a dark contour behind the blue ring and a dark edge on the core —
+  // contrast that survives a white background while still glowing on dark.
   const s = 128;
   const c = document.createElement("canvas");
   c.width = c.height = s;
   const ctx = c.getContext("2d");
-  const glow = ctx.createRadialGradient(s / 2, s / 2, 4, s / 2, s / 2, s / 2);
-  glow.addColorStop(0, "rgba(150, 195, 255, 0.85)");
-  glow.addColorStop(0.35, "rgba(110, 165, 255, 0.28)");
-  glow.addColorStop(1, "rgba(100, 160, 255, 0)");
+  const cx = s / 2;
+  const glow = ctx.createRadialGradient(cx, cx, 3, cx, cx, cx);
+  glow.addColorStop(0, "rgba(63, 140, 255, 0.60)");
+  glow.addColorStop(0.4, "rgba(63, 140, 255, 0.24)");
+  glow.addColorStop(1, "rgba(63, 140, 255, 0)");
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, s, s);
   ctx.save();
-  ctx.translate(s / 2, s / 2);
+  ctx.translate(cx, cx);
   ctx.rotate(Math.PI / 4);
-  ctx.strokeStyle = "rgba(190, 216, 255, 0.95)";
-  ctx.lineWidth = 4;
+  // dark contour first — gives the ring an edge on WHITE backgrounds
+  ctx.strokeStyle = "rgba(6, 20, 44, 0.55)";
+  ctx.lineWidth = 8.5;
   ctx.strokeRect(-19, -19, 38, 38);
-  ctx.fillStyle = "rgba(255, 255, 255, 0.96)";
-  ctx.fillRect(-9, -9, 18, 18);
+  // saturated brand-blue ring
+  ctx.strokeStyle = "#3f8cff";
+  ctx.lineWidth = 5;
+  ctx.strokeRect(-19, -19, 38, 38);
+  // white core with a thin dark edge (reads on white, glows on dark)
+  ctx.fillStyle = "rgba(8, 22, 46, 0.6)";
+  ctx.fillRect(-10, -10, 20, 20);
+  ctx.fillStyle = "rgba(255, 255, 255, 0.98)";
+  ctx.fillRect(-8, -8, 16, 16);
   ctx.restore();
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -2845,8 +2883,8 @@ function makeInteractMarker() {
       map: tex,
       transparent: true,
       depthWrite: false,
-      blending: THREE.AdditiveBlending,
-      opacity: 0.9,
+      blending: THREE.NormalBlending,
+      opacity: 0.95,
     })
   );
   sprite.scale.setScalar(0.042);
@@ -3293,9 +3331,11 @@ function buildWorkbench() {
   }
   // printer mains lead: printer rear -> sag -> strip
   g.add(cable([[-0.5, 0.84, -0.18], [-0.38, 0.86, -0.27], [-0.22, 0.9, -0.295], [-0.14, 0.965, -0.293]], 0.0045, 0x17181c));
-  // PSU test leads: front jacks draped onto the bench (red + black)
-  g.add(cable([[0.375, 0.845, -0.085], [0.33, 0.815, 0.02], [0.3, 0.786, 0.1], [0.24, 0.784, 0.14]], 0.003, 0xb3342e));
-  g.add(cable([[0.4, 0.845, -0.085], [0.37, 0.81, 0.04], [0.33, 0.786, 0.12], [0.28, 0.784, 0.17]], 0.003, 0x141519));
+  // PSU test leads: front jacks draped and loosely COILED on the bench right
+  // in front of the PSU — deliberately NOT reaching the multimeter (x~0.24),
+  // which read as if the two instruments were wired together (Kefan)
+  g.add(cable([[0.375, 0.845, -0.085], [0.4, 0.81, 0.0], [0.47, 0.786, 0.06], [0.52, 0.786, 0.02], [0.5, 0.784, -0.03]], 0.003, 0xb3342e));
+  g.add(cable([[0.4, 0.845, -0.085], [0.44, 0.81, -0.01], [0.5, 0.786, 0.04], [0.54, 0.786, 0.09], [0.5, 0.784, 0.11]], 0.003, 0x141519));
   // PSU mains into the strip
   g.add(cable([[0.36, 0.82, -0.24], [0.22, 0.88, -0.29], [0.05, 0.958, -0.293]], 0.0042, 0x17181c));
 
