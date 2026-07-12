@@ -256,7 +256,45 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-12 (latest) realism set-dressing (Kefan approved A3/A5/B1/tire/C2/C4/C5/C6)
+### 2026-07-12 (latest) realism fix round 2 (Kefan's 4 complaints on the set-dressing)
+- **Tire = Hoosier R20 with a real wheel.** Bottom arc now "R20" (was RACING
+  TIRE). Bore filled by a 5-spoke machined wheel: open barrel r 0.082 (bore is
+  0.08), spokes 0.076 long reach hub→barrel with no gap, hub + BLUE hex
+  center-lock nut (echoes the brand blue).
+- **Welding-cart top rebuilt as ONE connected stack** (v1: ARGON label was a
+  flat plane floating off the curved bottle; two gauge discs floated 17 mm in
+  front of a detached regulator block; no valve on top): brass valve body on
+  the shoulder + dark handwheel + brass outlet nipple (+z) + cylindrical
+  regulator + a SINGLE gauge flush on its face + barb + hose. The hose stays
+  above y 0.745 until z clears -0.16 (the TIG box top-back edge at y 0.73 /
+  z -0.15 — a tighter route grazed it). ARGON label is now an open
+  CylinderGeometry segment (r 0.0757, θ 1.5 rad) sharing the bottle's axis.
+- **Torch actually hangs on the push-handle bar**: TorusGeometry hook arc
+  1.7π with rotation.z = -0.35π so BOTH arc ends dip below the bar centerline
+  (y 0.78) and land on the torch-body top cap (y 0.7665). A plain π top-arc
+  leaves a 13.5 mm air gap — caught by the adversarial review via torus-arc
+  math, not by captures (the handle side is occluded from most angles).
+- **Printer chamber fan** (was the "奇怪的线圈" complaint — a flat canvas of
+  concentric rings floating mid-air at z=-0.093 vs the chamber inner back
+  plane z=-0.10): real 3D axial fan flush on the back wall — dark RoundedBox
+  frame, LIGHT blades (0x8f959d metalness 0.6 — v2's dark blades vanished
+  and its bright guard re-read as a coil; review caught it), 5 pitched blades
+  via per-blade group (group.rotation.z spoke + blade.rotation.y pitch:
+  local y is the radial axis, uniform pitch), DARKER guard (0x3f4348), hub
+  height 0.011 ≤ frame depth 0.012 (0.014 poked 1 mm past the wall).
+- QA gotchas learned this round: after a page reload, pump ~450 frames FIRST
+  (boot intro tweens the camera; snapshots mid-intro show the cabinet);
+  with `controls.enabled=false` the loop skips update()/lookAt — you MUST
+  call `camera.lookAt(controls.target)` after setting the pose or the camera
+  translates with a stale orientation.
+- Verified via captures (fx3-*/fx4-* in scratchpad snaps): cart front/top/
+  rear-3/4, tire straight-on, fan close + through-door, night visitor
+  angles; 3-lens adversarial workflow (Sonnet-5 xhigh) passed after fixes.
+  Cache: `exp-realism2-20260712`.
+- Corner/wall proposals for the MAIN cabinet's left pocket + wall above are
+  awaiting Kefan's pick (D1-D4 / E1-E4 in chat, 2026-07-12); nothing built.
+
+### 2026-07-12 realism set-dressing (Kefan approved A3/A5/B1/tire/C2/C4/C5/C6)
 - From a 3-lens realism audit; Kefan approved by number. All NEW geometry is
   REAL-TIME (no `bk_` tags) so it renders over the baked room with no re-bake.
 - Printer internals (`buildBambuPrinter`): **A3** CoreXY idler pulleys at the
@@ -1077,8 +1115,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-realism1-20260712` (3D page styles — in experience.html)
-- `experience.js?v=exp-realism1-20260712` (3D page module — in experience.html)
+- `experience.css?v=exp-realism2-20260712` (3D page styles — in experience.html)
+- `experience.js?v=exp-realism2-20260712` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

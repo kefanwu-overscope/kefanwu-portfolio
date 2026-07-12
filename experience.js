@@ -3956,22 +3956,45 @@ function buildBambuPrinter() {
   camLens.rotation.z = -0.5;
   camLens.position.set(chamberW / 2 - 0.051, doorH - 0.022, D / 2 - 0.069);
   g.add(camLens);
-  // auxiliary chamber-circulation fan grille on the interior back wall
-  const grilleCanvas = document.createElement("canvas");
-  grilleCanvas.width = grilleCanvas.height = 128;
-  {
-    const gg = grilleCanvas.getContext("2d");
-    gg.fillStyle = "#15171b"; gg.fillRect(0, 0, 128, 128);
-    gg.strokeStyle = "#2c2f35"; gg.lineWidth = 5;
-    for (let r = 12; r <= 60; r += 12) { gg.beginPath(); gg.arc(64, 64, r, 0, Math.PI * 2); gg.stroke(); }
-    gg.fillStyle = "#3a3e45"; gg.beginPath(); gg.arc(64, 64, 9, 0, Math.PI * 2); gg.fill();
+  // auxiliary chamber-circulation fan on the interior back wall — a real
+  // axial fan (frame, hub, pitched blades, wire guard). The v1 flat decal of
+  // concentric rings caught the chamber light and read as a floating coil.
+  const fanG = new THREE.Group();
+  const fanFrame = new THREE.Mesh(new RoundedBoxGeometry(0.078, 0.078, 0.012, 2, 0.004),
+    new THREE.MeshStandardMaterial({ color: 0x1a1c20, roughness: 0.55, metalness: 0.3 }));
+  fanG.add(fanFrame);
+  const fanHub = new THREE.Mesh(new THREE.CylinderGeometry(0.013, 0.013, 0.011, 14),
+    new THREE.MeshStandardMaterial({ color: 0x4a4e55, roughness: 0.45, metalness: 0.4 }));
+  fanHub.rotation.x = Math.PI / 2;
+  fanG.add(fanHub);
+  // blades LIGHT against the dark frame — same-tone blades vanished and the
+  // bright guard read as a coil again (review verdict on v2)
+  const bladeMat = new THREE.MeshStandardMaterial({ color: 0x8f959d, roughness: 0.4, metalness: 0.6 });
+  for (let b = 0; b < 5; b++) {
+    const bSpoke = new THREE.Group();
+    bSpoke.rotation.z = (b / 5) * Math.PI * 2;
+    const blade = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.026, 0.0028), bladeMat);
+    blade.position.y = 0.023;
+    blade.rotation.y = 0.55; // uniform pitch: local y IS the radial axis here
+    bSpoke.add(blade);
+    fanG.add(bSpoke);
   }
-  const grilleTex = new THREE.CanvasTexture(grilleCanvas);
-  grilleTex.colorSpace = THREE.SRGBColorSpace;
-  const grille = new THREE.Mesh(new THREE.CircleGeometry(0.045, 24),
-    new THREE.MeshStandardMaterial({ map: grilleTex, roughness: 0.7, metalness: 0.2 }));
-  grille.position.set(0.09, 0.3, D / 2 - 0.343);
-  g.add(grille);
+  const guardMat = new THREE.MeshStandardMaterial({ color: 0x3f4348, roughness: 0.5, metalness: 0.5 });
+  [0.016, 0.032].forEach((gr) => {
+    const guardRing = new THREE.Mesh(new THREE.TorusGeometry(gr, 0.0011, 6, 20), guardMat);
+    guardRing.position.z = 0.009;
+    fanG.add(guardRing);
+  });
+  for (let w = 0; w < 4; w++) {
+    const wire = new THREE.Mesh(new THREE.CylinderGeometry(0.001, 0.001, 0.068, 6), guardMat);
+    wire.rotation.z = (w / 4) * Math.PI * 2 + Math.PI / 4;
+    wire.position.z = 0.0095;
+    fanG.add(wire);
+  }
+  // chamber box: center z = D/2-0.18, half-depth 0.17 -> inner back plane at
+  // z = -0.10; the frame (half-depth 0.006) sits flush against it
+  fanG.position.set(0.09, 0.3, -0.094);
+  g.add(fanG);
   const inner = new THREE.PointLight(0xeaf2ff, 0.38, 0.8, 2);
   inner.position.set(0, doorH - 0.06, D / 2 - 0.16);
   g.add(inner);
@@ -4421,14 +4444,29 @@ function buildWeldingCart() {
   const shoulder = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.075, 0.1, 20), cylMat);
   shoulder.position.set(-0.16, 1.12, -0.02);
   g.add(shoulder);
-  const valve = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.07, 10),
-    new THREE.MeshStandardMaterial({ color: 0xb08d3e, roughness: 0.35, metalness: 0.85 }));
-  valve.position.set(-0.16, 1.2, -0.02);
+  // top hardware as ONE connected stack (v1 had a detached regulator block
+  // with two gauge discs floating 17 mm in front of it — Kefan flagged it):
+  // valve body + handwheel on the shoulder, outlet nipple toward the room,
+  // regulator on the nipple, a single gauge ON the regulator, barb + hose
+  const brass = new THREE.MeshStandardMaterial({ color: 0xb08d3e, roughness: 0.35, metalness: 0.85 });
+  const valve = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.055, 12), brass);
+  valve.position.set(-0.16, 1.195, -0.02);
   g.add(valve);
-  // regulator: body + two gauge discs with white faces
-  const regBody = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.03, 0.03),
+  const handwheel = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.012, 16),
+    new THREE.MeshStandardMaterial({ color: 0x33363c, roughness: 0.5, metalness: 0.4 }));
+  handwheel.position.set(-0.16, 1.228, -0.02);
+  g.add(handwheel);
+  const knobCap = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.008, 8), brass);
+  knobCap.position.set(-0.16, 1.237, -0.02);
+  g.add(knobCap);
+  const outlet = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.032, 10), brass);
+  outlet.rotation.x = Math.PI / 2;
+  outlet.position.set(-0.16, 1.2, -0.002);
+  g.add(outlet);
+  const regBody = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.036, 14),
     new THREE.MeshStandardMaterial({ color: 0x8f959d, roughness: 0.35, metalness: 0.85 }));
-  regBody.position.set(-0.11, 1.21, -0.02);
+  regBody.rotation.x = Math.PI / 2;
+  regBody.position.set(-0.16, 1.2, 0.028);
   g.add(regBody);
   const gaugeCanvas = document.createElement("canvas");
   gaugeCanvas.width = gaugeCanvas.height = 64;
@@ -4447,17 +4485,34 @@ function buildWeldingCart() {
   }
   const gaugeTex = new THREE.CanvasTexture(gaugeCanvas);
   gaugeTex.colorSpace = THREE.SRGBColorSpace;
-  [[-0.085, 1.245], [-0.055, 1.225]].forEach(([gx, gy]) => {
-    const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.019, 0.019, 0.012, 14),
-      new THREE.MeshStandardMaterial({ color: 0x1c1e22, roughness: 0.4, metalness: 0.6 }));
-    rim.rotation.x = Math.PI / 2;
-    rim.position.set(gx, gy, 0.012);
-    g.add(rim);
-    const face = new THREE.Mesh(new THREE.CircleGeometry(0.015, 14),
-      new THREE.MeshStandardMaterial({ map: gaugeTex, roughness: 0.5 }));
-    face.position.set(gx, gy, 0.019);
-    g.add(face);
-  });
+  // ONE gauge, mounted flush on the regulator face (real flowmeter regs are
+  // fine with one dial; the second floating disc was the complaint)
+  const gaugeRim = new THREE.Mesh(new THREE.CylinderGeometry(0.021, 0.021, 0.014, 16),
+    new THREE.MeshStandardMaterial({ color: 0x1c1e22, roughness: 0.4, metalness: 0.6 }));
+  gaugeRim.rotation.x = Math.PI / 2;
+  gaugeRim.position.set(-0.16, 1.2, 0.05);
+  g.add(gaugeRim);
+  const gaugeFace = new THREE.Mesh(new THREE.CircleGeometry(0.017, 16),
+    new THREE.MeshStandardMaterial({ map: gaugeTex, roughness: 0.5 }));
+  gaugeFace.position.set(-0.16, 1.2, 0.0575);
+  g.add(gaugeFace);
+  // hose barb under the regulator + argon hose down and over to the machine
+  const barb = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.02, 8), brass);
+  barb.position.set(-0.16, 1.178, 0.028);
+  g.add(barb);
+  const gasHose = new THREE.Mesh(
+    new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
+      new THREE.Vector3(-0.16, 1.168, 0.028),
+      new THREE.Vector3(-0.205, 1.0, 0.095),
+      new THREE.Vector3(-0.13, 0.78, 0.15),
+      new THREE.Vector3(0.0, 0.76, 0.08),
+      new THREE.Vector3(0.10, 0.76, -0.05),
+      new THREE.Vector3(0.115, 0.745, -0.185), // stay above the box top until well past its back edge
+      new THREE.Vector3(0.11, 0.66, -0.17),
+    ]), 40, 0.0045, 8),
+    darkPl
+  );
+  g.add(gasHose);
   // stencil label band on the cylinder
   const argonCanvas = document.createElement("canvas");
   argonCanvas.width = 128; argonCanvas.height = 64;
@@ -4470,9 +4525,12 @@ function buildWeldingCart() {
   }
   const argonTex = new THREE.CanvasTexture(argonCanvas);
   argonTex.colorSpace = THREE.SRGBColorSpace;
-  const label = new THREE.Mesh(new THREE.PlaneGeometry(0.11, 0.055),
+  // curved label segment sharing the cylinder's axis — a flat plane on a
+  // curved bottle floats off the surface from every side angle
+  const label = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.0757, 0.0757, 0.06, 24, 1, true, -0.75, 1.5),
     new THREE.MeshBasicMaterial({ map: argonTex, transparent: true }));
-  label.position.set(-0.16, 0.86, 0.056);
+  label.position.set(-0.16, 0.86, -0.02);
   g.add(label);
   // retaining strap from the cylinder to the handle uprights
   const strap = new THREE.Mesh(new THREE.TorusGeometry(0.079, 0.006, 6, 20, Math.PI * 1.35), darkPl);
@@ -4481,24 +4539,36 @@ function buildWeldingCart() {
   strap.position.set(-0.16, 0.82, -0.02);
   g.add(strap);
 
-  // TIG torch hooked on the handle + cable loop to the machine
-  const torchBody = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.011, 0.09, 10), darkPl);
-  torchBody.rotation.z = 0.35;
-  torchBody.position.set(-0.31, 0.55, 0.1);
+  // TIG torch HANGING on the handle bar (v1 floated it 0.23 m below the bar —
+  // only the orange cup was visible, mid-air): hook over the bar, body
+  // hanging straight down, ceramic cup + tungsten pointing at the floor
+  // 1.7π arc rotated so BOTH ends dip below the bar and land on the torch
+  // body's top cap (a plain π top-arc left a 13.5 mm air gap to the torch)
+  const hook = new THREE.Mesh(new THREE.TorusGeometry(0.014, 0.003, 6, 18, Math.PI * 1.7), darkPl);
+  hook.rotation.z = -Math.PI * 0.35;
+  hook.position.set(-0.3, 0.78, 0.09);
+  g.add(hook);
+  const torchBody = new THREE.Mesh(new THREE.CylinderGeometry(0.0095, 0.0095, 0.075, 10), darkPl);
+  torchBody.position.set(-0.3, 0.729, 0.09);
   g.add(torchBody);
-  const torchCup = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.007, 0.03, 8),
+  const torchCup = new THREE.Mesh(new THREE.CylinderGeometry(0.0045, 0.0068, 0.028, 8),
     new THREE.MeshStandardMaterial({ color: 0xd88a5a, roughness: 0.6 }));
-  torchCup.rotation.z = 0.35;
-  torchCup.position.set(-0.328, 0.605, 0.1);
+  torchCup.position.set(-0.3, 0.678, 0.09);
   g.add(torchCup);
+  const tungsten = new THREE.Mesh(new THREE.CylinderGeometry(0.0012, 0.0012, 0.014, 6),
+    new THREE.MeshStandardMaterial({ color: 0xc8ccd2, roughness: 0.3, metalness: 0.8 }));
+  tungsten.position.set(-0.3, 0.66, 0.09);
+  g.add(tungsten);
+  // torch lead: out of the back cap, sagging down and over to the front panel
   const torchCable = new THREE.Mesh(
     new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-0.3, 0.52, 0.1),
-      new THREE.Vector3(-0.22, 0.36, 0.14),
-      new THREE.Vector3(-0.05, 0.3, 0.16),
-      new THREE.Vector3(0.1, 0.42, 0.15),
-      new THREE.Vector3(0.11, 0.53, 0.12),
-    ]), 28, 0.004, 8),
+      new THREE.Vector3(-0.3, 0.762, 0.09),
+      new THREE.Vector3(-0.27, 0.66, 0.14),
+      new THREE.Vector3(-0.13, 0.5, 0.21),
+      new THREE.Vector3(0.0, 0.42, 0.22),
+      new THREE.Vector3(0.08, 0.5, 0.21),
+      new THREE.Vector3(0.10, 0.545, 0.155),
+    ]), 36, 0.004, 8),
     darkPl
   );
   g.add(torchCable);
@@ -4534,9 +4604,9 @@ function buildHoosierTire() {
         s.restore();
       }
     };
-    // top arc: HOOSIER — bottom arc: RACING TIRE (reads upright both sides)
+    // top arc: HOOSIER — bottom arc: the compound (Kefan: it's a Hoosier R20)
     arcText("HOOSIER", 200, -Math.PI * 0.82, -Math.PI * 0.18, "700 64px Arial", "rgba(240,240,242,0.95)");
-    arcText("RACING TIRE", 210, Math.PI * 0.75, Math.PI * 0.25, "600 32px Arial", "rgba(240,240,242,0.85)", true);
+    arcText("R20", 202, Math.PI * 0.60, Math.PI * 0.40, "700 48px Arial", "rgba(240,240,242,0.9)", true);
   }
   const swTex = new THREE.CanvasTexture(sw);
   swTex.colorSpace = THREE.SRGBColorSpace;
@@ -4546,6 +4616,30 @@ function buildHoosierTire() {
     new THREE.MeshBasicMaterial({ map: swTex, transparent: true, depthWrite: false }));
   ring.position.z = 0.0757;
   g.add(ring);
+  // machined FSAE wheel filling the bore (a bare through-hole read as a
+  // donut): barrel, five spokes on a dished face, center-lock hub + blue nut
+  const rimMat = new THREE.MeshStandardMaterial({ color: 0xb9bec6, roughness: 0.32, metalness: 0.85, side: THREE.DoubleSide });
+  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.082, 0.082, 0.1, 28, 1, true), rimMat);
+  barrel.rotation.x = Math.PI / 2;
+  g.add(barrel);
+  const spokeMat = new THREE.MeshStandardMaterial({ color: 0xa8adb5, roughness: 0.35, metalness: 0.8 });
+  for (let sp = 0; sp < 5; sp++) {
+    const arm = new THREE.Group();
+    arm.rotation.z = (sp / 5) * Math.PI * 2 + 0.3;
+    const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.076, 0.011), spokeMat);
+    spoke.position.set(0, 0.046, 0.03);
+    arm.add(spoke);
+    g.add(arm);
+  }
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.027, 0.027, 0.026, 18), spokeMat);
+  hub.rotation.x = Math.PI / 2;
+  hub.position.z = 0.032;
+  g.add(hub);
+  const lockNut = new THREE.Mesh(new THREE.CylinderGeometry(0.0135, 0.0135, 0.018, 6),
+    new THREE.MeshStandardMaterial({ color: 0x2a55c8, roughness: 0.35, metalness: 0.7 }));
+  lockNut.rotation.x = Math.PI / 2;
+  lockNut.position.z = 0.048;
+  g.add(lockNut);
   // steel wall bracket: slim plate hidden behind the tire band (a wide plate
   // showed through the hub hole) + two hooks cradling the tire bottom
   const brMat = new THREE.MeshStandardMaterial({ color: 0x2a2d33, roughness: 0.45, metalness: 0.75 });
