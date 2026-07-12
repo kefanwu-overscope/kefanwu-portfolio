@@ -256,7 +256,24 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-12 (latest) window day/night + no cross + slimmer + no cabinet clip
+### 2026-07-12 (latest) 360° containment: clear ALL wall furniture
+- The first cabinet-clip fix only protected the MAIN cabinet (z-clamp). An
+  adversarial review found the camera still orbited INTO the right cabinet
+  CAB2 (x≈2.0–2.5), the desk lamp (from the minDistance 0.6 drop), and the
+  ceiling pendant. The render-loop camera clamp is now an open-central-volume
+  box that clears every piece of wall furniture:
+  x `[-1.8, 1.85]` (in front of CAB2's open face ≈2.0 and the left workbench
+  front ≈-1.9), z `[-0.75, 3.35]` (front of the main cabinet), y `[0.4, 2.25]`
+  (below the pendant shade at ≈2.42). Plus a keep-out that LIFTS the camera to
+  y=1.45 when it's within 0.5 m (horizontal) of the thin desk-lamp axis
+  (-0.7, 0.13) — pushing UP (not radially) so it stays > minDistance from the
+  target and can't oscillate against OrbitControls.
+- Verified with a 1080-sample azimuth×polar×radius sweep: ZERO penetrations of
+  the main cabinet / CAB2 / workbench / pendant / desk / lamp bounding boxes.
+  Dead-behind at min-zoom (window view) holds distance with no drift.
+- Cache: `exp-clampfix-20260712`.
+
+### 2026-07-12 window day/night + no cross + slimmer + no cabinet clip
 - **360° no longer clips the cabinet:** the back-wall camera clamp was
   `cp.z ≥ -1.25`, which is INSIDE the main cabinet (center z=-1.12, depth
   0.54 → front face -0.85). Moved to `-0.75` (0.1 in front of the cabinet
@@ -999,8 +1016,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-daywindow-20260712` (3D page styles — in experience.html)
-- `experience.js?v=exp-daywindow-20260712` (3D page module — in experience.html)
+- `experience.css?v=exp-clampfix-20260712` (3D page styles — in experience.html)
+- `experience.js?v=exp-clampfix-20260712` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

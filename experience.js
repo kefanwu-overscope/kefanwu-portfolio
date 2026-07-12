@@ -1209,14 +1209,22 @@ function initScene(canvas) {
       // combination can ever peek past a wall
       const cp = camera.position;
       const bx = cp.x, by = cp.y, bz = cp.z;
-      cp.x = Math.max(-2.35, Math.min(2.35, cp.x));
-      // z back bound -0.75 keeps the camera in FRONT of the display cabinet
-      // (front face at z=-0.85) so a full 360° orbit can't clip through it.
+      // Keep the camera in the OPEN CENTRAL volume, clear of ALL wall furniture
+      // (not just the main cabinet). Per-axis insets: x stays in front of the
+      // right display cabinet CAB2 (open face x≈2.0) and the left workbench
+      // (front ≈-1.9); z stays in front of the main cabinet (front face -0.85);
+      // y stays below the ceiling pendant (shade at y≈2.42).
+      cp.x = Math.max(-1.8, Math.min(1.85, cp.x));
       cp.z = Math.max(-0.75, Math.min(3.35, cp.z));
-      cp.y = Math.max(0.4, Math.min(3.15, cp.y));
+      cp.y = Math.max(0.4, Math.min(2.25, cp.y));
+      // lift the camera OVER the thin desk lamp rather than clipping through it
+      // (pushing UP keeps it >minDistance from the target, so unlike a radial
+      // keep-out it can't oscillate against OrbitControls' minDistance)
+      const ldx = cp.x + 0.7, ldz = cp.z - 0.13; // lamp axis ≈ (-0.7, 0.13)
+      if (cp.y < 1.45 && ldx * ldx + ldz * ldz < 0.25) cp.y = 1.45;
       // OrbitControls.update() baked its lookAt from the PRE-clamp position;
-      // when the wall clamp actually moved the camera (e.g. zoomed out toward
-      // a side wall) the frame would render mis-aimed, so re-aim at the target.
+      // when a clamp actually moved the camera the frame would render
+      // mis-aimed, so re-aim at the target.
       if (controls.enabled && (cp.x !== bx || cp.y !== by || cp.z !== bz)) camera.lookAt(controls.target);
     }
 
