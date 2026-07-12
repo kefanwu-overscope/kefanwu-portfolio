@@ -256,7 +256,32 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-11 (latest) studio modeling pass + Boston window + 360° orbit
+### 2026-07-11 (latest) window city-glow (real-time, NOT baked — why)
+- The window now spills a cool city glow onto the floor/desk. It is a
+  REAL-TIME SpotLight (`windowGlow`, colour 0x9fbdf0, from the window aimed at
+  the floor in front), faded by the lamp toggle inside `applyLightState`
+  (night `win: 2.6`, day `win: 0.6`) — same pattern as the pendant / desk lamp
+  / bench glow, which are ALL real-time.
+- **Why not baked** (Kefan asked for all-baked): I DID run the bake — a
+  window-only Cycles pass onto the existing `lm` atlas (tools kept in scratch:
+  `bake_window.py`, `composite_lm.py`), additively layered onto the pristine
+  lightmaps so the existing bake was preserved exactly. But the added spatial
+  variation nearly DOUBLED the Radiance lightmap payload (17MB→31MB per 4k;
+  5MB→8.8MB per 2k) — ~+40MB of first/idle load — for a subtle effect. That
+  is a bad web-perf trade, so the bake was reverted (`git checkout
+  models/baked/`) and the glow is a ~free real-time light instead. The bake
+  pipeline works if a future change wants it (the two scripts + the
+  additive-composite approach are proven); `BAKE_V` in experience.js is the
+  cache-buster to bump when re-baking (currently "").
+- NOTE on "all lights baked": the room ARCHITECTURE (shell/desk/chest/rug) is
+  baked as before; the practicals (cabinet strips, pendant, desk lamp,
+  bench, window, exhibit focus spot, résumé pickup) are real-time by
+  necessity — exhibits rotate and the résumé is picked up, so a static
+  lightmap can't carry them. Converting the cabinet strips to baked would
+  darken the rotating exhibits and remove tunability; not done.
+- Cache: `exp-cityglow-20260711`.
+
+### 2026-07-11 studio modeling pass + Boston window + 360° orbit
 - **Full 360° orbit:** `controls.min/maxAzimuthAngle` unlocked to ±Infinity
   (was ±0.32π). The per-frame AABB clamp still keeps the camera inside the
   shell. All four walls have content (cabinet back / workbench left / right
@@ -931,8 +956,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-window-20260711` (3D page styles — in experience.html)
-- `experience.js?v=exp-window-20260711` (3D page module — in experience.html)
+- `experience.css?v=exp-cityglow-20260711` (3D page styles — in experience.html)
+- `experience.js?v=exp-cityglow-20260711` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

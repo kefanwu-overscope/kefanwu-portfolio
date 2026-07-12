@@ -868,6 +868,17 @@ function initScene(canvas) {
   scene.add(moonSpot);
   scene.add(moonSpot.target);
 
+  // Boston-window city glow: a cool spot spilling in from the front window
+  // onto the floor/desk. A real-time practical (like the pendant / desk lamp /
+  // bench glow — all real-time) rather than baked, because baking the added
+  // spatial variation nearly DOUBLED the lightmap payload (17MB→31MB per 4k)
+  // for a subtle effect. Night-only, faded by the lamp toggle in applyLightState.
+  const windowGlow = new THREE.SpotLight(0x9fbdf0, 0, 5.2, 0.72, 0.62, 1.4);
+  windowGlow.position.set(0, 2.3, 3.32);
+  windowGlow.target.position.set(0.05, 0, 1.7);
+  scene.add(windowGlow);
+  scene.add(windowGlow.target);
+
   // set while the first-visit boot choreography owns the light levels
   let bootTakeover = false;
   // bumped by every applyLightState call; stale step closures bail on mismatch
@@ -926,13 +937,13 @@ function initScene(canvas) {
     if (probe && (!animate || prefersReducedMotion)) scene.environment = probe;
     // real-time lights serve the exhibits; dim them with the room
     const want = lightsOn
-      ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0, resume: 0, moon: 0, pendant: 2.6 } // day grade: strips + bake carry the room
+      ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0, resume: 0, moon: 0, pendant: 2.6, win: 0.6 } // day grade: strips + bake carry the room
       // night: the desk lamp (resume) is the dominant practical, the pendant
       // recedes to a whisper so the lamp's pool owns the desk
       // resume 1.5, NOT higher: sampled at 2.8 the pool washed out the sheet's
       // upper half (DOM-parity texture has more white than the old Arial mini);
       // at 1.5 every section reads while the pool still owns the mat (Kefan)
-      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 1.5, moon: MOON_NIGHT, pendant: 0.3 };
+      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 1.5, moon: MOON_NIGHT, pendant: 0.3, win: 2.6 };
     if (bootTakeover) return; // the boot choreography owns the levels; it lands on these values
     blueLines.forEach((m) => {
       m.emissive = m.emissive || new THREE.Color(0x2b4d80);
@@ -947,7 +958,7 @@ function initScene(canvas) {
       key: key.intensity, hemi: hemi.intensity, fill: fill.intensity,
       env: scene.environmentIntensity, bench: benchGlow.intensity,
       resume: resumeSpot.intensity, moon: moonSpot.intensity,
-      pendant: MODELS.pendantLight.intensity,
+      pendant: MODELS.pendantLight.intensity, win: windowGlow.intensity,
       led: lampLeds.length ? lampLeds[0].emissiveIntensity : wantLed,
       blue: blueLines.length ? blueLines[0].emissiveIntensity : wantBlue,
     };
@@ -957,6 +968,7 @@ function initScene(canvas) {
       resumeSpot.intensity = want.resume;
       moonSpot.intensity = want.moon;
       MODELS.pendantLight.intensity = want.pendant;
+      windowGlow.intensity = want.win;
       lampLeds.forEach((m) => { m.emissiveIntensity = wantLed; });
       blueLines.forEach((m) => { m.emissiveIntensity = wantBlue; });
       return;
@@ -976,6 +988,7 @@ function initScene(canvas) {
       resumeSpot.intensity = from.resume + (want.resume - from.resume) * e;
       moonSpot.intensity = from.moon + (want.moon - from.moon) * e;
       MODELS.pendantLight.intensity = from.pendant + (want.pendant - from.pendant) * e;
+      windowGlow.intensity = from.win + (want.win - from.win) * e;
       lampLeds.forEach((m) => { m.emissiveIntensity = from.led + (wantLed - from.led) * e; });
       blueLines.forEach((m) => { m.emissiveIntensity = from.blue + (wantBlue - from.blue) * e; });
       // swap the environment probe mid-fade, hidden inside the moving grade
@@ -1002,9 +1015,13 @@ function initScene(canvas) {
       if (tagged) o.visible = false;
     });
     applyLightState(false); // real-time lights to night values immediately
+    // BAKE_V busts the browser cache when the baked assets are RE-baked (their
+    // URLs are otherwise fixed). Empty while the committed bake is current —
+    // set to "?v=<label>" on the next re-bake so stale caches don't mask it.
+    const BAKE_V = "";
     const hdrl = new HDRLoader(manager);
-    hdrl.load("models/baked/lightmap-off-2k.hdr", (t) => { LM.off2k = prepLM(t); applyLightState(false); });
-    hdrl.load("models/baked/probe-off.hdr", (t) => {
+    hdrl.load("models/baked/lightmap-off-2k.hdr" + BAKE_V, (t) => { LM.off2k = prepLM(t); applyLightState(false); });
+    hdrl.load("models/baked/probe-off.hdr" + BAKE_V, (t) => {
       t.mapping = THREE.EquirectangularReflectionMapping;
       LM.probeOff = t;
       scene.environment = t;
@@ -1015,7 +1032,7 @@ function initScene(canvas) {
     // reflections — but live on light-layer 1 so the real-time lights can't
     // double-light what the lightmap already carries
     camera.layers.enable(1);
-    loader.load("models/baked/room-baked.glb", (gltf) => {
+    loader.load("models/baked/room-baked.glb" + BAKE_V, (gltf) => {
       const pt = TEX.loadPBR("painted_plaster_wall");
       const fMap = pt.map.clone(); fMap.repeat.set(8, 8); fMap.needsUpdate = true;
       const fNor = pt.normalMap.clone(); fNor.repeat.set(8, 8); fNor.needsUpdate = true;
@@ -1073,8 +1090,8 @@ function initScene(canvas) {
     // equirect->PMREM conversion made the crossfade visibly hitch.
     const later = new HDRLoader(); // NOT on the manager — don't block the loader UI
     setTimeout(() => {
-      later.load("models/baked/lightmap-on-2k.hdr", (t) => { LM.on2k = prepLM(t); renderer.initTexture(LM.on2k); });
-      later.load("models/baked/probe-on.hdr", (t) => {
+      later.load("models/baked/lightmap-on-2k.hdr" + BAKE_V, (t) => { LM.on2k = prepLM(t); renderer.initTexture(LM.on2k); });
+      later.load("models/baked/probe-on.hdr" + BAKE_V, (t) => {
         t.mapping = THREE.EquirectangularReflectionMapping;
         const pg = new THREE.PMREMGenerator(renderer);
         LM.probeOn = pg.fromEquirectangular(t).texture; // pre-filtered, swap is free
@@ -1082,8 +1099,8 @@ function initScene(canvas) {
         t.dispose();
       });
       if (!LOW_TIER) { // phones stay on 2K — don't pull 15MB+ maps over mobile data
-        later.load("models/baked/lightmap-off-4k.hdr", (t) => { LM.off4k = prepLM(t); if (!lightsOn) applyLightState(false); });
-        later.load("models/baked/lightmap-on-4k.hdr", (t) => { LM.on4k = prepLM(t); renderer.initTexture(LM.on4k); if (lightsOn) applyLightState(false); });
+        later.load("models/baked/lightmap-off-4k.hdr" + BAKE_V, (t) => { LM.off4k = prepLM(t); if (!lightsOn) applyLightState(false); });
+        later.load("models/baked/lightmap-on-4k.hdr" + BAKE_V, (t) => { LM.on4k = prepLM(t); renderer.initTexture(LM.on4k); if (lightsOn) applyLightState(false); });
       }
     }, 4000);
   }
