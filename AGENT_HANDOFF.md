@@ -256,7 +256,31 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-12 (latest) realism fix round 2 (Kefan's 4 complaints on the set-dressing)
+### 2026-07-12 (latest) REAL Hoosier tire from Kefan's STEP file
+- Kefan supplied `Desktop\WEBSITE\hoosier-16x7-5-10-fsae-tire-1.snapshot.1\`
+  `Hoosier 16x7.5-10 LC0.STEP` (27 MB B-rep, GrabCAD snapshot — do NOT
+  commit it). Pipeline: `scratchpad/step2stl.py` (OCP a.k.a. OpenCascade
+  bindings, `pip install cadquery-ocp` into the codex Python 3.12) tessellates
+  STEP→binary STL (lin 0.8 mm / ang 0.35 rad → 150k tris), then
+  `scratchpad/bl_tire.py` (Blender headless) welds, decimates to 36k tris,
+  smooths by 35°, rotates the tire axis onto +Z, scales OD to the real
+  0.4064 m, centers, exports `models/tire-hoosier.glb` (1.14 MB, committed).
+- Measured after transform: OD 0.4065, width 0.2162, bore r 0.1269 (= 10"
+  wheel, real). NOTE: glTF export is Y-up, so the axis lands on +Y in
+  three.js — `buildHoosierTire()` rotates the loaded scene x += π/2 back.
+- `buildHoosierTire(loader)` now takes the shared GLTFLoader (boot manager
+  gates on it). Wheel rebuilt to the real bore: barrel r 0.128 × 0.19,
+  spokes 0.115 long, hub r 0.034, blue center-lock nut. Lettering ring
+  radii 0.14–0.196, letters at canvas r 222 ↔ world r ≈ 0.17, ring z
+  0.110 — the REAL sidewall's widest point is 0.108 and a ring at 0.106
+  clipped letter bottoms off. Bracket arms moved UNDER the tire (y −0.212,
+  tire bottom −0.203); group z −1.405 puts the tire back flush with the
+  wainscot (−1.515). GLB sidewall is smooth (no molded text) — the canvas
+  ring is the only lettering, so keep it.
+- Verified: rt2-front/rt2-angle/rt2-night captures, console clean.
+  Cache: `exp-realtire-20260712`.
+
+### 2026-07-12 realism fix round 2 (Kefan's 4 complaints on the set-dressing)
 - **Tire = Hoosier R20 with a real wheel.** Bottom arc now "R20" (was RACING
   TIRE). Bore filled by a 5-spoke machined wheel: open barrel r 0.082 (bore is
   0.08), spokes 0.076 long reach hub→barrel with no gap, hub + BLUE hex
@@ -1115,8 +1139,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-realism2-20260712` (3D page styles — in experience.html)
-- `experience.js?v=exp-realism2-20260712` (3D page module — in experience.html)
+- `experience.css?v=exp-realtire-20260712` (3D page styles — in experience.html)
+- `experience.js?v=exp-realtire-20260712` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

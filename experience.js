@@ -798,8 +798,8 @@ function initScene(canvas) {
   weldCart.rotation.y = 0.35;
   scene.add(weldCart);
   // wall-mounted FSAE Hoosier slick above the cart, flush to the back wall
-  const hoosier = buildHoosierTire();
-  hoosier.position.set(1.62, 1.72, -1.44); // torus back flush with the wainscot face
+  const hoosier = buildHoosierTire(loader);
+  hoosier.position.set(1.62, 1.72, -1.405); // tire back (half-width 0.108) flush with the wainscot face (-1.515)
   scene.add(hoosier);
   scene.add(buildFloorJoints()); // C2: saw-cut control joints in the slab
   scene.add(buildBenchMat());    // C4: ESD mat + ground lead at the bench
@@ -4577,14 +4577,24 @@ function buildWeldingCart() {
   return g;
 }
 
-function buildHoosierTire() {
-  // FSAE Hoosier slick displayed on the wall (slicks have no tread — a plain
-  // torus IS accurate) with white HOOSIER arc lettering on the sidewall and
-  // a small steel wall bracket.
+function buildHoosierTire(loader) {
+  // REAL Hoosier 16x7.5-10 LC0 — Kefan's STEP tessellated to 36k tris
+  // (tools: scratchpad step2stl.py via OCP + bl_tire.py; real scale:
+  // OD 0.4065 m, width 0.216 m, bore r 0.127 = 10" wheel), on a wall bracket.
   const g = new THREE.Group();
-  const tire = new THREE.Mesh(new THREE.TorusGeometry(0.155, 0.075, 18, 40),
-    new THREE.MeshStandardMaterial({ color: 0x131313, roughness: 0.88, metalness: 0.02 }));
-  g.add(tire);
+  loader.load("models/tire-hoosier.glb", (gltf) => {
+    const tire = gltf.scene;
+    tire.rotation.x = Math.PI / 2; // GLB is Y-up; this group wants the axis on +Z
+    tire.traverse((o) => {
+      if (o.isMesh) {
+        o.castShadow = true;
+        o.receiveShadow = true;
+        o.material.roughness = 0.88;
+        o.material.metalness = 0.02;
+      }
+    });
+    g.add(tire);
+  });
   // sidewall lettering: arc text drawn per-character on a transparent canvas
   const sw = document.createElement("canvas");
   sw.width = sw.height = 512;
@@ -4605,53 +4615,54 @@ function buildHoosierTire() {
       }
     };
     // top arc: HOOSIER — bottom arc: the compound (Kefan: it's a Hoosier R20)
-    arcText("HOOSIER", 200, -Math.PI * 0.82, -Math.PI * 0.18, "700 64px Arial", "rgba(240,240,242,0.95)");
-    arcText("R20", 202, Math.PI * 0.60, Math.PI * 0.40, "700 48px Arial", "rgba(240,240,242,0.9)", true);
+    arcText("HOOSIER", 222, -Math.PI * 0.82, -Math.PI * 0.18, "700 52px Arial", "rgba(240,240,242,0.95)");
+    arcText("R20", 222, Math.PI * 0.58, Math.PI * 0.42, "700 42px Arial", "rgba(240,240,242,0.9)", true);
   }
   const swTex = new THREE.CanvasTexture(sw);
   swTex.colorSpace = THREE.SRGBColorSpace;
-  // the ring sits just PROUD of the torus crest (z=0.075) — a flat ring at the
-  // sidewall midline buries the letters inside the tire's bulge
-  const ring = new THREE.Mesh(new THREE.RingGeometry(0.095, 0.152, 40),
+  // flat ring just PROUD of the sidewall's widest point (half-width 0.108);
+  // letters at world r ≈ 0.17 (canvas r 222 of 256 ↔ ring outer 0.196)
+  const ring = new THREE.Mesh(new THREE.RingGeometry(0.14, 0.196, 48),
     new THREE.MeshBasicMaterial({ map: swTex, transparent: true, depthWrite: false }));
-  ring.position.z = 0.0757;
+  ring.position.z = 0.110; // 2 mm proud of the real sidewall's widest point (0.108)
   g.add(ring);
-  // machined FSAE wheel filling the bore (a bare through-hole read as a
-  // donut): barrel, five spokes on a dished face, center-lock hub + blue nut
+  // machined 10" FSAE wheel filling the real bore (r 0.127): barrel, five
+  // spokes on a dished face, center-lock hub + blue anodized nut
   const rimMat = new THREE.MeshStandardMaterial({ color: 0xb9bec6, roughness: 0.32, metalness: 0.85, side: THREE.DoubleSide });
-  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.082, 0.082, 0.1, 28, 1, true), rimMat);
+  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.128, 0.128, 0.19, 32, 1, true), rimMat);
   barrel.rotation.x = Math.PI / 2;
   g.add(barrel);
   const spokeMat = new THREE.MeshStandardMaterial({ color: 0xa8adb5, roughness: 0.35, metalness: 0.8 });
   for (let sp = 0; sp < 5; sp++) {
     const arm = new THREE.Group();
     arm.rotation.z = (sp / 5) * Math.PI * 2 + 0.3;
-    const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.076, 0.011), spokeMat);
-    spoke.position.set(0, 0.046, 0.03);
+    const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.115, 0.016), spokeMat);
+    spoke.position.set(0, 0.0745, 0.05);
     arm.add(spoke);
     g.add(arm);
   }
-  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.027, 0.027, 0.026, 18), spokeMat);
+  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.034, 0.034, 0.03, 18), spokeMat);
   hub.rotation.x = Math.PI / 2;
-  hub.position.z = 0.032;
+  hub.position.z = 0.05;
   g.add(hub);
-  const lockNut = new THREE.Mesh(new THREE.CylinderGeometry(0.0135, 0.0135, 0.018, 6),
+  const lockNut = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.022, 6),
     new THREE.MeshStandardMaterial({ color: 0x2a55c8, roughness: 0.35, metalness: 0.7 }));
   lockNut.rotation.x = Math.PI / 2;
-  lockNut.position.z = 0.048;
+  lockNut.position.z = 0.072;
   g.add(lockNut);
   // steel wall bracket: slim plate hidden behind the tire band (a wide plate
-  // showed through the hub hole) + two hooks cradling the tire bottom
+  // showed through the hub hole) + two cradle arms UNDER the tire (the old
+  // arms sat inside the tire body) with lips in front of the sidewall
   const brMat = new THREE.MeshStandardMaterial({ color: 0x2a2d33, roughness: 0.45, metalness: 0.75 });
   const plate = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.12, 0.012), brMat);
-  plate.position.set(0, 0.15, -0.085);
+  plate.position.set(0, 0.15, -0.103); // wall face is at local z = -0.11
   g.add(plate);
   [-1, 1].forEach((sd) => {
-    const arm = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.016, 0.1), brMat);
-    arm.position.set(sd * 0.09, -0.145, -0.03);
+    const arm = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.016, 0.27), brMat);
+    arm.position.set(sd * 0.09, -0.212, 0.005); // tire bottom is y = -0.203
     g.add(arm);
     const lip = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.05, 0.016), brMat);
-    lip.position.set(sd * 0.09, -0.125, 0.022);
+    lip.position.set(sd * 0.09, -0.19, 0.138);
     g.add(lip);
   });
   g.traverse((o) => { if (o.isMesh && o.geometry.type !== "RingGeometry") { o.castShadow = true; o.receiveShadow = true; } });
