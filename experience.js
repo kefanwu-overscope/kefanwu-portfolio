@@ -211,22 +211,14 @@ function initScene(canvas) {
   controls.enableDamping = true;
   controls.dampingFactor = 0.08;
   controls.enablePan = false;
-  // 0.6: the back-wall clamp now stops at z=-0.75 (just in FRONT of the
-  // cabinet face at -0.85, so 360° orbit can't clip into the cabinet). That
-  // leaves target.z - clampZ = 0.65 of dead-behind clearance, so minDistance
-  // must stay under it (0.6 < 0.65) or OrbitControls re-derives radius <
-  // minDistance from the clamped position and fights the clamp (drift/stutter).
-  // Don't raise minDistance past ~0.65 without moving the clamp/target apart.
-  controls.minDistance = 0.6;
+  controls.minDistance = 1.4;
   controls.maxDistance = 3.2;
   controls.minPolarAngle = 0.46;
   controls.maxPolarAngle = Math.PI / 2 - 0.05;
-  // full 360° orbit — the room is enclosed on all four walls (cabinet back,
-  // workbench left, right cabinet, and now the Boston window front), so every
-  // heading has content. The per-frame AABB clamp still keeps the camera
-  // inside the shell, so no heading can peek past a wall.
-  controls.minAzimuthAngle = -Infinity;
-  controls.maxAzimuthAngle = Infinity;
+  // limited orbit (Kefan reverted the 360° experiment on 2026-07-12: "太乱了")
+  // — the stage is the cabinet/desk/workbench arc; the front wall is plain
+  controls.minAzimuthAngle = -Math.PI * 0.32;
+  controls.maxAzimuthAngle = Math.PI * 0.32;
   controls.target.copy(REST_TARGET);
   controls.update();
 
@@ -487,7 +479,6 @@ function initScene(canvas) {
     blueLines.forEach((m) => { m.emissiveIntensity = 0; });
     lampLeds.forEach((m) => { m.emissiveIntensity = 0; });
     benchGlow.intensity = 0; resumeSpot.intensity = 0; moonSpot.intensity = 0;
-    windowGlow.intensity = 0; // powers on with the moon, not lit through the blackout
     bakedMats.forEach((m) => { m.lightMapIntensity = 0.15; });
     // if the user grabs the light switch mid-boot, snap the pieces that
     // applyLightState doesn't own to their steady-state values
@@ -536,9 +527,8 @@ function initScene(canvas) {
     }
     // gentle case spots once both cabinets are alive
     seg(3350, 550, (k) => caseSpots.forEach((s) => { s.l.intensity = s.target * k; }));
-    // the moon + Boston window glow reveal as the camera settles to rest
+    // the moon reveals itself as the camera settles toward the rest pose
     seg(3600, 900, (k) => { moonSpot.intensity = MOON_NIGHT * k; });
-    seg(3600, 900, (k) => { windowGlow.intensity = 2.6 * k; });
     // final beat at flight landing: the lamp clicks on — snappy, not eased —
     // and the warm pool blooms up on the resume
     seg(5050, 90, (k) => lampLeds.forEach((m) => { m.emissiveIntensity = 2.4 * k; }), lin);
@@ -573,10 +563,6 @@ function initScene(canvas) {
   // tag every room-shell mesh for the bake pipeline ("bk_" names let the
   // exporter select them and P2 hide them when the baked GLB is active)
   buildRoom({ add: (o) => { o.traverse((m) => { if (m.isMesh && !m.name) m.name = "bk_room"; }); scene.add(o); } });
-  // Boston night-skyline window on the front wall — added OUTSIDE the bake
-  // wrapper (no bk_ tag) so it stays visible whether or not the baked room is
-  // active. It's a backlit panel on the interior wall face; see buildCityWindow.
-  scene.add(buildCityWindow());
 
   const contact = new THREE.Mesh(
     new THREE.PlaneGeometry(2.6, 1.5),
@@ -876,17 +862,6 @@ function initScene(canvas) {
   scene.add(moonSpot);
   scene.add(moonSpot.target);
 
-  // Boston-window city glow: a cool spot spilling in from the front window
-  // onto the floor/desk. A real-time practical (like the pendant / desk lamp /
-  // bench glow — all real-time) rather than baked, because baking the added
-  // spatial variation nearly DOUBLED the lightmap payload (17MB→31MB per 4k)
-  // for a subtle effect. Night-only, faded by the lamp toggle in applyLightState.
-  const windowGlow = new THREE.SpotLight(0x9fbdf0, 0, 5.2, 0.72, 0.62, 1.4);
-  windowGlow.position.set(0, 2.3, 3.32);
-  windowGlow.target.position.set(0.05, 0, 1.7);
-  scene.add(windowGlow);
-  scene.add(windowGlow.target);
-
   // set while the first-visit boot choreography owns the light levels
   let bootTakeover = false;
   // bumped by every applyLightState call; stale step closures bail on mismatch
@@ -945,15 +920,13 @@ function initScene(canvas) {
     if (probe && (!animate || prefersReducedMotion)) scene.environment = probe;
     // real-time lights serve the exhibits; dim them with the room
     const want = lightsOn
-      // day: the window shows the DAY skyline (winSky:1) and floods brighter
-      // daylight in (win:1.6); moon off
-      ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0, resume: 0, moon: 0, pendant: 2.6, win: 1.6, winSky: 1 } // day grade: strips + bake carry the room
+      ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0, resume: 0, moon: 0, pendant: 2.6 } // day grade: strips + bake carry the room
       // night: the desk lamp (resume) is the dominant practical, the pendant
       // recedes to a whisper so the lamp's pool owns the desk
       // resume 1.5, NOT higher: sampled at 2.8 the pool washed out the sheet's
       // upper half (DOM-parity texture has more white than the old Arial mini);
       // at 1.5 every section reads while the pool still owns the mat (Kefan)
-      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 1.5, moon: MOON_NIGHT, pendant: 0.3, win: 2.6, winSky: 0 };
+      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 1.5, moon: MOON_NIGHT, pendant: 0.3 };
     if (bootTakeover) return; // the boot choreography owns the levels; it lands on these values
     blueLines.forEach((m) => {
       m.emissive = m.emissive || new THREE.Color(0x2b4d80);
@@ -968,8 +941,7 @@ function initScene(canvas) {
       key: key.intensity, hemi: hemi.intensity, fill: fill.intensity,
       env: scene.environmentIntensity, bench: benchGlow.intensity,
       resume: resumeSpot.intensity, moon: moonSpot.intensity,
-      pendant: MODELS.pendantLight.intensity, win: windowGlow.intensity,
-      winSky: MODELS.cityWindow ? MODELS.cityWindow.dayMat.opacity : 0,
+      pendant: MODELS.pendantLight.intensity,
       led: lampLeds.length ? lampLeds[0].emissiveIntensity : wantLed,
       blue: blueLines.length ? blueLines[0].emissiveIntensity : wantBlue,
     };
@@ -979,8 +951,6 @@ function initScene(canvas) {
       resumeSpot.intensity = want.resume;
       moonSpot.intensity = want.moon;
       MODELS.pendantLight.intensity = want.pendant;
-      windowGlow.intensity = want.win;
-      if (MODELS.cityWindow) MODELS.cityWindow.dayMat.opacity = want.winSky;
       lampLeds.forEach((m) => { m.emissiveIntensity = wantLed; });
       blueLines.forEach((m) => { m.emissiveIntensity = wantBlue; });
       return;
@@ -1000,8 +970,6 @@ function initScene(canvas) {
       resumeSpot.intensity = from.resume + (want.resume - from.resume) * e;
       moonSpot.intensity = from.moon + (want.moon - from.moon) * e;
       MODELS.pendantLight.intensity = from.pendant + (want.pendant - from.pendant) * e;
-      windowGlow.intensity = from.win + (want.win - from.win) * e;
-      if (MODELS.cityWindow) MODELS.cityWindow.dayMat.opacity = from.winSky + (want.winSky - from.winSky) * e;
       lampLeds.forEach((m) => { m.emissiveIntensity = from.led + (wantLed - from.led) * e; });
       blueLines.forEach((m) => { m.emissiveIntensity = from.blue + (wantBlue - from.blue) * e; });
       // swap the environment probe mid-fade, hidden inside the moving grade
@@ -1209,22 +1177,12 @@ function initScene(canvas) {
       // combination can ever peek past a wall
       const cp = camera.position;
       const bx = cp.x, by = cp.y, bz = cp.z;
-      // Keep the camera in the OPEN CENTRAL volume, clear of ALL wall furniture
-      // (not just the main cabinet). Per-axis insets: x stays in front of the
-      // right display cabinet CAB2 (open face x≈2.0) and the left workbench
-      // (front ≈-1.9); z stays in front of the main cabinet (front face -0.85);
-      // y stays below the ceiling pendant (shade at y≈2.42).
-      cp.x = Math.max(-1.8, Math.min(1.85, cp.x));
-      cp.z = Math.max(-0.75, Math.min(3.35, cp.z));
-      cp.y = Math.max(0.4, Math.min(2.25, cp.y));
-      // lift the camera OVER the thin desk lamp rather than clipping through it
-      // (pushing UP keeps it >minDistance from the target, so unlike a radial
-      // keep-out it can't oscillate against OrbitControls' minDistance)
-      const ldx = cp.x + 0.7, ldz = cp.z - 0.13; // lamp axis ≈ (-0.7, 0.13)
-      if (cp.y < 1.45 && ldx * ldx + ldz * ldz < 0.25) cp.y = 1.45;
+      cp.x = Math.max(-2.35, Math.min(2.35, cp.x));
+      cp.z = Math.max(-1.25, Math.min(3.35, cp.z));
+      cp.y = Math.max(0.4, Math.min(3.15, cp.y));
       // OrbitControls.update() baked its lookAt from the PRE-clamp position;
-      // when a clamp actually moved the camera the frame would render
-      // mis-aimed, so re-aim at the target.
+      // when the wall clamp actually moved the camera (e.g. zoomed out toward
+      // a side wall) the frame would render mis-aimed, so re-aim at the target.
       if (controls.enabled && (cp.x !== bx || cp.y !== by || cp.z !== bz)) camera.lookAt(controls.target);
     }
 
@@ -2516,224 +2474,6 @@ function loadAssembly(loader, scene, url, opts, onPlaced) {
 /* ============================================================
    room
    ============================================================ */
-function makeBostonSkylineTexture(mode) {
-  // Procedural Boston skyline (no external asset / no CORS), NIGHT or DAY.
-  // Layered downtown silhouettes, a stepped Prudential-ish block + a tapered
-  // Hancock-ish glass tower, and a harbor reflection. Unlit (MeshBasic) so it
-  // reads as a lit exterior regardless of room lighting; the window crossfades
-  // between the two textures when the lamp toggles day/night.
-  // half-res on LOW_TIER/mobile (a full 2048×1152 + max-aniso backdrop is
-  // ~12MB GPU — matches the file's "phones stay on 2K" convention).
-  const night = mode !== "day";
-  const W = LOW_TIER ? 1024 : 2048, H = LOW_TIER ? 576 : 1152;
-  const c = document.createElement("canvas");
-  c.width = W; c.height = H;
-  const x = c.getContext("2d");
-  const horizon = H * 0.66;
-
-  // --- sky gradient ---
-  const sky = x.createLinearGradient(0, 0, 0, horizon);
-  if (night) {
-    sky.addColorStop(0, "#05070f"); sky.addColorStop(0.55, "#0a1122");
-    sky.addColorStop(0.85, "#132038"); sky.addColorStop(1, "#20304e");
-  } else {
-    sky.addColorStop(0, "#5b8fc9"); sky.addColorStop(0.5, "#89b4de");
-    sky.addColorStop(0.85, "#bcd7ee"); sky.addColorStop(1, "#dcebf5");
-  }
-  x.fillStyle = sky;
-  x.fillRect(0, 0, W, horizon);
-  if (night) {
-    for (let i = 0; i < 90; i++) { // faint stars
-      const sx = (i * 733) % W, sy = (i * 271) % (horizon * 0.6);
-      x.fillStyle = `rgba(200,215,240,${0.05 + (i % 5) * 0.03})`;
-      x.fillRect(sx, sy, 1.4, 1.4);
-    }
-  } else {
-    // soft daytime clouds
-    for (let i = 0; i < 5; i++) {
-      const cxp = ((i * 421 + 120) % W), cyp = horizon * (0.18 + 0.09 * (i % 3));
-      const rw = 120 + (i % 3) * 70, rh = 26 + (i % 2) * 12;
-      const cg = x.createRadialGradient(cxp, cyp, 4, cxp, cyp, rw);
-      cg.addColorStop(0, "rgba(255,255,255,0.7)"); cg.addColorStop(0.6, "rgba(248,251,255,0.3)"); cg.addColorStop(1, "rgba(248,251,255,0)");
-      x.fillStyle = cg;
-      x.save(); x.translate(cxp, cyp); x.scale(1, rh / rw); x.beginPath(); x.arc(0, 0, rw, 0, Math.PI * 2); x.fill(); x.restore();
-    }
-  }
-  // horizon glow: warm sodium light-pollution at night / white haze by day
-  const glow = x.createRadialGradient(W * 0.52, horizon, 40, W * 0.52, horizon, W * 0.5);
-  if (night) {
-    glow.addColorStop(0, "rgba(90,70,40,0.5)"); glow.addColorStop(0.4, "rgba(50,45,55,0.22)"); glow.addColorStop(1, "rgba(40,45,60,0)");
-  } else {
-    glow.addColorStop(0, "rgba(236,244,250,0.6)"); glow.addColorStop(0.45, "rgba(220,234,246,0.28)"); glow.addColorStop(1, "rgba(210,228,244,0)");
-  }
-  x.fillStyle = glow;
-  x.fillRect(0, horizon - H * 0.4, W, H * 0.4);
-
-  const litWindows = (bx, by, bw, bh, density, warmBias) => {
-    const cell = 13, pad = 5;
-    for (let wy = by + pad; wy < by + bh - pad; wy += cell) {
-      for (let wx = bx + pad; wx < bx + bw - pad; wx += cell) {
-        if (night) {
-          if (Math.random() > density) continue;
-          const warm = Math.random() < warmBias;
-          const a = 0.35 + Math.random() * 0.5;
-          x.fillStyle = warm ? `rgba(255,205,130,${a})` : `rgba(190,215,255,${a * 0.85})`;
-        } else {
-          // day: glazing grid — mostly faint sky reflection, some brighter panes
-          const a = 0.10 + (Math.random() < 0.16 ? 0.32 * Math.random() : 0);
-          x.fillStyle = `rgba(196,220,240,${a})`;
-        }
-        x.fillRect(wx, wy, cell - 6, cell - 7);
-      }
-    }
-  };
-  // --- distant haze layer (lighter, sparse) ---
-  let hx = -40;
-  while (hx < W + 40) {
-    const bw = 40 + Math.random() * 70, bh = 90 + Math.random() * 190;
-    x.fillStyle = night ? "#141d30" : "#aebfd2";
-    x.fillRect(hx, horizon - bh, bw, bh);
-    litWindows(hx, horizon - bh, bw, bh, 0.06, 0.4);
-    hx += bw + 8 + Math.random() * 16;
-  }
-  // --- main downtown silhouettes ---
-  const nightCols = ["#080c16", "#0b1120"], dayCols = ["#8593a6", "#748295"];
-  const drawTower = (bx, bw, bh, col, density) => {
-    x.fillStyle = col;
-    x.fillRect(bx, horizon - bh, bw, bh);
-    litWindows(bx, horizon - bh, bw, bh, density, 0.5);
-    return { bx, bw, bh };
-  };
-  let bx2 = -30;
-  while (bx2 < W + 30) {
-    const bw = 60 + Math.random() * 120;
-    const bh = 130 + Math.random() * 260;
-    const cols = night ? nightCols : dayCols;
-    drawTower(bx2, bw, bh, Math.random() < 0.5 ? cols[0] : cols[1], 0.16);
-    bx2 += bw + 4 + Math.random() * 10;
-  }
-  // Prudential-ish stepped block (left of center, tall)
-  drawTower(W * 0.34, 150, 560, night ? "#0a0f1c" : "#7e8ca0", 0.2);
-  x.fillStyle = night ? "#0a0f1c" : "#7e8ca0"; x.fillRect(W * 0.355, horizon - 620, 118, 70); // setback crown
-  // Hancock-ish tapered glass tower (center, tallest) + antenna
-  const tw = 130, tx = W * 0.5, tbh = 640;
-  const grad = x.createLinearGradient(tx, horizon - tbh, tx + tw, horizon);
-  if (night) { grad.addColorStop(0, "#0c1424"); grad.addColorStop(1, "#0a1120"); }
-  else { grad.addColorStop(0, "#b7d0e8"); grad.addColorStop(1, "#8fb0cf"); } // reflects sky by day
-  x.fillStyle = grad; x.fillRect(tx, horizon - tbh, tw, tbh);
-  litWindows(tx, horizon - tbh, tw, tbh, 0.22, 0.35);
-  x.strokeStyle = night ? "rgba(120,150,200,0.25)" : "rgba(120,140,165,0.35)"; x.lineWidth = 2; // vertical glass mullions
-  for (let mx = tx + 16; mx < tx + tw; mx += 20) { x.beginPath(); x.moveTo(mx, horizon - tbh); x.lineTo(mx, horizon); x.stroke(); }
-  // antenna: red aircraft beacon glows at night, plain mast by day
-  x.strokeStyle = night ? "rgba(210,90,90,0.8)" : "rgba(90,100,115,0.9)"; x.lineWidth = 3;
-  x.beginPath(); x.moveTo(tx + tw / 2, horizon - tbh); x.lineTo(tx + tw / 2, horizon - tbh - 70); x.stroke();
-  if (night) { x.fillStyle = "rgba(255,80,70,0.9)"; x.beginPath(); x.arc(tx + tw / 2, horizon - tbh - 70, 4, 0, Math.PI * 2); x.fill(); }
-
-  // --- harbor / river reflection (bottom band) ---
-  const water = x.createLinearGradient(0, horizon, 0, H);
-  if (night) { water.addColorStop(0, "#0c1524"); water.addColorStop(1, "#060a12"); }
-  else { water.addColorStop(0, "#7ea6c8"); water.addColorStop(1, "#547d9f"); }
-  x.fillStyle = water;
-  x.fillRect(0, horizon, W, H - horizon);
-  x.save();
-  x.globalAlpha = night ? 0.18 : 0.26;
-  x.scale(1, -1);
-  x.drawImage(c, 0, -horizon, W, horizon, 0, -horizon - (H - horizon), W, horizon);
-  x.restore();
-  // horizontal ripple streaks
-  for (let i = 0; i < 60; i++) {
-    const ry = horizon + Math.random() * (H - horizon);
-    x.fillStyle = night ? `rgba(120,140,180,${0.02 + Math.random() * 0.04})` : `rgba(225,238,248,${0.03 + Math.random() * 0.05})`;
-    x.fillRect(0, ry, W, 1);
-  }
-
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = LOW_TIER ? 2 : MAXA;
-  return tex;
-}
-
-function buildCityWindow() {
-  // A large picture window on the interior face of the FRONT wall (z≈front),
-  // looking out on the Boston night skyline. Mounted as a backlit panel just
-  // inside the wall: the camera is hard-clamped inside the room, so from every
-  // angle this reads exactly like a window with a hole — no re-bake needed for
-  // the geometry. (The re-bake adds the city glow SPILL onto the room.)
-  // NOT tagged bk_ and added OUTSIDE buildRoom, so USE_BAKED never hides it.
-  const g = new THREE.Group();
-  const front = 3.6;
-  const cx = 0, cy = 1.78, ow = 3.2, oh = 1.2; // opening (height now 2/3 of the old 1.8)
-
-  // TWO stacked skyline panels for a smooth day/night crossfade on the lamp
-  // toggle: night is opaque underneath, day fades in on top (opacity driven by
-  // applyLightState via MODELS.cityWindow.dayMat). Both unlit MeshBasic.
-  const skyNight = new THREE.Mesh(
-    new THREE.PlaneGeometry(ow, oh),
-    new THREE.MeshBasicMaterial({ map: makeBostonSkylineTexture("night") })
-  );
-  skyNight.rotation.y = Math.PI; // front face -> into the room
-  skyNight.position.set(cx, cy, front - 0.02);
-  g.add(skyNight);
-  const dayMat = new THREE.MeshBasicMaterial({
-    map: makeBostonSkylineTexture("day"), transparent: true, opacity: 0, depthWrite: false,
-  });
-  const skyDay = new THREE.Mesh(new THREE.PlaneGeometry(ow, oh), dayMat);
-  skyDay.rotation.y = Math.PI;
-  // IN FRONT of the opaque night plane (smaller z = closer to the camera),
-  // so the day panel blends OVER night as its opacity ramps up
-  skyDay.position.set(cx, cy, front - 0.021);
-  skyDay.renderOrder = 1;
-  g.add(skyDay);
-  MODELS.cityWindow = { dayMat }; // applyLightState crossfades dayMat.opacity 0<->1
-
-  // glass: faint cool tint + a soft diagonal reflection streak, so the pane
-  // reads as glazing rather than an open hole
-  const glassCanvas = document.createElement("canvas");
-  glassCanvas.width = 256; glassCanvas.height = 256;
-  {
-    const gx = glassCanvas.getContext("2d");
-    gx.clearRect(0, 0, 256, 256);
-    // a faint sheen confined to the TOP-LEFT corner only — enough to read as
-    // glazing, not a searchlight streaking across the skyline
-    const st = gx.createRadialGradient(40, 40, 8, 40, 40, 150);
-    st.addColorStop(0, "rgba(180,200,230,0.09)");
-    st.addColorStop(0.5, "rgba(170,195,230,0.03)");
-    st.addColorStop(1, "rgba(150,180,220,0)");
-    gx.fillStyle = st; gx.fillRect(0, 0, 256, 256);
-  }
-  const glassTex = new THREE.CanvasTexture(glassCanvas);
-  glassTex.colorSpace = THREE.SRGBColorSpace;
-  const glass = new THREE.Mesh(
-    new THREE.PlaneGeometry(ow, oh),
-    new THREE.MeshBasicMaterial({ map: glassTex, transparent: true, opacity: 0.5, depthWrite: false })
-  );
-  glass.rotation.y = Math.PI;
-  glass.position.set(cx, cy, front - 0.05);
-  glass.renderOrder = 2;
-  g.add(glass);
-
-  // slim frame (dark aluminum) — outer border only, NO cross mullions (Kefan)
-  const frameMat = new THREE.MeshStandardMaterial({ color: 0x14161b, roughness: 0.5, metalness: 0.6 });
-  const bar = (w, h, px, py, pz) => {
-    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.045), frameMat);
-    m.position.set(px, py, pz);
-    m.castShadow = true; m.receiveShadow = true;
-    g.add(m);
-  };
-  const fz = front - 0.055, t = 0.05; // narrower border (was 0.09)
-  bar(ow + 2 * t, t, cx, cy + oh / 2 + t / 2, fz);       // top
-  bar(ow + 2 * t, t, cx, cy - oh / 2 - t / 2, fz);       // bottom
-  bar(t, oh + 2 * t, cx - ow / 2 - t / 2, cy, fz);       // left
-  bar(t, oh + 2 * t, cx + ow / 2 + t / 2, cy, fz);       // right
-  // sill ledge protruding slightly into the room
-  const sill = new THREE.Mesh(new THREE.BoxGeometry(ow + 2 * t + 0.05, 0.04, 0.1), frameMat);
-  sill.position.set(cx, cy - oh / 2 - t, front - 0.1);
-  sill.castShadow = true; sill.receiveShadow = true;
-  g.add(sill);
-
-  return g;
-}
-
 function buildRoom(scene) {
   // graphite engineering office: sealed-concrete floor, dark plaster walls
   // with a steel lower band, fully enclosed (incl. front wall) so no camera

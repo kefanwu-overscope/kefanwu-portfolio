@@ -256,7 +256,26 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-12 (latest) 360° containment: clear ALL wall furniture
+### 2026-07-12 (latest) REVERTED: 360° orbit + Boston window (Kefan: "太乱了")
+- Kefan reverted the whole 360°/window experiment same-day. Removed:
+  `makeBostonSkylineTexture` + `buildCityWindow` (+ its scene.add), the
+  `windowGlow` SpotLight and all its applyLightState/boot wiring
+  (`win`/`winSky` keys), the open-central-volume camera clamp and the
+  desk-lamp keep-out. Restored: azimuth ±0.32π, minDistance 1.4, wall clamp
+  x ±2.35 / z [-1.25, 3.35] / y [0.4, 3.15]. The post-clamp
+  `camera.lookAt(controls.target)` re-aim was KEPT (that mis-aim bug predates
+  360° — side-wall zoom-out was reachable in the old range too).
+- **Do NOT re-add the window/360° without Kefan asking.** If it ever comes
+  back, the day/night skyline + full-furniture containment work is in git
+  history (`a57d5db`, `f66775e`) and the pitfalls are documented in the two
+  entries below.
+- P2–P7 bench/printer modeling and all résumé-pickup work are untouched.
+- Verified after revert: azimuth ±0.32π, minDistance 1.4, no skyline meshes
+  in the scene (the one 16:9 texture left is the CFD monitor exhibit —
+  expected), front wall plain, pickup lands posErr 0, lamp toggle both ways
+  (key 0.22↔1.15), no console errors. Cache: `exp-nowindow-20260712`.
+
+### 2026-07-12 360° containment: clear ALL wall furniture (REVERTED, see above)
 - The first cabinet-clip fix only protected the MAIN cabinet (z-clamp). An
   adversarial review found the camera still orbited INTO the right cabinet
   CAB2 (x≈2.0–2.5), the desk lamp (from the minDistance 0.6 drop), and the
@@ -1016,8 +1035,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-clampfix-20260712` (3D page styles — in experience.html)
-- `experience.js?v=exp-clampfix-20260712` (3D page module — in experience.html)
+- `experience.css?v=exp-nowindow-20260712` (3D page styles — in experience.html)
+- `experience.js?v=exp-nowindow-20260712` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
