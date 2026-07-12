@@ -256,7 +256,27 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-11 (latest) window city-glow (real-time, NOT baked — why)
+### 2026-07-11 (latest) 360°/window review fixes (4, from adversarial review)
+- **minDistance 1.4→1.1:** with 360° azimuth the camera can face the window
+  from the back-wall side, where the AABB z-clamp (cp.z ≥ -1.25) sits 1.15
+  from the target; at 1.4 OrbitControls kept re-deriving radius<1.4 from the
+  clamped position and stretching the offset out every frame (camera
+  drift/stutter). 1.1 < 1.15 removes the conflict. Do NOT raise past ~1.15
+  without moving the clamp/target apart.
+- **Re-aim after the AABB clamp:** the render-loop wall clamp ran AFTER
+  OrbitControls' internal `lookAt`, so a clamped frame (e.g. zoom-out toward a
+  side wall) rendered mis-aimed. Now re-`camera.lookAt(controls.target)` only
+  when the clamp actually moved the camera.
+- **windowGlow boot ramp:** it was stranded at full night intensity (2.6)
+  through the first-visit cold-boot blackout while the rest of the room was
+  black. Now zeroed in the blackout and ramped up on the moon beat
+  (`seg(3600,900,...)`), verified 0 through blackout → 2.6 with the moon.
+- **Skyline texture LOW_TIER-gated:** `makeBostonSkylineTexture` is 1024×576 +
+  anisotropy 2 on LOW_TIER (was always 2048×1152 + max aniso, ~12MB GPU) —
+  matches the file's "phones stay on 2K" convention.
+- Cache: `exp-orbitfix-20260711`.
+
+### 2026-07-11 window city-glow (real-time, NOT baked — why)
 - The window now spills a cool city glow onto the floor/desk. It is a
   REAL-TIME SpotLight (`windowGlow`, colour 0x9fbdf0, from the window aimed at
   the floor in front), faded by the lamp toggle inside `applyLightState`
@@ -956,8 +976,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-cityglow-20260711` (3D page styles — in experience.html)
-- `experience.js?v=exp-cityglow-20260711` (3D page module — in experience.html)
+- `experience.css?v=exp-orbitfix-20260711` (3D page styles — in experience.html)
+- `experience.js?v=exp-orbitfix-20260711` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

@@ -211,7 +211,14 @@ function initScene(canvas) {
   controls.enableDamping = true;
   controls.dampingFactor = 0.08;
   controls.enablePan = false;
-  controls.minDistance = 1.4;
+  // 1.1 (was 1.4): with 360° azimuth the camera can now orbit to face the
+  // window from the back-wall side, where the AABB z-clamp (cp.z >= -1.25,
+  // keeping the camera in FRONT of the cabinet) sits only 1.15 from the
+  // target. At minDistance 1.4 OrbitControls kept re-deriving radius < 1.4
+  // from the clamped position and stretching the offset back out every
+  // frame → camera drift/stutter. 1.1 < 1.15 so the clamp and minDistance
+  // never conflict. (Do not raise past ~1.15 without moving the clamp/target.)
+  controls.minDistance = 1.1;
   controls.maxDistance = 3.2;
   controls.minPolarAngle = 0.46;
   controls.maxPolarAngle = Math.PI / 2 - 0.05;
@@ -481,6 +488,7 @@ function initScene(canvas) {
     blueLines.forEach((m) => { m.emissiveIntensity = 0; });
     lampLeds.forEach((m) => { m.emissiveIntensity = 0; });
     benchGlow.intensity = 0; resumeSpot.intensity = 0; moonSpot.intensity = 0;
+    windowGlow.intensity = 0; // powers on with the moon, not lit through the blackout
     bakedMats.forEach((m) => { m.lightMapIntensity = 0.15; });
     // if the user grabs the light switch mid-boot, snap the pieces that
     // applyLightState doesn't own to their steady-state values
@@ -529,8 +537,9 @@ function initScene(canvas) {
     }
     // gentle case spots once both cabinets are alive
     seg(3350, 550, (k) => caseSpots.forEach((s) => { s.l.intensity = s.target * k; }));
-    // the moon reveals itself as the camera settles toward the rest pose
+    // the moon + Boston window glow reveal as the camera settles to rest
     seg(3600, 900, (k) => { moonSpot.intensity = MOON_NIGHT * k; });
+    seg(3600, 900, (k) => { windowGlow.intensity = 2.6 * k; });
     // final beat at flight landing: the lamp clicks on — snappy, not eased —
     // and the warm pool blooms up on the resume
     seg(5050, 90, (k) => lampLeds.forEach((m) => { m.emissiveIntensity = 2.4 * k; }), lin);
@@ -1195,9 +1204,14 @@ function initScene(canvas) {
       // hard-clamp the camera inside the room shell so no orbit/zoom
       // combination can ever peek past a wall
       const cp = camera.position;
+      const bx = cp.x, by = cp.y, bz = cp.z;
       cp.x = Math.max(-2.35, Math.min(2.35, cp.x));
       cp.z = Math.max(-1.25, Math.min(3.35, cp.z));
       cp.y = Math.max(0.4, Math.min(3.15, cp.y));
+      // OrbitControls.update() baked its lookAt from the PRE-clamp position;
+      // when the wall clamp actually moved the camera (e.g. zoomed out toward
+      // a side wall) the frame would render mis-aimed, so re-aim at the target.
+      if (controls.enabled && (cp.x !== bx || cp.y !== by || cp.z !== bz)) camera.lookAt(controls.target);
     }
 
 
@@ -2494,7 +2508,10 @@ function makeBostonSkylineTexture() {
   // of lit windows, a couple of recognizable towers (a stepped Prudential-ish
   // block + a tapered glass tower with an antenna), and a faint harbor
   // reflection. Unlit (MeshBasic) so it reads as self-lit city at night.
-  const W = 2048, H = 1152;
+  // half-res on LOW_TIER/mobile: a full 2048×1152 + max-aniso backdrop is
+  // ~12MB GPU for one decorative panel (matches the file's "phones stay on 2K"
+  // convention for the baked maps)
+  const W = LOW_TIER ? 1024 : 2048, H = LOW_TIER ? 576 : 1152;
   const c = document.createElement("canvas");
   c.width = W; c.height = H;
   const x = c.getContext("2d");
@@ -2593,7 +2610,7 @@ function makeBostonSkylineTexture() {
 
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = MAXA;
+  tex.anisotropy = LOW_TIER ? 2 : MAXA;
   return tex;
 }
 
