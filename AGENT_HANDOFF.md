@@ -256,7 +256,30 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-11 (latest) 360°/window review fixes (4, from adversarial review)
+### 2026-07-12 (latest) window day/night + no cross + slimmer + no cabinet clip
+- **360° no longer clips the cabinet:** the back-wall camera clamp was
+  `cp.z ≥ -1.25`, which is INSIDE the main cabinet (center z=-1.12, depth
+  0.54 → front face -0.85). Moved to `-0.75` (0.1 in front of the cabinet
+  face) so a full orbit can't enter it. minDistance dropped 1.1→0.6 to keep
+  it under the new dead-behind clearance (target.z − clampZ = 0.65) so
+  OrbitControls doesn't fight the clamp. Verified: 360° azimuth sweep bottoms
+  at z=-0.75 (clip-safe), dead-behind at min-zoom holds distance (no drift).
+- **Window geometry** (`buildCityWindow`): height 1.8→**1.2** (2/3, letterbox
+  picture window), centered cy 1.9→1.78; **cross mullions removed** (outer
+  border only); frame border `t` 0.09→**0.05** (slimmer), depth 0.05→0.045.
+- **Day/night skyline** (`makeBostonSkylineTexture(mode)`): now takes
+  `"night"|"day"`. Day = pale-blue sky + clouds, light grey-blue daylight
+  facades, sky-reflecting glass tower, blue harbor, no red beacon. The window
+  stacks TWO planes — opaque night behind + a transparent day plane IN FRONT
+  (`front-0.021`, smaller z = closer to camera; putting it behind night was a
+  bug — night occluded it). `MODELS.cityWindow.dayMat.opacity` crossfades
+  0↔1 in `applyLightState` (new `winSky` in want/from/instant/step), so the
+  city turns to daytime when the lamp turns the room lights on. Day window
+  spill `win` 0.6→1.6. Verified: opacity ramps 0→1 on toggle, day skyline
+  renders, toggling back restores night.
+- Cache: `exp-daywindow-20260712`.
+
+### 2026-07-11 360°/window review fixes (4, from adversarial review)
 - **minDistance 1.4→1.1:** with 360° azimuth the camera can face the window
   from the back-wall side, where the AABB z-clamp (cp.z ≥ -1.25) sits 1.15
   from the target; at 1.4 OrbitControls kept re-deriving radius<1.4 from the
@@ -976,8 +999,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-orbitfix-20260711` (3D page styles — in experience.html)
-- `experience.js?v=exp-orbitfix-20260711` (3D page module — in experience.html)
+- `experience.css?v=exp-daywindow-20260712` (3D page styles — in experience.html)
+- `experience.js?v=exp-daywindow-20260712` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

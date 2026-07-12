@@ -211,14 +211,13 @@ function initScene(canvas) {
   controls.enableDamping = true;
   controls.dampingFactor = 0.08;
   controls.enablePan = false;
-  // 1.1 (was 1.4): with 360° azimuth the camera can now orbit to face the
-  // window from the back-wall side, where the AABB z-clamp (cp.z >= -1.25,
-  // keeping the camera in FRONT of the cabinet) sits only 1.15 from the
-  // target. At minDistance 1.4 OrbitControls kept re-deriving radius < 1.4
-  // from the clamped position and stretching the offset back out every
-  // frame → camera drift/stutter. 1.1 < 1.15 so the clamp and minDistance
-  // never conflict. (Do not raise past ~1.15 without moving the clamp/target.)
-  controls.minDistance = 1.1;
+  // 0.6: the back-wall clamp now stops at z=-0.75 (just in FRONT of the
+  // cabinet face at -0.85, so 360° orbit can't clip into the cabinet). That
+  // leaves target.z - clampZ = 0.65 of dead-behind clearance, so minDistance
+  // must stay under it (0.6 < 0.65) or OrbitControls re-derives radius <
+  // minDistance from the clamped position and fights the clamp (drift/stutter).
+  // Don't raise minDistance past ~0.65 without moving the clamp/target apart.
+  controls.minDistance = 0.6;
   controls.maxDistance = 3.2;
   controls.minPolarAngle = 0.46;
   controls.maxPolarAngle = Math.PI / 2 - 0.05;
@@ -946,13 +945,15 @@ function initScene(canvas) {
     if (probe && (!animate || prefersReducedMotion)) scene.environment = probe;
     // real-time lights serve the exhibits; dim them with the room
     const want = lightsOn
-      ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0, resume: 0, moon: 0, pendant: 2.6, win: 0.6 } // day grade: strips + bake carry the room
+      // day: the window shows the DAY skyline (winSky:1) and floods brighter
+      // daylight in (win:1.6); moon off
+      ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0, resume: 0, moon: 0, pendant: 2.6, win: 1.6, winSky: 1 } // day grade: strips + bake carry the room
       // night: the desk lamp (resume) is the dominant practical, the pendant
       // recedes to a whisper so the lamp's pool owns the desk
       // resume 1.5, NOT higher: sampled at 2.8 the pool washed out the sheet's
       // upper half (DOM-parity texture has more white than the old Arial mini);
       // at 1.5 every section reads while the pool still owns the mat (Kefan)
-      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 1.5, moon: MOON_NIGHT, pendant: 0.3, win: 2.6 };
+      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 1.5, moon: MOON_NIGHT, pendant: 0.3, win: 2.6, winSky: 0 };
     if (bootTakeover) return; // the boot choreography owns the levels; it lands on these values
     blueLines.forEach((m) => {
       m.emissive = m.emissive || new THREE.Color(0x2b4d80);
@@ -968,6 +969,7 @@ function initScene(canvas) {
       env: scene.environmentIntensity, bench: benchGlow.intensity,
       resume: resumeSpot.intensity, moon: moonSpot.intensity,
       pendant: MODELS.pendantLight.intensity, win: windowGlow.intensity,
+      winSky: MODELS.cityWindow ? MODELS.cityWindow.dayMat.opacity : 0,
       led: lampLeds.length ? lampLeds[0].emissiveIntensity : wantLed,
       blue: blueLines.length ? blueLines[0].emissiveIntensity : wantBlue,
     };
@@ -978,6 +980,7 @@ function initScene(canvas) {
       moonSpot.intensity = want.moon;
       MODELS.pendantLight.intensity = want.pendant;
       windowGlow.intensity = want.win;
+      if (MODELS.cityWindow) MODELS.cityWindow.dayMat.opacity = want.winSky;
       lampLeds.forEach((m) => { m.emissiveIntensity = wantLed; });
       blueLines.forEach((m) => { m.emissiveIntensity = wantBlue; });
       return;
@@ -998,6 +1001,7 @@ function initScene(canvas) {
       moonSpot.intensity = from.moon + (want.moon - from.moon) * e;
       MODELS.pendantLight.intensity = from.pendant + (want.pendant - from.pendant) * e;
       windowGlow.intensity = from.win + (want.win - from.win) * e;
+      if (MODELS.cityWindow) MODELS.cityWindow.dayMat.opacity = from.winSky + (want.winSky - from.winSky) * e;
       lampLeds.forEach((m) => { m.emissiveIntensity = from.led + (wantLed - from.led) * e; });
       blueLines.forEach((m) => { m.emissiveIntensity = from.blue + (wantBlue - from.blue) * e; });
       // swap the environment probe mid-fade, hidden inside the moving grade
@@ -1206,7 +1210,9 @@ function initScene(canvas) {
       const cp = camera.position;
       const bx = cp.x, by = cp.y, bz = cp.z;
       cp.x = Math.max(-2.35, Math.min(2.35, cp.x));
-      cp.z = Math.max(-1.25, Math.min(3.35, cp.z));
+      // z back bound -0.75 keeps the camera in FRONT of the display cabinet
+      // (front face at z=-0.85) so a full 360° orbit can't clip through it.
+      cp.z = Math.max(-0.75, Math.min(3.35, cp.z));
       cp.y = Math.max(0.4, Math.min(3.15, cp.y));
       // OrbitControls.update() baked its lookAt from the PRE-clamp position;
       // when the wall clamp actually moved the camera (e.g. zoomed out toward
@@ -2502,15 +2508,15 @@ function loadAssembly(loader, scene, url, opts, onPlaced) {
 /* ============================================================
    room
    ============================================================ */
-function makeBostonSkylineTexture() {
-  // Procedural Boston night skyline (no external asset / no CORS): deep-navy
-  // sky with a warm horizon glow, layered downtown silhouettes with a scatter
-  // of lit windows, a couple of recognizable towers (a stepped Prudential-ish
-  // block + a tapered glass tower with an antenna), and a faint harbor
-  // reflection. Unlit (MeshBasic) so it reads as self-lit city at night.
-  // half-res on LOW_TIER/mobile: a full 2048×1152 + max-aniso backdrop is
-  // ~12MB GPU for one decorative panel (matches the file's "phones stay on 2K"
-  // convention for the baked maps)
+function makeBostonSkylineTexture(mode) {
+  // Procedural Boston skyline (no external asset / no CORS), NIGHT or DAY.
+  // Layered downtown silhouettes, a stepped Prudential-ish block + a tapered
+  // Hancock-ish glass tower, and a harbor reflection. Unlit (MeshBasic) so it
+  // reads as a lit exterior regardless of room lighting; the window crossfades
+  // between the two textures when the lamp toggles day/night.
+  // half-res on LOW_TIER/mobile (a full 2048×1152 + max-aniso backdrop is
+  // ~12MB GPU — matches the file's "phones stay on 2K" convention).
+  const night = mode !== "day";
   const W = LOW_TIER ? 1024 : 2048, H = LOW_TIER ? 576 : 1152;
   const c = document.createElement("canvas");
   c.width = W; c.height = H;
@@ -2519,23 +2525,39 @@ function makeBostonSkylineTexture() {
 
   // --- sky gradient ---
   const sky = x.createLinearGradient(0, 0, 0, horizon);
-  sky.addColorStop(0, "#05070f");
-  sky.addColorStop(0.55, "#0a1122");
-  sky.addColorStop(0.85, "#132038");
-  sky.addColorStop(1, "#20304e");
+  if (night) {
+    sky.addColorStop(0, "#05070f"); sky.addColorStop(0.55, "#0a1122");
+    sky.addColorStop(0.85, "#132038"); sky.addColorStop(1, "#20304e");
+  } else {
+    sky.addColorStop(0, "#5b8fc9"); sky.addColorStop(0.5, "#89b4de");
+    sky.addColorStop(0.85, "#bcd7ee"); sky.addColorStop(1, "#dcebf5");
+  }
   x.fillStyle = sky;
   x.fillRect(0, 0, W, horizon);
-  // faint stars
-  for (let i = 0; i < 90; i++) {
-    const sx = (i * 733) % W, sy = (i * 271) % (horizon * 0.6);
-    x.fillStyle = `rgba(200,215,240,${0.05 + (i % 5) * 0.03})`;
-    x.fillRect(sx, sy, 1.4, 1.4);
+  if (night) {
+    for (let i = 0; i < 90; i++) { // faint stars
+      const sx = (i * 733) % W, sy = (i * 271) % (horizon * 0.6);
+      x.fillStyle = `rgba(200,215,240,${0.05 + (i % 5) * 0.03})`;
+      x.fillRect(sx, sy, 1.4, 1.4);
+    }
+  } else {
+    // soft daytime clouds
+    for (let i = 0; i < 5; i++) {
+      const cxp = ((i * 421 + 120) % W), cyp = horizon * (0.18 + 0.09 * (i % 3));
+      const rw = 120 + (i % 3) * 70, rh = 26 + (i % 2) * 12;
+      const cg = x.createRadialGradient(cxp, cyp, 4, cxp, cyp, rw);
+      cg.addColorStop(0, "rgba(255,255,255,0.7)"); cg.addColorStop(0.6, "rgba(248,251,255,0.3)"); cg.addColorStop(1, "rgba(248,251,255,0)");
+      x.fillStyle = cg;
+      x.save(); x.translate(cxp, cyp); x.scale(1, rh / rw); x.beginPath(); x.arc(0, 0, rw, 0, Math.PI * 2); x.fill(); x.restore();
+    }
   }
-  // warm sodium glow along the horizon (city light pollution)
+  // horizon glow: warm sodium light-pollution at night / white haze by day
   const glow = x.createRadialGradient(W * 0.52, horizon, 40, W * 0.52, horizon, W * 0.5);
-  glow.addColorStop(0, "rgba(90,70,40,0.5)");
-  glow.addColorStop(0.4, "rgba(50,45,55,0.22)");
-  glow.addColorStop(1, "rgba(40,45,60,0)");
+  if (night) {
+    glow.addColorStop(0, "rgba(90,70,40,0.5)"); glow.addColorStop(0.4, "rgba(50,45,55,0.22)"); glow.addColorStop(1, "rgba(40,45,60,0)");
+  } else {
+    glow.addColorStop(0, "rgba(236,244,250,0.6)"); glow.addColorStop(0.45, "rgba(220,234,246,0.28)"); glow.addColorStop(1, "rgba(210,228,244,0)");
+  }
   x.fillStyle = glow;
   x.fillRect(0, horizon - H * 0.4, W, H * 0.4);
 
@@ -2543,10 +2565,16 @@ function makeBostonSkylineTexture() {
     const cell = 13, pad = 5;
     for (let wy = by + pad; wy < by + bh - pad; wy += cell) {
       for (let wx = bx + pad; wx < bx + bw - pad; wx += cell) {
-        if (Math.random() > density) continue;
-        const warm = Math.random() < warmBias;
-        const a = 0.35 + Math.random() * 0.5;
-        x.fillStyle = warm ? `rgba(255,205,130,${a})` : `rgba(190,215,255,${a * 0.85})`;
+        if (night) {
+          if (Math.random() > density) continue;
+          const warm = Math.random() < warmBias;
+          const a = 0.35 + Math.random() * 0.5;
+          x.fillStyle = warm ? `rgba(255,205,130,${a})` : `rgba(190,215,255,${a * 0.85})`;
+        } else {
+          // day: glazing grid — mostly faint sky reflection, some brighter panes
+          const a = 0.10 + (Math.random() < 0.16 ? 0.32 * Math.random() : 0);
+          x.fillStyle = `rgba(196,220,240,${a})`;
+        }
         x.fillRect(wx, wy, cell - 6, cell - 7);
       }
     }
@@ -2555,12 +2583,13 @@ function makeBostonSkylineTexture() {
   let hx = -40;
   while (hx < W + 40) {
     const bw = 40 + Math.random() * 70, bh = 90 + Math.random() * 190;
-    x.fillStyle = "#141d30";
+    x.fillStyle = night ? "#141d30" : "#aebfd2";
     x.fillRect(hx, horizon - bh, bw, bh);
     litWindows(hx, horizon - bh, bw, bh, 0.06, 0.4);
     hx += bw + 8 + Math.random() * 16;
   }
   // --- main downtown silhouettes ---
+  const nightCols = ["#080c16", "#0b1120"], dayCols = ["#8593a6", "#748295"];
   const drawTower = (bx, bw, bh, col, density) => {
     x.fillStyle = col;
     x.fillRect(bx, horizon - bh, bw, bh);
@@ -2568,43 +2597,45 @@ function makeBostonSkylineTexture() {
     return { bx, bw, bh };
   };
   let bx2 = -30;
-  const skyline = [];
   while (bx2 < W + 30) {
     const bw = 60 + Math.random() * 120;
     const bh = 130 + Math.random() * 260;
-    skyline.push(drawTower(bx2, bw, bh, Math.random() < 0.5 ? "#080c16" : "#0b1120", 0.16));
+    const cols = night ? nightCols : dayCols;
+    drawTower(bx2, bw, bh, Math.random() < 0.5 ? cols[0] : cols[1], 0.16);
     bx2 += bw + 4 + Math.random() * 10;
   }
   // Prudential-ish stepped block (left of center, tall)
-  drawTower(W * 0.34, 150, 560, "#0a0f1c", 0.2);
-  x.fillStyle = "#0a0f1c"; x.fillRect(W * 0.355, horizon - 620, 118, 70); // setback crown
-  // 200 Clarendon / Hancock-ish tapered glass tower (center, tallest) + antenna
+  drawTower(W * 0.34, 150, 560, night ? "#0a0f1c" : "#7e8ca0", 0.2);
+  x.fillStyle = night ? "#0a0f1c" : "#7e8ca0"; x.fillRect(W * 0.355, horizon - 620, 118, 70); // setback crown
+  // Hancock-ish tapered glass tower (center, tallest) + antenna
   const tw = 130, tx = W * 0.5, tbh = 640;
   const grad = x.createLinearGradient(tx, horizon - tbh, tx + tw, horizon);
-  grad.addColorStop(0, "#0c1424"); grad.addColorStop(1, "#0a1120");
+  if (night) { grad.addColorStop(0, "#0c1424"); grad.addColorStop(1, "#0a1120"); }
+  else { grad.addColorStop(0, "#b7d0e8"); grad.addColorStop(1, "#8fb0cf"); } // reflects sky by day
   x.fillStyle = grad; x.fillRect(tx, horizon - tbh, tw, tbh);
   litWindows(tx, horizon - tbh, tw, tbh, 0.22, 0.35);
-  x.strokeStyle = "rgba(120,150,200,0.25)"; x.lineWidth = 2; // vertical glass mullions
+  x.strokeStyle = night ? "rgba(120,150,200,0.25)" : "rgba(120,140,165,0.35)"; x.lineWidth = 2; // vertical glass mullions
   for (let mx = tx + 16; mx < tx + tw; mx += 20) { x.beginPath(); x.moveTo(mx, horizon - tbh); x.lineTo(mx, horizon); x.stroke(); }
-  x.strokeStyle = "rgba(210,90,90,0.8)"; x.lineWidth = 3; // antenna + red aircraft light
+  // antenna: red aircraft beacon glows at night, plain mast by day
+  x.strokeStyle = night ? "rgba(210,90,90,0.8)" : "rgba(90,100,115,0.9)"; x.lineWidth = 3;
   x.beginPath(); x.moveTo(tx + tw / 2, horizon - tbh); x.lineTo(tx + tw / 2, horizon - tbh - 70); x.stroke();
-  x.fillStyle = "rgba(255,80,70,0.9)"; x.beginPath(); x.arc(tx + tw / 2, horizon - tbh - 70, 4, 0, Math.PI * 2); x.fill();
+  if (night) { x.fillStyle = "rgba(255,80,70,0.9)"; x.beginPath(); x.arc(tx + tw / 2, horizon - tbh - 70, 4, 0, Math.PI * 2); x.fill(); }
 
   // --- harbor / river reflection (bottom band) ---
   const water = x.createLinearGradient(0, horizon, 0, H);
-  water.addColorStop(0, "#0c1524");
-  water.addColorStop(1, "#060a12");
+  if (night) { water.addColorStop(0, "#0c1524"); water.addColorStop(1, "#060a12"); }
+  else { water.addColorStop(0, "#7ea6c8"); water.addColorStop(1, "#547d9f"); }
   x.fillStyle = water;
   x.fillRect(0, horizon, W, H - horizon);
   x.save();
-  x.globalAlpha = 0.18;
+  x.globalAlpha = night ? 0.18 : 0.26;
   x.scale(1, -1);
   x.drawImage(c, 0, -horizon, W, horizon, 0, -horizon - (H - horizon), W, horizon);
   x.restore();
   // horizontal ripple streaks
   for (let i = 0; i < 60; i++) {
     const ry = horizon + Math.random() * (H - horizon);
-    x.fillStyle = `rgba(120,140,180,${0.02 + Math.random() * 0.04})`;
+    x.fillStyle = night ? `rgba(120,140,180,${0.02 + Math.random() * 0.04})` : `rgba(225,238,248,${0.03 + Math.random() * 0.05})`;
     x.fillRect(0, ry, W, 1);
   }
 
@@ -2623,16 +2654,29 @@ function buildCityWindow() {
   // NOT tagged bk_ and added OUTSIDE buildRoom, so USE_BAKED never hides it.
   const g = new THREE.Group();
   const front = 3.6;
-  const cx = 0, cy = 1.9, ow = 3.2, oh = 1.8; // opening
+  const cx = 0, cy = 1.78, ow = 3.2, oh = 1.2; // opening (height now 2/3 of the old 1.8)
 
-  // skyline panel (furthest back, nearest the wall)
-  const sky = new THREE.Mesh(
+  // TWO stacked skyline panels for a smooth day/night crossfade on the lamp
+  // toggle: night is opaque underneath, day fades in on top (opacity driven by
+  // applyLightState via MODELS.cityWindow.dayMat). Both unlit MeshBasic.
+  const skyNight = new THREE.Mesh(
     new THREE.PlaneGeometry(ow, oh),
-    new THREE.MeshBasicMaterial({ map: makeBostonSkylineTexture() })
+    new THREE.MeshBasicMaterial({ map: makeBostonSkylineTexture("night") })
   );
-  sky.rotation.y = Math.PI; // front face -> into the room
-  sky.position.set(cx, cy, front - 0.02);
-  g.add(sky);
+  skyNight.rotation.y = Math.PI; // front face -> into the room
+  skyNight.position.set(cx, cy, front - 0.02);
+  g.add(skyNight);
+  const dayMat = new THREE.MeshBasicMaterial({
+    map: makeBostonSkylineTexture("day"), transparent: true, opacity: 0, depthWrite: false,
+  });
+  const skyDay = new THREE.Mesh(new THREE.PlaneGeometry(ow, oh), dayMat);
+  skyDay.rotation.y = Math.PI;
+  // IN FRONT of the opaque night plane (smaller z = closer to the camera),
+  // so the day panel blends OVER night as its opacity ramps up
+  skyDay.position.set(cx, cy, front - 0.021);
+  skyDay.renderOrder = 1;
+  g.add(skyDay);
+  MODELS.cityWindow = { dayMat }; // applyLightState crossfades dayMat.opacity 0<->1
 
   // glass: faint cool tint + a soft diagonal reflection streak, so the pane
   // reads as glazing rather than an open hole
@@ -2657,26 +2701,25 @@ function buildCityWindow() {
   );
   glass.rotation.y = Math.PI;
   glass.position.set(cx, cy, front - 0.05);
+  glass.renderOrder = 2;
   g.add(glass);
 
-  // frame + mullions (dark aluminum), mounted on the interior face
+  // slim frame (dark aluminum) — outer border only, NO cross mullions (Kefan)
   const frameMat = new THREE.MeshStandardMaterial({ color: 0x14161b, roughness: 0.5, metalness: 0.6 });
   const bar = (w, h, px, py, pz) => {
-    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.05), frameMat);
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.045), frameMat);
     m.position.set(px, py, pz);
     m.castShadow = true; m.receiveShadow = true;
     g.add(m);
   };
-  const fz = front - 0.06, t = 0.09;
+  const fz = front - 0.055, t = 0.05; // narrower border (was 0.09)
   bar(ow + 2 * t, t, cx, cy + oh / 2 + t / 2, fz);       // top
   bar(ow + 2 * t, t, cx, cy - oh / 2 - t / 2, fz);       // bottom
   bar(t, oh + 2 * t, cx - ow / 2 - t / 2, cy, fz);       // left
   bar(t, oh + 2 * t, cx + ow / 2 + t / 2, cy, fz);       // right
-  bar(0.05, oh, cx, cy, fz);                              // center vertical mullion
-  bar(ow, 0.05, cx, cy, fz);                             // center horizontal mullion
   // sill ledge protruding slightly into the room
-  const sill = new THREE.Mesh(new THREE.BoxGeometry(ow + 2 * t + 0.06, 0.05, 0.11), frameMat);
-  sill.position.set(cx, cy - oh / 2 - t, front - 0.11);
+  const sill = new THREE.Mesh(new THREE.BoxGeometry(ow + 2 * t + 0.05, 0.04, 0.1), frameMat);
+  sill.position.set(cx, cy - oh / 2 - t, front - 0.1);
   sill.castShadow = true; sill.receiveShadow = true;
   g.add(sill);
 
