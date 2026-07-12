@@ -256,7 +256,19 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-11 (latest) full-bleed sheet: aspect stretch kills the bottom band
+### 2026-07-11 (latest) marker v3: centered over the résumé, contrast backing
+- The résumé marker moved from the sheet's top-right corner (read as
+  detached) to CENTERED directly over the sheet (markerX/Z = 0,
+  markerY = 0.16 — high enough to never cover the print from any camera).
+- `makeInteractMarker` gained a soft dark backing disc behind the diamond:
+  the marker carries its own contrast plate, so it reads over the white
+  résumé/CFD monitor and the bright walls, while the disc melts away over
+  dark exhibits. Contours darkened, pulse floor raised to 0.72–0.96, sprite
+  0.048 (hover 0.066). Kefan asked about white-background legibility twice —
+  do not lighten this design without testing on the résumé sheet.
+- Cache: `exp-marker2-20260711`.
+
+### 2026-07-11 full-bleed sheet: aspect stretch kills the bottom band
 - Kefan's screenshot showed a grey band under the résumé: on content-fit
   viewports the DOM sheet is slightly taller than 3:4 (e.g. 540×732), so the
   paper left a ~12px uncovered strip at the bottom where the blurred scene
@@ -882,8 +894,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-fullbleed-20260711` (3D page styles — in experience.html)
-- `experience.js?v=exp-fullbleed-20260711` (3D page module — in experience.html)
+- `experience.css?v=exp-marker2-20260711` (3D page styles — in experience.html)
+- `experience.js?v=exp-marker2-20260711` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

@@ -1310,8 +1310,8 @@ function initScene(canvas) {
         m.position.y = h.userData.hotspot.markerY + Math.sin(t * 0.0024 + ph) * 0.016;
         // higher floor than the old additive marker: normal blending needs
         // more opacity to stay legible, especially on white exhibits
-        m.material.opacity = 0.62 + 0.26 * (0.5 + 0.5 * Math.sin(t * 0.003 + ph));
-        const s = h === hovered ? 0.06 : 0.042;
+        m.material.opacity = 0.72 + 0.24 * (0.5 + 0.5 * Math.sin(t * 0.003 + ph));
+        const s = h === hovered ? 0.066 : 0.048;
         m.scale.setScalar(s);
       }
     }
@@ -2388,12 +2388,11 @@ function placeRoot(root, scene, opts, onPlaced) {
     const marker = makeInteractMarker();
     let markerY, markerX = 0, markerZ = 0;
     if (opts.action === "resume") {
-      // the resume sheet is flat on the desk — a centered marker floats
-      // directly over the printed text, so push it to the paper's
-      // top-right corner and keep it low, just above the desk surface
-      markerX = 0.12;
-      markerZ = 0.10;
-      markerY = 0.05;
+      // centered DIRECTLY over the sheet (Kefan: the corner placement read
+      // as detached), floating high enough that it never covers the print
+      markerX = 0;
+      markerZ = 0;
+      markerY = 0.16;
     } else {
       markerY = Math.min(bb.max.y + 0.09, capY) - center.y;
     }
@@ -2966,9 +2965,18 @@ function makeInteractMarker() {
   c.width = c.height = s;
   const ctx = c.getContext("2d");
   const cx = s / 2;
+  // soft dark backing disc: the marker carries its OWN contrast plate, so
+  // it stays legible over the white résumé sheet / CFD monitor while the
+  // disc melts away over dark exhibits (Kefan asked twice — keep this)
+  const back = ctx.createRadialGradient(cx, cx, 2, cx, cx, 46);
+  back.addColorStop(0, "rgba(9, 18, 36, 0.55)");
+  back.addColorStop(0.55, "rgba(9, 18, 36, 0.34)");
+  back.addColorStop(1, "rgba(9, 18, 36, 0)");
+  ctx.fillStyle = back;
+  ctx.fillRect(0, 0, s, s);
   const glow = ctx.createRadialGradient(cx, cx, 3, cx, cx, cx);
-  glow.addColorStop(0, "rgba(63, 140, 255, 0.60)");
-  glow.addColorStop(0.4, "rgba(63, 140, 255, 0.24)");
+  glow.addColorStop(0, "rgba(63, 140, 255, 0.55)");
+  glow.addColorStop(0.4, "rgba(63, 140, 255, 0.22)");
   glow.addColorStop(1, "rgba(63, 140, 255, 0)");
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, s, s);
@@ -2976,16 +2984,16 @@ function makeInteractMarker() {
   ctx.translate(cx, cx);
   ctx.rotate(Math.PI / 4);
   // dark contour first — gives the ring an edge on WHITE backgrounds
-  ctx.strokeStyle = "rgba(6, 20, 44, 0.55)";
-  ctx.lineWidth = 8.5;
+  ctx.strokeStyle = "rgba(4, 12, 28, 0.9)";
+  ctx.lineWidth = 9;
   ctx.strokeRect(-19, -19, 38, 38);
   // saturated brand-blue ring
   ctx.strokeStyle = "#3f8cff";
   ctx.lineWidth = 5;
   ctx.strokeRect(-19, -19, 38, 38);
   // white core with a thin dark edge (reads on white, glows on dark)
-  ctx.fillStyle = "rgba(8, 22, 46, 0.6)";
-  ctx.fillRect(-10, -10, 20, 20);
+  ctx.fillStyle = "rgba(6, 16, 34, 0.85)";
+  ctx.fillRect(-10.5, -10.5, 21, 21);
   ctx.fillStyle = "rgba(255, 255, 255, 0.98)";
   ctx.fillRect(-8, -8, 16, 16);
   ctx.restore();
