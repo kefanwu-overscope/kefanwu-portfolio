@@ -2827,8 +2827,10 @@ function buildDisplayCabinet() {
   // museum flat-file look, one deep drawer per bay with a recessed pull slot
   const pullMat = new THREE.MeshStandardMaterial({ color: 0x1c1e22, roughness: 0.55, metalness: 0.4 });
   [[-0.756, 0.74], [0, 0.7], [0.756, 0.74]].forEach(([x, w]) => {
-    const front = new THREE.Mesh(new RoundedBoxGeometry(w, 0.58, 0.02, 2, 0.005), frameMat);
-    front.position.set(x, 0.405, z + D / 2 - 0.022);
+    // full solid drawer BODY (Kefan: not just a front panel) — the box runs
+    // most of the cabinet depth behind the same front plane
+    const front = new THREE.Mesh(new RoundedBoxGeometry(w, 0.58, 0.44, 2, 0.005), frameMat);
+    front.position.set(x, 0.405, z + D / 2 - 0.012 - 0.22);
     front.castShadow = true;
     front.receiveShadow = true;
     g.add(front);
@@ -2850,11 +2852,16 @@ function buildDisplayCabinet() {
     clearcoat: 0.15,
     clearcoatRoughness: 0.28,
   });
-  CAB.rows.forEach((y) => {
+  CAB.rows.forEach((y, ri) => {
     // rounded edges: a sharp 90° glass corner breaks into dashed specular
-    // fireflies under the follow-spot at fly-in distance
-    const board = new THREE.Mesh(new RoundedBoxGeometry(W - 0.09, 0.014, D - 0.08, 2, 0.004), glassMat);
-    board.position.set(0, y - 0.007, z);
+    // fireflies under the follow-spot at fly-in distance.
+    // BOTTOM row is opaque grey wood (Kefan) — glass there looked down into
+    // the drawer void
+    const bottomRow = ri === CAB.rows.length - 1;
+    const board = new THREE.Mesh(
+      new RoundedBoxGeometry(W - 0.09, bottomRow ? 0.02 : 0.014, D - 0.08, 2, 0.004),
+      bottomRow ? cabinetBackMaterial() : glassMat);
+    board.position.set(0, y - (bottomRow ? 0.01 : 0.007), z);
     board.receiveShadow = true;
     g.add(board);
     // (no aluminum front-edge bar: a subpixel-thin bar in front of the LED
@@ -4292,8 +4299,9 @@ function buildSideCabinet() {
   // F1 (Kefan approved): drawer fronts on the bottom compartment, one per bay
   const pullMat = new THREE.MeshStandardMaterial({ color: 0x1c1e22, roughness: 0.55, metalness: 0.4 });
   [-0.393, 0.393].forEach((zc) => {
-    const front = new THREE.Mesh(new RoundedBoxGeometry(0.02, 0.58, 0.75, 2, 0.005), frameMat);
-    front.position.set(-D / 2 + 0.022, 0.405, zc);
+    // full solid drawer body behind the same front plane (see buildCabinet)
+    const front = new THREE.Mesh(new RoundedBoxGeometry(0.4, 0.58, 0.75, 2, 0.005), frameMat);
+    front.position.set(-D / 2 + 0.012 + 0.2, 0.405, zc);
     front.castShadow = true;
     front.receiveShadow = true;
     g.add(front);
@@ -4306,9 +4314,13 @@ function buildSideCabinet() {
     color: 0x3a4b5c, roughness: 0.16, metalness: 0, transparent: true, opacity: 0.3,
     envMapIntensity: 0.7, clearcoat: 0.15, clearcoatRoughness: 0.28,
   });
-  CAB2.rows.forEach((y) => {
-    const board = new THREE.Mesh(new RoundedBoxGeometry(D - 0.08, 0.014, W - 0.08, 2, 0.004), glassMat);
-    board.position.set(0, y - 0.007, 0);
+  CAB2.rows.forEach((y, ri) => {
+    // bottom row opaque grey wood (Kefan) — see buildCabinet
+    const bottomRow = ri === CAB2.rows.length - 1;
+    const board = new THREE.Mesh(
+      new RoundedBoxGeometry(D - 0.08, bottomRow ? 0.02 : 0.014, W - 0.08, 2, 0.004),
+      bottomRow ? cabinetBackMaterial() : glassMat);
+    board.position.set(0, y - (bottomRow ? 0.01 : 0.007), 0);
     board.receiveShadow = true;
     g.add(board);
     const strip = new THREE.Mesh(

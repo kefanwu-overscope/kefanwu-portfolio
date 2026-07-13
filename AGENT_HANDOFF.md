@@ -256,7 +256,22 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-12 (latest) F1 drawer fronts + resolution floor + global anisotropy
+### 2026-07-13 (latest) fully-white lettering + wood bottom shelf + solid drawers
+- Kefan round 6: letters still had dark speckle inside; bottom glass shelf
+  looked down into the drawer void; drawer fronts read as floating panels.
+- Tire (bl_tire2.py): texture-space close 8->12 px + bold 3 px (seals every
+  in-glyph hole), white 0.97, Emission Strength 0.12 -> 0.35 — the emission
+  is what finally makes the letters read UNIFORMLY white: it washes out the
+  lumpy relief's facet shading (and GTAO darkening) that dotted the paint.
+- Both cabinets: bottom row's shelf board is now OPAQUE cabinetBackMaterial()
+  grey wood (0.02 thick), upper rows stay tinted glass.
+- Drawer fronts became full solid bodies: main cabinet boxes 0.44 deep,
+  side cabinet 0.4 deep, same front plane as before (front face position
+  preserved by shifting centers back by half the added depth).
+- Verified: tire-allwhite preview + aw-* in-scene captures, console clean.
+  Cache: `exp-solid-20260713`.
+
+### 2026-07-12 F1 drawer fronts + resolution floor + global anisotropy
 - **F1 approved & built**: drawer fronts close the bare bottom compartments —
   main cabinet 3 (one per bay, inside buildCabinet, cabinet-local coords are
   world-space), side cabinet 2 (buildSideCabinet, local coords, front plane
@@ -1284,8 +1299,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-f1res-20260712` (3D page styles — in experience.html)
-- `experience.js?v=exp-f1res-20260712` (3D page module — in experience.html)
+- `experience.css?v=exp-solid-20260713` (3D page styles — in experience.html)
+- `experience.js?v=exp-solid-20260713` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
