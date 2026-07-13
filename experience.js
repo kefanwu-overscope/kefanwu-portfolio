@@ -812,11 +812,11 @@ function initScene(canvas) {
   // it poked out below the chin bar (the GT3 runs much deeper than the weld).
   const gt3Helmet = buildWallHelmet(loader, "models/helmet-gt3.glb", -0.195, 0.12,
     new THREE.Vector3(0, 0.01, -0.055)); // tip up inside the shell so it doesn't poke below the chin
-  gt3Helmet.position.set(-1.72, 1.94, -1.32); // depth 0.36 -> back near the wall (-1.515)
+  gt3Helmet.position.set(-1.84, 1.94, -1.32); // depth 0.36 -> back near the wall (-1.515)
   scene.add(gt3Helmet);
   const weldHelmet = buildWallHelmet(loader, "models/helmet-weld.glb", -0.155, 0.12,
     new THREE.Vector3(0, -0.045, 0.005));
-  weldHelmet.position.set(-1.72, 1.46, -1.36); // 0.48 below the GT3 (heights 0.36 + 0.32 -> 0.34 min gap)
+  weldHelmet.position.set(-1.84, 1.46, -1.36); // 0.48 below the GT3 (heights 0.36 + 0.32 -> 0.34 min gap)
   scene.add(weldHelmet);
   // E2: small fire extinguisher on the floor AGAINST the back wall, left of
   // the helmet stack (Kefan: 靠墙放)

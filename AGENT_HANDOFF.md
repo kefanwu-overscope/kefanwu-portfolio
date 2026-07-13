@@ -256,7 +256,30 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-12 (latest) SOLID tire lettering + no lamp cord + helmets left
+### 2026-07-12 (latest) tire lettering = TEXTURE; helmets further left
+- Kefan round 4: lettering still read speckled in-scene. Root cause of the
+  speckle: painting FACES of lumpy faceted relief means the paint boundary
+  follows tessellation, never pixel-clean. FINAL pipeline (bl_tire2.py):
+  ray-cast footprint (unchanged) -> drawn into a 4096x128 band TEXTURE
+  (antialiased) -> sidewall band UV-mapped by (theta, r) -> pixels define
+  the paint edge. Key traps encoded in the script:
+  (a) front/back sidewall lettering is MIRRORED — the mirror-flip agreement
+  is 96% vs 10% raw; texture is built from the FRONT footprint and the BACK
+  UVs use u -> 1-u (OR-ing the two footprints overlays text+mirror garbage);
+  (b) faces crossing the u seam get +1 u-spill with REPEAT extension (the
+  BOTTOM wordmark sits right on the seam);
+  (c) morphological opening GUTS the footprint (much of a glyph is 1 cell
+  wide) — despeckle by component size (<8 cells) instead;
+  (d) the wordmark is angularly ASYMMETRIC (~-36..+44 deg): SECTOR 40 deg
+  clipped the trailing "r"; keep 46 deg;
+  (e) the tiny blob after the wordmark is the Hoosier "(R)" mark — REAL,
+  do not filter it; the dark jagged shapes near the shoulder are unpainted
+  mold relief, also real.
+- Helmets moved further left: stack x -1.72 -> -1.84.
+- Verified: fx9-* captures (tire straight + room angle, stack), tire GLB
+  now carries a packed PNG texture. Cache: `exp-props4-20260712`.
+
+### 2026-07-12 SOLID tire lettering + no lamp cord + helmets left
 - Kefan round 3: remove the desk-lamp cord, shift the helmet stack left,
   tire lettering still wrong (hollow-outline letters).
 - **Tire lettering — the definitive pipeline** (scratchpad bl_tire2.py).
@@ -1225,8 +1248,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-props3-20260712` (3D page styles — in experience.html)
-- `experience.js?v=exp-props3-20260712` (3D page module — in experience.html)
+- `experience.css?v=exp-props4-20260712` (3D page styles — in experience.html)
+- `experience.js?v=exp-props4-20260712` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
