@@ -812,11 +812,11 @@ function initScene(canvas) {
   // it poked out below the chin bar (the GT3 runs much deeper than the weld).
   const gt3Helmet = buildWallHelmet(loader, "models/helmet-gt3.glb", -0.195, 0.12,
     new THREE.Vector3(0, 0.01, -0.055)); // tip up inside the shell so it doesn't poke below the chin
-  gt3Helmet.position.set(-1.55, 1.94, -1.32); // depth 0.36 -> back near the wall (-1.515)
+  gt3Helmet.position.set(-1.72, 1.94, -1.32); // depth 0.36 -> back near the wall (-1.515)
   scene.add(gt3Helmet);
   const weldHelmet = buildWallHelmet(loader, "models/helmet-weld.glb", -0.155, 0.12,
     new THREE.Vector3(0, -0.045, 0.005));
-  weldHelmet.position.set(-1.55, 1.46, -1.36); // 0.48 below the GT3 (heights 0.36 + 0.32 -> 0.34 min gap)
+  weldHelmet.position.set(-1.72, 1.46, -1.36); // 0.48 below the GT3 (heights 0.36 + 0.32 -> 0.34 min gap)
   scene.add(weldHelmet);
   // E2: small fire extinguisher on the floor AGAINST the back wall, left of
   // the helmet stack (Kefan: 靠墙放)
@@ -831,21 +831,7 @@ function initScene(canvas) {
   chestProps.position.set(-2.22, 0.791, 1.06);
   chestProps.rotation.y = Math.PI / 2;
   scene.add(chestProps);
-  // C6: desk lamp power cord over the desk's back edge (the pendant has a
-  // cord, the lamp didn't — inconsistent)
-  const lampCord = new THREE.Mesh(
-    new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
-      new THREE.Vector3(-0.76, 0.776, 0.07),   // lamp base (desk top is y=0.766)
-      new THREE.Vector3(-0.80, 0.772, -0.22),  // stays ON the top all the way back
-      new THREE.Vector3(-0.81, 0.771, -0.42),  // desk back edge is z=-0.45
-      new THREE.Vector3(-0.82, 0.58, -0.478),  // over the edge, hugging the back
-      new THREE.Vector3(-0.82, 0.05, -0.44),   // down to the floor behind the desk
-    ]), 32, 0.0035, 8),
-    new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.7, metalness: 0.05 })
-  );
-  lampCord.castShadow = true;
-  scene.add(lampCord);
-
+  // (removed per Kefan 2026-07-12: the desk-lamp power cord across the desk)
   // (removed: the race-car schematic blueprint panel above the main cabinet)
 
   /* ---------- baked lighting (Blender/Cycles pipeline, tools/bake/) ----------

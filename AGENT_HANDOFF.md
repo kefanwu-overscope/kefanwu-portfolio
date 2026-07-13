@@ -256,7 +256,29 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-12 (latest) tire lettering color + helmet stack + extinguisher to wall
+### 2026-07-12 (latest) SOLID tire lettering + no lamp cord + helmets left
+- Kefan round 3: remove the desk-lamp cord, shift the helmet stack left,
+  tire lettering still wrong (hollow-outline letters).
+- **Tire lettering — the definitive pipeline** (scratchpad bl_tire2.py).
+  Ground truth from a raking-light closeup (bl_closeup.py): the big HOOSIER
+  glyphs are SOLID but LUMPY faceted relief (dense small facets base→peak);
+  the base sidewall is a few huge triangles; small legends are fine engraved
+  outlines. Consequences that broke every statistic-based attempt:
+  (a) face-count medians/percentiles per radius bin land on glyph slopes,
+  not the base; (b) any |normal.z| gate deletes the glyphs' steep facets
+  (the "white outline with dark fill" symptom); (c) vertex-density stats
+  fail the same way. What WORKS: **BVH ray-cast height map** — one ray per
+  (θ,r) cell per side (front/back lettering is mirrored, never share a
+  raster), per-RING base = median over the full circle, glyph cells =
+  height > base + 0.15 mm, sector gate (±46° of ±Y keeps small legends
+  black), morphological close(4), paint faces by footprint cell with an
+  outward-normal gate (interior liner shares cells through the bore).
+- Desk-lamp power cord REMOVED (was C6) per Kefan.
+- Helmet stack moved to x -1.72 (from -1.55) — centered in the pocket.
+- Verified: fx8-* captures (tire straight-on, clean desk, stack, night
+  rest view), console clean. Cache: `exp-props3-20260712`.
+
+### 2026-07-12 tire lettering color + helmet stack + extinguisher to wall
 - Kefan: big HOOSIER script must be WHITE, small legends TIRE-COLORED (his
   reference photo); stack the helmets (racing on top, welding below); put the
   extinguisher against the wall.
@@ -1203,8 +1225,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-props2-20260712` (3D page styles — in experience.html)
-- `experience.js?v=exp-props2-20260712` (3D page module — in experience.html)
+- `experience.css?v=exp-props3-20260712` (3D page styles — in experience.html)
+- `experience.js?v=exp-props3-20260712` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
