@@ -256,7 +256,29 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-12 (latest) STRICT tire + wall helmets + fire extinguisher
+### 2026-07-12 (latest) tire lettering color + helmet stack + extinguisher to wall
+- Kefan: big HOOSIER script must be WHITE, small legends TIRE-COLORED (his
+  reference photo); stack the helmets (racing on top, welding below); put the
+  extinguisher against the wall.
+- **Tire lettering** (scratchpad bl_tire2.py): paint ONLY the big HOOSIER
+  wordmark white. Connected-component sizing FAILED (the STL has overlapping
+  shells — components came out duplicated 2/4/8×, glyphs fragmented). What
+  works: paint raised band faces that fall in the TOP/BOTTOM angular sectors
+  (±46° of ±Y — the two HOOSIER instances live there; every small legend is on
+  the L/R arcs) AND r > 0.162 (drops the "MADE IN U.S.A." legend that shares
+  the top sector but sits inboard). Small text now renders tire-black.
+- **Helmets stacked** at x -1.55: GT3 at y 1.94, weld at y 1.46 (0.48 gap;
+  heights 0.36 + 0.32 need ≥0.34). buildWallHelmet's `yaw` + per-model
+  `neckPoint` unchanged in signature; GT3 neckPoint raised to (0, 0.01,
+  -0.055) so the peg tip doesn't poke below the chin bar.
+- **Extinguisher** moved to (-1.66, 0, -1.4) — on the floor against the back
+  wall (face -1.515), left of the helmet stack. Reads at the actual rest
+  camera; only fully framed from unreachable close angles.
+- Verified via st2-* captures (tire, stack, rest-camera wide) + console clean.
+  Placement/material tweaks on already-reviewed geometry, so no new adversarial
+  round. Cache: `exp-props2-20260712`.
+
+### 2026-07-12 STRICT tire + wall helmets + fire extinguisher
 - Kefan: tire must be STRICTLY the STEP model, NO wheel; E2 extinguisher
   approved (small, ON THE FLOOR near the cabinet); hang a welding helmet and
   a white racing helmet on the wall. Source STLs live in `Desktop\stl\`
@@ -1181,8 +1203,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-stepprops-20260712` (3D page styles — in experience.html)
-- `experience.js?v=exp-stepprops-20260712` (3D page module — in experience.html)
+- `experience.css?v=exp-props2-20260712` (3D page styles — in experience.html)
+- `experience.js?v=exp-props2-20260712` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

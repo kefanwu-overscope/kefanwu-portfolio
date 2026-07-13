@@ -807,21 +807,22 @@ function initScene(canvas) {
   // allowed camera angle); the dark weld helmet sits nearer the cabinet —
   // the cabinet flank occludes that slot from right-of-center views and the
   // dark shell on the white wall still reads from the remaining angles
-  // GT3 peg tip sits in the shell's REAR half — at z 0.005 it poked out
-  // below the chin bar (the GT3 runs much deeper than the weld helmet)
-  const gt3Helmet = buildWallHelmet(loader, "models/helmet-gt3.glb", -0.195, 0.16,
-    new THREE.Vector3(0, -0.03, -0.06));
-  gt3Helmet.position.set(-1.76, 1.54, -1.32); // depth 0.36 -> back near the wall (-1.515)
+  // helmets STACKED (Kefan): white GT3 racing helmet on TOP, welding helmet
+  // BELOW it, same x. GT3 peg tip sits in the shell's REAR half — at z 0.005
+  // it poked out below the chin bar (the GT3 runs much deeper than the weld).
+  const gt3Helmet = buildWallHelmet(loader, "models/helmet-gt3.glb", -0.195, 0.12,
+    new THREE.Vector3(0, 0.01, -0.055)); // tip up inside the shell so it doesn't poke below the chin
+  gt3Helmet.position.set(-1.55, 1.94, -1.32); // depth 0.36 -> back near the wall (-1.515)
   scene.add(gt3Helmet);
-  const weldHelmet = buildWallHelmet(loader, "models/helmet-weld.glb", -0.155, 0.06,
+  const weldHelmet = buildWallHelmet(loader, "models/helmet-weld.glb", -0.155, 0.12,
     new THREE.Vector3(0, -0.045, 0.005));
-  weldHelmet.position.set(-1.38, 1.54, -1.36); // right edge clears the cabinet flank (-1.19)
+  weldHelmet.position.set(-1.55, 1.46, -1.36); // 0.48 below the GT3 (heights 0.36 + 0.32 -> 0.34 min gap)
   scene.add(weldHelmet);
-  // E2: small fire extinguisher on the floor at the main cabinet's left-front
-  // corner — deeper in the pocket it vanished behind the desk from most angles
+  // E2: small fire extinguisher on the floor AGAINST the back wall, left of
+  // the helmet stack (Kefan: 靠墙放)
   const fireExt = buildFireExtinguisher();
-  fireExt.position.set(-1.33, 0, -0.9);
-  fireExt.rotation.y = 0.35;
+  fireExt.position.set(-1.66, 0, -1.4); // body r 0.052 -> back 0.052 clear of wall face -1.515
+  fireExt.rotation.y = 0.25;
   scene.add(fireExt);
   scene.add(buildFloorJoints()); // C2: saw-cut control joints in the slab
   scene.add(buildBenchMat());    // C4: ESD mat + ground lead at the bench
