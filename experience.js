@@ -69,6 +69,10 @@ const COL = {
 /* ---------- shared texture sets ---------- */
 let TEX = null;
 let MAXA = 4;
+// texture-sharpness sweep flag: the render loop applies max anisotropy to
+// every material map on the next frame; async loaders re-arm it (Kefan:
+// models/text blur when the camera pulls back)
+let ANISO_DIRTY = true;
 function setupTextures(manager) {
   const loader = new THREE.TextureLoader(manager);
   const cache = {};
@@ -180,7 +184,12 @@ const CAB = {
 
 function initScene(canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, LOW_TIER ? 1.5 : 2));
+  // desktop: FLOOR the pixel ratio at 1.6 — on 100-150% Windows scaling the
+  // DPR is 1-1.5 and distant models/text go soft (Kefan); low-DPR displays
+  // get supersampling, retina stays capped
+  renderer.setPixelRatio(LOW_TIER
+    ? Math.min(window.devicePixelRatio, 1.5)
+    : Math.min(Math.max(window.devicePixelRatio, 1.6), 2.2));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -1107,6 +1116,7 @@ function initScene(canvas) {
       });
       scene.add(gltf.scene);
       applyLightState(false);
+      ANISO_DIRTY = true;
     });
     // idle upgrades: 4K lightmap, then the lights-off set. Everything loaded
     // here is PRE-UPLOADED/pre-filtered now — first use used to happen in the
@@ -1142,8 +1152,11 @@ function initScene(canvas) {
     const h = window.innerHeight;
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, LOW_TIER ? 1.5 : 2));
+    renderer.setPixelRatio(LOW_TIER
+      ? Math.min(window.devicePixelRatio, 1.5)
+      : Math.min(Math.max(window.devicePixelRatio, 1.6), 2.2));
     renderer.setSize(w, h);
+    composer.setPixelRatio(renderer.getPixelRatio());
     composer.setSize(w, h);
     if (gtao) gtao.setSize(w, h);
   }
@@ -1190,6 +1203,26 @@ function initScene(canvas) {
   // synthetic timestamps in a backgrounded tab, where rAF never fires
   const tick = (t, forced) => {
     if (!running && !forced) return;
+
+    if (ANISO_DIRTY) {
+      // sharpen every material map at grazing/minified angles; re-armed by
+      // async GLB loads so their textures get swept too
+      ANISO_DIRTY = false;
+      scene.traverse((o) => {
+        if (!o.isMesh) return;
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        for (const m of mats) {
+          if (!m) continue;
+          for (const slot of ["map", "emissiveMap", "roughnessMap", "metalnessMap", "normalMap", "aoMap"]) {
+            const tx2 = m[slot];
+            if (tx2 && tx2.anisotropy < MAXA) {
+              tx2.anisotropy = MAXA;
+              tx2.needsUpdate = true;
+            }
+          }
+        }
+      });
+    }
 
     if (flight) {
       if (flight.start === null) flight.start = t;
@@ -2790,6 +2823,20 @@ function buildDisplayCabinet() {
     g.add(div);
   });
 
+  // F1 (Kefan approved): drawer fronts close the bare bottom compartment —
+  // museum flat-file look, one deep drawer per bay with a recessed pull slot
+  const pullMat = new THREE.MeshStandardMaterial({ color: 0x1c1e22, roughness: 0.55, metalness: 0.4 });
+  [[-0.756, 0.74], [0, 0.7], [0.756, 0.74]].forEach(([x, w]) => {
+    const front = new THREE.Mesh(new RoundedBoxGeometry(w, 0.58, 0.02, 2, 0.005), frameMat);
+    front.position.set(x, 0.405, z + D / 2 - 0.022);
+    front.castShadow = true;
+    front.receiveShadow = true;
+    g.add(front);
+    const pull = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.02, 0.008), pullMat);
+    pull.position.set(x, 0.64, z + D / 2 - 0.014);
+    g.add(pull);
+  });
+
   // tinted glass shelves with aluminum front edge + cool light strips
   // roughness/clearcoatRoughness kept off the mirror end and env gain modest:
   // near-mirror glass sparkles into subpixel fireflies under the follow-spot
@@ -4242,6 +4289,19 @@ function buildSideCabinet() {
   div.castShadow = true;
   g.add(div);
 
+  // F1 (Kefan approved): drawer fronts on the bottom compartment, one per bay
+  const pullMat = new THREE.MeshStandardMaterial({ color: 0x1c1e22, roughness: 0.55, metalness: 0.4 });
+  [-0.393, 0.393].forEach((zc) => {
+    const front = new THREE.Mesh(new RoundedBoxGeometry(0.02, 0.58, 0.75, 2, 0.005), frameMat);
+    front.position.set(-D / 2 + 0.022, 0.405, zc);
+    front.castShadow = true;
+    front.receiveShadow = true;
+    g.add(front);
+    const pull = new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.02, 0.16), pullMat);
+    pull.position.set(-D / 2 + 0.014, 0.64, zc);
+    g.add(pull);
+  });
+
   const glassMat = new THREE.MeshPhysicalMaterial({
     color: 0x3a4b5c, roughness: 0.16, metalness: 0, transparent: true, opacity: 0.3,
     envMapIntensity: 0.7, clearcoat: 0.15, clearcoatRoughness: 0.28,
@@ -4603,6 +4663,7 @@ function buildHoosierTire(loader) {
       }
     });
     g.add(tire);
+    ANISO_DIRTY = true; // sweep the paint texture (sharp lettering at grazing angles)
   });
   // steel wall bracket: slim plate hidden behind the tire band + two cradle
   // arms UNDER the tire with lips in front of the sidewall
@@ -4656,6 +4717,7 @@ function buildWallHelmet(loader, url, wallDz, yaw, neckPoint) {
       }
     });
     g.add(h);
+    ANISO_DIRTY = true;
   });
   return g;
 }

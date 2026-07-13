@@ -256,7 +256,29 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-12 (latest) tire lettering solidified in texture space + night emission
+### 2026-07-12 (latest) F1 drawer fronts + resolution floor + global anisotropy
+- **F1 approved & built**: drawer fronts close the bare bottom compartments —
+  main cabinet 3 (one per bay, inside buildCabinet, cabinet-local coords are
+  world-space), side cabinet 2 (buildSideCabinet, local coords, front plane
+  local x = -D/2). Satin frameMat fronts 0.58 tall + dark recessed pull slots.
+  Cabinets are REAL-TIME groups (not bk_ baked), so no re-bake.
+- **Resolution** (Kefan: everything blurs when the camera pulls back): the
+  render pixel ratio was capped at DPR, and on Windows 125% scaling DPR is
+  1.25 — the scene rendered at 1.25x. Desktop now FLOORS the ratio at 1.6
+  (cap 2.2): `Math.min(Math.max(devicePixelRatio, 1.6), 2.2)`; LOW_TIER
+  unchanged (cap 1.5). Set in BOTH the init and the resize handler, and the
+  resize handler now calls composer.setPixelRatio too.
+- **Global anisotropy sweep**: module-scope ANISO_DIRTY flag; the render
+  tick traverses the scene once and maxes anisotropy on map/emissiveMap/
+  roughness/metalness/normal/aoMap (NOT lightMap — the lm crossfade pipeline
+  is delicate). Async GLB callbacks (room-baked, tire, helmets) re-arm the
+  flag so late textures get swept. Fixes soft canvas labels/screens and the
+  tire paint texture at grazing angles.
+- Verified: f1-* captures (both cabinets' drawers, far view at 1.6 ratio,
+  console clean; pane DPR measured 1.25 -> now renders 1.6).
+  Cache: `exp-f1res-20260712`.
+
+### 2026-07-12 tire lettering solidified in texture space + night emission
 - Kefan round 5: lettering still read as grey mottle at night/from afar.
   Two causes: pinholes/filaments in the footprint that mipmapping averages
   into grey, and zero night light on that wall. Fixes in bl_tire2.py:
@@ -1262,8 +1284,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-props5-20260712` (3D page styles — in experience.html)
-- `experience.js?v=exp-props5-20260712` (3D page module — in experience.html)
+- `experience.css?v=exp-f1res-20260712` (3D page styles — in experience.html)
+- `experience.js?v=exp-f1res-20260712` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
