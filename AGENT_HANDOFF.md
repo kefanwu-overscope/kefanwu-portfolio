@@ -256,7 +256,21 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-12 (latest) tire lettering = TEXTURE; helmets further left
+### 2026-07-12 (latest) tire lettering solidified in texture space + night emission
+- Kefan round 5: lettering still read as grey mottle at night/from afar.
+  Two causes: pinholes/filaments in the footprint that mipmapping averages
+  into grey, and zero night light on that wall. Fixes in bl_tire2.py:
+  (a) solidify in TEXTURE space (close 8 px + bold 2 px at 4096-wide —
+  much finer than footprint-cell closing, still far under the ~40 px letter
+  spacing); (b) faint emission (texture -> Emission Color, strength 0.12)
+  so the white paint reads at night — rubber pixels are near-black and emit
+  nothing visible. Verified at Kefan's own camera angle at night (fx10-*).
+- CAB2's bottom compartment is a bare empty box; main cabinet bottom band
+  similar. Proposals F1-F4 sent to Kefan (F1 drawer fronts recommended) —
+  awaiting approval, nothing built.
+- Cache: `exp-props5-20260712`.
+
+### 2026-07-12 tire lettering = TEXTURE; helmets further left
 - Kefan round 4: lettering still read speckled in-scene. Root cause of the
   speckle: painting FACES of lumpy faceted relief means the paint boundary
   follows tessellation, never pixel-clean. FINAL pipeline (bl_tire2.py):
@@ -1248,8 +1262,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-props4-20260712` (3D page styles — in experience.html)
-- `experience.js?v=exp-props4-20260712` (3D page module — in experience.html)
+- `experience.css?v=exp-props5-20260712` (3D page styles — in experience.html)
+- `experience.js?v=exp-props5-20260712` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
