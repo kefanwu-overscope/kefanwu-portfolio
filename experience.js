@@ -788,8 +788,9 @@ function initScene(canvas) {
   // resume: the hero object on the desk — front and center, in the light
   placeRoot(buildResumePaper(), scene, {
     name: "resumePaper", action: "resume", label: "Résumé",
-    // desk top 0.76 + leather inlay 0.012 — sit ON the leather, not inside it
-    pos: [0.02, DESK_TOP + 0.013, 0.16], rotY: 0.12,
+    // sits ON the cutting-mat overlay (mat top 0.7668; the old baked pad the
+    // paper used to ride is hidden at GLB load)
+    pos: [0.02, DESK_TOP + 0.0061, 0.16], rotY: 0.12,
   });
 
   /* ---------- display cabinet + exhibits (3 x 3) ---------- */
@@ -1008,7 +1009,7 @@ function initScene(canvas) {
   resumeSpot.position
     .copy(deskLamp.localToWorld(deskLamp.userData.headLocal.clone()))
     .add(new THREE.Vector3(0, -0.008, 0));
-  resumeSpot.target.position.set(0.02, 0.775, 0.16);
+  resumeSpot.target.position.set(0.02, 0.769, 0.16); // follows the lowered paper
   if (!LOW_TIER) {
     // shadows sell the source: the paper, tray and pen throw away from the lamp
     resumeSpot.castShadow = true;
@@ -1248,6 +1249,14 @@ function initScene(canvas) {
           // two fixtures overlap at the same hang point
           const c = wbb.getCenter(new THREE.Vector3());
           if (c.y > 2.1 && Math.abs(c.x - 0.15) < 0.3 && Math.abs(c.z - 0.35) < 0.3 && Math.max(s.x, s.z) < 0.5) {
+            o.visible = false;
+            return;
+          }
+          // the old baked desk pad (0.44 x 0.5, 1 mm proud of the slab): the
+          // real-time cutting mat replaces it — the mat used to float 6 mm
+          // above it and the pad peeked out underneath at grazing angles
+          if (s.y < 0.01 && s.x > 0.35 && s.x < 0.55 && s.z > 0.4 && s.z < 0.6 &&
+              Math.abs(c.x - 0.02) < 0.1 && Math.abs(c.y - 0.763) < 0.02 && Math.abs(c.z - 0.16) < 0.1) {
             o.visible = false;
             return;
           }
@@ -5309,7 +5318,9 @@ function buildCuttingMatOverlay() {
   tex.colorSpace = THREE.SRGBColorSpace;
   const m = new THREE.Mesh(new RoundedBoxGeometry(0.72, 0.0016, 0.52, 1, 0.0006),
     new THREE.MeshStandardMaterial({ map: tex, roughness: 0.88, metalness: 0.02 }));
-  m.position.set(0.02, 0.7729, 0.16); // 0.9 mm above the baked pad's top face
+  // 0.2 mm above the desk slab's top face (0.765) — the baked pad this used
+  // to ride on is hidden in the GLB callback now
+  m.position.set(0.02, 0.766, 0.16);
   m.receiveShadow = true;
   return m;
 }

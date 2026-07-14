@@ -256,7 +256,22 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-14 (latest) Kefan corrections to the realism batch
+### 2026-07-14 (latest, 2nd pass) old desk pad peeked out under the cutting mat
+- Kefan: "新cutting mat下面貌似盖着旧的". Root cause: the mat was authored at
+  y=0.7729 believing the baked pad's top was 0.772 — it is actually 0.766
+  (pad Mesh_0_22: center (0.02, 0.763, 0.16), 0.44x0.006x0.5, 1 mm proud of
+  the slab top 0.765). The mat floated 6 mm in the air and the pad showed in
+  the gap at grazing angles.
+- Fix: the baked pad is HIDDEN in the GLB callback (world-bbox test, same
+  pattern as the old pendant); the mat dropped to y=0.766 (0.2 mm above the
+  slab); the resume paper dropped with it (placeRoot pos y = DESK_TOP +
+  0.0061, was +0.013) and resumeSpot's target followed (0.769).
+- The pad's baked AO/shadow on the desk lightmap sits entirely under the
+  0.72x0.52 mat footprint, so hiding the mesh leaves no ghost.
+- Verified: qx-graze/qx-graze2 grazing-angle captures clean, console clean.
+  Cache: `exp-padfix-20260714`.
+
+### 2026-07-14 Kefan corrections to the realism batch
 - **Weld screen (K2) REMOVED** — Kefan: "argon围栏去掉". buildWeldScreen and
   its set-dressing add are deleted; a comment marks the spot. Do NOT re-add
   any fence/screen around the TIG corner.
@@ -1381,8 +1396,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-tweaks-20260714` (3D page styles — in experience.html)
-- `experience.js?v=exp-tweaks-20260714` (3D page module — in experience.html)
+- `experience.css?v=exp-padfix-20260714` (3D page styles — in experience.html)
+- `experience.js?v=exp-padfix-20260714` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
