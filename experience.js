@@ -114,11 +114,72 @@ function woodMaterial(tint = COL.woodTint, rough = 0.8, slug = "dark_wood") {
   });
 }
 
+// J2: shared brushed-satin roughness streaks — the flat single-value frame
+// material made the biggest background element read as one CG-clean slab
+let BRUSHED_ROUGH = null;
+function brushedRoughTex() {
+  if (BRUSHED_ROUGH) return BRUSHED_ROUGH;
+  const c = document.createElement("canvas");
+  c.width = 256; c.height = 256;
+  const x = c.getContext("2d");
+  x.fillStyle = "#999999";
+  x.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < 1100; i++) {
+    const y = Math.random() * 256;
+    const x0 = Math.random() * 256;
+    const len = 24 + Math.random() * 150;
+    const v = 128 + Math.floor((Math.random() - 0.5) * 70);
+    x.strokeStyle = `rgba(${v},${v},${v},0.16)`;
+    x.beginPath(); x.moveTo(x0, y); x.lineTo(x0 + len, y + (Math.random() - 0.5) * 1.6); x.stroke();
+  }
+  BRUSHED_ROUGH = new THREE.CanvasTexture(c);
+  BRUSHED_ROUGH.wrapS = BRUSHED_ROUGH.wrapT = THREE.RepeatWrapping;
+  return BRUSHED_ROUGH;
+}
+
+// J1: micro-wear roughness for the desk slab (injected onto the BAKED desk
+// material at GLB load — buildDesk itself is hidden at runtime)
+let DESK_WEAR = null;
+function deskWearTex() {
+  if (DESK_WEAR) return DESK_WEAR;
+  const c = document.createElement("canvas");
+  c.width = c.height = 512;
+  const x = c.getContext("2d");
+  x.fillStyle = "#858585"; // ≈ the slab's original 0.52 roughness
+  x.fillRect(0, 0, 512, 512);
+  // faint circular sheen swirls (daily wipe/mouse arcs)
+  for (let i = 0; i < 60; i++) {
+    const cx = Math.random() * 512, cy = Math.random() * 512;
+    const r = 20 + Math.random() * 90;
+    const v = 133 + Math.floor((Math.random() - 0.5) * 30);
+    x.strokeStyle = `rgba(${v},${v},${v},0.10)`;
+    x.lineWidth = 2 + Math.random() * 5;
+    x.beginPath();
+    x.arc(cx, cy, r, Math.random() * 6.28, Math.random() * 6.28 + 1.5 + Math.random() * 3);
+    x.stroke();
+  }
+  // duller patches where things sit and hands rest
+  for (let i = 0; i < 14; i++) {
+    const g2 = x.createRadialGradient(0, 0, 0, 0, 0, 40 + Math.random() * 60);
+    const up = Math.random() > 0.5 ? 16 : -14;
+    g2.addColorStop(0, `rgba(${133 + up},${133 + up},${133 + up},0.16)`);
+    g2.addColorStop(1, "rgba(133,133,133,0)");
+    x.save();
+    x.translate(Math.random() * 512, Math.random() * 512);
+    x.fillStyle = g2;
+    x.fillRect(-120, -120, 240, 240);
+    x.restore();
+  }
+  DESK_WEAR = new THREE.CanvasTexture(c);
+  return DESK_WEAR;
+}
+
 function cabinetFrameMaterial() {
   return new THREE.MeshStandardMaterial({
     color: 0x9da3aa,
-    roughness: 0.6,
+    roughness: 0.62,
     metalness: 0.0,
+    roughnessMap: brushedRoughTex(),
   });
 }
 
@@ -367,6 +428,15 @@ function initScene(canvas) {
   fill.position.set(-3, 2.2, 3);
   scene.add(fill);
 
+  // layer 2 = the pendant fixture: its own point light hangs centimeters from
+  // the shade interior, and physical decay would blow the reflector out to
+  // pure white. The fixture sees only these room lights; the point light
+  // (layer 0) lights everything else.
+  camera.layers.enable(2);
+  hemi.layers.enable(2);
+  key.layers.enable(2);
+  fill.layers.enable(2);
+
   // (desk lamp is decorative furniture only — it emits no light)
 
   // display spots washing the cabinet
@@ -431,6 +501,11 @@ function initScene(canvas) {
         stage(o.material, "emissiveIntensity", 250, 350);
       }
     });
+    // the pendant's bulb + liner glow are DERIVED from its point light (I1) —
+    // ramp them on the point-light clock or the bulb reads lit while its
+    // light is still out (their night emissives sit under the 0.4 gate above)
+    if (MODELS.pendantBulb && !seen.has(MODELS.pendantBulb.material)) stage(MODELS.pendantBulb.material, "emissiveIntensity", 700, 300);
+    if (MODELS.pendantShadeInner && !seen.has(MODELS.pendantShadeInner.material)) stage(MODELS.pendantShadeInner.material, "emissiveIntensity", 700, 300);
     const t0 = performance.now();
     const tick = (now) => {
       let live = false;
@@ -488,6 +563,13 @@ function initScene(canvas) {
     blueLines.forEach((m) => { m.emissiveIntensity = 0; });
     lampLeds.forEach((m) => { m.emissiveIntensity = 0; });
     benchGlow.intensity = 0; resumeSpot.intensity = 0; moonSpot.intensity = 0;
+    // the practicals added by the realism batch join the blackout too — they
+    // were sitting at full night level through the whole "powered-off" room
+    benchBarSpot.intensity = 0;
+    MODELS.pendantLight.intensity = 0;
+    if (MODELS.pendantBulb) MODELS.pendantBulb.material.emissiveIntensity = 0;
+    if (MODELS.pendantShadeInner) MODELS.pendantShadeInner.material.emissiveIntensity = 0;
+    if (MODELS.tigGlow) MODELS.tigGlow.intensity = 0;
     bakedMats.forEach((m) => { m.lightMapIntensity = 0.15; });
     // if the user grabs the light switch mid-boot, snap the pieces that
     // applyLightState doesn't own to their steady-state values
@@ -498,6 +580,16 @@ function initScene(canvas) {
       caseStrips.main.concat(caseStrips.side).forEach((l) => { l.intensity = l.userData.bootTarget; });
       stripMats.main.concat(stripMats.side).forEach((m) => { m.emissiveIntensity = 1.15; });
       bakedMats.forEach((m) => { m.lightMapIntensity = 0.6; });
+      // snap every blacked-out practical to its canonical night value so
+      // cancelBoot is safe from ANY call site — today toggleRoomLights calls
+      // applyLightState(true) right after and re-owns most of these, but
+      // that adjacency is a convention, not a guarantee (and the TIG glow
+      // isn't state-driven at all)
+      benchBarSpot.intensity = 0.95 * 1.2;
+      MODELS.pendantLight.intensity = 0.3;
+      if (MODELS.pendantBulb) MODELS.pendantBulb.material.emissiveIntensity = 0.15 + 0.85 * (0.3 / 2.6);
+      if (MODELS.pendantShadeInner) MODELS.pendantShadeInner.material.emissiveIntensity = 0.06 + 0.6 * (0.3 / 2.6);
+      if (MODELS.tigGlow) MODELS.tigGlow.intensity = 0.8;
     };
     // fluorescent-strike intensity curve: two dips, then settle
     const STRIKE = [0, 1.5, 0.25, 1.15, 1];
@@ -536,6 +628,15 @@ function initScene(canvas) {
     }
     // gentle case spots once both cabinets are alive
     seg(3350, 550, (k) => caseSpots.forEach((s) => { s.l.intensity = s.target * k; }));
+    // the TIG amp readout's warm pool strikes with the right-side leg,
+    // the pendant wakes with the main cabinet, the bench bar joins the lamp
+    seg(1300, 500, (k) => { if (MODELS.tigGlow) MODELS.tigGlow.intensity = 0.8 * k; });
+    seg(2600, 600, (k) => {
+      MODELS.pendantLight.intensity = 0.3 * k;
+      if (MODELS.pendantBulb) MODELS.pendantBulb.material.emissiveIntensity = (0.15 + 0.85 * (0.3 / 2.6)) * k;
+      if (MODELS.pendantShadeInner) MODELS.pendantShadeInner.material.emissiveIntensity = (0.06 + 0.6 * (0.3 / 2.6)) * k;
+    });
+    seg(5080, 320, (k) => { benchBarSpot.intensity = 0.95 * 1.2 * k; }, easeOut);
     // the moon reveals itself as the camera settles toward the rest pose
     seg(3600, 900, (k) => { moonSpot.intensity = MOON_NIGHT * k; });
     // final beat at flight landing: the lamp clicks on — snappy, not eased —
@@ -833,6 +934,40 @@ function initScene(canvas) {
   fireExt.position.set(-1.66, 0, -1.4); // body r 0.052 -> back 0.052 clear of wall face -1.515
   fireExt.rotation.y = 0.25;
   scene.add(fireExt);
+  // K1: a SECOND extinguisher lives at the hot-work corner — the only one in
+  // the room sat 3.2 m from the welder, which no real shop would pass
+  const fireExt2 = buildFireExtinguisher();
+  fireExt2.position.set(2.14, 0, -1.2); // behind the cart, against the right corner
+  fireExt2.rotation.y = -0.6;
+  scene.add(fireExt2);
+  // K2: low folding weld screen between the cart and the display cabinets
+  // (arc spatter next to a wooden guitar is a shop no-go); panels stay under
+  // 0.65 m so the tire and corner remain visible
+  const weldScreen = buildWeldScreen();
+  // x=1.22, NOT 1.24: the cart is yawed 0.35 rad, its nearest caster reaches
+  // x=1.324 — the back foot (x extent ±0.08) needs the extra 2 cm of air
+  weldScreen.position.set(1.22, 0, -0.97);
+  scene.add(weldScreen);
+  // K3: hazard-striped hot-work border on the floor in front of the cart
+  scene.add(buildHotWorkMark());
+  // J5: weld stains + caster scuffs — the concrete looked poured yesterday
+  scene.add(buildFloorStains());
+  // K5: rolling lab stool at the electronics bench (the room's only seat was
+  // the desk chair, 3 m from the soldering station)
+  const stool = buildLabStool();
+  stool.position.set(-1.82, 0, -0.72);
+  scene.add(stool);
+  // K6: scrap bin beside the tool chest — swarf and offcuts have to go somewhere
+  const scrapBin = buildScrapBin();
+  scrapBin.position.set(-2.14, 0, 1.62);
+  scrapBin.rotation.y = 0.2;
+  scene.add(scrapBin);
+  // J1: the plain black desk pad becomes a gridded self-healing cutting mat
+  // (REAL-TIME overlay — the pad itself is baked into the desk GLB)
+  scene.add(buildCuttingMatOverlay());
+  // K7: a few quiet everyday tools on the desk's far corner (out of the
+  // resume spotlight — set dressing, not a focal point)
+  scene.add(buildDeskTools());
   scene.add(buildFloorJoints()); // C2: saw-cut control joints in the slab
   scene.add(buildBenchMat());    // C4: ESD mat + ground lead at the bench
   // C5: lived-in chest top — the chest itself is baked, props ride on top
@@ -857,6 +992,14 @@ function initScene(canvas) {
   const benchGlow = new THREE.PointLight(0xe8ecf2, 0, 1.7, 2);
   benchGlow.position.set(-2.3, 1.25, -1.1);
   scene.add(benchGlow);
+  // I2: the LED bar lamp over the instrument cluster now CASTS its light —
+  // it was the brightest shape on that wall at night while the bench under
+  // it stayed dark. Cool-white to match the fixture's own emissive.
+  const benchBarSpot = new THREE.SpotLight(0xdfe8f5, 0, 2.2, 0.55, 0.6, 1.6);
+  benchBarSpot.position.set(-2.4, 1.3, -1.15);
+  benchBarSpot.target.position.set(-2.3, 0.79, -0.55);
+  scene.add(benchBarSpot);
+  scene.add(benchBarSpot.target);
   // museum follow-spot: fades in on the focused exhibit while its panel is
   // open (real-time layer only — the baked room ignores it)
   const focusSpot = new THREE.SpotLight(0xf2f5fa, 0, 3.5, 0.5, 1.0, 1.7);
@@ -1003,6 +1146,10 @@ function initScene(canvas) {
       resumeSpot.intensity = want.resume;
       moonSpot.intensity = want.moon;
       MODELS.pendantLight.intensity = want.pendant;
+      benchBarSpot.intensity = want.bench * 1.2; // I2: rides the bench ramp
+      // I1: the bulb's visible glow follows its actual light output
+      if (MODELS.pendantBulb) MODELS.pendantBulb.material.emissiveIntensity = 0.15 + 0.85 * (want.pendant / 2.6);
+      if (MODELS.pendantShadeInner) MODELS.pendantShadeInner.material.emissiveIntensity = 0.06 + 0.6 * (want.pendant / 2.6);
       lampLeds.forEach((m) => { m.emissiveIntensity = wantLed; });
       blueLines.forEach((m) => { m.emissiveIntensity = wantBlue; });
       return;
@@ -1022,6 +1169,13 @@ function initScene(canvas) {
       resumeSpot.intensity = from.resume + (want.resume - from.resume) * e;
       moonSpot.intensity = from.moon + (want.moon - from.moon) * e;
       MODELS.pendantLight.intensity = from.pendant + (want.pendant - from.pendant) * e;
+      benchBarSpot.intensity = (from.bench + (want.bench - from.bench) * e) * 1.2; // I2
+      if (MODELS.pendantBulb) { // I1
+        MODELS.pendantBulb.material.emissiveIntensity = 0.15 + 0.85 * (MODELS.pendantLight.intensity / 2.6);
+      }
+      if (MODELS.pendantShadeInner) {
+        MODELS.pendantShadeInner.material.emissiveIntensity = 0.06 + 0.6 * (MODELS.pendantLight.intensity / 2.6);
+      }
       lampLeds.forEach((m) => { m.emissiveIntensity = from.led + (wantLed - from.led) * e; });
       blueLines.forEach((m) => { m.emissiveIntensity = from.blue + (wantBlue - from.blue) * e; });
       // swap the environment probe mid-fade, hidden inside the moving grade
@@ -1078,14 +1232,34 @@ function initScene(canvas) {
         // Blender rewrites baseColor on texture-stripped materials, so match
         // the two big textured surfaces by GEOMETRY instead: the floor is the
         // 16x16 plane, the walls are the only >3m-tall slabs
+        // node transforms are inconsistent in the export (walls/floor are Y-up
+        // with baked-in transforms, the pendant/desk nodes keep Blender's Z-up
+        // plus a rotation), so every geometry test here must run in WORLD space
         o.geometry.computeBoundingBox();
-        const s = o.geometry.boundingBox.getSize(new THREE.Vector3());
+        const wbb = o.geometry.boundingBox.clone();
+        o.updateWorldMatrix(true, false);
+        wbb.applyMatrix4(o.matrixWorld);
+        const s = wbb.getSize(new THREE.Vector3());
         if (s.x > 10 && s.z > 10 && s.y < 0.5) {
           m.map = fMap; m.normalMap = fNor; m.roughnessMap = fRgh;
           m.color.setHex(COL.floorTint);
         } else if (s.y > 3 && Math.max(s.x, s.z) > 4) {
           m.map = pt.map; m.normalMap = pt.normalMap; m.roughnessMap = pt.roughnessMap;
           m.color.setHex(COL.wallTint);
+        } else if (s.x > 1.7 && s.x < 2.0 && s.y < 0.06 && s.z > 0.8 && s.z < 1.0) {
+          // J1: the desk slab — micro-wear so the largest close-range surface
+          // stops reading injection-molded (map base ≈ its old 0.52 roughness)
+          m.roughnessMap = deskWearTex();
+          m.roughness = 1.0;
+        } else {
+          // H4 rebuilt the pendant (bell shade, canopy, live bulb) as a
+          // real-time group — hide the old cone frozen into the bake, or the
+          // two fixtures overlap at the same hang point
+          const c = wbb.getCenter(new THREE.Vector3());
+          if (c.y > 2.1 && Math.abs(c.x - 0.15) < 0.3 && Math.abs(c.z - 0.35) < 0.3 && Math.max(s.x, s.z) < 0.5) {
+            o.visible = false;
+            return;
+          }
         }
         // the rug's blue LED inlay lines glow for real at night
         if (m.color && m.color.getHexString() === "2b4d80") blueLines.push(m);
@@ -1164,6 +1338,10 @@ function initScene(canvas) {
 
   /* ---------- camera flight system ---------- */
   let flight = null;
+  // per-frame animation state (G-batch): tick delta + printer toolpath run
+  let tickLast = null;
+  let scopeLastDraw = 0;
+  const headRun = { x: 0, dir: 1, dwell: 0, limit: 0.12 };
   function startFlight(toPos, toLook, ms, onDone) {
     flight = {
       fromPos: camera.position.clone(),
@@ -1346,9 +1524,44 @@ function initScene(canvas) {
       }
     }
 
-    // Bambu printer: print head sweeps across the bed while "printing"
+    // Bambu printer: the head runs a real TOOLPATH rhythm — constant-velocity
+    // passes, a short dwell at each turnaround, pass length slightly
+    // randomized. (The old pure sine read as a metronome, not a machine.)
+    const dtms = tickLast === null ? 16.7 : Math.min(100, Math.max(0, t - tickLast));
+    tickLast = t;
     if (!prefersReducedMotion && MODELS.printerHead) {
-      MODELS.printerHead.position.x = Math.sin(t * 0.0032) * 0.13;
+      const hs = headRun;
+      if (hs.dwell > 0) {
+        hs.dwell -= dtms;
+      } else {
+        hs.x += hs.dir * 0.00024 * dtms; // ~0.24 m/s traverse
+        if (hs.dir > 0 ? hs.x >= hs.limit : hs.x <= -hs.limit) {
+          hs.x = hs.dir > 0 ? hs.limit : -hs.limit;
+          hs.dir *= -1;
+          hs.dwell = 120 + Math.random() * 180;             // line-end hitch
+          hs.limit = 0.085 + Math.random() * 0.045;         // next pass length
+        }
+      }
+      MODELS.printerHead.position.x = hs.x;
+    }
+    if (!prefersReducedMotion) {
+      // G2: chamber circulation fan spins while the job runs
+      if (MODELS.chamberFan) MODELS.chamberFan.rotation.z -= dtms * 0.0085;
+      // G4: the blue AMS spool feeds the blue print (slow payout)
+      if (MODELS.activeSpool) MODELS.activeSpool.rotation.x += dtms * 0.00028;
+      // G5: status LED breathes like a real activity indicator
+      if (MODELS.printerStatusLed) {
+        MODELS.printerStatusLed.material.emissiveIntensity = 0.55 + 0.18 * Math.sin(t * 0.0016);
+      }
+      // G1: the scope trace crawls (cheap 128x80 canvas redraw ~11 fps)
+      if (MODELS.scope && t - scopeLastDraw > 90) {
+        scopeLastDraw = t;
+        MODELS.scope.draw(t * 0.0045);
+        MODELS.scope.tex.needsUpdate = true;
+      }
+      // G6: near-subliminal moonlight drift — "there is a real sky out there"
+      moonSpot.target.position.x = 0.85 + 0.05 * Math.sin(t * 0.00008);
+      moonSpot.target.position.z = 0.7 + 0.04 * Math.sin(t * 0.000063 + 1.7);
     }
 
     // focused exhibit slowly turns on its pedestal; DoF opens up
@@ -1413,6 +1626,7 @@ function initScene(canvas) {
       flk = 1 + 0.013 * Math.sin(t * 0.00071) + 0.009 * Math.sin(t * 0.00173) + 0.006 * Math.sin(t * 0.00347);
       if (!spotSteady) resumeSpot.intensity *= flk;
       benchGlow.intensity *= flk;
+      benchBarSpot.intensity *= flk;
       lampLeds.forEach((m) => { m.emissiveIntensity *= flk; });
     }
 
@@ -1421,6 +1635,7 @@ function initScene(canvas) {
     if (flk) {
       if (!spotSteady) resumeSpot.intensity /= flk;
       benchGlow.intensity /= flk;
+      benchBarSpot.intensity /= flk;
       lampLeds.forEach((m) => { m.emissiveIntensity /= flk; });
     }
   };
@@ -2679,33 +2894,95 @@ function buildRoom(scene) {
 
   // (removed: the polished floor reflector strip in front of the display wall)
 
-  // modern black pendant over the desk (neutral light)
+  // modern black pendant over the desk (neutral light). H4: canopy + strain
+  // relief at the slab, a lathe bell shade instead of a bare cone, a warm
+  // inner reflector and a socket collar — the old cone read low-poly up close
   const pendant = new THREE.Group();
+  const pendMat = new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.35, metalness: 0.7, side: THREE.DoubleSide });
+  const canopy = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.058, 0.022, 20), pendMat);
+  canopy.position.y = WALL_H - 0.011;
+  pendant.add(canopy);
+  const relief = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.012, 0.034, 10), pendMat);
+  relief.position.y = WALL_H - 0.038;
+  pendant.add(relief);
   const cord = new THREE.Mesh(
     new THREE.CylinderGeometry(0.004, 0.004, WALL_H - 2.42, 8),
     new THREE.MeshStandardMaterial({ color: 0x101114, roughness: 0.7 })
   );
   cord.position.y = 2.42 + (WALL_H - 2.42) / 2;
   pendant.add(cord);
-  const shade = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.05, 0.17, 0.15, 28, 1, true),
-    new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.35, metalness: 0.7, side: THREE.DoubleSide })
-  );
-  shade.position.y = 2.42;
+  const shadePts = [];
+  for (let i = 0; i <= 12; i++) {
+    const k = i / 12;
+    shadePts.push(new THREE.Vector2(0.05 + 0.12 * Math.pow(1 - k, 1.45), k * 0.15));
+  }
+  shadePts.unshift(new THREE.Vector2(0.165, 0.007)); // rolled lip
+  const shade = new THREE.Mesh(new THREE.LatheGeometry(shadePts, 30), pendMat);
+  shade.position.y = 2.345;
   shade.castShadow = true;
   pendant.add(shade);
+  // matte warm liner, NOT white: a near-white bowl sat at ~1.0 HDR under env +
+  // room light and the bloom pass smeared the whole shade into a blob — the
+  // "lit" read comes from the emissive ramp (applyLightState), not albedo
+  const reflector = new THREE.Mesh(
+    new THREE.LatheGeometry(shadePts.map((p) => new THREE.Vector2(Math.max(0.03, p.x - 0.006), p.y)), 30),
+    new THREE.MeshStandardMaterial({ color: 0x9a9288, roughness: 0.8, side: THREE.BackSide, envMapIntensity: 0.2, emissive: 0xffd9a0, emissiveIntensity: 0.12 })
+  );
+  reflector.position.y = 2.346;
+  pendant.add(reflector);
+  MODELS.pendantShadeInner = reflector; // glows with the light, like the bulb
+  const socket = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.032, 12),
+    new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.5, metalness: 0.4 }));
+  socket.position.y = 2.4;
+  pendant.add(socket);
   const bulb = new THREE.Mesh(
     new THREE.SphereGeometry(0.028, 16, 16),
     new THREE.MeshStandardMaterial({ color: 0xf4f6f8, emissive: 0xe8eef8, emissiveIntensity: 1.0 })
   );
   bulb.position.y = 2.37;
   pendant.add(bulb);
+  MODELS.pendantBulb = bulb; // I1: emissive follows the light's own ramp
   const pendantLight = new THREE.PointLight(0xe8eef8, 2.6, 4.2, 2); // carries the desk now the lamps emit no light
   pendantLight.position.y = 2.32;
   pendant.add(pendantLight);
   MODELS.pendantLight = pendantLight; // exposed so applyLightState (initScene scope) can drive it
   pendant.position.set(0.15, 0, 0.35);
+  // pre-name: the bake shim tags every NAMELESS mesh bk_room and the swap then
+  // hides the whole group — this fixture (and the point light inside it) must
+  // stay real-time, so claim the names first. Layer 2 keeps the fixture out of
+  // reach of its own point light (see the light rig).
+  pendant.traverse((m) => { if (m.isMesh) { m.name = "rt_pendant"; m.layers.set(2); } });
   scene.add(pendant);
+
+  // H4: the ceiling slab was a bare void — smoke detector + a small square
+  // HVAC diffuser (REAL-TIME meshes: added straight to the scene, no bk_ tag,
+  // so the baked ceiling lightmap is untouched)
+  const ceilWhite = new THREE.MeshStandardMaterial({ color: 0xd8dade, roughness: 0.6 });
+  const smoke = new THREE.Group();
+  const smBase = new THREE.Mesh(new THREE.CylinderGeometry(0.056, 0.06, 0.018, 20), ceilWhite);
+  smBase.position.y = -0.009;
+  smoke.add(smBase);
+  const smDome = new THREE.Mesh(new THREE.CylinderGeometry(0.038, 0.05, 0.016, 20), ceilWhite);
+  smDome.position.y = -0.025;
+  smoke.add(smDome);
+  const smLed = new THREE.Mesh(new THREE.SphereGeometry(0.0045, 8, 8),
+    new THREE.MeshStandardMaterial({ color: 0x1a3326, emissive: 0x35d17a, emissiveIntensity: 1.3 }));
+  smLed.position.set(0.028, -0.031, 0);
+  smoke.add(smLed);
+  smoke.position.set(-1.0, WALL_H, 1.6);
+  smoke.traverse((m) => { if (m.isMesh) m.name = "rt_ceiling"; }); // same: dodge the bk_ shim
+  scene.add(smoke);
+  const diffuser = new THREE.Group();
+  const dfFrame = new THREE.Mesh(new RoundedBoxGeometry(0.42, 0.02, 0.42, 2, 0.005), ceilWhite);
+  diffuser.add(dfFrame);
+  [0.32, 0.22, 0.12].forEach((s, i) => {
+    const ring = new THREE.Mesh(new RoundedBoxGeometry(s, 0.014, s, 2, 0.004), ceilWhite);
+    ring.position.y = -0.006 - i * 0.006; // stepped concentric cones
+    diffuser.add(ring);
+  });
+  diffuser.position.set(1.15, WALL_H - 0.01, 1.75);
+  diffuser.traverse((m) => { if (m.isMesh) m.name = "rt_ceiling"; });
+  scene.add(diffuser);
 }
 
 function buildDesk() {
@@ -3022,7 +3299,9 @@ function buildModernDeskLamp() {
   // code keys off: emissive material, intensity in the dim "off" range)
   const led = new THREE.Mesh(
     new THREE.BoxGeometry(0.02, 0.006, 0.11),
-    new THREE.MeshStandardMaterial({ color: 0xe8ebf0, emissive: 0xdfe6f0, emissiveIntensity: 0.05 })
+    // J4: warm-white to MATCH the amber pool it casts (resumeSpot 0xffdcae) —
+    // a cool-white strip producing warm light was a physical contradiction
+    new THREE.MeshStandardMaterial({ color: 0xe8ebf0, emissive: 0xffe6c2, emissiveIntensity: 0.05 })
   );
   led.position.set(0, -0.032, 0);
   headGroup.add(led);
@@ -3179,7 +3458,10 @@ function buildWorkbench() {
   const g = new THREE.Group();
   const steel = new THREE.MeshStandardMaterial({ color: 0x2e3136, roughness: 0.45, metalness: 0.8 });
   const darkPlastic = new THREE.MeshStandardMaterial({ color: 0x1b1d21, roughness: 0.5, metalness: 0.2 });
-  const toolSteel = new THREE.MeshStandardMaterial({ color: 0x9aa0a8, metalness: 0.9, roughness: 0.4 });
+  // I3: roughness 0.4 + metalness 0.9 on small high-curvature tools clipped
+  // the key light's specular past the bloom threshold — a phantom white orb
+  // on the hammer head / tape clip. Satin tool steel reads truer anyway.
+  const toolSteel = new THREE.MeshStandardMaterial({ color: 0x9aa0a8, metalness: 0.9, roughness: 0.56 });
   const TOP_Y = 0.78;
 
   // bench: butcher-block top on steel legs + lower shelf
@@ -3507,7 +3789,10 @@ function buildWorkbench() {
 
   // programmable bench PSU with a live readout
   const psu = new THREE.Group();
-  const psuBody = new THREE.Mesh(new RoundedBoxGeometry(0.21, 0.105, 0.17, 2, 0.008), darkPlastic);
+  // J3: brushed dark-alu case — the PSU/scope/solder station were three
+  // identical molded boxes; real bench gear mixes metal chassis with plastic
+  const psuBody = new THREE.Mesh(new RoundedBoxGeometry(0.21, 0.105, 0.17, 2, 0.008),
+    new THREE.MeshStandardMaterial({ color: 0x30353c, roughness: 0.38, metalness: 0.55, roughnessMap: brushedRoughTex() }));
   psuBody.position.y = 0.0525;
   psu.add(psuBody);
   const dc = document.createElement("canvas");
@@ -3580,6 +3865,21 @@ function buildWorkbench() {
     g.add(tip);
   };
   [-0.66, -0.5, -0.34, -0.18, 0.02, 0.22, 0.42, 0.62].forEach((hx) => mkHook(hx, 1.06));
+  // H2: the DISPLAYED tools hung flush on the board with no support — they
+  // read as decals next to the fully-modeled empty hooks below. One or two
+  // hooks per tool at its actual hang point:
+  mkHook(-0.82, TOP_Y + 0.745);                       // steel rule (top hole)
+  mkHook(-0.56, TOP_Y + 0.585); mkHook(-0.44, TOP_Y + 0.585); // drill body cradle
+  mkHook(-0.18, TOP_Y + 0.63);                        // dremel clip
+  mkHook(0.115, TOP_Y + 0.70); mkHook(0.24, TOP_Y + 0.49);    // torque wrench shaft
+  mkHook(0.563, TOP_Y + 0.69);                        // comb wrench ring
+  mkHook(0.7725, TOP_Y + 0.648);                      // pliers head
+  mkHook(-0.68, TOP_Y + 0.705);                       // caliper beam
+  mkHook(-0.02, TOP_Y + 0.643); mkHook(0.06, TOP_Y + 0.643);  // hammer head rest
+  mkHook(0.905, TOP_Y + 0.612);                       // flush cutters
+  mkHook(0.648, TOP_Y + 0.535);                       // tape measure clip
+  mkHook(-0.62, TOP_Y + 0.812); mkHook(-0.48, TOP_Y + 0.812); // torpedo level
+  for (let i = 0; i < 5; i++) mkHook(-0.32 + i * 0.036, TOP_Y + 0.856); // hung hex keys
   psu.rotation.y = -0.06;
   g.add(psu);
 
@@ -3729,7 +4029,9 @@ function buildWorkbench() {
   scope.add(scBody);
   const scCanvas = document.createElement("canvas");
   scCanvas.width = 128; scCanvas.height = 80;
-  {
+  // G1: the trace is a live capture — drawScope(phase) is re-run by the
+  // render loop (~10 fps) so both channels crawl like a running scope
+  const drawScope = (phase) => {
     const oc = scCanvas.getContext("2d");
     oc.fillStyle = "#060a0d"; oc.fillRect(0, 0, 128, 80);
     oc.strokeStyle = "#14283a"; oc.lineWidth = 1;
@@ -3737,17 +4039,25 @@ function buildWorkbench() {
     for (let y = 0; y <= 80; y += 16) { oc.beginPath(); oc.moveTo(0, y); oc.lineTo(128, y); oc.stroke(); }
     // CH1: yellow sine
     oc.strokeStyle = "#e8c33c"; oc.lineWidth = 2; oc.beginPath();
-    for (let x = 0; x <= 128; x++) { const y = 28 - Math.sin(x * 0.16) * 12; x === 0 ? oc.moveTo(x, y) : oc.lineTo(x, y); }
+    for (let x = 0; x <= 128; x++) { const y = 28 - Math.sin(x * 0.16 + phase) * 12; x === 0 ? oc.moveTo(x, y) : oc.lineTo(x, y); }
     oc.stroke();
     // CH2: cyan square wave
     oc.strokeStyle = "#3fc9e0"; oc.lineWidth = 2; oc.beginPath();
-    for (let x = 0; x <= 128; x++) { const y = ((x >> 4) & 1) ? 62 : 48; x === 0 ? oc.moveTo(x, y) : oc.lineTo(x, y); }
+    const sq = Math.floor(phase / 0.16);
+    for (let x = 0; x <= 128; x++) { const y = (((x + sq) >> 4) & 1) ? 62 : 48; x === 0 ? oc.moveTo(x, y) : oc.lineTo(x, y); }
     oc.stroke();
     oc.fillStyle = "#9aa4b0"; oc.font = "600 8px Arial";
     oc.fillText("CH1 2V", 4, 10); oc.fillText("500us", 96, 10);
-  }
+  };
+  drawScope(0);
   const scTex = new THREE.CanvasTexture(scCanvas);
   scTex.colorSpace = THREE.SRGBColorSpace;
+  MODELS.scope = { draw: drawScope, tex: scTex };
+  // J3: brushed-alu fascia plate behind the screen breaks up the molded box
+  const scBezel = new THREE.Mesh(new RoundedBoxGeometry(0.118, 0.08, 0.004, 2, 0.003),
+    new THREE.MeshStandardMaterial({ color: 0x8f959d, roughness: 0.32, metalness: 0.7, roughnessMap: brushedRoughTex() }));
+  scBezel.position.set(-0.028, 0.062, 0.0412);
+  scope.add(scBezel);
   const scScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 0.062),
     new THREE.MeshStandardMaterial({ map: scTex, color: 0x8f9298, emissive: 0xffffff, emissiveMap: scTex, emissiveIntensity: 0.55 }));
   scScreen.position.set(-0.028, 0.062, 0.0435);
@@ -3852,6 +4162,7 @@ function buildBambuPrinter() {
     new THREE.MeshStandardMaterial({ color: 0x1b4f43, emissive: 0x22c39c, emissiveIntensity: 0.7 }));
   statusLed.position.set(0, 0.036, D / 2 + 0.0075);
   g.add(statusLed);
+  MODELS.printerStatusLed = statusLed; // G5: breathes while "printing"
 
   // printing chamber behind the glass
   const chamber = new THREE.Mesh(
@@ -4058,6 +4369,7 @@ function buildBambuPrinter() {
   // z = -0.10; the frame (half-depth 0.006) sits flush against it
   fanG.position.set(0.09, 0.3, -0.094);
   g.add(fanG);
+  MODELS.chamberFan = fanG; // G2: spins in the render loop
   const inner = new THREE.PointLight(0xeaf2ff, 0.38, 0.8, 2);
   inner.position.set(0, doorH - 0.06, D / 2 - 0.16);
   g.add(inner);
@@ -4194,6 +4506,9 @@ function buildBambuPrinter() {
     sp.rotation.z = Math.PI / 2;
     sp.position.set(-amsW / 2 + 0.075 + i * 0.095, amsH + 0.055, 0);
     ams.add(sp);
+    // G4: the blue spool feeds the blue bracket on the bed — it slowly turns
+    // (rotation.x spins about the axle: XYZ euler applies Rz(π/2) first)
+    if (i === 1) MODELS.activeSpool = sp;
   });
   // smoked half-cylinder cover along the width (sized to clear the spools)
   const cover = new THREE.Mesh(
@@ -4511,6 +4826,13 @@ function buildWeldingCart() {
     new THREE.MeshStandardMaterial({ map: tigTex, emissive: 0xffffff, emissiveMap: tigTex, emissiveIntensity: 0.25, roughness: 0.6 }));
   tigFace.position.set(0.11, 0.63, 0.152);
   g.add(tigFace);
+  // I4 + J7: the amp readout casts a contained warm pool — it was the only
+  // bright pixel in the darkest corner, floating in black; this also gives
+  // the cool-graded room its second warm anchor (the desk lamp is the first)
+  const tigGlow = new THREE.PointLight(0xffb066, 0.8, 0.9, 2);
+  tigGlow.position.set(0.11, 0.62, 0.22);
+  g.add(tigGlow);
+  MODELS.tigGlow = tigGlow; // runBootIntro darkens + restrikes it with the room
   const tigHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.007, 0.2, 8), darkPl);
   tigHandle.rotation.z = Math.PI / 2;
   tigHandle.position.set(0.11, 0.75, 0);
@@ -4610,7 +4932,9 @@ function buildWeldingCart() {
   // curved bottle floats off the surface from every side angle
   const label = new THREE.Mesh(
     new THREE.CylinderGeometry(0.0757, 0.0757, 0.06, 24, 1, true, -0.75, 1.5),
-    new THREE.MeshBasicMaterial({ map: argonTex, transparent: true }));
+    // I6: LIT material — MeshBasic ignored the room lighting and the stencil
+    // glowed like a sticker in the dark
+    new THREE.MeshStandardMaterial({ map: argonTex, transparent: true, roughness: 0.8 }));
   label.position.set(-0.16, 0.86, -0.02);
   g.add(label);
   // retaining strap from the cylinder to the handle uprights
@@ -4805,9 +5129,285 @@ function buildFireExtinguisher() {
   labelTex.colorSpace = THREE.SRGBColorSpace;
   const label = new THREE.Mesh(
     new THREE.CylinderGeometry(0.0525, 0.0525, 0.09, 20, 1, true, -0.55, 1.1),
-    new THREE.MeshBasicMaterial({ map: labelTex, transparent: false }));
+    // I6: lit material — the Basic label glowed at night
+    new THREE.MeshStandardMaterial({ map: labelTex, roughness: 0.75 }));
   label.position.y = 0.20;
   g.add(label);
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildWeldScreen() {
+  // K2: two-panel folding weld screen — dark canvas in a steel tube frame,
+  // low (0.62 m) so it shields spatter lines without hiding the corner
+  const g = new THREE.Group();
+  const tube = new THREE.MeshStandardMaterial({ color: 0x2a2d33, roughness: 0.45, metalness: 0.75 });
+  const cloth = new THREE.MeshStandardMaterial({ color: 0x1b1d21, roughness: 0.92, metalness: 0, side: THREE.DoubleSide });
+  const panel = (w) => {
+    const p = new THREE.Group();
+    [[-w / 2 + 0.012, 0], [w / 2 - 0.012, 0]].forEach(([px]) => {
+      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.009, 0.62, 10), tube);
+      post.position.set(px, 0.36, 0);
+      p.add(post);
+      const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.16, 8), tube);
+      foot.rotation.x = Math.PI / 2;
+      foot.position.set(px, 0.012, 0);
+      p.add(foot);
+    });
+    [0.09, 0.66].forEach((ry) => {
+      const rail = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.007, w - 0.02, 8), tube);
+      rail.rotation.z = Math.PI / 2;
+      rail.position.set(0, ry, 0);
+      p.add(rail);
+    });
+    const sheet = new THREE.Mesh(new THREE.PlaneGeometry(w - 0.05, 0.52), cloth);
+    sheet.position.set(0, 0.375, 0);
+    p.add(sheet);
+    return p;
+  };
+  // group origin sits at the bay's open corner; both panels stay well inside
+  // the back wall (z=-1.55) — the first layout pushed the wing through it
+  const a = panel(0.56);            // long panel guards the desk side of the bay
+  a.rotation.y = Math.PI / 2;       // plane normal toward +x (the cart)
+  a.position.set(0, 0, 0);          // spans group z -0.28..+0.28
+  g.add(a);
+  const b = panel(0.5);             // hinged wing folds across the bay's front
+  // 25° swing (not more): the far foot must stay behind the z=-0.4 walkway
+  // line, and the near post lands flush on panel a's front post (the hinge)
+  b.rotation.y = -Math.PI * 0.14;
+  b.position.set(0.2153, 0, 0.3693);
+  g.add(b);
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildHotWorkMark() {
+  // K3: hazard-striped border marking the welding footprint on the concrete
+  const c = document.createElement("canvas");
+  c.width = 512; c.height = 400;
+  const x = c.getContext("2d");
+  x.clearRect(0, 0, 512, 400);
+  const BW = 26; // border thickness in px
+  x.save();
+  x.beginPath();
+  x.rect(0, 0, 512, 400);
+  x.rect(BW, BW, 512 - 2 * BW, 400 - 2 * BW);
+  x.clip("evenodd");
+  x.fillStyle = "rgba(225,228,233,0.85)";
+  x.fillRect(0, 0, 512, 400);
+  x.strokeStyle = "rgba(24,25,28,0.9)";
+  x.lineWidth = 14;
+  for (let d = -400; d < 912; d += 34) {
+    x.beginPath(); x.moveTo(d, 0); x.lineTo(d + 400, 400); x.stroke();
+  }
+  x.restore();
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(1.15, 0.9),
+    new THREE.MeshStandardMaterial({ map: tex, transparent: true, roughness: 0.9, depthWrite: false }));
+  m.rotation.x = -Math.PI / 2;
+  m.position.set(1.64, 0.0028, -0.98);
+  m.receiveShadow = true;
+  return m;
+}
+
+function buildFloorStains() {
+  // J5: weld-corner grime — dark stains + caster scuff arcs on the concrete
+  const c = document.createElement("canvas");
+  c.width = c.height = 512;
+  const x = c.getContext("2d");
+  x.clearRect(0, 0, 512, 512);
+  const blob = (bx, by, r, a) => {
+    const g2 = x.createRadialGradient(bx, by, 0, bx, by, r);
+    g2.addColorStop(0, `rgba(16,17,19,${a})`);
+    g2.addColorStop(1, "rgba(16,17,19,0)");
+    x.fillStyle = g2;
+    x.fillRect(bx - r, by - r, r * 2, r * 2);
+  };
+  blob(180, 300, 120, 0.42);
+  blob(330, 180, 90, 0.3);
+  blob(390, 360, 70, 0.35);
+  blob(120, 140, 55, 0.22);
+  x.strokeStyle = "rgba(22,23,26,0.4)";
+  for (let i = 0; i < 9; i++) {
+    x.lineWidth = 3 + Math.random() * 4;
+    const cx = 80 + Math.random() * 360, cy = 80 + Math.random() * 360;
+    const r = 40 + Math.random() * 120;
+    const a0 = Math.random() * 6.28;
+    x.beginPath(); x.arc(cx, cy, r, a0, a0 + 0.5 + Math.random()); x.stroke();
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 1.2),
+    new THREE.MeshStandardMaterial({ map: tex, transparent: true, roughness: 0.98, depthWrite: false }));
+  m.rotation.x = -Math.PI / 2;
+  m.position.set(1.62, 0.0021, -0.95);
+  m.receiveShadow = true;
+  return m;
+}
+
+function buildLabStool() {
+  // K5: rolling lab stool for the electronics bench
+  const g = new THREE.Group();
+  const dark = new THREE.MeshStandardMaterial({ color: 0x1b1d21, roughness: 0.6, metalness: 0.2 });
+  const steel = new THREE.MeshStandardMaterial({ color: 0x8f959d, roughness: 0.35, metalness: 0.85 });
+  const seat = new THREE.Mesh(new THREE.CylinderGeometry(0.155, 0.145, 0.05, 22), dark);
+  seat.position.y = 0.56;
+  g.add(seat);
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.3, 12), steel);
+  post.position.y = 0.38;
+  g.add(post);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.14, 0.008, 8, 24), steel);
+  ring.rotation.x = Math.PI / 2;
+  ring.position.y = 0.24;
+  g.add(ring);
+  [0, 1, 2, 3, 4].forEach((i) => {
+    const a = (i / 5) * Math.PI * 2;
+    const leg = new THREE.Mesh(new RoundedBoxGeometry(0.24, 0.024, 0.036, 2, 0.008), dark);
+    leg.position.set(Math.cos(a) * 0.12, 0.1, Math.sin(a) * 0.12);
+    leg.rotation.y = -a;
+    g.add(leg);
+    const wheel = new THREE.Mesh(new THREE.SphereGeometry(0.026, 12, 10), dark);
+    wheel.position.set(Math.cos(a) * 0.22, 0.032, Math.sin(a) * 0.22);
+    g.add(wheel);
+  });
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildScrapBin() {
+  // K6: perforated sheet-steel scrap bin with a few tube offcuts
+  const g = new THREE.Group();
+  const c = document.createElement("canvas");
+  c.width = c.height = 128;
+  const x = c.getContext("2d");
+  x.fillStyle = "#2c2f34";
+  x.fillRect(0, 0, 128, 128);
+  x.fillStyle = "#17181c";
+  for (let py = 8; py < 128; py += 14)
+    for (let px = ((py / 14) % 2) * 7 + 6; px < 128; px += 14) {
+      x.beginPath(); x.arc(px, py, 2.6, 0, 7); x.fill();
+    }
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const perf = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.5, metalness: 0.6, side: THREE.DoubleSide });
+  const W = 0.28, H = 0.34, D = 0.28, TH = 0.006;
+  [[W, H, TH, 0, H / 2, -D / 2], [W, H, TH, 0, H / 2, D / 2],
+   [TH, H, D, -W / 2, H / 2, 0], [TH, H, D, W / 2, H / 2, 0],
+   [W, TH, D, 0, TH / 2, 0]].forEach(([w, h, d, px, py, pz]) => {
+    const p = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), perf);
+    p.position.set(px, py, pz);
+    g.add(p);
+  });
+  const rim = new THREE.Mesh(new THREE.BoxGeometry(W + 0.014, 0.014, D + 0.014),
+    new THREE.MeshStandardMaterial({ color: 0x3a3e45, roughness: 0.4, metalness: 0.7 }));
+  rim.position.y = H;
+  g.add(rim);
+  // offcuts leaning inside
+  const stockMat = new THREE.MeshStandardMaterial({ color: 0x9aa0a8, roughness: 0.45, metalness: 0.85 });
+  [[0.05, -0.03, 0.28, 0.24], [-0.04, 0.05, 0.34, -0.3], [0.0, 0.06, 0.3, 0.5]].forEach(([px, pz, len, tilt], i) => {
+    const r = 0.012 - i * 0.002;
+    const bar = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, 10), stockMat);
+    bar.position.set(px, H - 0.06 + len / 6, pz);
+    bar.rotation.z = tilt;
+    bar.rotation.x = tilt * 0.6;
+    g.add(bar);
+  });
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  return g;
+}
+
+function buildCuttingMatOverlay() {
+  // J1: gridded self-healing cutting mat skin over the baked black desk pad
+  const c = document.createElement("canvas");
+  c.width = 448; c.height = 512;
+  const x = c.getContext("2d");
+  x.fillStyle = "#16181d";
+  x.fillRect(0, 0, 448, 512);
+  const cm = 448 / 42; // ~1 cm grid on the 0.44 m width, 3 cm margins
+  x.strokeStyle = "rgba(96,130,168,0.28)";
+  x.lineWidth = 1;
+  for (let gx = 3 * cm; gx <= 448 - 3 * cm + 0.1; gx += cm) {
+    x.beginPath(); x.moveTo(gx, 3 * cm); x.lineTo(gx, 512 - 3 * cm); x.stroke();
+  }
+  for (let gy = 3 * cm; gy <= 512 - 3 * cm + 0.1; gy += cm) {
+    x.beginPath(); x.moveTo(3 * cm, gy); x.lineTo(448 - 3 * cm, gy); x.stroke();
+  }
+  x.strokeStyle = "rgba(150,182,214,0.5)";
+  x.lineWidth = 1.6;
+  for (let gx = 3 * cm; gx <= 448 - 3 * cm + 0.1; gx += 5 * cm) {
+    x.beginPath(); x.moveTo(gx, 3 * cm); x.lineTo(gx, 512 - 3 * cm); x.stroke();
+  }
+  for (let gy = 3 * cm; gy <= 512 - 3 * cm + 0.1; gy += 5 * cm) {
+    x.beginPath(); x.moveTo(3 * cm, gy); x.lineTo(448 - 3 * cm, gy); x.stroke();
+  }
+  // border + corner diagonals + quiet branding
+  x.strokeStyle = "rgba(150,182,214,0.6)";
+  x.lineWidth = 2;
+  x.strokeRect(2 * cm, 2 * cm, 448 - 4 * cm, 512 - 4 * cm);
+  x.beginPath(); x.moveTo(3 * cm, 8 * cm); x.lineTo(8 * cm, 3 * cm); x.stroke();
+  x.beginPath(); x.moveTo(448 - 3 * cm, 512 - 8 * cm); x.lineTo(448 - 8 * cm, 512 - 3 * cm); x.stroke();
+  x.fillStyle = "rgba(150,182,214,0.55)";
+  x.font = "700 16px Arial";
+  x.fillText("A2", 2 * cm + 6, 512 - 2 * cm - 8);
+  x.font = "600 11px Arial";
+  x.fillText("SELF-HEALING CUTTING MAT", 2 * cm + 34, 512 - 2 * cm - 10);
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const m = new THREE.Mesh(new RoundedBoxGeometry(0.445, 0.0016, 0.505, 1, 0.0006),
+    new THREE.MeshStandardMaterial({ map: tex, roughness: 0.88, metalness: 0.02 }));
+  m.position.set(0.02, 0.7729, 0.16); // 0.9 mm above the baked pad's top face
+  m.receiveShadow = true;
+  return m;
+}
+
+function buildDeskTools() {
+  // K7: three quiet everyday tools on the desk's far corner
+  const g = new THREE.Group();
+  const steel = new THREE.MeshStandardMaterial({ color: 0x9aa0a8, roughness: 0.5, metalness: 0.85 });
+  const dark = new THREE.MeshStandardMaterial({ color: 0x1f2126, roughness: 0.55, metalness: 0.1 });
+  // small screwdriver
+  const sd = new THREE.Group();
+  const sdShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.0028, 0.0028, 0.075, 8), steel);
+  sdShaft.position.y = 0.0;
+  sd.add(sdShaft);
+  const sdHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.0075, 0.0065, 0.048, 10),
+    new THREE.MeshStandardMaterial({ color: 0x2b66d9, roughness: 0.45 }));
+  sdHandle.position.y = 0.058;
+  sd.add(sdHandle);
+  sd.rotation.z = Math.PI / 2;
+  sd.rotation.y = 0.35;
+  sd.position.set(0.66, 0.7695, -0.3);
+  g.add(sd);
+  // single L hex key
+  const hk = new THREE.Group();
+  const hkLong = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.07, 6), steel);
+  hk.add(hkLong);
+  const hkShort = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.024, 6), steel);
+  hkShort.rotation.z = Math.PI / 2;
+  hkShort.position.set(0.011, 0.032, 0);
+  hk.add(hkShort);
+  hk.rotation.z = Math.PI / 2;
+  hk.rotation.x = Math.PI / 2;
+  hk.rotation.y = 0.15;
+  hk.position.set(0.72, 0.7695, -0.24);
+  g.add(hk);
+  // matte pencil with a steel ferrule
+  const pen = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.0032, 0.0032, 0.13, 6), dark);
+  pen.add(body);
+  const ferrule = new THREE.Mesh(new THREE.CylinderGeometry(0.0033, 0.0033, 0.012, 8), steel);
+  ferrule.position.y = 0.068;
+  pen.add(ferrule);
+  const tip = new THREE.Mesh(new THREE.ConeGeometry(0.0032, 0.012, 8),
+    new THREE.MeshStandardMaterial({ color: 0xc9b28a, roughness: 0.8 }));
+  tip.rotation.x = Math.PI;
+  tip.position.y = -0.071;
+  pen.add(tip);
+  pen.rotation.z = Math.PI / 2;
+  pen.rotation.y = -0.2;
+  pen.position.set(0.7, 0.7692, -0.36);
+  g.add(pen);
   g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
 }

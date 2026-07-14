@@ -256,7 +256,71 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-13 (latest) fully-white lettering + wood bottom shelf + solid drawers
+### 2026-07-13 (latest) 24-item realism batch (approved: G1-G6, H2, H4, I1-I4, I6, J1-J5, J7, K1-K3, K5-K7)
+- Kefan asked for a 5-dimension realism audit (animation/modeling/lighting/
+  aesthetics/layout) and approved 24 items. NOT approved — do not build:
+  H1 lamp power cables, H3 exhibit cradles, I5 screen bounce light, J6 wall
+  card, K4 stock rack.
+- **Animation (G)**: tick() is dtms-based now (tickLast); printer head runs a
+  dwell/turnaround state machine instead of a sine; chamber fan + active spool
+  spin; status LED breathes; scope redraws every 90 ms via MODELS.scope.draw;
+  the moon target drifts very slowly.
+- **Modeling (H)**: pegboard hooks under ~13 hanging tools; pendant rebuilt
+  (canopy + strain relief + lathe bell shade + warm liner + socket + bulb);
+  ceiling smoke detector (-1.0, 3.4, 1.6) + HVAC diffuser (1.15, 3.39, 1.75).
+- **Lighting (I)**: pendant bulb + shade-liner emissive follow the light's
+  day/night ramp (both applyLightState branches); benchBarSpot spotlights the
+  bench and rides the bench ramp + night flicker; TIG corner has a warm 0.8
+  point glow; ARGON/extinguisher labels are MeshStandard now (no night glow).
+- **Aesthetics (J)**: desk slab gets a micro-wear roughness map INJECTED INTO
+  THE BAKED GLB's material (buildDesk is hidden at runtime — editing it does
+  nothing); cabinet frames brushed-rough; lamp LED warm white; PSU brushed
+  alu; scope got a bezel plate; cutting mat replaces the black desk pad look.
+- **Layout (K)**: cutting-mat overlay floats 0.9 mm above the baked desk pad
+  at (0.02, 0.7729, 0.16); folding weld screen (1.22, 0, -0.97) — panel a
+  spans z -1.24..-0.70 at x 1.22, 25° wing hinged flush on a's front post,
+  far post (1.65, -0.50); NOTE the back wall is at z=-1.55 (the first layout
+  pushed the wing through it), the yawed cart's caster reaches x=1.324, and
+  the walkway line is z=-0.4 — the skeptics measured all three; 2nd fire
+  extinguisher (2.14, 0, -1.2); hazard-striped hot-work floor marking + faint
+  floor stains under the TIG corner; lab stool (-1.82, 0, -0.72); scrap bin
+  (-2.14, 0, 1.62); small hand tools on the desk's far corner.
+- **THREE BAKE-LAYER TRAPS hit and fixed — read before touching buildRoom or
+  the baked GLB callback:**
+  1. buildRoom's `scene` param is a SHIM whose add() names every NAMELESS
+     mesh `bk_room`; the swap then hides the whole top-level group. Anything
+     added inside buildRoom that must stay real-time needs its meshes
+     pre-named (`rt_pendant`, `rt_ceiling`) BEFORE scene.add. The new pendant
+     +smoke detector+diffuser were invisible until named — and the pendant
+     POINT LIGHT had been dead since the bake (it sits inside the hidden
+     group), so applyLightState's pendant ramp did nothing until now.
+  2. room-baked.glb node transforms are INCONSISTENT (walls/floor Y-up with
+     baked-in transforms; pendant/desk nodes Z-up + rotation). Every geometry
+     test in the GLB traverse now runs on a WORLD-space bbox
+     (updateWorldMatrix + applyMatrix4). The old local-space desk-slab test
+     had NEVER matched — J1 desk wear silently no-opped until this fix. The
+     old baked pendant (3 meshes near x .15 z .35 y>2.1) is hidden there too.
+  3. The revived pendant light nuked its own shade: physical decay at cm
+     range + near-white liner ≈ 1.0 HDR + UnrealBloom = white blob (day AND
+     night). Fix: fixture meshes live on light-layer 2 (camera/key/hemi/fill
+     enable it; the point light stays layer 0 so it can't hit the fixture),
+     and the liner is matte warm grey 0x9a9288 with an emissive ramp
+     (MODELS.pendantShadeInner) instead of white albedo.
+- QA gotcha: runLightIntro/runBootIntro animate via REAL rAF — in a hidden/
+  background pane they freeze at their start values (point lights 0, key/hemi
+  at 25%). Set steady-state values by hand before captures; not a site bug.
+- Review fixes (4-dim adversarial workflow, Sonnet-5 xhigh, 4 confirmed
+  findings, all fixed): runBootIntro now blacks out + restrikes benchBarSpot
+  (lamp beat, 5080 ms), tigGlow (right-side leg, 1300 ms; restored in
+  bootRestore because applyLightState doesn't own it) and the pendant
+  (main-cabinet beat, 2600 ms); runLightIntro stages the pendant bulb/liner
+  emissives on the point-light clock (their night values sit under its 0.4
+  emissive gate, so the generic sweep missed them); the weld screen was
+  re-laid — its wing used to stick through the back wall.
+- Verified: bx-*/hx-*/ix-*/jx-* captures (day-boosted + night), console clean.
+  Cache: `exp-realism3-20260713`.
+
+### 2026-07-13 fully-white lettering + wood bottom shelf + solid drawers
 - Kefan round 6: letters still had dark speckle inside; bottom glass shelf
   looked down into the drawer void; drawer fronts read as floating panels.
 - Tire (bl_tire2.py): texture-space close 8->12 px + bold 3 px (seals every
@@ -1299,8 +1363,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-solid-20260713` (3D page styles — in experience.html)
-- `experience.js?v=exp-solid-20260713` (3D page module — in experience.html)
+- `experience.css?v=exp-realism3-20260713` (3D page styles — in experience.html)
+- `experience.js?v=exp-realism3-20260713` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
