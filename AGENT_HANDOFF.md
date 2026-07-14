@@ -256,7 +256,25 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-13 (latest) 24-item realism batch (approved: G1-G6, H2, H4, I1-I4, I6, J1-J5, J7, K1-K3, K5-K7)
+### 2026-07-14 (latest) Kefan corrections to the realism batch
+- **Weld screen (K2) REMOVED** — Kefan: "argon围栏去掉". buildWeldScreen and
+  its set-dressing add are deleted; a comment marks the spot. Do NOT re-add
+  any fence/screen around the TIG corner.
+- **Desk hand tools (K7) REMOVED** — Kefan: "桌面小工具去掉". buildDeskTools
+  deleted; the desk far corner stays clear. Do NOT re-add.
+- **Cutting mat is now 0.72 x 0.52 m LANDSCAPE** (was a near-square
+  0.445 x 0.505 portrait) — Kefan: "改成大一点的长方形". Same center
+  (0.02, 0.7729, 0.16); canvas is 720x520 px at 10 px/cm; still covers the
+  baked pad and clears the desk lamp (base edge ≈ x -0.46) and the slab's
+  front edge (mat front z 0.42 vs slab 0.45).
+- **Chamber-fan rotation fixed** — Kefan: only the frame appeared to spin.
+  MODELS.chamberFan pointed at the whole fanG (frame + guard + blades); the
+  hub + 5 blade spokes now live in a `fanRotor` subgroup and MODELS.chamberFan
+  points at THAT — frame and wire guard stay put, verified across two
+  captures 20 frames apart (guard X static, rotor rotation.z accumulating).
+- Verified: nx-*/px-* captures, console clean. Cache: `exp-tweaks-20260714`.
+
+### 2026-07-13 24-item realism batch (approved: G1-G6, H2, H4, I1-I4, I6, J1-J5, J7, K1-K3, K5-K7)
 - Kefan asked for a 5-dimension realism audit (animation/modeling/lighting/
   aesthetics/layout) and approved 24 items. NOT approved — do not build:
   H1 lamp power cables, H3 exhibit cradles, I5 screen bounce light, J6 wall
@@ -277,14 +295,14 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
   nothing); cabinet frames brushed-rough; lamp LED warm white; PSU brushed
   alu; scope got a bezel plate; cutting mat replaces the black desk pad look.
 - **Layout (K)**: cutting-mat overlay floats 0.9 mm above the baked desk pad
-  at (0.02, 0.7729, 0.16); folding weld screen (1.22, 0, -0.97) — panel a
-  spans z -1.24..-0.70 at x 1.22, 25° wing hinged flush on a's front post,
-  far post (1.65, -0.50); NOTE the back wall is at z=-1.55 (the first layout
-  pushed the wing through it), the yawed cart's caster reaches x=1.324, and
-  the walkway line is z=-0.4 — the skeptics measured all three; 2nd fire
+  at (0.02, 0.7729, 0.16); folding weld screen (REMOVED 2026-07-14 — see the
+  latest entry; useful bounds if placing anything in that bay: back wall
+  z=-1.55, the yawed cart's caster reaches x=1.324, walkway line z=-0.4);
+  2nd fire
   extinguisher (2.14, 0, -1.2); hazard-striped hot-work floor marking + faint
   floor stains under the TIG corner; lab stool (-1.82, 0, -0.72); scrap bin
-  (-2.14, 0, 1.62); small hand tools on the desk's far corner.
+  (-2.14, 0, 1.62); small hand tools on the desk's far corner (REMOVED
+  2026-07-14 — see the latest entry).
 - **THREE BAKE-LAYER TRAPS hit and fixed — read before touching buildRoom or
   the baked GLB callback:**
   1. buildRoom's `scene` param is a SHIM whose add() names every NAMELESS
@@ -1363,8 +1381,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=aesthetics-20260709` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
 - `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-realism3-20260713` (3D page styles — in experience.html)
-- `experience.js?v=exp-realism3-20260713` (3D page module — in experience.html)
+- `experience.css?v=exp-tweaks-20260714` (3D page styles — in experience.html)
+- `experience.js?v=exp-tweaks-20260714` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

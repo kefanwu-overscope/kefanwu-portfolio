@@ -940,14 +940,7 @@ function initScene(canvas) {
   fireExt2.position.set(2.14, 0, -1.2); // behind the cart, against the right corner
   fireExt2.rotation.y = -0.6;
   scene.add(fireExt2);
-  // K2: low folding weld screen between the cart and the display cabinets
-  // (arc spatter next to a wooden guitar is a shop no-go); panels stay under
-  // 0.65 m so the tire and corner remain visible
-  const weldScreen = buildWeldScreen();
-  // x=1.22, NOT 1.24: the cart is yawed 0.35 rad, its nearest caster reaches
-  // x=1.324 — the back foot (x extent ±0.08) needs the extra 2 cm of air
-  weldScreen.position.set(1.22, 0, -0.97);
-  scene.add(weldScreen);
+  // (K2 weld screen REMOVED 2026-07-14 per Kefan — do not re-add)
   // K3: hazard-striped hot-work border on the floor in front of the cart
   scene.add(buildHotWorkMark());
   // J5: weld stains + caster scuffs — the concrete looked poured yesterday
@@ -965,9 +958,7 @@ function initScene(canvas) {
   // J1: the plain black desk pad becomes a gridded self-healing cutting mat
   // (REAL-TIME overlay — the pad itself is baked into the desk GLB)
   scene.add(buildCuttingMatOverlay());
-  // K7: a few quiet everyday tools on the desk's far corner (out of the
-  // resume spotlight — set dressing, not a focal point)
-  scene.add(buildDeskTools());
+  // (K7 desk tools REMOVED 2026-07-14 per Kefan — do not re-add)
   scene.add(buildFloorJoints()); // C2: saw-cut control joints in the slab
   scene.add(buildBenchMat());    // C4: ESD mat + ground lead at the bench
   // C5: lived-in chest top — the chest itself is baked, props ride on top
@@ -4337,10 +4328,13 @@ function buildBambuPrinter() {
   const fanFrame = new THREE.Mesh(new RoundedBoxGeometry(0.078, 0.078, 0.012, 2, 0.004),
     new THREE.MeshStandardMaterial({ color: 0x1a1c20, roughness: 0.55, metalness: 0.3 }));
   fanG.add(fanFrame);
+  // rotor = hub + blades in their own group: ONLY this spins — animating the
+  // whole fanG turned the square frame and guard with it (Kefan 2026-07-14)
+  const fanRotor = new THREE.Group();
   const fanHub = new THREE.Mesh(new THREE.CylinderGeometry(0.013, 0.013, 0.011, 14),
     new THREE.MeshStandardMaterial({ color: 0x4a4e55, roughness: 0.45, metalness: 0.4 }));
   fanHub.rotation.x = Math.PI / 2;
-  fanG.add(fanHub);
+  fanRotor.add(fanHub);
   // blades LIGHT against the dark frame — same-tone blades vanished and the
   // bright guard read as a coil again (review verdict on v2)
   const bladeMat = new THREE.MeshStandardMaterial({ color: 0x8f959d, roughness: 0.4, metalness: 0.6 });
@@ -4351,8 +4345,9 @@ function buildBambuPrinter() {
     blade.position.y = 0.023;
     blade.rotation.y = 0.55; // uniform pitch: local y IS the radial axis here
     bSpoke.add(blade);
-    fanG.add(bSpoke);
+    fanRotor.add(bSpoke);
   }
+  fanG.add(fanRotor);
   const guardMat = new THREE.MeshStandardMaterial({ color: 0x3f4348, roughness: 0.5, metalness: 0.5 });
   [0.016, 0.032].forEach((gr) => {
     const guardRing = new THREE.Mesh(new THREE.TorusGeometry(gr, 0.0011, 6, 20), guardMat);
@@ -4369,7 +4364,7 @@ function buildBambuPrinter() {
   // z = -0.10; the frame (half-depth 0.006) sits flush against it
   fanG.position.set(0.09, 0.3, -0.094);
   g.add(fanG);
-  MODELS.chamberFan = fanG; // G2: spins in the render loop
+  MODELS.chamberFan = fanRotor; // G2: the rotor spins in the render loop, frame stays put
   const inner = new THREE.PointLight(0xeaf2ff, 0.38, 0.8, 2);
   inner.position.set(0, doorH - 0.06, D / 2 - 0.16);
   g.add(inner);
@@ -5137,50 +5132,6 @@ function buildFireExtinguisher() {
   return g;
 }
 
-function buildWeldScreen() {
-  // K2: two-panel folding weld screen — dark canvas in a steel tube frame,
-  // low (0.62 m) so it shields spatter lines without hiding the corner
-  const g = new THREE.Group();
-  const tube = new THREE.MeshStandardMaterial({ color: 0x2a2d33, roughness: 0.45, metalness: 0.75 });
-  const cloth = new THREE.MeshStandardMaterial({ color: 0x1b1d21, roughness: 0.92, metalness: 0, side: THREE.DoubleSide });
-  const panel = (w) => {
-    const p = new THREE.Group();
-    [[-w / 2 + 0.012, 0], [w / 2 - 0.012, 0]].forEach(([px]) => {
-      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.009, 0.62, 10), tube);
-      post.position.set(px, 0.36, 0);
-      p.add(post);
-      const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.16, 8), tube);
-      foot.rotation.x = Math.PI / 2;
-      foot.position.set(px, 0.012, 0);
-      p.add(foot);
-    });
-    [0.09, 0.66].forEach((ry) => {
-      const rail = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.007, w - 0.02, 8), tube);
-      rail.rotation.z = Math.PI / 2;
-      rail.position.set(0, ry, 0);
-      p.add(rail);
-    });
-    const sheet = new THREE.Mesh(new THREE.PlaneGeometry(w - 0.05, 0.52), cloth);
-    sheet.position.set(0, 0.375, 0);
-    p.add(sheet);
-    return p;
-  };
-  // group origin sits at the bay's open corner; both panels stay well inside
-  // the back wall (z=-1.55) — the first layout pushed the wing through it
-  const a = panel(0.56);            // long panel guards the desk side of the bay
-  a.rotation.y = Math.PI / 2;       // plane normal toward +x (the cart)
-  a.position.set(0, 0, 0);          // spans group z -0.28..+0.28
-  g.add(a);
-  const b = panel(0.5);             // hinged wing folds across the bay's front
-  // 25° swing (not more): the far foot must stay behind the z=-0.4 walkway
-  // line, and the near post lands flush on panel a's front post (the hinge)
-  b.rotation.y = -Math.PI * 0.14;
-  b.position.set(0.2153, 0, 0.3693);
-  g.add(b);
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  return g;
-}
-
 function buildHotWorkMark() {
   // K3: hazard-striped border marking the welding footprint on the concrete
   const c = document.createElement("canvas");
@@ -5318,98 +5269,49 @@ function buildScrapBin() {
 }
 
 function buildCuttingMatOverlay() {
-  // J1: gridded self-healing cutting mat skin over the baked black desk pad
+  // J1: gridded self-healing cutting mat over the baked black desk pad.
+  // 0.72 x 0.52 m LANDSCAPE (Kefan 2026-07-14: bigger, clearly rectangular —
+  // the first cut was a near-square 0.445 x 0.505); still fully covers the
+  // baked pad and stays 3 cm inside the desk slab's front edge
+  const W = 720, H = 520; // canvas px, 10 px = 1 cm
   const c = document.createElement("canvas");
-  c.width = 448; c.height = 512;
+  c.width = W; c.height = H;
   const x = c.getContext("2d");
   x.fillStyle = "#16181d";
-  x.fillRect(0, 0, 448, 512);
-  const cm = 448 / 42; // ~1 cm grid on the 0.44 m width, 3 cm margins
+  x.fillRect(0, 0, W, H);
+  const cm = 10;
   x.strokeStyle = "rgba(96,130,168,0.28)";
   x.lineWidth = 1;
-  for (let gx = 3 * cm; gx <= 448 - 3 * cm + 0.1; gx += cm) {
-    x.beginPath(); x.moveTo(gx, 3 * cm); x.lineTo(gx, 512 - 3 * cm); x.stroke();
+  for (let gx = 3 * cm; gx <= W - 3 * cm + 0.1; gx += cm) {
+    x.beginPath(); x.moveTo(gx, 3 * cm); x.lineTo(gx, H - 3 * cm); x.stroke();
   }
-  for (let gy = 3 * cm; gy <= 512 - 3 * cm + 0.1; gy += cm) {
-    x.beginPath(); x.moveTo(3 * cm, gy); x.lineTo(448 - 3 * cm, gy); x.stroke();
+  for (let gy = 3 * cm; gy <= H - 3 * cm + 0.1; gy += cm) {
+    x.beginPath(); x.moveTo(3 * cm, gy); x.lineTo(W - 3 * cm, gy); x.stroke();
   }
   x.strokeStyle = "rgba(150,182,214,0.5)";
   x.lineWidth = 1.6;
-  for (let gx = 3 * cm; gx <= 448 - 3 * cm + 0.1; gx += 5 * cm) {
-    x.beginPath(); x.moveTo(gx, 3 * cm); x.lineTo(gx, 512 - 3 * cm); x.stroke();
+  for (let gx = 3 * cm; gx <= W - 3 * cm + 0.1; gx += 5 * cm) {
+    x.beginPath(); x.moveTo(gx, 3 * cm); x.lineTo(gx, H - 3 * cm); x.stroke();
   }
-  for (let gy = 3 * cm; gy <= 512 - 3 * cm + 0.1; gy += 5 * cm) {
-    x.beginPath(); x.moveTo(3 * cm, gy); x.lineTo(448 - 3 * cm, gy); x.stroke();
+  for (let gy = 3 * cm; gy <= H - 3 * cm + 0.1; gy += 5 * cm) {
+    x.beginPath(); x.moveTo(3 * cm, gy); x.lineTo(W - 3 * cm, gy); x.stroke();
   }
   // border + corner diagonals + quiet branding
   x.strokeStyle = "rgba(150,182,214,0.6)";
   x.lineWidth = 2;
-  x.strokeRect(2 * cm, 2 * cm, 448 - 4 * cm, 512 - 4 * cm);
+  x.strokeRect(2 * cm, 2 * cm, W - 4 * cm, H - 4 * cm);
   x.beginPath(); x.moveTo(3 * cm, 8 * cm); x.lineTo(8 * cm, 3 * cm); x.stroke();
-  x.beginPath(); x.moveTo(448 - 3 * cm, 512 - 8 * cm); x.lineTo(448 - 8 * cm, 512 - 3 * cm); x.stroke();
+  x.beginPath(); x.moveTo(W - 3 * cm, H - 8 * cm); x.lineTo(W - 8 * cm, H - 3 * cm); x.stroke();
   x.fillStyle = "rgba(150,182,214,0.55)";
-  x.font = "700 16px Arial";
-  x.fillText("A2", 2 * cm + 6, 512 - 2 * cm - 8);
-  x.font = "600 11px Arial";
-  x.fillText("SELF-HEALING CUTTING MAT", 2 * cm + 34, 512 - 2 * cm - 10);
+  x.font = "600 13px Arial";
+  x.fillText("SELF-HEALING CUTTING MAT", 2 * cm + 10, H - 2 * cm - 10);
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
-  const m = new THREE.Mesh(new RoundedBoxGeometry(0.445, 0.0016, 0.505, 1, 0.0006),
+  const m = new THREE.Mesh(new RoundedBoxGeometry(0.72, 0.0016, 0.52, 1, 0.0006),
     new THREE.MeshStandardMaterial({ map: tex, roughness: 0.88, metalness: 0.02 }));
   m.position.set(0.02, 0.7729, 0.16); // 0.9 mm above the baked pad's top face
   m.receiveShadow = true;
   return m;
-}
-
-function buildDeskTools() {
-  // K7: three quiet everyday tools on the desk's far corner
-  const g = new THREE.Group();
-  const steel = new THREE.MeshStandardMaterial({ color: 0x9aa0a8, roughness: 0.5, metalness: 0.85 });
-  const dark = new THREE.MeshStandardMaterial({ color: 0x1f2126, roughness: 0.55, metalness: 0.1 });
-  // small screwdriver
-  const sd = new THREE.Group();
-  const sdShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.0028, 0.0028, 0.075, 8), steel);
-  sdShaft.position.y = 0.0;
-  sd.add(sdShaft);
-  const sdHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.0075, 0.0065, 0.048, 10),
-    new THREE.MeshStandardMaterial({ color: 0x2b66d9, roughness: 0.45 }));
-  sdHandle.position.y = 0.058;
-  sd.add(sdHandle);
-  sd.rotation.z = Math.PI / 2;
-  sd.rotation.y = 0.35;
-  sd.position.set(0.66, 0.7695, -0.3);
-  g.add(sd);
-  // single L hex key
-  const hk = new THREE.Group();
-  const hkLong = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.07, 6), steel);
-  hk.add(hkLong);
-  const hkShort = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.024, 6), steel);
-  hkShort.rotation.z = Math.PI / 2;
-  hkShort.position.set(0.011, 0.032, 0);
-  hk.add(hkShort);
-  hk.rotation.z = Math.PI / 2;
-  hk.rotation.x = Math.PI / 2;
-  hk.rotation.y = 0.15;
-  hk.position.set(0.72, 0.7695, -0.24);
-  g.add(hk);
-  // matte pencil with a steel ferrule
-  const pen = new THREE.Group();
-  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.0032, 0.0032, 0.13, 6), dark);
-  pen.add(body);
-  const ferrule = new THREE.Mesh(new THREE.CylinderGeometry(0.0033, 0.0033, 0.012, 8), steel);
-  ferrule.position.y = 0.068;
-  pen.add(ferrule);
-  const tip = new THREE.Mesh(new THREE.ConeGeometry(0.0032, 0.012, 8),
-    new THREE.MeshStandardMaterial({ color: 0xc9b28a, roughness: 0.8 }));
-  tip.rotation.x = Math.PI;
-  tip.position.y = -0.071;
-  pen.add(tip);
-  pen.rotation.z = Math.PI / 2;
-  pen.rotation.y = -0.2;
-  pen.position.set(0.7, 0.7692, -0.36);
-  g.add(pen);
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  return g;
 }
 
 function buildFloorJoints() {
