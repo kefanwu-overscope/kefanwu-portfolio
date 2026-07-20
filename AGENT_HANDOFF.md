@@ -256,7 +256,41 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-14 (latest, 2nd pass) old desk pad peeked out under the cutting mat
+### 2026-07-14 (latest, 3rd pass) site audit batch 1 of ~4 (M1-M6, M8, M9, M13, M14)
+- A 9-dimension Fable-5-max audit produced a 43-item approved plan (ids M*/S*/X*,
+  full list in the session of 2026-07-14; Kefan approves batch-by-batch, 10 at a
+  time). Batch 1, homepage:
+- M1 #skills/#capabilities section heads wrapped in `.section-head.compact >
+  div` (kicker+h2 were auto-placed into the WRONG grid columns; "Capabilities"
+  overflowed the shell by 21px).
+- M2 the late unscoped `.capability-grid` rule is now inside
+  `@media (min-width: 981px)` — it used to override both mobile breakpoints
+  (three 201px columns at 640px). NOTE: desktop columns for .capability-grid
+  come ONLY from this rule; the base rule sets no columns.
+- M3 `.contact-actions` is a right-anchored 272px stacked column; resume is
+  the `.primary` button now ("View resume (PDF)"), mailto demoted.
+- M4 `--hero-pad` = max(old clamp, (100% - --max)/2) — hero shares the 125px
+  section spine at wide viewports (was x=48).
+- M5 telecaster + ftc cards use `card-media--fill` (were letterboxed).
+- M6 `.project-meta` 0.66→0.72rem and `--quiet`→`--muted`; `.footer-grid`
+  `--quiet`→`--muted`; footer's last span lost its inline style (AA contrast).
+- M8 skill matrix = flush spec-sheet rows (240px label + chips grid, bottom
+  hairlines, no boxes); 980px two-column matrix rule removed, ≤720 stacks the
+  row's two columns.
+- M9 nav gained a Resume link (target=_blank, before the 3D Studio pill);
+  contact resume button lost `download` (opens in tab).
+- M13 project grid re-ranked: steering, brakeSim, javelin, ansysCfd,
+  carbonSeat, seat, aura, scanner, formlabs, education, telecaster, ftc, pool,
+  lineFollower — metas renumbered; Pool Sniper sub rewritten with real specs.
+- M14 project-data.js: AURA payload story unified (structure sized for 300 lb,
+  drivetrain tuned at 200 lb working load — five mentions now agree);
+  "six-buckle"→"six-point harness with anti-submarine strap".
+- Verified by DOM measurement at 1440/640 (hero x=125=shell, contact column
+  3×272px, capability-grid 1 col at 640, matrix rows 240px+1fr, meta/footer
+  color rgb(161,161,166)); console clean.
+  Cache: styles.css + project-data.js (both pages) → `audit1-20260714`.
+
+### 2026-07-14 (2nd pass) old desk pad peeked out under the cutting mat
 - Kefan: "新cutting mat下面貌似盖着旧的". Root cause: the mat was authored at
   y=0.7729 believing the baked pad's top was 0.772 — it is actually 0.766
   (pad Mesh_0_22: center (0.02, 0.763, 0.16), 0.44x0.006x0.5, 1 mm proud of
@@ -1393,9 +1427,9 @@ studio. Everything below is LIVE.
 - Windows gotchas: Python cannot write to `/tmp` — write temp files under `C:/Users/oc/AppData/Local/Temp/...`. In `python -c` strings use forward slashes / `os.path.join`, not escaped backslashes. Pasted screenshots land in `C:\Users\oc\AppData\Local\Packages\MicrosoftWindows.Client.Core_cw5n1h2txyewy\TempState\ScreenClip\`.
 
 ### Current cache versions (bump the matching one whenever you edit that file)
-- `styles.css?v=aesthetics-20260709` (in index.html)
+- `styles.css?v=audit1-20260714` (in index.html)
 - `script.js?v=aesthetics-20260709` (in index.html)
-- `project-data.js?v=polish-20260708` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `project-data.js?v=audit1-20260714` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-padfix-20260714` (3D page styles — in experience.html)
 - `experience.js?v=exp-padfix-20260714` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.

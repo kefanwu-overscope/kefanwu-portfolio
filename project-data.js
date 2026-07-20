@@ -198,7 +198,7 @@ const projectData = {
     highlights: [
       "Validated cockpit fit across ~20 drivers of varying heights with CAD body positioning and physical fit studies.",
       "Accommodated the shortest-to-tallest driver range through a booster strategy and flexible mounting points.",
-      "Upgraded restraint to a six-buckle harness with an anti-submarine belt on a dedicated chassis bar.",
+      "Upgraded restraint to a six-point harness with an anti-submarine strap on a dedicated chassis bar.",
       "Mounted the seat on welded chassis tabs and multiple hard points for reliable retention and fast service access.",
       "Packaged the seat inside the cockpit template alongside the steering column, pedal tray, and bodywork."
     ],
@@ -224,7 +224,7 @@ const projectData = {
         title: "Mounting and harness interfaces",
         points: [
           "Developed mounting concepts using chassis-welded tabs, multiple seat hard points, and dedicated harness bars or tabs.",
-          "Upgraded the harness toward six buckles with an anti-submarine belt on a dedicated chassis bar.",
+          "Upgraded the harness to a six-point layout with an anti-submarine strap on a dedicated chassis bar.",
           "Connected the seat package to the surrounding cockpit systems: pedal tray, steering column, frame tubes, and bodywork."
         ]
       },
@@ -486,9 +486,9 @@ const projectData = {
       ],
     },
     summary:
-      "Front-wheel swerve drive system for Project AURA, an autonomous cart that can load 300lbs. My mechanical focus was the drive and steering package: independent front-wheel steering, chain-driven steering reduction, DC drive motors, robust shafts, and fabricated steel mounts.",
+      "Front-wheel swerve drive system for Project AURA, an autonomous cart structurally sized for a 300 lb payload. My mechanical focus was the drive and steering package: independent front-wheel steering, chain-driven steering reduction, DC drive motors, robust shafts, and fabricated steel mounts.",
     highlights: [
-      "Owned the mechanical swerve drive direction for a cart designed to carry 200 lb while remaining steerable and autonomous.",
+      "Owned the mechanical swerve drive direction for a cart structurally sized for 300 lb — drivetrain tuned around a 200 lb working load — while remaining steerable and autonomous.",
       "Used two front drive modules so the robot could combine drive and steering at the front while preserving maneuverability.",
       "Designed around Ackermann-aware independent steering to reduce scrub and improve turning behavior under heavy load.",
       "Packaged MY1016Z6 24 V DC drive motors with a 9:16 sprocket ratio for traction and acceleration under load.",
@@ -510,7 +510,7 @@ const projectData = {
         title: "Swerve-drive responsibility",
         points: [
           "My AURA contribution centered on the front-wheel swerve drive system rather than the whole autonomy stack.",
-          "The project goal was a smart autonomous cart, but the mechanical requirement I focused on was making the cart drive, steer, and carry a 200 lb load reliably.",
+          "The project goal was a smart autonomous cart, but the mechanical requirement I focused on was making the cart drive, steer, and carry its payload reliably — structure sized for 300 lb, drivetrain tuned at a 200 lb working load.",
           "Putting both drive and steering in the front modules created a compact but demanding packaging problem: motors, sprockets, shafts, chains, bearings, and mounts all had to coexist around the wheel."
         ]
       },
@@ -525,7 +525,7 @@ const projectData = {
       {
         title: "Drive and load path",
         points: [
-          "The drive system uses two MY1016Z6 24 V DC motors with a 9:16 sprocket ratio, targeting acceleration around 1 m/s^2 with a 200 lb payload.",
+          "The drive system uses two MY1016Z6 24 V DC motors with a 9:16 sprocket ratio, targeting acceleration around 1 m/s^2 at a 200 lb working load.",
           "Wheel position feedback came from LPD3806 encoders mounted to the 3/8 in front wheel shafts, giving the system speed and displacement information.",
           "The drivetrain relied on heavy-duty solid rubber wheels, eight bearings across the wheel assemblies, and steel shafts with redundancy for expected load cases."
         ]
