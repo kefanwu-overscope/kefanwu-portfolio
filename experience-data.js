@@ -26,8 +26,8 @@ export const RESUME = {
     { group: "Software & leadership",   items: ["Team management", "Automation / scripting"] },
   ],
   contact: [
-    { label: "kwu@olin.edu",          href: "mailto:kwu@olin.edu" },
-    { label: "kefanwu8888@gmail.com", href: "mailto:kefanwu8888@gmail.com" },
-    { label: "LinkedIn",              href: "https://www.linkedin.com/in/kefan-wu-olin/" },
+    { label: "kwu@olin.edu",           href: "mailto:kwu@olin.edu" },
+    { label: "LinkedIn",               href: "https://www.linkedin.com/in/kefan-wu-olin/" },
+    { label: "Download resume (PDF)",  href: "assets/kefan-wu-resume.pdf" },
   ],
 };

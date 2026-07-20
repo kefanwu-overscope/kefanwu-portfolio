@@ -256,7 +256,49 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-14 (latest, 4th pass) site audit batch 2 (M12, M16, M17, M20-M22, M24-M27)
+### 2026-07-14 (latest, 5th pass) site audit batch 3 — studio perf + UX (S3, S5, S6, S8-S10, S12-S15)
+- S3 shadowMap.autoUpdate=false + tick() sets needsUpdate once per frame
+  (shadow pass used to render 3x per composer frame — measured -55% CPU);
+  key shadow map 4096→2048; BokehPass DISABLES itself while idle
+  (bokeh.enabled = want>0 || aperture>2e-5) — one fewer full-scene render.
+- S5 pixel ratio budget: pixelRatioFor(w,h) caps the drawing buffer at
+  ~10 MP (4K@DPR1 now near-native instead of 21 MP; 1080p/1440p unchanged).
+  Shared by init AND onResize — do not let them drift again.
+- S6 (parts 1+2): the two 4k lightmaps download SEQUENTIALLY (off-4k first —
+  night is the default state), each 4k arrival disposes its 2k predecessor
+  (-67 MB VRAM). CRITICAL: repoint lmB.value to the 4k BEFORE disposing —
+  the B sampler may still hold the 2k and three would re-upload a disposed
+  texture. Part 3 (worker RGBE parse) DEFERRED to batch 4: HDRLoader's bare
+  `three` import can't resolve in a worker until S4 vendors three locally.
+- S8 night reading light: `focusBoost` flag folded INTO applyLightState's
+  want table (key 0.22→0.55, hemi 0.16→0.32 while a project panel is open at
+  night; resume keeps its own paper glow). Set in focusHotspot, cleared in
+  closePanel; late lightmap callbacks can't stomp it because the boost lives
+  in the want computation itself.
+- S9 third one-time hint (localStorage kw_lamphint): "Tip — the desk lamp
+  switches the room lights", chained 1.2s after the click hint dismisses,
+  auto-dismisses in 4s.
+- S10 ArrowLeft/Right step the 14-project tour while the panel is open
+  (lightbox keeps its own arrows; verified 01/14 → 02/14).
+- S12 resume sheet: contact row is now olin.edu · LinkedIn · "Download
+  resume (PDF)" (download attr via the .pdf branch in resumeHTML); the gmail
+  entry is REMOVED to match the homepage.
+- S13 portrait fov: onResize widens fov to min(64, 42/aspect^0.42) and
+  maxDistance 4.0 when aspect<1 (was: 7 of 16 exhibits visible at 375px);
+  onResize() now also runs once at init.
+- S14 touch verbs: click hint says "Tap an exhibit …" and the canvas
+  aria-label swaps to swipe/tap wording on coarse pointers (drag hint
+  already did this).
+- S15 night workbench: benchBarSpot angle 0.55→0.72 rad and ramp multiplier
+  1.2→1.6 (all four sites: both applyLightState branches, bootRestore, boot
+  seg) — the left wall was near-black when orbited at night.
+- Verified: S3/S5/S13/S15 by state probes, S10/S12 functionally (tour step,
+  PDF link + no gmail in the rendered sheet), console clean. S8/S9 ride real
+  rAF/timer chains that freeze in a background pane — code-path verified,
+  will be covered by the next review workflow.
+  Cache: experience.css/js → `exp-audit3-20260714`.
+
+### 2026-07-14 (4th pass) site audit batch 2 (M12, M16, M17, M20-M22, M24-M27)
 - M12 all self-grading copy is gone: modal column "Engineering signal" → "Key
   results" (index.html AND experience.js projectHTML); closing blocks in
   project-data.js are fact-based now ("Status and validation"/"Status");
@@ -1476,8 +1518,8 @@ studio. Everything below is LIVE.
 - `styles.css?v=audit2-20260714` (in index.html)
 - `script.js?v=audit2-20260714` (in index.html)
 - `project-data.js?v=audit2-20260714` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-audit2-20260714` (3D page styles — in experience.html)
-- `experience.js?v=exp-audit2-20260714` (3D page module — in experience.html)
+- `experience.css?v=exp-audit3-20260714` (3D page styles — in experience.html)
+- `experience.js?v=exp-audit3-20260714` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

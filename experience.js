@@ -247,16 +247,27 @@ function initScene(canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   // desktop: FLOOR the pixel ratio at 1.6 — on 100-150% Windows scaling the
   // DPR is 1-1.5 and distant models/text go soft (Kefan); low-DPR displays
-  // get supersampling, retina stays capped
-  renderer.setPixelRatio(LOW_TIER
-    ? Math.min(window.devicePixelRatio, 1.5)
-    : Math.min(Math.max(window.devicePixelRatio, 1.6), 2.2));
+  // get supersampling, retina stays capped. S5: the floor is BUDGETED at
+  // ~10 MP of drawing buffer — a 4K monitor at DPR 1 used to render 21 MP
+  // through every post pass; it now runs near-native while 1080p/1440p keep
+  // exactly the old supersampling.
+  const pixelRatioFor = (w, h) => {
+    if (LOW_TIER) return Math.min(window.devicePixelRatio, 1.5);
+    const want = Math.min(Math.max(window.devicePixelRatio, 1.6), 2.2);
+    const budget = Math.sqrt(10e6 / Math.max(1, w * h));
+    return Math.max(1, Math.min(want, budget));
+  };
+  renderer.setPixelRatio(pixelRatioFor(window.innerWidth, window.innerHeight));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.3;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
+  // S3: with autoUpdate the shadow pass re-rendered for EVERY sub-render of a
+  // composer frame (beauty + GTAO prepass + bokeh depth = 3x). tick() flags
+  // needsUpdate once per frame instead — measured -55% CPU frame cost.
+  renderer.shadowMap.autoUpdate = false;
   MAXA = renderer.capabilities.getMaxAnisotropy();
 
   const scene = new THREE.Scene();
@@ -411,7 +422,9 @@ function initScene(canvas) {
   const key = new THREE.DirectionalLight(0xeef2f8, 1.35);
   key.position.set(2.6, 4.6, 2.4);
   key.castShadow = true;
-  key.shadow.mapSize.set(LOW_TIER ? 1024 : 4096, LOW_TIER ? 1024 : 4096);
+  // 2048 (was 4096): the PCF radius-7 blur already softens edges and the
+  // room's own shadows are baked — quarter the shadow buffer for free (S3)
+  key.shadow.mapSize.set(LOW_TIER ? 1024 : 2048, LOW_TIER ? 1024 : 2048);
   key.shadow.camera.near = 0.5;
   key.shadow.camera.far = 20;
   key.shadow.camera.left = -4;
@@ -585,7 +598,7 @@ function initScene(canvas) {
       // applyLightState(true) right after and re-owns most of these, but
       // that adjacency is a convention, not a guarantee (and the TIG glow
       // isn't state-driven at all)
-      benchBarSpot.intensity = 0.95 * 1.2;
+      benchBarSpot.intensity = 0.95 * 1.6;
       MODELS.pendantLight.intensity = 0.3;
       if (MODELS.pendantBulb) MODELS.pendantBulb.material.emissiveIntensity = 0.15 + 0.85 * (0.3 / 2.6);
       if (MODELS.pendantShadeInner) MODELS.pendantShadeInner.material.emissiveIntensity = 0.06 + 0.6 * (0.3 / 2.6);
@@ -636,7 +649,7 @@ function initScene(canvas) {
       if (MODELS.pendantBulb) MODELS.pendantBulb.material.emissiveIntensity = (0.15 + 0.85 * (0.3 / 2.6)) * k;
       if (MODELS.pendantShadeInner) MODELS.pendantShadeInner.material.emissiveIntensity = (0.06 + 0.6 * (0.3 / 2.6)) * k;
     });
-    seg(5080, 320, (k) => { benchBarSpot.intensity = 0.95 * 1.2 * k; }, easeOut);
+    seg(5080, 320, (k) => { benchBarSpot.intensity = 0.95 * 1.6 * k; }, easeOut);
     // the moon reveals itself as the camera settles toward the rest pose
     seg(3600, 900, (k) => { moonSpot.intensity = MOON_NIGHT * k; });
     // final beat at flight landing: the lamp clicks on — snappy, not eased —
@@ -987,7 +1000,10 @@ function initScene(canvas) {
   // I2: the LED bar lamp over the instrument cluster now CASTS its light —
   // it was the brightest shape on that wall at night while the bench under
   // it stayed dark. Cool-white to match the fixture's own emissive.
-  const benchBarSpot = new THREE.SpotLight(0xdfe8f5, 0, 2.2, 0.55, 0.6, 1.6);
+  // S15: 0.72 rad (was 0.55) — at night the workbench wall fell to near-black
+  // outside the old tight cone; wider + brighter pool keeps the mood but the
+  // printer/pegboard silhouettes now read when orbiting left
+  const benchBarSpot = new THREE.SpotLight(0xdfe8f5, 0, 2.2, 0.72, 0.6, 1.6);
   benchBarSpot.position.set(-2.4, 1.3, -1.15);
   benchBarSpot.target.position.set(-2.3, 0.79, -0.55);
   scene.add(benchBarSpot);
@@ -1084,6 +1100,9 @@ function initScene(canvas) {
     tex.colorSpace = THREE.LinearSRGBColorSpace;
     return tex;
   }
+  // S8: while a case study is open at night, key/hemi lift so the focused
+  // exhibit reads instead of silhouetting; closePanel eases them back
+  let focusBoost = false;
   function applyLightState(animate) {
     // generation counter: a newer call (toggle or instant set) invalidates
     // any still-running step closure — without this, two quick lamp clicks
@@ -1106,7 +1125,7 @@ function initScene(canvas) {
     // start of the fade was one of the toggle's visible "steps"
     if (probe && (!animate || prefersReducedMotion)) scene.environment = probe;
     // real-time lights serve the exhibits; dim them with the room
-    const want = lightsOn
+    let want = lightsOn
       ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0, resume: 0, moon: 0, pendant: 2.6 } // day grade: strips + bake carry the room
       // night: the desk lamp (resume) is the dominant practical, the pendant
       // recedes to a whisper so the lamp's pool owns the desk
@@ -1114,6 +1133,9 @@ function initScene(canvas) {
       // upper half (DOM-parity texture has more white than the old Arial mini);
       // at 1.5 every section reads while the pool still owns the mat (Kefan)
       : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 1.5, moon: MOON_NIGHT, pendant: 0.3 };
+    // S8 reading light: every applyLightState caller (including the late 4k
+    // lightmap upgrades) respects the boost, so nothing can stomp it mid-read
+    if (focusBoost && !lightsOn) want = { ...want, key: 0.55, hemi: 0.32 };
     if (bootTakeover) return; // the boot choreography owns the levels; it lands on these values
     blueLines.forEach((m) => {
       m.emissive = m.emissive || new THREE.Color(0x2b4d80);
@@ -1138,7 +1160,7 @@ function initScene(canvas) {
       resumeSpot.intensity = want.resume;
       moonSpot.intensity = want.moon;
       MODELS.pendantLight.intensity = want.pendant;
-      benchBarSpot.intensity = want.bench * 1.2; // I2: rides the bench ramp
+      benchBarSpot.intensity = want.bench * 1.6; // I2 ramp; S15 raised 1.2→1.6
       // I1: the bulb's visible glow follows its actual light output
       if (MODELS.pendantBulb) MODELS.pendantBulb.material.emissiveIntensity = 0.15 + 0.85 * (want.pendant / 2.6);
       if (MODELS.pendantShadeInner) MODELS.pendantShadeInner.material.emissiveIntensity = 0.06 + 0.6 * (want.pendant / 2.6);
@@ -1161,7 +1183,7 @@ function initScene(canvas) {
       resumeSpot.intensity = from.resume + (want.resume - from.resume) * e;
       moonSpot.intensity = from.moon + (want.moon - from.moon) * e;
       MODELS.pendantLight.intensity = from.pendant + (want.pendant - from.pendant) * e;
-      benchBarSpot.intensity = (from.bench + (want.bench - from.bench) * e) * 1.2; // I2
+      benchBarSpot.intensity = (from.bench + (want.bench - from.bench) * e) * 1.6; // I2; S15
       if (MODELS.pendantBulb) { // I1
         MODELS.pendantBulb.material.emissiveIntensity = 0.15 + 0.85 * (MODELS.pendantLight.intensity / 2.6);
       }
@@ -1307,8 +1329,34 @@ function initScene(canvas) {
         t.dispose();
       });
       if (!LOW_TIER) { // phones stay on 2K — don't pull 15MB+ maps over mobile data
-        later.load("models/baked/lightmap-off-4k.hdr" + BAKE_V, (t) => { LM.off4k = prepLM(t); if (!lightsOn) applyLightState(false); });
-        later.load("models/baked/lightmap-on-4k.hdr" + BAKE_V, (t) => { LM.on4k = prepLM(t); renderer.initTexture(LM.on4k); if (lightsOn) applyLightState(false); });
+        // S6: SEQUENCED, not parallel — visitors start in night mode, so the
+        // visible off-4k map gets the whole pipe and lands ~2x sooner; the
+        // on-4k download starts only once it's in. Each 4k arrival retires
+        // its 2k predecessor (-67 MB VRAM for the pair) — safe because the
+        // 2k being replaced is never the BOUND map of the opposite state,
+        // and applyLightState's `LM.off4k || LM.off2k` chain tolerates null.
+        later.load("models/baked/lightmap-off-4k.hdr" + BAKE_V, (t) => {
+          LM.off4k = prepLM(t);
+          if (!lightsOn) applyLightState(false);
+          // the B sampler may still hold the 2k (applyLightState only seeds it
+          // when unset) — repoint it BEFORE disposing or three re-uploads the
+          // disposed texture on the next bind and the VRAM saving evaporates
+          if (LM.off2k) {
+            if (lmB.value === LM.off2k) lmB.value = LM.off4k;
+            LM.off2k.dispose();
+            LM.off2k = null;
+          }
+          later.load("models/baked/lightmap-on-4k.hdr" + BAKE_V, (t2) => {
+            LM.on4k = prepLM(t2);
+            renderer.initTexture(LM.on4k);
+            if (lightsOn) applyLightState(false);
+            if (LM.on2k) {
+              if (lmB.value === LM.on2k) lmB.value = LM.on4k;
+              LM.on2k.dispose();
+              LM.on2k = null;
+            }
+          });
+        });
       }
     }, 4000);
   }
@@ -1324,17 +1372,22 @@ function initScene(canvas) {
   function onResize() {
     const w = window.innerWidth;
     const h = window.innerHeight;
-    camera.aspect = w / h;
+    const a = w / h;
+    camera.aspect = a;
+    // S13: portrait phones — a fixed 42° vertical fov collapses horizontal
+    // fov to ~20° and hides 9 of the 16 exhibits at the rest pose; widen
+    // vertically as the aspect drops, and let the user pinch farther out
+    camera.fov = a < 1 ? Math.min(64, 42 / Math.pow(a, 0.42)) : 42;
+    controls.maxDistance = a < 1 ? 4.0 : 3.2;
     camera.updateProjectionMatrix();
-    renderer.setPixelRatio(LOW_TIER
-      ? Math.min(window.devicePixelRatio, 1.5)
-      : Math.min(Math.max(window.devicePixelRatio, 1.6), 2.2));
+    renderer.setPixelRatio(pixelRatioFor(w, h)); // S5: shared budget formula
     renderer.setSize(w, h);
     composer.setPixelRatio(renderer.getPixelRatio());
     composer.setSize(w, h);
     if (gtao) gtao.setSize(w, h);
   }
   window.addEventListener("resize", onResize);
+  onResize(); // S13: apply the portrait fov on a phone's very first frame too
 
   /* ---------- camera flight system ---------- */
   let flight = null;
@@ -1381,6 +1434,7 @@ function initScene(canvas) {
   // synthetic timestamps in a backgrounded tab, where rAF never fires
   const tick = (t, forced) => {
     if (!running && !forced) return;
+    renderer.shadowMap.needsUpdate = true; // S3: exactly one shadow pass per frame
 
     if (ANISO_DIRTY) {
       // sharpen every material map at grazing/minified angles; re-armed by
@@ -1585,6 +1639,9 @@ function initScene(canvas) {
       const want = panelOpen && focusedPivot ? 0.0018 : paperSettled ? 0.0012 : 0.0;
       const u = bokeh.uniforms;
       u.aperture.value += (want - u.aperture.value) * 0.08;
+      // S5-adjacent (S3): the pass re-renders the whole scene for a blur of
+      // ZERO on every idle frame — switch it off once the ease lands
+      bokeh.enabled = want > 0 || u.aperture.value > 2e-5;
       if (panelOpen && focusedPivot) {
         u.focus.value = camera.position.distanceTo(focusedPivot.userData.hotspot.center);
       } else if (activePaperPivot && paperHold) {
@@ -1766,6 +1823,14 @@ function initScene(canvas) {
   // one-time follow-up hint: exhibits are clickable
   const clickHintEl = document.getElementById("exp-clickhint");
   let clickHintDone = false;
+  if (!FINE_POINTER) { // S14: touch users get touch verbs
+    const ct = clickHintEl && clickHintEl.querySelector(".exp-draghint__text");
+    if (ct) ct.textContent = "Tap an exhibit to open its case study";
+    renderer.domElement.setAttribute(
+      "aria-label",
+      "Interactive 3D studio. Swipe to look around, tap an exhibit to open its case study."
+    );
+  }
   function showClickHint() {
     if (clickHintDone || !clickHintEl || panelOpen) return;
     clickHintEl.hidden = false;
@@ -1778,6 +1843,32 @@ function initScene(canvas) {
     if (!clickHintEl) return;
     clickHintEl.classList.remove("is-on");
     setTimeout(() => { if (clickHintEl) clickHintEl.hidden = true; }, 620);
+    setTimeout(showLampHint, 1200); // S9: third beat — teach the light switch
+  }
+  // S9: one-time (localStorage) tip that the desk lamp toggles the room
+  // lights — day mode was effectively hidden content behind a hover-only
+  // label on a decorative-looking lamp
+  let lampHintDone = false;
+  try { lampHintDone = localStorage.getItem("kw_lamphint") === "1"; } catch (e) {}
+  let lampHintEl = null;
+  function showLampHint() {
+    if (lampHintDone || panelOpen) return;
+    lampHintDone = true;
+    try { localStorage.setItem("kw_lamphint", "1"); } catch (e) {}
+    lampHintEl = document.createElement("div");
+    lampHintEl.className = "exp-draghint exp-draghint--click";
+    lampHintEl.setAttribute("aria-hidden", "true");
+    lampHintEl.innerHTML = '<span class="exp-draghint__text">Tip — the desk lamp switches the room lights</span>';
+    document.body.appendChild(lampHintEl);
+    requestAnimationFrame(() => lampHintEl.classList.add("is-on"));
+    setTimeout(dismissLampHint, 4000);
+  }
+  function dismissLampHint() {
+    if (!lampHintEl) return;
+    const el = lampHintEl;
+    lampHintEl = null;
+    el.classList.remove("is-on");
+    setTimeout(() => el.remove(), 620);
   }
   // dismiss the moment the user actually drags to orbit the scene
   renderer.domElement.addEventListener("pointermove", (ev) => {
@@ -1891,6 +1982,12 @@ function initScene(canvas) {
 
     panelOpen = true;
     setOverlayInert(true);
+    // S8: at night the focused exhibit was a black silhouette next to its
+    // panel — ease the room up while reading (rides the same 850ms fly-in)
+    if (hs.action !== "resume" && !lightsOn && !focusBoost) {
+      focusBoost = true;
+      applyLightState(true);
+    }
     focusedPivot = hs.key ? root : null;
     currentProjectKey = hs.key || null;
     sndClick();
@@ -2369,6 +2466,10 @@ function initScene(canvas) {
     const closeGen = ++paperAnimGen;
     panelOpen = false;
     setOverlayInert(false);
+    if (focusBoost) { // S8: hand the night grade back
+      focusBoost = false;
+      if (!lightsOn) applyLightState(true);
+    }
     recenterPivot(focusedPivot);
     focusedPivot = null;
     sndWhoosh(0.4);
@@ -2516,6 +2617,14 @@ function initScene(canvas) {
     if (e.key !== "Escape") return;
     if (document.documentElement.classList.contains("exp-lightbox-open")) return closeLightbox();
     if (panelOpen) closePanel();
+  });
+  // S10: the panel footer advertises "← Prev / Next →" — the arrow keys now
+  // actually drive the 14-project tour (lightbox keeps its own arrow keys)
+  window.addEventListener("keydown", (e) => {
+    if (!panelOpen || !currentProjectKey) return;
+    if (document.documentElement.classList.contains("exp-lightbox-open")) return;
+    if (e.key === "ArrowRight") { e.preventDefault(); sndClick(); stepProject(1); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); sndClick(); stepProject(-1); }
   });
 
   /* ---------- keyboard navigation layer (additive; mirrors the pointer flow) ----------
@@ -5731,7 +5840,8 @@ function resumeHTML(r) {
     .map((s) => `<div class="exp-sheet__skill"><b>${s.group}</b><span>${s.items.join(" · ")}</span></div>`)
     .join("");
   const contact = (r.contact || [])
-    .map((c) => `<a href="${c.href}"${c.href.startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>${c.label}</a>`)
+    // S12: .pdf entries download in place so the studio stays open
+    .map((c) => `<a href="${c.href}"${c.href.startsWith("http") ? ' target="_blank" rel="noopener"' : ""}${c.href.endsWith(".pdf") ? " download" : ""}>${c.label}</a>`)
     .join('<span class="exp-sheet__dot">·</span>');
   return `
     <button class="exp-sheet__close" data-close aria-label="Close">&times;</button>
