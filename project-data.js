@@ -9,7 +9,6 @@ const projectData = {
     summary:
       "Mk.8 steering column redesign: matched 27.5-degree dual U-joints cancel rotational speed ripple, the wheel sits 3.5 inches closer and 15 degrees more upright than Mk.7, and every part maps to a shop process — lathe shafts, waterjet mounts, CNC bearing cages, TIG-welded chassis integration.",
     highlights: [
-      "Mechanical Lead context with steering work grounded in Mk.8 cockpit ownership and full-vehicle integration.",
       "Matched dual U-joint bend angles to reduce rotational velocity ripple through the steering column.",
       "Moved the wheel 3.5 inches closer and 15 degrees more vertical than Mk.7 to improve driver posture and cockpit clearance.",
       "Analyzed shaft, rack mount, yoke phasing, bearing cage, and fastener decisions against stiffness and slop targets.",
@@ -42,10 +41,11 @@ const projectData = {
         ]
       },
       {
-        title: "What it proves",
+        title: "Status and validation",
         points: [
-          "This project shows vehicle packaging, linkage analysis, fabrication planning, and safety-critical mechanical judgment in one subsystem.",
-          "The design review work is not just a render: it connects human factors, kinematics, strength, manufacturability, and service access."
+          "Column locked at a 55-degree posture (Mk.7: 60 degrees) with the wheel 3.5 inches closer to the driver.",
+          "The matched 27.5-degree U-joint pair cancels speed ripple per the ripple-surface model in the gallery.",
+          "Parts released to the lathe, waterjet, and CNC mill; the column integrates into the Mk.8 chassis with TIG-welded mounts."
         ]
       }
     ],
@@ -63,7 +63,7 @@ const projectData = {
     title: "Javelin high-speed VTOL drone",
     image: "assets/javelin-3q.webp",
     summary:
-      "A tail-sitter VTOL drone with no moving control surfaces. It launches vertically, tips onto its belly, and flies like a dart toward a 300 km/h target — every maneuver produced by varying the speed of four motors (differential thrust). The whole airframe is shaped around one enemy: drag at 300 km/h.",
+      "A tail-sitter VTOL drone with no moving control surfaces, designed for 300 km/h. It launches vertically, tips onto its belly, and flies like a dart — every maneuver produced by varying the speed of four motors (differential thrust). The whole airframe is shaped around one enemy: drag at 300 km/h.",
     highlights: [
       "Targets 300 km/h with zero control surfaces — yaw, pitch, and roll all come from differential thrust across four motors, moving the entire control burden onto the autopilot and tuning.",
       "Drag-driven airframe: Von Karman ogive nose, swept wing, NACA-0008 stabilizers, and streamlined motor fairings; CG placed ahead of the center of pressure for high-speed stability.",
@@ -229,10 +229,11 @@ const projectData = {
         ]
       },
       {
-        title: "Why it matters",
+        title: "Status and validation",
         points: [
-          "This project shows human-centered mechanical design under motorsport constraints: real drivers, real rules, real packaging limits.",
-          "The work is especially useful for teams that need someone comfortable moving between CAD, physical fit checks, and fabrication details."
+          "Cockpit fit validated across roughly 20 drivers through CAD body positioning plus physical fit checks.",
+          "Six-point harness with an anti-submarine strap mounted on a dedicated chassis bar; seat retained on welded chassis tabs.",
+          "The full package sits inside the FSAE cockpit template alongside the steering column, pedal tray, and bodywork."
         ]
       }
     ],
@@ -283,10 +284,10 @@ const projectData = {
         ]
       },
       {
-        title: "Outcome",
+        title: "Status",
         points: [
-          "The project turns cockpit support into a system problem: composite structure, driver sizing, bodywork service, and chassis interfaces.",
-          "It adds depth to the FSAE work by showing material/process reasoning, not just metallic brackets and CAD assemblies."
+          "Shell laid up over the seat mold and trimmed (layup and weave shots in the gallery), sized for the Mk.8 cockpit.",
+          "Designed to remove, repair, and reassemble within a race weekend, using the Mk.7 build's service pain points as the target list."
         ]
       }
     ],
@@ -456,8 +457,7 @@ const projectData = {
         title: "Failure and learning",
         points: [
           "The stepper lead-screw actuator overheated under sustained operation, exposing a duty-cycle and thermal-management issue.",
-          "The lesson was concrete: actuator choice must include expected runtime, not only force, stroke, and CAD packaging.",
-          "The project is a good signal for rapid mechanism design under real integration pressure."
+          "The lesson was concrete: actuator choice must include expected runtime, not only force, stroke, and CAD packaging."
         ]
       }
     ],
@@ -582,10 +582,10 @@ const projectData = {
         ]
       },
       {
-        title: "Integration signal",
+        title: "Status",
         points: [
-          "This is a compact example of system integration: the mechanical layout, wiring, sensing, and controller all affect performance.",
-          "It sits well next to the larger hardware projects because it shows hands-on embedded build discipline at small scale."
+          "Built as a complete package: Arduino Mega, dual motor drivers, IR reflectance sensing, and power on one palm-size chassis.",
+          "The layout keeps wire runs short and connectors accessible, so sensors and drive modules can be swapped between iterations."
         ]
       }
     ],
@@ -694,8 +694,7 @@ const projectData = {
         title: "Learning",
         points: [
           "The strongest feedback was that the kit should lean into STEAM learning, not just imitate a cheap instrument.",
-          "Teachers and community-program feedback pushed the design toward durability, instruction quality, and class-session feasibility.",
-          "This project shows product iteration driven by actual users instead of only internal team assumptions."
+          "Teachers and community-program feedback pushed the design toward durability, instruction quality, and class-session feasibility."
         ]
       }
     ],
@@ -747,10 +746,10 @@ const projectData = {
         ]
       },
       {
-        title: "Why it matters",
+        title: "Status",
         points: [
-          "This is a clean manufacturing story: material prep, CNC, templates, finishing, and integration.",
-          "The project is presented as precision fabrication and process control on a real, playable instrument."
+          "Finished, strung, and playable — working pickups, controls, and output jack on the walnut/maple body.",
+          "Full process record: glued blank, ShopBot CNC routing, laser-cut drilling templates, multi-coat white finish, electronics install."
         ]
       }
     ],

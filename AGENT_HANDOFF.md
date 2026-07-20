@@ -256,7 +256,53 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-14 (latest, 3rd pass) site audit batch 1 of ~4 (M1-M6, M8, M9, M13, M14)
+### 2026-07-14 (latest, 4th pass) site audit batch 2 (M12, M16, M17, M20-M22, M24-M27)
+- M12 all self-grading copy is gone: modal column "Engineering signal" → "Key
+  results" (index.html AND experience.js projectHTML); closing blocks in
+  project-data.js are fact-based now ("Status and validation"/"Status");
+  steering's framing highlight deleted. M16 Javelin leads with "Designed for
+  300 km/h" on card + summary.
+- M17 hero srcset: hero-fsae-track-{960,1440,2200}.webp (91/215/461KB, PIL
+  q70/66) + fetchpriority=high + width/height on img and imagesrcset preload.
+  The original hero-fsae-track.webp stays for og:image until X1.
+- M20 fonts SELF-HOSTED: assets/fonts/*.woff2 (8 latin subsets), @font-face
+  at the top of styles.css, Google preconnect/stylesheet links REMOVED from
+  index.html, Inter-400 + InterTight-700 preloaded. experience.html still
+  uses Google Fonts (its own stylesheet — not in this batch's scope).
+- M21 all five hot-linked skill images replaced with OWN assets:
+  skill-fea (oem-brake-fea), skill-waterjet (aura-swerve-mount),
+  skill-carbon (carbon-seat-weave-close), skill-matlab (fsae-mk8-live-5
+  ripple surface), skill-topology (seat-fea — closest own load-path visual).
+- M22 modalScrub: frames 2..N load on FIRST modal scroll (preload() method,
+  fetchPriority low), not at open (was 60 requests / 1.4MB instantly on AURA).
+- M24 stretched-control cards: every h3 wraps a .card-open <button>; article
+  role/tabindex/aria-label REMOVED; card-level click stays as a pointer
+  convenience (guarded by isInteractiveCardTarget); focus ring drawn via
+  .project-card:has(.card-open:focus-visible) twins.
+- M25 skip-to-projects link (first element in body); filter-bar role=group +
+  #filter-status aria-live announces "Showing N of 14 projects"; skill items
+  lost the "Show X skill detail" aria-label override; the glass card is
+  role=tooltip + aria-describedby, Escape dismisses it.
+- M26 studio dialogs: #exp-panel lost aria-live (was dumping whole case
+  studies), #exp-label gained aria-live=polite; setOverlayInert() makes the
+  topbar inert + canvas tabIndex -1 while panelOpen (set in focusHotspot,
+  cleared in closePanel); kbHighlight docks the label at the exhibit's
+  PROJECTED screen position (was stuck at stale pointer coords offscreen).
+- M27 JSON-LD: Person gains @id/email/affiliation; second block = ItemList
+  of 14 CreativeWork entries (absolute image URLs).
+- M15 (years on cards) POSTPONED: needs real per-project years from Kefan
+  (do NOT invent dates). M10 resume PDF + M11 program facts also awaiting
+  Kefan's data.
+- QA gotcha (background pane): a pending camera flight makes kbBusy() true
+  forever because the flight advances on real rAF — pump ~90 frames first.
+- Verified by DOM probes: srcset picks 960w, fonts load with 0 Google links,
+  0 external skill images, 14 .card-open buttons / 0 role=button articles,
+  filter announces counts, inert toggles both ways, kb label lands on-screen
+  (591,92 @1280x800). Console clean both pages.
+  Cache: styles/script/project-data → audit2-20260714; experience.css/js →
+  exp-audit2-20260714.
+
+### 2026-07-14 (3rd pass) site audit batch 1 of ~4 (M1-M6, M8, M9, M13, M14)
 - A 9-dimension Fable-5-max audit produced a 43-item approved plan (ids M*/S*/X*,
   full list in the session of 2026-07-14; Kefan approves batch-by-batch, 10 at a
   time). Batch 1, homepage:
@@ -1427,11 +1473,11 @@ studio. Everything below is LIVE.
 - Windows gotchas: Python cannot write to `/tmp` — write temp files under `C:/Users/oc/AppData/Local/Temp/...`. In `python -c` strings use forward slashes / `os.path.join`, not escaped backslashes. Pasted screenshots land in `C:\Users\oc\AppData\Local\Packages\MicrosoftWindows.Client.Core_cw5n1h2txyewy\TempState\ScreenClip\`.
 
 ### Current cache versions (bump the matching one whenever you edit that file)
-- `styles.css?v=audit1-20260714` (in index.html)
-- `script.js?v=aesthetics-20260709` (in index.html)
-- `project-data.js?v=audit1-20260714` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-padfix-20260714` (3D page styles — in experience.html)
-- `experience.js?v=exp-padfix-20260714` (3D page module — in experience.html)
+- `styles.css?v=audit2-20260714` (in index.html)
+- `script.js?v=audit2-20260714` (in index.html)
+- `project-data.js?v=audit2-20260714` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `experience.css?v=exp-audit2-20260714` (3D page styles — in experience.html)
+- `experience.js?v=exp-audit2-20260714` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

@@ -17,17 +17,21 @@
     <title>Kefan Wu | Mechanical Engineering Portfolio</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="assets/favicon_custom.png" sizes="any" />
-    <link rel="preload" as="image" href="assets/hero-fsae-track.webp" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="preload"
+      as="image"
+      href="assets/hero-fsae-track-1440.webp"
+      imagesrcset="assets/hero-fsae-track-960.webp 960w, assets/hero-fsae-track-1440.webp 1440w, assets/hero-fsae-track-2200.webp 2200w"
+      imagesizes="100vw"
+      fetchpriority="high"
     />
-    <link rel="stylesheet" href="styles.css?v=audit1-20260714" />
+    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/Inter-400.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/InterTight-700.woff2" crossorigin />
+    <link rel="stylesheet" href="styles.css?v=audit2-20260714" />
     <script>document.documentElement.classList.add("js");</script>
   </head>
   <body>
+    <a class="skip-link" href="#work">Skip to projects</a>
     <div class="progress" aria-hidden="true"></div>
 
     <header class="site-header">
@@ -56,7 +60,16 @@
       <!-- ============ HERO ============ -->
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-media" aria-hidden="true">
-          <img src="assets/hero-fsae-track.webp" alt="" decoding="async" />
+          <img
+            src="assets/hero-fsae-track-1440.webp"
+            srcset="assets/hero-fsae-track-960.webp 960w, assets/hero-fsae-track-1440.webp 1440w, assets/hero-fsae-track-2200.webp 2200w"
+            sizes="100vw"
+            width="2200"
+            height="1238"
+            fetchpriority="high"
+            alt=""
+            decoding="async"
+          />
         </div>
         <div class="hero-shade" aria-hidden="true"></div>
         <div class="hero-content">
@@ -121,7 +134,7 @@
             </div>
           </div>
 
-          <div class="filter-bar" role="list" aria-label="Filter case studies" data-reveal>
+          <div class="filter-bar" role="group" aria-label="Filter case studies" data-reveal>
             <button class="filter active" type="button" data-filter="all" aria-pressed="true">All</button>
             <button class="filter" type="button" data-filter="motorsport" aria-pressed="false">Motorsport</button>
             <button class="filter" type="button" data-filter="robotics" aria-pressed="false">Robotics</button>
@@ -129,6 +142,7 @@
             <button class="filter" type="button" data-filter="analysis" aria-pressed="false">Analysis</button>
             <button class="filter" type="button" data-filter="fabrication" aria-pressed="false">Fabrication</button>
           </div>
+          <span class="sr-only" aria-live="polite" id="filter-status"></span>
 
           <div id="project-cards" class="project-grid" data-reveal-group>
             <article class="project-card" data-category="motorsport analysis fabrication" data-project="steering">
@@ -137,7 +151,7 @@
               </div>
               <div class="project-body">
                 <p class="project-meta">01 / Motorsport</p>
-                <h3>Mk.8 steering system</h3>
+                <h3><button type="button" class="card-open">Mk.8 steering system</button></h3>
                 <p class="project-sub">Matched 27.5° dual U-joints cancel speed ripple; the wheel sits 3.5 in closer, 15° more upright than Mk.7.</p>
               </div>
             </article>
@@ -148,7 +162,7 @@
               </div>
               <div class="project-body">
                 <p class="project-meta">02 / Motorsport</p>
-                <h3>FSAE Brake Sim</h3>
+                <h3><button type="button" class="card-open">FSAE Brake Sim</button></h3>
                 <p class="project-sub">22-lap MATLAB thermal model justified a 25% rotor mass cut at a 3.0 factor of safety.</p>
               </div>
             </article>
@@ -159,8 +173,8 @@
               </div>
               <div class="project-body">
                 <p class="project-meta">03 / Robotics</p>
-                <h3>Javelin VTOL drone</h3>
-                <p class="project-sub">300 km/h tail-sitter with zero control surfaces — every maneuver from differential thrust.</p>
+                <h3><button type="button" class="card-open">Javelin VTOL drone</button></h3>
+                <p class="project-sub">Designed for 300 km/h — tail-sitter with zero control surfaces; every maneuver from differential thrust.</p>
               </div>
             </article>
 
@@ -171,7 +185,7 @@
               <div class="project-body">
                 <p class="project-meta">04 / Analysis</p>
                 <div class="title-row">
-                <h3>Agent-based CFD</h3>
+                <h3><button type="button" class="card-open">Agent-based CFD</button></h3>
                 <a class="project-download project-download--icon" href="assets/claude_ansys_cfd.zip" download aria-label="Download claude_ansys_cfd package" title="Download package"></a>
                 </div>
                 <p class="project-sub">Teaching package for AI-agent-driven headless Ansys Fluent — 11 documented failure modes.</p>
@@ -184,7 +198,7 @@
               </div>
               <div class="project-body">
                 <p class="project-meta">05 / Motorsport</p>
-                <h3>Carbon fiber seat</h3>
+                <h3><button type="button" class="card-open">Carbon fiber seat</button></h3>
                 <p class="project-sub">Composite shoulder-support shell designed for load paths and race-weekend repairability.</p>
               </div>
             </article>
@@ -195,7 +209,7 @@
               </div>
               <div class="project-body">
                 <p class="project-meta">06 / Motorsport</p>
-                <h3>Driver seat and harness</h3>
+                <h3><button type="button" class="card-open">Driver seat and harness</button></h3>
                 <p class="project-sub">Cockpit fit validated across ~20 drivers; six-point harness on dedicated chassis tabs.</p>
               </div>
             </article>
@@ -206,7 +220,7 @@
               </div>
               <div class="project-body">
                 <p class="project-meta">07 / Robotics</p>
-                <h3>AURA swerve drive</h3>
+                <h3><button type="button" class="card-open">AURA swerve drive</button></h3>
                 <p class="project-sub">Independent front swerve modules for a 300 lb autonomous cart — waterjet, TIG-welded A36 steel.</p>
               </div>
             </article>
@@ -217,7 +231,7 @@
               </div>
               <div class="project-body">
                 <p class="project-meta">08 / Robotics</p>
-                <h3>3D scanner</h3>
+                <h3><button type="button" class="card-open">3D scanner</button></h3>
                 <p class="project-sub">LiDAR gantry scanner — 2,206 points, under 3% error after calibration.</p>
               </div>
             </article>
@@ -228,7 +242,7 @@
               </div>
               <div class="project-body">
                 <p class="project-meta">09 / Robotics</p>
-                <h3>Smelly</h3>
+                <h3><button type="button" class="card-open">Smelly</button></h3>
                 <p class="project-sub">Perfume-mixing vending machine; gantry and actuators designed, printed, and debugged in 2.5 days.</p>
               </div>
             </article>
@@ -239,7 +253,7 @@
               </div>
               <div class="project-body">
                 <p class="project-meta">10 / Product</p>
-                <h3>Guitar education kit</h3>
+                <h3><button type="button" class="card-open">Guitar education kit</button></h3>
                 <p class="project-sub">~$100 STEAM kit — 8th/9th graders build a playable guitar in about 45 minutes.</p>
               </div>
             </article>
@@ -250,7 +264,7 @@
               </div>
               <div class="project-body">
                 <p class="project-meta">11 / Fabrication</p>
-                <h3>Telecaster guitar</h3>
+                <h3><button type="button" class="card-open">Telecaster guitar</button></h3>
                 <p class="project-sub">Walnut/maple body: glued blank, ShopBot CNC, multi-coat finish, working electronics.</p>
               </div>
             </article>
@@ -261,7 +275,7 @@
               </div>
               <div class="project-body">
                 <p class="project-meta">12 / Robotics</p>
-                <h3>FTC robot</h3>
+                <h3><button type="button" class="card-open">FTC robot</button></h3>
                 <p class="project-sub">Massachusetts Championship winning alliance — cone intake, string-driven lift, mecanum drive.</p>
               </div>
             </article>
@@ -272,7 +286,7 @@
               </div>
               <div class="project-body">
                 <p class="project-meta">13 / Robotics</p>
-                <h3>Pool Sniper</h3>
+                <h3><button type="button" class="card-open">Pool Sniper</button></h3>
                 <p class="project-sub">Surgical-tubing energy storage, adjustable pullback release, laser aiming, 2:1 chain-driven cue pullback.</p>
               </div>
             </article>
@@ -283,7 +297,7 @@
               </div>
               <div class="project-body">
                 <p class="project-meta">14 / Robotics</p>
-                <h3>LineFollower robot</h3>
+                <h3><button type="button" class="card-open">LineFollower robot</button></h3>
                 <p class="project-sub">Controller, drivers, sensors, and power packaged on a palm-size chassis.</p>
               </div>
             </article>
@@ -512,7 +526,7 @@
           <div id="modal-gallery" class="modal-gallery" aria-label="Project image gallery"></div>
           <div class="modal-columns">
             <div>
-              <h3>Engineering signal</h3>
+              <h3>Key results</h3>
               <ul id="modal-highlights"></ul>
             </div>
             <div id="modal-tools-block">
@@ -525,18 +539,44 @@
       </article>
     </div>
 
-    <script src="project-data.js?v=audit1-20260714"></script>
-    <script src="script.js?v=aesthetics-20260709"></script>
+    <script src="project-data.js?v=audit2-20260714"></script>
+    <script src="script.js?v=audit2-20260714"></script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Person",
+      "@id": "https://www.kefanwu.com/#kefan",
       "name": "Kefan Wu",
       "url": "https://www.kefanwu.com/",
+      "email": "mailto:kwu@olin.edu",
       "jobTitle": "Mechanical Engineering Student · Mechanical Lead, Olin Electric Motorsports",
       "alumniOf": { "@type": "CollegeOrUniversity", "name": "Olin College of Engineering" },
+      "affiliation": { "@type": "Organization", "name": "Olin Electric Motorsports", "url": "https://olinelectricmotorsports.com/" },
       "sameAs": ["https://www.linkedin.com/in/kefan-wu-olin/"],
       "knowsAbout": ["Mechanical design", "SolidWorks", "FEA", "CFD", "MATLAB", "CNC machining", "Carbon fiber composites", "Formula SAE", "Robotics"]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Engineering projects by Kefan Wu",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "item": { "@type": "CreativeWork", "name": "Mk.8 steering system", "description": "Matched 27.5-degree dual U-joints cancel speed ripple; the wheel sits 3.5 in closer, 15 degrees more upright than Mk.7.", "image": "https://www.kefanwu.com/assets/cover-steering-system-cad.webp", "url": "https://www.kefanwu.com/#work", "author": { "@id": "https://www.kefanwu.com/#kefan" } } },
+        { "@type": "ListItem", "position": 2, "item": { "@type": "CreativeWork", "name": "FSAE Brake Sim", "description": "22-lap MATLAB thermal model justified a 25% rotor mass cut at a 3.0 factor of safety.", "image": "https://www.kefanwu.com/assets/oem-brake-fea.webp", "url": "https://www.kefanwu.com/#work", "author": { "@id": "https://www.kefanwu.com/#kefan" } } },
+        { "@type": "ListItem", "position": 3, "item": { "@type": "CreativeWork", "name": "Javelin VTOL drone", "description": "Designed for 300 km/h — tail-sitter with zero control surfaces; every maneuver from differential thrust.", "image": "https://www.kefanwu.com/assets/cover-javelin.webp", "url": "https://www.kefanwu.com/#work", "author": { "@id": "https://www.kefanwu.com/#kefan" } } },
+        { "@type": "ListItem", "position": 4, "item": { "@type": "CreativeWork", "name": "Agent-based CFD", "description": "Teaching package for AI-agent-driven headless Ansys Fluent — 11 documented failure modes.", "image": "https://www.kefanwu.com/assets/cover-ansys-cfd.webp", "url": "https://www.kefanwu.com/#work", "author": { "@id": "https://www.kefanwu.com/#kefan" } } },
+        { "@type": "ListItem", "position": 5, "item": { "@type": "CreativeWork", "name": "Carbon fiber seat", "description": "Composite shoulder-support shell designed for load paths and race-weekend repairability.", "image": "https://www.kefanwu.com/assets/cover-carbon-fiber-seat-cad.webp", "url": "https://www.kefanwu.com/#work", "author": { "@id": "https://www.kefanwu.com/#kefan" } } },
+        { "@type": "ListItem", "position": 6, "item": { "@type": "CreativeWork", "name": "Driver seat and harness", "description": "Cockpit fit validated across ~20 drivers; six-point harness on dedicated chassis tabs.", "image": "https://www.kefanwu.com/assets/cover-aluminum-seat-white.webp", "url": "https://www.kefanwu.com/#work", "author": { "@id": "https://www.kefanwu.com/#kefan" } } },
+        { "@type": "ListItem", "position": 7, "item": { "@type": "CreativeWork", "name": "AURA swerve drive", "description": "Independent front swerve modules for a 300 lb autonomous cart — waterjet, TIG-welded A36 steel.", "image": "https://www.kefanwu.com/assets/cover-aura-swerve-cad.webp", "url": "https://www.kefanwu.com/#work", "author": { "@id": "https://www.kefanwu.com/#kefan" } } },
+        { "@type": "ListItem", "position": 8, "item": { "@type": "CreativeWork", "name": "3D scanner", "description": "LiDAR gantry scanner — 2,206 points, under 3% error after calibration.", "image": "https://www.kefanwu.com/assets/scanner-live-7.webp", "url": "https://www.kefanwu.com/#work", "author": { "@id": "https://www.kefanwu.com/#kefan" } } },
+        { "@type": "ListItem", "position": 9, "item": { "@type": "CreativeWork", "name": "Smelly", "description": "Perfume-mixing vending machine; gantry and actuators designed, printed, and debugged in 2.5 days.", "image": "https://www.kefanwu.com/assets/cover-smelly-cad.webp", "url": "https://www.kefanwu.com/#work", "author": { "@id": "https://www.kefanwu.com/#kefan" } } },
+        { "@type": "ListItem", "position": 10, "item": { "@type": "CreativeWork", "name": "Guitar education kit", "description": "~$100 STEAM kit — 8th/9th graders build a playable guitar in about 45 minutes.", "image": "https://www.kefanwu.com/assets/cover-guitar-education-cad.webp", "url": "https://www.kefanwu.com/#work", "author": { "@id": "https://www.kefanwu.com/#kefan" } } },
+        { "@type": "ListItem", "position": 11, "item": { "@type": "CreativeWork", "name": "Telecaster guitar", "description": "Walnut/maple body: glued blank, ShopBot CNC, multi-coat finish, working electronics.", "image": "https://www.kefanwu.com/assets/cover-telecaster.webp", "url": "https://www.kefanwu.com/#work", "author": { "@id": "https://www.kefanwu.com/#kefan" } } },
+        { "@type": "ListItem", "position": 12, "item": { "@type": "CreativeWork", "name": "FTC robot", "description": "Massachusetts Championship winning alliance — cone intake, string-driven lift, mecanum drive.", "image": "https://www.kefanwu.com/assets/cover-ftc-robot.webp", "url": "https://www.kefanwu.com/#work", "author": { "@id": "https://www.kefanwu.com/#kefan" } } },
+        { "@type": "ListItem", "position": 13, "item": { "@type": "CreativeWork", "name": "Pool Sniper", "description": "Surgical-tubing energy storage, adjustable pullback release, laser aiming, 2:1 chain-driven cue pullback.", "image": "https://www.kefanwu.com/assets/pool-sniper-white.webp", "url": "https://www.kefanwu.com/#work", "author": { "@id": "https://www.kefanwu.com/#kefan" } } },
+        { "@type": "ListItem", "position": 14, "item": { "@type": "CreativeWork", "name": "LineFollower robot", "description": "Controller, drivers, sensors, and power packaged on a palm-size chassis.", "image": "https://www.kefanwu.com/assets/cover-line-follower-cad.webp", "url": "https://www.kefanwu.com/#work", "author": { "@id": "https://www.kefanwu.com/#kefan" } } }
+      ]
     }
     </script>
   </body>

@@ -1890,6 +1890,7 @@ function initScene(canvas) {
     const focusLook = c.clone().addScaledVector(right, lookOff);
 
     panelOpen = true;
+    setOverlayInert(true);
     focusedPivot = hs.key ? root : null;
     currentProjectKey = hs.key || null;
     sndClick();
@@ -2353,12 +2354,21 @@ function initScene(canvas) {
     };
     requestAnimationFrame(step);
   }
+  function setOverlayInert(on) {
+    // dialog containment: while the case-study panel / resume sheet is open,
+    // the topbar and canvas leave the tab order so focus can't walk out from
+    // under the modal into the scene behind the backdrop
+    const topbar = document.querySelector(".exp-topbar");
+    if (topbar) topbar.inert = on;
+    renderer.domElement.tabIndex = on ? -1 : 0;
+  }
   function closePanel() {
     if (!panelOpen) return;
     const rootClass = document.documentElement.classList;
     const closingPaperPivot = activePaperPivot;
     const closeGen = ++paperAnimGen;
     panelOpen = false;
+    setOverlayInert(false);
     recenterPivot(focusedPivot);
     focusedPivot = null;
     sndWhoosh(0.4);
@@ -2533,7 +2543,17 @@ function initScene(canvas) {
   }
   function kbHighlight(order, next) {
     kbIndex = ((next % order.length) + order.length) % order.length;
-    setHover(order[kbIndex]);
+    const root = order[kbIndex];
+    setHover(root);
+    // keyboard has no cursor: dock the label at the exhibit's projected screen
+    // position (it used to render at the stale pointer coords — 0,0 offscreen)
+    if (labelEl && !labelEl.hidden) {
+      const v = new THREE.Vector3();
+      new THREE.Box3().setFromObject(root).getCenter(v).project(camera);
+      const r = renderer.domElement.getBoundingClientRect();
+      labelEl.style.left = r.left + ((v.x + 1) / 2) * r.width + "px";
+      labelEl.style.top = r.top + ((1 - v.y) / 2) * r.height - 18 + "px";
+    }
   }
   renderer.domElement.addEventListener("keydown", (e) => {
     if (kbBusy()) return;
@@ -5699,7 +5719,7 @@ function projectHTML(p) {
     <h2 class="exp-panel__title">${p.title || ""}</h2>
     <p class="exp-panel__summary">${p.summary || ""}</p>
     ${lead}
-    ${hi ? `<h3 class="exp-panel__h3">Engineering signal</h3><ul class="exp-panel__list">${hi}</ul>` : ""}
+    ${hi ? `<h3 class="exp-panel__h3">Key results</h3><ul class="exp-panel__list">${hi}</ul>` : ""}
     ${tools ? `<h3 class="exp-panel__h3">Tools and methods</h3><div class="exp-panel__chips">${tools}</div>` : ""}
     ${details}
   `;

@@ -40,8 +40,8 @@ const heroSkillDetails = {
   "topology study": {
     title: "Topology Study",
     meta: "Load-path exploration",
-    image: "https://www.comsol.com/model/image/69891/big.png",
-    alt: "Bracket topology optimization result",
+    image: "assets/skill-topology.webp",
+    alt: "Finite element load-path study on a seat support structure",
     text:
       "Constraint-first material studies that reveal load paths before committing weight and geometry in final CAD."
   },
@@ -56,16 +56,16 @@ const heroSkillDetails = {
   matlab: {
     title: "MATLAB",
     meta: "Engineering models",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Matlab%20Logo.png?width=900",
-    alt: "MATLAB membrane logo image",
+    image: "assets/skill-matlab.webp",
+    alt: "MATLAB surface plot of steering U-joint speed ripple",
     text:
       "Parameter sweeps, kinematics, thermal models, and plots that turn assumptions into traceable decisions."
   },
   fea: {
     title: "FEA",
     meta: "Structural validation",
-    image: "https://efficientengineer.com/wp-content/uploads/equivalent_stress_bracket-1.jpg",
-    alt: "Finite element analysis stress result on a cantilever bracket",
+    image: "assets/skill-fea.webp",
+    alt: "Finite element analysis stress result on a brake rotor",
     text:
       "Stress and stiffness checks for seats, mounts, brackets, and motorsport hardware under explicit load cases."
   },
@@ -96,16 +96,16 @@ const heroSkillDetails = {
   waterjet: {
     title: "Waterjet",
     meta: "Flat-pattern fabrication",
-    image: "https://www.emachineshop.com/wp-content/uploads/Waterjet-Cutting-1-1.jpg",
-    alt: "Waterjet cutting head cutting a metal sheet",
+    image: "assets/skill-waterjet.webp",
+    alt: "Waterjet-cut, TIG-welded A36 steel swerve mount",
     text:
       "Fast plate and bracket manufacturing for seats, mounts, fixtures, and chassis-adjacent hardware."
   },
   "carbon fiber": {
     title: "Carbon Fiber",
     meta: "Composite structures",
-    image: "https://commons.wikimedia.org/wiki/Special:FilePath/FibreDeCarbone.jpg?width=900",
-    alt: "Close view of woven carbon fiber",
+    image: "assets/skill-carbon.webp",
+    alt: "Close view of the carbon fiber weave on the FSAE seat shell",
     text:
       "Layup, trimming, support geometry, and lightweight structure decisions for motorsport packaging."
   },
@@ -160,6 +160,8 @@ function initHeroSkillCards() {
 
   const card = document.createElement("aside");
   card.className = "skill-glass-card";
+  card.id = "skill-detail-card";
+  card.setAttribute("role", "tooltip");
   card.setAttribute("aria-hidden", "true");
   card.innerHTML = `
     <div class="skill-card-inner">
@@ -237,16 +239,23 @@ function initHeroSkillCards() {
     cardImage.src = detail.image;
     cardImage.alt = detail.alt;
     positionCard(item);
+    item.setAttribute("aria-describedby", "skill-detail-card");
     card.setAttribute("aria-hidden", "false");
     card.classList.add("is-visible");
   }
 
   function hideSkillCard(item) {
     if (item && activeItem !== item) return;
+    activeItem?.removeAttribute("aria-describedby");
     activeItem = null;
     card.classList.remove("is-visible");
     card.setAttribute("aria-hidden", "true");
   }
+
+  // WCAG 1.4.13: the hover/focus card must be dismissable without moving
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") hideSkillCard();
+  });
 
   skillItems.forEach((item) => {
     const isDuplicateTrack = item.closest(".hero-skill-track")?.getAttribute("aria-hidden") === "true";
@@ -265,8 +274,8 @@ function initHeroSkillCards() {
     item.addEventListener("mouseleave", () => hideSkillCard(item));
 
     if (!isDuplicateTrack) {
+      // no aria-label override: the li/span text IS the accessible name
       item.tabIndex = 0;
-      item.setAttribute("aria-label", `Show ${item.textContent.trim()} skill detail`);
       item.addEventListener("focus", () => showSkillCard(item));
       item.addEventListener("blur", () => hideSkillCard(item));
     }
@@ -479,6 +488,10 @@ filters.forEach((button) => {
           || (card.dataset.category || "").includes(filter);
         card.classList.toggle("is-hidden", !show);
       });
+      const projectCards = cards.filter((c) => !c.classList.contains("project-card--studio"));
+      const shown = projectCards.filter((c) => !c.classList.contains("is-hidden")).length;
+      const status = document.getElementById("filter-status");
+      if (status) status.textContent = `Showing ${shown} of ${projectCards.length} projects`;
     };
     if (reducedMotion.matches) {
       apply();
@@ -503,12 +516,9 @@ let tiltFrame = null;
 
 cards.forEach((card) => {
   const isStudioTile = card.classList.contains("project-card--studio");
-  if (!isStudioTile) {
-    // the studio tile is a real <a>: natively focusable, no modal role
-    card.tabIndex = 0;
-    card.setAttribute("role", "button");
-    card.setAttribute("aria-label", `Open ${card.querySelector("h3")?.textContent || "project"} case study`);
-  }
+  // stretched-link pattern: the h3's .card-open button is the one real
+  // control (its ::after overlay covers the whole card), so the download
+  // link is a legal sibling instead of an interactive nested in a role=button
 
   card.addEventListener("pointerenter", () => {
     if (!finePointer.matches || reducedMotion.matches) return;
@@ -537,16 +547,13 @@ cards.forEach((card) => {
   });
 
   if (!isStudioTile) {
+    card.querySelector(".card-open")?.addEventListener("click", () => {
+      openModal(card.dataset.project, card);
+    });
+    // convenience: clicks on the card surface (not on a real control) open too
     card.addEventListener("click", (event) => {
       if (isInteractiveCardTarget(event)) return;
       openModal(card.dataset.project, card);
-    });
-    card.addEventListener("keydown", (event) => {
-      if (isInteractiveCardTarget(event)) return;
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        openModal(card.dataset.project, card);
-      }
     });
   }
 
@@ -817,17 +824,6 @@ const modalScrub = {
     modalMedia.classList.add("modal-media--scrub");
     modalMedia.classList.remove("modal-media--scrubbed");
     modalScrubImg.hidden = false;
-    if (!this.frames || this.frames.base !== cfg.base) {
-      const arr = [];
-      for (let i = 1; i <= cfg.count; i++) {
-        const im = new Image();
-        im.decoding = "async";
-        im.src = this.url(i);
-        arr.push(im);
-      }
-      arr.base = cfg.base;
-      this.frames = arr;
-    }
     if (scrubReduce.matches) {
       modalScrubImg.src = this.url(cfg.count); // static fully-exploded view
       if (modalScrubBar) modalScrubBar.style.width = "100%";
@@ -836,11 +832,28 @@ const modalScrub = {
     modalScrubImg.src = this.url(1); // start assembled
     this.lastIdx = 1;
     modalPanel.addEventListener("scroll", this.onScroll, { passive: true });
+    // frames 2..N used to preload HERE — 60 parallel requests (1.4 MB on
+    // AURA) the instant the modal opened; they now load on the first scroll
+  },
+  preload() {
+    if (!this.active || (this.frames && this.frames.base === this.base)) return;
+    const arr = [];
+    for (let i = 1; i <= this.count; i++) {
+      const im = new Image();
+      im.decoding = "async";
+      im.fetchPriority = "low"; // the visible gallery keeps network priority
+      im.src = this.url(i);
+      arr.push(im);
+    }
+    arr.base = this.base;
+    this.frames = arr;
     Promise.all(
-      this.frames.map((im) => (im.decode ? im.decode().catch(() => {}) : Promise.resolve()))
+      arr.map((im) => (im.decode ? im.decode().catch(() => {}) : Promise.resolve()))
     ).then(() => {
-      this.ready = true;
-      this.render();
+      if (this.frames === arr) {
+        this.ready = true;
+        this.render();
+      }
     });
   },
   teardown() {
@@ -961,6 +974,7 @@ const modalScrub = {
 };
 modalScrub.onScroll = function () {
   if (!modalScrub.active || scrubReduce.matches) return;
+  modalScrub.preload(); // lazy frame fetch on first scroll (idempotent)
   if (modalScrub.paused) modalScrub.resume();
   if (!modalScrub.rafPending) {
     modalScrub.rafPending = true;
