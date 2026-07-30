@@ -476,6 +476,16 @@ const projectData = {
     kicker: "Olin Vine Robotics Lab / pressure vessel / 2026",
     title: "Vine everting robot",
     image: "assets/cover-vine-robot.webp",
+    gallery: [
+      { src: "assets/vine-robot-built.webp", alt: "The built vine everting robot: transparent polypropylene pressure vessel with a bolted printed lid, bolted outlet flange and a black vine body everted through the outlet", caption: "Built robot" },
+      { src: "assets/vine-assembly-cutaway.webp", alt: "CAD cutaway of the robot showing the internal spool, drive shaft and outlet", caption: "Internal spool" },
+      { src: "assets/vine-lid-exploded.webp", alt: "Exploded CAD view of the lid assembly: motor, printed lid, TPU gasket and the flange-gripping lid mount with its bolt ring", caption: "Lid assembly" },
+      { src: "assets/vine-outlet-exploded.webp", alt: "Exploded CAD view of the vine outlet with its cross-section converter, gasket and bolt ring", caption: "Outlet + converter" },
+      { src: "assets/vine-reinforced-cad.webp", alt: "CAD of the reinforced robot with aluminium plates on every face and three C-shaped steel brackets", caption: "Reinforced build" },
+      { src: "assets/vine-fea-deformation.webp", alt: "FEA displacement result on the reinforcement structure, peaking at 6.5 mm", caption: "FEA — 6.5 mm peak" },
+      { src: "assets/vine-fea-stress.webp", alt: "FEA von Mises stress detail on the reinforcement, peaking at 0.234 GPa", caption: "FEA — 0.234 GPa" },
+      { src: "assets/vine-fabric-modulus.webp", alt: "Polar plot of the measured in-plane orthotropic Young's modulus of the TPU-coated vine fabric", caption: "Measured fabric modulus" },
+    ],
     // no 3D exhibit for this one (no model in the studio) — script.js hides the
     // "view in the studio" link when noStudio is set
     noStudio: true,

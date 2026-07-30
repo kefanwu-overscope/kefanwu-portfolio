@@ -1692,7 +1692,7 @@ studio. Everything below is LIVE.
 ### Current cache versions (bump the matching one whenever you edit that file)
 - `styles.css?v=vine-20260714` (in index.html)
 - `script.js?v=vine-20260714` (in index.html)
-- `project-data.js?v=vine-20260714` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `project-data.js?v=vinepix-20260714` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-vine-20260714` (3D page styles — in experience.html)
 - `experience.js?v=exp-vine-20260714` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
