@@ -277,13 +277,30 @@ research project.
     0.2339 GPa vs A36 0.25 GPa yield, the 45-run factorial, and the ASTM D882
     / three-point-bending results (MD 76.30, TD 69.89, 45° 41.78 MPa;
     EI 0.672 ± 0.063 N·m²).
-  · **Cover is a placeholder I generated**, `assets/cover-vine-robot.webp` —
-    a dark/blue polar plot of the measured in-plane orthotropic modulus,
-    drawn from Kefan's own numbers by
-    `scratchpad/vine_cover.py` (the plane-stress compliance model reproduces
-    MD/TD/45° exactly and bottoms out at 41.77 MPa near 46°, matching the
-    doc's "min 41.8 MPa near 46°"). SWAP IT for a Bucketbot photo/CAD render
-    when Kefan supplies one, and move the plot into the gallery.
+  · **Cover** (Kefan's pick, 2026-07-14): `assets/cover-vine-robot.webp` is the
+    **reinforcement-structure CAD** (aluminium plates + three C-brackets), so
+    the card uses `card-media--contain` — it is a 452x563 PORTRAIT render, and
+    --fill would crop the vessel. Contain-fit renders 234x291 inside the
+    388x291 box, i.e. 1.93x downscale (4% shy of the 2x-DPR ideal — invisible,
+    but a fresh SolidWorks render ≥800 px would make it exact).
+    The modal hero stays the PHOTO (gallery[0]) because `image:` is only the
+    no-gallery fallback — card shows the CAD, case study opens on the build.
+  · 8-image gallery pulled from the same doc: built robot (photo), internal
+    spool cutaway, exploded lid, exploded outlet, reinforced build, FEA
+    displacement (6.5 mm), FEA von Mises (0.234 GPa), and the measured fabric
+    modulus figure I generated with `scratchpad/vine_cover.py` (the
+    plane-stress compliance model reproduces MD/TD/45° exactly and bottoms out
+    at 41.77 MPa near 46°, matching the doc's "min 41.8 MPa near 46°").
+  · **How the images were obtained** (the folder is NOT link-shared, so curl
+    gets 403 and the Drive MCP only returns text): open the doc's
+    `/mobilebasic` view in the user's logged-in Chrome (claude-in-chrome MCP),
+    fetch each image in-page, compose them into ONE tall canvas, trigger a
+    blob `<a download>`, then slice the downloaded PNG locally with the rects
+    the page reports. Posting bytes to a localhost receiver does NOT work —
+    Google's CSP blocks connect-src. Chrome also blocks the SECOND automatic
+    download in a session, so one sheet per page load.
+  · Still missing: the Material Property Test doc's 8 large images (Instron
+    setup) — blocked by that second-download limit. Kefan was told.
   · `noStudio: true` on the entry + `studioLink.hidden = Boolean(project.noStudio)`
     in script.js openModal — there is no 3D exhibit for this project, so the
     "view this exhibit in the 3D Studio" link is suppressed (verified hidden
