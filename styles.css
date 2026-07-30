@@ -36,7 +36,13 @@
   --shadow-lg: 0 30px 80px rgba(0, 0, 0, 0.6);
   --ink-dark: #070707;
   --bg-recessed: #060708;
-  --max: 1180px;
+  /* content shell: FLUID at wide viewports (Kefan 2026-07-14: "两边留白很多").
+     A fixed 1180px left ~410px of dead margin per side on a 2000px screen.
+     88vw keeps the old ~1180 column at 1340px and below, then grows with the
+     window up to 1680px. The project grid is auto-fit, hero copy is capped at
+     620px and section heads at 820px, so nothing over-widens into unreadable
+     line lengths — only the dead margin shrinks. */
+  --max: clamp(1180px, 88vw, 1680px);
   --radius: 8px;
   --radius-small: 6px;
 
@@ -326,6 +332,11 @@ button {
   /* at wide viewports, snap to the .section-shell spine so the hero and the
      sections below share one left edge (was x=48 vs x=125 at 1440px) */
   --hero-pad: max(clamp(1rem, 4vw, 3rem), calc((100% - var(--max)) / 2));
+  /* same value in VIEWPORT units, for descendants that must escape the hero's
+     padding: --hero-pad is percentage-based, and inside .hero-content (capped
+     at 880px) a percentage resolves against the wrong box. Only the ~scrollbar
+     width differs from --hero-pad, which the width:100vw bleed already eats. */
+  --hero-bleed: max(clamp(1rem, 4vw, 3rem), calc((100vw - var(--max)) / 2));
   position: relative;
   min-height: 100svh;
   display: grid;
@@ -408,7 +419,10 @@ button {
   width: 100vw;
   max-width: none;
   min-width: 0;
-  margin: 0.15rem 0 0.65rem calc(var(--hero-pad) * -1);
+  /* --hero-bleed, NOT --hero-pad: the percentage in --hero-pad resolves
+     against .hero-content (880px cap) here, which collapsed the pull to the
+     clamp floor and left the ticker inset ~317px at 1920 */
+  margin: 0.15rem 0 0.65rem calc(var(--hero-bleed) * -1);
   overflow: hidden;
   border-block: 1px solid rgba(255, 255, 255, 0.08);
   opacity: 0.88;
@@ -2481,6 +2495,7 @@ html.js .project-grid.is-filtering .project-card {
 
   .hero {
     --hero-pad: 1rem;
+    --hero-bleed: 1rem; /* keep the ticker's pull equal to the pad on phones */
     padding-inline: var(--hero-pad);
   }
 
@@ -2520,7 +2535,7 @@ html.js .project-grid.is-filtering .project-card {
 
   .hero-skill-strip {
     width: 100vw;
-    margin-left: calc(var(--hero-pad) * -1);
+    margin-left: calc(var(--hero-bleed) * -1);
     margin-bottom: 0.75rem;
   }
 

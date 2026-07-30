@@ -256,7 +256,34 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-14 (latest, 5th pass) site audit batch 3 — studio perf + UX (S3, S5, S6, S8-S10, S12-S15)
+### 2026-07-14 (latest, 6th pass) fluid content shell + ticker full-bleed restored
+- Kefan on a ~1920px screen: "两边留白很多，能不能留少一点". Cause: `--max`
+  was a fixed 1180px, so a 1920px window left 370px of dead margin per side
+  (2000px → 410px).
+- `--max: clamp(1180px, 88vw, 1680px)` — identical to the old 1180px column at
+  ≤1340px, then grows with the window to a 1680px cap. Sides at 1920px:
+  370 → 115px. Nothing over-widens: `.project-grid` is auto-fit (4 → 6 columns
+  at 1920, card width stays ~267px), `.hero-copy` is capped at 620px, and
+  `.section-head.compact` at 820px.
+- Ticker full-bleed FIX (regression from M4 in batch 1): `.hero-skill-strip`
+  pulled itself out of the hero padding with `calc(var(--hero-pad) * -1)`, but
+  --hero-pad is PERCENTAGE-based and a percentage inside `.hero-content`
+  (width capped at 880px) resolves against that box — the pull collapsed to
+  the 48px clamp floor and the ticker sat ~317px inset at 1920 (visible as a
+  dark gap left of the marquee in Kefan's screenshot). New `--hero-bleed` var
+  holds the same value in VIEWPORT units (`(100vw - var(--max)) / 2`), which
+  is context-free; the ≤720 block sets both vars to 1rem.
+  NOTE: do NOT use `calc(50% - 50vw)` here — 50% is .hero-content's 880px.
+- Verified at 375/1024/1280/1440/1920: shell sides 16/16, 16/16, 45/55,
+  81/82, 115/115; hero left edge == shell left edge at 1440+ (M4 intact);
+  ticker covers the full viewport at every width; no horizontal overflow;
+  capabilities title still inside the shell; console clean.
+  (Known, pre-existing: at ≤1024 the hero pad is 4vw while the shell gutter is
+  1rem, so they diverge ~25px — untouched, aligning it would either add
+  whitespace or remove the hero's breathing room.)
+  Cache: styles.css → `shell-20260714`.
+
+### 2026-07-14 (5th pass) site audit batch 3 — studio perf + UX (S3, S5, S6, S8-S10, S12-S15)
 - S3 shadowMap.autoUpdate=false + tick() sets needsUpdate once per frame
   (shadow pass used to render 3x per composer frame — measured -55% CPU);
   key shadow map 4096→2048; BokehPass DISABLES itself while idle
@@ -1515,7 +1542,7 @@ studio. Everything below is LIVE.
 - Windows gotchas: Python cannot write to `/tmp` — write temp files under `C:/Users/oc/AppData/Local/Temp/...`. In `python -c` strings use forward slashes / `os.path.join`, not escaped backslashes. Pasted screenshots land in `C:\Users\oc\AppData\Local\Packages\MicrosoftWindows.Client.Core_cw5n1h2txyewy\TempState\ScreenClip\`.
 
 ### Current cache versions (bump the matching one whenever you edit that file)
-- `styles.css?v=audit2-20260714` (in index.html)
+- `styles.css?v=shell-20260714` (in index.html)
 - `script.js?v=audit2-20260714` (in index.html)
 - `project-data.js?v=audit2-20260714` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-audit3-20260714` (3D page styles — in experience.html)
