@@ -1086,11 +1086,18 @@ h2 {
 
 .project-grid {
   display: grid;
-  /* TWO up, always (Kefan 2026-07-14): auto-fit filled the fluid shell with
-     6 small columns at 1920 and read as a thumbnail wall. Big editorial cards
-     instead — one project per half-width. ≤720px collapses to one column. */
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* FOUR up (Kefan 2026-07-14) — a FIXED count, not auto-fit: with the fluid
+     --max, auto-fit kept adding columns as the window grew (6 at 1920, read as
+     a thumbnail wall). Steps down to 3 / 2 / 1 in the blocks below. */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(0.75rem, 1.6vw, 1rem);
+}
+
+/* below ~1200px four cards get too narrow (233px at 1024) — drop to three */
+@media (max-width: 1199px) {
+  .project-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .project-card {
@@ -2845,13 +2852,12 @@ html { scrollbar-gutter: stable; }
   color: var(--muted); /* --quiet measured 4.3:1 on the card gradient — under AA */
 }
 .project-body h3 { font-size: var(--text-h3); letter-spacing: -0.01em; }
-/* two-up cards run ~480-830px wide on desktop; the padding and type sized for
-   the old four-column grid read undersized inside them */
-@media (min-width: 981px) {
-  .project-body { gap: 0.55rem; padding: 1.2rem 1.4rem 1.45rem; }
-  .project-body h3 { font-size: 1.5rem; }
-  .project-body p:not(.project-meta) { font-size: 1.02rem; line-height: 1.5; }
-  .project-meta { font-size: 0.75rem; }
+/* on wide screens the fluid shell makes four-up cards ~370-410px (vs the 283px
+   they were sized for), so give the body a small matching step up */
+@media (min-width: 1600px) {
+  .project-body { gap: 0.48rem; padding: 1.05rem 1.2rem 1.25rem; }
+  .project-body h3 { font-size: 1.32rem; }
+  .project-body p:not(.project-meta) { font-size: 0.96rem; }
 }
 .title-row {
   display: flex;

@@ -256,27 +256,28 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-14 (latest, 7th pass) project grid is TWO up
-- Kefan, after the fluid shell landed: the grid went to 6 columns at 1920 and
-  "排版不太好看 ... 改成一行只有2".
-- `.project-grid` is `repeat(2, minmax(0, 1fr))` — NOT auto-fit any more. Do
-  not restore auto-fit: with a fluid --max it silently adds columns as the
-  window grows, which is exactly what Kefan rejected.
-- Cards are big now (832x771 at 1920, 626x616 at 1440), so an
-  `@media (min-width: 981px)` block in the override layer scales the body to
-  match: padding 1.2/1.4/1.45rem, h3 1.5rem, sub 1.02rem, meta 0.75rem.
-  Below 981px the ≤980 rule already gave 2 columns at the old compact type,
-  and ≤720px still collapses to 1 column.
-- Page height on desktop roughly doubles (1920: ~9.9k px, 1440: ~8.7k px).
-  Kefan accepted that trade for bigger cards; if it ever needs shortening the
-  lever is the `.card-media` aspect ratio, not the column count.
+### 2026-07-14 (latest, 7th pass) project grid is FOUR up (fixed count)
+- After the fluid shell landed, auto-fit grew the grid to 6 columns at 1920 and
+  Kefan called the layout bad. He wants **4 per row** (a first reading of the
+  message shipped 2-up for one commit — corrected immediately, don't revive it).
+- `.project-grid` is now a FIXED `repeat(4, minmax(0, 1fr))`. Do NOT restore
+  auto-fit: with a fluid `--max` it silently re-adds columns as the window
+  grows, which is the thing that was rejected. Step-down ladder:
+  ≥1200px = 4 · ≤1199px = 3 (new rule right under the base) · ≤980px = 2
+  (pre-existing block) · ≤720px = 1 (pre-existing block). Cascade order in the
+  file already puts them in that priority — keep new rules above line ~2370.
+- Cards: 408x462 at 1920, 305x383 at 1440, 317 wide at 1024, 357 at 768.
+  Since the fluid shell makes them ~408px on wide screens (vs the 283px the
+  typography was sized for), a small `@media (min-width: 1600px)` step-up in
+  the override layer sets padding 1.05/1.2/1.25rem, h3 1.32rem, sub 0.96rem.
+- Page height 1920: ~6.1k px (2-up was ~9.9k).
 - Measured source ARs vs the 4/3 media box (unchanged): most CAD covers are
   1.4-1.89 so they letterbox 16-29% top/bottom, carbonSeat is portrait (0.75)
   at 44%, and the four `--fill` photos (1.5-1.6) crop 11-17%. Proportions are
-  identical to before — only the absolute pixel size grew. A 3/2 box would
-  help the wide ones and hurt steering/seat/carbonSeat; left alone on purpose.
-- Verified at 375/768/1440/1920: 1/2/2/2 per row, no horizontal overflow,
-  console clean. Cache: `grid2up-20260714`.
+  unchanged from before the fluid shell — only absolute size moved. A 3/2 box
+  would help the wide ones and hurt steering/seat/carbonSeat; left alone.
+- Verified at 375/768/1024/1440/1920: 1/2/3/4/4 per row, no horizontal
+  overflow, console clean. Cache: `grid4up-20260714`.
 
 ### 2026-07-14 (6th pass) fluid content shell + ticker full-bleed restored
 - Kefan on a ~1920px screen: "两边留白很多，能不能留少一点". Cause: `--max`
@@ -1564,7 +1565,7 @@ studio. Everything below is LIVE.
 - Windows gotchas: Python cannot write to `/tmp` — write temp files under `C:/Users/oc/AppData/Local/Temp/...`. In `python -c` strings use forward slashes / `os.path.join`, not escaped backslashes. Pasted screenshots land in `C:\Users\oc\AppData\Local\Packages\MicrosoftWindows.Client.Core_cw5n1h2txyewy\TempState\ScreenClip\`.
 
 ### Current cache versions (bump the matching one whenever you edit that file)
-- `styles.css?v=grid2up-20260714` (in index.html)
+- `styles.css?v=grid4up-20260714` (in index.html)
 - `script.js?v=audit2-20260714` (in index.html)
 - `project-data.js?v=audit2-20260714` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-audit3-20260714` (3D page styles — in experience.html)
