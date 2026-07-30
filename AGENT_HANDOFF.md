@@ -256,7 +256,72 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-14 (latest, 7th pass) project grid is FOUR up (fixed count)
+### 2026-07-14 (latest, 8th pass) M10 DONE — real resume shipped + resume ground truth
+- Kefan supplied `C:\Users\oc\Desktop\Kefan Wu resume.pdf` (1 page, created
+  2026-07-29). It replaces the 3.6 KB ReportLab auto-generated placeholder at
+  `assets/kefan-wu-resume.pdf` that the audit flagged (M10). Referenced from
+  index.html twice (nav + contact) and from experience-data.js (3D sheet, S12).
+- PDF metadata was rewritten (title was "Kefan Wu resume help" → "Kefan Wu —
+  Mechanical Engineering Resume", author "kwu" → "Kefan Wu", plus subject and
+  keywords). Rendered pixels verified IDENTICAL before/after (sha256 of a 2x
+  pixmap), so the visual document is untouched.
+- **KNOWN DEFECT, told to Kefan:** the file was printed through PScript5 +
+  Acrobat Distiller, so all glyphs are a **Type3 outline font with no
+  ToUnicode CMap**. Text extraction yields glyph indices, not characters —
+  i.e. ATS parsers and copy-paste get nothing, and the outlines bloat it to
+  570 KB. Fix is on Kefan's side: export straight from the source document
+  (Word "Save as PDF" / Google Docs "Download → PDF"), never "Print to Adobe
+  PDF". Re-verify with:
+  `python -c "from pypdf import PdfReader; print(PdfReader('assets/kefan-wu-resume.pdf').pages[0].extract_text()[:200])"`
+- Tooling note: reading this PDF required rendering. `pymupdf` is now pip-
+  installed in the codex python (`C:\Users\oc\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe`);
+  poppler/pdftoppm is NOT available, so the Read tool cannot rasterize PDFs.
+
+#### RESUME GROUND TRUTH (use for site copy; supersedes guesses)
+- Olin College of Engineering, Needham MA — B.S. Mechanical Engineering,
+  **expected May 2028**, **GPA 3.9/4.0**. Coursework: Mechanics of Solids &
+  Structures, Systems Analysis: Dynamics, Thermal-Fluid Systems, Probabilistic
+  Modeling. Contact on resume: kefanwu.com · kwu@olin.edu · 508-509-2707
+  (the phone number is NOT on the website — do not add it without asking).
+- Olin Electric Motorsports (Formula SAE Electric): team builds an **85 kW**
+  electric racecar, **0–60 mph in 3.5 s**. Role progression:
+  · **Mechanical Lead, May 2026 – present** — directs mechanical design /
+    integration / fabrication of Mk.8; manages **4 mechanical subteams**
+    (suspension & chassis, aerodynamics, drivetrain, accumulator); milestones
+    toward a **22 km, sub-30-minute endurance** design target.
+  · **Cockpit Lead, Jun 2025 – May 2026** — track-based brake thermal model,
+    rotor mass **-25% at 3.0 FEA FoS**; steering column on matched **27.5°
+    dual U-joints** for linear steering; lightweighted bearing cages saving
+    **0.9 kg**; led the cockpit subteam (lathe/mill/waterjet, TIG-welded
+    chassis tabs, carbon fiber seat layup).
+  · **Drivetrain & Cockpit Engineer, Sep 2024 – Jun 2025** — Mk.7 driver seat
+    and FEA-validated motor-controller mounts.
+- **Research Assistant, Olin Vine Robotics Lab (full-time summer research),
+  May 2026 – Aug 2026** — vine-everting robot holding **5 psi**; **30 Instron
+  tests** across TPU-coated fabric and LDPE (**ASTM D882**); testing rig with
+  minimized buckling validating a cross-section strain model. **This whole
+  role is ABSENT from the website.**
+- Project AURA (class project) **Oct 2025 – Dec 2025** — front swerve modules
+  for a **300 lb-payload autonomous LUGGAGE robot** (site calls it a "cart"):
+  NEMA 23 steppers via 18:80 chain steering reduction, 24 V DC motors via 9:16
+  sprockets; fixed chain skip / backlash / shaft misalignment across
+  durability, impact and load tests; 0.25 in A36 waterjet on an OMAX + TIG.
+- Selected projects: Javelin VTOL (300 km/h design target, differential
+  thrust, **seeking FAA clearance to fly past the 100 mph UAS limit**);
+  Agent-based CFD (PyFluent + AI agents, **drove Javelin aero design**, 11
+  documented failure modes); LiDAR scanner (**ESP32** two-axis gantry, NEMA 17
+  + DRV8825, 2,206 points, **14-point calibration** → <3% range error, copper
+  foil EMI shielding).
+- **CONFLICT to resolve with Kefan:** the site claims ">30 Engineers led"
+  (hero stat), "Leading 30+ engineers" (Motorsport panel) and "coordinating
+  30+ engineers" (3D resume sheet), but the resume says only "manage 4
+  mechanical subteams" with no headcount. Do NOT quietly keep or delete the
+  claim — it needs his confirmation.
+- The resume gives NO dates for Telecaster, FTC, Pool Sniper, LineFollower,
+  guitar education kit, Smelly, carbon seat, scanner, Javelin or CFD, so M15
+  (years on every card) is still partly blocked.
+
+### 2026-07-14 (7th pass) project grid is FOUR up (fixed count)
 - After the fluid shell landed, auto-fit grew the grid to 6 columns at 1920 and
   Kefan called the layout bad. He wants **4 per row** (a first reading of the
   message shipped 2-up for one commit — corrected immediately, don't revive it).
