@@ -692,7 +692,12 @@ function openModal(projectKey, sourceCard = null) {
   modalTitle.textContent = project.title;
   modalSummary.textContent = project.summary;
   const studioLink = document.querySelector("#modal-studio-link");
-  if (studioLink) studioLink.href = `experience.html#${projectKey}`;
+  if (studioLink) {
+    // projects flagged noStudio have no 3D exhibit (no model in the scene) —
+    // don't offer a link that lands in the studio with nothing to show
+    studioLink.hidden = Boolean(project.noStudio);
+    studioLink.href = `experience.html#${projectKey}`;
+  }
   fillList(modalHighlights, project.highlights);
   fillList(modalTools, project.tools);
   renderDetails(project);

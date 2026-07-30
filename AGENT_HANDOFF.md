@@ -256,7 +256,67 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-14 (latest, 8th pass) M10 DONE — real resume shipped + resume ground truth
+### 2026-07-14 (latest, 9th pass) Vine robot project added + resume-truth copy pass
+Kefan approved all of it in one message (option **B** on the headcount plus
+items 1-8 from the resume-facts list), and supplied a Drive folder for the
+research project.
+
+- **NEW PROJECT: `vineRobot`** — "Vine everting robot", card #03 / Research,
+  categories `robotics analysis fabrication`. 15 project cards now (16 grid
+  tiles with the studio link tile) = exactly 4 rows of 4.
+  · Source: Kefan's Drive folder `1PFFm59Znxa4Tu2NeF4561eQpcsUfXq8Z` —
+    "Bucketbot Design Documentation", "Bucketbot" deck, "Vine Deformation
+    Experiment", "Material Property Test". Read via the Drive MCP
+    (`mcp__ffde5733-…__search_files` / `read_file_content`). The folder is NOT
+    link-shared, so curl/wget cannot fetch it — only the MCP path works.
+  · Case study carries the real numbers: 34 kPa (5 psi) design pressure at
+    3.33 FoS, 571 mm max body circumference, 39 M4x30 Grade 12.9 lid bolts
+    against ~2,304 N blow-off, TPU 85A printed gaskets (0.5-3 mm, five seal
+    families), swappable outlet converters, spool holder + flexible coupling,
+    first test 1.2 psi vs 0.71 psi hand calc, reinforcement FEA 6.524 mm /
+    0.2339 GPa vs A36 0.25 GPa yield, the 45-run factorial, and the ASTM D882
+    / three-point-bending results (MD 76.30, TD 69.89, 45° 41.78 MPa;
+    EI 0.672 ± 0.063 N·m²).
+  · **Cover is a placeholder I generated**, `assets/cover-vine-robot.webp` —
+    a dark/blue polar plot of the measured in-plane orthotropic modulus,
+    drawn from Kefan's own numbers by
+    `scratchpad/vine_cover.py` (the plane-stress compliance model reproduces
+    MD/TD/45° exactly and bottoms out at 41.77 MPa near 46°, matching the
+    doc's "min 41.8 MPa near 46°"). SWAP IT for a Bucketbot photo/CAD render
+    when Kefan supplies one, and move the plot into the gallery.
+  · `noStudio: true` on the entry + `studioLink.hidden = Boolean(project.noStudio)`
+    in script.js openModal — there is no 3D exhibit for this project, so the
+    "view this exhibit in the 3D Studio" link is suppressed (verified hidden
+    for vineRobot, still visible for steering).
+- **Headcount claim resolved (option B)**: every ">30 / 30+ engineers" is gone.
+  Hero stat is now `4 — Mechanical subteams led`; the Motorsport panel opens
+  with "four subteams"; the 3D resume sheet highlight names the four subteams.
+  Grep for "Engineers led" returns nothing.
+- Hero stats bar is now: Mechanical Lead · **4** subteams led · **85 kW**
+  racecar (0-60 in 3.5 s) · **15** engineering projects. Dropped "18+
+  Technical skills" (the audit's weakest stat) and the headcount.
+- Hero eyebrow and the 3D sheet's meta line carry **GPA 3.9**.
+- Motorsport spec list gained a **Program** row (4 subteams + the 22 km,
+  sub-30-minute endurance target) and a **Track record** row (Drivetrain &
+  Cockpit Engineer Sep 2024 → Cockpit Lead Jun 2025 → Mechanical Lead
+  May 2026) — that is audit item M11, and the FSAE half of M15.
+- Steering: **0.9 kg** bearing-cage saving added to highlights, details and
+  the Motorsport spec row. Javelin: "seeking FAA clearance to fly past the
+  100 mph UAS limit". AURA: now an **autonomous luggage robot with a 300 lb
+  payload** everywhere — the "200 lb working load" framing I invented on
+  2026-07-14 to reconcile the site's internal contradiction is REMOVED,
+  because the resume settles it at 300 lb.
+- Studio tile copy: "Every project above…" → "The 14 modeled projects above…"
+  (15 projects, 14 exhibits — keep these two counts distinct).
+- JSON-LD ItemList is 15 items, positions renumbered; both blocks validated
+  with json.loads.
+- Verified by DOM probe at 1920: 16 tiles / 4 per row, card order
+  steering·brakeSim·vineRobot·javelin·ansysCfd·carbonSeat, cover resolves,
+  7 highlights + 6 detail blocks, studio-link visibility correct both ways,
+  stats/eyebrow/spec rows read as intended, console clean.
+- STILL BLOCKED: per-card years for the 10 non-FSAE projects (M15 remainder).
+
+### 2026-07-14 (8th pass) M10 DONE — real resume shipped + resume ground truth
 - Kefan supplied `C:\Users\oc\Desktop\Kefan Wu resume.pdf` (1 page, created
   2026-07-29). It replaces the 3.6 KB ReportLab auto-generated placeholder at
   `assets/kefan-wu-resume.pdf` that the audit flagged (M10). Referenced from
@@ -1630,11 +1690,11 @@ studio. Everything below is LIVE.
 - Windows gotchas: Python cannot write to `/tmp` — write temp files under `C:/Users/oc/AppData/Local/Temp/...`. In `python -c` strings use forward slashes / `os.path.join`, not escaped backslashes. Pasted screenshots land in `C:\Users\oc\AppData\Local\Packages\MicrosoftWindows.Client.Core_cw5n1h2txyewy\TempState\ScreenClip\`.
 
 ### Current cache versions (bump the matching one whenever you edit that file)
-- `styles.css?v=grid4up-20260714` (in index.html)
-- `script.js?v=audit2-20260714` (in index.html)
-- `project-data.js?v=audit2-20260714` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-audit3-20260714` (3D page styles — in experience.html)
-- `experience.js?v=exp-audit3-20260714` (3D page module — in experience.html)
+- `styles.css?v=vine-20260714` (in index.html)
+- `script.js?v=vine-20260714` (in index.html)
+- `project-data.js?v=vine-20260714` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `experience.css?v=exp-vine-20260714` (3D page styles — in experience.html)
+- `experience.js?v=exp-vine-20260714` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
