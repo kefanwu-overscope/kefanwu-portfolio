@@ -577,9 +577,10 @@ const projectData = {
     title: "Material property testing",
     image: "assets/cover-material-test.webp",
     gallery: [
-      { src: "assets/cover-material-test.webp", alt: "Polar plot of the measured in-plane orthotropic Young's modulus of the TPU-coated vine fabric, minimum near 46 degrees", caption: "Directional modulus" },
-      { src: "assets/material-tensile-summary.webp", alt: "Bar chart of tensile modulus with standard deviation for TPU-coated fabric in three directions and LDPE film", caption: "Tensile results" },
-      { src: "assets/material-bending-summary.webp", alt: "Three-point bending stiffness band for eleven bamboo rods with the derived bending stiffness and modulus", caption: "Bamboo bending" },
+      { src: "assets/cover-material-test.webp", alt: "Polar plot of the measured directional Young's modulus of the TPU-coated fabric, stiffest along the weave axes and minimum near 46 degrees", caption: "Directional modulus" },
+      { src: "assets/material-tensile-summary.webp", alt: "Bar chart of engineering tensile modulus with error bars for the fabric in TD, MD and 45 degrees plus LDPE film", caption: "Tensile summary" },
+      { src: "assets/material-bending-fits.webp", alt: "Force-deflection curves for all eleven bamboo samples in three-point bending", caption: "Force–deflection, 11 rods" },
+      { src: "assets/material-bending-summary.webp", alt: "Per-sample bending stiffness EI and estimated bending modulus for the eleven bamboo rods against their means", caption: "Per-rod EI and E" },
     ],
     noStudio: true,
     spec: {
