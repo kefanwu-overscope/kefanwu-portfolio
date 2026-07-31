@@ -256,7 +256,49 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-14 (latest, 9th pass) Vine robot project added + resume-truth copy pass
+### 2026-07-30 (latest) real vine photos + material testing split into its own project
+- Kefan dropped four 8160x6120 photos in `C:\Users\oc\Desktop\WEBSITE\vine robot\`
+  (that Desktop-folder handoff is the pattern that keeps working — Drive is
+  awkward, see below). Converted to 1400px WebP:
+  `vine-body-3partition` (reinforced robot everting the 3-partition body),
+  `vine-body-stick` (stick-reinforced body, bamboo rods visible),
+  `vine-test-rig` (full deformation rig), `vine-test-closeup` (body under load).
+  They lead the vineRobot gallery, which is 11 images now; the modal hero is
+  therefore the 3-partition photo.
+- **NEW PROJECT `materialTest`** — "Material property testing", card 04 /
+  Research, `data-category="analysis"`, noStudio. Kefan asked for the material
+  work to stand alone, so vineRobot's "Material characterization" detail block
+  was replaced by a one-line "Feeding the model" pointer and all the Instron
+  content moved across: ASTM D882 on 30 specimens (MD 76.30±3.08, TD
+  69.89±2.47, 45° 41.78±0.99, LDPE 100.96±5.00 MPa), the plane-stress
+  orthotropic fit, and three-point bending on 11 bamboo rods (81.7±7.7 N/mm,
+  EI 0.672±0.063 N·m², E 0.678±0.055 GPa).
+- Counts moved: 16 project cards (17 grid tiles), hero stat "16 Engineering
+  projects", JSON-LD ItemList 16 items, card metas renumbered. The studio tile
+  still says 14 EXHIBITS — two projects have no 3D model, keep them distinct.
+- **Figures are PLACEHOLDERS pending Kefan's originals.** He asked for the
+  documentation's own plots ("数据图片尽量用我documentation的原图").
+  `cover-material-test.webp` (polar modulus), `material-tensile-summary.webp`
+  and `material-bending-summary.webp` are drawn by
+  `scratchpad/mat_figs.py` from the tabulated values — accurate and labelled,
+  but not his renders. The bending figure shows a mean ± SD band, NOT invented
+  per-specimen curves (an earlier draft synthesised 11 fake rod traces; do not
+  reintroduce that).
+- **Getting images out of Drive — what works and what does not:**
+  · Folder is not link-shared → `curl` on any Drive/Docs image URL returns 403.
+  · Drive MCP returns text; `download_file_content` would push base64 through
+    the model context (a 130 KB PNG ≈ 43k tokens) — avoid.
+  · In-page `fetch` of doc images works (same-origin, session cookies).
+    Getting the bytes OUT is the hard part:
+      - POST to a localhost receiver → blocked by Google's CSP.
+      - `navigator.clipboard.write` → NotAllowedError, document not focused.
+      - blob `<a download>` → works ONCE per site, then Chrome blocks further
+        automatic downloads (that is how the 11 Bucketbot doc images landed;
+        the Material doc and the figures folder were both blocked afterwards).
+  · Unblock options for Kefan: allow automatic downloads for docs.google.com,
+    or link-share the folder, or just drop the PNGs in the Desktop folder.
+
+### 2026-07-14 (9th pass) Vine robot project added + resume-truth copy pass
 Kefan approved all of it in one message (option **B** on the headcount plus
 items 1-8 from the resume-facts list), and supplied a Drive folder for the
 research project.
@@ -1709,7 +1751,7 @@ studio. Everything below is LIVE.
 ### Current cache versions (bump the matching one whenever you edit that file)
 - `styles.css?v=vine-20260714` (in index.html)
 - `script.js?v=vine-20260714` (in index.html)
-- `project-data.js?v=vinepix-20260714` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `project-data.js?v=matlab-20260730` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-vine-20260714` (3D page styles — in experience.html)
 - `experience.js?v=exp-vine-20260714` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.

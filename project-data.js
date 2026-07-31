@@ -477,14 +477,17 @@ const projectData = {
     title: "Vine everting robot",
     image: "assets/cover-vine-robot.webp",
     gallery: [
-      { src: "assets/vine-robot-built.webp", alt: "The built vine everting robot: transparent polypropylene pressure vessel with a bolted printed lid, bolted outlet flange and a black vine body everted through the outlet", caption: "Built robot" },
+      { src: "assets/vine-body-3partition.webp", alt: "The reinforced vine robot in the shop everting a large three-partition vine body across the bench", caption: "3-partition body everted" },
+      { src: "assets/vine-body-stick.webp", alt: "The reinforced vine robot everting a stick-reinforced vine body, its bamboo rods visible along the length", caption: "Stick-reinforced body" },
+      { src: "assets/vine-test-rig.webp", alt: "The deformation test rig: timber frame on adjustable feet with vertical guide rods, a load shape over the pressurised vine body, and the robot outlet at right", caption: "Deformation test rig" },
+      { src: "assets/vine-test-closeup.webp", alt: "Close view of a pressurised vine body under the load shape, resting on the marked wood plate between the rig's linear bearings", caption: "Body under load" },
+      { src: "assets/vine-robot-built.webp", alt: "The first build of the vine everting robot: transparent polypropylene pressure vessel with a bolted printed lid, bolted outlet flange and a vine body everted through the outlet", caption: "First build" },
       { src: "assets/vine-assembly-cutaway.webp", alt: "CAD cutaway of the robot showing the internal spool, drive shaft and outlet", caption: "Internal spool" },
       { src: "assets/vine-lid-exploded.webp", alt: "Exploded CAD view of the lid assembly: motor, printed lid, TPU gasket and the flange-gripping lid mount with its bolt ring", caption: "Lid assembly" },
       { src: "assets/vine-outlet-exploded.webp", alt: "Exploded CAD view of the vine outlet with its cross-section converter, gasket and bolt ring", caption: "Outlet + converter" },
       { src: "assets/vine-reinforced-cad.webp", alt: "CAD of the reinforced robot with aluminium plates on every face and three C-shaped steel brackets", caption: "Reinforced build" },
       { src: "assets/vine-fea-deformation.webp", alt: "FEA displacement result on the reinforcement structure, peaking at 6.5 mm", caption: "FEA — 6.5 mm peak" },
       { src: "assets/vine-fea-stress.webp", alt: "FEA von Mises stress detail on the reinforcement, peaking at 0.234 GPa", caption: "FEA — 0.234 GPa" },
-      { src: "assets/vine-fabric-modulus.webp", alt: "Polar plot of the measured in-plane orthotropic Young's modulus of the TPU-coated vine fabric", caption: "Measured fabric modulus" },
     ],
     // no 3D exhibit for this one (no model in the studio) — script.js hides the
     // "view in the studio" link when noStudio is set
@@ -508,7 +511,7 @@ const projectData = {
       "Added a spool holder that moves vine tension and spool weight off the motor shaft into a bearing, with a flexible coupling absorbing motor-to-spool misalignment.",
       "First pressure test held 1.2 psi against a 0.71 psi thin-wall hand calculation, and exposed the real failure order: coupler, vine-to-spool joint, then leaks.",
       "Reinforced with 6061 plate on all four faces, an aluminum lid and three C-shaped A36 brackets; FEA at 500 lbf per face (5.8 psi) gives 6.5 mm peak deformation and 0.234 GPa peak stress against A36's 0.25 GPa yield.",
-      "Measured the model's inputs rather than citing literature: 30 ASTM D882 tensile specimens on Instron 3345 (TPU-coated fabric MD/TD/45 deg plus LDPE) and 11 three-point bending tests on bamboo rods (EI = 0.672 +/- 0.063 N.m2).",
+      "Ran the resulting 45-test factorial with it: three body types (circular, 3-partition, stick-reinforced) against two load shapes, three pressures and two loads.",
     ],
     tools: [
       "SolidWorks",
@@ -562,11 +565,80 @@ const projectData = {
         ],
       },
       {
-        title: "Material characterization",
+        title: "Feeding the model",
         points: [
-          "TPU-coated fabric is orthotropic because of its weave, so it was cut and tested in three directions: MD 76.30 +/- 3.08 MPa, TD 69.89 +/- 2.47 MPa, 45 deg 41.78 +/- 0.99 MPa (LDPE film, isotropic in the pilot, came in at 100.96 +/- 5.00 MPa).",
-          "The 45 deg modulus is only ~55% of MD, which is the signature of a shear-governed off-axis response; the three measurements fully determine the plane-stress orthotropic compliance model, whose minimum lands near 46 deg.",
-          "Bamboo reinforcing rods went through three-point bending over a 73.37 mm span: stiffness 81.7 +/- 7.7 N/mm, EI = 0.672 +/- 0.063 N.m2, all 11 fits above R2 0.999.",
+          "The prediction model takes membrane stiffness and rod bending stiffness as direct inputs, so both were measured on an Instron rather than taken from literature — see the material property testing case study.",
+        ],
+      },
+    ],
+  },
+  materialTest: {
+    kicker: "Olin Vine Robotics Lab / Instron / 2026",
+    title: "Material property testing",
+    image: "assets/cover-material-test.webp",
+    gallery: [
+      { src: "assets/cover-material-test.webp", alt: "Polar plot of the measured in-plane orthotropic Young's modulus of the TPU-coated vine fabric, minimum near 46 degrees", caption: "Directional modulus" },
+      { src: "assets/material-tensile-summary.webp", alt: "Bar chart of tensile modulus with standard deviation for TPU-coated fabric in three directions and LDPE film", caption: "Tensile results" },
+      { src: "assets/material-bending-summary.webp", alt: "Three-point bending stiffness band for eleven bamboo rods with the derived bending stiffness and modulus", caption: "Bamboo bending" },
+    ],
+    noStudio: true,
+    spec: {
+      meta: [
+        ["Role", "Research assistant"],
+        ["Standard", "ASTM D882"],
+      ],
+      stats: [
+        ["30", "Tensile specimens"],
+        ["11", "Bending tests"],
+      ],
+    },
+    summary:
+      "The Olin Vine Robotics Lab's cross-section model takes membrane stiffness and rod bending stiffness as direct inputs, so both had to be measured rather than looked up. I ran two campaigns on an Instron 3345: ASTM D882 tension on 30 film and fabric specimens, and three-point bending on 11 bamboo reinforcing rods — then fitted a plane-stress orthotropic model to the fabric results.",
+    highlights: [
+      "Tested the TPU-coated fabric in three directions because its weave makes it orthotropic: MD 76.30 +/- 3.08 MPa, TD 69.89 +/- 2.47 MPa, 45 deg 41.78 +/- 0.99 MPa, with LDPE film at 100.96 +/- 5.00 MPa.",
+      "Scatter stayed under 4.9% of the mean in every group, and the on-axis fabric fits landed at R2 0.99.",
+      "The 45 deg modulus is only ~55% of MD — the signature of a shear-governed off-axis response — and the three measurements fully determine the plane-stress compliance model, whose minimum sits near 46 deg.",
+      "Three-point bending on 11 rods gave 81.7 +/- 7.7 N/mm stiffness, EI = 0.672 +/- 0.063 N.m2 and E = 0.678 +/- 0.055 GPa, every fit above R2 0.999.",
+      "Adapted the standard where the equipment required it: a 100 mm gauge length instead of the 250 mm nominal to fit the available grip separation, with crosshead speeds set by the standard's strain-rate rule.",
+    ],
+    tools: [
+      "Instron 3345 (5 kN)",
+      "ASTM D882",
+      "Three-point bending",
+      "Orthotropic modelling",
+      "Least-squares fitting",
+      "Data analysis",
+    ],
+    details: [
+      {
+        title: "Why measure it at all",
+        points: [
+          "The lab's cross-section prediction model consumes the vine body's membrane stiffness and the bamboo rods' bending stiffness directly, so literature values would have propagated straight into every prediction.",
+          "Two materials are in play for vine bodies — single-side TPU-coated fabric and LDPE film — and the reinforced bodies add bamboo rods, so three separate characterisations were needed.",
+        ],
+      },
+      {
+        title: "Membrane tension, ASTM D882",
+        points: [
+          "30 specimens: 7 machine-direction, 7 transverse, 8 at 45 deg for the fabric, plus 8 LDPE, which showed no directional dependence in the pilot.",
+          "Specimens ran 23.6-25.4 mm wide inside the standard's 5.0-25.4 mm window; fabric measured 0.19-0.22 mm thick and LDPE 0.10-0.11 mm, all conditioned and tested at 23 +/- 2 C and 50 +/- 10 % RH.",
+          "Crosshead speed followed the standard's strain-rate rule: 12.5 mm/min for fabric to 20% strain, 50 mm/min for LDPE to 200 mm; modulus came from a least-squares fit over the initial linear region.",
+        ],
+      },
+      {
+        title: "Orthotropic model of the fabric",
+        points: [
+          "Feeding the three measured moduli into the plane-stress orthotropic compliance relation gives the full directional curve rather than three isolated numbers.",
+          "It is stiffest along MD at 76.3 MPa, slightly softer along TD at 69.9 MPa, and bottoms out near 41.8 MPa at about 46 deg — that curve is what the fabric bodies use in the model.",
+          "The lower fit quality at 45 deg and for LDPE (R2 0.967 and 0.950) reflects mild curvature inside the fit window, which is worth knowing before trusting either number too far.",
+        ],
+      },
+      {
+        title: "Rod bending",
+        points: [
+          "No bending standard covers a 0.25 in wood rod, so the test was defined to be repeatable instead: 73.37 mm support span, 12.5 mm/min crosshead, and 11 rods selected for straightness out of the supplied batch.",
+          "Stiffness came from the initial linear region of each force-deflection curve, roughly the first 1.3-1.8 mm of travel, then converted to EI through the simply-supported central-load relation.",
+          "EI is the quantity the model consumes and the primary result; the derived modulus is reported alongside it for comparison only.",
         ],
       },
     ],
