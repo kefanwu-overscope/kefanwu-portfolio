@@ -577,8 +577,12 @@ const projectData = {
     title: "Material property testing",
     image: "assets/cover-material-test.webp",
     gallery: [
-      { src: "assets/cover-material-test.webp", alt: "Polar plot of the measured directional Young's modulus of the TPU-coated fabric, stiffest along the weave axes and minimum near 46 degrees", caption: "Directional modulus" },
+      { src: "assets/cover-material-test.webp", alt: "Engineering stress against extension over the first 25 mm for TD, MD and 45 degree fabric plus LDPE, each specimen drawn faintly behind its group mean", caption: "Stress vs extension, 0–25 mm" },
+      { src: "assets/material-stress-extension-full.webp", alt: "Engineering stress against extension over the full test range for every specimen group", caption: "Full extension range" },
+      { src: "assets/material-stress-strain-md.webp", alt: "Engineering stress-strain curves for the machine-direction fabric specimens", caption: "MD stress–strain" },
+      { src: "assets/material-stress-strain-ldpe.webp", alt: "Engineering stress-strain curves for the LDPE film specimens", caption: "LDPE stress–strain" },
       { src: "assets/material-tensile-summary.webp", alt: "Bar chart of engineering tensile modulus with error bars for the fabric in TD, MD and 45 degrees plus LDPE film", caption: "Tensile summary" },
+      { src: "assets/material-modulus-polar.webp", alt: "Polar plot of the measured directional Young's modulus of the TPU-coated fabric, stiffest along the weave axes and minimum near 46 degrees", caption: "Directional modulus" },
       { src: "assets/material-bending-fits.webp", alt: "Force-deflection curves for all eleven bamboo samples in three-point bending", caption: "Force–deflection, 11 rods" },
       { src: "assets/material-bending-summary.webp", alt: "Per-sample bending stiffness EI and estimated bending modulus for the eleven bamboo rods against their means", caption: "Per-rod EI and E" },
     ],

@@ -276,13 +276,18 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 - Counts moved: 16 project cards (17 grid tiles), hero stat "16 Engineering
   projects", JSON-LD ItemList 16 items, card metas renumbered. The studio tile
   still says 14 EXHIBITS — two projects have no 3D model, keep them distinct.
-- **The four figures are Kefan's OWN MATLAB renders** (he asked for the
-  documentation's originals): `cover-material-test.webp` (directional modulus
-  polar), `material-tensile-summary.webp` (TD/MD/45/LDPE bars with error bars),
-  `material-bending-fits.webp` (force–deflection for all 11 samples) and
-  `material-bending-summary.webp` (per-rod EI and E against the mean), all
-  from the `figures` subfolder at 1200 px WebP. The generated stand-ins from
-  `scratchpad/mat_figs.py` are gone — that script is now dead code.
+- **All eight figures are Kefan's OWN MATLAB renders**, pulled from the Drive
+  `figures` subfolder (`1fnt08AUwUIaEwffgi7fOaqwyHcIToO5b`) and re-encoded to
+  WebP with the outer white margin trimmed:
+  `cover-material-test` (stress vs extension, 0-25 mm — **his pick for the
+  cover**, kept at 1500 px so its labels survive the card's 0.23x contain-fit;
+  a 42 px title lands at ~10 px on a 389 px card, ~20 px at 2x DPR),
+  `material-stress-extension-full`, `material-stress-strain-md`,
+  `material-stress-strain-ldpe`, `material-tensile-summary`,
+  `material-modulus-polar` (was the cover, now a gallery item),
+  `material-bending-fits`, `material-bending-summary`. Gallery order walks the
+  argument: raw curves → per-material → summary → model → bamboo.
+  `scratchpad/mat_figs.py` (the generated stand-ins) is dead code now.
 - **HOW TO PULL DRIVE IMAGES (this is the working recipe — everything else
   failed):** call the Drive MCP `download_file_content` with the file id. The
   base64 result is too big for context, so the harness spills it to
@@ -1752,7 +1757,7 @@ studio. Everything below is LIVE.
 ### Current cache versions (bump the matching one whenever you edit that file)
 - `styles.css?v=vine-20260714` (in index.html)
 - `script.js?v=vine-20260714` (in index.html)
-- `project-data.js?v=origfigs-20260730` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `project-data.js?v=figs8-20260730` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-vine-20260714` (3D page styles — in experience.html)
 - `experience.js?v=exp-vine-20260714` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
