@@ -274,7 +274,12 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
   orthotropic fit, and three-point bending on 11 bamboo rods (81.7±7.7 N/mm,
   EI 0.672±0.063 N·m², E 0.678±0.055 GPa).
 - Counts moved: 16 project cards (17 grid tiles), hero stat "16 Engineering
-  projects", JSON-LD ItemList 16 items, card metas renumbered. The studio tile
+  projects", JSON-LD ItemList 16 items, card metas renumbered.
+- Grid order (Kefan, after a ranking discussion — keep the JSON-LD ItemList in
+  the SAME order, and note the last ListItem line must be the only one without
+  a trailing comma or the block stops parsing): steering · brakeSim ·
+  vineRobot · materialTest · javelin · ansysCfd · carbonSeat · seat · aura ·
+  scanner · **pool · lineFollower** · formlabs · education · telecaster · ftc. The studio tile
   still says 14 EXHIBITS — two projects have no 3D model, keep them distinct.
 - **All eight figures are Kefan's OWN MATLAB renders**, pulled from the Drive
   `figures` subfolder (`1fnt08AUwUIaEwffgi7fOaqwyHcIToO5b`) and re-encoded to
