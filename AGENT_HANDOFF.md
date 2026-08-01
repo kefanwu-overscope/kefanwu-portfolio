@@ -290,9 +290,20 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
   `material-stress-extension-full`, `material-stress-strain-md`,
   `material-stress-strain-ldpe`, `material-tensile-summary`,
   `material-modulus-polar` (was the cover, now a gallery item),
-  `material-bending-fits`, `material-bending-summary`. Gallery order walks the
-  argument: raw curves → per-material → summary → model → bamboo.
+  `material-bending-fits`, `material-bending-summary`.
   `scratchpad/mat_figs.py` (the generated stand-ins) is dead code now.
+- Kefan then dropped six lab photos in `C:\Users\oc\Desktop\WEBSITE\material
+  property test\` (3000x4000 phone shots) — converted to 1400 px long-side
+  WebP as `material-instron-frame` (the 3345 frame), `material-specimen-td` /
+  `-md` / `-45` / `-ldpe` (caliper on each labelled specimen group) and
+  `material-bending-fixture` (a bamboo rod deflected in the flexure fixture).
+  Gallery is 14 items now, ordered: cover figure → setup photos → the
+  remaining plots (raw curves → per-material → summary → model → bamboo), so
+  the modal hero still matches the card cover.
+  NOTE on that fixture photo: the base is stamped "4-Point Flexure Fixture -
+  Bottom" but the documentation describes a THREE-point test (single central
+  anvil on that fixture's outer supports) — the caption deliberately says
+  neither, just "Bamboo in the fixture", so the two can't contradict.
 - **HOW TO PULL DRIVE IMAGES (this is the working recipe — everything else
   failed):** call the Drive MCP `download_file_content` with the file id. The
   base64 result is too big for context, so the harness spills it to
@@ -1762,7 +1773,7 @@ studio. Everything below is LIVE.
 ### Current cache versions (bump the matching one whenever you edit that file)
 - `styles.css?v=vine-20260714` (in index.html)
 - `script.js?v=vine-20260714` (in index.html)
-- `project-data.js?v=figs8-20260730` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `project-data.js?v=matlab-20260730b` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-vine-20260714` (3D page styles — in experience.html)
 - `experience.js?v=exp-vine-20260714` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.

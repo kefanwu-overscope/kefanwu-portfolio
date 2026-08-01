@@ -578,6 +578,12 @@ const projectData = {
     image: "assets/cover-material-test.webp",
     gallery: [
       { src: "assets/cover-material-test.webp", alt: "Engineering stress against extension over the first 25 mm for TD, MD and 45 degree fabric plus LDPE, each specimen drawn faintly behind its group mean", caption: "Stress vs extension, 0–25 mm" },
+      { src: "assets/material-instron-frame.webp", alt: "The Instron 3345 single-column test frame with its tensile grips and control panel", caption: "Instron 3345" },
+      { src: "assets/material-specimen-td.webp", alt: "Digital caliper measuring the width of a transverse-direction fabric specimen labelled TD-1 in the grips", caption: "TD specimen" },
+      { src: "assets/material-specimen-md.webp", alt: "Digital caliper measuring a machine-direction fabric specimen labelled MD-1", caption: "MD specimen" },
+      { src: "assets/material-specimen-45.webp", alt: "Digital caliper measuring a 45 degree fabric specimen labelled 45-1", caption: "45° specimen" },
+      { src: "assets/material-specimen-ldpe.webp", alt: "Digital caliper measuring an LDPE film specimen labelled LDPE-1", caption: "LDPE specimen" },
+      { src: "assets/material-bending-fixture.webp", alt: "A bamboo rod deflected between the outer supports of the flexure fixture during a bending test", caption: "Bamboo in the fixture" },
       { src: "assets/material-stress-extension-full.webp", alt: "Engineering stress against extension over the full test range for every specimen group", caption: "Full extension range" },
       { src: "assets/material-stress-strain-md.webp", alt: "Engineering stress-strain curves for the machine-direction fabric specimens", caption: "MD stress–strain" },
       { src: "assets/material-stress-strain-ldpe.webp", alt: "Engineering stress-strain curves for the LDPE film specimens", caption: "LDPE stress–strain" },
