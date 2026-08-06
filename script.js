@@ -467,10 +467,20 @@ const isInteractiveCardTarget = (event) =>
   Boolean(event.target.closest("a, button, input, select, textarea"));
 
 // unique view-transition-name per card => cards glide (FLIP) between
-// filter states in browsers with the View Transitions API
-cards.forEach((card) => {
-  card.style.viewTransitionName = `card-${card.dataset.project || "studio"}`;
-});
+// filter states in browsers with the View Transitions API. Names are
+// assigned only for the duration of a filter change: permanent names make
+// EVERY view transition (including opening a case study) snapshot all the
+// cards as separate layers, which costs a visible stutter on click.
+const nameCardsForTransition = () => {
+  cards.forEach((card) => {
+    card.style.viewTransitionName = `card-${card.dataset.project || "studio"}`;
+  });
+};
+const unnameCards = () => {
+  cards.forEach((card) => {
+    card.style.viewTransitionName = "";
+  });
+};
 
 filters.forEach((button) => {
   button.addEventListener("click", () => {
@@ -496,7 +506,12 @@ filters.forEach((button) => {
     if (reducedMotion.matches) {
       apply();
     } else if (document.startViewTransition) {
-      document.startViewTransition(apply);
+      nameCardsForTransition();
+      const transition = document.startViewTransition(apply);
+      // a skipped transition (hidden tab, rapid re-trigger) rejects both
+      // promises; unhandled, each rejection logs a console error
+      transition.ready.catch(() => {});
+      transition.finished.catch(() => {}).finally(unnameCards);
     } else {
       // graceful fade fallback (Firefox / older Safari)
       projectGrid?.classList.add("is-filtering");
@@ -602,6 +617,8 @@ const modalTools = document.querySelector("#modal-tools");
 const modalDetails = document.querySelector("#modal-details");
 const modalGallery = document.querySelector("#modal-gallery");
 let lastFocusedElement = null;
+let modalOpenPending = false; // an open sequence (view transition) is in flight
+let modalOpenedAt = 0; // when the modal DOM last became visible
 
 function fillList(node, items = []) {
   node.replaceChildren(
@@ -685,6 +702,11 @@ function renderGallery(project) {
 function openModal(projectKey, sourceCard = null) {
   const project = projectData[projectKey];
   if (!project) return;
+  // Re-entry guard: a second click while the open is still in flight (or the
+  // modal is already up) must not restart the sequence — restarting the view
+  // transition mid-capture flashes and can leave stale view-transition-names.
+  if (modalOpenPending || modal.getAttribute("aria-hidden") === "false") return;
+  modalOpenPending = true;
   lastFocusedElement = document.activeElement;
   const firstItem = project.gallery?.[0] || { src: project.image, alt: `${project.title} case study image` };
   showModalMedia(firstItem, project.title, true);
@@ -705,6 +727,8 @@ function openModal(projectKey, sourceCard = null) {
   modalPanel.scrollTop = 0;
   modalScrub.setup(project.scrub, project);
   const showDom = () => {
+    modalOpenPending = false;
+    modalOpenedAt = performance.now();
     modal.classList.remove("is-closing");
     modal.setAttribute("aria-hidden", "false");
     body.classList.add("modal-open");
@@ -714,17 +738,20 @@ function openModal(projectKey, sourceCard = null) {
   const cardEl = document.querySelector(`.project-card[data-project="${projectKey}"]`);
   const cardImg = cardEl?.querySelector(".card-media img");
   if (document.startViewTransition && !reducedMotion.matches && cardImg) {
-    const prevCardName = cardEl.style.viewTransitionName;
-    cardEl.style.viewTransitionName = "none"; // only the image pair morphs
     cardImg.style.viewTransitionName = "case-hero";
     modalImage.style.viewTransitionName = "case-hero";
-    document
-      .startViewTransition(showDom)
-      .finished.finally(() => {
-        cardImg.style.viewTransitionName = "";
-        modalImage.style.viewTransitionName = "";
-        cardEl.style.viewTransitionName = prevCardName;
-      });
+    const transition = document.startViewTransition(() => {
+      showDom();
+      // "case-hero" must be unique per state: the card cover carries it in
+      // the old capture, the modal hero in the new. Both named at once
+      // makes the browser abort the morph (duplicate view-transition-name).
+      cardImg.style.viewTransitionName = "";
+    });
+    transition.ready.catch(() => {}); // skipped transitions reject; keep the console clean
+    transition.finished.catch(() => {}).finally(() => {
+      cardImg.style.viewTransitionName = "";
+      modalImage.style.viewTransitionName = "";
+    });
   } else {
     // non-Chrome fallback: grow the modal panel from the clicked card's
     // on-screen center; default to a neutral origin for programmatic opens
@@ -758,8 +785,30 @@ function closeModal() {
   }, 400);
 }
 
+// Backdrop dismissal is stricter than the Close button: the press must both
+// start and end on the backdrop, and not land in the first beat after the
+// modal opened. Without the grace window, the second click of a double-click
+// on a project card hits the freshly-mounted backdrop and instantly closes
+// the case study the first click just opened ("flash and gone").
+const modalBackdrop = modal.querySelector(".modal-backdrop");
+let backdropPressStartedHere = false;
+modalBackdrop?.addEventListener("pointerdown", (event) => {
+  backdropPressStartedHere = event.target === modalBackdrop;
+});
 modal.querySelectorAll("[data-close-modal]").forEach((element) => {
-  element.addEventListener("click", closeModal);
+  element.addEventListener("click", (event) => {
+    if (element === modalBackdrop) {
+      const startedHere = backdropPressStartedHere;
+      backdropPressStartedHere = false;
+      if (!startedHere && event.isTrusted) return; // drag out of the panel, not a dismissal
+      if (performance.now() - modalOpenedAt < 400) return;
+    } else if (event.detail === 0 && performance.now() - modalOpenedAt < 400) {
+      // keyboard: opening focuses Close; a held/repeated Enter from the card
+      // would otherwise re-fire on the Close button and shut the modal
+      return;
+    }
+    closeModal();
+  });
 });
 
 // capability "See: ..." proof links open the matching case study directly

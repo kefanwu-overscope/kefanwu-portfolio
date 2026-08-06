@@ -256,7 +256,49 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-07-30 (latest) real vine photos + material testing split into its own project
+### 2026-08-05 (latest) modal "flash and gone" fix — double-click closed the case study
+Kefan reported: clicking a project card sometimes flashed the case study open
+and instantly shut it ("闪退"). Root cause chain, all in script.js:
+- **Primary:** `.modal-backdrop` is fixed/inset-0/z-100 with a bare
+  `click → closeModal` listener. On a double-click (or two quick clicks) the
+  first click opens the modal, the second lands on the freshly-mounted
+  backdrop at the same cursor position → instant close. "Sometimes" = only
+  users who double-click cards.
+- **Fixes shipped:**
+  1. Backdrop dismissal now requires (a) the press to START on the backdrop
+     (`pointerdown` target check, trusted events only) and (b) ≥400 ms since
+     the modal became visible (`modalOpenedAt`, stamped in `showDom`).
+     Keyboard-activated Close clicks (`event.detail === 0`) get the same
+     400 ms grace so a held Enter from the card can't re-fire on the
+     just-focused Close button. Escape and user-paced Close are unaffected.
+  2. `openModal` re-entry guard (`modalOpenPending` + aria-hidden check):
+     a burst of clicks starts exactly one open sequence. Previously a second
+     call mid-transition saved `prevCardName` as "none" and could leave the
+     card's `viewTransitionName` permanently blanked (killing its filter FLIP).
+  3. Shared-element morph actually plays now: the update callback clears
+     `cardImg.style.viewTransitionName` so "case-hero" is unique per state.
+     Before, card cover AND modal hero were both named in the new capture —
+     duplicate `view-transition-name` ⇒ browser ABORTS the morph every time
+     (hard cut + unhandled InvalidStateError rejection).
+  4. Card `view-transition-name`s are no longer permanent — assigned by
+     `nameCardsForTransition()` just before a filter transition, cleared on
+     `finished`. Permanent names made EVERY view transition (incl. modal
+     open) snapshot all 17 cards as separate layers → click stutter.
+  5. All `startViewTransition` calls now attach `.catch(() => {})` to BOTH
+     `ready` and `finished` — skipped transitions (hidden tab, rapid
+     re-trigger) reject both and each unhandled rejection logged a console
+     error ("Transition was aborted because of invalid state").
+- QA note: the preview pane backgrounded reads `innerWidth/Height = 0`, so
+  `elementFromPoint` hit-testing is impossible — verify wiring by dispatching
+  `pointerdown` + `click()` on the actual elements instead. Synthetic-click
+  tests must send a `pointerdown` to the backdrop first or the origin check
+  (correctly) ignores the click. Console error history persists across
+  navigations in the pane — attach an in-page `unhandledrejection` listener
+  to tell stale noise from live regressions.
+- Cache: script.js → `modalfix-20260805` (index.html only; experience.js
+  untouched).
+
+### 2026-07-30 real vine photos + material testing split into its own project
 - Kefan dropped four 8160x6120 photos in `C:\Users\oc\Desktop\WEBSITE\vine robot\`
   (that Desktop-folder handoff is the pattern that keeps working — Drive is
   awkward, see below). Converted to 1400px WebP:
@@ -1772,7 +1814,7 @@ studio. Everything below is LIVE.
 
 ### Current cache versions (bump the matching one whenever you edit that file)
 - `styles.css?v=vine-20260714` (in index.html)
-- `script.js?v=vine-20260714` (in index.html)
+- `script.js?v=modalfix-20260805` (in index.html)
 - `project-data.js?v=matlab-20260730b` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-vine-20260714` (3D page styles — in experience.html)
 - `experience.js?v=exp-vine-20260714` (3D page module — in experience.html)
