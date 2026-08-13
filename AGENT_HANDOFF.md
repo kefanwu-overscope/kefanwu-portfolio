@@ -256,7 +256,52 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-08-13b (latest) vine robot is now the 15th studio exhibit (real CAD)
+### 2026-08-13c (latest) vineRobot <-> education slot swap; pail transparent; photo-audited colors
+Kefan: swap the vine robot and the guitar education kit, make the pail
+transparent, verify the other colors. Three Opus subagents under supervision.
+- **Slot swap**: vineRobot now sits in the MAIN cabinet, bay 2 / row 2
+  (education's old slot) as a direct loadAssembly — targetSize 0.36 axis "y",
+  rotY PI/2-0.2 so the outlet faces the room. education became the last
+  SIDE_EXHIBITS entry (CAB2 bay 1 / row 2) — size 0.44 **axis "z"** (re-derived:
+  in the side cabinet the long axis runs along the wall), rotZ PI/2,
+  rotY -PI/2+0.12, navy/walnut matTweak carried over verbatim. PROJECT_ORDER
+  swapped to match (vineRobot index 8, education last).
+- **Pail is translucent**: "EBK Bucket" moved to a new CLASS rule -> the
+  renderer's native **mat_glass** bucket (3416 tris, pail geometry only).
+  The shared ASSEMBLY_MATS.glass is clear acrylic (pool's windows need it);
+  the milky-HDPE look is a PER-EXHIBIT matTweak: color 0xc9c6c9, opacity
+  0.55, transmission 0.35, roughness 0.38 (roughness is what blurs the
+  transmission sample = frosted). matTweak runs material.setValues() so
+  MeshPhysicalMaterial props land cleanly.
+- **Photo-evidence color audit** (rule now written into stl2glb.py: real
+  build photos beat CAD renders for any part visible in them; CAD only fills
+  internals; most SolidWorks parts carry NO appearance so "grey in the CAD"
+  is not evidence of metal). 9 reassignments: pail aero->glass; C-bands
+  Bracket1/2/3 steel->printed (photos show royal blue, same as their caps —
+  the old "deliberately steel" comment was CAD-default-grey deception);
+  Converter_circular (outlet funnel) steel->printed (deep blue in photos);
+  TOP_Plate aero->printed (blue lid top); Lid_Mount brass->aero (white, not
+  yellow); Output_r52mm_coupler + Dividing_Shaft steel->aero. DC_Motor
+  stays dark — now EVIDENCE-backed (vine-test-closeup shows a black can).
+  Rule-order trap documented in-file: never shorten "ebk bucket" to
+  "bucket" — every filename starts "Bucketbot - " and the whole robot would
+  turn to glass.
+- **One judgment call to know about**: rubber tweak went crimson 0xa32b2f ->
+  orange 0xcc5b26 because the TPU gaskets photograph ORANGE (lid line,
+  outlet squeeze-out) while the CAD paints them red. Trivial to revert if
+  Kefan prefers red.
+- aero tweak added (0xe6e3da warm white, metalness 0): the plates are
+  cream-white printed plastic in the photos, not bare aluminum as the
+  earlier comment assumed.
+- Verified (subagent 10/10 + supervisor spot-check): world positions
+  swapped exactly (vine [0.73,0.9,-1.08], edu [2.24,0.85,0.25], both min.y
+  = 0.72 on-shelf), no interpenetration, glass props in effect at runtime,
+  education still navy 0x3d5180, both deep links fly to the new spots,
+  tour 15/15 ends on education, 17 hotspots, zero console errors.
+- Cache: experience.js -> `exp-vineswap-20260813`; project-data.js stays
+  `bucketbot-20260813` (content unchanged). GLB 2157 KB.
+
+### 2026-08-13b vine robot is now the 15th studio exhibit (real CAD)
 Kefan dropped 144 `Bucketbot - *.STL` files in `C:\Users\oc\Desktop\STL\Bucketbot\`
 (note: a SUBFOLDER — the STL root has none, globs must carry the folder).
 Executed by four Opus subagents (convert / scene / copy / verify) under
@@ -1911,9 +1956,9 @@ studio. Everything below is LIVE.
 ### Current cache versions (bump the matching one whenever you edit that file)
 - `styles.css?v=vine-20260714` (in index.html)
 - `script.js?v=modalfix-20260805` (in index.html)
-- `project-data.js?v=steering-20260813` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `project-data.js?v=bucketbot-20260813` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-vine-20260714` (3D page styles — in experience.html)
-- `experience.js?v=exp-vine-20260714` (3D page module — in experience.html)
+- `experience.js?v=exp-vineswap-20260813` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

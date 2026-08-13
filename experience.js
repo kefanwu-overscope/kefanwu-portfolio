@@ -848,13 +848,55 @@ function initScene(canvas) {
     fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_ansysCfd", projectKey: "ansysCfd", label: "Agent-based CFD",
     targetSize: 0.34, axis: "x", pos: [CAB.bays[1], CAB.rows[2], CAB.frontZ], rotY: 0.25,
   });
-  loadAssembly(loader, scene, "models/real/education.glb", {
-    // exploded parts layout, rotated 90deg CCW so the guitar lies horizontal
-    fit: [0.62, 0.46, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_education", projectKey: "education", label: "Guitar education kit",
-    targetSize: 0.44, axis: "x", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotZ: Math.PI / 2, rotY: 0.12,
-    // photo-matched, lightened per feedback: medium navy body and a lighter
-    // walnut neck/fingerboard; chrome panel/bridge via the steel bucket
-    matTweak: { printed: { color: 0x3d5180, metalness: 0.05, roughness: 0.55 }, wood: { color: 0x7d6144, roughness: 0.6 } },
+  // real CAD (Bucketbot - *.STL -> vineRobot.glb): the pressure vessel that
+  // spools out the everting vine. Native axes are ALREADY y-up — feet at min y,
+  // lid + gearmotor at max y — so no rotX/rotZ; the guitar kit that used to
+  // hold this slot needed rotZ 90 to lie down, this one stands as exported.
+  // The only rotation is the yaw that swings the outlet face (native -x, where
+  // the vine everts out) round to the room: +90deg lands it on +z, and the
+  // extra -0.2 cants it toward room center, since focusHotspot approaches this
+  // right-hand bay from the left (its dir runs room center -> exhibit).
+  loadAssembly(loader, scene, "models/real/vineRobot.glb", {
+    fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_vineRobot", projectKey: "vineRobot", label: "Vine everting robot",
+    // 0.36 tall — up from the 0.31 the cramped side slot allowed, and it fills
+    // the bay about as much as the guitar kit's 0.44 spread did. 380x424x298mm
+    // at that height comes out 0.31 wide x 0.37 deep: clear of the 0.7 bay,
+    // still inside the shelf board's 0.46 of depth, and under every `fit` axis
+    // so the clamp never fires. 0.12 of the 0.48 row is left for the marker.
+    targetSize: 0.36, axis: "y", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotY: Math.PI / 2 - 0.2,
+    // Re-audited for the regenerated GLB (60 parts -> 7 buckets). The build
+    // photos beat the CAD renders on every part they actually show:
+    //   printed (38) — the one royal blue now also paints the 3 C-bands, the
+    //     lid's top plate and the outlet funnel; all three used to sit in other
+    //     buckets purely on the CAD's default grey.
+    //   aero (9) — vessel plates, spool spider and the lid's clamp band are
+    //     cream-white plastic in the photos, NOT the bare aluminum the old
+    //     comment assumed, so warm the stock cool grey and drop the metalness.
+    //   rubber (5) — the TPU gaskets photograph orange (the line under the lid,
+    //     the squeeze-out at the outlet); the old crimson was the CAD's color.
+    //   brass (1) — only the outlet clamp is still yellow. Lid_Mount, the other
+    //     half of the old "yellow clamp flanges", is white and moved to aero.
+    //   dark (1) DC_Motor and steel (5) bearings/coupling keep their stock
+    //     mats: a near-black can and plain metal is exactly what the photos
+    //     show, so there is nothing left to override.
+    matTweak: {
+      printed: { color: 0x2a5fc4, metalness: 0.05, roughness: 0.5 },
+      aero: { color: 0xe6e3da, metalness: 0.0, roughness: 0.52 },
+      rubber: { color: 0xcc5b26, roughness: 0.7 },
+      brass: { color: 0xc9a83a, metalness: 0.45, roughness: 0.45 },
+      // glass (1) — the EBK pail is milky HDPE, not the clear acrylic the
+      // shared `glass` mat was written for (pool's housing windows still need
+      // that, so retune HERE rather than in ASSEMBLY_MATS). matTweak runs
+      // material.setValues(), so each MeshPhysicalMaterial prop below lands
+      // cleanly: neutral tint sampled off the wall in the photos (#bcb9bd /
+      // #b6b5bd, sat 0.02-0.04 = unpigmented), opacity 0.22 -> 0.55 so it reads
+      // as a tub you see INTO rather than a window, transmission 0.6 -> 0.35,
+      // and roughness 0.06 -> 0.38 — in three that same number blurs the
+      // transmission sample, so it is what turns clear into milky. The folded
+      // vine and the internal ribs still read through the wall, which is what
+      // every body photo and the cutaway render show.
+      glass: { color: 0xc9c6c9, opacity: 0.55, transmission: 0.35, roughness: 0.38 },
+    },
   });
 
   /* ---------- side dressing ---------- */
@@ -889,21 +931,25 @@ function initScene(canvas) {
         wood: { color: 0xaeb0b3, metalness: 0.8, roughness: 0.4 } } },
     { file: "telecaster",      key: "telecaster", label: "Telecaster",       size: 0.42, axis: "y", bay: 0, row: 2, rotY: -Math.PI / 2 + 0.2,
       matTweak: { printed: { color: 0xe9e6da, metalness: 0.0, roughness: 0.45 }, wood: { color: 0xa97c4c, roughness: 0.55 } } }, // warm white body, honey-maple neck (photos)
-    // real CAD (Bucketbot - *.STL -> vineRobot.glb): the pressure vessel that
-    // spools out the everting vine. Native axes are ALREADY y-up — feet at
-    // min y, lid + gearmotor at max y — so no rotX/rotZ, unlike driverseat;
-    // the only rotation is a small yaw that turns the outlet face (native -x,
-    // where the vine everts out) out of the bay toward the room. Kept to the
-    // last free slot's budget: 0.31 tall x ~0.33 deep fits the 0.34 depth
-    // allowance without the `fit` clamp kicking in.
-    { file: "vineRobot",       key: "vineRobot", label: "Vine everting robot", size: 0.31, axis: "y", bay: 1, row: 2, rotY: 0.3,
-      // CAD-matched (assets/vine-lid-exploded.webp, vine-outlet-exploded.webp):
-      // blue printed spool + connector caps/feet, red TPU gaskets, yellow
-      // clamp flanges on the lid and outlet. The aluminium plates/pail (aero)
-      // and the C-bands + machined nozzle (steel) keep the default greys.
-      matTweak: { printed: { color: 0x2a5fc4, metalness: 0.05, roughness: 0.5 },
-        rubber: { color: 0xa32b2f, roughness: 0.7 },
-        brass: { color: 0xc9a83a, metalness: 0.45, roughness: 0.45 } } },
+    // real CAD (education.glb): the exploded guitar teaching kit — a flat
+    // 392x650x68mm layout of parts in the native x-y plane, long axis native y.
+    // In the main cabinet rotZ 90 alone laid that long axis horizontal; here
+    // the room is off -x instead of +z, so it takes a second -90deg of yaw.
+    // rotZ swings the long axis to world -x, rotY then carries it round to -z
+    // (along the wall) and brings the layout's face (native +z) to the room —
+    // same face, same left-to-right reading order as the old slot. The +0.12 is
+    // the cant it already carried, kept so it isn't a dead-flat billboard.
+    { file: "education",       key: "education", label: "Guitar education kit", size: 0.44, axis: "z", bay: 1, row: 2, rotZ: Math.PI / 2, rotY: -Math.PI / 2 + 0.12,
+      // The axis moves x -> z with the layout, so 0.44 is now measured ALONG
+      // THE WALL, where the budget is 0.58 against the main bay's 0.62 — the
+      // kit keeps the size it had. What actually shrank is the depth allowance
+      // (0.4 -> 0.34) and the thin panel spends only 0.07 of it; height lands
+      // at 0.26 under the 0.4 cap, so `fit` never clamps and the marker clears
+      // the shelf on its own without hitting markerCap.
+      // photo-matched, lightened per feedback: medium navy body and a lighter
+      // walnut neck/fingerboard; chrome panel/bridge via the steel bucket
+      matTweak: { printed: { color: 0x3d5180, metalness: 0.05, roughness: 0.55 },
+        wood: { color: 0x7d6144, roughness: 0.6 } } },
   ];
   SIDE_EXHIBITS.forEach((s) => {
     const opts = {
@@ -2034,8 +2080,10 @@ function initScene(canvas) {
 
   // fixed tour order for prev/next navigation (matches cabinet layout)
   const PROJECT_ORDER = ["carbonSeat", "aura", "scanner", "javelin", "steering", "brakeSim",
-    "lineFollower", "ansysCfd", "education", "seat", "ftc", "formlabs", "pool", "telecaster",
-    "vineRobot"]; // vineRobot closes the side cabinet: bay 1 of the bottom row, after telecaster
+    "lineFollower", "ansysCfd", "vineRobot", "seat", "ftc", "formlabs", "pool", "telecaster",
+    "education"]; // vineRobot now closes the MAIN cabinet's bottom row (bay 2) before the
+  // tour crosses to the right wall; education closes the side cabinet, bay 1 of
+  // its bottom row, after telecaster
   let currentProjectKey = null;
   // set for the duration of a stepProject() → openPanel() call so openPanel
   // knows to cross-fade the content swap instead of hard-cutting it (the

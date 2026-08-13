@@ -49,28 +49,87 @@ CLASS = [
     # not printed-blue — route them to the aero (light grey) bucket
     (r"horizonal_stablizer|emg_cover", "aero"),
     (r"cf_seat", "carbon"),
-    # --- Bucketbot/vineRobot; colours read off assets/vine-*.webp CAD renders.
+    # --- Bucketbot/vineRobot; re-audited against BOTH evidence sets: the real
+    # build photos (assets/vine-body-3partition, vine-body-stick, vine-test-rig,
+    # vine-test-closeup) and the CAD renders (vine-reinforced-cad,
+    # vine-lid-exploded, vine-outlet-exploded, vine-assembly-cutaway). Photos win
+    # for any part visible in them; the CAD only fills in for internals. Most of
+    # the SolidWorks parts carry no appearance, so "grey in the CAD" is NOT
+    # evidence of metal — the built robot is blue + white printed plastic.
     # These sit above the dark/steel rules because several Bucketbot names hit
     # those rules by accident (see each note).
-    (r"tpu_", "rubber"),                      # the red gaskets. Must beat the
-                                              # "motor" rule: TPU_Motor Seal.
-    (r"bracket connector|bracket_back_connector|side_joint|back joint", "printed"),
-                                              # the blue connector caps and feet.
+    (r"tpu_", "rubber"),                      # the gaskets. Orange TPU in the
+                                              # photos (the line under the lid and
+                                              # the squeeze-out around the outlet
+                                              # flange), red in the CAD — rubber is
+                                              # the nearest bucket either way. Must
+                                              # beat the "motor" rule: TPU_Motor Seal.
+    (r"ebk bucket", "glass"),                 # the pail. Every photo shows a
+                                              # translucent HDPE tub with the spool
+                                              # visible through the wall, so it takes
+                                              # the renderer's native glass mat.
+                                              # NEVER shorten this to "bucket":
+                                              # bucket_of() gets the whole basename
+                                              # and every part here is prefixed
+                                              # "Bucketbot - ", so a bare "bucket"
+                                              # would turn the entire robot to glass.
+    (r"bracket|side_joint|back joint", "printed"),
+                                              # all the royal-blue printed frame
+                                              # parts: the 3 C-bands (Bracket1/2/3),
+                                              # their 27 connector caps and the 3
+                                              # feet. The photos show each C-band
+                                              # rail is the SAME blue as the caps
+                                              # bolted onto it (vine-body-3partition
+                                              # left face, vine-test-rig top rails) —
+                                              # the CAD's default grey for the bands
+                                              # was what put them in steel before.
                                               # Must beat the steel rule: "bracket"
                                               # contains "rack", "*joint" hits "joint".
-                                              # Bracket1/2/3 are deliberately NOT
-                                              # here — the C-bands are grey metal
-                                              # and fall through to steel via "rack".
-    (r"plate|ebk bucket|spool_holder|spool_mount", "aero"),
-                                              # aluminium vessel plates, the pail,
-                                              # and the spool spider/base: light
-                                              # grey in the renders, not printed-blue
-    (r"lid_mount|outlet_bolt", "brass"),      # the yellow flanges clamping the
-                                              # lid and outlet gaskets
-    (r"converter_circular|r52mm_coupler", "steel"),
-                                              # machined outlet manifold + its
-                                              # polished discharge nozzle
+                                              # Keep side_joint|back joint spelled
+                                              # out — a bare "joint" would steal
+                                              # steering's U-Joints out of steel.
+    (r"top_plate|converter_circular", "printed"),
+                                              # the two remaining blue parts: the
+                                              # lid's top plate (blue top face with
+                                              # print layer lines above the orange
+                                              # lid gasket, vine-body-stick) and the
+                                              # outlet funnel, whose 279x152 flange
+                                              # is the big blue face the vine everts
+                                              # through. CAD draws both grey.
+                                              # MUST precede the "plate" rule below.
+    (r"plate|spool_holder|spool_mount|dividing_shaft|r52mm_coupler|lid_mount", "aero"),
+                                              # the white / light-grey parts. Vessel
+                                              # plates: cream-white in vine-test-rig
+                                              # (bottom + side), not bare aluminium.
+                                              # Spool spider/base + Dividing_Shaft:
+                                              # internals, light grey in the cutaway —
+                                              # and that "shaft" is really a
+                                              # 254x15x8 flat divider blade, so it
+                                              # has to beat the steel rule's "shaft".
+                                              # r52mm_coupler: the outlet ring is
+                                              # buried under the everted sleeve in
+                                              # every photo, and vine-outlet-exploded
+                                              # renders it light grey, so nothing
+                                              # supports the old "polished nozzle".
+                                              # Lid_Mount: the band under the orange
+                                              # lid gasket is WHITE in all three body
+                                              # photos though the CAD paints it yellow.
+                                              # NB "Spool-1" is deliberately absent —
+                                              # it is the blue mandrel in the cutaway
+                                              # and falls through to printed.
+    (r"outlet_bolt", "brass"),                # the yellow frame clamping the outlet
+                                              # gasket. Unlike Lid_Mount it sits
+                                              # INSIDE the pail wall and never shows
+                                              # in a photo, so the CAD's yellow stands.
+    # DC_Motor: the CAD draws it default light grey, but vine-test-closeup shows the
+    # real motor sitting on the lid as a black can with a black coupling boss (driver
+    # PCB + 4-wire encoder ribbon beside it) — the photo wins, so the near-black
+    # "dark" bucket is now backed by evidence, not just by site convention.
     (r"motor|servo|mg996|stepper|23hs32|encoder|camera|caddx|foxeer|gnss|matek|airspeed|tfmini|switch|estop|battery|sensor_mount_step", "dark"),
+    # from Bucketbot only the vendor hardware still lands here — the 4 flanged
+    # bearings and the McMaster set-screw coupling, all plain metal in the lid
+    # explode. (Holder_Fixer stays on the printed default below: it is an 11x20mm
+    # internal clip, invisible in the photos and too small to read in the renders.)
     (r"screw|nut|shaft|sprocket|bearing|coupling|pulley|tube|insert|joint|rack|narrco|nar0|tt11|qd_|lead|magnet-", "steel"),
     (r"pitot", "steel"),
     (r".", "printed"),
