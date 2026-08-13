@@ -176,7 +176,7 @@ Before deployment, verify:
 > `projectData` object), NOT in `script.js`. It is loaded by both `index.html`
 > (before `script.js`) and `experience.html` (before `experience.js`). The site
 > also has a second surface — the interactive 3D studio at `experience.html`,
-> where all 14 projects are clickable exhibits. See `AGENT_HANDOFF.md` for the
+> where 15 of the 16 projects are clickable exhibits. See `AGENT_HANDOFF.md` for the
 > full current reference (file map, IDs, cache versions, 3D internals).
 
 Most content updates should happen in `project-data.js` inside the `projectData` object.

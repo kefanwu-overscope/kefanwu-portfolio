@@ -256,7 +256,47 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-08-13 (latest) steering case study updated to "built, installed, running"
+### 2026-08-13b (latest) vine robot is now the 15th studio exhibit (real CAD)
+Kefan dropped 144 `Bucketbot - *.STL` files in `C:\Users\oc\Desktop\STL\Bucketbot\`
+(note: a SUBFOLDER — the STL root has none, globs must carry the folder).
+Executed by four Opus subagents (convert / scene / copy / verify) under
+supervision; all changes reviewed against the diffs before shipping.
+- **models/real/vineRobot.glb** (new, 2.2 MB, 122,814 tris, 6 mat_* buckets).
+  `tools/stl2glb.py` gained the `vineRobot` GROUPS entry + 5 CLASS rules + 1
+  SKIP. Traps that are now handled IN THE FILE's comments — read them before
+  touching CLASS: "bracket" contains "rack" (steel rule), "*joint" hits
+  "joint", "TPU_Motor Seal" hits "motor"; Bucketbot's 84 fully-threaded cap
+  screws are 52% of the tris and are SKIPped with a prefix-scoped token so
+  steering/aura keep their identically-named fasteners. Bracket1/2/3
+  intentionally fall through to steel (they're the grey C-band
+  reinforcements). Re-classification of all 236 root STLs under old vs new
+  tables: zero differences — other groups provably unaffected.
+- **experience.js**: new SIDE_EXHIBITS entry — right-wall cabinet CAB2,
+  bay 1 / row 2 (the one free slot; world (2.24, ~0.875, 0.25), shelf top
+  y=0.72), size 0.31, rotY 0.3 so the native -x outlet face turns toward the
+  room. Native axes already y-up, no rotX/rotZ. matTweak: printed→blue
+  0x2a5fc4, rubber→red 0xa32b2f, brass→0xc9a83a (colors sampled from the
+  vine-*.webp CAD renders). PROJECT_ORDER now 15 keys (vineRobot last);
+  kb-nav comments updated. Runtime hotspot math: 15 exhibits + resume + lamp
+  = **17** (`console.info` prints 17).
+- **project-data.js**: vineRobot's `noStudio: true` + its 2-line comment
+  removed — the modal now shows "View this exhibit in the 3D Studio →"
+  (#vineRobot deep link needed no new code; doReveal resolves it).
+  materialTest keeps its noStudio and is now the ONLY project without an
+  exhibit.
+- **index.html**: studio tile "14 EXHIBITS" → "15 EXHIBITS", "The 14 modeled
+  projects above" → 15. (L299's "14 / Product" is card #14's NUMBER — leave.)
+- Verification (subagent + independent supervisor spot-check): both cache
+  strings live, GLB 200, hotspots 17, vineRobot label/hotspot present, Box3
+  clean vs all 105 exhibit pairs and the cabinet (0.17 clearance to shelf
+  above), deep-link flight lands 1.0 from the exhibit center, zero console
+  errors, materialTest still hidden, card-14 meta untouched.
+- Cache: project-data.js → `bucketbot-20260813` (BOTH pages), experience.js →
+  `exp-bucketbot-20260813`.
+- Serving trap rediscovered: `serve.ps1` (the "portfolio" launch config)
+  400s requests to `127.0.0.1` — use `http://localhost:4173`.
+
+### 2026-08-13 steering case study updated to "built, installed, running"
 Kefan confirmed four facts on 2026-08-13 and they are the ONLY new claims in
 this pass — everything else in the steering object is untouched:
 1. Max steering torque **50 N·m**, hand-derived from peak tire friction plus
@@ -1988,12 +2028,12 @@ ceiling cove LED strips, graphite rug (noise map + bump for plush).
 currently empty; a helmet + motor prop set was tried there and removed.
 The potted plant was removed 2026-07-06 per owner request.)
 
-### Exhibits — all 14 projects clickable (15 content hotspots: + resume; 16 at runtime including the lamp pseudo-hotspot)
+### Exhibits — 15 of 16 projects clickable (16 content hotspots: + resume; 17 at runtime including the lamp pseudo-hotspot)
 
-> `HOTSPOTS.length` is 16 at runtime and the boot `console.info` prints 16 —
-> that's 14 project exhibits + the resume (`action:"resume"`) = 15 CONTENT
+> `HOTSPOTS.length` is 17 at runtime and the boot `console.info` prints 17 —
+> that's 15 project exhibits + the resume (`action:"resume"`) = 16 CONTENT
 > hotspots, PLUS the desk-lamp pseudo-hotspot (`action:"lamp"`, `key:null`)
-> which is also stored in the `HOTSPOTS` array. If you see "15 hotspots"
+> which is also stored in the `HOTSPOTS` array. If you see "16 hotspots"
 > in older notes it means the 15 content ones, not the raw array length.
 
 > Gearbox was removed (main site + 3D). Right cabinet now holds 5 exhibits
@@ -2278,7 +2318,8 @@ CURRENT STATE (2026-07-07; verify with `git log` / the live site)
   background is solid black.
 - 3D studio: an L5 lighting "wow" pass (cold-boot intro, moonlight gobo), a
   reliable desk-lamp light switch, and a carbon-seat seam fix landed recently.
-  All 14 projects are clickable exhibits; the resume sits on the desk.
+  15 of the 16 projects are clickable exhibits (materialTest has none); the
+  resume sits on the desk.
 - A dated local backup exists at
   C:\Users\oc\Desktop\kefanwu-portfolio-backup-2026-07-07 (full git bundle +
   source snapshot zip). Re-run a backup after major changes.

@@ -490,9 +490,6 @@ const projectData = {
       { src: "assets/vine-fea-deformation.webp", alt: "FEA displacement result on the reinforcement structure, peaking at 6.5 mm", caption: "FEA — 6.5 mm peak" },
       { src: "assets/vine-fea-stress.webp", alt: "FEA von Mises stress detail on the reinforcement, peaking at 0.234 GPa", caption: "FEA — 0.234 GPa" },
     ],
-    // no 3D exhibit for this one (no model in the studio) — script.js hides the
-    // "view in the studio" link when noStudio is set
-    noStudio: true,
     spec: {
       meta: [
         ["Role", "Research assistant"],

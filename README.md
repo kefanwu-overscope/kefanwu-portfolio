@@ -11,7 +11,7 @@ framework, no build step, no package install. Auto-deploys to Vercel from the
   contact, and a resume PDF. Styled by `styles.css`, driven by `script.js`.
 - **`experience.html`** — an interactive 3D "studio" (three.js r0.185, buildless
   via a jsDelivr import map): a night-lit engineering room where the resume sits
-  on the desk and all 14 projects are clickable exhibits. Styled by
+  on the desk and 15 of the 16 projects are clickable exhibits. Styled by
   `experience.css`, driven by the `experience.js` module. Deep-linkable:
   `experience.html#steering` flies straight to that exhibit.
 

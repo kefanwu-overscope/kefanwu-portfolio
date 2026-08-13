@@ -863,7 +863,7 @@ function initScene(canvas) {
   // multimeter + task lamp)
   scene.add(buildSideCabinet());
 
-  // five more projects in the right-wall cabinet (14 on display total).
+  // six more projects in the right-wall cabinet (15 on display total).
   // `build` = procedural group; `file` = real CAD GLB via loadAssembly.
   const SIDE_EXHIBITS = [
     // real CAD (7-CP06-P00-SEAT.STL -> driverseat.glb): bent-sheet aluminum
@@ -889,6 +889,21 @@ function initScene(canvas) {
         wood: { color: 0xaeb0b3, metalness: 0.8, roughness: 0.4 } } },
     { file: "telecaster",      key: "telecaster", label: "Telecaster",       size: 0.42, axis: "y", bay: 0, row: 2, rotY: -Math.PI / 2 + 0.2,
       matTweak: { printed: { color: 0xe9e6da, metalness: 0.0, roughness: 0.45 }, wood: { color: 0xa97c4c, roughness: 0.55 } } }, // warm white body, honey-maple neck (photos)
+    // real CAD (Bucketbot - *.STL -> vineRobot.glb): the pressure vessel that
+    // spools out the everting vine. Native axes are ALREADY y-up — feet at
+    // min y, lid + gearmotor at max y — so no rotX/rotZ, unlike driverseat;
+    // the only rotation is a small yaw that turns the outlet face (native -x,
+    // where the vine everts out) out of the bay toward the room. Kept to the
+    // last free slot's budget: 0.31 tall x ~0.33 deep fits the 0.34 depth
+    // allowance without the `fit` clamp kicking in.
+    { file: "vineRobot",       key: "vineRobot", label: "Vine everting robot", size: 0.31, axis: "y", bay: 1, row: 2, rotY: 0.3,
+      // CAD-matched (assets/vine-lid-exploded.webp, vine-outlet-exploded.webp):
+      // blue printed spool + connector caps/feet, red TPU gaskets, yellow
+      // clamp flanges on the lid and outlet. The aluminium plates/pail (aero)
+      // and the C-bands + machined nozzle (steel) keep the default greys.
+      matTweak: { printed: { color: 0x2a5fc4, metalness: 0.05, roughness: 0.5 },
+        rubber: { color: 0xa32b2f, roughness: 0.7 },
+        brass: { color: 0xc9a83a, metalness: 0.45, roughness: 0.45 } } },
   ];
   SIDE_EXHIBITS.forEach((s) => {
     const opts = {
@@ -2019,7 +2034,8 @@ function initScene(canvas) {
 
   // fixed tour order for prev/next navigation (matches cabinet layout)
   const PROJECT_ORDER = ["carbonSeat", "aura", "scanner", "javelin", "steering", "brakeSim",
-    "lineFollower", "ansysCfd", "education", "seat", "ftc", "formlabs", "pool", "telecaster"];
+    "lineFollower", "ansysCfd", "education", "seat", "ftc", "formlabs", "pool", "telecaster",
+    "vineRobot"]; // vineRobot closes the side cabinet: bay 1 of the bottom row, after telecaster
   let currentProjectKey = null;
   // set for the duration of a stepProject() → openPanel() call so openPanel
   // knows to cross-fade the content swap instead of hard-cutting it (the
@@ -2619,7 +2635,7 @@ function initScene(canvas) {
     if (panelOpen) closePanel();
   });
   // S10: the panel footer advertises "← Prev / Next →" — the arrow keys now
-  // actually drive the 14-project tour (lightbox keeps its own arrow keys)
+  // actually drive the 15-project tour (lightbox keeps its own arrow keys)
   window.addEventListener("keydown", (e) => {
     if (!panelOpen || !currentProjectKey) return;
     if (document.documentElement.classList.contains("exp-lightbox-open")) return;
@@ -2628,7 +2644,7 @@ function initScene(canvas) {
   });
 
   /* ---------- keyboard navigation layer (additive; mirrors the pointer flow) ----------
-     Cycle order: the 14 project pivots (PROJECT_ORDER), then résumé, then the
+     Cycle order: the 15 project pivots (PROJECT_ORDER), then résumé, then the
      lamp switch. Rebuilt fresh on every keypress (not snapshotted once) —
      the real-CAD exhibits attach to HOTSPOTS asynchronously as their GLTFs
      finish loading, so a one-time snapshot at init would miss most of them.

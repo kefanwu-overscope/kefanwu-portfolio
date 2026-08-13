@@ -17,6 +17,9 @@ GROUPS = {
     # regenerate it here (restore from git if it gets clobbered).
     # "aura":   "Drive_System - *.STL",
     "scanner":  "SD_Scanner_Assem - *.STL",
+    # the only group that lives in a subfolder — the STL root has no Bucketbot
+    # files, so the glob must carry the folder or it silently matches nothing
+    "vineRobot": "Bucketbot/Bucketbot - *.STL",
     "seat":     "CF_Seat.STL",
 }
 
@@ -29,6 +32,11 @@ SKIP = [
     "psu_lrs",               # empty file
     "lpd3806",               # encoder body, buried
     "91390a097",             # coupling screws, buried
+    # 84 fully-threaded 7mm cap screws = 133k tris, 52% of the whole Bucketbot
+    # set; the shanks sit inside tapped holes and only the heads break the
+    # surface. Prefix-scoped on purpose: steering/aura ship the same vendor
+    # "socket head cap screw_am" name and must keep their fasteners.
+    "bucketbot - socket head cap screw",
 ]
 
 # (pattern, bucket) — first match wins; more specific first
@@ -41,6 +49,27 @@ CLASS = [
     # not printed-blue — route them to the aero (light grey) bucket
     (r"horizonal_stablizer|emg_cover", "aero"),
     (r"cf_seat", "carbon"),
+    # --- Bucketbot/vineRobot; colours read off assets/vine-*.webp CAD renders.
+    # These sit above the dark/steel rules because several Bucketbot names hit
+    # those rules by accident (see each note).
+    (r"tpu_", "rubber"),                      # the red gaskets. Must beat the
+                                              # "motor" rule: TPU_Motor Seal.
+    (r"bracket connector|bracket_back_connector|side_joint|back joint", "printed"),
+                                              # the blue connector caps and feet.
+                                              # Must beat the steel rule: "bracket"
+                                              # contains "rack", "*joint" hits "joint".
+                                              # Bracket1/2/3 are deliberately NOT
+                                              # here — the C-bands are grey metal
+                                              # and fall through to steel via "rack".
+    (r"plate|ebk bucket|spool_holder|spool_mount", "aero"),
+                                              # aluminium vessel plates, the pail,
+                                              # and the spool spider/base: light
+                                              # grey in the renders, not printed-blue
+    (r"lid_mount|outlet_bolt", "brass"),      # the yellow flanges clamping the
+                                              # lid and outlet gaskets
+    (r"converter_circular|r52mm_coupler", "steel"),
+                                              # machined outlet manifold + its
+                                              # polished discharge nozzle
     (r"motor|servo|mg996|stepper|23hs32|encoder|camera|caddx|foxeer|gnss|matek|airspeed|tfmini|switch|estop|battery|sensor_mount_step", "dark"),
     (r"screw|nut|shaft|sprocket|bearing|coupling|pulley|tube|insert|joint|rack|narrco|nar0|tt11|qd_|lead|magnet-", "steel"),
     (r"pitot", "steel"),
