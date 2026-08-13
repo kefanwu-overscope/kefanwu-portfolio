@@ -7,15 +7,16 @@ const projectData = {
     title: "Mk.8 steering system",
     image: "assets/cover-steering-system.webp",
     summary:
-      "Mk.8 steering column redesign: matched 27.5-degree dual U-joints cancel rotational speed ripple, the wheel sits 3.5 inches closer and 15 degrees more upright than Mk.7, and every part maps to a shop process — lathe shafts, waterjet mounts, CNC bearing cages, TIG-welded chassis integration.",
+      "Mk.8 steering column redesign: matched 27.5-degree dual U-joints cancel rotational speed ripple, and the wheel sits 3.5 inches closer and 15 degrees more upright than Mk.7. A 50 N·m worst-case steering torque was derived by hand from peak tire friction and Ackermann steering geometry, and every steering part was cut, turned, and welded personally; the full system is installed on the car and has run without issues.",
     highlights: [
       "Matched dual U-joint bend angles to reduce rotational velocity ripple through the steering column.",
       "Moved the wheel 3.5 inches closer and 15 degrees more vertical than Mk.7 to improve driver posture and cockpit clearance.",
       "Lightweighted the steering bearing cages, saving 0.9 kg against the previous year's design.",
-      "Analyzed shaft, rack mount, yoke phasing, bearing cage, and fastener decisions against stiffness and slop targets.",
-      "Planned fabrication across lathe shafts, waterjet rack mounts, CNC bearing cages, TIG integration, and lock-wired fasteners."
+      "Derived a 50 N·m worst-case steering torque by hand from peak tire friction and the car's Ackermann steering geometry.",
+      "Sized every steering shaft in torsion by hand and cross-checked each one in FEA.",
+      "Cut, turned, and welded every steering part personally — waterjet rack mounts, lathe-turned shafts, TIG-welded chassis integration — and the full system is installed on the car and has run without issues."
     ],
-    tools: ["SolidWorks", "MATLAB", "FEA", "Lathe", "Waterjet", "CNC mill", "TIG weld planning"],
+    tools: ["SolidWorks", "MATLAB", "FEA", "Lathe", "Waterjet", "CNC mill", "TIG welding"],
     details: [
       {
         title: "Role and objective",
@@ -38,7 +39,7 @@ const projectData = {
         points: [
           "Designed rack mounts, shaft interfaces, bearing cages, and sensor packaging around realistic shop processes instead of pure CAD convenience.",
           "Reworked the bearing cages for mass as well as stiffness, taking 0.9 kg out of the previous year's column.",
-          "Planned lathe work for splined shafts, waterjet parts for rack mounting, and welded chassis integration for load paths.",
+          "Personally turned the splined shafts on the lathe, cut the rack mounts on the waterjet, and TIG-welded the chassis integration that carries the load paths.",
           "Moved critical fasteners toward higher-grade hardware and preload-aware retention where looseness would become steering play."
         ]
       },
@@ -47,7 +48,7 @@ const projectData = {
         points: [
           "Column locked at a 55-degree posture (Mk.7: 60 degrees) with the wheel 3.5 inches closer to the driver.",
           "The matched 27.5-degree U-joint pair cancels speed ripple per the ripple-surface model in the gallery.",
-          "Parts released to the lathe, waterjet, and CNC mill; the column integrates into the Mk.8 chassis with TIG-welded mounts."
+          "Every steering part was made personally, and TIG-welded mounts tie the column into the Mk.8 chassis; the full steering system is installed on the car and has run without issues."
         ]
       }
     ],

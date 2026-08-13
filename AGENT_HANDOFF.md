@@ -256,7 +256,63 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-08-05 (latest) modal "flash and gone" fix — double-click closed the case study
+### 2026-08-13 (latest) steering case study updated to "built, installed, running"
+Kefan confirmed four facts on 2026-08-13 and they are the ONLY new claims in
+this pass — everything else in the steering object is untouched:
+1. Max steering torque **50 N·m**, hand-derived from peak tire friction plus
+   the car's Ackermann steering geometry.
+2. **Every steering shaft** sized in torsion by hand, cross-checked in FEA.
+3. All steering parts machined by him personally — processes are exactly
+   **waterjet, lathe, TIG welding** and nothing else.
+4. The full steering system is **installed on the car and has run without
+   issues**.
+
+Changed, all inside the `steering` object (L5-62 of project-data.js):
+- `summary` — dropped the design-tense tail ("every part maps to a shop
+  process ..."); now states the 50 N·m hand derivation and the built/installed
+  status as two parallel facts.
+- `highlights` **5 → 6**. Kept the U-joint ripple, 3.5-inch wheel move, and
+  0.9 kg cage bullets. Replaced the generic "Analyzed shaft, rack mount, yoke
+  phasing..." bullet with the 50 N·m derivation, replaced "Planned fabrication
+  across..." with the shaft-torsion + FEA bullet, and added a sixth covering
+  personal fabrication and installation. 6 is precedented (site-wide highlight
+  counts are 5x12, 6x3, 7x1). Note **every highlight on this site is a single
+  sentence** — keep it that way; the new sixth uses em dashes and a conjunction
+  rather than two sentences.
+- `tools` — "TIG weld planning" → "TIG welding". `CNC mill` deliberately kept:
+  a tools list carries no agent, and the CNC bearing cages were not his work.
+- `details[2].points[2]` and `details[3].points[2]` — rewritten from
+  planned/released tense to done. The word "release" is retired site-wide for
+  this project.
+
+**Honesty constraints that must survive future edits:**
+- Facts 1 and 2 are stated in PARALLEL, never causally linked. Kefan did not
+  say the 50 N·m case was the input load for the torsion work — do not write
+  "carried that load case through the column" or similar.
+- Fact 2's scope is **shafts only**, never "every part" / "the whole column".
+- No stress values, factors of safety, or deflections exist for this work.
+- 50 N·m verbatim: no lb-ft conversion, no reinterpretation as "torque at the
+  wheel" vs "at the shaft".
+- Ceiling phrasing is "installed on the car and has run without issues".
+  BANNED: smooth/smoothly, no binding, no play, zero backlash, no stiction,
+  dialed in, proven, validated on track, durability. In a steering context
+  "smooth" reads as an unverified performance claim.
+- L49's qualifier "per the ripple-surface model in the gallery" stays verbatim
+  — running on the car is not the same as measuring ripple cancellation.
+- This car has no competition results. No lap times, no placings.
+
+Two documentation traps found while doing this (fix your assumptions, not the
+files): `index.html` L155 uses the LITERAL `°` character, not the `&deg;`
+entity, so searching for the entity finds nothing; and `window.projectData` is
+in fact an object, not undefined, despite `const` at classic-script top level.
+There are also TWO launch configs — `WEBSITE/.claude/launch.json` ("portfolio",
+runs serve.ps1) and `portfolio-site/.claude/launch.json` ("portfolio-static",
+python http.server) — both on port 4173.
+
+Cache: project-data.js → `steering-20260813` in BOTH index.html and
+experience.html. No other version string touched.
+
+### 2026-08-05 modal "flash and gone" fix — double-click closed the case study
 Kefan reported: clicking a project card sometimes flashed the case study open
 and instantly shut it ("闪退"). Root cause chain, all in script.js:
 - **Primary:** `.modal-backdrop` is fixed/inset-0/z-100 with a bare
@@ -1815,7 +1871,7 @@ studio. Everything below is LIVE.
 ### Current cache versions (bump the matching one whenever you edit that file)
 - `styles.css?v=vine-20260714` (in index.html)
 - `script.js?v=modalfix-20260805` (in index.html)
-- `project-data.js?v=matlab-20260730b` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `project-data.js?v=steering-20260813` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-vine-20260714` (3D page styles — in experience.html)
 - `experience.js?v=exp-vine-20260714` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
