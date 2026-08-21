@@ -256,7 +256,63 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-08-13c (latest) vineRobot <-> education slot swap; pail transparent; photo-audited colors
+### 2026-08-21 (latest) tensile machine becomes the materialTest exhibit; guitar kit retired
+Kefan dropped a downloaded tensile-tester model in
+`WEBSITE/instron-machine-1.snapshot.3/`. Three Sonnet subagents under
+supervision. Exhibit total stays **15** (one out, one in).
+- **New exhibit `models/real/materialTest.glb`** (395 KB, 22,302 tris, Y-up,
+  extents 152x310x150). materialTest was the last project without an
+  exhibit; it now has one.
+- **NEW PIPELINE PATH — geometry-based bucketing.** Unlike every other
+  group, this is ONE STL with no part names, so materials cannot come from
+  filename regexes. `tools/tensile_geometry.py` (new) splits the mesh into
+  connected components via `scipy.sparse.csgraph.connected_components` over
+  face adjacency (trimesh's `split()` needs networkx, which is NOT installed
+  in the Blender python) and classifies each shell by position/size/shape.
+  19 components recovered, faces summing exactly to 22,302, zero hitting the
+  fallback rule. `stl2glb.py` gained a separate `GEOM_GROUPS` loop appended
+  AFTER the filename loop — the regex `CLASS` table is untouched and a
+  before/after dry run over all other groups diffed empty.
+- Colors matched to the reference photo: aero cream 0xe0ddd0 (columns +
+  base), dark 0x2f2d2d (beams, both grip yokes, pendant), steel stock
+  (load cell, couplings, pins), brass 0xaa7648 (two flange rings).
+- **Slot moves**: education REMOVED from the scene; lineFollower main
+  cabinet -> side cabinet CAB2 bay1/row2; materialTest into lineFollower's
+  old main-cabinet slot (CAB.bays[0], CAB.rows[2], CAB.frontZ).
+  PROJECT_ORDER updated in place (materialTest at index 6, lineFollower
+  last).
+- **noStudio flips**: materialTest's flag REMOVED, education's ADDED.
+
+**BUG FOUND AND FIXED (was live in production, not introduced here):**
+`.modal-studio-link { display: inline-flex }` has the same specificity as
+the UA's `[hidden]{display:none}` and author styles win — so `script.js`'s
+`studioLink.hidden = Boolean(project.noStudio)` had NO visual effect. Every
+noStudio project (materialTest, and vineRobot before it got an exhibit) has
+been showing a clickable "view in the studio" link that deep-links into the
+studio with nothing to focus. Fixed with `.modal-studio-link[hidden] {
+display: none; }`. Note styles.css already had this override for
+`.modal-scrub-img[hidden]` and `.modal-media img[hidden]` — this one class
+was simply missed. **If you add another `display:`-bearing class that JS
+toggles via `.hidden`, add the `[hidden]` override too.**
+- Cache: styles.css -> `instron-20260821`, project-data.js ->
+  `instron-20260821` (BOTH pages), experience.js -> `exp-instron-20260821`.
+- `.gitignore` gained `__pycache__/` (the new tools helper generates one).
+
+**TWO OPEN ITEMS FOR KEFAN (do not paper over these):**
+1. The reference photo is a PHOTOGRAPH, and the machine in it is badged
+   **"MTS Insight, Electromechanical, 5 kN"** — not the **Instron 3345**
+   the materialTest case study describes. The model is dual-column
+   floor-standing; a 3345 is single-column benchtop (see the real lab shot
+   `assets/material-instron-frame.webp`). The exhibit label is the generic
+   "Material property testing", so nothing on screen states a false brand,
+   but the geometry is not the machine he used.
+2. Provenance/licence of the model is UNKNOWN. The folder name
+   `instron-machine-1.snapshot.3` matches the download-snapshot pattern of
+   the other third-party props in `Desktop/STL`. ATTRIBUTIONS.txt currently
+   claims all exhibit GLBs are Kefan's own CAD — that claim is now WRONG
+   until this model's source is identified and credited.
+
+### 2026-08-13c vineRobot <-> education slot swap; pail transparent; photo-audited colors
 Kefan: swap the vine robot and the guitar education kit, make the pail
 transparent, verify the other colors. Three Opus subagents under supervision.
 - **Slot swap**: vineRobot now sits in the MAIN cabinet, bay 2 / row 2
@@ -1954,11 +2010,11 @@ studio. Everything below is LIVE.
 - Windows gotchas: Python cannot write to `/tmp` — write temp files under `C:/Users/oc/AppData/Local/Temp/...`. In `python -c` strings use forward slashes / `os.path.join`, not escaped backslashes. Pasted screenshots land in `C:\Users\oc\AppData\Local\Packages\MicrosoftWindows.Client.Core_cw5n1h2txyewy\TempState\ScreenClip\`.
 
 ### Current cache versions (bump the matching one whenever you edit that file)
-- `styles.css?v=vine-20260714` (in index.html)
+- `styles.css?v=instron-20260821` (in index.html)
 - `script.js?v=modalfix-20260805` (in index.html)
-- `project-data.js?v=bucketbot-20260813` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `project-data.js?v=instron-20260821` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-vine-20260714` (3D page styles — in experience.html)
-- `experience.js?v=exp-vineswap-20260813` (3D page module — in experience.html)
+- `experience.js?v=exp-instron-20260821` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)

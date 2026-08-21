@@ -1,4 +1,5 @@
 _qa-*.png
+__pycache__/
 .vercel/
 .DS_Store
 Thumbs.db

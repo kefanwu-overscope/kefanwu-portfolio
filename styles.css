@@ -3011,6 +3011,11 @@ html { scrollbar-gutter: stable; }
   transition: background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
 }
 .modal-studio-link:hover { background: rgba(63, 140, 255, 0.1); border-color: var(--blue); }
+/* script.js sets studioLink.hidden for projects with no exhibit. The rule
+   above has the same specificity as the UA's [hidden]{display:none}, and
+   author styles win — without this the link stayed visible and clickable on
+   every noStudio project, deep-linking into the studio with nothing there. */
+.modal-studio-link[hidden] { display: none; }
 
 /* ---- capabilities: proof links + drawing-line hover ---- */
 .cap-proof {

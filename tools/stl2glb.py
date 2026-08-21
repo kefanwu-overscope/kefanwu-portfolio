@@ -175,4 +175,75 @@ for proj, pat in GROUPS.items():
     ext = scene.extents
     print(f"OK {proj}: {len(files)} parts -> {len(buckets)} buckets ({', '.join(sorted(buckets))}), "
           f"{tris} tris, {kb} KB, extents {np.round(ext,1)}")
+
+# ---------------------------------------------------------------------------
+# Geometry-based groups: buckets derived from mesh SHAPE, not filename.
+#
+# Every group above is a folder of one-STL-per-SolidWorks-part, so bucket_of()
+# just regexes the filename. The tensile-testing-machine exhibit is the
+# opposite: ONE STL ("Tensile Machine.STL", a single fused export with no
+# per-part breakdown -- it came with a matching "Tensile Machine.IGS" and
+# nothing else) with zero names anywhere to key off. So instead we split the
+# mesh into its connected components -- each disjoint shell == one real part,
+# since assembled SolidWorks parts essentially never share exactly-coincident
+# vertices even when touching -- and classify each shell by its bounding-box
+# geometry (position/size/shape/how many identical copies exist) against the
+# reference photo. Full rules + per-bucket photo justification live in
+# tools/tensile_geometry.py; the splitter uses scipy.sparse.csgraph over the
+# face-adjacency graph rather than trimesh's mesh.split(), because that wants
+# networkx and this interpreter (the Blender-bundled one) doesn't have it and
+# scipy already does the same job.
+#
+# This stays a separate dict + loop instead of folding into GROUPS/CLASS
+# above: every existing group's classification key is a filename regex, and
+# this group's key is mesh geometry, so forcing it through bucket_of(name)
+# would mean inventing a fake filename to regex against -- more confusing
+# than a parallel, clearly-labeled code path. Nothing above this comment
+# block was touched to make room for it -- verified by snapshotting
+# bucket_of(name) for every file in every GROUPS entry before and after this
+# edit and diffing the two (identical: steering/javelin/scanner/vineRobot/
+# seat all classify exactly as before).
+# ---------------------------------------------------------------------------
+from tensile_geometry import split_connected_components, classify_tensile_components
+
+GEOM_GROUPS = {
+    "materialTest": "Tensile Machine.STL",
+}
+
+# same optional CLI filter as GROUPS above, applied separately since this is
+# a separate dict (`python stl2glb.py materialTest` regenerates only this one
+# without re-exporting any of the filename-based groups)
+if len(sys.argv) > 1:
+    GEOM_GROUPS = {k: v for k, v in GEOM_GROUPS.items() if k in sys.argv[1:]}
+
+for proj, fname in GEOM_GROUPS.items():
+    path = os.path.join(SRC, fname)
+    if not os.path.exists(path):
+        print(f"!! {proj}: {fname} not found"); continue
+    mesh = trimesh.load(path, force="mesh")
+    if mesh.is_empty or len(mesh.faces) == 0:
+        print(f"!! {proj}: empty mesh"); continue
+    comps = split_connected_components(mesh)
+    labels = classify_tensile_components(comps)
+    buckets = {}
+    roles = {}
+    for sub, (b, role) in zip(comps, labels):
+        buckets.setdefault(b, []).append(sub)
+        roles.setdefault(b, []).append(f"{role} ({len(sub.faces)}f)")
+    scene = trimesh.Scene()
+    tris = 0
+    for b, meshes in buckets.items():
+        merged = trimesh.util.concatenate(meshes)
+        merged.merge_vertices()
+        tris += len(merged.faces)
+        scene.add_geometry(merged, node_name=f"mat_{b}", geom_name=f"mat_{b}")
+    out = os.path.join(OUT, f"{proj}.glb")
+    scene.export(out)
+    kb = os.path.getsize(out) // 1024
+    ext = scene.extents
+    print(f"OK {proj}: {len(comps)} shells (connected components) -> {len(buckets)} buckets "
+          f"({', '.join(sorted(buckets))}), {tris} tris, {kb} KB, extents {np.round(ext,1)}")
+    for b in sorted(buckets):
+        print(f"     mat_{b}: {', '.join(roles[b])}")
+
 print("DONE")

@@ -836,13 +836,42 @@ function initScene(canvas) {
     targetSize: 0.26, axis: "y", pos: [CAB.bays[2], CAB.rows[1], CAB.frontZ], rotY: Math.PI / 2 + 0.25,
     matTweak: { steel: { color: 0xbcc2c9, roughness: 0.4, metalness: 1.0 } }, // bright silver rotor
   });
-  loadAssembly(loader, scene, "models/real/lineFollower.glb", {
-    fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_lineFollower", projectKey: "lineFollower", label: "LineFollower robot",
-    targetSize: 0.34, axis: "z", pos: [CAB.bays[0], CAB.rows[2], CAB.frontZ], rotY: 0.45,
-    // photo-matched: bright orange tires, Arduino-teal main PCB, silver
-    // motors + silver/white battery wrap (both live in the "dark" bucket)
-    matTweak: { rubber: { color: 0xe8883a, roughness: 0.6 }, pcb: { color: 0x146e80 },
-      dark: { color: 0x9a9ea3, metalness: 0.6, roughness: 0.45 } },
+  // real CAD (Tensile Machine.STL -> materialTest.glb): the Instron-style
+  // tensile tester that measured the fabric/LDPE and bamboo specimens for
+  // the material property testing case study. Extents 152x310x150mm
+  // (x,y,z) with the native up axis already Y, like vineRobot's GLB -- no
+  // rotX needed, it just stands on its base housing. This takes over
+  // lineFollower's old bottom-left bay.
+  loadAssembly(loader, scene, "models/real/materialTest.glb", {
+    fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_materialTest", projectKey: "materialTest", label: "Material property testing",
+    // axis "y" sizes the tall frame itself. 0.38 leaves 0.02 of headroom
+    // under the row's 0.4 height cap -- so `fit` never clamps -- while
+    // still reading as a tall machine on the shelf rather than a squat
+    // one. At that height the 152x150mm footprint scales to roughly
+    // 0.19 x 0.18m, far inside the 0.6 along-wall / 0.4 depth budgets, so
+    // neither X nor Z gets anywhere near clamping either. rotY carries
+    // this bay's established cant (lineFollower ran 0.45 here) so the
+    // frame reads 3/4-on into the room instead of a flat, square-on
+    // billboard at 0.
+    targetSize: 0.38, axis: "y", pos: [CAB.bays[0], CAB.rows[2], CAB.frontZ], rotY: 0.4,
+    // converter-suggested tweaks over the 4 merged material buckets:
+    // aero = both side columns + the base housing, warmed toward a cream
+    // off-white (the raw photo sample carries a green-white fluorescent
+    // cast; pulled toward vineRobot's cream-plastic precedent instead);
+    // dark = the fixed top beam, the moving "MTS Insight" crosshead, both
+    // grip-jaw yokes, and the hand-pendant body -- one merged bucket, read
+    // as a warm dark charcoal rather than stock near-black (this knowingly
+    // lightens the pendant's true medium-grey housing, a fair trade since
+    // the grips/beams dominate the read and the pendant is a minor
+    // accessory); brass = the two flange/spacer rings, a warmer and more
+    // saturated copper than the stock muted tan. Steel (load cell, base
+    // coupling, grip pins, pendant bracket) stays stock -- already a close
+    // match for that silver-grey hardware.
+    matTweak: {
+      aero: { color: 0xe0ddd0, metalness: 0.05, roughness: 0.5 },
+      dark: { color: 0x2f2d2d, metalness: 0.15, roughness: 0.48 },
+      brass: { color: 0xaa7648, metalness: 0.9, roughness: 0.4 },
+    },
   });
   placeRoot(buildCfdDisplay(artLoader), scene, {
     fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_ansysCfd", projectKey: "ansysCfd", label: "Agent-based CFD",
@@ -931,25 +960,28 @@ function initScene(canvas) {
         wood: { color: 0xaeb0b3, metalness: 0.8, roughness: 0.4 } } },
     { file: "telecaster",      key: "telecaster", label: "Telecaster",       size: 0.42, axis: "y", bay: 0, row: 2, rotY: -Math.PI / 2 + 0.2,
       matTweak: { printed: { color: 0xe9e6da, metalness: 0.0, roughness: 0.45 }, wood: { color: 0xa97c4c, roughness: 0.55 } } }, // warm white body, honey-maple neck (photos)
-    // real CAD (education.glb): the exploded guitar teaching kit — a flat
-    // 392x650x68mm layout of parts in the native x-y plane, long axis native y.
-    // In the main cabinet rotZ 90 alone laid that long axis horizontal; here
-    // the room is off -x instead of +z, so it takes a second -90deg of yaw.
-    // rotZ swings the long axis to world -x, rotY then carries it round to -z
-    // (along the wall) and brings the layout's face (native +z) to the room —
-    // same face, same left-to-right reading order as the old slot. The +0.12 is
-    // the cant it already carried, kept so it isn't a dead-flat billboard.
-    { file: "education",       key: "education", label: "Guitar education kit", size: 0.44, axis: "z", bay: 1, row: 2, rotZ: Math.PI / 2, rotY: -Math.PI / 2 + 0.12,
-      // The axis moves x -> z with the layout, so 0.44 is now measured ALONG
-      // THE WALL, where the budget is 0.58 against the main bay's 0.62 — the
-      // kit keeps the size it had. What actually shrank is the depth allowance
-      // (0.4 -> 0.34) and the thin panel spends only 0.07 of it; height lands
-      // at 0.26 under the 0.4 cap, so `fit` never clamps and the marker clears
-      // the shelf on its own without hitting markerCap.
-      // photo-matched, lightened per feedback: medium navy body and a lighter
-      // walnut neck/fingerboard; chrome panel/bridge via the steel bucket
-      matTweak: { printed: { color: 0x3d5180, metalness: 0.05, roughness: 0.55 },
-        wood: { color: 0x7d6144, roughness: 0.6 } } },
+    // real CAD (lineFollower.glb): moved out of the main cabinet's
+    // bottom-left bay to make room for the tensile-machine exhibit -- this
+    // is exactly the slot the guitar kit used to hold. Only rotY was ever
+    // set for it (no rotX/rotZ) in either bay, and pure Y-axis yaws compose
+    // additively, so adding this cabinet's -90deg reface on top of the old
+    // 0.45 cant (new = -PI/2 + 0.45) does more than turn the robot to face
+    // -x instead of +z: a clean extra -90deg of yaw also swaps its world
+    // x/z footprint exactly, so whatever measured 0.34 along world z
+    // (depth, axis "z") now measures that same 0.34 along world x instead
+    // -- axis becomes "x" and the SAME targetSize keeps fixing the SAME
+    // physical dimension of the chassis. That lands exactly on this bay's
+    // tighter 0.34 depth cap (was 0.4 in the main bay) with no slack but no
+    // overshoot either. The footprint that swaps in along the wall (now z,
+    // was x) sat comfortably clear of the main bay's ~0.62, so it has
+    // plenty of room under this bay's tighter 0.58; height is untouched by
+    // a Y-axis yaw and was already under the shared 0.4 cap in the main
+    // bay, so it stays clear here too -- `fit` never clamps on any axis.
+    { file: "lineFollower",    key: "lineFollower", label: "LineFollower robot", size: 0.34, axis: "x", bay: 1, row: 2, rotY: -Math.PI / 2 + 0.45,
+      // photo-matched: bright orange tires, Arduino-teal main PCB, silver
+      // motors + silver/white battery wrap (both live in the "dark" bucket)
+      matTweak: { rubber: { color: 0xe8883a, roughness: 0.6 }, pcb: { color: 0x146e80 },
+        dark: { color: 0x9a9ea3, metalness: 0.6, roughness: 0.45 } } },
   ];
   SIDE_EXHIBITS.forEach((s) => {
     const opts = {
@@ -2080,10 +2112,10 @@ function initScene(canvas) {
 
   // fixed tour order for prev/next navigation (matches cabinet layout)
   const PROJECT_ORDER = ["carbonSeat", "aura", "scanner", "javelin", "steering", "brakeSim",
-    "lineFollower", "ansysCfd", "vineRobot", "seat", "ftc", "formlabs", "pool", "telecaster",
-    "education"]; // vineRobot now closes the MAIN cabinet's bottom row (bay 2) before the
-  // tour crosses to the right wall; education closes the side cabinet, bay 1 of
-  // its bottom row, after telecaster
+    "materialTest", "ansysCfd", "vineRobot", "seat", "ftc", "formlabs", "pool", "telecaster",
+    "lineFollower"]; // vineRobot now closes the MAIN cabinet's bottom row (bay 2) before the
+  // tour crosses to the right wall; lineFollower closes the side cabinet, bay 1
+  // of its bottom row, after telecaster (the slot education used to hold)
   let currentProjectKey = null;
   // set for the duration of a stepProject() → openPanel() call so openPanel
   // knows to cross-fade the content swap instead of hard-cutting it (the

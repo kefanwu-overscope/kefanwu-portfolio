@@ -590,7 +590,6 @@ const projectData = {
       { src: "assets/material-bending-fits.webp", alt: "Force-deflection curves for all eleven bamboo samples in three-point bending", caption: "Force–deflection, 11 rods" },
       { src: "assets/material-bending-summary.webp", alt: "Per-sample bending stiffness EI and estimated bending modulus for the eleven bamboo rods against their means", caption: "Per-rod EI and E" },
     ],
-    noStudio: true,
     spec: {
       meta: [
         ["Role", "Research assistant"],
@@ -886,7 +885,11 @@ const projectData = {
       { src: "assets/education-kit-experiment.webp", alt: "Guitar kit experiment render", caption: "Assembly design" },
       { src: "assets/education-kit-parts.webp", alt: "STEAM hardware kit market test poster", caption: "Market test poster" },
       { src: "assets/education-kit-user-test.webp", alt: "Guitar kit components during user testing", caption: "User test setup" }
-    ]
+    ],
+    // no 3D exhibit anymore -- the kit was retired from the studio scene
+    // (its cabinet slot now holds lineFollower); hides the "view in the
+    // studio" link the same way materialTest's old flag used to
+    noStudio: true,
   },
   telecaster: {
     kicker: "CNC / finishing / electronics integration",
