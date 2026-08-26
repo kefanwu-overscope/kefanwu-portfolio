@@ -256,7 +256,31 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-08-21 (latest) tensile machine becomes the materialTest exhibit; guitar kit retired
+### 2026-08-21b (latest) gallery caption accuracy pass (Kefan's corrections)
+Kefan flagged inaccurate photo descriptions; ten edits, all inside gallery
+arrays in project-data.js:
+- brakeSim: "Endurance thermal model" -> "Track-based thermal model";
+  REMOVED the "Structural check" item (fsae-mk8-live-2.webp — byte-identical
+  to the cover FEA, so this also kills a known duplicate). 4 -> 3 items.
+- vineRobot: REMOVED "Body under load" (vine-test-closeup) and "Internal
+  spool" (vine-assembly-cutaway). 11 -> 9 items. Files stay in assets/
+  (still referenced by nothing else; left on disk deliberately).
+- javelin: kept javelin-outdoor.webp but REMOVED its "Scale in hand"
+  caption (photo shows no hand or scale cue); alt re-worded to "Javelin
+  resting outdoors" since it carried the same false claim. NOTE: script.js
+  renderGallery falls back to project.title for a caption-less item, so the
+  thumb label now reads the full project title. experience.js renders no
+  figcaption at all for it (`it.caption ? ... : ""`).
+- carbonSeat: "Carbon shell cover" -> "Demolded"; "Layup interior" ->
+  "Male mold"; "Carbon weave" -> "Carbon fiber cloth layup"; "Trimmed
+  shell" -> "Trimmed seat"; REMOVED "Shell front" (near-duplicate of the
+  cover photo) and "Driver support context" (fsae-mk7-cockpit). 6 -> 4.
+- Kefan's message spelled it "trimmmed seat" — shipped as "Trimmed seat"
+  (site-visible content must be correct English).
+- Cache: project-data.js -> `captions-20260821` (BOTH pages). No other file
+  touched.
+
+### 2026-08-21 tensile machine becomes the materialTest exhibit; guitar kit retired
 Kefan dropped a downloaded tensile-tester model in
 `WEBSITE/instron-machine-1.snapshot.3/`. Three Sonnet subagents under
 supervision. Exhibit total stays **15** (one out, one in).
@@ -2012,7 +2036,7 @@ studio. Everything below is LIVE.
 ### Current cache versions (bump the matching one whenever you edit that file)
 - `styles.css?v=instron-20260821` (in index.html)
 - `script.js?v=modalfix-20260805` (in index.html)
-- `project-data.js?v=instron-20260821` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `project-data.js?v=captions-20260821` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-vine-20260714` (3D page styles — in experience.html)
 - `experience.js?v=exp-instron-20260821` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.

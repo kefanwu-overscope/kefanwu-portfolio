@@ -124,7 +124,7 @@ const projectData = {
       { src: "assets/javelin-nose.webp", alt: "Von Karman ogive nose with the extended pitot tube", caption: "Ogive nose and pitot" },
       { src: "assets/javelin-motor.webp", alt: "T-Motor F90 and propeller mounted on the swept wing", caption: "Tractor motor" },
       { src: "assets/javelin-rear.webp", alt: "Javelin rear three-quarter showing the swept wing and stabilizers", caption: "Swept wing and tail" },
-      { src: "assets/javelin-outdoor.webp", alt: "Javelin held outdoors showing scale", caption: "Scale in hand" }
+      { src: "assets/javelin-outdoor.webp", alt: "Javelin resting outdoors" }
     ]
   },
   ansysCfd: {
@@ -295,12 +295,10 @@ const projectData = {
       }
     ],
     gallery: [
-      { src: "assets/cover-carbon-fiber-seat.webp", alt: "Carbon fiber seat support shell filling the work surface", caption: "Carbon shell cover" },
-      { src: "assets/carbon-seat-layup-interior.webp", alt: "Carbon fiber seat layup around a gray mold", caption: "Layup interior" },
-      { src: "assets/carbon-seat-shell-front.webp", alt: "Carbon fiber seat shell standing upright with masking tape at the edges", caption: "Shell front" },
-      { src: "assets/carbon-seat-weave-close.webp", alt: "Close view of the carbon fiber weave over the seat support surface", caption: "Carbon weave" },
-      { src: "assets/carbon-seat-trimmed-shell.webp", alt: "Trimmed carbon fiber seat support shell after curing", caption: "Trimmed shell" },
-      { src: "assets/fsae-mk7-cockpit.webp", alt: "Driver seated in Olin Electric Motorsports Formula SAE car", caption: "Driver support context" }
+      { src: "assets/cover-carbon-fiber-seat.webp", alt: "Carbon fiber seat support shell filling the work surface", caption: "Demolded" },
+      { src: "assets/carbon-seat-layup-interior.webp", alt: "Carbon fiber seat layup around a gray mold", caption: "Male mold" },
+      { src: "assets/carbon-seat-weave-close.webp", alt: "Close view of the carbon fiber weave over the seat support surface", caption: "Carbon fiber cloth layup" },
+      { src: "assets/carbon-seat-trimmed-shell.webp", alt: "Trimmed carbon fiber seat support shell after curing", caption: "Trimmed seat" }
     ]
   },
   brakeSim: {
@@ -353,8 +351,7 @@ const projectData = {
     ],
     gallery: [
       { src: "assets/oem-brake-fea.webp", alt: "Brake rotor finite element analysis result", caption: "Rotor FEA" },
-      { src: "assets/fsae-mk8-live-1.webp", alt: "Brake rotor and pad temperature over endurance laps", caption: "Endurance thermal model" },
-      { src: "assets/fsae-mk8-live-2.webp", alt: "Brake rotor stress or displacement contour plot", caption: "Structural check" },
+      { src: "assets/fsae-mk8-live-1.webp", alt: "Brake rotor and pad temperature over endurance laps", caption: "Track-based thermal model" },
       { src: "assets/fsae-mk8-live-3.webp", alt: "Perforated brake rotor CAD pattern", caption: "Rotor geometry" }
     ]
   },
@@ -481,9 +478,7 @@ const projectData = {
       { src: "assets/vine-body-3partition.webp", alt: "The reinforced vine robot in the shop everting a large three-partition vine body across the bench", caption: "3-partition body everted" },
       { src: "assets/vine-body-stick.webp", alt: "The reinforced vine robot everting a stick-reinforced vine body, its bamboo rods visible along the length", caption: "Stick-reinforced body" },
       { src: "assets/vine-test-rig.webp", alt: "The deformation test rig: timber frame on adjustable feet with vertical guide rods, a load shape over the pressurised vine body, and the robot outlet at right", caption: "Deformation test rig" },
-      { src: "assets/vine-test-closeup.webp", alt: "Close view of a pressurised vine body under the load shape, resting on the marked wood plate between the rig's linear bearings", caption: "Body under load" },
       { src: "assets/vine-robot-built.webp", alt: "The first build of the vine everting robot: transparent polypropylene pressure vessel with a bolted printed lid, bolted outlet flange and a vine body everted through the outlet", caption: "First build" },
-      { src: "assets/vine-assembly-cutaway.webp", alt: "CAD cutaway of the robot showing the internal spool, drive shaft and outlet", caption: "Internal spool" },
       { src: "assets/vine-lid-exploded.webp", alt: "Exploded CAD view of the lid assembly: motor, printed lid, TPU gasket and the flange-gripping lid mount with its bolt ring", caption: "Lid assembly" },
       { src: "assets/vine-outlet-exploded.webp", alt: "Exploded CAD view of the vine outlet with its cross-section converter, gasket and bolt ring", caption: "Outlet + converter" },
       { src: "assets/vine-reinforced-cad.webp", alt: "CAD of the reinforced robot with aluminium plates on every face and three C-shaped steel brackets", caption: "Reinforced build" },
