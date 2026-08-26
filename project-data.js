@@ -935,6 +935,7 @@ const projectData = {
       { src: "assets/telecaster-wood.webp", alt: "Guitar body with its first layer of primer", caption: "First layer of primer" },
       { src: "assets/telecaster-cnc.webp", alt: "Guitar body in the painting setup", caption: "Painting setup" },
       { src: "assets/telecaster-finish.webp", alt: "Guitar body clamped during glue-up", caption: "Wood-gluing the body" },
+      { src: "assets/telecaster-shopbot.webp", alt: "Walnut guitar body being cut on a ShopBot 3-axis CNC router, dust brush over the blank", caption: "ShopBot 3-axis CNC router" },
       { src: "assets/telecaster-assembly.webp", alt: "Drilling the guitar body holes with a jig", caption: "Drilling holes with a jig" }
     ]
   },

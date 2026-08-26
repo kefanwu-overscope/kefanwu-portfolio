@@ -256,7 +256,16 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-08-22 (latest) third caption pass: smelly / education / telecaster / ftc
+### 2026-08-25 (latest) ShopBot photo lands in the telecaster gallery
+The photo Kefan pasted on 08-22 finally reached disk (WEBSITE/Shopbot.jpg,
+1706x1280) -> assets/telecaster-shopbot.webp (1400px, 164 KB). Inserted
+between "Wood-gluing the body" and "Drilling holes with a jig" to match
+build order (glue-up -> CNC -> drill). Telecaster gallery is 7 items.
+Cache: project-data.js -> `shopbot-20260825` (BOTH pages).
+QA note: lazy-loaded modal thumbs never fire in the backgrounded pane —
+verify new images by curling the asset URL, not by img.complete.
+
+### 2026-08-22 third caption pass: smelly / education / telecaster / ftc
 Kefan's corrections continue — several captions were describing the wrong
 thing entirely (the ftc "Robot package" tile is actually a TEAM PHOTO; the
 telecaster "Wood blank" shot is the primed body; "CNC setup" is the
@@ -277,9 +286,8 @@ painting rig). Alts were fixed together with the captions.
   its Afternoon Tunes charity music program.
 - telecaster: "Wood blank" -> "First layer of primer"; "CNC setup" ->
   "Painting setup"; "Body preparation" -> "Wood-gluing the body";
-  "Post-processing" -> "Drilling holes with a jig". A ShopBot 3-axis CNC
-  router photo is WANTED here — Kefan pasted one in chat but it never
-  reached disk; waiting on a file path.
+  "Post-processing" -> "Drilling holes with a jig". (ShopBot photo landed
+  2026-08-25, see the entry above.)
 - ftc reordered + renamed: Robot in competition -> Slide mechanism
   prototype (moved up) -> "Massachusetts State Record: 269" -> Awards ->
   Team photo (moved last; its alt wrongly said "CAD or mechanism").
@@ -2087,7 +2095,7 @@ studio. Everything below is LIVE.
 ### Current cache versions (bump the matching one whenever you edit that file)
 - `styles.css?v=instron-20260821` (in index.html)
 - `script.js?v=modalfix-20260805` (in index.html)
-- `project-data.js?v=captions3-20260822` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `project-data.js?v=shopbot-20260825` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-vine-20260714` (3D page styles — in experience.html)
 - `experience.js?v=exp-instron-20260821` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
