@@ -19,3 +19,9 @@ HDRI:
 
 Textures:
 - dark_wood, painted_plaster_wall — Poly Haven (CC0)
+
+NOTE (2026-08-25): the tensile-machine exhibit (models/real/materialTest.glb)
+was converted from a model supplied in a download-snapshot folder
+("instron-machine-1.snapshot.3"). Its source platform and licence are not
+yet identified, so the "Kefan Wu's own SolidWorks CAD" claim above does not
+cover that one file. A proper credit line is pending source identification.
