@@ -463,11 +463,9 @@ const projectData = {
     ],
     gallery: [
       { src: "assets/cover-perfume-dispenser.webp", alt: "Automated perfume dispenser prototype with gantry and fragrance bottles", caption: "Integrated prototype" },
-      { src: "assets/formlabs-smelly-build.webp", alt: "Automated perfume dispenser prototype on a workbench", caption: "Workbench build" },
-      { src: "assets/formlabs-smelly-front.webp", alt: "Formlabs hackathon perfume dispenser gantry", caption: "Gantry setup" },
       { src: "assets/formlabs-smelly-actuator.webp", alt: "Wiring and actuator system for perfume dispenser", caption: "Actuator wiring" },
       { src: "assets/formlabs-smelly-table.webp", alt: "Perfume dispenser test setup with gantry and fragrance bases", caption: "Dispensing test" },
-      { src: "assets/formlabs-smelly.webp", alt: "Smelly automated perfume dispenser close-up", caption: "Final concept" }
+      { src: "assets/formlabs-smelly.webp", alt: "Smelly automated perfume dispenser close-up", caption: "Final presentation" }
     ]
   },
   vineRobot: {
@@ -859,9 +857,10 @@ const projectData = {
       {
         title: "Customer experiments",
         points: [
-          "Parent research tested whether the build experience or final product value mattered more in the buying decision.",
-          "Younger children liked customization but found some wiring intimidating and wanted a clearer tool/setup experience.",
-          "8th and 9th graders found the kit more appropriately challenging and completed assembly in roughly 45 minutes."
+          "Interviewed at least five children and parents; the parent research tested whether the build experience or the final product value mattered more in the buying decision.",
+          "Two 8-year-olds ran assembly attempts: they liked the customization but found some wiring intimidating and wanted a clearer tool and setup experience.",
+          "Two 15-year-old high schoolers found the kit appropriately challenging and completed assembly in roughly 45 minutes.",
+          "All Saints Church in Worcester has expressed interest in the kit for its Afternoon Tunes charity music program."
         ]
       },
       {
@@ -874,10 +873,9 @@ const projectData = {
     ],
     gallery: [
       { src: "assets/education-kit.webp", alt: "Guitar education kit laid out as components", caption: "Kit layout" },
-      { src: "assets/education-kit-render.webp", alt: "Blue guitar kit render", caption: "Guitar concept" },
-      { src: "assets/education-kit-experiment.webp", alt: "Guitar kit experiment render", caption: "Assembly design" },
-      { src: "assets/education-kit-parts.webp", alt: "STEAM hardware kit market test poster", caption: "Market test poster" },
-      { src: "assets/education-kit-user-test.webp", alt: "Guitar kit components during user testing", caption: "User test setup" }
+      { src: "assets/education-kit-render.webp", alt: "Blue guitar kit render", caption: "Guitar CAD" },
+      { src: "assets/education-kit-experiment.webp", alt: "Exploded CAD view of the guitar kit parts on white", caption: "Exploded view" },
+      { src: "assets/education-kit-parts.webp", alt: "STEAM hardware kit market test poster", caption: "Market test poster" }
     ],
     // no 3D exhibit anymore -- the kit was retired from the studio scene
     // (its cabinet slot now holds lineFollower); hides the "view in the
@@ -934,10 +932,10 @@ const projectData = {
     gallery: [
       { src: "assets/cover-telecaster.webp", alt: "Finished Telecaster-style guitar in a case", caption: "Finished guitar" },
       { src: "assets/telecaster-body.webp", alt: "White Telecaster-style guitar body", caption: "Finished body" },
-      { src: "assets/telecaster-wood.webp", alt: "Walnut and maple guitar body blank", caption: "Wood blank" },
-      { src: "assets/telecaster-cnc.webp", alt: "Guitar body being machined or prepared near a CNC setup", caption: "CNC setup" },
-      { src: "assets/telecaster-finish.webp", alt: "Guitar blank clamped during finishing or preparation", caption: "Body preparation" },
-      { src: "assets/telecaster-assembly.webp", alt: "Guitar body assembly and routing process", caption: "Post-processing" }
+      { src: "assets/telecaster-wood.webp", alt: "Guitar body with its first layer of primer", caption: "First layer of primer" },
+      { src: "assets/telecaster-cnc.webp", alt: "Guitar body in the painting setup", caption: "Painting setup" },
+      { src: "assets/telecaster-finish.webp", alt: "Guitar body clamped during glue-up", caption: "Wood-gluing the body" },
+      { src: "assets/telecaster-assembly.webp", alt: "Drilling the guitar body holes with a jig", caption: "Drilling holes with a jig" }
     ]
   },
   ftc: {
@@ -988,11 +986,11 @@ const projectData = {
       }
     ],
     gallery: [
-      { src: "assets/cover-ftc-robot.webp", alt: "FTC robot competing on a field with cone scoring elements", caption: "Competition robot" },
-      { src: "assets/ftc-robot.webp", alt: "FTC robot CAD or mechanism image", caption: "Robot package" },
-      { src: "assets/ftc-action.webp", alt: "FTC competition scoreboard or field event", caption: "Competition result" },
-      { src: "assets/ftc-cad.webp", alt: "FTC trophies and awards", caption: "Awards context" },
-      { src: "assets/ftc-mechanism.webp", alt: "FTC robot mechanism close-up", caption: "Slide mechanism" }
+      { src: "assets/cover-ftc-robot.webp", alt: "FTC robot competing on a field with cone scoring elements", caption: "Robot in competition" },
+      { src: "assets/ftc-mechanism.webp", alt: "FTC robot slide mechanism close-up", caption: "Slide mechanism prototype" },
+      { src: "assets/ftc-action.webp", alt: "FTC competition scoreboard", caption: "Massachusetts State Record: 269" },
+      { src: "assets/ftc-cad.webp", alt: "FTC trophies and awards", caption: "Awards" },
+      { src: "assets/ftc-robot.webp", alt: "FTC team photo", caption: "Team photo" }
     ]
   }
 };

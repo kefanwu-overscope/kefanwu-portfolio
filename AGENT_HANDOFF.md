@@ -256,7 +256,36 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-08-21c (latest) second caption pass: scanner / pool / lineFollower (Kefan's corrections)
+### 2026-08-22 (latest) third caption pass: smelly / education / telecaster / ftc
+Kefan's corrections continue — several captions were describing the wrong
+thing entirely (the ftc "Robot package" tile is actually a TEAM PHOTO; the
+telecaster "Wood blank" shot is the primed body; "CNC setup" is the
+painting rig). Alts were fixed together with the captions.
+- formlabs/Smelly (6 -> 4): REMOVED "Workbench build" + "Gantry setup";
+  "Final concept" -> "Final presentation".
+- education (5 -> 4): "Guitar concept" -> "Guitar CAD"; "Assembly design"
+  -> "Exploded view" AND assets/education-kit-experiment.webp had its
+  baked-in BLACK background flood-filled to white (border-connected fill,
+  thresh 42, interior dark parts untouched; pre-edit original preserved at
+  scratchpad/education-kit-experiment.orig.webp for this session only);
+  REMOVED "User test setup". "Customer experiments" points retold with the
+  real demographics Kefan supplied: >=5 children+parents interviewed, two
+  8-year-olds and two 15-year-old high schoolers ran assembly attempts
+  (the old "8th and 9th graders" 45-min claim reattached to the 15yo pair,
+  the old "younger children" wiring note to the 8yo pair), plus new
+  traction line: All Saints Church in Worcester interested in the kit for
+  its Afternoon Tunes charity music program.
+- telecaster: "Wood blank" -> "First layer of primer"; "CNC setup" ->
+  "Painting setup"; "Body preparation" -> "Wood-gluing the body";
+  "Post-processing" -> "Drilling holes with a jig". A ShopBot 3-axis CNC
+  router photo is WANTED here — Kefan pasted one in chat but it never
+  reached disk; waiting on a file path.
+- ftc reordered + renamed: Robot in competition -> Slide mechanism
+  prototype (moved up) -> "Massachusetts State Record: 269" -> Awards ->
+  Team photo (moved last; its alt wrongly said "CAD or mechanism").
+- Cache: project-data.js -> `captions3-20260822` (BOTH pages).
+
+### 2026-08-21c second caption pass: scanner / pool / lineFollower (Kefan's corrections)
 - scanner: "Final gantry prototype" -> "3D-Scanner"; "Error reduction" ->
   "Calibration result"; summary gains "Built as a one-week project in
   Olin's Principles of Integrated Engineering course." (Kefan wrote
@@ -2058,7 +2087,7 @@ studio. Everything below is LIVE.
 ### Current cache versions (bump the matching one whenever you edit that file)
 - `styles.css?v=instron-20260821` (in index.html)
 - `script.js?v=modalfix-20260805` (in index.html)
-- `project-data.js?v=pie-20260821` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `project-data.js?v=captions3-20260822` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-vine-20260714` (3D page styles — in experience.html)
 - `experience.js?v=exp-instron-20260821` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
