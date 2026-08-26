@@ -2504,7 +2504,12 @@ CURRENT STATE (2026-07-07; verify with `git log` / the live site)
   reliable desk-lamp light switch, and a carbon-seat seam fix landed recently.
   15 of the 16 projects are clickable exhibits (materialTest has none); the
   resume sits on the desk.
-- A dated local backup exists at
-  C:\Users\oc\Desktop\kefanwu-portfolio-backup-2026-07-07 (full git bundle +
-  source snapshot zip). Re-run a backup after major changes.
+- Dated local backups live at C:\Users\oc\Desktop\kefanwu-portfolio-backup-*
+  (latest 2026-08-25; full git bundle + source snapshot zip + docs +
+  BACKUP_INFO). Re-run a backup after major changes. DISASTER RECOVERY
+  does not depend on that machine: git clone
+  https://github.com/kefanwu-overscope/kefanwu-portfolio.git recovers
+  everything (plain static site, no build step), and Vercel keeps
+  serving www.kefanwu.com from its own infrastructure regardless of
+  the PC.
 ```
