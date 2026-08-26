@@ -256,7 +256,29 @@ Asset/version refs — see "Current cache versions" below for the authoritative,
 
 ## Recent Important Changes
 
-### 2026-08-21b (latest) gallery caption accuracy pass (Kefan's corrections)
+### 2026-08-21c (latest) second caption pass: scanner / pool / lineFollower (Kefan's corrections)
+- scanner: "Final gantry prototype" -> "3D-Scanner"; "Error reduction" ->
+  "Calibration result"; summary gains "Built as a one-week project in
+  Olin's Principles of Integrated Engineering course." (Kefan wrote
+  "Principle of" — shipped with the course's real plural name.)
+- pool: "Fabricated plate" -> "Plasma-cut plate"; REMOVED "Release
+  geometry" (pool-sniper-release.webp; was the LAST array item — its
+  predecessor's trailing comma stripped). The Build-challenges points were
+  sharpened to Kefan's telling: plasma cut first, tolerances came out
+  uncontrolled, parts moved to the waterjet for the final build (this
+  story already existed obliquely at the old L818-819 — reworded, not
+  duplicated).
+- lineFollower: "Controller packaging" -> "Lightweighted: 284 g";
+  "Assembled prototype" -> "Prototype: 428 g"; REMOVED "Front sensor
+  layout" (line-follower-front.webp). Summary gains "Built as a two-week
+  project in Olin's Principles of Integrated Engineering course."
+  ("light-weighted" normalized to the site's existing "Lightweighted"
+  spelling, cf. the steering highlight.)
+- Galleries now: scanner 7, pool 3, lineFollower 3. Removed files stay in
+  assets/ (unreferenced, left on disk).
+- Cache: project-data.js -> `pie-20260821` (BOTH pages).
+
+### 2026-08-21b gallery caption accuracy pass (Kefan's corrections)
 Kefan flagged inaccurate photo descriptions; ten edits, all inside gallery
 arrays in project-data.js:
 - brakeSim: "Endurance thermal model" -> "Track-based thermal model";
@@ -2036,7 +2058,7 @@ studio. Everything below is LIVE.
 ### Current cache versions (bump the matching one whenever you edit that file)
 - `styles.css?v=instron-20260821` (in index.html)
 - `script.js?v=modalfix-20260805` (in index.html)
-- `project-data.js?v=captions-20260821` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
+- `project-data.js?v=pie-20260821` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
 - `experience.css?v=exp-vine-20260714` (3D page styles — in experience.html)
 - `experience.js?v=exp-instron-20260821` (3D page module — in experience.html)
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.

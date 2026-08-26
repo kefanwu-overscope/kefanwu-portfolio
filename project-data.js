@@ -360,7 +360,7 @@ const projectData = {
     title: "3D scanner",
     image: "assets/scanner-live-7.webp",
     summary:
-      "Gantry-based scanner that moves a TFmini-S LiDAR through a controlled Cartesian pattern and reconstructs object geometry from 2,206 calibrated distance readings.",
+      "Gantry-based scanner that moves a TFmini-S LiDAR through a controlled Cartesian pattern and reconstructs object geometry from 2,206 calibrated distance readings. Built as a one-week project in Olin's Principles of Integrated Engineering course.",
     highlights: [
       "Calibrated 14 known distances and reduced stable-range error to under 3 percent beyond roughly 30 cm.",
       "Captured 2,206 measurements across a 140 mm by 165 mm scan area for a small test object.",
@@ -405,10 +405,10 @@ const projectData = {
       }
     ],
     gallery: [
-      { src: "assets/scanner-live-7.webp", alt: "Physical gantry-based 3D scanner prototype", caption: "Final gantry prototype" },
+      { src: "assets/scanner-live-7.webp", alt: "Physical gantry-based 3D scanner prototype", caption: "3D-Scanner" },
       { src: "assets/scanner-live-5.webp", alt: "CAD model of the gantry-based 3D scanner", caption: "Gantry CAD" },
       { src: "assets/scanner-live-1.webp", alt: "LiDAR calibration curve and formula", caption: "Calibration curve" },
-      { src: "assets/scanner-live-2.webp", alt: "LiDAR percentage error before and after calibration", caption: "Error reduction" },
+      { src: "assets/scanner-live-2.webp", alt: "LiDAR percentage error before and after calibration", caption: "Calibration result" },
       { src: "assets/scanner-live-3.webp", alt: "3D scanner wiring diagram", caption: "Electrical architecture" },
       { src: "assets/scanner-live-4.webp", alt: "TFmini-S LiDAR sensor and voltage converter", caption: "Sensor package" },
       { src: "assets/scanner-live-6.webp", alt: "Scanned Mercedes-style object and resulting scan plot", caption: "Scan output" }
@@ -731,7 +731,7 @@ const projectData = {
     title: "LineFollower robot",
     image: "assets/line-follower-cover.webp",
     summary:
-      "Compact line-following robot packaging an Arduino Mega, drive hardware, sensors, and dense wiring into a small mobile platform.",
+      "Compact line-following robot packaging an Arduino Mega, drive hardware, sensors, and dense wiring into a small mobile platform. Built as a two-week project in Olin's Principles of Integrated Engineering course.",
     highlights: [
       "Packaged an Arduino Mega, motor drivers, battery, sensors, and drive into a palm-size chassis.",
       "Ran stable low-speed line tracking with front-mounted sensing and a compact two-wheel differential drive.",
@@ -767,9 +767,8 @@ const projectData = {
     ],
     gallery: [
       { src: "assets/line-follower-cover.webp", alt: "Compact line follower robot on a scale", caption: "Full robot package" },
-      { src: "assets/line-follower-wiring.webp", alt: "Line follower robot wiring and Arduino Mega", caption: "Controller packaging" },
-      { src: "assets/line-follower-front.webp", alt: "Line follower robot front sensing and wiring", caption: "Front sensor layout" },
-      { src: "assets/line-follower-built.webp", alt: "Built line follower robot with dense wiring", caption: "Assembled prototype" }
+      { src: "assets/line-follower-wiring.webp", alt: "Line follower robot wiring and Arduino Mega", caption: "Lightweighted: 284 g" },
+      { src: "assets/line-follower-built.webp", alt: "Built line follower robot with dense wiring", caption: "Prototype: 428 g" }
     ]
   },
   pool: {
@@ -815,16 +814,15 @@ const projectData = {
         title: "Build challenges",
         points: [
           "Compact packaging made wire routing and component access difficult, so wire length and fit checks became part of the design process.",
-          "Tolerance limits from plasma cutting and long cue machining forced manual finishing and process changes.",
-          "The final build used waterjet-cut parts and practical shop iteration to reach a functional mechanism."
+          "Started with plasma-cut plates; the tolerances came out uncontrolled, so the parts moved to the waterjet for the final build.",
+          "Long cue machining still forced manual finishing, and practical shop iteration carried the mechanism to functional."
         ]
       }
     ],
     gallery: [
       { src: "assets/pool-sniper.webp", alt: "Pool Sniper cue launcher CAD render", caption: "Full mechanism" },
       { src: "assets/pool-sniper-exploded.webp", alt: "Exploded Pool Sniper mechanism CAD", caption: "Exploded assembly" },
-      { src: "assets/pool-sniper-build.webp", alt: "Machined Pool Sniper component plate", caption: "Fabricated plate" },
-      { src: "assets/pool-sniper-release.webp", alt: "Pool Sniper release mechanism CAD frame", caption: "Release geometry" }
+      { src: "assets/pool-sniper-build.webp", alt: "Machined Pool Sniper component plate", caption: "Plasma-cut plate" }
     ]
   },
   education: {
