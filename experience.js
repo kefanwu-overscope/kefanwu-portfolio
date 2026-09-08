@@ -19,6 +19,7 @@ import { AdaptiveFrameClock, frameAlpha } from "./experience-timing.js?v=exp-ada
 import { createStudioLoader } from "./experience-loader.js?v=exp-adaptive-20260907";
 import { createHDRService, createHDRTexture } from "./experience-hdr.js?v=exp-adaptive-20260907";
 import { AdaptiveQuality, GpuFrameTimer } from "./experience-quality.js?v=exp-adaptive-20260907";
+import { addStudioRealism } from "./experience-realism.js?v=studio-realism-20260907";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
@@ -450,28 +451,25 @@ async function initScene(canvas) {
     const lightToggle = document.getElementById("exp-light-toggle");
     if (lightToggle) lightToggle.disabled = false;
     updateLightingUI();
-    // deep link: experience.html#<projectKey> flies straight to that exhibit
-    // (the homepage case-study panels link here) — visitors with a specific
-    // destination skip the cinematic intro and keep it for a later visit
+    // Every entry gets the same guided camera sweep. A deep link keeps its
+    // destination and opens that exhibit when the sweep finishes.
     const dlKey = deepLinkKey;
     const dlPivot = dlKey && HOTSPOTS.find((h) => h.userData.hotspot.key === dlKey);
     if (dlPivot) {
       camera.position.copy(REST_POS);
       camera.lookAt(REST_TARGET);
       controls.target.copy(REST_TARGET);
-      try { localStorage.setItem("kw_intro_seen", "1"); } catch (e) {}
-      pendingDragHintOnClose = true; // panel opens immediately; show the hint once they close it
+      pendingDragHintOnClose = true; // show the hint after the linked project closes
       if (!prefersReducedMotion) {
         runBootIntro();
-        schedulePanelWork(() => focusHotspot(dlPivot), 650);
+        startIntro(() => focusHotspot(dlPivot));
       } else {
         focusHotspot(dlPivot);
       }
       return;
     }
     if (!prefersReducedMotion) {
-      // Every visit gets the full lighting power-on sequence. The camera
-      // still retains its shorter return-visit flight independently.
+      // Lighting and the complete camera sweep both repeat on every visit.
       runBootIntro();
       startIntro(); // the drag hint fires from startIntro()'s final flight leg, once the camera actually lands
     } else {
@@ -1096,6 +1094,8 @@ async function initScene(canvas) {
   }
   await yieldToBrowser();
   scene.add(await buildWorkbench());
+  await yieldToBrowser();
+  const studioRealism = addStudioRealism(scene, { cabinet: CAB, sideCabinet: CAB2 });
   await yieldToBrowser();
 
   // rolling tool chest beside the workbench
@@ -1728,11 +1728,13 @@ async function initScene(canvas) {
 
   /* ---------- camera flight system ---------- */
   let flight = null;
+  const cameraIntro = { plays: 0, phase: "idle", completedLegs: 0 };
   // per-frame animation state (G-batch): tick delta + printer toolpath run
   let tickLast = null;
   let scopeLastDraw = 0;
   const headRun = { x: 0, dir: 1, dwell: 0, limit: 0.12 };
-  function startFlight(toPos, toLook, ms, onDone) {
+  function startFlight(toPos, toLook, ms, onDone, introLeg = false) {
+    if (!introLeg && cameraIntro.phase === "playing") cameraIntro.phase = "interrupted";
     flight = {
       fromPos: camera.position.clone(),
       toPos: toPos.clone(),
@@ -1744,22 +1746,27 @@ async function initScene(canvas) {
     };
     controls.enabled = false;
   }
-  function startIntro() {
+  function startIntro(onDone = showDragHint) {
     camera.position.copy(FLY_POS);
     controls.target.set(0, 0.75, -0.1);
-    let seen = false;
-    try { seen = localStorage.getItem("kw_intro_seen") === "1"; } catch (e) {}
-    if (seen) {
-      startFlight(REST_POS, REST_TARGET, 1500, showDragHint);
-      return;
-    }
-    try { localStorage.setItem("kw_intro_seen", "1"); } catch (e) {}
-    // guided sweep: right cabinet -> main cabinet -> resting pose
-    startFlight(new THREE.Vector3(0.7, 1.5, 1.9), new THREE.Vector3(2.3, 1.2, CAB2.z), 1700, () => {
-      startFlight(new THREE.Vector3(0.6, 1.45, 1.6), new THREE.Vector3(0, 1.2, -1.1), 1900, () => {
-        startFlight(REST_POS, REST_TARGET, 1500, showDragHint);
-      });
-    });
+    cameraIntro.plays++;
+    cameraIntro.phase = "playing";
+    cameraIntro.completedLegs = 0;
+    // Preserve the original first-visit path and timing, with no visit flag.
+    const legs = [
+      [new THREE.Vector3(0.7, 1.5, 1.9), new THREE.Vector3(2.3, 1.2, CAB2.z), 1700],
+      [new THREE.Vector3(0.6, 1.45, 1.6), new THREE.Vector3(0, 1.2, -1.1), 1900],
+      [REST_POS, REST_TARGET, 1500],
+    ];
+    const playLeg = (index) => {
+      const [position, target, duration] = legs[index];
+      startFlight(position, target, duration, () => {
+        cameraIntro.completedLegs = index + 1;
+        if (index + 1 < legs.length) playLeg(index + 1);
+        else { cameraIntro.phase = "complete"; onDone(); }
+      }, true);
+    };
+    playLeg(0);
   }
 
   const frameClock = new AdaptiveFrameClock();
@@ -3232,6 +3239,8 @@ async function initScene(canvas) {
     pump: (t) => tick(t, true), lod: loader, getLODStats: () => loader.getStats(), readiness,
     getFrameStats: () => frameClock.snapshot(),
     getBootStats: () => ({ ...bootStatus, active: bootTakeover }),
+    getCameraIntroStats: () => ({ ...cameraIntro }),
+    getRealismStats: () => ({ ...studioRealism.stats }),
     getHDRStats: () => ({ ...hdrService.getStats(), fallback: hdrFallback }),
     getQualityStats: () => ({ ...adaptiveQuality.getStats(), appliedScale: resolutionScale, gpuTiming: gpuTimer.supported, displayBudgetMs: refreshBudget }),
     getLightingStats: () => ({

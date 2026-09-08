@@ -1301,10 +1301,12 @@ a {
 }
 
 /* ============ drag hint (one-time: the scene can be dragged) ============ */
+.exp-draghint[hidden] { display: none; }
 .exp-draghint {
   position: fixed;
   left: 50%;
   top: 50%;
+  bottom: auto; /* Center an intrinsic-size hint; never stretch between two edges. */
   z-index: 60;
   transform: translate(-50%, -50%) scale(0.9);
   transform-origin: 50% 50%;
@@ -1457,7 +1459,6 @@ a {
 .exp-panel__navbar span { color: #a5b6cc; }
 .exp-panel__gallery { gap: 0.5rem; }
 .exp-panel__shot { background: #0a0e14; }
-.exp-draghint { bottom: 8rem; }
 @media (max-width: 720px) {
   .exp-topbar { padding: 0.75rem; gap: 0.5rem; }
   .exp-brand { padding: 0.35rem; }
@@ -1471,7 +1472,7 @@ a {
   .exp-dock select { flex: 1; width: 0; }
   .exp-dock button { padding-inline: 0.6rem; }
   .exp-dock__hint { font-size: 0.55rem; }
-  .exp-draghint { bottom: 8rem; max-width: calc(100% - 2rem); }
+  .exp-draghint { max-width: calc(100% - 2rem); }
   .exp-panel { top: 0.65rem; right: 0.65rem; bottom: 0.65rem; width: calc(100% - 1.3rem); height: auto; padding: 3.7rem 1.3rem 1.3rem; }
   .exp-panel__navbar { bottom: -1.3rem; margin: 1.5rem -1.3rem -1.3rem; padding-inline: 0.9rem; }
   .exp-panel__summary { font-size: 0.95rem; }

@@ -1,5 +1,35 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## 2026-09-07 — compact hint, repeat camera tour and room details
+
+The 3D HTML styles/script and new `experience-realism.js` use
+`studio-realism-20260907`. Other previously versioned files are unchanged.
+
+- Restored the original compact centered drag hint. The erroneous bottom:8rem
+  constraint combined with top:50% stretched its glass background; bottom is
+  now auto, and hidden hints explicitly have display:none.
+- Every non-reduced-motion entry plays the original 1700/1900/1500 ms camera
+  sweep. No `kw_intro_seen` gate remains. Deep links keep their destination and
+  open after the sweep; selecting/resetting replaces the active flight. The
+  existing every-visit light intro and reduced-motion behavior are preserved.
+- `addStudioRealism(scene, {cabinet:CAB, sideCabinet:CAB2})` runs after the
+  workbench and before startup compilation. Static shared-material construction
+  details add shelf supports/isolators, fastened joints, desk beam/mounts, lifting
+  column seals and foot caps. No exhibit CAD or existing surface is replaced.
+  Added geometry: 4,740 triangles / 171 instances / 10 scene-pass draw calls,
+  four PBR materials, no new texture downloads, lights, animation or shadow casts.
+- `__exp.getCameraIntroStats()` and `getRealismStats()` support local QA.
+  Geometry checks include the baked desk's actual .715–.760m slab bounds,
+  shelf contact, drawer clearance, deterministic layout and idempotent disposal.
+
+QA artifacts: `../.codex/realism-20260907/`. Desktop and phone-size hint captures,
+day/night detail review, complete returning-visit camera stats, deep-link check,
+and bounded geometry/intro tests are included. The matched 1280x720 DPR~1 rest
+sample stayed about 60 FPS; p95 render time was 5.5ms before and 5.6ms after.
+These are local browser samples, not universal performance guarantees.
+
+Backup/recovery: `C:\Users\oc\Desktop\kefanwu-portfolio-backup-2026-09-07-realism\RESTORE.md`.
+
 ## 2026-09-07 — visual, copy and performance polish
 
 Latest release uses `studio-polish-20260907` for the two page styles/scripts,
