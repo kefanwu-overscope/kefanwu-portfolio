@@ -5,6 +5,42 @@
 const body = document.body;
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+const motionUpdates = new Set();
+const canAnimatePage = () => !document.hidden && !reducedMotion.matches
+  && !body.classList.contains("modal-open");
+const updateMotion = () => {
+  body.classList.toggle("is-page-hidden", document.hidden);
+  motionUpdates.forEach((update) => update());
+};
+body.classList.toggle("is-page-hidden", document.hidden);
+document.addEventListener("visibilitychange", updateMotion);
+reducedMotion.addEventListener("change", updateMotion);
+finePointer.addEventListener("change", updateMotion);
+
+// Restore the CSS play state when a section returns: hover/focus still owns
+// its liquid-glass effects. No polling loop or permanently promoted layers.
+function observeAmbientMotion(root, elements) {
+  if (!root) return;
+  let visible = false;
+  const originalStates = new Map(elements.map((el) => [el, el.style.animationPlayState]));
+  const update = () => {
+    const paused = !visible || !canAnimatePage();
+    originalStates.forEach((state, el) => {
+      el.style.animationPlayState = paused ? "paused" : state;
+    });
+    root.classList.toggle("is-motion-paused", paused);
+  };
+  const observer = new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting;
+    update();
+  });
+  observer.observe(root);
+  motionUpdates.add(update);
+  update();
+}
+observeAmbientMotion(document.querySelector(".hero"), [
+  ...document.querySelectorAll(".hero-media img, .hero-skill-track"),
+]);
 
 window.addEventListener("load", () => body.classList.add("is-loaded"));
 // Fallback in case load already fired or assets stall.
@@ -180,6 +216,10 @@ function initHeroSkillCards() {
   const cardTitle = card.querySelector("h2");
   const cardText = card.querySelector(".skill-card-text");
   let activeItem = null;
+  let positionFrame = 0;
+  let dismissedItem = null;
+  const heroTitle = document.querySelector(".hero h1");
+  const heroCue = document.querySelector(".scroll-cue");
 
   const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
   const skillKey = (item) => item.textContent.trim().toLowerCase();
@@ -190,9 +230,10 @@ function initHeroSkillCards() {
     const gap = 14;
     const cardWidth = card.offsetWidth || 304;
     const cardHeight = card.offsetHeight || 178;
-    const titleRect = document.querySelector(".hero h1")?.getBoundingClientRect();
-    const cueRect = document.querySelector(".scroll-cue:not(.is-gone)")?.getBoundingClientRect();
-    const maxX = window.innerWidth - cardWidth - margin;
+    const titleRect = heroTitle?.getBoundingClientRect();
+    const cueRect = heroCue && !heroCue.classList.contains("is-gone")
+      ? heroCue.getBoundingClientRect() : null;
+    const maxX = Math.max(margin, window.innerWidth - cardWidth - margin);
     let x = clamp(rect.left + rect.width / 2 - cardWidth / 2, margin, maxX);
     let y = rect.bottom + gap;
 
@@ -228,17 +269,28 @@ function initHeroSkillCards() {
     card.style.setProperty("--skill-card-y", `${Math.round(y)}px`);
   }
 
+  function schedulePosition() {
+    if (!activeItem || positionFrame || document.hidden) return;
+    positionFrame = requestAnimationFrame(() => {
+      positionFrame = 0;
+      if (activeItem) positionCard(activeItem);
+    });
+  }
+
   function showSkillCard(item) {
+    if (dismissedItem === item || document.hidden) return;
     const detail = heroSkillDetails[skillKey(item)];
     if (!detail) return;
+    if (activeItem === item) return;
 
+    activeItem?.removeAttribute("aria-describedby");
     activeItem = item;
     cardKicker.textContent = detail.meta;
     cardTitle.textContent = detail.title;
     cardText.textContent = detail.text;
     cardImage.src = detail.image;
     cardImage.alt = detail.alt;
-    positionCard(item);
+    schedulePosition();
     item.setAttribute("aria-describedby", "skill-detail-card");
     card.setAttribute("aria-hidden", "false");
     card.classList.add("is-visible");
@@ -248,49 +300,50 @@ function initHeroSkillCards() {
     if (item && activeItem !== item) return;
     activeItem?.removeAttribute("aria-describedby");
     activeItem = null;
+    cancelAnimationFrame(positionFrame);
+    positionFrame = 0;
     card.classList.remove("is-visible");
     card.setAttribute("aria-hidden", "true");
   }
 
   // WCAG 1.4.13: the hover/focus card must be dismissable without moving
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") hideSkillCard();
+    if (event.key === "Escape") {
+      dismissedItem = activeItem;
+      hideSkillCard();
+    }
   });
 
   skillItems.forEach((item) => {
     const isDuplicateTrack = item.closest(".hero-skill-track")?.getAttribute("aria-hidden") === "true";
 
-    item.addEventListener("pointerenter", () => showSkillCard(item));
-    item.addEventListener("pointermove", () => {
-      if (activeItem !== item) showSkillCard(item);
-      if (activeItem === item) positionCard(item);
+    item.addEventListener("pointerenter", (event) => {
+      if (event.pointerType === "touch") return;
+      dismissedItem = null;
+      showSkillCard(item);
     });
-    item.addEventListener("mouseenter", () => showSkillCard(item));
-    item.addEventListener("mousemove", () => {
-      if (activeItem !== item) showSkillCard(item);
-      if (activeItem === item) positionCard(item);
+    item.addEventListener("pointermove", schedulePosition);
+    item.addEventListener("pointerleave", () => {
+      dismissedItem = null;
+      if (document.activeElement !== item) hideSkillCard(item);
     });
-    item.addEventListener("pointerleave", () => hideSkillCard(item));
-    item.addEventListener("mouseleave", () => hideSkillCard(item));
 
     if (!isDuplicateTrack) {
       // no aria-label override: the li/span text IS the accessible name
       item.tabIndex = 0;
-      item.addEventListener("focus", () => showSkillCard(item));
+      item.addEventListener("focus", () => {
+        dismissedItem = null;
+        showSkillCard(item);
+      });
       item.addEventListener("blur", () => hideSkillCard(item));
     }
   });
 
-  window.addEventListener("resize", () => {
-    if (activeItem) positionCard(activeItem);
+  window.addEventListener("resize", schedulePosition);
+  window.addEventListener("scroll", () => hideSkillCard(), { passive: true });
+  motionUpdates.add(() => {
+    if (document.hidden || body.classList.contains("modal-open")) hideSkillCard();
   });
-  window.addEventListener(
-    "scroll",
-    () => {
-      if (activeItem) positionCard(activeItem);
-    },
-    { passive: true }
-  );
 }
 
 initHeroSkillCards();
@@ -301,38 +354,50 @@ const progress = document.querySelector(".progress");
 const header = document.querySelector(".site-header");
 const scrollCue = document.querySelector(".scroll-cue");
 const parallaxImgs = [...document.querySelectorAll("[data-parallax]")];
-let scrollTicking = false;
+let scrollFrame = 0;
+const visibleParallax = new Set();
+const parallaxObserver = new IntersectionObserver((entries) => {
+  entries.forEach(({ target, isIntersecting }) => {
+    if (isIntersecting) visibleParallax.add(target);
+    else visibleParallax.delete(target);
+  });
+  scheduleScrollEffects();
+}, { rootMargin: "80px" });
+parallaxImgs.forEach((img) => parallaxObserver.observe(img));
 
 function updateScrollEffects() {
+  if (document.hidden) return;
   const max = document.documentElement.scrollHeight - window.innerHeight;
   const ratio = max > 0 ? window.scrollY / max : 0;
-  progress.style.transform = `scaleX(${ratio})`; // compositor-only
-  header.classList.toggle("is-scrolled", window.scrollY > 24);
-
-  // gentle parallax on flagged media (slight overscale hides the travel)
-  if (!reducedMotion.matches) {
-    parallaxImgs.forEach((img) => {
-      const rect = img.getBoundingClientRect();
-      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
-      const offset = (rect.top + rect.height / 2 - window.innerHeight / 2) / window.innerHeight;
-      img.style.transform = `translateY(${(-offset * 14).toFixed(2)}px) scale(1.06)`;
-    });
-  }
+  // Read all visible geometry before writing transforms/classes.
+  const transforms = canAnimatePage() ? [...visibleParallax].map((img) => {
+    const rect = img.getBoundingClientRect();
+    const offset = (rect.top + rect.height / 2 - window.innerHeight / 2) / window.innerHeight;
+    return [img, `translateY(${(-offset * 14).toFixed(2)}px) scale(1.06)`];
+  }) : [];
+  if (progress) progress.style.transform = `scaleX(${Math.max(0, Math.min(1, ratio))})`;
+  header?.classList.toggle("is-scrolled", window.scrollY > 24);
+  transforms.forEach(([img, transform]) => { img.style.transform = transform; });
 }
 
-window.addEventListener(
-  "scroll",
-  () => {
-    if (!scrollTicking) {
-      scrollTicking = true;
-      requestAnimationFrame(() => {
-        updateScrollEffects();
-        scrollTicking = false;
-      });
-    }
-  },
-  { passive: true }
-);
+function scheduleScrollEffects() {
+  if (scrollFrame || document.hidden) return;
+  scrollFrame = requestAnimationFrame(() => {
+    scrollFrame = 0;
+    updateScrollEffects();
+  });
+}
+window.addEventListener("scroll", scheduleScrollEffects, { passive: true });
+window.addEventListener("resize", scheduleScrollEffects);
+if (window.ResizeObserver) {
+  new ResizeObserver(scheduleScrollEffects).observe(document.body);
+}
+motionUpdates.add(() => {
+  cancelAnimationFrame(scrollFrame);
+  scrollFrame = 0;
+  if (reducedMotion.matches) parallaxImgs.forEach((img) => { img.style.transform = ""; });
+  scheduleScrollEffects();
+});
 updateScrollEffects();
 
 const onCueScroll = () => {
@@ -347,18 +412,36 @@ window.addEventListener("scroll", onCueScroll, { passive: true });
 
 const navToggle = document.querySelector(".nav-toggle");
 const nav = document.querySelector(".site-nav");
+const mobileNav = window.matchMedia("(max-width: 720px)");
+
+function setNavOpen(open) {
+  navToggle?.setAttribute("aria-expanded", String(open));
+  nav?.classList.toggle("is-open", open);
+  if (nav) nav.inert = mobileNav.matches && !open;
+}
+setNavOpen(false);
+mobileNav.addEventListener("change", () => setNavOpen(false));
 
 navToggle?.addEventListener("click", () => {
   const isOpen = navToggle.getAttribute("aria-expanded") === "true";
-  navToggle.setAttribute("aria-expanded", String(!isOpen));
-  nav.classList.toggle("is-open", !isOpen);
+  setNavOpen(!isOpen);
 });
 
 nav?.addEventListener("click", (event) => {
-  if (event.target.matches("a")) {
-    nav.classList.remove("is-open");
-    navToggle?.setAttribute("aria-expanded", "false");
+  if (event.target.closest("a")) {
+    setNavOpen(false);
   }
+});
+function onNavKeydown(event) {
+  if (event.key !== "Escape" || navToggle?.getAttribute("aria-expanded") !== "true") return;
+  event.preventDefault();
+  setNavOpen(false);
+  navToggle.focus({ preventScroll: true });
+}
+nav?.addEventListener("keydown", onNavKeydown);
+navToggle?.addEventListener("keydown", onNavKeydown);
+header?.addEventListener("focusout", (event) => {
+  if (mobileNav.matches && !header.contains(event.relatedTarget)) setNavOpen(false);
 });
 
 /* ============ scrollspy (current section in nav) ============ */
@@ -374,8 +457,12 @@ const spyObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
-      spyLinks.forEach((link) => link.classList.remove("is-current"));
-      spyLinks.get(entry.target.id)?.classList.add("is-current");
+      spyLinks.forEach((link, id) => {
+        const current = id === entry.target.id;
+        link.classList.toggle("is-current", current);
+        if (current) link.setAttribute("aria-current", "location");
+        else link.removeAttribute("aria-current");
+      });
     });
   },
   { rootMargin: "-35% 0px -60% 0px" }
@@ -419,16 +506,33 @@ document
 
 /* ============ stat counters (count up on first view) ============ */
 
+const activeCounters = new Map();
+const finishCounter = (el) => {
+  const animation = activeCounters.get(el);
+  if (!animation) return;
+  clearTimeout(animation.timer);
+  cancelAnimationFrame(animation.frame);
+  el.textContent = animation.finalText;
+  activeCounters.delete(el);
+  counterObserver.unobserve(el);
+};
+motionUpdates.add(() => {
+  if (!canAnimatePage()) [...activeCounters.keys()].forEach(finishCounter);
+});
 const counterObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
       const el = entry.target;
-      counterObserver.unobserve(el);
+      if (!entry.isIntersecting) {
+        finishCounter(el);
+        return;
+      }
+      if (activeCounters.has(el)) return;
       const target = parseFloat(el.dataset.count);
       const decimals = parseInt(el.dataset.decimals || "0", 10);
-      if (reducedMotion.matches) {
+      if (!canAnimatePage()) {
         el.textContent = target.toFixed(decimals);
+        counterObserver.unobserve(el);
         return;
       }
       // hero stats sit behind a staged reveal — hold the count until the bar
@@ -439,14 +543,17 @@ const counterObserver = new IntersectionObserver(
       const ease = inHero
         ? (t) => 1 - Math.pow(1 - t, 4)
         : (t) => 1 - Math.pow(1 - t, 3);
-      setTimeout(() => {
+      const animation = { timer: 0, frame: 0, finalText: target.toFixed(decimals) };
+      activeCounters.set(el, animation);
+      animation.timer = setTimeout(() => {
         const start = performance.now();
         const tick = (now) => {
           const p = Math.min((now - start) / duration, 1);
           el.textContent = (target * ease(p)).toFixed(decimals);
-          if (p < 1) requestAnimationFrame(tick);
+          if (p < 1) animation.frame = requestAnimationFrame(tick);
+          else finishCounter(el);
         };
-        requestAnimationFrame(tick);
+        animation.frame = requestAnimationFrame(tick);
       }, delay);
     });
   },
@@ -458,7 +565,7 @@ document.querySelectorAll("[data-count]").forEach((el) => {
   counterObserver.observe(el);
 });
 
-/* ============ filters (with view transitions when available) ============ */
+/* ============ filters (bounded grid fade, latest intent wins) ============ */
 
 const cards = [...document.querySelectorAll(".project-card")];
 const filters = [...document.querySelectorAll(".filter")];
@@ -466,99 +573,131 @@ const projectGrid = document.querySelector(".project-grid");
 const isInteractiveCardTarget = (event) =>
   Boolean(event.target.closest("a, button, input, select, textarea"));
 
-// unique view-transition-name per card => cards glide (FLIP) between
-// filter states in browsers with the View Transitions API. Names are
-// assigned only for the duration of a filter change: permanent names make
-// EVERY view transition (including opening a case study) snapshot all the
-// cards as separate layers, which costs a visible stutter on click.
-const nameCardsForTransition = () => {
-  cards.forEach((card) => {
-    card.style.viewTransitionName = `card-${card.dataset.project || "studio"}`;
-  });
-};
-const unnameCards = () => {
-  cards.forEach((card) => {
-    card.style.viewTransitionName = "";
-  });
-};
+let pendingFilter = null;
+let filterJob = null;
+let activeFilter = filters.find((button) => button.getAttribute("aria-pressed") === "true") || null;
+const realProjectCards = cards.filter((card) => !card.classList.contains("project-card--studio"));
+const filterStatus = document.getElementById("filter-status");
 
+function applyProjectFilter(button) {
+  activeFilter = button;
+  const filter = button.dataset.filter;
+  filters.forEach((item) => {
+    const isActive = item === button;
+    item.classList.toggle("active", isActive);
+    item.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
+  cards.forEach((card) => {
+    // The studio tile stays visible under every filter.
+    const show = filter === "all"
+      || card.classList.contains("project-card--studio")
+      || (card.dataset.category || "").split(/\s+/).includes(filter);
+    card.classList.toggle("is-hidden", !show);
+  });
+  const shown = realProjectCards.filter((card) => !card.classList.contains("is-hidden")).length;
+  if (filterStatus) filterStatus.textContent = `Showing ${shown} of ${realProjectCards.length} projects`;
+  scheduleScrollEffects();
+}
+
+function finishFilterJob(job) {
+  if (filterJob !== job) return;
+  clearTimeout(job.timer);
+  projectGrid?.classList.remove("is-filtering");
+  filterJob = null;
+  if (pendingFilter === activeFilter) pendingFilter = null;
+  runPendingFilter();
+}
+
+function applyLatestFilter(job) {
+  if (filterJob !== job) return;
+  const button = pendingFilter || job.button;
+  job.button = button;
+  pendingFilter = null;
+  applyProjectFilter(button);
+}
+
+function runPendingFilter() {
+  if (filterJob || !pendingFilter) return;
+  const job = { button: pendingFilter, timer: 0 };
+  pendingFilter = null;
+  filterJob = job;
+  if (!canAnimatePage()) {
+    applyLatestFilter(job);
+    finishFilterJob(job);
+  } else {
+    // Fade only the grid: a document view-transition overlay can intercept
+    // another native filter click. Further clicks share this 150ms deadline.
+    projectGrid?.classList.add("is-filtering");
+    job.timer = setTimeout(() => {
+      applyLatestFilter(job);
+      finishFilterJob(job);
+    }, 150);
+  }
+}
+
+function flushPendingFilter() {
+  if (!filterJob) return;
+  const job = filterJob;
+  applyLatestFilter(job);
+  finishFilterJob(job);
+}
+motionUpdates.add(() => {
+  if (!canAnimatePage()) flushPendingFilter();
+});
 filters.forEach((button) => {
   button.addEventListener("click", () => {
-    const filter = button.dataset.filter;
-    const apply = () => {
-      filters.forEach((item) => {
-        const isActive = item === button;
-        item.classList.toggle("active", isActive);
-        item.setAttribute("aria-pressed", isActive ? "true" : "false");
-      });
-      cards.forEach((card) => {
-        // the studio tile stays visible under every filter (it links to all 14)
-        const show = filter === "all"
-          || card.classList.contains("project-card--studio")
-          || (card.dataset.category || "").includes(filter);
-        card.classList.toggle("is-hidden", !show);
-      });
-      const projectCards = cards.filter((c) => !c.classList.contains("project-card--studio"));
-      const shown = projectCards.filter((c) => !c.classList.contains("is-hidden")).length;
-      const status = document.getElementById("filter-status");
-      if (status) status.textContent = `Showing ${shown} of ${projectCards.length} projects`;
-    };
-    if (reducedMotion.matches) {
-      apply();
-    } else if (document.startViewTransition) {
-      nameCardsForTransition();
-      const transition = document.startViewTransition(apply);
-      // a skipped transition (hidden tab, rapid re-trigger) rejects both
-      // promises; unhandled, each rejection logs a console error
-      transition.ready.catch(() => {});
-      transition.finished.catch(() => {}).finally(unnameCards);
-    } else {
-      // graceful fade fallback (Firefox / older Safari)
-      projectGrid?.classList.add("is-filtering");
-      setTimeout(() => {
-        apply();
-        requestAnimationFrame(() =>
-          requestAnimationFrame(() => projectGrid?.classList.remove("is-filtering"))
-        );
-      }, 150);
-    }
+    // Retain the latest intent even if that button still appears active
+    // before this fade has applied its first filter (Robotics -> All).
+    pendingFilter = button;
+    runPendingFilter();
   });
 });
 
 /* ============ project cards: keyboard, tilt, specular ============ */
 
-let tiltFrame = null;
-
 cards.forEach((card) => {
+  let tiltFrame = 0;
+  let pointer = null;
+  const resetTilt = () => {
+    cancelAnimationFrame(tiltFrame);
+    tiltFrame = 0;
+    pointer = null;
+    card.style.transition = "";
+    card.style.transform = "";
+    card.style.willChange = "";
+  };
   const isStudioTile = card.classList.contains("project-card--studio");
   // stretched-link pattern: the h3's .card-open button is the one real
   // control (its ::after overlay covers the whole card), so the download
   // link is a legal sibling instead of an interactive nested in a role=button
 
   card.addEventListener("pointerenter", () => {
-    if (!finePointer.matches || reducedMotion.matches) return;
+    if (!finePointer.matches || !canAnimatePage()) return;
     card.style.transition = "border-color 200ms, box-shadow 200ms";
     card.style.willChange = "transform";
   });
 
   card.addEventListener("pointermove", (event) => {
-    if (!finePointer.matches || reducedMotion.matches) return;
+    if (!finePointer.matches || !canAnimatePage()) return;
+    pointer = { x: event.clientX, y: event.clientY };
     if (tiltFrame) return;
     tiltFrame = requestAnimationFrame(() => {
-      tiltFrame = null;
+      tiltFrame = 0;
+      if (!pointer || !canAnimatePage()) return;
       const rect = card.getBoundingClientRect();
-      const px = (event.clientX - rect.left) / rect.width;
-      const py = (event.clientY - rect.top) / rect.height;
+      if (!rect.width || !rect.height) return;
+      const px = Math.max(0, Math.min(1, (pointer.x - rect.left) / rect.width));
+      const py = Math.max(0, Math.min(1, (pointer.y - rect.top) / rect.height));
       card.style.setProperty("--mx", `${px * 100}%`);
       card.style.setProperty("--my", `${py * 100}%`);
       card.style.transform = `perspective(900px) rotateX(${(py - 0.5) * -3}deg) rotateY(${(px - 0.5) * 4}deg) translateY(-2px)`;
     });
   });
 
-  card.addEventListener("pointerleave", () => {
-    card.style.transition = "";
-    card.style.transform = "";
-    card.style.willChange = "";
+  card.addEventListener("pointerleave", resetTilt);
+  card.addEventListener("pointercancel", resetTilt);
+  motionUpdates.add(() => {
+    if (!canAnimatePage() || !finePointer.matches) resetTilt();
   });
 
   if (!isStudioTile) {
@@ -581,26 +720,47 @@ cards.forEach((card) => {
 /* ============ magnetic buttons ============ */
 
 document.querySelectorAll("[data-magnetic]").forEach((el) => {
+  let frame = 0;
+  let timer = 0;
+  let pointer = null;
+  const reset = () => {
+    cancelAnimationFrame(frame);
+    clearTimeout(timer);
+    frame = 0;
+    pointer = null;
+    el.style.transform = "";
+    el.style.transition = "";
+  };
   el.addEventListener("pointerenter", () => {
-    if (!finePointer.matches || reducedMotion.matches) return;
+    if (!finePointer.matches || !canAnimatePage()) return;
+    clearTimeout(timer);
     // soften the first movement so the pull eases in instead of stepping
     el.style.transition = "transform 160ms cubic-bezier(0.33, 1, 0.68, 1)";
-    setTimeout(() => { el.style.transition = ""; }, 180);
+    timer = setTimeout(() => { el.style.transition = ""; }, 180);
   });
   el.addEventListener("pointermove", (event) => {
-    if (!finePointer.matches || reducedMotion.matches) return;
-    const rect = el.getBoundingClientRect();
-    const dx = event.clientX - rect.left - rect.width / 2;
-    const dy = event.clientY - rect.top - rect.height / 2;
-    const clamp = (v, m) => Math.max(-m, Math.min(m, v));
-    el.style.transform = `translate(${clamp(dx * 0.08, rect.width * 0.06)}px, ${clamp(dy * 0.12, rect.height * 0.12)}px)`;
+    if (!finePointer.matches || !canAnimatePage()) return;
+    pointer = { x: event.clientX, y: event.clientY };
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      if (!pointer || !canAnimatePage()) return;
+      const rect = el.getBoundingClientRect();
+      const dx = pointer.x - rect.left - rect.width / 2;
+      const dy = pointer.y - rect.top - rect.height / 2;
+      const clamp = (v, m) => Math.max(-m, Math.min(m, v));
+      el.style.transform = `translate(${clamp(dx * 0.08, rect.width * 0.06)}px, ${clamp(dy * 0.12, rect.height * 0.12)}px)`;
+    });
   });
   el.addEventListener("pointerleave", () => {
+    reset();
+    if (!finePointer.matches || !canAnimatePage()) return;
     el.style.transition = "transform 320ms cubic-bezier(0.16, 1, 0.3, 1)";
-    el.style.transform = "";
-    setTimeout(() => {
-      el.style.transition = "";
-    }, 320);
+    timer = setTimeout(() => { el.style.transition = ""; }, 320);
+  });
+  el.addEventListener("pointercancel", reset);
+  motionUpdates.add(() => {
+    if (!canAnimatePage() || !finePointer.matches) reset();
   });
 });
 
@@ -619,6 +779,38 @@ const modalGallery = document.querySelector("#modal-gallery");
 let lastFocusedElement = null;
 let modalOpenPending = false; // an open sequence (view transition) is in flight
 let modalOpenedAt = 0; // when the modal DOM last became visible
+let mediaSwapTimer = 0;
+let modalCloseCleanup = null;
+let galleryButtons = [];
+const modalBackground = new Map();
+modal.inert = modal.getAttribute("aria-hidden") !== "false";
+modalPanel.tabIndex = -1;
+modalGallery.setAttribute("role", "group");
+
+function setModalBackgroundInert(inert) {
+  if (inert) {
+    // Walk the ancestor path so moving the dialog into a layout wrapper is safe.
+    let branch = modal;
+    while (branch.parentElement) {
+      [...branch.parentElement.children].forEach((el) => {
+        if (el === branch || modalBackground.has(el)) return;
+        modalBackground.set(el, el.inert);
+        el.inert = true;
+      });
+      if (branch.parentElement === body) break;
+      branch = branch.parentElement;
+    }
+  } else {
+    modalBackground.forEach((value, el) => { el.inert = value; });
+    modalBackground.clear();
+  }
+}
+
+function cancelMediaSwap() {
+  clearTimeout(mediaSwapTimer);
+  mediaSwapTimer = 0;
+  modalImage.classList.remove("is-swapping");
+}
 
 function fillList(node, items = []) {
   node.replaceChildren(
@@ -650,6 +842,7 @@ function renderDetails(project) {
 }
 
 function showModalMedia(item, projectTitle, instant = false) {
+  cancelMediaSwap();
   modalScrub.pause();
   modalImage.hidden = false;
   const alt = item.alt || `${projectTitle} gallery image`;
@@ -659,44 +852,72 @@ function showModalMedia(item, projectTitle, instant = false) {
     return;
   }
   modalImage.classList.add("is-swapping");
-  setTimeout(() => {
+  mediaSwapTimer = setTimeout(() => {
+    mediaSwapTimer = 0;
     modalImage.src = item.src;
     modalImage.alt = alt;
     modalImage.classList.remove("is-swapping");
   }, 200);
 }
 
+function selectGalleryButton(index) {
+  galleryButtons.forEach((button, i) => {
+    const selected = i === index;
+    button.classList.toggle("is-active", selected);
+    button.setAttribute("aria-pressed", String(selected));
+    if (index >= 0) button.tabIndex = selected ? 0 : -1;
+  });
+}
+
+modalGallery.addEventListener("keydown", (event) => {
+  const current = galleryButtons.indexOf(event.target);
+  if (current < 0 || event.altKey || event.ctrlKey || event.metaKey) return;
+  let next;
+  if (event.key === "ArrowRight") next = (current + 1) % galleryButtons.length;
+  else if (event.key === "ArrowLeft") next = (current + galleryButtons.length - 1) % galleryButtons.length;
+  else if (event.key === "Home") next = 0;
+  else if (event.key === "End") next = galleryButtons.length - 1;
+  else return;
+  event.preventDefault();
+  galleryButtons[next].click();
+  galleryButtons[next].focus({ preventScroll: true });
+  galleryButtons[next].scrollIntoView({ block: "nearest", inline: "nearest", behavior: "instant" });
+  // Revealing a keyboard-selected thumb may scroll the panel. Keep its photo
+  // selected until the user actually scrolls to a different position.
+  modalScrub.photoScrollTop = modalPanel.scrollTop;
+});
+
 function renderGallery(project) {
   const items = project.gallery?.length
     ? project.gallery
     : [{ src: project.image, alt: `${project.title} image`, caption: project.title }];
 
-  modalGallery.replaceChildren(
-    ...items.map((item, index) => {
-      const button = document.createElement("button");
-      button.className = "gallery-item";
-      button.type = "button";
-      button.setAttribute("aria-label", `Show ${item.caption || project.title} image`);
-      button.classList.toggle("is-active", index === 0);
+  galleryButtons = items.map((item, index) => {
+    const button = document.createElement("button");
+    button.className = "gallery-item";
+    button.type = "button";
+    button.setAttribute("aria-label", `Show ${item.caption || project.title} image`);
+    button.setAttribute("aria-controls", "modal-image");
 
-      const image = document.createElement("img");
-      image.src = item.src;
-      image.alt = item.alt || item.caption || (project.title ? project.title + " image" : "Project image");
-      image.loading = "lazy";
-      button.append(image);
+    const image = document.createElement("img");
+    image.src = item.thumbnail || item.src;
+    image.alt = item.alt || item.caption || (project.title ? project.title + " image" : "Project image");
+    image.loading = "lazy";
+    image.decoding = "async";
+    button.append(image);
 
-      const caption = document.createElement("span");
-      caption.textContent = item.caption || project.title;
-      button.append(caption);
+    const caption = document.createElement("span");
+    caption.textContent = item.caption || project.title;
+    button.append(caption);
 
-      button.addEventListener("click", () => {
-        showModalMedia(item, project.title);
-        modalGallery.querySelectorAll(".gallery-item").forEach((node) => node.classList.remove("is-active"));
-        button.classList.add("is-active");
-      });
-      return button;
-    })
-  );
+    button.addEventListener("click", () => {
+      showModalMedia(item, project.title);
+      selectGalleryButton(index);
+    });
+    return button;
+  });
+  modalGallery.replaceChildren(...galleryButtons);
+  selectGalleryButton(0);
 }
 
 function openModal(projectKey, sourceCard = null) {
@@ -706,8 +927,9 @@ function openModal(projectKey, sourceCard = null) {
   // modal is already up) must not restart the sequence — restarting the view
   // transition mid-capture flashes and can leave stale view-transition-names.
   if (modalOpenPending || modal.getAttribute("aria-hidden") === "false") return;
+  flushPendingFilter();
   modalOpenPending = true;
-  lastFocusedElement = document.activeElement;
+  lastFocusedElement = sourceCard?.querySelector(".card-open") || document.activeElement;
   const firstItem = project.gallery?.[0] || { src: project.image, alt: `${project.title} case study image` };
   showModalMedia(firstItem, project.title, true);
   modalKicker.textContent = project.kicker;
@@ -730,9 +952,12 @@ function openModal(projectKey, sourceCard = null) {
     modalOpenPending = false;
     modalOpenedAt = performance.now();
     modal.classList.remove("is-closing");
+    modal.inert = false;
     modal.setAttribute("aria-hidden", "false");
     body.classList.add("modal-open");
-    modal.querySelector(".modal-close").focus();
+    setModalBackgroundInert(true);
+    updateMotion();
+    modal.querySelector(".modal-close").focus({ preventScroll: true });
   };
   // shared-element morph: the clicked card's cover glides into the modal hero
   const cardEl = document.querySelector(`.project-card[data-project="${projectKey}"]`);
@@ -766,24 +991,41 @@ function openModal(projectKey, sourceCard = null) {
 }
 
 function closeModal() {
+  if (modal.getAttribute("aria-hidden") !== "false" || modalCloseCleanup) return;
+  cancelMediaSwap();
   modalScrub.teardown();
+  let timer = 0;
   const finish = () => {
+    if (modalCloseCleanup !== finish) return;
+    clearTimeout(timer);
+    modalPanel.removeEventListener("animationend", onAnimationEnd);
+    modalCloseCleanup = null;
     modal.classList.remove("is-closing");
     modal.setAttribute("aria-hidden", "true");
+    modal.inert = true;
+    setModalBackgroundInert(false);
     body.classList.remove("modal-open");
-    lastFocusedElement?.focus();
+    updateMotion();
+    if (lastFocusedElement?.isConnected && !lastFocusedElement.closest("[inert]")) {
+      lastFocusedElement.focus({ preventScroll: true });
+    }
   };
-  if (reducedMotion.matches) {
+  const onAnimationEnd = (event) => {
+    if (event.target === modalPanel) finish();
+  };
+  modalCloseCleanup = finish;
+  if (reducedMotion.matches || document.hidden) {
     finish();
     return;
   }
   modal.classList.add("is-closing");
-  modalPanel.addEventListener("animationend", finish, { once: true });
+  modalPanel.addEventListener("animationend", onAnimationEnd);
   // Safety net if animationend never fires.
-  setTimeout(() => {
-    if (modal.classList.contains("is-closing")) finish();
-  }, 400);
+  timer = setTimeout(finish, 400);
 }
+motionUpdates.add(() => {
+  if (document.hidden || reducedMotion.matches) modalCloseCleanup?.();
+});
 
 // Backdrop dismissal is stricter than the Close button: the press must both
 // start and end on the backdrop, and not land in the first beat after the
@@ -795,6 +1037,7 @@ let backdropPressStartedHere = false;
 modalBackdrop?.addEventListener("pointerdown", (event) => {
   backdropPressStartedHere = event.target === modalBackdrop;
 });
+modalBackdrop?.addEventListener("pointercancel", () => { backdropPressStartedHere = false; });
 modal.querySelectorAll("[data-close-modal]").forEach((element) => {
   element.addEventListener("click", (event) => {
     if (element === modalBackdrop) {
@@ -823,24 +1066,38 @@ document.addEventListener("keydown", (event) => {
   if (modal.getAttribute("aria-hidden") !== "false") return;
 
   if (event.key === "Escape") {
+    event.preventDefault();
     closeModal();
     return;
   }
 
   if (event.key === "Tab") {
     const focusables = [
-      ...modal.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])')
-    ].filter((el) => el.offsetParent !== null);
-    if (!focusables.length) return;
+      ...modal.querySelectorAll('button, a[href], input, select, textarea, [tabindex]')
+    ].filter((el) => el.tabIndex >= 0 && !el.matches(":disabled")
+      && !el.closest("[hidden], [inert]") && el.getClientRects().length > 0);
+    if (!focusables.length) {
+      event.preventDefault();
+      modalPanel.focus({ preventScroll: true });
+      return;
+    }
     const first = focusables[0];
     const last = focusables[focusables.length - 1];
-    if (event.shiftKey && document.activeElement === first) {
+    if (!focusables.includes(document.activeElement)) {
+      event.preventDefault();
+      (event.shiftKey ? last : first).focus({ preventScroll: true });
+    } else if (event.shiftKey && document.activeElement === first) {
       event.preventDefault();
       last.focus();
     } else if (!event.shiftKey && document.activeElement === last) {
       event.preventDefault();
       first.focus();
     }
+  }
+});
+document.addEventListener("focusin", (event) => {
+  if (modal.getAttribute("aria-hidden") === "false" && !modal.contains(event.target)) {
+    modal.querySelector(".modal-close").focus({ preventScroll: true });
   }
 });
 
@@ -852,8 +1109,6 @@ const modalMedia = modal.querySelector(".modal-media");
 const modalScrubImg = document.getElementById("modal-scrub-img");
 const modalSpec = document.getElementById("modal-spec");
 const modalScrubBar = document.getElementById("modal-scrub-bar");
-const scrubReduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-
 const modalScrub = {
   active: false,
   paused: false,
@@ -861,7 +1116,9 @@ const modalScrub = {
   count: 0,
   base: "",
   frames: null,
-  rafPending: false,
+  frame: 0,
+  mediaVisible: false,
+  photoScrollTop: 0,
   lastIdx: -1,
   url(n) {
     return this.base + String(n).padStart(3, "0") + ".webp";
@@ -875,44 +1132,72 @@ const modalScrub = {
     this.base = cfg.base;
     this.lastIdx = -1;
     this.renderSpec(project);
+    selectGalleryButton(-1);
     modalMedia.classList.add("modal-media--scrub");
     modalMedia.classList.remove("modal-media--scrubbed");
     modalScrubImg.hidden = false;
-    if (scrubReduce.matches) {
+    modalPanel.addEventListener("scroll", this.onScroll, { passive: true });
+    if (reducedMotion.matches) {
       modalScrubImg.src = this.url(cfg.count); // static fully-exploded view
       if (modalScrubBar) modalScrubBar.style.width = "100%";
       return;
     }
     modalScrubImg.src = this.url(1); // start assembled
     this.lastIdx = 1;
-    modalPanel.addEventListener("scroll", this.onScroll, { passive: true });
     // frames 2..N used to preload HERE — 60 parallel requests (1.4 MB on
     // AURA) the instant the modal opened; they now load on the first scroll
   },
   preload() {
-    if (!this.active || (this.frames && this.frames.base === this.base)) return;
-    const arr = [];
-    for (let i = 1; i <= this.count; i++) {
+    if (!this.canRender()) return;
+    if (!this.frames) {
+      this.frames = { images: [], next: 1, inFlight: 0 };
+    }
+    const batch = this.frames;
+    // Bound network/decode work to three frames. Closing, selecting a photo,
+    // hiding the page, or scrolling the viewer offscreen stops new requests.
+    while (batch.inFlight < 3 && batch.next <= this.count) {
+      const index = batch.next++;
+      batch.inFlight++;
       const im = new Image();
       im.decoding = "async";
-      im.fetchPriority = "low"; // the visible gallery keeps network priority
-      im.src = this.url(i);
-      arr.push(im);
+      im.fetchPriority = "low";
+      batch.images.push(im);
+      const loaded = new Promise((resolve) => {
+        im.onload = resolve;
+        im.onerror = resolve;
+      });
+      im.src = this.url(index);
+      loaded.then(() => im.decode ? im.decode().catch(() => {}) : undefined).then(() => {
+        im.onload = im.onerror = null;
+        batch.inFlight--;
+        if (this.frames !== batch) return;
+        this.ready = batch.next > this.count && batch.inFlight === 0;
+        this.preload();
+      });
     }
-    arr.base = this.base;
-    this.frames = arr;
-    Promise.all(
-      arr.map((im) => (im.decode ? im.decode().catch(() => {}) : Promise.resolve()))
-    ).then(() => {
-      if (this.frames === arr) {
-        this.ready = true;
-        this.render();
-      }
+  },
+  canRender() {
+    return this.active && !this.paused && this.mediaVisible
+      && !document.hidden && !reducedMotion.matches;
+  },
+  cancelFrame() {
+    cancelAnimationFrame(this.frame);
+    this.frame = 0;
+  },
+  schedule() {
+    if (!this.canRender() || this.frame) return;
+    this.frame = requestAnimationFrame(() => {
+      this.frame = 0;
+      this.render();
     });
   },
   teardown() {
+    this.cancelFrame();
     this.active = false;
     this.paused = false;
+    this.frames = null;
+    this.ready = false;
+    this.smooth = null;
     modalPanel.removeEventListener("scroll", this.onScroll);
     if (modalScrubImg) {
       modalScrubImg.hidden = true;
@@ -985,15 +1270,19 @@ const modalScrub = {
     // Called when a gallery photo is selected: reveal the static photo.
     if (!this.active || this.paused) return;
     this.paused = true;
+    this.photoScrollTop = modalPanel.scrollTop;
+    this.cancelFrame();
     if (modalScrubImg) modalScrubImg.hidden = true;
     if (modalMedia) modalMedia.classList.add("modal-media--scrubbed");
   },
   resume() {
     if (!this.active || !this.paused) return;
     this.paused = false;
+    cancelMediaSwap();
+    selectGalleryButton(-1);
     if (modalScrubImg) modalScrubImg.hidden = false;
     this.lastIdx = -1;
-    this.render();
+    this.schedule();
   },
   progress() {
     const max = modalPanel.scrollHeight - modalPanel.clientHeight;
@@ -1002,7 +1291,7 @@ const modalScrub = {
     return Math.max(0, Math.min(1, modalPanel.scrollTop / range));
   },
   render() {
-    if (!this.active || this.paused || scrubReduce.matches) return;
+    if (!this.canRender()) return;
     const t = this.progress();
     // damped frame glide: fast wheel ticks ease between frames instead of
     // teleporting 8-10 frames — reads like turning a CAD turntable
@@ -1017,27 +1306,36 @@ const modalScrub = {
     }
     if (modalScrubBar) modalScrubBar.style.width = (t * 100).toFixed(1) + "%";
     if (modalMedia) modalMedia.classList.toggle("modal-media--scrubbed", t > 0.04);
-    if (this.smooth !== targetIdx && !this.rafPending) {
-      this.rafPending = true;
-      requestAnimationFrame(() => {
-        this.rafPending = false;
-        this.render();
-      });
-    }
+    if (this.smooth !== targetIdx) this.schedule();
   },
 };
 modalScrub.onScroll = function () {
-  if (!modalScrub.active || scrubReduce.matches) return;
-  modalScrub.preload(); // lazy frame fetch on first scroll (idempotent)
+  if (!modalScrub.active || reducedMotion.matches || document.hidden) return;
+  if (modalScrub.paused && modalPanel.scrollTop === modalScrub.photoScrollTop) return;
   if (modalScrub.paused) modalScrub.resume();
-  if (!modalScrub.rafPending) {
-    modalScrub.rafPending = true;
-    requestAnimationFrame(() => {
-      modalScrub.rafPending = false;
-      modalScrub.render();
-    });
+  modalScrub.preload(); // lazy frame fetch on first scroll (idempotent)
+  modalScrub.schedule();
+};
+const updateScrubMotion = () => {
+  modalScrub.cancelFrame();
+  if (!modalScrub.active || modalScrub.paused) return;
+  if (reducedMotion.matches) {
+    modalScrubImg.src = modalScrub.url(modalScrub.count);
+    if (modalScrubBar) modalScrubBar.style.width = "100%";
+    modalScrub.lastIdx = -1;
+    modalScrub.smooth = null;
+  } else {
+    if (modalScrub.frames) modalScrub.preload();
+    modalScrub.schedule();
   }
 };
+motionUpdates.add(updateScrubMotion);
+if (modalMedia) {
+  new IntersectionObserver(([entry]) => {
+    modalScrub.mediaVisible = entry.isIntersecting;
+    updateScrubMotion();
+  }, { root: modalPanel }).observe(modalMedia);
+}
 
 /* -----------------------------------------------------------------
    Studio hover drift ("Walk the studio" tile)
@@ -1050,35 +1348,32 @@ modalScrub.onScroll = function () {
    and the drift are pure CSS (:hover / :focus-visible).
 ------------------------------------------------------------------ */
 (function initStudioOrbit() {
-  const motionOK = matchMedia("(prefers-reduced-motion: no-preference)").matches;
-  const desktop = matchMedia("(hover: hover) and (pointer: fine)").matches;
-  if (!motionOK || !desktop) return;
-
   const tile = document.querySelector(".project-card--studio");
   if (!tile) return;
 
   let built = false;
   const build = () => {
-    if (built) return;
+    if (built || !canAnimatePage() || !finePointer.matches) return;
     built = true;
     const im = new Image();
     im.decoding = "async";
     im.alt = "";
-    im.src = "assets/studio-hover.webp";
     const insert = () => {
       const layer = document.createElement("div");
       layer.className = "studio-orbit";
       layer.setAttribute("aria-hidden", "true");
       layer.appendChild(im);
       tile.prepend(layer);
+      observeAmbientMotion(tile, [im]);
     };
     // insert once loaded so the layer never fades in over a half-loaded
     // image (NOT img.decode() — it can hang for detached images in
     // backgrounded tabs; onload is reliable and the decode cost of a
     // 47KB webp is negligible on first paint)
     im.onload = insert;
-    im.onerror = insert;
+    im.onerror = () => { built = false; };
+    im.src = "assets/studio-hover.webp";
   };
-  tile.addEventListener("pointerenter", build, { once: true });
-  tile.addEventListener("focusin", build, { once: true });
+  tile.addEventListener("pointerenter", build);
+  tile.addEventListener("focusin", build);
 })();

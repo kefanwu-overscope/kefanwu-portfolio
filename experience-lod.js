@@ -67,9 +67,10 @@ function prepareGeometry(root) {
 }
 
 export class ModelLODLoader {
-  constructor(manager, { manifestURL = "models/lod/manifest.json?v=exp-adaptive-20260907", targetKey = "" } = {}) {
+  constructor(manager, { manifestURL = "models/lod/manifest.json?v=exp-adaptive-20260907", targetKey = "", requestTimeoutMs = 45000 } = {}) {
     this.manager = manager;
     this.raw = new GLTFLoader();
+    this.requestTimeoutMs = requestTimeoutMs;
     this.queue = new AssetQueue(1);
     this.records = [];
     this.targetKey = targetKey;
@@ -98,6 +99,26 @@ export class ModelLODLoader {
     })();
   }
   start() { this.queue.start(); }
+  async loadGLB(url, onProgress) {
+    // Abort the actual transfer (including the body), so a stalled asset cannot
+    // permanently occupy the single preparation slot. Existing fallback paths
+    // handle the rejection and late network data can never mount a model.
+    const abort = new AbortController();
+    const timer = setTimeout(() => abort.abort(), this.requestTimeoutMs);
+    let data;
+    try {
+      const response = await fetch(url, { signal: abort.signal });
+      if (!response.ok) throw new Error(`HTTP ${response.status}: ${url}`);
+      data = await response.arrayBuffer();
+      if (onProgress) onProgress({ loaded: data.byteLength, total: data.byteLength, lengthComputable: true });
+    } catch (error) {
+      if (abort.signal.aborted) throw new Error(`Model request timed out: ${url}`);
+      throw error;
+    } finally {
+      clearTimeout(timer);
+    }
+    return this.raw.parseAsync(data, THREE.LoaderUtils.extractUrlBase(url));
+  }
   load(url, onLoad, onProgress, onError, prepare = null, key = null) {
     const token = `base-model:${this.records.length}:${url}`;
     this.manager.itemStart(token); // includes jobs still waiting for the queue
@@ -117,7 +138,7 @@ export class ModelLODLoader {
       record.baseStatus = "loading";
       let gltf;
       if (record.entry) {
-        try { gltf = await this.raw.loadAsync(record.entry.low, onProgress); }
+        try { gltf = await this.loadGLB(record.entry.low, onProgress); }
         catch (error) {
           // A missing/broken derivative must never leave an exhibit empty.
           console.warn(`[experience] low model failed; falling back to ${url}`, error);
@@ -173,13 +194,13 @@ export class ModelLODLoader {
   }
   async loadHigh(record, onProgress) {
     if (record.highURL && record.highURL !== record.url) {
-      try { return await this.raw.loadAsync(record.highURL, onProgress); }
+      try { return await this.loadGLB(record.highURL, onProgress); }
       catch (error) {
         console.warn(`[experience] optimized high model unavailable; using original: ${record.url}`, error);
         record.highURL = record.url;
       }
     }
-    return this.raw.loadAsync(record.url, onProgress);
+    return this.loadGLB(record.url, onProgress);
   }
   update(camera, selectedKey = null, now = performance.now()) {
     let changed = false;

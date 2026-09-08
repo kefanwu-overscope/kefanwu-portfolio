@@ -7,48 +7,48 @@ const projectData = {
     title: "Mk.8 steering system",
     image: "assets/cover-steering-system.webp",
     summary:
-      "Mk.8 steering column redesign: matched 27.5-degree dual U-joints cancel rotational speed ripple, and the wheel sits 3.5 inches closer and 15 degrees more upright than Mk.7. A 50 N·m worst-case steering torque was derived by hand from peak tire friction and Ackermann steering geometry, and every steering part was cut, turned, and welded personally; the full system is installed on the car and has run without issues.",
+      "Mk.8 steering redesign: matched 27.5-degree dual U-joints cancel speed ripple; the wheel sits 3.5 inches closer and 15 degrees more upright than Mk.7. Hand calculations using peak tire friction and Ackermann geometry gave a 50 N·m worst-case torque. I cut, turned, and welded every steering part; the installed system has run without issues.",
     highlights: [
       "Matched dual U-joint bend angles to reduce rotational velocity ripple through the steering column.",
-      "Moved the wheel 3.5 inches closer and 15 degrees more vertical than Mk.7 to improve driver posture and cockpit clearance.",
-      "Lightweighted the steering bearing cages, saving 0.9 kg against the previous year's design.",
-      "Derived a 50 N·m worst-case steering torque by hand from peak tire friction and the car's Ackermann steering geometry.",
+      "Moved the wheel 3.5 inches closer and 15 degrees more vertical than Mk.7, improving driver posture and cockpit clearance.",
+      "Lightweighted the steering bearing cages, saving 0.9 kg over the previous year's design.",
+      "Hand-calculated a 50 N·m worst-case steering torque from peak tire friction and the car's Ackermann geometry.",
       "Sized every steering shaft in torsion by hand and cross-checked each one in FEA.",
-      "Cut, turned, and welded every steering part personally — waterjet rack mounts, lathe-turned shafts, TIG-welded chassis integration — and the full system is installed on the car and has run without issues."
+      "Personally fabricated every steering part: waterjet rack mounts, lathe-turned shafts, and TIG-welded chassis integration. The installed system has run without issues."
     ],
     tools: ["SolidWorks", "MATLAB", "FEA", "Lathe", "Waterjet", "CNC mill", "TIG welding"],
     details: [
       {
         title: "Role and objective",
         points: [
-          "Led the cockpit-side steering design as part of OEM Mk.8 development, then stepped into Mechanical Lead ownership for broader vehicle integration.",
-          "Primary requirement was a precise, low-slop steering path that fit inside the cockpit template while preserving dashboard space and driver ingress.",
-          "The design had to improve ergonomics without introducing binding, speed ripple, or hard-to-service hardware."
+          "Led cockpit-side steering design for OEM Mk.8, then stepped into Mechanical Lead ownership for broader vehicle integration.",
+          "Required a precise, low-slop steering path within the cockpit template, preserving dashboard space and driver ingress.",
+          "Required better ergonomics without binding, speed ripple, or hardware that was difficult to service."
         ]
       },
       {
         title: "Kinematic decisions",
         points: [
-          "Used a dual U-joint layout with matched bend angles around 27.5 degrees so input and output speed variation cancel more cleanly.",
-          "Compared yoke phasing and shaft angle options with a speed-ratio ripple model before locking the column geometry.",
-          "Adjusted the column from the previous Mk.7 60-degree posture toward a 55-degree angle and closer wheel location for better driver reach."
+          "Matched dual U-joint bend angles around 27.5 degrees to better cancel input and output speed variation.",
+          "Compared yoke phasing and shaft angles with a speed-ratio ripple model before finalizing column geometry.",
+          "Moved from Mk.7's 60-degree posture toward 55-degree geometry and a closer wheel for better driver reach."
         ]
       },
       {
         title: "Hardware and fabrication",
         points: [
-          "Designed rack mounts, shaft interfaces, bearing cages, and sensor packaging around realistic shop processes instead of pure CAD convenience.",
-          "Reworked the bearing cages for mass as well as stiffness, taking 0.9 kg out of the previous year's column.",
-          "Personally turned the splined shafts on the lathe, cut the rack mounts on the waterjet, and TIG-welded the chassis integration that carries the load paths.",
-          "Moved critical fasteners toward higher-grade hardware and preload-aware retention where looseness would become steering play."
+          "Designed rack mounts, shaft interfaces, bearing cages, and sensor packaging around available shop processes.",
+          "Balanced bearing-cage mass and stiffness, removing 0.9 kg from the previous year's column.",
+          "Personally lathe-turned splined shafts, waterjet-cut rack mounts, and TIG-welded chassis integration along the load paths.",
+          "Used higher-grade critical fasteners and preload-aware retention to prevent looseness from becoming steering play."
         ]
       },
       {
         title: "Status and validation",
         points: [
-          "Column locked at a 55-degree posture (Mk.7: 60 degrees) with the wheel 3.5 inches closer to the driver.",
-          "The matched 27.5-degree U-joint pair cancels speed ripple per the ripple-surface model in the gallery.",
-          "Every steering part was made personally, and TIG-welded mounts tie the column into the Mk.8 chassis; the full steering system is installed on the car and has run without issues."
+          "Column finalized at 55-degree posture (Mk.7: 60 degrees), with the wheel 3.5 inches closer to the driver.",
+          "The matched 27.5-degree U-joint pair cancels speed ripple per the gallery's ripple-surface model.",
+          "Personally made every steering part, with TIG-welded mounts joining the column to the Mk.8 chassis. The installed system has run without issues."
         ]
       }
     ],
@@ -66,55 +66,55 @@ const projectData = {
     title: "Javelin high-speed VTOL drone",
     image: "assets/javelin-3q.webp",
     summary:
-      "A tail-sitter VTOL drone with no moving control surfaces, designed for 300 km/h. It launches vertically, tips onto its belly, and flies like a dart — every maneuver produced by varying the speed of four motors (differential thrust). The whole airframe is shaped around one enemy: drag at 300 km/h.",
+      "Tail-sitter VTOL drone targeting 300 km/h without moving control surfaces. It launches vertically, tips onto its belly, and flies like a dart, maneuvering through differential thrust across four motors. The airframe is shaped to reduce drag at 300 km/h.",
     highlights: [
-      "Targets 300 km/h with zero control surfaces — yaw, pitch, and roll all come from differential thrust across four motors, moving the entire control burden onto the autopilot and tuning.",
-      "Drag-driven airframe: Von Karman ogive nose, swept wing, NACA-0008 stabilizers, and streamlined motor fairings; CG placed ahead of the center of pressure for high-speed stability.",
-      "3D-printed structure material-matched per function — PPA-CF chassis (stiffness/heat), ASA antenna fairings (RF-transparent), PC-FR parts (flame-retardant) — with 3x1.5 mm carbon-fiber tube spars bonded through the wing and tail.",
+      "Targets 300 km/h without control surfaces: four-motor differential thrust provides yaw, pitch, and roll, placing control demands on autopilot tuning.",
+      "Drag-driven airframe: Von Karman ogive nose, swept wing, NACA-0008 stabilizers, streamlined motor fairings, and CG ahead of the center of pressure for high-speed stability.",
+      "Function-matched 3D-printed materials: PPA-CF chassis (stiffness/heat), ASA antenna fairings (RF-transparent), PC-FR parts (flame-retardant), and bonded 3x1.5 mm carbon-fiber tube spars through wing and tail.",
       "Avionics on a Matek H743-WING running ArduPlane: pitot/airspeed sensor for stall prevention, GPS auto-return-home, integrated Remote ID, and EMI-aware HV/LV cable separation.",
-      "Drove the design from a ~24-item requirements matrix; custom CAD tooling for a carbon-tube cutting jig and a motor thrust test stand; quick-release body and XT90-S anti-spark throughout.",
-      "Built and fully modeled, not airborne yet by design: seeking FAA clearance to fly past the 100 mph UAS limit before a 300 km/h first flight."
+      "Designed from a ~24-item requirements matrix, with custom carbon-tube cutting jig and motor thrust test stand, quick-release body, and XT90-S anti-spark connectors throughout.",
+      "Built and fully modeled; awaiting flight while seeking FAA clearance to exceed the 100 mph UAS limit before a 300 km/h first flight."
     ],
     tools: ["SolidWorks", "ArduPilot / ArduPlane", "CFD", "3D printing (PPA-CF / PC-FR)", "Carbon-rod reinforcement", "Differential thrust", "FPV"],
     details: [
       {
         title: "Concept",
         points: [
-          "Four-motor tail-sitter that takes off vertically like a quadcopter, tips over, and flies forward like a dart.",
-          "No flaps, ailerons, rudders, or servos anywhere — a deliberate trade of simpler mechanics for harder software (all attitude control through motor mixing).",
-          "Target top speed of 300 km/h drives every shape and material decision."
+          "Four-motor tail-sitter: vertical quadcopter takeoff, then a tip-over into forward flight.",
+          "No flaps, ailerons, rudders, or servos: simpler mechanics require harder software, with all attitude control through motor mixing.",
+          "The 300 km/h target drives every shape and material decision."
         ]
       },
       {
         title: "Aerodynamics and structure",
         points: [
-          "Von Karman ogive nosecone for a minimum-drag profile; swept wing to delay drag rise and house the motor arms.",
-          "Thin symmetric NACA-0008 stabilizers and streamlined motor fairings to cut frontal drag.",
-          "Center of gravity ahead of the center of pressure for stability at speed; embedded 3x1.5 mm carbon-fiber tubes bonded through wing and stabilizers (a dedicated cutting jig was designed to cut them)."
+          "Von Karman ogive nosecone minimizes drag; the swept wing delays drag rise and houses motor arms.",
+          "Thin symmetric NACA-0008 stabilizers and streamlined motor fairings reduce frontal drag.",
+          "CG ahead of the center of pressure supports high-speed stability; embedded 3x1.5 mm carbon-fiber tubes are bonded through wing and stabilizers. Designed a dedicated tube-cutting jig."
         ]
       },
       {
         title: "Propulsion and power",
         points: [
-          "Four T-Motor F90 2806 motors in a tractor layout — props pull rather than push, keeping clean airflow and aiding cooling.",
-          "Two 4S LiPo packs wired in parallel hold 14.8 V while roughly doubling current and burst capacity for sustained high-speed power.",
-          "High-pitch APC props in multiple pitches under test; XT90-S anti-spark connectors standardized throughout for safe inrush current."
+          "Four T-Motor F90 2806 motors use tractor props for clean airflow and cooling.",
+          "Two parallel 4S LiPo packs maintain 14.8 V while roughly doubling current and burst capacity for sustained high-speed power.",
+          "Testing multiple high-pitch APC props; standardized XT90-S anti-spark connectors manage inrush current."
         ]
       },
       {
         title: "Avionics and electronics",
         points: [
-          "Matek H743-WING flight controller running ArduPlane for the VTOL/tail-sitter modes and motor mixing; Matek M10Q-5883 GPS/compass facing the sky.",
-          "Matek ASPD-4525 airspeed sensor with a pitot tube extended past the nose and short silicone tubing for low-lag, accurate readings used for stall prevention.",
-          "ELRS radio link, FPV camera and 5.8 GHz VTX (antenna placed at the tail for clearance), Holybro Remote ID, and separated HV/LV cabling to minimize EMI."
+          "Matek H743-WING runs ArduPlane VTOL/tail-sitter modes and motor mixing; the Matek M10Q-5883 GPS/compass faces skyward.",
+          "Matek ASPD-4525 airspeed sensor uses a pitot tube beyond the nose and short silicone tubing for accurate, low-lag stall-prevention readings.",
+          "ELRS radio, FPV camera, 5.8 GHz VTX with tail-mounted antenna for clearance, Holybro Remote ID, and separated HV/LV cabling to minimize EMI."
         ]
       },
       {
         title: "Status and next steps",
         points: [
-          "Airframe complete, full CAD model finished, electronics selected and integrated.",
-          "Not airborne yet by design: at 300 km/h the failure modes get dangerous fast, so fail-safe behavior is being finalized first.",
-          "Researching FAA compliance (the target speed is well past small-UAS limits) and tuning ArduPlane attitude control through pure differential-thrust mixing."
+          "Airframe and full CAD complete; electronics selected and integrated.",
+          "Not airborne yet by design: finalizing fail-safe behavior because failure at 300 km/h carries serious risk.",
+          "Researching FAA compliance for speeds beyond small-UAS limits and tuning ArduPlane attitude control through differential-thrust mixing."
         ]
       }
     ],
@@ -132,54 +132,54 @@ const projectData = {
     title: "Agent-based CFD",
     image: "assets/cover-ansys-cfd.webp",
     summary:
-      "Open teaching package that shows AI agents how to run Ansys Fluent 2024 R1 headlessly through PyFluent, using a real VTOL drone cruise case as the validation path.",
+      "Open teaching package for AI agents running Ansys Fluent 2024 R1 headlessly through PyFluent, using a VTOL drone cruise validation case.",
     highlights: [
-      "Converted a completed Javelin VTOL cruise CFD run at 300 kph, Mach 0.245, into a reusable agent instruction package.",
+      "Turned a completed Javelin VTOL cruise CFD run at 300 kph, Mach 0.245, into reusable agent instructions.",
       "Packaged a system prompt, workflow SOP, PyFluent playbook, failure recovery catalog, quality gates, templates, and verified reference scripts.",
-      "Documented 11 real failure modes, including headless STEP import crashes, wrap-mesh traps, silent far-field key failures, and orphaned MPI processes holding a license seat.",
-      "Moved from failed wrap-mesh refinement to a conforming multi-region mesh with a single pressure-far-field boundary while preserving CAD fidelity.",
-      "Built anti-fabrication gates: read back critical Fluent settings, label estimated-reference coefficients as process-validation values, and never report unverified results as design-grade."
+      "Documented 11 real failures, including headless STEP import crashes, wrap-mesh traps, silent far-field key failures, and orphaned MPI processes holding a license seat.",
+      "Replaced failed wrap-mesh refinement with a conforming multi-region mesh and one pressure-far-field boundary, preserving CAD fidelity.",
+      "Added anti-fabrication gates: read back critical Fluent settings, label coefficients using estimated references as process-validation values, and exclude unverified results from design-grade claims."
     ],
     tools: ["Ansys Fluent 2024 R1", "PyFluent 0.17.1", "Python", "PowerShell", "CFD post-processing", "Quality gates"],
     details: [
       {
         title: "Project goal",
         points: [
-          "The project asks a practical question: can an AI coding agent drive desktop engineering software well enough to run a reviewable CFD workflow without a GUI?",
-          "The result is a teaching package for agents, not just a one-off simulation: the documents explain the operating discipline needed to launch Fluent, manage files, monitor solves, and report credibility.",
-          "The source case is a Javelin VTOL drone cruise simulation at 300 kph, Mach 0.245, with the final numbers explicitly marked as process-validation level where reference values are estimated."
+          "Tested whether an AI coding agent could run a reviewable CFD workflow in desktop engineering software without a GUI.",
+          "The teaching package covers launching Fluent, managing files, monitoring solves, and reporting credibility beyond a single simulation.",
+          "The source Javelin VTOL cruise case runs at 300 kph, Mach 0.245; results using estimated references are explicitly labeled process-validation level."
         ]
       },
       {
         title: "Workflow package",
         points: [
-          "The package includes a system prompt, a step-by-step SOP, a PyFluent playbook with real 2024 R1 API keys, a failure-recovery catalog, quality-gate definitions, report templates, and verified reference scripts.",
-          "Reference scripts cover solver setup, conforming far-field solve, post-processing images, audit checks, and result reporting so another agent can follow the workflow instead of rediscovering the same traps.",
-          "The workflow forces a gate at each stage: geometry, mesh, solver setup, convergence, y+, force extraction, post-processing, and credibility labeling."
+          "Includes a system prompt, step-by-step SOP, PyFluent playbook with real 2024 R1 API keys, failure-recovery catalog, quality gates, report templates, and verified reference scripts.",
+          "Reference scripts cover solver setup, conforming far-field solve, post-processing images, audit checks, and reporting, helping other agents avoid known failures.",
+          "Every stage has a gate: geometry, mesh, solver setup, convergence, y+, force extraction, post-processing, and credibility labeling."
         ]
       },
       {
         title: "Technical breakthrough",
         points: [
-          "The early fault-tolerant wrap mesh ran, but it discarded real CAD surface fidelity and could not be refined reliably in a headless environment.",
-          "The route that worked was a conforming watertight mesh solved as a multi-region case with one pressure-far-field boundary, avoiding brittle region extraction while keeping the CAD surface smooth.",
-          "The final setup used compressible ideal-gas physics, k-omega SST, Mach 0.245, and a verified flow-direction vector for the angle of attack."
+          "The initial fault-tolerant wrap mesh ran but lost CAD surface fidelity and resisted reliable headless refinement.",
+          "A conforming watertight mesh solved as a multi-region case with one pressure-far-field boundary preserved smooth CAD surfaces and avoided brittle region extraction.",
+          "Final setup: compressible ideal-gas physics, k-omega SST, Mach 0.245, and a verified angle-of-attack flow vector."
         ]
       },
       {
         title: "Failure recovery",
         points: [
-          "The catalog records 11 failure modes and fixes, including SpaceClaim headless crashes, interactive TUI report loops, Fluent default convergence stopping too early, hidden moment report defaults, and report-file liveness traps.",
-          "One operational lesson was critical: clean up the whole Fluent process family, including mpiexec and cortex, before relaunching, or orphaned MPI processes can hold the license seat.",
-          "Silent no-op settings were treated as hard blockers: after setting a far-field Mach number or flow direction, the script reads the state back and aborts if the values do not match."
+          "Cataloged 11 failures and fixes: SpaceClaim headless crashes, interactive TUI report loops, premature default convergence, hidden moment report defaults, and report-file liveness traps.",
+          "Clean up the entire Fluent process family, including mpiexec and cortex, before relaunching; orphaned MPI processes can hold the license seat.",
+          "Treat silent no-op settings as blockers: read back far-field Mach and flow direction, then abort on mismatches."
         ]
       },
       {
         title: "Professional standard",
         points: [
-          "The package distinguishes process validation from design-grade CFD and makes the limitation visible instead of burying it.",
-          "Coefficients derived from estimated reference area, reference length, or moment center are labeled process-validation values only.",
-          "The project demonstrates simulation automation, engineering judgment, and agent instruction design: the agent is not asked to make pretty plots, it is asked to run a disciplined CFD process."
+          "Clearly distinguishes process validation from design-grade CFD, making limitations visible in the reported results.",
+          "Coefficients using estimated reference area, reference length, or moment center are labeled process-validation values only.",
+          "Demonstrates simulation automation, engineering judgment, and agent instruction design through a disciplined CFD process."
         ]
       }
     ],
@@ -197,46 +197,46 @@ const projectData = {
     title: "Driver seat and harness",
     image: "assets/cover-aluminum-seat.webp",
     summary:
-      "Cockpit seat and harness package focused on driver fit, lateral support, mount reliability, fast service access, and rules-driven packaging.",
+      "Cockpit seat and harness package balancing driver fit, lateral support, reliable mounts, fast service access, and rules compliance.",
     highlights: [
-      "Validated cockpit fit across ~20 drivers of varying heights with CAD body positioning and physical fit studies.",
-      "Accommodated the shortest-to-tallest driver range through a booster strategy and flexible mounting points.",
+      "Validated cockpit fit across ~20 drivers of varying heights using CAD body positioning and physical fit studies.",
+      "Covered the shortest-to-tallest driver range with boosters and flexible mounting points.",
       "Upgraded restraint to a six-point harness with an anti-submarine strap on a dedicated chassis bar.",
-      "Mounted the seat on welded chassis tabs and multiple hard points for reliable retention and fast service access.",
-      "Packaged the seat inside the cockpit template alongside the steering column, pedal tray, and bodywork."
+      "Used welded chassis tabs and multiple seat hard points for reliable retention and fast service.",
+      "Fit the seat within the cockpit template alongside steering, pedal tray, and bodywork."
     ],
     tools: ["SolidWorks", "Cockpit fit study", "Driver measurements", "Harness routing", "Mount design"],
     details: [
       {
         title: "Role and requirements",
         points: [
-          "Owned cockpit seat and harness design during the Mk.7/Mk.8 transition, with requirements spanning driver retention, serviceability, comfort, and rules compliance.",
-          "The seat had to support drivers during cornering and braking while staying light enough for a Formula SAE electric car.",
-          "The design also had to respect the cockpit opening, steering wheel placement, pedal position, and harness geometry."
+          "Owned seat and harness design during the Mk.7/Mk.8 transition, balancing driver retention, serviceability, comfort, and rules compliance.",
+          "Required cornering and braking support at a weight suitable for a Formula SAE electric car.",
+          "Respected cockpit opening, steering wheel placement, pedal position, and harness geometry."
         ]
       },
       {
         title: "Driver fit strategy",
         points: [
-          "Used CAD body models and physical checks to evaluate a range of driver sizes instead of optimizing around only one driver.",
-          "Planned booster-seat or cushion options for smaller drivers while keeping taller-driver packaging inside the cockpit envelope.",
-          "Balanced comfort with restraint: the design needed lateral support without blocking exit, service, or harness access."
+          "Evaluated multiple driver sizes with CAD body models and physical fit checks.",
+          "Planned booster-seat or cushion options for smaller drivers while keeping taller drivers within the cockpit envelope.",
+          "Balanced comfort and lateral restraint with exit, service, and harness access."
         ]
       },
       {
         title: "Mounting and harness interfaces",
         points: [
-          "Developed mounting concepts using chassis-welded tabs, multiple seat hard points, and dedicated harness bars or tabs.",
-          "Upgraded the harness to a six-point layout with an anti-submarine strap on a dedicated chassis bar.",
-          "Connected the seat package to the surrounding cockpit systems: pedal tray, steering column, frame tubes, and bodywork."
+          "Developed mounts using chassis-welded tabs, multiple seat hard points, and dedicated harness bars or tabs.",
+          "Upgraded to a six-point harness with an anti-submarine strap on a dedicated chassis bar.",
+          "Integrated the seat with pedal tray, steering column, frame tubes, and bodywork."
         ]
       },
       {
         title: "Status and validation",
         points: [
-          "Cockpit fit validated across roughly 20 drivers through CAD body positioning plus physical fit checks.",
-          "Six-point harness with an anti-submarine strap mounted on a dedicated chassis bar; seat retained on welded chassis tabs.",
-          "The full package sits inside the FSAE cockpit template alongside the steering column, pedal tray, and bodywork."
+          "Validated fit across roughly 20 drivers using CAD body positioning and physical checks.",
+          "Six-point harness and anti-submarine strap on a dedicated chassis bar; seat retained by welded chassis tabs.",
+          "Full package fits the FSAE cockpit template alongside steering column, pedal tray, and bodywork."
         ]
       }
     ],
@@ -252,45 +252,45 @@ const projectData = {
     title: "Carbon fiber seat",
     image: "assets/cover-carbon-fiber-seat.webp",
     summary:
-      "Composite-focused seat and bodywork support work improving shoulder support, driver retention, repairability, and manufacturability.",
+      "Composite seat and bodywork support improving shoulder retention, driver support, repairability, and manufacturability.",
     highlights: [
-      "Added a carbon shoulder- and hip-support shell above the seat pan for upper-body retention under cornering load.",
+      "Added a carbon shoulder- and hip-support shell above the seat pan for retention under cornering load.",
       "Chose the carbon-fiber layup for stiffness-to-weight where driver retention mattered more than a metal pan.",
-      "Designed the shell and bodywork to remove, repair, and reassemble within a race weekend.",
-      "Sized the geometry around real layup and trimming limits rather than CAD-only surfaces.",
-      "Used the Mk.7 build to target the Mk.8 cockpit's actual support and service pain points."
+      "Designed shell and bodywork for removal, repair, and reassembly within a race weekend.",
+      "Shaped geometry around practical layup and trimming limits.",
+      "Used Mk.7 build experience to address Mk.8 cockpit support and service issues."
     ],
     tools: ["Composite layup planning", "Carbon fiber", "Bodywork DFM", "Driver ergonomics", "Repairability review"],
     details: [
       {
         title: "Design intent",
         points: [
-          "The carbon seat support work targets the top half of the cockpit, where shoulder retention and upper-body support become important under lateral load.",
-          "Instead of treating the seat as a flat floor insert, the design considers flanges, support layers, and local stiffness around the driver's torso.",
-          "The seat support also has to coexist with bodywork, harness routing, chassis tubes, and access for inspection."
+          "Targets the upper cockpit, where shoulder retention and upper-body support matter under cornering and other lateral loads.",
+          "Uses flanges, support layers, and local stiffness around the driver's torso beyond a flat floor insert.",
+          "Accommodates bodywork, harness routing, chassis tubes, and inspection access."
         ]
       },
       {
         title: "Composite choices",
         points: [
-          "Carbon fiber was evaluated for lightweight support where stiffness and driver retention matter more than decorative appearance.",
-          "Layup planning considers epoxy safety, repair access, repeatability, and how the part can be installed or removed without damaging surrounding panels.",
-          "The bodywork review emphasized robust panels that are easy to remove, repair, and reassemble during a race weekend."
+          "Evaluated carbon fiber for lightweight stiffness and driver retention.",
+          "Layup planning covers epoxy safety, repair access, repeatability, and installation or removal without damaging adjacent panels.",
+          "Reviewed bodywork for robust panels that can be removed, repaired, and reassembled during a race weekend."
         ]
       },
       {
         title: "Manufacturing constraints",
         points: [
-          "Kept the geometry compatible with realistic layup and trimming work rather than overcomplicated surfaces that look good only in CAD.",
-          "Used the Mk.7 car as a build reference for where seat support, bodywork, and cockpit service access become painful in practice.",
-          "Prioritized stiffness, driver fit, and repairability so the composite structure earns its weight and manufacturing effort."
+          "Kept geometry compatible with practical layup and trimming, avoiding overcomplicated surfaces that work only in CAD.",
+          "Used the Mk.7 build to identify seat support, bodywork, and cockpit service-access problems.",
+          "Prioritized stiffness, driver fit, and repairability to justify composite weight and manufacturing effort."
         ]
       },
       {
         title: "Status",
         points: [
-          "Shell laid up over the seat mold and trimmed (layup and weave shots in the gallery), sized for the Mk.8 cockpit.",
-          "Designed to remove, repair, and reassemble within a race weekend, using the Mk.7 build's service pain points as the target list."
+          "Laid up and trimmed the shell over the seat mold for the Mk.8 cockpit; gallery shows layup and weave.",
+          "Designed for removal, repair, and reassembly within a race weekend, addressing Mk.7 service issues."
         ]
       }
     ],
@@ -306,46 +306,46 @@ const projectData = {
     title: "FSAE Brake Sim",
     image: "assets/oem-brake-fea.webp",
     summary:
-      "Track-based brake rotor and pad temperature model for OEM Mk.8, built to size rotors around endurance heat load, pad operating range, 25 percent mass reduction, and structural safety margin.",
+      "Track-based rotor and pad temperature model for OEM Mk.8, balancing endurance heat load, pad operating range, 25 percent mass reduction, and structural safety margin.",
     highlights: [
-      "Modeled a 22-lap FSAE endurance cycle as 25 discrete track segments with varying velocity and brake demand.",
-      "Included heat input, hub conduction, radiation, and velocity-dependent convection in the rotor temperature prediction.",
-      "Used brake-bias assumptions and high-load course zones to identify where temperature peaks matter most.",
-      "Selected cast iron ASTM A48 Class 40 rotors for conductivity, cost, and manufacturability against more exotic materials.",
-      "Connected simulation output to Wilwood GP200 calipers, BP-28 pads, AN3 service disconnects, 25 percent rotor mass reduction, and a 3.0 factor of safety in structural FEA."
+      "Modeled a 22-lap FSAE endurance cycle with 25 track segments of varying velocity and brake demand.",
+      "Predicted rotor temperature using heat input, hub conduction, radiation, and velocity-dependent convection.",
+      "Used brake-bias assumptions and high-load course zones to locate critical temperature peaks.",
+      "Selected cast iron ASTM A48 Class 40 rotors over exotic materials for conductivity, cost, and manufacturability.",
+      "Linked results to Wilwood GP200 calipers, BP-28 pads, AN3 service disconnects, 25 percent rotor mass reduction, and a 3.0 structural FEA safety factor."
     ],
     tools: ["MATLAB", "Thermal modeling", "Track segmentation", "FEA", "Brake bias", "Wilwood BP-28 data"],
     details: [
       {
         title: "Model objective",
         points: [
-          "Built the brake model to answer a practical design question: how much rotor mass can be removed while keeping pad and rotor temperatures in a usable range.",
-          "The model treats the endurance event as repeated thermal loading over 22 laps rather than a single braking event, with 25 track segments defining heat input and cooling windows.",
-          "This makes the result more useful for real FSAE reliability decisions, where heat soak and repeatability matter."
+          "Modeled how much rotor mass could be removed while keeping pad and rotor temperatures within usable ranges.",
+          "Simulated repeated thermal loading over 22 endurance laps, with 25 track segments defining heat input and cooling windows.",
+          "Repeated thermal loading supports FSAE reliability decisions, where heat soak and repeatability matter."
         ]
       },
       {
         title: "Thermal implementation",
         points: [
-          "Segmented the course into braking and cooling zones so velocity, deceleration, and heat transfer could vary through the lap.",
-          "Estimated heat input from braking work and distributed it through front/rear bias assumptions.",
-          "Included conduction into the hub, radiation, and speed-dependent convection to avoid a one-term temperature estimate."
+          "Split the course into braking and cooling zones with varying velocity, deceleration, and heat transfer.",
+          "Estimated braking-work heat input and distributed it using front/rear bias assumptions.",
+          "Included hub conduction, radiation, and speed-dependent convection."
         ]
       },
       {
         title: "Hardware decisions",
         points: [
-          "Evaluated rotor material direction and favored cast iron for thermal conductivity above 52 W/m-K, friction pairing, cost, and manufacturability.",
-          "Connected the model to Wilwood GP200 calipers and BP-28 pads, whose 0.46-0.48 high-temperature friction coefficient set the target operating range.",
-          "Kept serviceability in the system design through AN3 quick-disconnect thinking for faster brake-line replacement."
+          "Favored cast iron for conductivity above 52 W/m-K, friction pairing, cost, and manufacturability.",
+          "Linked the model to Wilwood GP200 calipers and BP-28 pads, whose 0.46-0.48 high-temperature friction coefficient set the target operating range.",
+          "Considered AN3 quick-disconnects for faster brake-line replacement."
         ]
       },
       {
         title: "Validation and tradeoffs",
         points: [
-          "Used Mk.7 and peer-team data as sanity checks because brake thermal models are sensitive to assumptions.",
-          "The main design tradeoff was surface area and thermal mass versus rotational inertia and unsprung mass.",
-          "The output gives the mechanical team a defensible starting point for rotor sizing, including the tradeoff between a 25 percent mass reduction target and a 3.0 structural factor of safety."
+          "Checked against Mk.7 and peer-team data because brake thermal models are sensitive to assumptions.",
+          "Balanced surface area and thermal mass against rotational inertia and unsprung mass.",
+          "Provided a defensible rotor-sizing baseline balancing a 25 percent mass reduction target with a 3.0 structural factor of safety."
         ]
       }
     ],
@@ -360,47 +360,47 @@ const projectData = {
     title: "3D scanner",
     image: "assets/scanner-live-7.webp",
     summary:
-      "Gantry-based scanner that moves a TFmini-S LiDAR through a controlled Cartesian pattern and reconstructs object geometry from 2,206 calibrated distance readings. Built as a one-week project in Olin's Principles of Integrated Engineering course.",
+      "Gantry scanner reconstructing geometry from 2,206 calibrated TFmini-S LiDAR readings along a controlled Cartesian path. Built in one week for Olin's Principles of Integrated Engineering course.",
     highlights: [
-      "Calibrated 14 known distances and reduced stable-range error to under 3 percent beyond roughly 30 cm.",
-      "Captured 2,206 measurements across a 140 mm by 165 mm scan area for a small test object.",
+      "Calibrated at 14 known distances, reducing stable-range error below 3 percent beyond roughly 30 cm.",
+      "Captured 2,206 measurements over a 140 mm by 165 mm area of a small test object.",
       "Owned LiDAR calibration, electrical architecture, and gantry mechanism design with teammate Jacob Likins.",
       "Built around Arduino Nano ESP32, DRV8825 drivers, NEMA 17 steppers, 12 V supply, and an emergency stop.",
-      "Replaced a lower-accuracy servo pan/tilt concept with a gantry for repeatable scan coordinates.",
-      "Used shielding, copper foil, and wiring changes to reduce power-supply noise around the sensor."
+      "Replaced a less accurate servo pan/tilt concept with a gantry for repeatable scan coordinates.",
+      "Reduced sensor power-supply noise through shielding, copper foil, and wiring changes."
     ],
     tools: ["Arduino Nano ESP32", "TFmini-S LiDAR", "MATLAB Curve Fitter", "Python", "DRV8825", "NEMA 17"],
     details: [
       {
         title: "Role and system",
         points: [
-          "Designed and assembled the gantry mechanism, calibrated the TFmini-S LiDAR, and built the electrical system with an Arduino Nano ESP32 controller.",
-          "The scanner moves the sensor through a raster path, pairs each measured distance with carriage position, and plots a digital outline of the object.",
-          "Jacob Likins was the project teammate; the final system emphasized repeatable motion and clean sensor data."
+          "Designed and assembled the gantry, calibrated TFmini-S LiDAR, and built the Arduino Nano ESP32 electrical system.",
+          "Raster motion pairs each distance reading with carriage position to plot the object's digital outline.",
+          "Worked with teammate Jacob Likins on repeatable motion and clean sensor data."
         ]
       },
       {
         title: "Calibration",
         points: [
-          "Measured 14 known distances with a ruler and used MATLAB Curve Fitter to derive a correction curve for the LiDAR output.",
-          "Found that readings below about 30 cm were less stable, then set operating placement around the more reliable range.",
-          "After calibration, stable-range percentage error dropped below roughly 3 percent for the intended object distance."
+          "Measured 14 known distances with a ruler and fitted a LiDAR correction curve in MATLAB Curve Fitter.",
+          "Readings below about 30 cm were less stable, so sensor placement used the more reliable range.",
+          "Calibration reduced stable-range error below roughly 3 percent at the intended object distance."
         ]
       },
       {
         title: "Electrical and EMI control",
         points: [
-          "Used a 12 V, 12.5 A supply for motor power, DRV8825 stepper drivers, capacitors on motor supply rails, and fan cooling.",
-          "Designed the emergency stop to cut motor voltage while keeping Arduino logic alive, making testing safer without losing state.",
-          "Lined the PETG electronics enclosure with copper foil and shielded LiDAR wiring to reduce noise from the power supply and motors."
+          "Used a 12 V, 12.5 A motor supply, DRV8825 drivers, motor-rail capacitors, and fan cooling.",
+          "Emergency stop cuts motor voltage while keeping Arduino logic alive, preserving state during safer testing.",
+          "Copper-lined the PETG enclosure and shielded LiDAR wiring to reduce power-supply and motor noise."
         ]
       },
       {
         title: "Mechanical and motion logic",
         points: [
-          "Built the Y axis around dual M8 lead screws and guide rods and used a belt-driven X axis at 1/16 microstepping.",
-          "Homed the axes against physical limit switches before scanning so the software knew the carriage coordinate frame.",
-          "Sampled 2,206 LiDAR points during raster motion and treated the project as a full electromechanical integration problem: motion, sensing, calibration, and data visualization."
+          "Built Y-axis motion with dual M8 lead screws and guide rods; belt-driven X axis uses 1/16 microstepping.",
+          "Homed against physical limit switches to establish carriage coordinates before scanning.",
+          "Captured 2,206 raster-scan LiDAR points, integrating motion, sensing, calibration, and data visualization."
         ]
       }
     ],
@@ -419,45 +419,45 @@ const projectData = {
     title: "Smelly",
     image: "assets/cover-perfume-dispenser.webp",
     summary:
-      "Gantry and actuator hardware for Smelly, a fully automated perfume-mixing vending machine built by Team Scent-A-Tubbies during a Formlabs hackathon.",
+      "Gantry and actuator hardware for Smelly, Team Scent-A-Tubbies' fully automated perfume-mixing vending machine at a Formlabs hackathon.",
     highlights: [
-      "Built in a 2.5-day sprint around a digital scent-profile concept and six fragrance bases.",
+      "Built in 2.5 days around a digital scent profile and six fragrance bases.",
       "Designed and fabricated the custom gantry plus linear actuator mechanisms.",
-      "Compared stepper lead-screw and rack-and-pinion actuator approaches under hackathon time pressure.",
+      "Compared stepper lead-screw and rack-and-pinion actuators under hackathon time pressure.",
       "Fabricated quickly with Formlabs Form 4 and Bambu Lab P1S printers.",
-      "Diagnosed continuous-duty overheating in the lead-screw actuator and folded the lesson into actuator selection."
+      "Diagnosed continuous-duty lead-screw actuator overheating to inform actuator selection."
     ],
     tools: ["Raspberry Pi", "Formlabs Form 4", "Bambu Lab P1S", "Lead screw actuator", "Rack and pinion", "Rapid prototyping"],
     details: [
       {
         title: "Role and product concept",
         points: [
-          "Worked on Team Scent-A-Tubbies to build Smelly, an automated perfume-mixing vending machine from a digital scent profile.",
-          "Owned the mechanical gantry and linear actuator design/fabrication while the broader team integrated software and dispensing.",
-          "The machine had to move between six fragrance bases and physically actuate dispensing within a very short sprint."
+          "Worked with Team Scent-A-Tubbies on Smelly, an automated vending machine mixing perfume from digital scent profiles.",
+          "Owned mechanical gantry and linear actuator design/fabrication; teammates integrated software and dispensing.",
+          "Required motion between six fragrance bases and physical dispensing actuation within the short sprint."
         ]
       },
       {
         title: "Motion architecture",
         points: [
-          "Designed a compact gantry controlled through the Raspberry Pi system so the dispenser could index between fragrance bottles.",
-          "Created two actuator concepts: a stepper lead-screw mechanism and a rack-and-pinion version.",
-          "The design had to be printed, assembled, and debugged fast enough to leave time for full-machine integration."
+          "Designed a compact Raspberry Pi-controlled gantry to index the dispenser between fragrance bottles.",
+          "Created stepper lead-screw and rack-and-pinion actuator concepts.",
+          "Planned printing, assembly, and debugging to leave time for full-machine integration."
         ]
       },
       {
         title: "Fabrication constraints",
         points: [
-          "Used Formlabs Form 4 and Bambu Lab P1S printing to choose between fine-detail resin parts and faster FDM iteration.",
-          "Prioritized tolerances that mattered for motion and ignored perfection where it would not affect the demo.",
-          "The sprint forced clear tradeoffs between ideal mechanism design and hardware that could actually be built that day."
+          "Used Formlabs Form 4 and Bambu Lab P1S printing to balance fine-detail resin parts with faster FDM iteration.",
+          "Prioritized motion-critical tolerances over details that would not affect the demo.",
+          "Balanced ideal mechanisms against hardware that could be built within the day."
         ]
       },
       {
         title: "Failure and learning",
         points: [
-          "The stepper lead-screw actuator overheated under sustained operation, exposing a duty-cycle and thermal-management issue.",
-          "The lesson was concrete: actuator choice must include expected runtime, not only force, stroke, and CAD packaging."
+          "Sustained operation overheated the stepper lead-screw actuator, exposing duty-cycle and thermal-management issues.",
+          "Actuator selection must account for runtime alongside force, stroke, and CAD packaging."
         ]
       }
     ],
@@ -494,15 +494,15 @@ const projectData = {
       ],
     },
     summary:
-      "A 34 kPa (5 psi) pressure vessel that everts soft vine bodies for a cross-section deformation study at the Olin Vine Robotics Lab: a 19 L polypropylene pail with a bolted PETG lid, printed TPU gaskets, swappable outlet converters, and a motor-driven internal spool. The first build yielded at 1.2 psi, so I reinforced it in aluminum and steel and re-validated it in FEA — then used it to run a 45-test factorial experiment and to measure the material properties the lab's prediction model takes as inputs.",
+      "A 34 kPa (5 psi) vessel for soft-vine cross-section deformation research at the Olin Vine Robotics Lab: 19 L polypropylene pail, bolted PETG lid, printed TPU gaskets, swappable outlets, and motor-driven internal spool. After the first build yielded at 1.2 psi, I added aluminum and steel reinforcement and re-validated it in FEA, then ran a 45-test factorial experiment and measured material inputs for the lab's prediction model.",
     highlights: [
-      "Bolted the lid against the underside of the pail flange with 39 Grade 12.9 M4x30 bolts so the ~2,304 N (518 lbf) blow-off load is carried in tension instead of by a snap fit.",
-      "Printed TPU 85A gaskets (0.5-3 mm) for five distinct seal families — the soft durometer conforms to FDM layer lines under bolt preload, which is what makes a printed vessel sealable at all.",
-      "Split the outlet into a fixed port plus swappable cross-section converters, so a new vine geometry is a one-part change instead of a rebuild; the outlet also stiffens the side wall it cuts through.",
-      "Added a spool holder that moves vine tension and spool weight off the motor shaft into a bearing, with a flexible coupling absorbing motor-to-spool misalignment.",
-      "First pressure test held 1.2 psi against a 0.71 psi thin-wall hand calculation, and exposed the real failure order: coupler, vine-to-spool joint, then leaks.",
-      "Reinforced with 6061 plate on all four faces, an aluminum lid and three C-shaped A36 brackets; FEA at 500 lbf per face (5.8 psi) gives 6.5 mm peak deformation and 0.234 GPa peak stress against A36's 0.25 GPa yield.",
-      "Ran the resulting 45-test factorial with it: three body types (circular, 3-partition, stick-reinforced) against two load shapes, three pressures and two loads.",
+      "Bolted the lid against the underside of the pail flange with 39 Grade 12.9 M4x30 bolts, carrying the ~2,304 N (518 lbf) blow-off load in tension instead of a snap fit.",
+      "Printed TPU 85A gaskets (0.5-3 mm) for five seal families; the soft durometer conforms to FDM layer lines under bolt preload, making the printed vessel sealable.",
+      "Used a fixed outlet with swappable cross-section converters, making new vine geometry a one-part change instead of a rebuild; the outlet also stiffens the cut side wall.",
+      "A spool holder transfers vine tension and spool weight from the motor shaft to a bearing; a flexible coupling absorbs misalignment.",
+      "First test held 1.2 psi versus a 0.71 psi thin-wall hand calculation; failures progressed from coupler to vine-to-spool joint, then leaks.",
+      "Reinforced all four faces with 6061 plate, an aluminum lid, and three C-shaped A36 brackets. FEA at 500 lbf per face (5.8 psi): 6.5 mm peak deformation, 0.234 GPa peak stress versus A36's 0.25 GPa yield.",
+      "Ran a 45-test factorial: three body types (circular, 3-partition, stick-reinforced), two load shapes, three pressures, and two loads.",
     ],
     tools: [
       "SolidWorks",
@@ -518,47 +518,47 @@ const projectData = {
       {
         title: "Role and requirements",
         points: [
-          "Full-time summer research assistant at the Olin Vine Robotics Lab (May - Aug 2026), owning the robot that everts the vine bodies for a cross-section deformation experiment.",
-          "Design targets came straight from the experiment: hold 34 kPa (5 psi) — a 3.33 factor of safety over the 10.3 kPa top of the test range — accept bodies up to 571 mm (22.5 in) circumference, and swap bodies fast enough for more than 15 trials a day.",
-          "The vessel also had to accept three different cross-sections (circular, 3-partition, stick-reinforced) and stay transparent enough to debug eversion faults from outside.",
+          "Full-time summer research assistant, Olin Vine Robotics Lab (May - Aug 2026); owned the robot everting vine bodies for cross-section deformation experiments.",
+          "Targets: hold 34 kPa (5 psi), a 3.33 factor of safety over the 10.3 kPa test maximum; accept up to 571 mm (22.5 in) body circumference; swap bodies for more than 15 daily trials.",
+          "Required three cross-sections (circular, 3-partition, stick-reinforced) and enough transparency to debug eversion faults externally.",
         ],
       },
       {
         title: "Pressure vessel and sealing",
         points: [
-          "Chose a stock 19 L (5 gal) transparent polypropylene pail with a 1.4 mm wall over a fabricated metal vessel: the shop's sheet metal tooling and the budget could not deliver a precise custom vessel, and the pail's flat sides carry component mounts.",
-          "The stock snap lid is neither airtight nor able to carry the motor and drive shaft, so the lid and its mount are custom PETG; the mount grips the back of the pail flange and was later welded to it for airtightness.",
-          "Sealing is FDM-printed TPU 85A rather than hand-cut gasket, so each seal matches its joint geometry exactly — which also means joint stiffness and bolt count matter more here than they would on a machined face.",
+          "Selected a stock transparent 19 L (5 gal) polypropylene pail with 1.4 mm walls: the shop's sheet metal tooling and budget ruled out a precise custom metal vessel, while flat sides supported component mounts.",
+          "The stock snap lid could neither seal nor support the motor and drive shaft. A custom PETG lid and mount grip behind the pail flange; the mount was later welded to the flange for airtightness.",
+          "FDM-printed TPU 85A gaskets replace hand-cut seals to match each joint's geometry precisely; compared with machined faces, printed joints demand greater attention to stiffness and bolt count.",
         ],
       },
       {
         title: "Outlet and drivetrain",
         points: [
-          "The outlet is the highest-stress region of the robot — a large, hand-cut opening — so it mounts from the inside with wide flanges for both sealing contact area and extra area moment of inertia.",
-          "Cross-section converters bolt to that fixed outlet through their own TPU gaskets, which is what lets one vessel serve all three body types.",
-          "The un-everted body winds onto an internal spool on two flanged ball bearings, driven by a DC motor through a McMaster 6133N114 flexible coupling on an 8 mm steel shaft.",
+          "The hand-cut outlet is the robot's highest-stress region. It mounts from inside with wide flanges to increase both sealing contact area and area moment of inertia.",
+          "Converters bolt to the fixed outlet through separate TPU gaskets, accommodating all three body types.",
+          "Uneverted bodies wind onto an internal spool on two flanged ball bearings, DC-motor-driven through a McMaster 6133N114 flexible coupling and 8 mm steel shaft.",
         ],
       },
       {
         title: "Test, failure, reinforcement",
         points: [
-          "Pressure-tested on the lab's high-pressure air system: the vessel held 1.2 psi versus the 0.71 psi wall-yield hand calculation, deformed significantly, decoupled the TPU coupler, failed the vine-to-spool connection, and showed minor leaks.",
-          "Reinforcement: PLA-welded the leak points, 6061 plates on both sides, back and bottom, an aluminum lid in place of the printed one, three C-shaped A36 steel brackets around the shell, PETG connection brackets, and cutout patterns kept open for debugging.",
-          "FEA on the reinforcement structure at 500 lbf per face (5.8 psi) returns 6.524 mm maximum deformation and 0.2339 GPa maximum stress against A36 steel's 0.25 GPa yield; the vine outlet remains the weakest point.",
+          "Lab high-pressure testing held 1.2 psi versus the 0.71 psi wall-yield hand calculation, with significant deformation, TPU coupler decoupling, vine-to-spool connection failure, and minor leaks.",
+          "PLA-welded leaks; added 6061 plates to both sides, back, and bottom, an aluminum replacement lid, three C-shaped A36 steel brackets, and PETG connection brackets. Open cutouts preserved debugging visibility.",
+          "Reinforcement FEA at 500 lbf per face (5.8 psi): 6.524 mm maximum deformation and 0.2339 GPa maximum stress versus A36 steel's 0.25 GPa yield. The vine outlet remains weakest.",
         ],
       },
       {
         title: "The experiment it runs",
         points: [
           "Full factorial: 3 body types x 2 load shapes x 3 pressures x 2 loads = 36 loaded conditions, plus 9 unloaded baselines, for 45 runs.",
-          "The rig rides on four 10 mm steel rods and eight linear bearings with a dovetail connector for fast load-shape swaps; a 0.01 kg scale sits directly under the vine because rod-bearing friction makes applied weight a poor proxy for the force actually reaching the body.",
-          "Air is regulated in two stages from 862 kPa (125 psi) shop air down to a 34 kPa gauge at the outlet, and a Creality scanner captures the deformed geometry for comparison against the prediction model.",
+          "The rig uses four 10 mm steel rods, eight linear bearings, and a dovetail connector for quick load-shape swaps. A 0.01 kg scale directly beneath the vine measures actual force, since rod-bearing friction makes applied weight a poor proxy for the load reaching the body.",
+          "Two-stage regulation reduces 862 kPa (125 psi) shop air to a 34 kPa outlet gauge; Creality scans capture deformed geometry for comparison with the prediction model.",
         ],
       },
       {
         title: "Feeding the model",
         points: [
-          "The prediction model takes membrane stiffness and rod bending stiffness as direct inputs, so both were measured on an Instron rather than taken from literature — see the material property testing case study.",
+          "Measured membrane and rod bending stiffness on an Instron as direct model inputs, rather than using literature values; see the material property testing case study.",
         ],
       },
     ],
@@ -594,13 +594,13 @@ const projectData = {
       ],
     },
     summary:
-      "The Olin Vine Robotics Lab's cross-section model takes membrane stiffness and rod bending stiffness as direct inputs, so both had to be measured rather than looked up. I ran two campaigns on an Instron 3345: ASTM D882 tension on 30 film and fabric specimens, and three-point bending on 11 bamboo reinforcing rods — then fitted a plane-stress orthotropic model to the fabric results.",
+      "Measured membrane and rod bending stiffness for the Olin Vine Robotics Lab's cross-section model using an Instron 3345: ASTM D882 tension on 30 film and fabric specimens, three-point bending on 11 bamboo reinforcing rods, and a plane-stress orthotropic fit to the fabric results.",
     highlights: [
-      "Tested the TPU-coated fabric in three directions because its weave makes it orthotropic: MD 76.30 +/- 3.08 MPa, TD 69.89 +/- 2.47 MPa, 45 deg 41.78 +/- 0.99 MPa, with LDPE film at 100.96 +/- 5.00 MPa.",
-      "Scatter stayed under 4.9% of the mean in every group, and the on-axis fabric fits landed at R2 0.99.",
-      "The 45 deg modulus is only ~55% of MD — the signature of a shear-governed off-axis response — and the three measurements fully determine the plane-stress compliance model, whose minimum sits near 46 deg.",
-      "Three-point bending on 11 rods gave 81.7 +/- 7.7 N/mm stiffness, EI = 0.672 +/- 0.063 N.m2 and E = 0.678 +/- 0.055 GPa, every fit above R2 0.999.",
-      "Adapted the standard where the equipment required it: a 100 mm gauge length instead of the 250 mm nominal to fit the available grip separation, with crosshead speeds set by the standard's strain-rate rule.",
+      "Tested TPU-coated fabric in three directions because its weave is orthotropic: MD 76.30 +/- 3.08 MPa, TD 69.89 +/- 2.47 MPa, 45 deg 41.78 +/- 0.99 MPa; LDPE film measured 100.96 +/- 5.00 MPa.",
+      "Every group's scatter stayed under 4.9% of its mean; on-axis fabric fits reached R2 0.99.",
+      "The 45 deg modulus is ~55% of MD, indicating shear-governed off-axis response. Three measurements determine the plane-stress compliance model, with a minimum near 46 deg.",
+      "Three-point bending on 11 rods: 81.7 +/- 7.7 N/mm stiffness, EI = 0.672 +/- 0.063 N.m2, E = 0.678 +/- 0.055 GPa; every fit exceeded R2 0.999.",
+      "Adapted gauge length to available grips: 100 mm versus 250 mm nominal, with crosshead speeds following the standard's strain-rate rule.",
     ],
     tools: [
       "Instron 3345 (5 kN)",
@@ -614,32 +614,32 @@ const projectData = {
       {
         title: "Why measure it at all",
         points: [
-          "The lab's cross-section prediction model consumes the vine body's membrane stiffness and the bamboo rods' bending stiffness directly, so literature values would have propagated straight into every prediction.",
-          "Two materials are in play for vine bodies — single-side TPU-coated fabric and LDPE film — and the reinforced bodies add bamboo rods, so three separate characterisations were needed.",
+          "The lab's cross-section prediction model takes vine membrane and bamboo rod bending stiffness directly, so using literature values would propagate those assumptions into every prediction.",
+          "Vine bodies use single-side TPU-coated fabric or LDPE film; reinforced bodies add bamboo rods, requiring three separate material characterizations.",
         ],
       },
       {
         title: "Membrane tension, ASTM D882",
         points: [
-          "30 specimens: 7 machine-direction, 7 transverse, 8 at 45 deg for the fabric, plus 8 LDPE, which showed no directional dependence in the pilot.",
-          "Specimens ran 23.6-25.4 mm wide inside the standard's 5.0-25.4 mm window; fabric measured 0.19-0.22 mm thick and LDPE 0.10-0.11 mm, all conditioned and tested at 23 +/- 2 C and 50 +/- 10 % RH.",
-          "Crosshead speed followed the standard's strain-rate rule: 12.5 mm/min for fabric to 20% strain, 50 mm/min for LDPE to 200 mm; modulus came from a least-squares fit over the initial linear region.",
+          "30 specimens: 7 machine-direction, 7 transverse, 8 at 45 deg for fabric, plus 8 LDPE, which showed no directional dependence in pilot testing.",
+          "Widths: 23.6-25.4 mm within the standard's 5.0-25.4 mm range. Thickness: fabric 0.19-0.22 mm, LDPE 0.10-0.11 mm. Conditioned and tested at 23 +/- 2 C, 50 +/- 10 % RH.",
+          "Standard strain-rate rule: 12.5 mm/min for fabric to 20% strain, 50 mm/min for LDPE to 200 mm. Modulus uses least-squares fitting of the initial linear region.",
         ],
       },
       {
         title: "Orthotropic model of the fabric",
         points: [
-          "Feeding the three measured moduli into the plane-stress orthotropic compliance relation gives the full directional curve rather than three isolated numbers.",
-          "It is stiffest along MD at 76.3 MPa, slightly softer along TD at 69.9 MPa, and bottoms out near 41.8 MPa at about 46 deg — that curve is what the fabric bodies use in the model.",
-          "The lower fit quality at 45 deg and for LDPE (R2 0.967 and 0.950) reflects mild curvature inside the fit window, which is worth knowing before trusting either number too far.",
+          "The plane-stress orthotropic compliance relation converts three measured moduli into a full directional curve, rather than three isolated values.",
+          "Fabric model inputs: MD maximum 76.3 MPa, TD 69.9 MPa, and minimum near 41.8 MPa at about 46 deg.",
+          "Lower fit quality at 45 deg and for LDPE (R2 0.967 and 0.950) reflects mild curvature in the fit window, limiting confidence in those moduli.",
         ],
       },
       {
         title: "Rod bending",
         points: [
-          "No bending standard covers a 0.25 in wood rod, so the test was defined to be repeatable instead: 73.37 mm support span, 12.5 mm/min crosshead, and 11 rods selected for straightness out of the supplied batch.",
-          "Stiffness came from the initial linear region of each force-deflection curve, roughly the first 1.3-1.8 mm of travel, then converted to EI through the simply-supported central-load relation.",
-          "EI is the quantity the model consumes and the primary result; the derived modulus is reported alongside it for comparison only.",
+          "No bending standard covers a 0.25 in wood rod. The repeatable setup uses a 73.37 mm support span, 12.5 mm/min crosshead, and 11 rods selected for straightness from the supplied batch.",
+          "Fitted each force-deflection curve's initial linear region, roughly 1.3-1.8 mm travel, then converted stiffness to EI using the simply-supported central-load relation.",
+          "EI is the model input and primary result; derived modulus is reported only for comparison.",
         ],
       },
     ],
@@ -660,14 +660,14 @@ const projectData = {
       ],
     },
     summary:
-      "Front-wheel swerve drive system for Project AURA, an autonomous luggage robot with a 300 lb payload. My mechanical focus was the drive and steering package: independent front-wheel steering, chain-driven steering reduction, DC drive motors, robust shafts, and fabricated steel mounts.",
+      "Front-wheel swerve drive for Project AURA, an autonomous luggage robot with a 300 lb payload. My mechanical scope covered independent steering, chain reduction, DC drive motors, robust shafts, and fabricated steel mounts.",
     highlights: [
-      "Owned the mechanical swerve drive direction for a 300 lb-payload luggage robot that still had to steer and drive autonomously under that load.",
-      "Used two front drive modules so the robot could combine drive and steering at the front while preserving maneuverability.",
-      "Designed around Ackermann-aware independent steering to reduce scrub and improve turning behavior under heavy load.",
-      "Packaged MY1016Z6 24 V DC drive motors with a 9:16 sprocket ratio for traction and acceleration under load.",
-      "Steered each front wheel with NEMA 23 stepper motors through an 18:80 sprocket reduction to prioritize steering torque.",
-      "Fabricated wheel housings and motor mounts from 0.25 in A36 mild steel using OMAX waterjet cutting, TIG welding, and paint for corrosion control."
+      "Owned mechanical swerve drive design for a 300 lb-payload luggage robot requiring autonomous driving and steering under load.",
+      "Combined drive and steering in two front modules to preserve maneuverability.",
+      "Used Ackermann-aware independent steering to reduce scrub and improve turning under heavy load.",
+      "Packaged MY1016Z6 24 V DC motors with a 9:16 sprocket ratio for loaded traction and acceleration.",
+      "Used NEMA 23 steppers and an 18:80 sprocket reduction at each front wheel to prioritize steering torque.",
+      "Fabricated 0.25 in A36 mild-steel wheel housings and motor mounts using OMAX waterjet cutting, TIG welding, and corrosion-control paint."
     ],
     tools: [
       "Swerve drive",
@@ -683,45 +683,45 @@ const projectData = {
       {
         title: "Swerve-drive responsibility",
         points: [
-          "My AURA contribution centered on the front-wheel swerve drive system rather than the whole autonomy stack.",
-          "The project goal was a smart autonomous luggage robot, but the mechanical requirement I focused on was making it drive, steer, and carry its 300 lb payload reliably.",
-          "Putting both drive and steering in the front modules created a compact but demanding packaging problem: motors, sprockets, shafts, chains, bearings, and mounts all had to coexist around the wheel."
+          "My contribution centered on front-wheel swerve drive mechanics, not the full autonomy stack.",
+          "For the autonomous luggage robot, my mechanical focus was reliable driving and steering while carrying the full 300 lb payload.",
+          "Combining drive and steering in the front modules created a compact packaging challenge: motors, sprockets, shafts, chains, bearings, and mounts all had to fit around each wheel."
         ]
       },
       {
         title: "Steering geometry and actuation",
         points: [
-          "The two front wheels steer independently so the robot can approach Ackermann steering behavior instead of dragging the wheels through turns.",
-          "Each steering module uses a NEMA 23 stepper motor through an 18:80 sprocket reduction, trading speed for enough torque to steer under load.",
-          "Stepper placement became a real design constraint: moving the steering motors toward the center of the robot increased sprocket spacing and helped reduce chain skipping."
+          "The two front wheels steer independently to approach Ackermann behavior, reducing wheel scrub when turning under load.",
+          "Each NEMA 23 stepper drives an 18:80 sprocket reduction, trading steering speed for torque under load.",
+          "Steering-motor placement constrained the design: moving motors toward the robot's center increased sprocket spacing and helped reduce chain skipping."
         ]
       },
       {
         title: "Drive and load path",
         points: [
-          "The drive system uses two MY1016Z6 24 V DC motors with a 9:16 sprocket ratio, sized for roughly 1 m/s^2 acceleration under payload.",
-          "Wheel position feedback came from LPD3806 encoders mounted to the 3/8 in front wheel shafts, giving the system speed and displacement information.",
-          "The drivetrain relied on heavy-duty solid rubber wheels, eight bearings across the wheel assemblies, and steel shafts with redundancy for expected load cases."
+          "Two MY1016Z6 24 V DC motors and a 9:16 sprocket ratio target roughly 1 m/s^2 acceleration under payload.",
+          "LPD3806 encoders on 3/8 in front wheel shafts provide speed and displacement feedback.",
+          "The drivetrain uses heavy-duty solid rubber wheels, eight bearings across the wheel assemblies, and steel shafts with redundancy for expected load cases."
         ]
       },
       {
         title: "Fabrication and iteration",
         points: [
-          "Wheel housings and motor mounts were made from 0.25 in A36 mild steel because it is strong, weldable, and practical for shop fabrication.",
-          "The parts were waterjetted on an OMAX, TIG welded, and spray painted to prevent rust after fabrication.",
-          "The hardest mechanical issue was packaging the chain, sprockets, wheel, mount, and drive hardware tightly enough for steering without interference; the solution involved testing spacers and shortening mounting hardware."
+          "Used 0.25 in A36 mild steel for strong, weldable wheel housings and motor mounts suited to shop fabrication.",
+          "OMAX-waterjetted, TIG-welded, and spray-painted the parts for corrosion protection.",
+          "The hardest packaging issue was fitting chains, sprockets, wheels, mounts, and drive hardware without steering interference; testing spacers and shortening mounting hardware resolved it."
         ]
       }
     ],
     gallery: [
       { src: "assets/aura-swerve.jpeg", alt: "AURA front-wheel swerve drive system showing independent steering wheel modules", caption: "Swerve drive system" },
-      { src: "assets/aura-chain-tensioner.jpeg", alt: "AURA steering chain tensioner and sprocket package", caption: "Steering chain package" },
-      { src: "assets/aura-swerve-mount.jpeg", alt: "AURA waterjet and welded swerve mount fabrication", caption: "A36 steel mount" },
+      { src: "assets/aura-chain-tensioner.jpeg", thumbnail: "assets/gallery-previews/aura-chain-tensioner-640.webp", alt: "AURA steering chain tensioner and sprocket package", caption: "Steering chain package" },
+      { src: "assets/aura-swerve-mount.jpeg", thumbnail: "assets/gallery-previews/aura-swerve-mount-640.webp", alt: "AURA waterjet and welded swerve mount fabrication", caption: "A36 steel mount" },
       { src: "assets/aura-motor.png", alt: "MY1016Z6 24 volt DC motor used for the AURA drive system", caption: "Drive motor" },
-      { src: "assets/aura-wheels-bearing-shaft.jpeg", alt: "AURA wheel, bearing, and shaft hardware", caption: "Wheel and shaft" },
-      { src: "assets/aura-rotary-encoder.jpeg", alt: "AURA rotary encoder mounted to wheel shaft", caption: "Encoder feedback" },
+      { src: "assets/aura-wheels-bearing-shaft.jpeg", thumbnail: "assets/gallery-previews/aura-wheels-bearing-shaft-640.webp", alt: "AURA wheel, bearing, and shaft hardware", caption: "Wheel and shaft" },
+      { src: "assets/aura-rotary-encoder.jpeg", thumbnail: "assets/gallery-previews/aura-rotary-encoder-640.webp", alt: "AURA rotary encoder mounted to wheel shaft", caption: "Encoder feedback" },
       { src: "assets/aura-battery.jpeg", alt: "AURA 24 volt LiFePO4 battery", caption: "Power package" },
-      { src: "assets/aura-system-diagram.png", alt: "AURA system diagram with Raspberry Pi, sensors, and front wheel drive modules", caption: "System context" }
+      { src: "assets/aura-system-diagram.png", thumbnail: "assets/gallery-previews/aura-system-diagram-640.webp", alt: "AURA system diagram with Raspberry Pi, sensors, and front wheel drive modules", caption: "System context" }
     ]
   },
   lineFollower: {
@@ -729,37 +729,37 @@ const projectData = {
     title: "LineFollower robot",
     image: "assets/line-follower-cover.webp",
     summary:
-      "Compact line-following robot packaging an Arduino Mega, drive hardware, sensors, and dense wiring into a small mobile platform. Built as a two-week project in Olin's Principles of Integrated Engineering course.",
+      "Palm-size line-following robot integrating an Arduino Mega, drive hardware, sensors, and dense wiring. Built in two weeks for Olin's Principles of Integrated Engineering course.",
     highlights: [
       "Packaged an Arduino Mega, motor drivers, battery, sensors, and drive into a palm-size chassis.",
       "Ran stable low-speed line tracking with front-mounted sensing and a compact two-wheel differential drive.",
-      "Kept wire runs short and serviceable so the build stayed debuggable after assembly.",
-      "Tuned sensor thresholds, driver wiring, and drive balance into repeatable tracking on the assembled robot.",
-      "Demonstrates hands-on electromechanical integration — controls, packaging, power, and build — at small scale."
+      "Kept wiring short and serviceable for debugging after assembly.",
+      "Tuned sensor thresholds, driver wiring, and drive balance for repeatable tracking.",
+      "Integrated controls, packaging, power, and fabrication in a small electromechanical platform."
     ],
     tools: ["Arduino Mega", "Motor drivers", "Sensor packaging", "Embedded wiring", "Mobile robotics"],
     details: [
       {
         title: "System architecture",
         points: [
-          "Built the robot around an Arduino Mega with front-mounted sensing, motor driver hardware, a compact battery package, and two-wheel drive.",
-          "The project required packaging electronics visibly and cleanly rather than hiding wiring in an oversized chassis.",
-          "The physical layout keeps the sensor line, wheelbase, and center of mass close enough for stable low-speed tracking."
+          "Combined Arduino Mega, front-mounted sensing, motor drivers, compact battery, and two-wheel drive.",
+          "Kept electronics visible and wiring orderly within a compact chassis.",
+          "Placed the sensor line, wheelbase, and center of mass close together for stable low-speed tracking."
         ]
       },
       {
         title: "Mechanical packaging",
         points: [
-          "Used a small chassis footprint with visible controller, wiring, and drive modules stacked around the wheelbase.",
-          "The main packaging challenge was fitting many electrical interfaces into very limited space.",
-          "The build rewards short wire runs, clear connector routing, and accessible components for iteration."
+          "Stacked the visible controller, wiring, and drive modules around a small wheelbase.",
+          "Fit numerous electrical interfaces into limited space.",
+          "Kept wire runs short, connector routing clear, and components accessible for iteration."
         ]
       },
       {
         title: "Status",
         points: [
-          "Built as a complete package: Arduino Mega, dual motor drivers, IR reflectance sensing, and power on one palm-size chassis.",
-          "The layout keeps wire runs short and connectors accessible, so sensors and drive modules can be swapped between iterations."
+          "Built a palm-size package with Arduino Mega, dual motor drivers, IR reflectance sensing, and power.",
+          "Short wiring and accessible connectors allow sensor and drive-module swaps between iterations."
         ]
       }
     ],
@@ -774,46 +774,46 @@ const projectData = {
     title: "Pool Sniper",
     image: "assets/pool-sniper.webp",
     summary:
-      "Accessible pool cue launcher for beginners and users with physical or visual limitations, using laser aiming, variable-force release, and a chain-driven powertrain.",
+      "Accessible pool cue launcher for beginners and users with physical or visual limitations, combining laser aiming, variable-force release, and chain drive.",
     highlights: [
-      "Built a mechanism strong enough to break while still allowing variable shot force.",
-      "Used surgical tubing as the energy storage element and a sliding trigger for adjustable release position.",
-      "Added laser aiming and a simple switch interface to reduce aiming difficulty.",
+      "Built for break-shot power with adjustable shot force.",
+      "Used surgical tubing for energy storage and a sliding trigger for adjustable release.",
+      "Added laser aiming and a simple switch to ease shot alignment.",
       "Used a 2:1 sprocket and gear chain drive with rack-and-pinion cue pullback.",
-      "Iterated around wiring, compact packaging, plasma-cut tolerance, and long-part lathe challenges."
+      "Iterated on wiring, compact packaging, plasma-cut tolerances, and long-part lathe work."
     ],
     tools: ["Rack and pinion", "Chain drive", "Surgical tubing", "Laser pointer", "Waterjet", "Lathe", "Tensioner design"],
     details: [
       {
         title: "Objective",
         points: [
-          "Designed Pool Sniper to make pool playable for beginners, disabled users, and people who have trouble sighting or striking a cue consistently.",
-          "The device needed enough stored energy to break, adjustable shot strength for regular play, and a compact form factor.",
-          "The goal was not only to automate the shot, but to preserve user control through aiming and force selection."
+          "Designed for beginners, disabled users, and people who struggle to sight or strike a cue consistently.",
+          "Required enough stored energy to break, adjustable shot strength, and compact packaging.",
+          "Preserved user control through aiming and force selection while automating the shot."
         ]
       },
       {
         title: "Launch mechanism",
         points: [
-          "Used surgical tubing to store energy and a sliding trigger so the cue can release at different pullback distances.",
-          "A rack-and-pinion mechanism pulls the cue back while the trigger position sets the final launch force.",
-          "A chain-drive powertrain and sprocket ratio were used to package the motion and generate enough pull force."
+          "Surgical tubing stores energy; a sliding trigger releases the cue at adjustable pullback distances.",
+          "Rack-and-pinion pullback loads the cue; trigger position sets launch force.",
+          "Chain drive and sprocket ratio package the motion and provide sufficient pull force."
         ]
       },
       {
         title: "Aiming and usability",
         points: [
-          "Added a laser pointer and two-way switch so the user can line up shots without traditional pool stance or sighting skill.",
-          "Kept the device compact and hand-operable rather than building a large table-mounted machine.",
-          "The sliding trigger gives a physical, intuitive control for shot power instead of a hidden software parameter."
+          "Laser aiming and a two-way switch enable shots without traditional pool stance or sighting skill.",
+          "Kept the device compact and hand-operable.",
+          "The sliding trigger provides intuitive, physical shot-power control instead of a hidden software parameter."
         ]
       },
       {
         title: "Build challenges",
         points: [
-          "Compact packaging made wire routing and component access difficult, so wire length and fit checks became part of the design process.",
-          "Started with plasma-cut plates; the tolerances came out uncontrolled, so the parts moved to the waterjet for the final build.",
-          "Long cue machining still forced manual finishing, and practical shop iteration carried the mechanism to functional."
+          "Tight packaging required wire-length planning and fit checks to preserve routing and component access.",
+          "Switched from plasma-cut plates with uncontrolled tolerances to waterjet parts for the final build.",
+          "Long cue machining required manual finishing; shop iteration brought the mechanism to working condition."
         ]
       }
     ],
@@ -828,46 +828,46 @@ const projectData = {
     title: "Guitar education kit",
     image: "assets/education-kit.webp",
     summary:
-      "Affordable STEAM hardware kit designed for middle and high school assembly, tested with students, parents, teachers, and community educators.",
+      "Affordable STEAM hardware kit for middle and high school assembly, tested with students, parents, teachers, and community educators.",
     highlights: [
-      "Targeted a roughly $100 kit cost to make hands-on engineering education more accessible.",
+      "Targeted roughly $100 per kit to broaden access to hands-on engineering education.",
       "Used letter-coded screws, color-coded solderless wiring, preassembled shielding, and written instructions.",
       "Tested with younger students, 8th/9th graders, parents, teachers, and community educators.",
-      "Observed older students completing assembly in about 45 minutes while still finding the kit engaging.",
-      "Used feedback to increase challenge level, reduce wiring intimidation, and improve instruction clarity."
+      "Older students assembled the kit in about 45 minutes and remained engaged.",
+      "Used feedback to raise challenge level, ease wiring concerns, and clarify instructions."
     ],
     tools: ["User testing", "Market research", "3D printing", "Electronics", "Instruction design", "Product iteration"],
     details: [
       {
         title: "Product objective",
         points: [
-          "Built the kit around a simple promise: students should be able to assemble a working hardware product while learning engineering concepts.",
-          "The team targeted affordability for under-resourced programs, with a roughly $100 cost goal.",
-          "The final product needed to be more than a toy; it had to sound good enough and survive classroom handling."
+          "Designed for students to assemble working hardware while learning engineering concepts.",
+          "Targeted under-resourced programs with a roughly $100 cost goal.",
+          "Required good sound and durability for classroom handling."
         ]
       },
       {
         title: "Design choices",
         points: [
           "Used a 3D printed body, affordable electronics, preassembled copper shielding, and solderless color-coded wiring.",
-          "Letter-coded screws and matching written instructions reduced confusion for first-time builders.",
-          "Pre-adjusting the neck, bridge, and pickups improved the chance that the instrument would play correctly after assembly."
+          "Letter-coded screws and matching instructions reduced first-time builder confusion.",
+          "Pre-adjusted neck, bridge, and pickups to improve playability after assembly."
         ]
       },
       {
         title: "Customer experiments",
         points: [
-          "Interviewed at least five children and parents; the parent research tested whether the build experience or the final product value mattered more in the buying decision.",
-          "Two 8-year-olds ran assembly attempts: they liked the customization but found some wiring intimidating and wanted a clearer tool and setup experience.",
-          "Two 15-year-old high schoolers found the kit appropriately challenging and completed assembly in roughly 45 minutes.",
-          "All Saints Church in Worcester has expressed interest in the kit for its Afternoon Tunes charity music program."
+          "Interviewed at least five children and parents; parent research compared the importance of the build experience and finished product in purchasing.",
+          "Two 8-year-olds liked customization but found some wiring intimidating and wanted clearer tool and setup guidance.",
+          "Two 15-year-old high schoolers found the challenge appropriate and assembled the kit in roughly 45 minutes.",
+          "All Saints Church in Worcester expressed interest for its Afternoon Tunes charity music program."
         ]
       },
       {
         title: "Learning",
         points: [
-          "The strongest feedback was that the kit should lean into STEAM learning, not just imitate a cheap instrument.",
-          "Teachers and community-program feedback pushed the design toward durability, instruction quality, and class-session feasibility."
+          "Feedback favored STEAM learning over imitating a cheap instrument.",
+          "Teacher and community-program feedback emphasized durability, instruction quality, and feasibility within class sessions."
         ]
       }
     ],
@@ -889,10 +889,10 @@ const projectData = {
     summary:
       "Walnut and maple Telecaster-style electric guitar built through material prep, ShopBot CNC routing, drilling, sanding, finishing, and electronics installation.",
     highlights: [
-      "Glued smaller walnut pieces into a usable blank to control cost while preserving material quality.",
-      "CNC-routed body pockets and wiring channels on a ShopBot after planning the toolpath and hold-down strategy.",
-      "Used laser-cut templates to validate drilling locations and pocket geometry.",
-      "Created a temporary paint setup and applied a multi-layer white finish over more than a week.",
+      "Glued smaller walnut pieces into a blank, controlling cost while preserving material quality.",
+      "ShopBot CNC-routed body pockets and wiring channels after planning toolpaths and hold-downs.",
+      "Validated drilling locations and pocket geometry with laser-cut templates.",
+      "Applied a multi-layer white finish in a temporary paint setup over more than a week.",
       "Integrated the electronics package after body fabrication and finishing."
     ],
     tools: ["ShopBot CNC", "Woodworking", "Laser-cut templates", "Finishing", "Electronics", "Fixture planning"],
@@ -900,32 +900,32 @@ const projectData = {
       {
         title: "Material strategy",
         points: [
-          "Built the body from walnut and maple, using smaller walnut pieces glued into a blank to keep cost under control.",
-          "Used Titebond III and overnight clamping so the blank was ready for CNC operations.",
-          "The material choice made the project a real fabrication exercise instead of a kit-only assembly."
+          "Built the walnut and maple body using smaller walnut pieces glued into a cost-effective blank.",
+          "Used Titebond III and overnight clamping before CNC operations.",
+          "Fabricated from raw materials rather than assembling a kit."
         ]
       },
       {
         title: "CNC and post-processing",
         points: [
-          "Used a ShopBot router to cut the body outline, electronics pocket, and wiring channels.",
-          "Pre-drilled wiring paths and checked pocket geometry before moving into sanding and finishing.",
-          "Used laser-cut templates for hole placement, reducing the risk of hand-drilling errors after the expensive CNC step."
+          "ShopBot-routed the body outline, electronics pocket, and wiring channels.",
+          "Pre-drilled wiring paths and checked pockets before sanding and finishing.",
+          "Laser-cut hole templates reduced hand-drilling errors after CNC work."
         ]
       },
       {
         title: "Finish and electronics",
         points: [
-          "Sanded the body and edges, then applied a multi-layer white finish in a temporary paint-tent setup.",
-          "The finishing process took more than a week because paint quality depended on surface prep, dry time, and repeat coats.",
-          "Installed the electronics package after the body was finished, turning the fabricated part into a playable system."
+          "Sanded body and edges, then applied a multi-layer white finish in a temporary paint tent.",
+          "Surface preparation, drying, and repeat coats extended finishing beyond a week.",
+          "Installed electronics after finishing to make the guitar playable."
         ]
       },
       {
         title: "Status",
         points: [
-          "Finished, strung, and playable — working pickups, controls, and output jack on the walnut/maple body.",
-          "Full process record: glued blank, ShopBot CNC routing, laser-cut drilling templates, multi-coat white finish, electronics install."
+          "Finished, strung, and playable, with working pickups, controls, and output jack on the walnut/maple body.",
+          "Documented glue-up, ShopBot routing, laser-cut drilling templates, multi-coat white finish, and electronics installation."
         ]
       }
     ],
@@ -944,45 +944,45 @@ const projectData = {
     title: "FTC robot",
     image: "assets/cover-ftc-robot.webp",
     summary:
-      "Senior Mechanical Engineer work on Pioneer Robotics FTC Team 12589 during a Massachusetts championship-winning season with a cone intake and deposit robot.",
+      "Senior Mechanical Engineer, Pioneer Robotics FTC Team 12589: cone intake and deposit robot for a Massachusetts championship-winning season.",
     highlights: [
       "Supported the 2022-2023 cone intake and deposit robot as Senior Mechanical Engineer.",
-      "Contributed to linkage extension, claw and arm intake, string-driven slide, rotational deposit, and mecanum drivetrain systems.",
+      "Contributed to linkage extension, claw and arm intake, string-driven slide, rotational deposit, and mecanum drivetrain.",
       "Robot won the Massachusetts Championship Tournament Winning Alliance.",
       "Team also earned Motivate and Gracious Professionalism awards.",
-      "Autonomous performance used odometry and encoders for position tracking and repeatability."
+      "Used odometry and encoders for repeatable autonomous position tracking."
     ],
     tools: ["FTC robotics", "Mecanum drive", "Odometry", "String-driven slides", "Linkage design", "Competition testing"],
     details: [
       {
         title: "Role and season",
         points: [
-          "Worked as Senior Mechanical Engineer on Pioneer Robotics FTC Team 12589 at Saint John's.",
-          "The robot was built for the 2022-2023 cone game, with intake, transfer, lift, and deposit functions.",
-          "The season ended with a Massachusetts Championship Tournament Winning Alliance result and additional team awards."
+          "Senior Mechanical Engineer on Pioneer Robotics FTC Team 12589 at Saint John's.",
+          "Built for the 2022-2023 cone game with intake, transfer, lift, and deposit functions.",
+          "Earned Massachusetts Championship Tournament Winning Alliance and additional team awards."
         ]
       },
       {
         title: "Mechanisms",
         points: [
-          "Used a linkage extension to reduce unnecessary movement during autonomous routines.",
-          "Built claw and arm intake hardware to collect cones and move them into the scoring path.",
-          "Integrated a string-driven slide and rotational deposit mechanism for vertical scoring."
+          "Used linkage extension to reduce unnecessary autonomous movement.",
+          "Built claw and arm intake hardware to collect cones and transfer them for scoring.",
+          "Integrated string-driven slide and rotational deposit mechanisms for vertical scoring."
         ]
       },
       {
         title: "Drive and autonomous",
         points: [
-          "Used a belt-drive mecanum drivetrain for field maneuverability.",
-          "Combined odometry and encoders so autonomous paths had position feedback instead of dead reckoning alone.",
-          "The mechanical design had to support repeated competition cycles, quick repair, and driver practice."
+          "Used belt-drive mecanum for field maneuverability.",
+          "Combined odometry and encoders for autonomous position feedback beyond dead reckoning alone.",
+          "Designed for repeated competition cycles, quick repairs, and driver practice."
         ]
       },
       {
         title: "Result",
         points: [
-          "This project adds early competition robotics evidence: fast iteration, subsystem integration, and performance under event pressure.",
-          "It also supports the broader portfolio story of moving from FTC mechanisms into FSAE vehicle systems."
+          "Demonstrates fast iteration, subsystem integration, and performance under competition pressure.",
+          "Established mechanism experience that carried into FSAE vehicle systems."
         ]
       }
     ],

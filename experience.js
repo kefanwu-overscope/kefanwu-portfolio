@@ -14,7 +14,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
-import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=exp-adaptive-20260907";
+import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=studio-polish-20260907";
 import { AdaptiveFrameClock, frameAlpha } from "./experience-timing.js?v=exp-adaptive-20260907";
 import { createStudioLoader } from "./experience-loader.js?v=exp-adaptive-20260907";
 import { createHDRService, createHDRTexture } from "./experience-hdr.js?v=exp-adaptive-20260907";
@@ -61,6 +61,22 @@ const startupUI = createStudioLoader(loaderEl);
 const revealScene = () => document.documentElement.classList.add("exp-ready");
 const easeInOutCubic = (x) =>
   x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+
+// Share one listener while hidden; downloads/worker decoding can continue.
+let visibleWait = null;
+function waitForVisible() {
+  if (!document.hidden) return Promise.resolve();
+  if (!visibleWait) visibleWait = new Promise((resolve) => {
+    const resume = () => {
+      if (document.hidden) return;
+      document.removeEventListener("visibilitychange", resume);
+      visibleWait = null;
+      resolve();
+    };
+    document.addEventListener("visibilitychange", resume);
+  });
+  return visibleWait;
+}
 
 const COL = {
   bg: 0x0b0c0e, // matches the main site's near-black
@@ -402,12 +418,12 @@ async function initScene(canvas) {
   manager.onProgress = (url, loaded, total) => {
     startupUI.update({ loaded, total, phase: "loading" });
   };
-  let revealed = false;
+  let revealed = false, revealPending = false;
   // one-shot: set when a flow (deep link) skips the normal drag-hint timing;
   // checked once in closePanel() so the hint still surfaces exactly once
   let pendingDragHintOnClose = false;
   const doReveal = () => {
-    if (revealed) return;
+    if (revealed || document.hidden || renderer.getContext().isContextLost()) return;
     revealed = true;
     readiness.revealed = true;
     loader.enabled = true;
@@ -427,6 +443,13 @@ async function initScene(canvas) {
       const fadeFallback = setTimeout(hideStatus, prefersReducedMotion ? 0 : 1000);
     }
     revealScene();
+    // Asset registration precedes GPU preparation. Enable interaction only
+    // after a completed frame, so startup cannot overwrite a user's selection.
+    const dock = document.getElementById("exp-dock");
+    if (dock) dock.hidden = false;
+    const lightToggle = document.getElementById("exp-light-toggle");
+    if (lightToggle) lightToggle.disabled = false;
+    updateLightingUI();
     // deep link: experience.html#<projectKey> flies straight to that exhibit
     // (the homepage case-study panels link here) — visitors with a specific
     // destination skip the cinematic intro and keep it for a later visit
@@ -440,7 +463,7 @@ async function initScene(canvas) {
       pendingDragHintOnClose = true; // panel opens immediately; show the hint once they close it
       if (!prefersReducedMotion) {
         runBootIntro();
-        setTimeout(() => focusHotspot(dlPivot), 650);
+        schedulePanelWork(() => focusHotspot(dlPivot), 650);
       } else {
         focusHotspot(dlPivot);
       }
@@ -1444,8 +1467,10 @@ async function initScene(canvas) {
     // CPU decoding runs concurrently in bounded workers. Only texture/GPU
     // preparation enters the main-thread queue shared with model placement.
     const promise = decodeLighting(url, !isProbe).then((pixels) => lightQueue.add(async () => {
+      if (document.hidden) await waitForVisible();
       const texture = pixels ? createHDRTexture(THREE, pixels) : await loadHDRFallback(url);
       await yieldToBrowser();
+      if (document.hidden) await waitForVisible();
       if (isProbe) {
         texture.mapping = THREE.EquirectangularReflectionMapping;
         const generator = new THREE.PMREMGenerator(renderer);
@@ -1510,6 +1535,13 @@ async function initScene(canvas) {
       qualityControl.setAttribute("aria-busy", String(lightingBusy));
     }
     if (qualityStatus) qualityStatus.textContent = message || (lightingBusy ? "Loading lighting" : "");
+    const lightToggle = document.getElementById("exp-light-toggle");
+    if (lightToggle) {
+      lightToggle.setAttribute("aria-pressed", String(requestedLightsOn));
+      lightToggle.setAttribute("aria-busy", String(lightingBusy));
+      lightToggle.setAttribute("aria-label", requestedLightsOn ? "Turn room lights off" : "Turn room lights on");
+      lightToggle.querySelector("[data-light-label]").textContent = lightingBusy ? "Loading" : "Lights";
+    }
     deskLamp.userData.hotspot.label = lightingBusy ? "Loading room lights" : "Room lights";
   }
   async function syncLighting() {
@@ -1546,14 +1578,17 @@ async function initScene(canvas) {
     }
   }
   function toggleRoomLights() {
+    if (!readiness.revealed) return;
     requestedLightsOn = !requestedLightsOn;
     sndClick();
     void syncLighting();
   }
   qualityControl?.addEventListener("change", () => {
+    if (!readiness.revealed) { updateLightingUI(); return; }
     lightQuality = qualityControl.value === "4k" ? "4k" : "2k";
     void syncLighting();
   });
+  document.getElementById("exp-light-toggle")?.addEventListener("click", toggleRoomLights);
   let initialLightingReady = Promise.resolve();
   if (USE_BAKED) {
     applyLightState(false);
@@ -2050,11 +2085,13 @@ async function initScene(canvas) {
     });
     lastCameraPosition.copy(camera.position);
     lastCameraQuaternion.copy(camera.quaternion);
-    if (!readiness.firstFrame && !renderer.getContext().isContextLost()) {
+    if (!readiness.revealed && !revealPending && !renderer.getContext().isContextLost()) {
       readiness.firstFrame = true;
+      revealPending = true;
       // The completed frame must reach a paint opportunity before the overlay leaves.
       requestAnimationFrame(() => {
-        if (!renderer.getContext().isContextLost()) doReveal();
+        revealPending = false;
+        if (!document.hidden && !renderer.getContext().isContextLost()) doReveal();
       });
     }
 
@@ -2079,6 +2116,26 @@ async function initScene(canvas) {
   const paperEl = document.getElementById("exp-paper");
   const backdropEl = document.getElementById("exp-backdrop");
   const labelEl = document.getElementById("exp-label");
+  const lightboxEl = document.getElementById("exp-lightbox");
+  let panelGeneration = 0, panelReturnFocus = null;
+  const panelTimers = new Set();
+  for (const dialog of [panelEl, paperEl, lightboxEl]) {
+    if (dialog) { dialog.inert = true; dialog.tabIndex = -1; }
+  }
+  function invalidatePanelWork() {
+    panelGeneration++;
+    for (const timer of panelTimers) clearTimeout(timer);
+    panelTimers.clear();
+    if (panelEl) { panelEl.style.opacity = ""; panelEl.style.transition = ""; }
+    return panelGeneration;
+  }
+  function schedulePanelWork(callback, delay, generation = panelGeneration) {
+    const timer = setTimeout(() => {
+      panelTimers.delete(timer);
+      if (generation === panelGeneration) callback();
+    }, delay);
+    panelTimers.add(timer);
+  }
   /* ---- résumé pickup: the REAL 3D sheet flies to a camera-facing pose ----
      The camera approach and the lift overlap (one continuous reach-and-pick-
      up); the DOM sheet cross-fades in only once the paper has settled at the
@@ -2299,16 +2356,40 @@ async function initScene(canvas) {
     while (o && !o.userData.hotspot) o = o.parent;
     return o || null;
   }
+  // Coalesce high-polling mice into one layout read and pick per animation frame.
+  let hoverFrame = 0, pendingPointer = null;
+  function clearPointerHover() {
+    if (hoverFrame) cancelAnimationFrame(hoverFrame);
+    hoverFrame = 0;
+    pendingPointer = null;
+    setHover(null);
+  }
   renderer.domElement.addEventListener("pointermove", (ev) => {
-    updatePointer(ev);
-    if (panelOpen || paperReturning || flight) return;
-    setHover(pickHotspot()); // the lamp is a pseudo-hotspot -> label + cursor for free
-  });
+    if (panelOpen || paperReturning || flight || ev.buttons) {
+      clearPointerHover();
+      return;
+    }
+    pendingPointer = { clientX: ev.clientX, clientY: ev.clientY };
+    if (hoverFrame) return;
+    hoverFrame = requestAnimationFrame(() => {
+      hoverFrame = 0;
+      const point = pendingPointer;
+      pendingPointer = null;
+      if (!point || panelOpen || paperReturning || flight) return;
+      updatePointer(point);
+      setHover(pickHotspot());
+      // A newly opened label also needs the current pointer position.
+      if (labelEl && !labelEl.hidden) {
+        labelEl.style.left = point.clientX + "px";
+        labelEl.style.top = point.clientY - 14 + "px";
+      }
+    });
+  }, { passive: true });
   // the hover card would otherwise stay stuck when the pointer exits the
   // canvas (topbar, panel, window edge) without another canvas pointermove
-  renderer.domElement.addEventListener("pointerleave", () => setHover(null));
-  renderer.domElement.addEventListener("pointercancel", () => setHover(null));
-  window.addEventListener("blur", () => setHover(null));
+  renderer.domElement.addEventListener("pointerleave", clearPointerHover);
+  renderer.domElement.addEventListener("pointercancel", clearPointerHover);
+  window.addEventListener("blur", clearPointerHover);
   renderer.domElement.addEventListener("pointerdown", (ev) => { downXY = [ev.clientX, ev.clientY]; });
   renderer.domElement.addEventListener("pointerup", (ev) => {
     if (!downXY) return;
@@ -2327,6 +2408,7 @@ async function initScene(canvas) {
   });
 
   function focusHotspot(root) {
+    if (!readiness.revealed || paperReturning) return;
     const hs = root.userData.hotspot;
     const html =
       hs.action === "resume"
@@ -2335,6 +2417,8 @@ async function initScene(canvas) {
           ? projectHTML(window.projectData[hs.key])
           : null;
     if (!html) return; // hover-only hotspots (skill wall) keep their card
+    if (!panelOpen) panelReturnFocus = document.activeElement;
+    const generation = invalidatePanelWork();
     setHover(null);
 
     const c = hs.center;
@@ -2350,7 +2434,7 @@ async function initScene(canvas) {
     // equals -(panel width fraction). d=1.0 matches the focusPos distance.
     const right = new THREE.Vector3(0, 1, 0).cross(dir).normalize();
     const panelFrac = hs.action === "resume" ? 0 :
-      Math.min(Math.min(window.innerWidth * 0.94, 900) / window.innerWidth, 0.55);
+      Math.min((panelEl?.getBoundingClientRect().width || 700) / window.innerWidth, 0.55);
     const lookOff = panelFrac * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect;
     const focusLook = c.clone().addScaledVector(right, lookOff);
 
@@ -2364,6 +2448,8 @@ async function initScene(canvas) {
     }
     focusedPivot = hs.key ? root : null;
     currentProjectKey = hs.key || null;
+    const exhibitSelect = document.getElementById("exp-project-select");
+    if (exhibitSelect) exhibitSelect.value = currentProjectKey || "";
     sndClick();
     sndWhoosh();
     // Lay out the heavy DOM résumé and raster proxy during the camera move,
@@ -2386,7 +2472,7 @@ async function initScene(canvas) {
         beginPaperLift(PAPER_LIFT_DELAY_MS);
       } else {
         startFlight(focusPos, focusLook, 850);
-        setTimeout(() => openPanel(html), 680);
+        schedulePanelWork(() => openPanel(html, generation), 680, generation);
       }
     }
   }
@@ -2410,7 +2496,6 @@ async function initScene(canvas) {
       const key = PROJECT_ORDER[(idx + dir * step + n * step) % n];
       const pivot = HOTSPOTS.find((h) => h.userData.hotspot.key === key);
       if (pivot) {
-        panelOpen = false;
         if (focusedPivot) focusedPivot.rotation.y = 0;
         recenterPivot(focusedPivot);
         focusedPivot = null;
@@ -2420,11 +2505,14 @@ async function initScene(canvas) {
       }
     }
   }
-  function openPanel(html) {
-    if (!panelEl) return;
+  function openPanel(html, generation = panelGeneration) {
+    if (!panelEl || generation !== panelGeneration || !readiness.revealed) return;
+    if (!panelOpen) panelReturnFocus = document.activeElement;
     panelOpen = true;
+    setOverlayInert(true);
     dismissClickHint();
     const applyPanelContent = () => {
+      if (generation !== panelGeneration || !panelOpen) return;
       panelEl.innerHTML = html;
       // prev / next tour bar (projects only — the resume sheet has no nav)
       if (currentProjectKey) {
@@ -2442,10 +2530,10 @@ async function initScene(canvas) {
       panelEl.scrollTop = 0;
       panelEl.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", closePanel));
       document.documentElement.classList.add("exp-panel-open");
+      setDialogInteractive(panelEl, true);
       setHover(null);
       // keyboard users land on the close button, not lost in the canvas
-      const closeBtn = panelEl.querySelector(".exp-panel__close");
-      if (closeBtn) closeBtn.focus();
+      focusDialog(panelEl, panelEl.querySelector(".exp-panel__close"));
     };
     if (isStepTransition) {
       // Prev/Next: fade the outgoing content out, swap, then fade in —
@@ -2453,21 +2541,22 @@ async function initScene(canvas) {
       isStepTransition = false;
       panelEl.style.transition = "opacity 150ms";
       panelEl.style.opacity = "0";
-      setTimeout(() => {
+      schedulePanelWork(() => {
         applyPanelContent();
         panelEl.style.transition = "opacity 200ms";
         panelEl.style.opacity = "1";
-        setTimeout(() => {
+        schedulePanelWork(() => {
           panelEl.style.opacity = "";
           panelEl.style.transition = "";
-        }, 200);
-      }, 150);
+        }, 200, generation);
+      }, 150, generation);
       return;
     }
     applyPanelContent();
   }
   function preparePaperContent(html, pivot) {
     if (!paperEl) return;
+    setDialogInteractive(paperEl, false); // pre-painted for the lift, still inaccessible
     const rootClass = document.documentElement.classList;
     rootClass.remove("exp-paper-active", "exp-paper-open");
 
@@ -2652,12 +2741,14 @@ async function initScene(canvas) {
   if (document.fonts && document.fonts.ready) {
     // (re)build once the real webfonts are in — a snapshot taken against
     // fallback-font layout must not survive the reflow
-    document.fonts.ready.then(() => {
+    document.fonts.ready.then(async () => {
+      if (document.hidden) await waitForVisible();
       if (sheetSnap) sheetSnap.width = -1;
       applySheetTexture();
     });
   } else {
-    applySheetTexture();
+    if (document.hidden) void waitForVisible().then(applySheetTexture);
+    else applySheetTexture();
   }
 
   // Project the DOM sheet's on-screen rect into camera space: at what
@@ -2761,12 +2852,12 @@ async function initScene(canvas) {
     if (!paperEl || gen !== paperAnimGen || !panelOpen) return;
     const rootClass = document.documentElement.classList;
     rootClass.add("exp-paper-active", "exp-paper-open");
+    setDialogInteractive(paperEl, true);
+    focusDialog(paperEl, paperEl.querySelector(".exp-sheet__close"));
     const finishSwap = () => {
       if (gen !== paperAnimGen || !panelOpen) return;
       // fully covered by the opaque DOM sheet now — stop rendering it
       if (activePaperPivot) activePaperPivot.visible = false;
-      const closeBtn = paperEl.querySelector(".exp-sheet__close");
-      if (closeBtn) closeBtn.focus();
     };
     if (prefersReducedMotion) finishSwap();
     else setTimeout(finishSwap, PAPER_SWAP_MS);
@@ -2834,14 +2925,50 @@ async function initScene(canvas) {
     // under the modal into the scene behind the backdrop
     const topbar = document.querySelector(".exp-topbar");
     if (topbar) topbar.inert = on;
+    const dock = document.getElementById("exp-dock");
+    if (dock) dock.inert = on;
+    renderer.domElement.inert = on;
     renderer.domElement.tabIndex = on ? -1 : 0;
+  }
+  function setDialogInteractive(dialog, on) {
+    if (!dialog) return;
+    dialog.inert = !on;
+    if (on) dialog.setAttribute("aria-modal", "true");
+  }
+  function dialogTabStops(dialog) {
+    return Array.from(dialog.querySelectorAll("button, a[href], input, select, textarea, [tabindex]"))
+      .filter((node) => node.tabIndex >= 0 && !node.disabled && !node.closest("[inert]") &&
+        node.getClientRects().length > 0 && getComputedStyle(node).visibility !== "hidden");
+  }
+  function focusDialog(dialog, preferred = null) {
+    if (!dialog || dialog.inert) return;
+    (preferred || dialogTabStops(dialog)[0] || dialog).focus({ preventScroll: true });
+  }
+  function restoreFocus(target, fallback = renderer.domElement) {
+    const usable = target?.isConnected && target.tabIndex >= 0 && !target.disabled &&
+      !target.closest("[inert]") && target.getClientRects().length > 0;
+    (usable ? target : fallback)?.focus({ preventScroll: true });
+  }
+  function activeDialog() {
+    const classes = document.documentElement.classList;
+    if (classes.contains("exp-lightbox-open") && lightboxEl && !lightboxEl.inert) return lightboxEl;
+    if (classes.contains("exp-paper-open") && paperEl && !paperEl.inert) return paperEl;
+    if (classes.contains("exp-panel-open") && panelEl && !panelEl.inert) return panelEl;
+    return null;
   }
   function closePanel() {
     if (!panelOpen) return;
+    invalidatePanelWork();
+    isStepTransition = false;
+    closeLightbox(false);
     const rootClass = document.documentElement.classList;
     const closingPaperPivot = activePaperPivot;
     const closeGen = ++paperAnimGen;
     panelOpen = false;
+    setDialogInteractive(panelEl, false);
+    setDialogInteractive(paperEl, false);
+    const exhibitSelect = document.getElementById("exp-project-select");
+    if (exhibitSelect) exhibitSelect.value = "";
     setOverlayInert(false);
     if (focusBoost) { // S8: hand the night grade back
       focusBoost = false;
@@ -2851,10 +2978,11 @@ async function initScene(canvas) {
     focusedPivot = null;
     sndWhoosh(0.4);
     rootClass.remove("exp-panel-open");
+    restoreFocus(panelReturnFocus);
+    panelReturnFocus = null;
 
     const returnToRoom = () => {
       if (pendingDragHintOnClose) { pendingDragHintOnClose = false; showDragHint(); }
-      renderer.domElement.focus(); // return focus to the stage once the overlay is gone
       if (prefersReducedMotion) {
         camera.position.copy(REST_POS);
         controls.target.copy(REST_TARGET);
@@ -2943,13 +3071,17 @@ async function initScene(canvas) {
     paperReturning = false;
     returnToRoom();
   }
-  // gallery lightbox: click a panel shot to enlarge; browse with arrows
-  const lightboxEl = document.getElementById("exp-lightbox");
-  let lbShots = [], lbIdx = 0;
-  function closeLightbox() {
+  // Real buttons share pointer/keyboard activation and retain their return focus.
+  let lbShots = [], lbIdx = 0, lbReturnFocus = null;
+  function closeLightbox(returnFocus = true) {
+    if (!document.documentElement.classList.contains("exp-lightbox-open")) return;
     document.documentElement.classList.remove("exp-lightbox-open");
+    setDialogInteractive(lightboxEl, false);
+    setDialogInteractive(panelEl, panelOpen && !activePaperPivot);
+    if (returnFocus) restoreFocus(lbReturnFocus, panelEl?.querySelector(".exp-panel__close"));
+    lbReturnFocus = null;
   }
-  function renderLightbox() {
+  function renderLightbox(focusAction = "close") {
     const s = lbShots[lbIdx];
     if (!s) return;
     lightboxEl.innerHTML =
@@ -2958,22 +3090,32 @@ async function initScene(canvas) {
         ? `<button type="button" class="exp-lightbox__btn exp-lightbox__prev" data-lb="-1" aria-label="Previous image">&lsaquo;</button>` +
           `<button type="button" class="exp-lightbox__btn exp-lightbox__next" data-lb="1" aria-label="Next image">&rsaquo;</button>`
         : "") +
-      `<img src="${s.src}" alt="" /><p>${s.cap}${lbShots.length > 1 ? `<span class="exp-lightbox__count">${lbIdx + 1} / ${lbShots.length}</span>` : ""}</p>`;
+      `<img src="${escapeMarkup(s.src)}" alt="${escapeMarkup(s.alt || "")}" decoding="async" /><p aria-live="polite" aria-atomic="true">${escapeMarkup(s.cap)}${lbShots.length > 1 ? `<span class="exp-lightbox__count">${lbIdx + 1} / ${lbShots.length}</span>` : ""}</p>`;
+    focusDialog(lightboxEl, lightboxEl.querySelector(`[data-lb="${focusAction}"]`));
   }
   function stepLightbox(d) {
+    if (!lbShots.length) return;
+    const action = lightboxEl.contains(document.activeElement) ? document.activeElement.dataset.lb : "close";
     lbIdx = (lbIdx + d + lbShots.length) % lbShots.length;
-    renderLightbox();
+    renderLightbox(["close", "-1", "1"].includes(action) ? action : "close");
     sndTick();
   }
   if (panelEl && lightboxEl) {
     panelEl.addEventListener("click", (ev) => {
-      const img = ev.target.closest(".exp-panel__shot img");
-      if (!img) return;
-      const all = Array.from(panelEl.querySelectorAll(".exp-panel__shot img"));
-      lbShots = all.map((im) => ({ src: im.src, cap: im.closest("figure")?.querySelector("figcaption")?.textContent || "" }));
-      lbIdx = Math.max(0, all.indexOf(img));
-      renderLightbox();
+      const button = ev.target.closest("[data-exp-gallery]");
+      if (!button || panelEl.inert || !panelOpen) return;
+      const all = Array.from(panelEl.querySelectorAll("[data-exp-gallery]"));
+      lbShots = all.map((item) => {
+        const im = item.querySelector("img");
+        return { src: im.dataset.fullSrc || im.src, alt: im.alt,
+          cap: item.closest("figure")?.querySelector("figcaption")?.textContent || "" };
+      });
+      lbIdx = Math.max(0, all.indexOf(button));
+      lbReturnFocus = button;
+      setDialogInteractive(panelEl, false);
+      setDialogInteractive(lightboxEl, true);
       document.documentElement.classList.add("exp-lightbox-open");
+      renderLightbox();
       sndClick();
     });
     lightboxEl.addEventListener("click", (ev) => {
@@ -2982,26 +3124,47 @@ async function initScene(canvas) {
       if (b.dataset.lb === "close") return closeLightbox();
       stepLightbox(+b.dataset.lb);
     });
-    window.addEventListener("keydown", (e) => {
-      if (!document.documentElement.classList.contains("exp-lightbox-open")) return;
-      if (e.key === "ArrowLeft") stepLightbox(-1);
-      if (e.key === "ArrowRight") stepLightbox(1);
-    });
   }
 
   if (backdropEl) backdropEl.addEventListener("click", closePanel);
-  window.addEventListener("keydown", (e) => {
-    if (e.key !== "Escape") return;
-    if (document.documentElement.classList.contains("exp-lightbox-open")) return closeLightbox();
-    if (panelOpen) closePanel();
-  });
-  // S10: the panel footer advertises "← Prev / Next →" — the arrow keys now
-  // actually drive the 15-project tour (lightbox keeps its own arrow keys)
-  window.addEventListener("keydown", (e) => {
-    if (!panelOpen || !currentProjectKey) return;
-    if (document.documentElement.classList.contains("exp-lightbox-open")) return;
-    if (e.key === "ArrowRight") { e.preventDefault(); sndClick(); stepProject(1); }
-    else if (e.key === "ArrowLeft") { e.preventDefault(); sndClick(); stepProject(-1); }
+  function handleOverlayKeydown(e) {
+    if (e.defaultPrevented || e.isComposing) return;
+    const dialog = activeDialog();
+    if (e.key === "Tab") {
+      if (!dialog) { if (panelOpen) e.preventDefault(); return; }
+      const stops = dialogTabStops(dialog);
+      const first = stops[0], last = stops[stops.length - 1];
+      if (!stops.length) { e.preventDefault(); focusDialog(dialog); return; }
+      const current = document.activeElement;
+      if (!stops.includes(current) || (e.shiftKey ? current === first : current === last)) {
+        e.preventDefault();
+        focusDialog(dialog, e.shiftKey ? last : first);
+      }
+      return;
+    }
+    if (e.key === "Escape") {
+      if (dialog === lightboxEl && lightboxEl) { e.preventDefault(); closeLightbox(); }
+      else if (panelOpen) { e.preventDefault(); closePanel(); }
+      else if (panelTimers.size) { e.preventDefault(); invalidatePanelWork(); }
+      return;
+    }
+    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey ||
+      e.target?.closest("input, textarea, select, [contenteditable]:not([contenteditable='false'])")) return;
+    const direction = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    if (!direction) return;
+    if (dialog === lightboxEl && lightboxEl) {
+      e.preventDefault(); e.stopPropagation();
+      stepLightbox(direction);
+    } else if (panelOpen && currentProjectKey && !activePaperPivot) {
+      e.preventDefault();
+      sndClick(); stepProject(direction);
+    }
+  }
+  // One dispatcher gives the topmost dialog exclusive arrow/Escape ownership.
+  window.addEventListener("keydown", handleOverlayKeydown, true);
+  document.addEventListener("focusin", (e) => {
+    const dialog = activeDialog();
+    if (dialog && !dialog.contains(e.target)) focusDialog(dialog);
   });
 
   /* ---------- keyboard navigation layer (additive; mirrors the pointer flow) ----------
@@ -3082,6 +3245,40 @@ async function initScene(canvas) {
   loader.start();
   manager.itemEnd("scene-bootstrap");
   await assetsReady;
+  // Populate after proxies register; doReveal enables the dock after GPU preparation.
+  const dock = document.getElementById("exp-dock");
+  const exhibitSelect = document.getElementById("exp-project-select");
+  if (dock && exhibitSelect) {
+    for (const key of PROJECT_ORDER) {
+      const pivot = HOTSPOTS.find((h) => h.userData.hotspot.key === key);
+      if (!pivot || !window.projectData?.[key]) continue;
+      const option = document.createElement("option");
+      option.value = key;
+      option.textContent = window.projectData[key].title;
+      exhibitSelect.appendChild(option);
+    }
+    exhibitSelect.addEventListener("change", () => {
+      const pivot = HOTSPOTS.find((h) => h.userData.hotspot.key === exhibitSelect.value);
+      if (!readiness.revealed || !pivot || panelOpen || paperReturning) return;
+      dismissDragHint();
+      focusHotspot(pivot);
+    });
+    document.getElementById("exp-reset-view")?.addEventListener("click", () => {
+      if (!readiness.revealed || panelOpen || paperReturning) return;
+      invalidatePanelWork(); // a pending deep link must not override Reset view
+      dismissDragHint();
+      clearPointerHover();
+      if (prefersReducedMotion) {
+        flight = null;
+        camera.position.copy(REST_POS);
+        controls.target.copy(REST_TARGET);
+        controls.enabled = true;
+        controls.update();
+      } else startFlight(REST_POS, REST_TARGET, 700);
+      renderer.domElement.focus();
+    });
+  }
+  updateLightingUI();
   startupUI.setPhase("preparing");
   // Upload ready textures in small batches rather than concentrating all of
   // their allocation into the first visible frame. Network/CPU work has ended.
@@ -3095,11 +3292,13 @@ async function initScene(canvas) {
   });
   let prepared = 0;
   for (const texture of textures) {
+    if (document.hidden) await waitForVisible();
     renderer.initTexture(texture);
     prepared++;
     startupUI.update({ phase: "preparing", loaded: prepared, total: textures.size + 1 });
     if (prepared % 4 === 0) await yieldToBrowser();
   }
+  if (document.hidden) await waitForVisible();
   if (renderer.compileAsync) await renderer.compileAsync(scene, camera);
   startupUI.update({ phase: "preparing", loaded: textures.size + 1, total: textures.size + 1 });
   await yieldToBrowser();
@@ -6214,6 +6413,10 @@ function makeRadialShadowTexture() {
 /* ============================================================
    panel HTML builders
    ============================================================ */
+function escapeMarkup(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (char) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+}
 function projectHTML(p) {
   const hi = (p.highlights || []).map((h) => `<li>${h}</li>`).join("");
   const tools = (p.tools || []).map((t) => `<span class="exp-chip">${t}</span>`).join("");
@@ -6229,9 +6432,11 @@ function projectHTML(p) {
     .join("");
   const gallery = (p.gallery || [])
     .map(
-      (it) => `
+      (it, index) => `
       <figure class="exp-panel__shot">
-        <img src="${it.src}" alt="${it.alt || ""}" loading="lazy" />
+        <button type="button" class="exp-panel__shot-button" data-exp-gallery aria-label="Enlarge image ${index + 1}">
+          <img src="${escapeMarkup(it.thumbnail || it.src)}" data-full-src="${escapeMarkup(it.src)}" alt="${escapeMarkup(it.alt || "")}" loading="lazy" decoding="async" />
+        </button>
         ${it.caption ? `<figcaption>${it.caption}</figcaption>` : ""}
       </figure>`
     )
@@ -6242,7 +6447,7 @@ function projectHTML(p) {
   const lead = gallery
     ? `<div class="exp-panel__gallery">${gallery}</div>`
     : img
-      ? `<div class="exp-panel__media"><img src="${img}" alt="" loading="lazy"></div>`
+      ? `<div class="exp-panel__media"><img src="${img}" alt="" loading="lazy" decoding="async"></div>`
       : "";
   return `
     <button class="exp-panel__close" data-close aria-label="Close">&times;</button>

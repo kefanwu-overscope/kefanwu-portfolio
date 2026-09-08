@@ -1,5 +1,45 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## 2026-09-07 — visual, copy and performance polish
+
+Latest release uses `studio-polish-20260907` for the two page styles/scripts,
+shared project data, `fonts.css`, and the LOD module import. Unchanged adaptive
+rendering/HDR modules keep their existing versions.
+
+- Both surfaces share the existing local Latin font files through `fonts.css`.
+  The 3D page no longer requests Google Fonts. The homepage has a more compact
+  hero, shorter card copy, quieter surfaces, and matching section typography.
+- Shared case-study prose was shortened about 21%; project identities, factual
+  evidence, full gallery sources, tools, roles and links remain intact.
+- Two photographic card covers use responsive 480/800/original srcsets. Five
+  large AURA gallery images have optional `thumbnail` fields. Thumbnail renderers
+  use those fields; classic main images and 3D lightbox retain original `src`.
+  Never replace the full source with a thumbnail in the lightbox.
+- Studio dock: `#exp-project-select`, `#exp-reset-view`; visible room-light control:
+  `#exp-light-toggle`. Enable after `doReveal`, not just assetsReady. Camera framing
+  reads the panel width. Hidden panels, resume and lightbox are inert; nested
+  lightbox focus returns to its gallery button.
+- 3D stale opening callbacks are generation-guarded. First-frame reveal retries
+  after a context loss. GPU preparation waits while hidden. GLB transfers use
+  AbortController with a 45-second deadline before GLTF parsing, retaining the
+  established derivative/original fallback and low-detail retry behavior.
+- Classic ambient motion pauses offscreen/hidden/behind the modal. Mouse work is
+  coalesced. Exploded-view preload concurrency is 3. Filtering uses a local grid
+  fade with latest-request wins; full-document filter View Transitions swallowed
+  rapid native clicks in browser QA. The modal image transition is preserved.
+- Current inventory remains 16 cases / 15 studio exhibits. Earlier inventory and
+  screenshot-tool notes below are historical; inspect current source first.
+
+Validation artifacts and scripts: `../.codex/design-polish-20260907/` (26 classic
+regressions, 9 studio UI/reveal regressions, abort/fallback queue checks, asset/data
+validation, desktop/mobile captures and image-comparison reports). 390x844 and
+320x720 are browser viewport checks, not claims about physical-phone performance.
+The prior LOD meshes and render cadence were not changed by this polish.
+
+Recovery backup: `C:\Users\oc\Desktop\kefanwu-portfolio-backup-2026-09-07-design-polish`.
+See its `RESTORE.md` for exact release and previous-release archives, complete Git
+history, QA records and checksums.
+
 ## Project
 
 Static portfolio website for Kefan Wu.
