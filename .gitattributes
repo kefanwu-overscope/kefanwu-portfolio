@@ -8,3 +8,8 @@
 *.jpg binary
 *.zip binary
 *.bin binary
+
+# Keep verified vendored/parser bytes identical across Windows and Linux.
+tools/hdr/vendor/** -text
+tools/lod/vendor/** -text
+experience-hdr-worker.js -text

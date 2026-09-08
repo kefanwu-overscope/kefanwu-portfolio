@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "files": [
+    {
+      "file": "meshopt_simplifier.mjs",
+      "package": "meshoptimizer",
+      "version": "1.2.0",
+      "url": "https://unpkg.com/meshoptimizer@1.2.0/meshopt_simplifier.js",
+      "sha256": "c77634874ca565e1445bbb140c1a626ae8f4c71d7fa69e332806955fb1337824",
+      "bytes": 55177
+    },
+    {
+      "file": "meshoptimizer-LICENSE.md",
+      "package": "meshoptimizer",
+      "version": "1.2.0",
+      "url": "https://unpkg.com/meshoptimizer@1.2.0/LICENSE.md",
+      "sha256": "f03037ca7bad1e3eb7f4a63fa6084a8baabd5ba30d3c239a9a7f35705d873e26",
+      "bytes": 1079
+    },
+    {
+      "file": "gltf-validator/index.cjs",
+      "package": "gltf-validator",
+      "version": "2.0.0-dev.3.10",
+      "url": "https://unpkg.com/gltf-validator@2.0.0-dev.3.10/index.js",
+      "sha256": "78deff9ea85743e86461c2d14fae76e7fc3ca0432e652f62948066b55fa16f0d",
+      "bytes": 2829
+    },
+    {
+      "file": "gltf-validator/gltf_validator.dart.js",
+      "package": "gltf-validator",
+      "version": "2.0.0-dev.3.10",
+      "url": "https://unpkg.com/gltf-validator@2.0.0-dev.3.10/gltf_validator.dart.js",
+      "sha256": "b73a7b2d455ac217567725138b46d826a13d7d1bb0c88c15f7c571bfb349298c",
+      "bytes": 307792
+    },
+    {
+      "file": "gltf-validator/LICENSE",
+      "package": "gltf-validator",
+      "version": "2.0.0-dev.3.10",
+      "url": "https://unpkg.com/gltf-validator@2.0.0-dev.3.10/LICENSE",
+      "sha256": "3ddf9be5c28fe27dad143a5dc76eea25222ad1dd68934a047064e56ed2fa40c5",
+      "bytes": 11560
+    }
+  ]
+}

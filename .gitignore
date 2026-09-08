@@ -3,3 +3,17 @@ __pycache__/
 .vercel/
 .DS_Store
 Thumbs.db
+
+# Local migration/visual experiments are not website releases.
+/AGENTS.md
+/index-light-preview.html
+/styles-light-preview.css
+
+# Generated verification artifacts; keep scripts, READMEs and vendor licenses.
+/tools/lod/*.json
+/tools/lod/*.png
+/tools/lod/visual-comparison/
+/tools/lod/*-candidates/
+/tools/hdr/validation.json
+/tools/hdr/REPORT.md
+/tools/lod/polish-summary.md

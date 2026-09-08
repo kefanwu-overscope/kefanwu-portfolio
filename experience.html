@@ -27,7 +27,8 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
     />
-    <link rel="stylesheet" href="experience.css?v=exp-vine-20260714" />
+    <link rel="stylesheet" href="experience.css?v=exp-adaptive-20260907" />
+    <noscript><style>.exp-loader, .exp-stage { display: none; }</style></noscript>
 
     <!-- Three.js import map (pinned, single CDN). -->
     <script type="importmap">
@@ -47,6 +48,14 @@
         <span class="brand-name">Kefan Wu</span>
       </a>
       <div class="exp-topbar__right">
+        <label class="exp-quality" for="exp-light-quality">
+          <span class="sr-only">Lighting quality</span>
+          <select id="exp-light-quality" aria-describedby="exp-quality-status" title="Lighting quality">
+            <option value="2k" selected>2K</option>
+            <option value="4k">4K</option>
+          </select>
+        </label>
+        <span class="sr-only" id="exp-quality-status" role="status" aria-live="polite"></span>
         <button class="exp-sound" id="exp-sound" type="button" aria-label="Enable sound">
           <svg class="snd-off" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <polygon points="7.3 3.3 4 6 1.3 6 1.3 10 4 10 7.3 12.7 7.3 3.3"></polygon>
@@ -103,12 +112,49 @@
     <!-- Accessible heading (visually hidden; the experience is the canvas) -->
     <h1 class="sr-only">Kefan Wu — interactive 3D engineering studio</h1>
 
-    <!-- Brief loader; fades out once the scene is ready -->
-    <div class="exp-loader" id="exp-loader" role="status" aria-live="polite">
+    <!-- Progress is supplied by the scene; only a rendered first frame can complete it. -->
+    <div class="exp-loader" id="exp-loader" role="region" aria-label="Studio startup" data-phase="loading" data-state="waiting">
       <div class="exp-loader__inner">
-        <span class="exp-loader__mark">KW</span>
-        <span class="exp-loader__bar"><i></i></span>
-        <span class="exp-loader__text">Entering the studio</span>
+        <div class="exp-loader__heading" aria-hidden="true">
+          <span>KW <span class="exp-loader__slash">/</span> Interactive studio</span>
+          <span class="exp-loader__identifier">System startup</span>
+        </div>
+        <div class="exp-loader__body">
+          <div class="exp-loader__reactor" aria-hidden="true">
+            <span class="exp-loader__crosshair"></span>
+            <span class="exp-loader__orbit exp-loader__orbit--outer"><span class="exp-loader__rotor"></span></span>
+            <span class="exp-loader__orbit exp-loader__orbit--inner"><span class="exp-loader__rotor"></span></span>
+            <span class="exp-loader__reticle"></span>
+            <span class="exp-loader__mark">KW</span>
+            <span class="exp-loader__axis exp-loader__axis--x">X</span>
+            <span class="exp-loader__axis exp-loader__axis--y">Y</span>
+          </div>
+          <div class="exp-loader__intro">
+            <p class="exp-loader__eyebrow">A workspace in three dimensions</p>
+            <h2 class="exp-loader__title">
+              <span class="exp-loader__title-default">Entering<br /> the studio.</span>
+              <span class="exp-loader__title-failed">Studio<br /> unavailable.</span>
+            </h2>
+            <p class="exp-loader__text" id="exp-loader-text" role="status" aria-live="polite" aria-atomic="true">Loading studio resources</p>
+          </div>
+        </div>
+        <div class="exp-loader__progress">
+          <div class="exp-loader__readout">
+            <span class="exp-loader__legend" id="exp-loader-progress-label">Startup progress</span>
+            <span class="exp-loader__number" aria-hidden="true"><span data-loader-value>—</span><span class="exp-loader__unit" data-loader-unit hidden>%</span></span>
+          </div>
+          <span class="exp-loader__bar" role="progressbar" aria-labelledby="exp-loader-progress-label" aria-describedby="exp-loader-text" aria-valuemin="0" aria-valuemax="100" aria-valuetext="Loading studio resources; progress not yet available"><i aria-hidden="true"></i></span>
+          <p class="exp-loader__detail" data-loader-detail>Waiting for scene resources</p>
+        </div>
+        <ol class="exp-loader__sequence" aria-label="Startup sequence">
+          <li class="is-active" data-loader-stage="loading" aria-current="step"><span class="exp-loader__step-index" aria-hidden="true">01</span><span>Assets</span><span class="exp-loader__step-state" data-loader-step-state>Loading</span></li>
+          <li data-loader-stage="preparing"><span class="exp-loader__step-index" aria-hidden="true">02</span><span>Scene</span><span class="exp-loader__step-state" data-loader-step-state>Waiting</span></li>
+          <li data-loader-stage="first-frame"><span class="exp-loader__step-index" aria-hidden="true">03</span><span>First frame</span><span class="exp-loader__step-state" data-loader-step-state>Waiting</span></li>
+        </ol>
+        <div class="exp-loader__footer">
+          <span>Engineering, in perspective.</span>
+          <a class="exp-loader__exit" href="index.html">View classic site <span aria-hidden="true">↗</span></a>
+        </div>
       </div>
     </div>
 
@@ -121,6 +167,6 @@
     </noscript>
 
     <script src="project-data.js?v=shopbot-20260825"></script>
-    <script type="module" src="experience.js?v=exp-instron-20260821"></script>
+    <script type="module" src="experience.js?v=exp-adaptive-20260907"></script>
   </body>
 </html>

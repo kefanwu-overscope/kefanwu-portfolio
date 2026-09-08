@@ -1,0 +1,52 @@
+{
+  "project": "three.js",
+  "version": "0.185.0",
+  "tag": "r185",
+  "license": "MIT",
+  "retrievedAt": "2026-09-07T21:16:33.5077507Z",
+  "note": "Verbatim upstream source bytes. Worker build extracts the complete HDRLoader.parse method, DataUtils implementation, clamp, warning helpers and selected constants. three.core.js is the independent offline test baseline only.",
+  "files": {
+    "HDRLoader.js": {
+      "upstreamPath": "examples/jsm/loaders/HDRLoader.js",
+      "url": "https://raw.githubusercontent.com/mrdoob/three.js/r185/examples/jsm/loaders/HDRLoader.js",
+      "sha256": "0986b578f9acd14cec74e5ee85e07f45e681b40bcd229a601a0391201f9b5ff1",
+      "bytes": 12079
+    },
+    "DataUtils.js": {
+      "upstreamPath": "src/extras/DataUtils.js",
+      "url": "https://raw.githubusercontent.com/mrdoob/three.js/r185/src/extras/DataUtils.js",
+      "sha256": "c13af55f853b7882c7435d06b9c66333e9d68b42b22f6c257a060d6248052d6b",
+      "bytes": 4553
+    },
+    "MathUtils.js": {
+      "upstreamPath": "src/math/MathUtils.js",
+      "url": "https://raw.githubusercontent.com/mrdoob/three.js/r185/src/math/MathUtils.js",
+      "sha256": "e329b0574b9b1ed34c169c11abfd3cfb3cf5ea61b062e17a72d400a8515b1f16",
+      "bytes": 21991
+    },
+    "utils.js": {
+      "upstreamPath": "src/utils.js",
+      "url": "https://raw.githubusercontent.com/mrdoob/three.js/r185/src/utils.js",
+      "sha256": "28f06d2e36ee99dcf3bad7dc10b13ed8715a5b8ed3468b1c7386384b0699e52a",
+      "bytes": 12516
+    },
+    "constants.js": {
+      "upstreamPath": "src/constants.js",
+      "url": "https://raw.githubusercontent.com/mrdoob/three.js/r185/src/constants.js",
+      "sha256": "3444ef8433dedd2d8b391bc1139b5f3c9f433ea3487473b366e624814d73d26e",
+      "bytes": 32951
+    },
+    "three.core.js": {
+      "upstreamPath": "build/three.core.js",
+      "url": "https://raw.githubusercontent.com/mrdoob/three.js/r185/build/three.core.js",
+      "sha256": "3718df126d69c125362a03340913204470d8c50238605150e57f808840fb7759",
+      "bytes": 1443056
+    },
+    "LICENSE": {
+      "upstreamPath": "LICENSE",
+      "url": "https://raw.githubusercontent.com/mrdoob/three.js/r185/LICENSE",
+      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc",
+      "bytes": 1081
+    }
+  }
+}

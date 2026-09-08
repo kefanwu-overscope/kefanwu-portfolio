@@ -14,7 +14,11 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=exp-adaptive-20260907";
+import { AdaptiveFrameClock, frameAlpha } from "./experience-timing.js?v=exp-adaptive-20260907";
+import { createStudioLoader } from "./experience-loader.js?v=exp-adaptive-20260907";
+import { createHDRService, createHDRTexture } from "./experience-hdr.js?v=exp-adaptive-20260907";
+import { AdaptiveQuality, GpuFrameTimer } from "./experience-quality.js?v=exp-adaptive-20260907";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
@@ -53,6 +57,7 @@ function webglSupported() {
 
 const canvas = document.getElementById("exp-canvas");
 const loaderEl = document.getElementById("exp-loader");
+const startupUI = createStudioLoader(loaderEl);
 const revealScene = () => document.documentElement.classList.add("exp-ready");
 const easeInOutCubic = (x) =>
   x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
@@ -73,6 +78,26 @@ let MAXA = 4;
 // every material map on the next frame; async loaders re-arm it (Kefan:
 // models/text blur when the camera pulls back)
 let ANISO_DIRTY = true;
+const SOURCE_READY = new WeakMap();
+const ANISO_PENDING = new Set();
+const textureReady = (t) => {
+  const image = t?.source?.data;
+  return !!(image && (image.width || image.videoWidth) > 0 && (image.height || image.videoHeight) > 0);
+};
+function repeatedTexture(source, x, y) {
+  const copy = new THREE.Texture(); // version 0 until the shared image is usable
+  const ready = () => {
+    if (!textureReady(source)) return;
+    copy.copy(source);
+    copy.repeat.set(x, y);
+    copy.anisotropy = MAXA;
+    copy.needsUpdate = true;
+    ANISO_DIRTY = true;
+  };
+  if (textureReady(source)) ready();
+  else SOURCE_READY.get(source.source)?.then(ready);
+  return copy;
+}
 function setupTextures(manager) {
   const loader = new THREE.TextureLoader(manager);
   const cache = {};
@@ -87,7 +112,13 @@ function setupTextures(manager) {
     if (cache[slug]) return cache[slug];
     const d = DEFS[slug];
     const mk = (suffix) => {
-      const t = loader.load(`${d.base}_${suffix}`);
+      let settle;
+      const ready = new Promise((resolve) => { settle = resolve; });
+      const t = loader.load(
+        `${d.base}_${suffix}`,
+        () => { ANISO_DIRTY = true; settle(); }, undefined,
+        (error) => { console.warn("[experience] PBR texture unavailable", error); settle(); });
+      SOURCE_READY.set(t.source, ready);
       t.wrapS = t.wrapT = THREE.RepeatWrapping;
       t.repeat.set(d.rep[0], d.rep[1]);
       t.anisotropy = MAXA;
@@ -243,19 +274,20 @@ const CAB = {
   rowH: 0.48,
 };
 
-function initScene(canvas) {
+async function initScene(canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-  // desktop: FLOOR the pixel ratio at 1.6 — on 100-150% Windows scaling the
-  // DPR is 1-1.5 and distant models/text go soft (Kefan); low-DPR displays
-  // get supersampling, retina stays capped. S5: the floor is BUDGETED at
-  // ~10 MP of drawing buffer — a 4K monitor at DPR 1 used to render 21 MP
-  // through every post pass; it now runs near-native while 1080p/1440p keep
-  // exactly the old supersampling.
+  // Never supersample beyond the viewport's native display pixels or the
+  // current screen bounds. Keep the existing quality caps and 10 MP desktop
+  // budget; on very large displays the budget can render below native size.
   const pixelRatioFor = (w, h) => {
-    if (LOW_TIER) return Math.min(window.devicePixelRatio, 1.5);
-    const want = Math.min(Math.max(window.devicePixelRatio, 1.6), 2.2);
-    const budget = Math.sqrt(10e6 / Math.max(1, w * h));
-    return Math.max(1, Math.min(want, budget));
+    const nativeDpr = window.devicePixelRatio || 1;
+    const screenScale = Math.min(1,
+      (window.screen.width || w) / Math.max(1, w),
+      (window.screen.height || h) / Math.max(1, h));
+    const nativeLimit = nativeDpr * screenScale;
+    const qualityLimit = LOW_TIER ? 1.5 : 2.2;
+    const budget = LOW_TIER ? Infinity : Math.sqrt(10e6 / Math.max(1, w * h));
+    return Math.min(nativeLimit, qualityLimit, budget);
   };
   renderer.setPixelRatio(pixelRatioFor(window.innerWidth, window.innerHeight));
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -352,14 +384,23 @@ function initScene(canvas) {
 
   /* ---------- loading manager ---------- */
   const manager = new THREE.LoadingManager();
+  // Hold one item until every construction stage and queued base model has
+  // registered. An early image completing cannot declare the room ready.
+  manager.itemStart("scene-bootstrap");
+  let markAssetsReady;
+  const assetsReady = new Promise((resolve) => { markAssetsReady = resolve; });
+  const readiness = { construction: false, assets: false, prepared: false, firstFrame: false, revealed: false, failures: [] };
+  manager.onError = (url) => { readiness.failures.push(url); };
+  let deepLinkKey = "";
+  try { deepLinkKey = decodeURIComponent(location.hash.slice(1)); } catch (error) {
+    console.warn("[experience] malformed deep link", error);
+  }
+  const loader = new ModelLODLoader(manager, { targetKey: deepLinkKey });
+  loader.onLevelLoaded = () => { ANISO_DIRTY = true; };
   const barEl = loaderEl ? loaderEl.querySelector(".exp-loader__bar i") : null;
   const txtEl = loaderEl ? loaderEl.querySelector(".exp-loader__text") : null;
   manager.onProgress = (url, loaded, total) => {
-    if (!barEl || !total) return;
-    const pct = Math.round((loaded / total) * 100);
-    barEl.style.animation = "none";
-    barEl.style.width = pct + "%";
-    if (txtEl) txtEl.textContent = "Loading " + pct + "%";
+    startupUI.update({ loaded, total, phase: "loading" });
   };
   let revealed = false;
   // one-shot: set when a flow (deep link) skips the normal drag-hint timing;
@@ -368,11 +409,28 @@ function initScene(canvas) {
   const doReveal = () => {
     if (revealed) return;
     revealed = true;
+    readiness.revealed = true;
+    loader.enabled = true;
+    startupUI.complete();
+    if (loaderEl) {
+      const hideStatus = () => {
+        loaderEl.setAttribute("aria-hidden", "true");
+        loaderEl.removeEventListener("transitionend", onFadeEnd);
+        clearTimeout(fadeFallback);
+      };
+      const onFadeEnd = (event) => {
+        if (event.target === loaderEl && event.propertyName === "opacity") hideStatus();
+      };
+      loaderEl.addEventListener("transitionend", onFadeEnd);
+      // Reduced motion may have no transitionend; this affects accessibility
+      // only, after the real first-frame readiness gate has already passed.
+      const fadeFallback = setTimeout(hideStatus, prefersReducedMotion ? 0 : 1000);
+    }
     revealScene();
     // deep link: experience.html#<projectKey> flies straight to that exhibit
     // (the homepage case-study panels link here) — visitors with a specific
     // destination skip the cinematic intro and keep it for a later visit
-    const dlKey = decodeURIComponent((location.hash || "").slice(1));
+    const dlKey = deepLinkKey;
     const dlPivot = dlKey && HOTSPOTS.find((h) => h.userData.hotspot.key === dlKey);
     if (dlPivot) {
       camera.position.copy(REST_POS);
@@ -381,7 +439,7 @@ function initScene(canvas) {
       try { localStorage.setItem("kw_intro_seen", "1"); } catch (e) {}
       pendingDragHintOnClose = true; // panel opens immediately; show the hint once they close it
       if (!prefersReducedMotion) {
-        runLightIntro();
+        runBootIntro();
         setTimeout(() => focusHotspot(dlPivot), 650);
       } else {
         focusHotspot(dlPivot);
@@ -389,26 +447,22 @@ function initScene(canvas) {
       return;
     }
     if (!prefersReducedMotion) {
-      let seenBefore = false;
-      try { seenBefore = localStorage.getItem("kw_intro_seen") === "1"; } catch (e) {}
-      // first visit: cold-boot choreography synced to the guided flight;
-      // returning visitors keep the quick staged ramp
-      if (seenBefore) runLightIntro();
-      else runBootIntro();
+      // Every visit gets the full lighting power-on sequence. The camera
+      // still retains its shorter return-visit flight independently.
+      runBootIntro();
       startIntro(); // the drag hint fires from startIntro()'s final flight leg, once the camera actually lands
     } else {
       // no flight to wait for under reduced motion — show it immediately
       showDragHint();
     }
   };
-  manager.onLoad = doReveal;
-  setTimeout(doReveal, 10000); // safety
+  manager.onLoad = () => { readiness.assets = true; markAssetsReady(); };
 
   setupTextures(manager);
 
-  const pmrem = new THREE.PMREMGenerator(renderer);
   if (!USE_BAKED) new HDRLoader(manager).load("hdri/wooden_lounge_1k.hdr", (tex) => {
     // legacy HDRI environment — replaced by the baked in-room probe
+    const pmrem = new THREE.PMREMGenerator(renderer);
     scene.environment = pmrem.fromEquirectangular(tex).texture;
     scene.environmentIntensity = 0.22; // keep the HDRI's warm-wood cast subtle
     tex.dispose();
@@ -532,16 +586,19 @@ function initScene(canvas) {
     requestAnimationFrame(tick);
   }
 
-  /* first-visit cold boot: the room powers on in sync with the guided flight.
+  /* every-visit cold boot: the room powers on in a staged sequence.
      Rug LEDs trace on, each cabinet's strips strike alive as the camera
      passes it, and the desk lamp "clicks" last — landing the warm pool on
      the resume and implicitly teaching the light switch. Timings follow the
      intro flight legs (1700 + 1900 + 1500 ms). */
   let bootRaf = 0;
   let bootRestore = null;
+  const bootStatus = { plays: 0, startedAt: null, completedAt: null, cancelled: false };
   function cancelBoot() {
     if (!bootTakeover) return;
     bootTakeover = false;
+    bootStatus.cancelled = true;
+    bootStatus.completedAt = performance.now();
     if (bootRaf) cancelAnimationFrame(bootRaf);
     if (bootRestore) bootRestore();
     bootRestore = null;
@@ -549,6 +606,10 @@ function initScene(canvas) {
   function runBootIntro() {
     if (bootTakeover) return; // re-entry would capture mid-boot values as targets
     bootTakeover = true;
+    bootStatus.plays++;
+    bootStatus.startedAt = performance.now();
+    bootStatus.completedAt = null;
+    bootStatus.cancelled = false;
     const easeOut = (k) => 1 - Math.pow(1 - k, 3);
     const lin = (k) => k;
     // gather the players
@@ -675,6 +736,7 @@ function initScene(canvas) {
         bootRaf = requestAnimationFrame(bt);
       } else {
         bootTakeover = false;
+        bootStatus.completedAt = now;
         bootRestore = null;
         applyLightState(false); // land exactly on the canonical night state
       }
@@ -700,65 +762,71 @@ function initScene(canvas) {
   contact.position.set(0, 0.02, 0.1);
   scene.add(contact);
 
-  // low-pile graphite rug anchoring the desk + chair vignette, with a thin
-  // muted-blue inner border line (matte, no emissive); a speckled noise
-  // map doubles as bump so the pile reads plush instead of painted
-  const rugCanvas = document.createElement("canvas");
-  rugCanvas.width = rugCanvas.height = 256;
-  const rugCtx = rugCanvas.getContext("2d");
-  rugCtx.fillStyle = "#171a21";
-  rugCtx.fillRect(0, 0, 256, 256);
-  for (let i = 0; i < 9000; i++) {
-    const a = Math.random();
-    rugCtx.fillStyle = `rgba(${14 + a * 30 | 0}, ${16 + a * 32 | 0}, ${22 + a * 40 | 0}, 0.6)`;
-    rugCtx.fillRect(Math.random() * 256, Math.random() * 256, 1.7, 1.7);
+  function buildFallbackRug() {
+    // low-pile graphite rug anchoring the desk + chair vignette, with a thin
+    // muted-blue inner border line (matte, no emissive); a speckled noise
+    // map doubles as bump so the pile reads plush instead of painted
+    const rugCanvas = document.createElement("canvas");
+    rugCanvas.width = rugCanvas.height = 256;
+    const rugCtx = rugCanvas.getContext("2d");
+    rugCtx.fillStyle = "#171a21";
+    rugCtx.fillRect(0, 0, 256, 256);
+    for (let i = 0; i < 9000; i++) {
+      const a = Math.random();
+      rugCtx.fillStyle = `rgba(${14 + a * 30 | 0}, ${16 + a * 32 | 0}, ${22 + a * 40 | 0}, 0.6)`;
+      rugCtx.fillRect(Math.random() * 256, Math.random() * 256, 1.7, 1.7);
+    }
+    const rugMap = new THREE.CanvasTexture(rugCanvas);
+    rugMap.colorSpace = THREE.SRGBColorSpace;
+    rugMap.wrapS = rugMap.wrapT = THREE.RepeatWrapping;
+    rugMap.repeat.set(3, 2.2);
+    rugMap.anisotropy = MAXA;
+    const rugBump = new THREE.CanvasTexture(rugCanvas);
+    rugBump.wrapS = rugBump.wrapT = THREE.RepeatWrapping;
+    rugBump.repeat.set(3, 2.2);
+    const rug = new THREE.Mesh(
+      new RoundedBoxGeometry(2.3, 0.012, 1.7, 2, 0.006),
+      new THREE.MeshStandardMaterial({
+        color: 0xd9dde4, // tints the dark speckle map back to graphite
+        map: rugMap,
+        bumpMap: rugBump,
+        bumpScale: 0.6,
+        roughness: 0.97,
+        metalness: 0,
+      })
+    );
+    rug.name = "bk_room";
+    rug.position.set(0, 0.006, 0.5);
+    rug.receiveShadow = true;
+    scene.add(rug);
+    const rugLine = new THREE.MeshStandardMaterial({ color: 0x2b4d80, roughness: 0.9, metalness: 0 });
+    const rugIn = { w: 2.12, d: 1.52 };
+    [
+      [rugIn.w, 0.02, 0, 0.5 - rugIn.d / 2 + 0.01],
+      [rugIn.w, 0.02, 0, 0.5 + rugIn.d / 2 - 0.01],
+      [0.02, rugIn.d, -rugIn.w / 2 + 0.01, 0.5],
+      [0.02, rugIn.d, rugIn.w / 2 - 0.01, 0.5],
+    ].forEach(([w, d, x, z]) => {
+      const line = new THREE.Mesh(new THREE.BoxGeometry(w, 0.002, d), rugLine);
+      line.name = "bk_room";
+      line.position.set(x, 0.0125, z);
+      scene.add(line);
+    });
   }
-  const rugMap = new THREE.CanvasTexture(rugCanvas);
-  rugMap.colorSpace = THREE.SRGBColorSpace;
-  rugMap.wrapS = rugMap.wrapT = THREE.RepeatWrapping;
-  rugMap.repeat.set(3, 2.2);
-  rugMap.anisotropy = MAXA;
-  const rugBump = new THREE.CanvasTexture(rugCanvas);
-  rugBump.wrapS = rugBump.wrapT = THREE.RepeatWrapping;
-  rugBump.repeat.set(3, 2.2);
-  const rug = new THREE.Mesh(
-    new RoundedBoxGeometry(2.3, 0.012, 1.7, 2, 0.006),
-    new THREE.MeshStandardMaterial({
-      color: 0xd9dde4, // tints the dark speckle map back to graphite
-      map: rugMap,
-      bumpMap: rugBump,
-      bumpScale: 0.6,
-      roughness: 0.97,
-      metalness: 0,
-    })
-  );
-  rug.name = "bk_room";
-  rug.position.set(0, 0.006, 0.5);
-  rug.receiveShadow = true;
-  scene.add(rug);
-  const rugLine = new THREE.MeshStandardMaterial({ color: 0x2b4d80, roughness: 0.9, metalness: 0 });
-  const rugIn = { w: 2.12, d: 1.52 };
-  [
-    [rugIn.w, 0.02, 0, 0.5 - rugIn.d / 2 + 0.01],
-    [rugIn.w, 0.02, 0, 0.5 + rugIn.d / 2 - 0.01],
-    [0.02, rugIn.d, -rugIn.w / 2 + 0.01, 0.5],
-    [0.02, rugIn.d, rugIn.w / 2 - 0.01, 0.5],
-  ].forEach(([w, d, x, z]) => {
-    const line = new THREE.Mesh(new THREE.BoxGeometry(w, 0.002, d), rugLine);
-    line.name = "bk_room";
-    line.position.set(x, 0.0125, z);
-    scene.add(line);
-  });
+  if (!USE_BAKED) buildFallbackRug();
+  await yieldToBrowser();
 
   /* ---------- loaders ---------- */
-  const loader = new GLTFLoader(manager);
   const artLoader = new THREE.TextureLoader(manager);
 
   /* ---------- desk (procedural, PBR) + desk props ---------- */
   const DESK_TOP = 0.76;
-  const deskGroup = buildDesk();
-  deskGroup.name = "bk_desk";
-  scene.add(deskGroup);
+  function buildFallbackDesk() {
+    const deskGroup = buildDesk();
+    deskGroup.name = "bk_desk";
+    scene.add(deskGroup);
+  }
+  if (!USE_BAKED) buildFallbackDesk();
 
   // modern LED desk lamp (procedural), warm pool on the resume
   const deskLamp = buildModernDeskLamp();
@@ -793,10 +861,12 @@ function initScene(canvas) {
     NO_PREPASS.push(hit, marker);
     deskLamp.userData.hotspot = {
       key: null, action: "lamp", label: "Room lights", baseScale: 1,
-      center, marker, markerY: mLocal.y, phase: Math.random() * Math.PI * 2,
+      center, marker, pickProxy: hit, markerY: mLocal.y, phase: Math.random() * Math.PI * 2,
     };
     HOTSPOTS.push(deskLamp);
   }
+
+  await yieldToBrowser();
 
   // resume: the hero object on the desk — front and center, in the light
   placeRoot(buildResumePaper(), scene, {
@@ -805,6 +875,8 @@ function initScene(canvas) {
     // paper used to ride is hidden at GLB load)
     pos: [0.02, DESK_TOP + 0.0061, 0.16], rotY: 0.12,
   });
+
+  await yieldToBrowser();
 
   /* ---------- display cabinet + exhibits (3 x 3) ---------- */
   scene.add(buildDisplayCabinet());
@@ -928,6 +1000,8 @@ function initScene(canvas) {
     },
   });
 
+  await yieldToBrowser();
+
   /* ---------- side dressing ---------- */
   // right wall: filled bookshelf; left wall: the electronics workbench
   // (bench + Bambu H2S mid-print + PSU + soldering station + drivers +
@@ -983,7 +1057,7 @@ function initScene(canvas) {
       matTweak: { rubber: { color: 0xe8883a, roughness: 0.6 }, pcb: { color: 0x146e80 },
         dark: { color: 0x9a9ea3, metalness: 0.6, roughness: 0.45 } } },
   ];
-  SIDE_EXHIBITS.forEach((s) => {
+  for (const s of SIDE_EXHIBITS) {
     const opts = {
       name: "ex_" + s.key, projectKey: s.key, label: s.label,
       targetSize: s.size, axis: s.axis || "x",
@@ -995,16 +1069,22 @@ function initScene(canvas) {
     };
     if (s.file) loadAssembly(loader, scene, `models/real/${s.file}.glb`, opts);
     else placeRoot(s.build(), scene, opts);
-  });
-  scene.add(buildWorkbench());
+    await yieldToBrowser();
+  }
+  await yieldToBrowser();
+  scene.add(await buildWorkbench());
+  await yieldToBrowser();
 
   // rolling tool chest beside the workbench
-  const chest = buildToolChest();
-  chest.name = "bk_chest";
-  chest.position.set(-2.22, 0, 1.06); // clear of the workbench front edge (was 0.95 -> back clipped the bench)
-  chest.rotation.y = Math.PI / 2;
-  scene.add(chest);
-  MODELS.chest = chest;
+  function buildFallbackChest() {
+    const chest = buildToolChest();
+    chest.name = "bk_chest";
+    chest.position.set(-2.22, 0, 1.06);
+    chest.rotation.y = Math.PI / 2;
+    scene.add(chest);
+    MODELS.chest = chest;
+  }
+  if (!USE_BAKED) buildFallbackChest();
 
   /* ---------- realism set-dressing (approved 2026-07-12) ----------
      All real-time (no bk_ tags): renders over the baked room, no re-bake. */
@@ -1035,6 +1115,7 @@ function initScene(canvas) {
     new THREE.Vector3(0, -0.045, 0.005));
   weldHelmet.position.set(-1.84, 1.46, -1.36); // 0.48 below the GT3 (heights 0.36 + 0.32 -> 0.34 min gap)
   scene.add(weldHelmet);
+  await yieldToBrowser();
   // E2: small fire extinguisher on the floor AGAINST the back wall, left of
   // the helmet stack (Kefan: 靠墙放)
   const fireExt = buildFireExtinguisher();
@@ -1076,13 +1157,53 @@ function initScene(canvas) {
   // (removed per Kefan 2026-07-12: the desk-lamp power cord across the desk)
   // (removed: the race-car schematic blueprint panel above the main cabinet)
 
+  await yieldToBrowser();
+
   /* ---------- baked lighting (Blender/Cycles pipeline, tools/bake/) ----------
      The architecture layer (bk_* tagged) is swapped for a pre-baked GLB with
      a 2nd-UV lightmap; cabinets/workbench/exhibits stay real-time and get a
      matching baked 360 environment probe. Two light states are baked — the
      desk lamp is the room's light switch. Set USE_BAKED=false to fall back
      to the fully procedural room. */
-  let lightsOn = false; // night mode is the default — the lamp switches day on
+  let lightsOn = false; // applied state; changes only after its own resources are ready
+  let requestedLightsOn = false;
+  let lightQuality = "2k", appliedQuality = "2k";
+  let lightingBusy = false, lightFadeActive = false, gradePending = false;
+  let lightTransition = Promise.resolve();
+  let bakeActive = USE_BAKED, bakedRoot = null, fallbackBuilt = !USE_BAKED;
+  const lightQueue = loader.queue; // GLB parse and HDR decode/upload share one slot
+  const hdrLoader = new HDRLoader();
+  const hdrService = createHDRService({ workers: 2 });
+  let hdrFallback = false;
+  async function decodeLighting(url, flip) {
+    if (hdrFallback) return null;
+    try { return await hdrService.load(url, { flipRows: flip }); }
+    catch (error) {
+      if (hdrFallback || error.code === "HDR_WORKER_UNAVAILABLE" || error.code === "HDR_WORKER_ERROR") {
+        if (!hdrFallback) console.warn("[experience] HDR worker unavailable; using the queued decoder", error);
+        hdrFallback = true;
+        hdrService.dispose();
+        return null;
+      }
+      throw error;
+    }
+  }
+  async function loadHDRFallback(url) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+      if (!response.ok) throw new Error(`HDR HTTP ${response.status}`);
+      const buffer = await response.arrayBuffer();
+      // Used only if Web Workers cannot run. Keep the original r185 parser,
+      // with an abortable fetch so a stalled fallback cannot hold the queue.
+      return createHDRTexture(THREE, hdrLoader.parse(buffer));
+    } finally { clearTimeout(timeout); }
+  }
+  const lightRequests = new Map();
+  const lightFailures = new Map();
+  const qualityControl = document.getElementById("exp-light-quality");
+  const qualityStatus = document.getElementById("exp-quality-status");
   let bakedMats = [];
   const LM = { on2k: null, off2k: null, on4k: null, off4k: null, probeOn: null, probeOff: null };
   // night-mode practicals: warm pool over the workbench (its lamp + printer
@@ -1200,19 +1321,20 @@ function initScene(canvas) {
     // generation counter: a newer call (toggle or instant set) invalidates
     // any still-running step closure — without this, two quick lamp clicks
     // let the FIRST fade finish last and commit the wrong grade
+    if (lightFadeActive) { gradePending = true; return lightTransition; }
     const gen = ++lightGen;
-    const lm = lightsOn ? (LM.on4k || LM.on2k) : (LM.off4k || LM.off2k);
+    const lm = LM[(lightsOn ? "on" : "off") + appliedQuality];
     const lmCurrent = bakedMats.length ? bakedMats[0].lightMap : null;
     const fadeLm = !!(lm && lmCurrent && lm !== lmCurrent && animate && !prefersReducedMotion);
     if (lm && !fadeLm) {
       bakedMats.forEach((m) => { m.lightMap = lm; });
-      if (!lmB.value) lmB.value = lm; // keep the B sampler bound
+      lmB.value = lm; // both samplers refer to live cached textures
       lmMix.value = 0;
     } else if (fadeLm) {
       lmB.value = lm;
       lmMix.value = 0;
     }
-    const probe = lightsOn ? (LM.probeOn || LM.probeOff) : (LM.probeOff || LM.probeOn);
+    const probe = lightsOn ? LM.probeOn : LM.probeOff;
     // instant paths swap the environment now; the animated fade swaps it at
     // its MIDPOINT instead — an instant reflection/ambient jump at the very
     // start of the fade was one of the toggle's visible "steps"
@@ -1261,6 +1383,9 @@ function initScene(canvas) {
       blueLines.forEach((m) => { m.emissiveIntensity = wantBlue; });
       return;
     }
+    lightFadeActive = true;
+    let finishTransition;
+    lightTransition = new Promise((resolve) => { finishTransition = resolve; });
     const t0 = performance.now();
     const DUR = fadeLm ? 800 : 450; // lightmap crossfade reads best a bit slower
     let probeSwapped = !probe;
@@ -1289,48 +1414,169 @@ function initScene(canvas) {
       if (!probeSwapped && k >= 0.5) { probeSwapped = true; scene.environment = probe; }
       if (fadeLm) lmMix.value = e;
       if (k < 1) requestAnimationFrame(step);
-      else if (fadeLm) {
-        bakedMats.forEach((m) => { m.lightMap = lm; });
-        lmMix.value = 0;
+      else {
+        if (fadeLm) {
+          bakedMats.forEach((m) => { m.lightMap = lm; });
+          lmB.value = lm;
+          lmMix.value = 0;
+        }
+        lightFadeActive = false;
+        finishTransition();
+        if (gradePending && !lightingBusy) {
+          gradePending = false;
+          applyLightState(true);
+        }
       }
     })(t0);
+    return lightTransition;
   }
-  function toggleRoomLights() {
-    lightsOn = !lightsOn;
-    sndClick();
-    cancelBoot(); // hand over cleanly if the boot choreography is mid-flight
-    applyLightState(true);
+  function getLightResource(key, initial = false) {
+    if (LM[key]) return Promise.resolve(LM[key]);
+    if (lightRequests.has(key)) return lightRequests.get(key);
+    const failure = lightFailures.get(key);
+    if (failure && (failure.attempts >= 3 || performance.now() < failure.retryAt)) {
+      return Promise.reject(new Error("Lighting resource unavailable; please try again later"));
+    }
+    const isProbe = key.startsWith("probe");
+    const state = key === "probeOn" || key.startsWith("on") ? "on" : "off";
+    const url = isProbe ? `models/baked/probe-${state}.hdr` :
+      `models/baked/lightmap-${state}-${key.endsWith("4k") ? "4k" : "2k"}.hdr`;
+    // CPU decoding runs concurrently in bounded workers. Only texture/GPU
+    // preparation enters the main-thread queue shared with model placement.
+    const promise = decodeLighting(url, !isProbe).then((pixels) => lightQueue.add(async () => {
+      const texture = pixels ? createHDRTexture(THREE, pixels) : await loadHDRFallback(url);
+      await yieldToBrowser();
+      if (isProbe) {
+        texture.mapping = THREE.EquirectangularReflectionMapping;
+        const generator = new THREE.PMREMGenerator(renderer);
+        try {
+          // Keep the render target alive for the life of the cached probe.
+          const target = generator.fromEquirectangular(texture);
+          probeTargets.push(target);
+          LM[key] = target.texture;
+        } finally { generator.dispose(); texture.dispose(); }
+      } else {
+        try {
+          if (!pixels) prepLM(texture); // workers already flipped the rows
+          else { texture.channel = 1; texture.colorSpace = THREE.LinearSRGBColorSpace; }
+          renderer.initTexture(texture);
+          LM[key] = texture;
+        } catch (error) { texture.dispose(); throw error; }
+      }
+      return LM[key];
+    }, initial ? -90 : -20)).catch((error) => {
+      const attempts = (lightFailures.get(key)?.attempts || 0) + 1;
+      lightFailures.set(key, { attempts, retryAt: performance.now() + 10000 });
+      console.warn(`[experience] lighting resource failed: ${url}`, error);
+      throw error;
+    }).finally(() => lightRequests.delete(key));
+    lightRequests.set(key, promise);
+    return promise;
   }
-  if (USE_BAKED) {
-    // hide the procedural originals
+  const probeTargets = [];
+  function activateBakedRoom() {
+    if (!bakeActive || !bakedRoot || !LM.off2k || !LM.probeOff) return;
     scene.children.forEach((o) => {
+      if (o === bakedRoot) return;
       let tagged = false;
-      o.traverse((m) => { if ((m.name || "").indexOf("bk_") === 0) tagged = true; });
+      o.traverse((m) => { if (m.name.startsWith("bk_")) tagged = true; });
       if (tagged) o.visible = false;
     });
-    applyLightState(false); // real-time lights to night values immediately
-    // BAKE_V busts the browser cache when the baked assets are RE-baked (their
-    // URLs are otherwise fixed). Empty while the committed bake is current —
-    // set to "?v=<label>" on the next re-bake so stale caches don't mask it.
-    const BAKE_V = "";
-    const hdrl = new HDRLoader(manager);
-    hdrl.load("models/baked/lightmap-off-2k.hdr" + BAKE_V, (t) => { LM.off2k = prepLM(t); applyLightState(false); });
-    hdrl.load("models/baked/probe-off.hdr" + BAKE_V, (t) => {
-      t.mapping = THREE.EquirectangularReflectionMapping;
-      LM.probeOff = t;
-      scene.environment = t;
-      applyLightState(false);
+    bakedRoot.visible = true;
+    applyLightState(false);
+  }
+  function restoreProceduralRoom(error) {
+    bakeActive = false;
+    if (bakedRoot) bakedRoot.visible = false;
+    bakedMats = [];
+    blueLines.length = 0;
+    scene.children.forEach((o) => {
+      if (o === bakedRoot) return;
+      let tagged = false;
+      o.traverse((m) => { if (m.name.startsWith("bk_")) tagged = true; });
+      if (tagged) o.visible = true;
     });
+    if (!fallbackBuilt) {
+      fallbackBuilt = true;
+      buildFallbackRug(); buildFallbackDesk(); buildFallbackChest();
+    }
+    applyLightState(false);
+    readiness.failures.push("baked-room-fallback");
+    console.warn("[experience] using procedural room fallback", error);
+  }
+  function updateLightingUI(message = "") {
+    if (qualityControl) {
+      qualityControl.value = lightQuality;
+      qualityControl.setAttribute("aria-busy", String(lightingBusy));
+    }
+    if (qualityStatus) qualityStatus.textContent = message || (lightingBusy ? "Loading lighting" : "");
+    deskLamp.userData.hotspot.label = lightingBusy ? "Loading room lights" : "Room lights";
+  }
+  async function syncLighting() {
+    if (lightingBusy) return;
+    lightingBusy = true;
+    updateLightingUI();
+    try {
+      await initialLightingReady;
+      while (lightsOn !== requestedLightsOn || appliedQuality !== lightQuality) {
+        const day = requestedLightsOn, quality = lightQuality;
+        if (bakeActive) {
+          // First daylight use always prepares the matching 2K map + probe.
+          await Promise.all([getLightResource(day ? "on2k" : "off2k"), getLightResource(day ? "probeOn" : "probeOff")]);
+          if (day !== requestedLightsOn || quality !== lightQuality) continue;
+          if (quality === "4k") await getLightResource(day ? "on4k" : "off4k");
+          if (day !== requestedLightsOn || quality !== lightQuality) continue;
+        }
+        await lightTransition; // serialize crossfades, including focus-light ramps
+        if (day !== requestedLightsOn || quality !== lightQuality) continue;
+        cancelBoot();
+        lightsOn = day;
+        appliedQuality = quality;
+        await applyLightState(true);
+      }
+    } catch (error) {
+      requestedLightsOn = lightsOn;
+      lightQuality = appliedQuality;
+      updateLightingUI("Lighting unavailable. Try again shortly.");
+      console.warn("[experience] keeping current lighting", error);
+    } finally {
+      lightingBusy = false;
+      if (gradePending) { gradePending = false; applyLightState(true); }
+      updateLightingUI(qualityStatus?.textContent.startsWith("Lighting unavailable") ? qualityStatus.textContent : "");
+    }
+  }
+  function toggleRoomLights() {
+    requestedLightsOn = !requestedLightsOn;
+    sndClick();
+    void syncLighting();
+  }
+  qualityControl?.addEventListener("change", () => {
+    lightQuality = qualityControl.value === "4k" ? "4k" : "2k";
+    void syncLighting();
+  });
+  let initialLightingReady = Promise.resolve();
+  if (USE_BAKED) {
+    applyLightState(false);
+    manager.itemStart("initial-lighting");
+    initialLightingReady = Promise.allSettled([
+      getLightResource("off2k", true), getLightResource("probeOff", true),
+    ]).then((results) => {
+      const failure = results.find((result) => result.status === "rejected");
+      if (failure) throw failure.reason;
+      activateBakedRoom(); applyLightState(false);
+    })
+      .catch(restoreProceduralRoom)
+      .finally(() => manager.itemEnd("initial-lighting"));
     // baked surfaces keep their imported PBR materials (roughness/metalness
     // survive the Blender round trip) so they still show speculars and probe
     // reflections — but live on light-layer 1 so the real-time lights can't
     // double-light what the lightmap already carries
     camera.layers.enable(1);
-    loader.load("models/baked/room-baked.glb" + BAKE_V, (gltf) => {
+    loader.load("models/baked/room-baked.glb", (gltf) => {
       const pt = TEX.loadPBR("painted_plaster_wall");
-      const fMap = pt.map.clone(); fMap.repeat.set(8, 8); fMap.needsUpdate = true;
-      const fNor = pt.normalMap.clone(); fNor.repeat.set(8, 8); fNor.needsUpdate = true;
-      const fRgh = pt.roughnessMap.clone(); fRgh.repeat.set(8, 8); fRgh.needsUpdate = true;
+      const fMap = repeatedTexture(pt.map, 8, 8);
+      const fNor = repeatedTexture(pt.normalMap, 8, 8);
+      const fRgh = repeatedTexture(pt.roughnessMap, 8, 8);
       gltf.scene.traverse((o) => {
         if (!o.isMesh) return;
         const m = o.material;
@@ -1403,55 +1649,12 @@ function initScene(canvas) {
         o.receiveShadow = false;
         bakedMats.push(m);
       });
-      scene.add(gltf.scene);
-      applyLightState(false);
+      bakedRoot = gltf.scene;
+      bakedRoot.visible = false;
+      scene.add(bakedRoot);
+      activateBakedRoom();
       ANISO_DIRTY = true;
-    });
-    // idle upgrades: 4K lightmap, then the lights-off set. Everything loaded
-    // here is PRE-UPLOADED/pre-filtered now — first use used to happen in the
-    // middle of the lamp toggle, where the GPU upload (4K HDR) and the
-    // equirect->PMREM conversion made the crossfade visibly hitch.
-    const later = new HDRLoader(); // NOT on the manager — don't block the loader UI
-    setTimeout(() => {
-      later.load("models/baked/lightmap-on-2k.hdr" + BAKE_V, (t) => { LM.on2k = prepLM(t); renderer.initTexture(LM.on2k); });
-      later.load("models/baked/probe-on.hdr" + BAKE_V, (t) => {
-        t.mapping = THREE.EquirectangularReflectionMapping;
-        const pg = new THREE.PMREMGenerator(renderer);
-        LM.probeOn = pg.fromEquirectangular(t).texture; // pre-filtered, swap is free
-        pg.dispose();
-        t.dispose();
-      });
-      if (!LOW_TIER) { // phones stay on 2K — don't pull 15MB+ maps over mobile data
-        // S6: SEQUENCED, not parallel — visitors start in night mode, so the
-        // visible off-4k map gets the whole pipe and lands ~2x sooner; the
-        // on-4k download starts only once it's in. Each 4k arrival retires
-        // its 2k predecessor (-67 MB VRAM for the pair) — safe because the
-        // 2k being replaced is never the BOUND map of the opposite state,
-        // and applyLightState's `LM.off4k || LM.off2k` chain tolerates null.
-        later.load("models/baked/lightmap-off-4k.hdr" + BAKE_V, (t) => {
-          LM.off4k = prepLM(t);
-          if (!lightsOn) applyLightState(false);
-          // the B sampler may still hold the 2k (applyLightState only seeds it
-          // when unset) — repoint it BEFORE disposing or three re-uploads the
-          // disposed texture on the next bind and the VRAM saving evaporates
-          if (LM.off2k) {
-            if (lmB.value === LM.off2k) lmB.value = LM.off4k;
-            LM.off2k.dispose();
-            LM.off2k = null;
-          }
-          later.load("models/baked/lightmap-on-4k.hdr" + BAKE_V, (t2) => {
-            LM.on4k = prepLM(t2);
-            renderer.initTexture(LM.on4k);
-            if (lightsOn) applyLightState(false);
-            if (LM.on2k) {
-              if (lmB.value === LM.on2k) lmB.value = LM.on4k;
-              LM.on2k.dispose();
-              LM.on2k = null;
-            }
-          });
-        });
-      }
-    }, 4000);
+    }, undefined, restoreProceduralRoom);
   }
 
   // real ergonomic mesh task chair (CC BY 4.0 — see ATTRIBUTIONS.txt);
@@ -1462,6 +1665,11 @@ function initScene(canvas) {
   });
 
   /* ---------- resize ---------- */
+  const adaptiveQuality = new AdaptiveQuality();
+  const gpuTimer = new GpuFrameTimer(renderer.getContext());
+  let resolutionScale = 1, pendingResolutionScale = 1;
+  let displayDpr = window.devicePixelRatio;
+  let displayWidth = window.screen.width, displayHeight = window.screen.height;
   function onResize() {
     const w = window.innerWidth;
     const h = window.innerHeight;
@@ -1473,11 +1681,12 @@ function initScene(canvas) {
     camera.fov = a < 1 ? Math.min(64, 42 / Math.pow(a, 0.42)) : 42;
     controls.maxDistance = a < 1 ? 4.0 : 3.2;
     camera.updateProjectionMatrix();
-    renderer.setPixelRatio(pixelRatioFor(w, h)); // S5: shared budget formula
+    displayDpr = window.devicePixelRatio;
+    displayWidth = window.screen.width; displayHeight = window.screen.height;
+    renderer.setPixelRatio(pixelRatioFor(w, h) * resolutionScale);
     renderer.setSize(w, h);
     composer.setPixelRatio(renderer.getPixelRatio());
     composer.setSize(w, h);
-    if (gtao) gtao.setSize(w, h);
   }
   window.addEventListener("resize", onResize);
   onResize(); // S13: apply the portrait fov on a phone's very first frame too
@@ -1518,35 +1727,82 @@ function initScene(canvas) {
     });
   }
 
-  let running = true;
+  const frameClock = new AdaptiveFrameClock();
+  const shadowClock = new AdaptiveFrameClock({ idleFps: 60, movingFps: 60, settleMs: 0 });
+  const lastCameraPosition = camera.position.clone();
+  const lastCameraQuaternion = camera.quaternion.clone();
+  const baseDamping = controls.dampingFactor;
+  let rafStamp = null, refreshBudget = 1000 / 60;
+  const rafDeltas = [];
+  let rafSamples = 0;
+  controls.addEventListener("start", () => frameClock.noteMotion(performance.now()));
+  controls.addEventListener("change", () => frameClock.noteMotion(performance.now()));
+  let running = !document.hidden;
   document.addEventListener("visibilitychange", () => {
     running = !document.hidden;
+    frameClock.reset();
+    shadowClock.reset();
+    pendingResolutionScale = adaptiveQuality.reset();
+    gpuTimer.reset();
+    rafStamp = null;
+    rafDeltas.length = 0;
+    tickLast = null;
   });
 
   // named + exposed (see window.__exp.pump) so QA can hand-step frames with
   // synthetic timestamps in a backgrounded tab, where rAF never fires
   const tick = (t, forced) => {
+    // Estimate the display's available cadence from raw (ungated) callbacks.
+    // A 60 Hz display must not lose resolution chasing unattainable 120 Hz.
+    if (!forced) {
+      const delta = rafStamp === null ? 0 : t - rafStamp;
+      rafStamp = t;
+      if (delta >= 3 && delta <= 40) {
+        rafDeltas.push(delta);
+        if (rafDeltas.length > 90) rafDeltas.shift();
+        if (++rafSamples % 30 === 0 && rafDeltas.length >= 12 && frameClock.fps === 60) {
+          const sorted = [...rafDeltas].sort((a, b) => a - b);
+          refreshBudget = Math.max(1000 / 120, sorted[Math.floor(sorted.length * 0.15)]);
+        }
+      }
+    }
+    if (!readiness.assets || !readiness.construction || !readiness.prepared) return;
     if (!running && !forced) return;
-    renderer.shadowMap.needsUpdate = true; // S3: exactly one shadow pass per frame
+    const cameraMoved = lastCameraPosition.distanceToSquared(camera.position) > 1e-10 ||
+      1 - Math.abs(lastCameraQuaternion.dot(camera.quaternion)) > 1e-10;
+    if (!forced && !frameClock.accept(t, !!flight || cameraMoved)) return;
+    const dtms = tickLast === null ? 1000 / 60 : Math.min(100, Math.max(0, t - tickLast));
+    tickLast = t;
+    controls.dampingFactor = frameAlpha(baseDamping, dtms);
+    const scale = frameClock.fps === 60 ? 1 : pendingResolutionScale;
+    if (scale !== resolutionScale) {
+      resolutionScale = scale;
+      onResize(); // resize before drawing, never blank an already-drawn frame
+      gpuTimer.reset();
+    }
+    // A monitor/DPI change need not dispatch a resize event.
+    if (window.devicePixelRatio !== displayDpr || window.screen.width !== displayWidth || window.screen.height !== displayHeight) onResize();
 
     if (ANISO_DIRTY) {
-      // sharpen every material map at grazing/minified angles; re-armed by
-      // async GLB loads so their textures get swept too
       ANISO_DIRTY = false;
       scene.traverse((o) => {
         if (!o.isMesh) return;
-        const mats = Array.isArray(o.material) ? o.material : [o.material];
-        for (const m of mats) {
+        for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
           if (!m) continue;
           for (const slot of ["map", "emissiveMap", "roughnessMap", "metalnessMap", "normalMap", "aoMap"]) {
-            const tx2 = m[slot];
-            if (tx2 && tx2.anisotropy < MAXA) {
-              tx2.anisotropy = MAXA;
-              tx2.needsUpdate = true;
-            }
+            const texture = m[slot];
+            if (texture && texture.anisotropy < MAXA) ANISO_PENDING.add(texture);
           }
         }
       });
+    }
+    for (const texture of ANISO_PENDING) {
+      if (!textureReady(texture)) continue; // retain until source resolves, no empty upload
+      if (texture.anisotropy < MAXA) {
+        texture.anisotropy = MAXA;
+        texture.needsUpdate = true;
+      }
+      ANISO_PENDING.delete(texture);
     }
 
     if (flight) {
@@ -1674,8 +1930,6 @@ function initScene(canvas) {
     // Bambu printer: the head runs a real TOOLPATH rhythm — constant-velocity
     // passes, a short dwell at each turnaround, pass length slightly
     // randomized. (The old pure sine read as a metronome, not a machine.)
-    const dtms = tickLast === null ? 16.7 : Math.min(100, Math.max(0, t - tickLast));
-    tickLast = t;
     if (!prefersReducedMotion && MODELS.printerHead) {
       const hs = headRun;
       if (hs.dwell > 0) {
@@ -1731,7 +1985,7 @@ function initScene(canvas) {
       const paperSettled = panelOpen && activePaperPivot && paperHold && !paperMotion;
       const want = panelOpen && focusedPivot ? 0.0018 : paperSettled ? 0.0012 : 0.0;
       const u = bokeh.uniforms;
-      u.aperture.value += (want - u.aperture.value) * 0.08;
+      u.aperture.value += (want - u.aperture.value) * frameAlpha(0.08, dtms);
       // S5-adjacent (S3): the pass re-renders the whole scene for a blur of
       // ZERO on every idle frame — switch it off once the ease lands
       bokeh.enabled = want > 0 || u.aperture.value > 2e-5;
@@ -1750,7 +2004,7 @@ function initScene(canvas) {
       // eased hover scale (an instant 6% pop read as a flash on click)
       const target = h === hovered && !busy ? h.userData.hotspot.baseScale * 1.06 : h.userData.hotspot.baseScale;
       if (Math.abs(h.scale.x - target) > 0.0004) {
-        h.scale.setScalar(h.scale.x + (target - h.scale.x) * 0.16);
+        h.scale.setScalar(h.scale.x + (target - h.scale.x) * frameAlpha(0.16, dtms));
       }
       const m = h.userData.hotspot.marker;
       if (!m) continue;
@@ -1780,7 +2034,29 @@ function initScene(canvas) {
       lampLeds.forEach((m) => { m.emissiveIntensity *= flk; });
     }
 
-    composer.render();
+    const lodChanged = loader.update(camera, focusedPivot?.userData.hotspot.key || null, t);
+    // Camera-only frames at 120 Hz do not need to redraw fixed-light shadows
+    // twice as often. Preserve the old 60 Hz caster motion and refresh a LOD
+    // switch immediately; offscreen casters still contribute normally.
+    renderer.shadowMap.needsUpdate = !!forced || !!lodChanged || shadowClock.accept(t);
+    const gpuMs = gpuTimer.poll();
+    gpuTimer.begin();
+    const renderStart = performance.now();
+    try { composer.render(); } finally { gpuTimer.end(); }
+    pendingResolutionScale = adaptiveQuality.sample({
+      now: performance.now(), moving: frameClock.fps === 120,
+      frameMs: Math.max(performance.now() - renderStart, gpuMs ?? 0),
+      frameBudgetMs: refreshBudget,
+    });
+    lastCameraPosition.copy(camera.position);
+    lastCameraQuaternion.copy(camera.quaternion);
+    if (!readiness.firstFrame && !renderer.getContext().isContextLost()) {
+      readiness.firstFrame = true;
+      // The completed frame must reach a paint opportunity before the overlay leaves.
+      requestAnimationFrame(() => {
+        if (!renderer.getContext().isContextLost()) doReveal();
+      });
+    }
 
     if (flk) {
       if (!spotSteady) resumeSpot.intensity /= flk;
@@ -2012,7 +2288,12 @@ function initScene(canvas) {
   }
   function pickHotspot() {
     raycaster.setFromCamera(pointer, camera);
-    const hits = raycaster.intersectObjects(HOTSPOTS, true);
+    // Stable pick proxies avoid traversing both cached LOD geometry trees.
+    const picks = HOTSPOTS.flatMap((h) => {
+      const hs = h.userData.hotspot;
+      return [hs.pickProxy, hs.marker].filter((o) => o?.visible);
+    });
+    const hits = raycaster.intersectObjects(picks, false);
     if (!hits.length) return null;
     let o = hits[0].object;
     while (o && !o.userData.hotspot) o = o.parent;
@@ -2782,8 +3063,49 @@ function initScene(canvas) {
   // path the pointer uses when it leaves the canvas
   renderer.domElement.addEventListener("blur", () => setHover(null));
 
-  window.__exp = { THREE, scene, camera, renderer, controls, composer, bloom, key, hemi, models: MODELS, hotspots: HOTSPOTS, openPanel, showDragHint, runBootIntro, pump: (t) => tick(t, true) };
-  console.info(`[experience] engineering office ready — ${HOTSPOTS.length} hotspots`);
+  window.__exp = {
+    THREE, scene, camera, renderer, controls, composer, bloom, key, hemi,
+    models: MODELS, hotspots: HOTSPOTS, openPanel, showDragHint, runBootIntro,
+    pump: (t) => tick(t, true), lod: loader, getLODStats: () => loader.getStats(), readiness,
+    getFrameStats: () => frameClock.snapshot(),
+    getBootStats: () => ({ ...bootStatus, active: bootTakeover }),
+    getHDRStats: () => ({ ...hdrService.getStats(), fallback: hdrFallback }),
+    getQualityStats: () => ({ ...adaptiveQuality.getStats(), appliedScale: resolutionScale, gpuTiming: gpuTimer.supported, displayBudgetMs: refreshBudget }),
+    getLightingStats: () => ({
+      lightsOn, requestedLightsOn, quality: lightQuality, appliedQuality,
+      loading: lightingBusy, transitioning: lightFadeActive, blend: lmMix.value,
+      baked: bakeActive, pending: [...lightRequests.keys()],
+      cached: Object.keys(LM).filter((key) => !!LM[key]),
+    }),
+  };
+  readiness.construction = true;
+  loader.start();
+  manager.itemEnd("scene-bootstrap");
+  await assetsReady;
+  startupUI.setPhase("preparing");
+  // Upload ready textures in small batches rather than concentrating all of
+  // their allocation into the first visible frame. Network/CPU work has ended.
+  const textures = new Set();
+  scene.traverse((object) => {
+    if (!object.isMesh) return;
+    for (const material of Array.isArray(object.material) ? object.material : [object.material]) {
+      if (!material) continue;
+      for (const value of Object.values(material)) if (value?.isTexture && textureReady(value)) textures.add(value);
+    }
+  });
+  let prepared = 0;
+  for (const texture of textures) {
+    renderer.initTexture(texture);
+    prepared++;
+    startupUI.update({ phase: "preparing", loaded: prepared, total: textures.size + 1 });
+    if (prepared % 4 === 0) await yieldToBrowser();
+  }
+  if (renderer.compileAsync) await renderer.compileAsync(scene, camera);
+  startupUI.update({ phase: "preparing", loaded: textures.size + 1, total: textures.size + 1 });
+  await yieldToBrowser();
+  startupUI.setPhase("first-frame");
+  readiness.prepared = true;
+  console.info(`[experience] base assets prepared — ${HOTSPOTS.length} hotspots; awaiting first frame`);
 }
 
 /* ============================================================
@@ -2861,14 +3183,14 @@ function placeRoot(root, scene, opts, onPlaced) {
   if (opts.rotZ) root.rotation.z = opts.rotZ;
   root.updateWorldMatrix(true, true);
 
-  let box = new THREE.Box3().setFromObject(root);
+  let box = modelBounds(root);
   if (opts.targetSize) {
     const size = box.getSize(new THREE.Vector3());
     const dim = opts.axis === "x" ? size.x : opts.axis === "z" ? size.z : size.y;
     if (dim > 0) {
       root.scale.multiplyScalar(opts.targetSize / dim);
       root.updateWorldMatrix(true, true);
-      box = new THREE.Box3().setFromObject(root);
+      box = modelBounds(root);
     }
   }
   // optional shelf-bay budget: uniformly shrink anything that exceeds it
@@ -2878,7 +3200,7 @@ function placeRoot(root, scene, opts, onPlaced) {
     if (k < 1) {
       root.scale.multiplyScalar(k);
       root.updateWorldMatrix(true, true);
-      box = new THREE.Box3().setFromObject(root);
+      box = modelBounds(root);
     }
   }
   const c = box.getCenter(new THREE.Vector3());
@@ -2892,7 +3214,7 @@ function placeRoot(root, scene, opts, onPlaced) {
   MODELS[opts.name] = root;
 
   if (opts.projectKey || opts.action) {
-    const bb = new THREE.Box3().setFromObject(root);
+    const bb = modelBounds(root);
     const center = bb.getCenter(new THREE.Vector3());
     const pivot = new THREE.Group();
     pivot.position.copy(center);
@@ -2933,6 +3255,7 @@ function placeRoot(root, scene, opts, onPlaced) {
       label: opts.label || "",
       baseScale: 1,
       center: center.clone(),
+      pickProxy: hitbox,
       marker,
       markerY,
       pickupObject: opts.action === "resume" ? root : null,
@@ -2943,7 +3266,7 @@ function placeRoot(root, scene, opts, onPlaced) {
     if (onPlaced) onPlaced(pivot, new THREE.Box3().setFromObject(pivot));
     return;
   }
-  if (onPlaced) onPlaced(root, new THREE.Box3().setFromObject(root));
+  if (onPlaced) onPlaced(root, modelBounds(root));
 }
 
 function loadModel(loader, scene, url, opts, onPlaced) {
@@ -2957,34 +3280,29 @@ function loadModel(loader, scene, url, opts, onPlaced) {
 
 // merged SolidWorks assembly: assign engineering materials by bucket name
 function loadAssembly(loader, scene, url, opts, onPlaced) {
-  loader.load(
-    url,
-    (gltf) => {
-      gltf.scene.traverse((o) => {
-        if (!o.isMesh) return;
-        const name = (o.name || "").toLowerCase();
-        let matKey = "printed";
-        for (const k of Object.keys(ASSEMBLY_MATS)) {
-          if (name.includes(`mat_${k}`)) { matKey = k; break; }
-        }
-        o.material = ASSEMBLY_MATS[matKey]();
-        // per-project material overrides (e.g. Javelin's dark PPA-CF shell)
-        if (opts.matTweak && opts.matTweak[matKey]) o.material.setValues(opts.matTweak[matKey]);
-        // STL-derived meshes have no UVs; box-project some so the carbon
-        // weave map can tile across the surface
-        if (matKey === "carbon") boxProjectUVs(o.geometry, 0.08); // geometry is in mm; ~12mm weave tile
-        o.castShadow = true;
-        o.receiveShadow = true;
-      });
-      // procedural add-ons in the model's native (mm) space, so they scale
-      // and orient with the assembly (e.g. the Telecaster's red pickguard,
-      // which isn't a separate solid in the exported STL)
-      if (opts.extraParts) opts.extraParts(gltf.scene);
-      placeRoot(gltf.scene, scene, opts, onPlaced);
-    },
-    undefined,
-    (err) => console.warn(`[experience] failed to load ${url}`, err)
-  );
+  const prepare = (root) => {
+    root.traverse((o) => {
+      if (!o.isMesh) return;
+      const name = (o.name || "").toLowerCase();
+      let matKey = "printed";
+      for (const k of Object.keys(ASSEMBLY_MATS)) {
+        if (name.includes(`mat_${k}`)) { matKey = k; break; }
+      }
+      o.material = ASSEMBLY_MATS[matKey]();
+      // per-project material overrides (e.g. Javelin's dark PPA-CF shell)
+      if (opts.matTweak && opts.matTweak[matKey]) o.material.setValues(opts.matTweak[matKey]);
+      // STL-derived meshes have no UVs; box-project some so the carbon
+      // weave map can tile across the surface
+      if (matKey === "carbon") boxProjectUVs(o.geometry, 0.08); // geometry is in mm; ~12mm weave tile
+      o.castShadow = true;
+      o.receiveShadow = true;
+    });
+  };
+  loader.load(url, (gltf) => {
+    if (opts.extraParts) opts.extraParts(gltf.scene);
+    placeRoot(gltf.scene, scene, opts, onPlaced);
+    ANISO_DIRTY = true;
+  }, undefined, undefined, prepare, opts.projectKey);
 }
 
 /* ============================================================
@@ -2997,9 +3315,9 @@ function buildRoom(scene) {
   const ft = TEX.loadPBR("painted_plaster_wall");
   // the shared wall set stretched over 16x16 m is featureless mush up close —
   // clone the maps for the floor only, at a much tighter repeat
-  const fMap = ft.map.clone(); fMap.repeat.set(8, 8); fMap.needsUpdate = true;
-  const fNor = ft.normalMap.clone(); fNor.repeat.set(8, 8); fNor.needsUpdate = true;
-  const fRgh = ft.roughnessMap.clone(); fRgh.repeat.set(8, 8); fRgh.needsUpdate = true;
+  const fMap = repeatedTexture(ft.map, 8, 8);
+  const fNor = repeatedTexture(ft.normalMap, 8, 8);
+  const fRgh = repeatedTexture(ft.roughnessMap, 8, 8);
   const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(16, 16),
     new THREE.MeshStandardMaterial({
@@ -3676,7 +3994,7 @@ function boxProjectUVs(geo, scale) {
   geo.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
 }
 
-function buildWorkbench() {
+async function buildWorkbench() {
   // electronics workbench, left wall: pegboard with real MechE tools,
   // H2S printing on the left, instruments clustered right, and the middle
   // of the bench deliberately left CLEAR for a future project
@@ -3860,6 +4178,7 @@ function buildWorkbench() {
   plierHead.position.set(0.7725, TOP_Y + 0.635, bz);
   g.add(plierHead);
 
+  await yieldToBrowser();
   // digital caliper (beam + fixed/sliding jaws + LCD)
   const caliper = new THREE.Group();
   const beam = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.24, 0.004), toolSteel);
@@ -4003,7 +4322,9 @@ function buildWorkbench() {
   g.add(stp);
 
   /* ---- bench top: printer LEFT, clear middle, instruments RIGHT ---- */
-  const printer = buildBambuPrinter();
+  await yieldToBrowser();
+  const printer = await buildBambuPrinter();
+  await yieldToBrowser();
   printer.scale.setScalar(0.8);
   printer.position.set(-0.62, TOP_Y, 0.02);
   printer.rotation.y = 0.1;
@@ -4108,6 +4429,7 @@ function buildWorkbench() {
   psu.rotation.y = -0.06;
   g.add(psu);
 
+  await yieldToBrowser();
   // soldering station + iron
   const solder = new THREE.Group();
   const sBody = new THREE.Mesh(new RoundedBoxGeometry(0.13, 0.075, 0.11, 2, 0.007), darkPlastic);
@@ -4246,6 +4568,7 @@ function buildWorkbench() {
   meter.rotation.y = 0.5;
   g.add(meter);
 
+  await yieldToBrowser();
   // compact bench oscilloscope (back row, between printer and PSU): dark
   // body, graticule screen with two live traces, knob column, BNC inputs
   const scope = new THREE.Group();
@@ -4331,7 +4654,7 @@ function makeMiniSpool(col) {
   return g;
 }
 
-function buildBambuPrinter() {
+async function buildBambuPrinter() {
   // Bambu Lab H2S per reference: light-silver side shells, dark front with a
   // large tinted door, top control band with screen + wordmark, side logo,
   // and an AMS 2 unit on top with four visible spools under a smoked cover
@@ -4476,6 +4799,7 @@ function buildBambuPrinter() {
     belt.position.set(0, 0.285, bz);
     g.add(belt);
   });
+  await yieldToBrowser();
   // moving print head: carriage on the rail + short Z-post + nozzle to the bed,
   // with a hot-end glow at the tip (sweeps in X)
   const headGroup = new THREE.Group();
@@ -4606,6 +4930,7 @@ function buildBambuPrinter() {
   inner2.position.set(0, 0.24, printZ);
   g.add(inner2);
 
+  await yieldToBrowser();
   // tinted door — unlit basic material so the bright bench can't wash it out
   // with specular; you see cleanly through to the lit chamber
   const glass = new THREE.Mesh(
@@ -4715,6 +5040,7 @@ function buildBambuPrinter() {
   logo.rotation.y = Math.PI / 2;
   g.add(logo);
 
+  await yieldToBrowser();
   /* ---- AMS 2 on top: dark tray + four spools under a smoked cover ---- */
   const ams = new THREE.Group();
   const amsW = W - 0.06, amsD = D - 0.16, amsH = 0.05;
@@ -5962,10 +6288,15 @@ if (!canvas || !webglSupported()) {
   console.warn("[experience] WebGL unavailable — static fallback in use");
   if (loaderEl) {
     const txt = loaderEl.querySelector(".exp-loader__text");
-    if (txt) txt.textContent = "WebGL unavailable — use “View classic site”";
+    startupUI.fail("WebGL unavailable — use View classic site");
     const bar = loaderEl.querySelector(".exp-loader__bar");
     if (bar) bar.style.display = "none";
   }
 } else {
-  initScene(canvas);
+  initScene(canvas).catch((error) => {
+    console.error("[experience] initialization failed", error);
+    document.documentElement.classList.add("exp-no-webgl");
+    const text = loaderEl?.querySelector(".exp-loader__text");
+    startupUI.fail("Studio unavailable — use View classic site");
+  });
 }

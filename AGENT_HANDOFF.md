@@ -2096,9 +2096,46 @@ studio. Everything below is LIVE.
 - `styles.css?v=instron-20260821` (in index.html)
 - `script.js?v=modalfix-20260805` (in index.html)
 - `project-data.js?v=shopbot-20260825` (shared case-study data; loaded before script.js on index.html and before experience.js on experience.html — bump in BOTH)
-- `experience.css?v=exp-vine-20260714` (3D page styles — in experience.html)
-- `experience.js?v=exp-instron-20260821` (3D page module — in experience.html)
+- `experience.css?v=exp-adaptive-20260907` (3D page styles — in experience.html)
+- `experience.js?v=exp-adaptive-20260907` (3D page module — in experience.html)
+- `experience-lod.js`, `experience-timing.js`, `experience-loader.js`, `experience-hdr.js`, `experience-quality.js` use `?v=exp-adaptive-20260907` in their imports.
+- `experience-hdr-worker.js?v=hdr-r185-v1` is an offline bundle of the pinned r185 HDR parser; regenerate and revalidate with `tools/hdr/` if Three.js changes.
 - Convention for the 3D page: bump both to a new `exp-<label>-<YYYYMMDD>` string in `experience.html` on every change, then `curl` the live URL to confirm the new string is served.
+
+### 2026-09-07 release authorization and backup
+
+- User explicitly authorized publishing the validated optimization and creating a backup: “可以上线，并备份”. This supersedes the local-only authorization recorded in the earlier entries below.
+- Release scope: studio runtime/CSS/HTML, the manifest and its 34 fingerprinted high/low models, cache configuration, and reproducible tooling with required vendor licenses. Local diagnostic images/reports, old plain-name lows, migration-only AGENTS.md and pre-existing light-preview pages are excluded from this release.
+- Before release, the complete working copy was saved and ZIP-verified at `C:\Users\oc\Desktop\kefanwu-portfolio-backup-2026-09-07-200758`. The release bundle, exact committed ZIP, checksums, deployment result and recovery instructions are recorded there.
+- Existing deployment remains GitHub `main` -> Vercel -> `https://www.kefanwu.com`. Verify the `exp-adaptive-20260907` module/CSS references, Worker file, model manifest and fingerprint cache headers after publication.
+
+### 2026-09-07 adaptive rendering and startup polish — local-only validation phase
+
+- User authorized the complete optimization plan and visual acceptance. No commit, push or deployment is authorized by this work; the older automatic-push convention remains overridden.
+- Full lighting cold-boot plays on every reveal, including return visits/deep links. The prior shorter return-visit camera flight remains independent. Reduced-motion settings still suppress the animation.
+- `AdaptiveFrameClock` targets 60 FPS with a still camera and 120 FPS during controls motion/automatic flights, with 180ms settling. Frame-time-normalized damping and easing preserve speed. Refresh rate/hardware may limit achieved FPS.
+- A bounded pair of Web Workers fetch/decode HDR data and flip lightmap rows off the main thread. Transferable buffers avoid copies. GLB placement and GPU uploads/PMREM remain serialized on the main thread. Worker startup failure uses a queued, abortable 30-second fetch with the original parser. `getHDRStats()` exposes real worker/fallback counts.
+- Startup textures upload in batches; `compileAsync` prepares scene shaders before first-frame release. `readiness.prepared` prevents early rendering. GPU initialization may still create long tasks; no fixed load-time guarantee is made.
+- New loading panel shows real stage-weighted startup progress: resources, preparation, first frame. No time-based fake progress; 100% only follows a rendered first frame. CSS scanning rings/segmented progress support narrow/short viewports and reduced motion. `experience-loader.js` documents the API.
+- Shadow maps keep the former 60Hz cadence during 120Hz camera movement; LOD changes refresh immediately. Offscreen casters remain. GPU timer queries are nonblocking with CPU fallback.
+- Adaptive resolution is conditional on sustained measured overload while moving: 1 -> .96 -> .92 -> .88, >=700ms between reductions. Static frames restore native resolution before drawing. A raw-vsync estimate taken while idle keeps 60Hz screens from chasing an unattainable 120Hz budget. The prior native-pixel and 10MP caps remain.
+- Conservative asset polish: high files 39,160,992 -> 30,767,308 bytes (-21.43%), triangles 1,843,389 -> 1,842,781. Lower-detail meshes remain byte-identical to the previous accepted lows; stronger reductions failed visual/error gates or lacked benefit. Original high files are untouched. The manifest now has `low` AND `high` fingerprint URLs; original `url` remains the identity/fallback.
+- All 34 level URLs have SHA256 filename fingerprints. `tools/cache/generate-headers.mjs` verifies hashes and regenerates exact immutable-cache rules in `vercel.json`; manifests/HTML stay revalidated. Existing production Brotli/CDN HIT was verified, not reimplemented. These new cache rules have only been tested locally, not deployed.
+- `tools/lod/polish-summary.md`: 272 fixed-view offline comparisons; zero silhouette pixel changes in that finite test set. `tools/hdr/validation.json`: 14 byte/metadata parity cases and 19 boundary checks. `.codex/perf-polish-20260907/` contains browser screenshots and timing/quality tests. Do not describe this as proof of zero difference for every view or device.
+- Existing QA API additionally exposes `getBootStats()`, `getFrameStats()`, `getQualityStats()`, `getHDRStats()`. Local-only diagnostic routes/load-injection tests belong to `.codex`, not the website UI.
+
+### 2026-09-07 dynamic LOD — local preview, not deployed
+
+- Current user authorization is local preview only. This overrides the older automatic commit/push convention for this work; no commit, push or deployment has been performed.
+- Desktop fine-pointer rendering is capped at 60 FPS, including narrow desktop windows. The frame gate runs before scene updates and rendering, preserves fractional cadence on high-refresh displays, and resets after backgrounding. Coarse-pointer scheduling is unchanged.
+- Removed the 1.6 DPR supersampling floor. Drawing buffers and composer passes stay within viewport/screen native pixels, the existing quality-tier caps, and the desktop 10 MP budget. Resize, DPR and same-DPR screen-size changes update this limit.
+- `models/lod/manifest.json` maps 17 original GLBs to low-detail versions. Originals are unchanged. Low variants total 653,231 triangles / 10.73 MiB versus 1,843,389 triangles / 37.35 MiB; names, transforms, materials, UVs and source world bounds were verified. Generation and validation live in `tools/lod/README.md` and its scripts.
+- `experience-lod.js` owns a single-concurrency loading/preparation queue, shared source bounds and cached low/high variants. Ordinary visible models enter high detail at projected height >=24% AND distance <=2.2m; exit at projected height <17%, distance >2.8m or outside the view frustum. Selected/deep-linked targets can preload before entering view. High-detail failure leaves low detail visible and retries at most three times.
+- LOD updates use the main camera once per rendered frame. Mesh frustum culling is preserved with valid bounds; offscreen model containers are not globally hidden, so their shadows can still affect visible surfaces. This does not implement occlusion culling behind walls.
+- Default lighting requests only night 2K/probe. Clicking the desk lamp prepares day resources before crossfade; the 2K/4K selector opts into the requested state's 4K map. Requests are deduplicated, transitions serialized and referenced textures retained.
+- Startup registration/queue barriers and a rendered first frame precede loader dismissal. Baked replacements skip redundant procedural carpet/desk/tool-cabinet work, with a baked-load fallback. Texture variants wait for their source image, and anisotropy updates skip unready textures.
+- Existing `window.__exp` QA API is preserved; additional readouts: `getLODStats()`, `getLightingStats()`, `readiness`.
+- Local verification assets and before/after reports are under `../.codex/perf-optimization-20260907/`. Preview server: `node .codex/perf-optimization-20260907/server.mjs` from WEBSITE; optimized URL `http://127.0.0.1:4174/experience.html`, preserved HEAD baseline at `/baseline/experience.html`. No build or package installation is required to serve the site.
 
 ### 2026-07-01 polish pass (approved by Kefan, groups A-D)
 - Reveal/stagger system is now ACTIVE (was dead CSS): `[data-reveal]` and project cards start hidden and rise in with `--i` stagger; `.is-settled` restores fast hover transitions. Hero `.stage` elements animate via `stage-rise` keyed off `--stage`.
@@ -2452,7 +2489,10 @@ STANDING RULES (do these automatically, without being reminded)
    string in the HTML — bump it. For the 3D page bump BOTH experience.css and
    experience.js in experience.html. project-data.js is referenced by both
    pages. After deploy, `curl` the live URL to confirm the new string is served.
-4. If you spawn subagents, use Sonnet 5 at xhigh reasoning effort.
+4. Subagents are encouraged but not mandatory; direct work is allowed. Every
+   subagent must use GPT-6 Astra with ultra reasoning effort (model: gpt-6-astra,
+   effort: ultra, or equivalent). If unavailable, work directly. Prefer MCP/API
+   tools over screenshot-and-click computer control; explain any necessary fallback.
 5. Design language: restrained premium black / blue (#3f8cff) / white
    engineering aesthetic (Apple/SpaceX). NO purple, NO videos, NO hobby framing
    (frame hobby-adjacent work as engineering / CAD / fabrication / analysis).

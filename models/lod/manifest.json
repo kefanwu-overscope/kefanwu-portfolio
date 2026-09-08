@@ -1,0 +1,379 @@
+{
+  "version": 1,
+  "models": {
+    "models/ergonomic_mesh_office_chair/ergonomic_mesh_office_chair.glb": {
+      "low": "models/lod/ergonomic_mesh_office_chair/ergonomic_mesh_office_chair.6ecdeb3f402e.glb",
+      "sourceTriangles": 181494,
+      "lowTriangles": 64898,
+      "sourceBytes": 5629600,
+      "lowBytes": 1795540,
+      "sourceBounds": {
+        "min": [
+          -0.47712691808395447,
+          -0.49539250097304205,
+          -0.532508006327461
+        ],
+        "max": [
+          0.54945005128396,
+          0.8614897923201995,
+          0.5343100475930447
+        ]
+      },
+      "high": "models/optimized/ergonomic_mesh_office_chair/ergonomic_mesh_office_chair.5807982542ed.glb",
+      "highTriangles": 181402,
+      "highBytes": 4546460
+    },
+    "models/tire-hoosier-step.glb": {
+      "low": "models/lod/tire-hoosier-step.a14659cc7a8e.glb",
+      "sourceTriangles": 150000,
+      "lowTriangles": 58756,
+      "sourceBytes": 5535744,
+      "lowBytes": 2214496,
+      "sourceBounds": {
+        "min": [
+          -0.2030644565820694,
+          -0.10790128260850906,
+          -0.20320001244544983
+        ],
+        "max": [
+          0.2030644416809082,
+          0.10790127515792847,
+          0.20320001244544983
+        ]
+      },
+      "high": "models/optimized/tire-hoosier-step.6182594db447.glb",
+      "highTriangles": 150000,
+      "highBytes": 5535744
+    },
+    "models/real/steering.glb": {
+      "low": "models/lod/real/steering.c4ee760b9776.glb",
+      "sourceTriangles": 158758,
+      "lowTriangles": 55560,
+      "sourceBytes": 2852580,
+      "lowBytes": 663456,
+      "sourceBounds": {
+        "min": [
+          10.153120040893555,
+          162.484375,
+          239.34323120117188
+        ],
+        "max": [
+          467.31494140625,
+          590.6893920898438,
+          692.44873046875
+        ]
+      },
+      "high": "models/optimized/real/steering.ad3b599bdd8d.glb",
+      "highTriangles": 158658,
+      "highBytes": 1898812
+    },
+    "models/real/scanner.glb": {
+      "low": "models/lod/real/scanner.bb8ec6119ccf.glb",
+      "sourceTriangles": 161404,
+      "lowTriangles": 56476,
+      "sourceBytes": 2895392,
+      "lowBytes": 672052,
+      "sourceBounds": {
+        "min": [
+          1.0850560665130615,
+          0.4310360252857208,
+          1.4004590511322021
+        ],
+        "max": [
+          497.0405578613281,
+          342.9076232910156,
+          225.32814025878906
+        ]
+      },
+      "high": "models/optimized/real/scanner.e9aa4402dda7.glb",
+      "highTriangles": 161288,
+      "highBytes": 1925524
+    },
+    "models/real/telecaster.glb": {
+      "low": "models/lod/real/telecaster.d6abdd339fe7.glb",
+      "sourceTriangles": 159997,
+      "lowTriangles": 55993,
+      "sourceBytes": 2882096,
+      "lowBytes": 674192,
+      "sourceBounds": {
+        "min": [
+          24.799169540405273,
+          102.01078796386719,
+          17.90996551513672
+        ],
+        "max": [
+          341.6620788574219,
+          1077.877685546875,
+          77.35520935058594
+        ]
+      },
+      "high": "models/optimized/real/telecaster.c6822ca641f7.glb",
+      "highTriangles": 159981,
+      "highBytes": 2803660
+    },
+    "models/real/javelin.glb": {
+      "low": "models/lod/real/javelin.afea34e4a6f9.glb",
+      "sourceTriangles": 149876,
+      "lowTriangles": 52456,
+      "sourceBytes": 2694220,
+      "lowBytes": 625936,
+      "sourceBounds": {
+        "min": [
+          13.11126708984375,
+          492.0832214355469,
+          1012.083251953125
+        ],
+        "max": [
+          556.80810546875,
+          707.916748046875,
+          1227.916748046875
+        ]
+      },
+      "high": "models/optimized/real/javelin.95af88cf3936.glb",
+      "highTriangles": 149782,
+      "highBytes": 1793800
+    },
+    "models/real/smelly.glb": {
+      "low": "models/lod/real/smelly.344ee3791a9e.glb",
+      "sourceTriangles": 139997,
+      "lowTriangles": 48995,
+      "sourceBytes": 2517616,
+      "lowBytes": 586272,
+      "sourceBounds": {
+        "min": [
+          4.5404276847839355,
+          19.829423904418945,
+          1.6288045644760132
+        ],
+        "max": [
+          534.5404052734375,
+          362.3171081542969,
+          331.1959228515625
+        ]
+      },
+      "high": "models/optimized/real/smelly.44f372ffd564.glb",
+      "highTriangles": 139997,
+      "highBytes": 1677608
+    },
+    "models/real/vineRobot.glb": {
+      "low": "models/lod/real/vineRobot.49d1198dfe7c.glb",
+      "sourceTriangles": 122814,
+      "lowTriangles": 42976,
+      "sourceBytes": 2209044,
+      "lowBytes": 514016,
+      "sourceBounds": {
+        "min": [
+          3.921035051345825,
+          2.169877290725708,
+          1.3771653175354004
+        ],
+        "max": [
+          383.7939758300781,
+          425.82086181640625,
+          299.83770751953125
+        ]
+      },
+      "high": "models/optimized/real/vineRobot.c1da780d8f3b.glb",
+      "highTriangles": 122638,
+      "highBytes": 1469988
+    },
+    "models/real/lineFollower.glb": {
+      "low": "models/lod/real/lineFollower.3b88f2e6d8fb.glb",
+      "sourceTriangles": 119998,
+      "lowTriangles": 41982,
+      "sourceBytes": 2154092,
+      "lowBytes": 498016,
+      "sourceBounds": {
+        "min": [
+          6.645447731018066,
+          6.754928112030029,
+          2.500183343887329
+        ],
+        "max": [
+          150.6454620361328,
+          58.1708984375,
+          194.5169677734375
+        ]
+      },
+      "high": "models/optimized/real/lineFollower.8559ea6af968.glb",
+      "highTriangles": 119998,
+      "highBytes": 1434176
+    },
+    "models/real/pool.glb": {
+      "low": "models/lod/real/pool.dadadc197e54.glb",
+      "sourceTriangles": 110000,
+      "lowTriangles": 38494,
+      "sourceBytes": 1980796,
+      "lowBytes": 462664,
+      "sourceBounds": {
+        "min": [
+          0.2811782956123352,
+          2.047457218170166,
+          16.275014877319336
+        ],
+        "max": [
+          112.70209503173828,
+          465.4068603515625,
+          181.67501831054688
+        ]
+      },
+      "high": "models/optimized/real/pool.9ef756667089.glb",
+      "highTriangles": 109992,
+      "highBytes": 1320644
+    },
+    "models/real/aura.glb": {
+      "low": "models/lod/real/aura.4bc41b21e8bc.glb",
+      "sourceTriangles": 106314,
+      "lowTriangles": 37206,
+      "sourceBytes": 1913228,
+      "lowBytes": 446728,
+      "sourceBounds": {
+        "min": [
+          575.4097900390625,
+          0.14988361299037933,
+          1201.8218994140625
+        ],
+        "max": [
+          775.9117431640625,
+          297.67828369140625,
+          1537.5047607421875
+        ]
+      },
+      "high": "models/optimized/real/aura.3e2313634ba4.glb",
+      "highTriangles": 106310,
+      "highBytes": 1275284
+    },
+    "models/real/brakeSim.glb": {
+      "low": "models/lod/real/brakeSim.6e1a76206bf7.glb",
+      "sourceTriangles": 82888,
+      "lowTriangles": 29010,
+      "sourceBytes": 1479856,
+      "lowBytes": 335976,
+      "sourceBounds": {
+        "min": [
+          0,
+          0.020347535610198975,
+          0
+        ],
+        "max": [
+          4.749800205230713,
+          190.4796600341797,
+          190.5
+        ]
+      },
+      "high": "models/optimized/real/brakeSim.510f86b6616e.glb",
+      "highTriangles": 82888,
+      "highBytes": 982512
+    },
+    "models/real/materialTest.glb": {
+      "low": "models/lod/real/materialTest.e30b9f598b8b.glb",
+      "sourceTriangles": 22302,
+      "lowTriangles": 7802,
+      "sourceBytes": 404036,
+      "lowBytes": 96172,
+      "sourceBounds": {
+        "min": [
+          -69.32779693603516,
+          -43.31101608276367,
+          -75.00000762939453
+        ],
+        "max": [
+          82.7953109741211,
+          266.6889953613281,
+          75
+        ]
+      },
+      "high": "models/optimized/real/materialTest.741f65210b74.glb",
+      "highTriangles": 22302,
+      "highBytes": 270184
+    },
+    "models/real/seat.glb": {
+      "low": "models/lod/real/seat.5f2d2f14f07b.glb",
+      "sourceTriangles": 20430,
+      "lowTriangles": 7150,
+      "sourceBytes": 508936,
+      "lowBytes": 209688,
+      "sourceBounds": {
+        "min": [
+          207.0107421875,
+          13.908814430236816,
+          101.18592071533203
+        ],
+        "max": [
+          759.1543579101562,
+          619.2757568359375,
+          708.7075805664062
+        ]
+      },
+      "high": "models/optimized/real/seat.f05fa91e0c50.glb",
+      "highTriangles": 20430,
+      "highBytes": 386344
+    },
+    "models/real/driverseat.glb": {
+      "low": "models/lod/real/driverseat.9fc2ec534eb6.glb",
+      "sourceTriangles": 9526,
+      "lowTriangles": 3334,
+      "sourceBytes": 171316,
+      "lowBytes": 39844,
+      "sourceBounds": {
+        "min": [
+          75.58724212646484,
+          281.0792236328125,
+          1587.2117919921875
+        ],
+        "max": [
+          632.437744140625,
+          787.078125,
+          2312.477783203125
+        ]
+      },
+      "high": "models/optimized/real/driverseat.5db70b951f54.glb",
+      "highTriangles": 9524,
+      "highBytes": 114128
+    },
+    "models/helmet-gt3.glb": {
+      "low": "models/lod/helmet-gt3.d3b337d1746b.glb",
+      "sourceTriangles": 89999,
+      "lowTriangles": 31989,
+      "sourceBytes": 2061040,
+      "lowBytes": 907380,
+      "sourceBounds": {
+        "min": [
+          -0.1299610435962677,
+          -0.135422945022583,
+          -0.18000000715255737
+        ],
+        "max": [
+          0.1299610435962677,
+          0.135422945022583,
+          0.18000000715255737
+        ]
+      },
+      "high": "models/optimized/helmet-gt3.cbc7f14475df.glb",
+      "highTriangles": 89999,
+      "highBytes": 2061040
+    },
+    "models/helmet-weld.glb": {
+      "low": "models/lod/helmet-weld.52b62784dc04.glb",
+      "sourceTriangles": 57592,
+      "lowTriangles": 20154,
+      "sourceBytes": 1271400,
+      "lowBytes": 513532,
+      "sourceBounds": {
+        "min": [
+          -0.1119566261768341,
+          -0.1600000262260437,
+          -0.14654800295829773
+        ],
+        "max": [
+          0.1119566410779953,
+          0.15999996662139893,
+          0.14654800295829773
+        ]
+      },
+      "high": "models/optimized/helmet-weld.2e9893edc142.glb",
+      "highTriangles": 57592,
+      "highBytes": 1271400
+    }
+  }
+}
