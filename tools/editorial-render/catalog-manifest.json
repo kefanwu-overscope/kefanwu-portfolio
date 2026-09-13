@@ -1,0 +1,2583 @@
+[
+  {
+    "project": "steering",
+    "renderProvenance": {
+      "source": "models\\real\\steering.glb",
+      "sourceBytes": 2852580,
+      "sourceSha256": "e787d66353912c1f47f9008a4995176ae4d1270e9e5aece02980278a4630595d",
+      "sourceTriangles": 158758,
+      "sourceMeshNames": [
+        "mat_printed",
+        "mat_steel"
+      ],
+      "cameraDirectionBlenderZUp": [
+        0.487713098526001,
+        -0.7664062976837158,
+        0.41803979873657227
+      ],
+      "cameraAngleIndex": 0,
+      "dimensions": [
+        1800,
+        1200
+      ],
+      "samples": 192,
+      "geometryChanges": "Blender removes exactly the audited coincident duplicate source faces during import. Unique surface geometry is unchanged. Uniform scale/translation and shallow-edge shading normals only after import.",
+      "sourceDimensionsBlender": [
+        457.1618347167969,
+        453.1054992675781,
+        428.20501708984375
+      ],
+      "importedTriangles": 158538,
+      "zeroAreaSourceTriangles": 0,
+      "repeatedIndexSourceTriangles": 0,
+      "duplicateSourceTriangles": 220
+    },
+    "variants": [
+      {
+        "src": "assets/editorial/steering-wide-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 5714,
+        "sha256": "f1bfa5b69622ff1c57fe403ebb7ed86895e5e625af2c5e2a61fd817f3bcc5095"
+      },
+      {
+        "src": "assets/editorial/steering-wide-960.webp",
+        "width": 960,
+        "height": 640,
+        "bytes": 13800,
+        "sha256": "e0a5a1bcdb108a367a1d5778ceb65cfa5ce6cd02ea132b2f5580d65c574b244e"
+      },
+      {
+        "src": "assets/editorial/steering-wide.webp",
+        "width": 1800,
+        "height": 1200,
+        "bytes": 37334,
+        "sha256": "fad8026dd920bdc5b82adb312742a3d6b315bf2372646869706bd978a9e75b69"
+      }
+    ]
+  },
+  {
+    "project": "vineRobot",
+    "renderProvenance": {
+      "source": "models\\real\\vineRobot.glb",
+      "sourceBytes": 2209044,
+      "sourceSha256": "d5b552b2c95de5aef9665542ec2d30edde9c3321a664e32d45dc78831ac3bee7",
+      "sourceTriangles": 122814,
+      "sourceMeshNames": [
+        "mat_steel",
+        "mat_aero",
+        "mat_printed",
+        "mat_dark",
+        "mat_glass",
+        "mat_brass",
+        "mat_rubber"
+      ],
+      "cameraDirectionBlenderZUp": [
+        -0.786716639995575,
+        -0.50262451171875,
+        0.358393132686615
+      ],
+      "cameraAngleIndex": 0,
+      "dimensions": [
+        1800,
+        1200
+      ],
+      "samples": 192,
+      "geometryChanges": "Blender removes exactly the audited coincident duplicate source faces during import. Unique surface geometry is unchanged. Uniform scale/translation and shallow-edge shading normals only after import.",
+      "sourceDimensionsBlender": [
+        379.8729553222656,
+        298.4605407714844,
+        423.6509704589844
+      ],
+      "importedTriangles": 122814,
+      "zeroAreaSourceTriangles": 0,
+      "repeatedIndexSourceTriangles": 0,
+      "duplicateSourceTriangles": 0
+    },
+    "variants": [
+      {
+        "src": "assets/editorial/vineRobot-wide-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 10910,
+        "sha256": "fd2ca0ee3fd428cb358ca6d3eddd8b9fe35f4ac8a7b41b5c59a7786c02f59dfb"
+      },
+      {
+        "src": "assets/editorial/vineRobot-wide-960.webp",
+        "width": 960,
+        "height": 640,
+        "bytes": 25426,
+        "sha256": "513753f6c71c49a9f2c3b39ebb4f46d1e47aaae9a0ff292ce5d1ffef11d87980"
+      },
+      {
+        "src": "assets/editorial/vineRobot-wide.webp",
+        "width": 1800,
+        "height": 1200,
+        "bytes": 65922,
+        "sha256": "8cf9a4865674716ce9034e7603f6c09c50a65552b3dec5e31c64fae64a11483f"
+      }
+    ]
+  },
+  {
+    "project": "javelin",
+    "renderProvenance": {
+      "project": "javelin",
+      "source": "tools/editorial-render/sources/javelin.glb",
+      "sourceSha256": "cc7fd0216c265323e988de1d1398465bd4e11e7743ca9351a2fcab701de33e26",
+      "renderer": "tools/editorial-render/render_catalog.py",
+      "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+      "builder": null,
+      "builderSha256": null,
+      "sourceMeshFaceCounts": {
+        "mat_dark": 16126,
+        "mat_printed": 8864,
+        "mat_aero": 90318,
+        "mat_steel": 6160,
+        "mat_motor_silver": 17464,
+        "mat_motor_black": 11136,
+        "mat_propeller": 3552
+      },
+      "sourceDimensionsAfterRotation": [
+        543.6968383789062,
+        251.85870361328125,
+        295.98291015625
+      ],
+      "dimensions": [
+        1800,
+        1200
+      ],
+      "cameraDirectionBlenderZUp": [
+        -0.9428090453147888,
+        -0.2357022613286972,
+        0.2357022613286972
+      ],
+      "angleIndex": 0,
+      "samples": 192,
+      "geometryPolicy": "Original Javelin STL assembly, material regrouping and face masks only, plus four explicitly reconstructed display propellers/nuts. No CAD triangle simplification. Motor copper windings are not modeled by the supplied simplified part and were not invented.",
+      "materialDefaults": {
+        "steel": {
+          "color": "BBC1C8",
+          "metallic": 0.9,
+          "roughness": 0.32
+        },
+        "printed": {
+          "color": "30363D",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "printed"
+        },
+        "dark": {
+          "color": "202328",
+          "metallic": 0.12,
+          "roughness": 0.4
+        },
+        "aero": {
+          "color": "E3E1DB",
+          "metallic": 0,
+          "roughness": 0.45
+        },
+        "rubber": {
+          "color": "181B1E",
+          "metallic": 0,
+          "roughness": 0.62
+        },
+        "brass": {
+          "color": "AD8954",
+          "metallic": 0.8,
+          "roughness": 0.34
+        },
+        "glass": {
+          "color": "E7EDF0",
+          "metallic": 0,
+          "roughness": 0.1,
+          "transmission": 1
+        },
+        "wood": {
+          "color": "BE9C68",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "wood"
+        },
+        "carbon": {
+          "color": "171A20",
+          "metallic": 0.05,
+          "roughness": 0.3,
+          "texture": "carbon",
+          "coat": 0.3
+        },
+        "pcb": {
+          "color": "166C79",
+          "metallic": 0,
+          "roughness": 0.44
+        }
+      },
+      "materialAssignments": {
+        "dark": {
+          "color": "222528",
+          "metallic": 0,
+          "roughness": 0.54
+        },
+        "printed": {
+          "color": "292C30",
+          "metallic": 0,
+          "roughness": 0.58,
+          "texture": "printed"
+        },
+        "aero": {
+          "color": "242629",
+          "metallic": 0,
+          "roughness": 0.61,
+          "texture": "printed",
+          "specular": 0.22
+        },
+        "steel": {
+          "color": "B7BDC1",
+          "metallic": 1,
+          "roughness": 0.32
+        },
+        "motor_silver": {
+          "color": "C4C9CE",
+          "metallic": 1,
+          "roughness": 0.3
+        },
+        "motor_black": {
+          "color": "171B1F",
+          "metallic": 0.65,
+          "roughness": 0.36
+        },
+        "propeller": {
+          "color": "1D2023",
+          "metallic": 0,
+          "roughness": 0.52
+        }
+      },
+      "references": [
+        "assets/javelin-3q.webp",
+        "assets/javelin-outdoor.webp"
+      ],
+      "notes": []
+    },
+    "variants": [
+      {
+        "src": "assets/editorial/javelin-wide-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 5116,
+        "sha256": "4940c975e3e3ab74c58511801111aa30e7f547a17b50bd5831f8c0636b225f79"
+      },
+      {
+        "src": "assets/editorial/javelin-wide-960.webp",
+        "width": 960,
+        "height": 640,
+        "bytes": 12776,
+        "sha256": "e6968976a5786fadacef0e7be12fd9820e727a6defcd9c389db1cdf2f1986809"
+      },
+      {
+        "src": "assets/editorial/javelin-wide.webp",
+        "width": 1800,
+        "height": 1200,
+        "bytes": 34334,
+        "sha256": "3eaeca7d08861e6f74b279fd89c84e0e4d6ef2980ca1251763d93ab2ed79bc9b"
+      }
+    ]
+  },
+  {
+    "project": "scanner",
+    "renderProvenance": {
+      "source": "models\\real\\scanner.glb",
+      "sourceBytes": 2895392,
+      "sourceSha256": "b072a6981c5850e1ac14af331515f0ec8c75e7bc90477b8d412478f0633e5ab6",
+      "sourceTriangles": 161404,
+      "sourceMeshNames": [
+        "mat_wood",
+        "mat_printed",
+        "mat_dark",
+        "mat_brass",
+        "mat_steel",
+        "mat_aero"
+      ],
+      "cameraDirectionBlenderZUp": [
+        0.4647594690322876,
+        -0.7900910973548889,
+        0.39969316124916077
+      ],
+      "cameraAngleIndex": 0,
+      "dimensions": [
+        1800,
+        1200
+      ],
+      "samples": 192,
+      "geometryChanges": "Blender removes exactly the audited coincident duplicate source faces during import. Unique surface geometry is unchanged. Uniform scale/translation and shallow-edge shading normals only after import.",
+      "sourceDimensionsBlender": [
+        495.95550537109375,
+        223.9276885986328,
+        342.4765930175781
+      ],
+      "importedTriangles": 161359,
+      "zeroAreaSourceTriangles": 0,
+      "repeatedIndexSourceTriangles": 0,
+      "duplicateSourceTriangles": 45
+    },
+    "variants": [
+      {
+        "src": "assets/editorial/scanner-wide-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 15144,
+        "sha256": "d90426f5db2137029b6cd3e4f7401c6c00b416a68208dab537c80f2bf3e94e18"
+      },
+      {
+        "src": "assets/editorial/scanner-wide-960.webp",
+        "width": 960,
+        "height": 640,
+        "bytes": 35266,
+        "sha256": "c49844c75a7c6674a97f04498ffd8d3e65c09ed1a1f17c033eff4b056296f4dd"
+      },
+      {
+        "src": "assets/editorial/scanner-wide.webp",
+        "width": 1800,
+        "height": 1200,
+        "bytes": 89590,
+        "sha256": "378717b8f28f56d81c851615213d6ad8715d5f960f6e47eb4b80f368d877532d"
+      }
+    ]
+  },
+  {
+    "project": "brakeSim",
+    "renderProvenance": {
+      "project": "brakeSim",
+      "source": "models/real/brakeSim.glb",
+      "sourceSha256": "694811cb504337a39d1170a34694683e4960e1115c2512044884c0b12278acc5",
+      "renderer": "tools/editorial-render/render_catalog.py",
+      "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+      "builder": null,
+      "builderSha256": null,
+      "sourceMeshFaceCounts": {
+        "mat_steel": 82888
+      },
+      "sourceDimensionsAfterRotation": [
+        4.749800205230713,
+        190.5,
+        190.45932006835938
+      ],
+      "dimensions": [
+        1800,
+        1200
+      ],
+      "cameraDirectionBlenderZUp": [
+        0.918650209903717,
+        -0.2624714970588684,
+        0.29528042674064636
+      ],
+      "angleIndex": 0,
+      "samples": 192,
+      "geometryPolicy": "Supplied CAD geometry: rotation, uniform scale, translation, and shading only. No replacement or decimation.",
+      "materialDefaults": {
+        "steel": {
+          "color": "BBC1C8",
+          "metallic": 0.9,
+          "roughness": 0.32
+        },
+        "printed": {
+          "color": "30363D",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "printed"
+        },
+        "dark": {
+          "color": "202328",
+          "metallic": 0.12,
+          "roughness": 0.4
+        },
+        "aero": {
+          "color": "E3E1DB",
+          "metallic": 0,
+          "roughness": 0.45
+        },
+        "rubber": {
+          "color": "181B1E",
+          "metallic": 0,
+          "roughness": 0.62
+        },
+        "brass": {
+          "color": "AD8954",
+          "metallic": 0.8,
+          "roughness": 0.34
+        },
+        "glass": {
+          "color": "E7EDF0",
+          "metallic": 0,
+          "roughness": 0.1,
+          "transmission": 1
+        },
+        "wood": {
+          "color": "BE9C68",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "wood"
+        },
+        "carbon": {
+          "color": "171A20",
+          "metallic": 0.05,
+          "roughness": 0.3,
+          "texture": "carbon",
+          "coat": 0.3
+        },
+        "pcb": {
+          "color": "166C79",
+          "metallic": 0,
+          "roughness": 0.44
+        }
+      },
+      "materialAssignments": {
+        "steel": {
+          "color": "A3A5A8",
+          "metallic": 1.0,
+          "roughness": 0.48
+        }
+      },
+      "references": [
+        "assets/fsae-mk8-live-3.webp",
+        "project-data.js#brakeSim"
+      ],
+      "notes": [
+        "The project record specifies ASTM A48 Class 40 cast iron. FEA colors are not physical pigments."
+      ]
+    },
+    "variants": [
+      {
+        "src": "assets/editorial/brakeSim-wide-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 20504,
+        "sha256": "37511c3eb45665c8f88eb04462734e1e215a77243d60a511e70afeb868dabc04"
+      },
+      {
+        "src": "assets/editorial/brakeSim-wide-960.webp",
+        "width": 960,
+        "height": 640,
+        "bytes": 47730,
+        "sha256": "4995ca290d356f0fd68c593133e9c8124df66981dc85fa94889b6a32f8b0f76c"
+      },
+      {
+        "src": "assets/editorial/brakeSim-wide.webp",
+        "width": 1800,
+        "height": 1200,
+        "bytes": 114998,
+        "sha256": "5d7280f9b7b5d1158f7fd8593d9ba1475c88046a6fda8d96a75d655c0180a571"
+      }
+    ]
+  },
+  {
+    "project": "aura",
+    "renderProvenance": {
+      "project": "aura",
+      "source": "tools/editorial-render/sources/aura.glb",
+      "sourceSha256": "a6ffbea4c9b4d5b1e8043a5a6c732314840caff70a5e2a02b03d1ad5992d5014",
+      "renderer": "tools/editorial-render/render_catalog.py",
+      "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+      "builder": null,
+      "builderSha256": null,
+      "sourceMeshFaceCounts": {
+        "mat_paint_gray": 7021,
+        "mat_plastic_black": 67531,
+        "mat_rubber_black": 392,
+        "mat_steel": 31370
+      },
+      "sourceDimensionsAfterRotation": [
+        297.52838134765625,
+        335.6829833984375,
+        200.501953125
+      ],
+      "dimensions": [
+        1800,
+        1200
+      ],
+      "cameraDirectionBlenderZUp": [
+        0.4647594690322876,
+        -0.7900910973548889,
+        0.39969316124916077
+      ],
+      "angleIndex": 0,
+      "samples": 192,
+      "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+      "materialDefaults": {
+        "steel": {
+          "color": "BBC1C8",
+          "metallic": 0.9,
+          "roughness": 0.32
+        },
+        "printed": {
+          "color": "30363D",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "printed"
+        },
+        "dark": {
+          "color": "202328",
+          "metallic": 0.12,
+          "roughness": 0.4
+        },
+        "aero": {
+          "color": "E3E1DB",
+          "metallic": 0,
+          "roughness": 0.45
+        },
+        "rubber": {
+          "color": "181B1E",
+          "metallic": 0,
+          "roughness": 0.62
+        },
+        "brass": {
+          "color": "AD8954",
+          "metallic": 0.8,
+          "roughness": 0.34
+        },
+        "glass": {
+          "color": "E7EDF0",
+          "metallic": 0,
+          "roughness": 0.1,
+          "transmission": 1
+        },
+        "wood": {
+          "color": "BE9C68",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "wood"
+        },
+        "carbon": {
+          "color": "171A20",
+          "metallic": 0.05,
+          "roughness": 0.3,
+          "texture": "carbon",
+          "coat": 0.3
+        },
+        "pcb": {
+          "color": "166C79",
+          "metallic": 0,
+          "roughness": 0.44
+        }
+      },
+      "materialAssignments": {
+        "paint_gray": {
+          "color": "8A9195",
+          "metallic": 0,
+          "roughness": 0.52
+        },
+        "plastic_black": {
+          "color": "202329",
+          "metallic": 0,
+          "roughness": 0.48
+        },
+        "rubber_black": {
+          "color": "24272B",
+          "metallic": 0,
+          "roughness": 0.7
+        },
+        "steel": {
+          "color": "ABB2BA",
+          "metallic": 1,
+          "roughness": 0.35
+        }
+      },
+      "references": [
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\aura-swerve.jpeg",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\aura-swerve-mount.jpeg",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\aura-wheels-bearing-shaft.jpeg",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-aura-swerve-cad.webp"
+      ],
+      "notes": []
+    },
+    "variants": [
+      {
+        "src": "assets/editorial/aura-wide-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 6854,
+        "sha256": "540d50870bc8b3737e872e89cc1342cf957a68e7308e5dc1b7a17702baee45b6"
+      },
+      {
+        "src": "assets/editorial/aura-wide-960.webp",
+        "width": 960,
+        "height": 640,
+        "bytes": 15558,
+        "sha256": "a8bf93097d9f898a86097c3ffc9553868f1c00d2af73fecbec14b6ef6cd858eb"
+      },
+      {
+        "src": "assets/editorial/aura-wide.webp",
+        "width": 1800,
+        "height": 1200,
+        "bytes": 41566,
+        "sha256": "d062f91a9d767d0c2106a52fcfcd40fe363239145bd5eae594ee7395f95eb3c2"
+      }
+    ]
+  },
+  {
+    "project": "carbonSeat",
+    "renderProvenance": {
+      "project": "carbonSeat",
+      "source": "models/real/seat.glb",
+      "sourceSha256": "923d4c76cd68962bec1bcae614bd02a5a6de7aa1cf7610cc1558e7498bcac006",
+      "renderer": "tools/editorial-render/render_catalog.py",
+      "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+      "builder": null,
+      "builderSha256": null,
+      "sourceMeshFaceCounts": {
+        "mat_carbon": 20430
+      },
+      "sourceDimensionsAfterRotation": [
+        552.1436157226562,
+        607.5216674804688,
+        605.366943359375
+      ],
+      "dimensions": [
+        1800,
+        1200
+      ],
+      "cameraDirectionBlenderZUp": [
+        0.4647594690322876,
+        -0.7900910973548889,
+        0.39969316124916077
+      ],
+      "angleIndex": 0,
+      "samples": 192,
+      "geometryPolicy": "Supplied CAD geometry: rotation, uniform scale, translation, and shading only. No replacement or decimation.",
+      "materialDefaults": {
+        "steel": {
+          "color": "BBC1C8",
+          "metallic": 0.9,
+          "roughness": 0.32
+        },
+        "printed": {
+          "color": "30363D",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "printed"
+        },
+        "dark": {
+          "color": "202328",
+          "metallic": 0.12,
+          "roughness": 0.4
+        },
+        "aero": {
+          "color": "E3E1DB",
+          "metallic": 0,
+          "roughness": 0.45
+        },
+        "rubber": {
+          "color": "181B1E",
+          "metallic": 0,
+          "roughness": 0.62
+        },
+        "brass": {
+          "color": "AD8954",
+          "metallic": 0.8,
+          "roughness": 0.34
+        },
+        "glass": {
+          "color": "E7EDF0",
+          "metallic": 0,
+          "roughness": 0.1,
+          "transmission": 1
+        },
+        "wood": {
+          "color": "BE9C68",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "wood"
+        },
+        "carbon": {
+          "color": "171A20",
+          "metallic": 0.05,
+          "roughness": 0.3,
+          "texture": "carbon",
+          "coat": 0.3
+        },
+        "pcb": {
+          "color": "166C79",
+          "metallic": 0,
+          "roughness": 0.44
+        }
+      },
+      "materialAssignments": {
+        "carbon": {
+          "color": "242628",
+          "metallic": 0.0,
+          "roughness": 0.5,
+          "coat": 0.12,
+          "specular": 0.25
+        }
+      },
+      "references": [
+        "assets/carbon-seat-trimmed-shell.webp",
+        "assets/carbon-seat-weave-close.webp"
+      ],
+      "notes": [
+        "Cured carbon/epoxy is a dielectric composite. Fine weave and resin finish follow the build photos; no geometry smoothing or invented upholstery."
+      ]
+    },
+    "variants": [
+      {
+        "src": "assets/editorial/carbonSeat-wide-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 4444,
+        "sha256": "7afa77a6806ef3513af0c9071dca26df19e3a756224f80f0a8beefad3384b529"
+      },
+      {
+        "src": "assets/editorial/carbonSeat-wide-960.webp",
+        "width": 960,
+        "height": 640,
+        "bytes": 13738,
+        "sha256": "59e1e9616e36b534a508051b0a6593653e50df4201cb1ee56395709a44833595"
+      },
+      {
+        "src": "assets/editorial/carbonSeat-wide.webp",
+        "width": 1800,
+        "height": 1200,
+        "bytes": 71946,
+        "sha256": "29787f1fb110f8a5405e46f3867f5cb7822505ebc8ed1561bf4426b2df97526d"
+      }
+    ]
+  },
+  {
+    "project": "seat",
+    "renderProvenance": {
+      "project": "seat",
+      "source": "models/real/driverseat.glb",
+      "sourceSha256": "c6b1842b4cb5103b316441e649fba95fefedcbf968b4ab70098c7caefd13880d",
+      "renderer": "tools/editorial-render/render_catalog.py",
+      "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+      "builder": null,
+      "builderSha256": null,
+      "sourceMeshFaceCounts": {
+        "mat_steel": 9526
+      },
+      "sourceDimensionsAfterRotation": [
+        725.2659912109375,
+        556.8504638671875,
+        505.99896240234375
+      ],
+      "dimensions": [
+        1800,
+        1200
+      ],
+      "cameraDirectionBlenderZUp": [
+        -0.6995898485183716,
+        -0.5052593350410461,
+        0.5052593350410461
+      ],
+      "angleIndex": 0,
+      "samples": 192,
+      "geometryPolicy": "Supplied CAD geometry: rotation, uniform scale, translation, and shading only. No replacement or decimation.",
+      "materialDefaults": {
+        "steel": {
+          "color": "BBC1C8",
+          "metallic": 0.9,
+          "roughness": 0.32
+        },
+        "printed": {
+          "color": "30363D",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "printed"
+        },
+        "dark": {
+          "color": "202328",
+          "metallic": 0.12,
+          "roughness": 0.4
+        },
+        "aero": {
+          "color": "E3E1DB",
+          "metallic": 0,
+          "roughness": 0.45
+        },
+        "rubber": {
+          "color": "181B1E",
+          "metallic": 0,
+          "roughness": 0.62
+        },
+        "brass": {
+          "color": "AD8954",
+          "metallic": 0.8,
+          "roughness": 0.34
+        },
+        "glass": {
+          "color": "E7EDF0",
+          "metallic": 0,
+          "roughness": 0.1,
+          "transmission": 1
+        },
+        "wood": {
+          "color": "BE9C68",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "wood"
+        },
+        "carbon": {
+          "color": "171A20",
+          "metallic": 0.05,
+          "roughness": 0.3,
+          "texture": "carbon",
+          "coat": 0.3
+        },
+        "pcb": {
+          "color": "166C79",
+          "metallic": 0,
+          "roughness": 0.44
+        }
+      },
+      "materialAssignments": {
+        "steel": {
+          "color": "C8CCD0",
+          "metallic": 1.0,
+          "roughness": 0.4
+        }
+      },
+      "references": [
+        "assets/seat-cad.webp",
+        "tools/stl2glb_seat.py"
+      ],
+      "notes": [
+        "The mat_steel bucket is unpainted sheet aluminum. No harness straps are present in the supplied model."
+      ]
+    },
+    "variants": [
+      {
+        "src": "assets/editorial/seat-wide-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 8500,
+        "sha256": "287ea9d7dda659b2d58d3f270c795fab0e1a934dce0b23812e2903824fc27873"
+      },
+      {
+        "src": "assets/editorial/seat-wide-960.webp",
+        "width": 960,
+        "height": 640,
+        "bytes": 18076,
+        "sha256": "5a521b481993f66fc2c9aa7fbd35bc64361e8a302704a57f330a57eaed71c0a9"
+      },
+      {
+        "src": "assets/editorial/seat-wide.webp",
+        "width": 1800,
+        "height": 1200,
+        "bytes": 43120,
+        "sha256": "1f1a6630d920f9c752ed1dc88d2edba5d9167d16622dc8f7ed52814488cba3f0"
+      }
+    ]
+  },
+  {
+    "project": "materialTest",
+    "renderProvenance": {
+      "project": "materialTest",
+      "source": null,
+      "sourceSha256": null,
+      "renderer": "tools/editorial-render/render_catalog.py",
+      "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+      "builder": "tools/editorial-render/material-test/build_material_test.py",
+      "builderSha256": "06a60961b3000d08bcf96c16f912687fec104fca9f3b6d2da44f11c48a3e39cb",
+      "sourceMeshFaceCounts": {
+        "MaterialTest_sloped_base_shell": 122,
+        "MaterialTest_base_foot": 242,
+        "MaterialTest_base_foot.001": 242,
+        "MaterialTest_base_foot.002": 242,
+        "MaterialTest_base_foot.003": 242,
+        "MaterialTest_single_column_back_shell": 98,
+        "MaterialTest_column_face_border": 98,
+        "MaterialTest_column_face_border.001": 98,
+        "MaterialTest_column_top_cap": 98,
+        "MaterialTest_bellows_shadow_face": 98,
+        "MaterialTest_accordion_folded_front": 442,
+        "MaterialTest_side_scale_recess": 6,
+        "MaterialTest_yellow_travel_marker": 98,
+        "MaterialTest_travel_marker_knob": 242,
+        "MaterialTest_yellow_travel_marker.001": 98,
+        "MaterialTest_travel_marker_knob.001": 242,
+        "MaterialTest_black_crosshead": 98,
+        "MaterialTest_crosshead_fastener": 242,
+        "MaterialTest_crosshead_fastener.001": 242,
+        "MaterialTest_upper_load_cell": 242,
+        "MaterialTest_upper_load_cell_top": 242,
+        "MaterialTest_load_cell_socket": 242,
+        "MaterialTest_upper_coupling": 242,
+        "MaterialTest_upper_knurled_ring": 242,
+        "MaterialTest_upper_cross_pin": 242,
+        "MaterialTest_lower_mount_gasket": 98,
+        "MaterialTest_lower_machined_plate": 98,
+        "MaterialTest_mount_plate_bolt": 122,
+        "MaterialTest_mount_plate_bolt.001": 122,
+        "MaterialTest_mount_plate_bolt.002": 122,
+        "MaterialTest_mount_plate_bolt.003": 122,
+        "MaterialTest_lower_fixed_coupler": 242,
+        "MaterialTest_lower_coupler_lock_ring": 242,
+        "MaterialTest_lower_lock_pin": 242,
+        "MaterialTest_lower_grip_stem": 242,
+        "MaterialTest_collar_knurl": 80,
+        "MaterialTest_collar_knurl.001": 80,
+        "MaterialTest_collar_knurl.002": 80,
+        "MaterialTest_collar_knurl.003": 80,
+        "MaterialTest_collar_knurl.004": 80,
+        "MaterialTest_collar_knurl.005": 80,
+        "MaterialTest_collar_knurl.006": 80,
+        "MaterialTest_collar_knurl.007": 80,
+        "MaterialTest_collar_knurl.008": 80,
+        "MaterialTest_collar_knurl.009": 80,
+        "MaterialTest_collar_knurl.010": 80,
+        "MaterialTest_collar_knurl.011": 80,
+        "MaterialTest_collar_knurl.012": 80,
+        "MaterialTest_collar_knurl.013": 80,
+        "MaterialTest_collar_knurl.014": 80,
+        "MaterialTest_collar_knurl.015": 80,
+        "MaterialTest_collar_knurl.016": 80,
+        "MaterialTest_collar_knurl.017": 80,
+        "MaterialTest_collar_knurl.018": 80,
+        "MaterialTest_collar_knurl.019": 80,
+        "MaterialTest_collar_knurl.020": 80,
+        "MaterialTest_collar_knurl.021": 80,
+        "MaterialTest_collar_knurl.022": 80,
+        "MaterialTest_collar_knurl.023": 80,
+        "MaterialTest_collar_knurl.024": 80,
+        "MaterialTest_collar_knurl.025": 80,
+        "MaterialTest_collar_knurl.026": 80,
+        "MaterialTest_collar_knurl.027": 80,
+        "MaterialTest_collar_knurl.028": 80,
+        "MaterialTest_collar_knurl.029": 80,
+        "MaterialTest_collar_knurl.030": 80,
+        "MaterialTest_collar_knurl.031": 80,
+        "MaterialTest_collar_knurl.032": 80,
+        "MaterialTest_collar_knurl.033": 80,
+        "MaterialTest_collar_knurl.034": 80,
+        "MaterialTest_collar_knurl.035": 80,
+        "MaterialTest_collar_knurl.036": 80,
+        "MaterialTest_collar_knurl.037": 80,
+        "MaterialTest_collar_knurl.038": 80,
+        "MaterialTest_collar_knurl.039": 80,
+        "MaterialTest_collar_knurl.040": 80,
+        "MaterialTest_collar_knurl.041": 80,
+        "MaterialTest_collar_knurl.042": 80,
+        "MaterialTest_collar_knurl.043": 80,
+        "MaterialTest_collar_knurl.044": 80,
+        "MaterialTest_collar_knurl.045": 80,
+        "MaterialTest_collar_knurl.046": 80,
+        "MaterialTest_collar_knurl.047": 80,
+        "MaterialTest_collar_knurl.048": 80,
+        "MaterialTest_collar_knurl.049": 80,
+        "MaterialTest_collar_knurl.050": 80,
+        "MaterialTest_collar_knurl.051": 80,
+        "MaterialTest_collar_knurl.052": 80,
+        "MaterialTest_collar_knurl.053": 80,
+        "MaterialTest_collar_knurl.054": 80,
+        "MaterialTest_collar_knurl.055": 80,
+        "MaterialTest_collar_knurl.056": 80,
+        "MaterialTest_collar_knurl.057": 80,
+        "MaterialTest_collar_knurl.058": 80,
+        "MaterialTest_collar_knurl.059": 80,
+        "MaterialTest_collar_knurl.060": 80,
+        "MaterialTest_collar_knurl.061": 80,
+        "MaterialTest_collar_knurl.062": 80,
+        "MaterialTest_collar_knurl.063": 80,
+        "MaterialTest_collar_knurl.064": 80,
+        "MaterialTest_collar_knurl.065": 80,
+        "MaterialTest_collar_knurl.066": 80,
+        "MaterialTest_collar_knurl.067": 80,
+        "MaterialTest_collar_knurl.068": 80,
+        "MaterialTest_collar_knurl.069": 80,
+        "MaterialTest_collar_knurl.070": 80,
+        "MaterialTest_collar_knurl.071": 80,
+        "MaterialTest_collar_knurl.072": 80,
+        "MaterialTest_collar_knurl.073": 80,
+        "MaterialTest_collar_knurl.074": 80,
+        "MaterialTest_collar_knurl.075": 80,
+        "MaterialTest_collar_knurl.076": 80,
+        "MaterialTest_collar_knurl.077": 80,
+        "MaterialTest_collar_knurl.078": 80,
+        "MaterialTest_collar_knurl.079": 80,
+        "MaterialTest_collar_knurl.080": 80,
+        "MaterialTest_collar_knurl.081": 80,
+        "MaterialTest_collar_knurl.082": 80,
+        "MaterialTest_collar_knurl.083": 80,
+        "MaterialTest_collar_knurl.084": 80,
+        "MaterialTest_collar_knurl.085": 80,
+        "MaterialTest_collar_knurl.086": 80,
+        "MaterialTest_collar_knurl.087": 80,
+        "MaterialTest_collar_knurl.088": 80,
+        "MaterialTest_collar_knurl.089": 80,
+        "MaterialTest_collar_knurl.090": 80,
+        "MaterialTest_collar_knurl.091": 80,
+        "MaterialTest_collar_knurl.092": 80,
+        "MaterialTest_collar_knurl.093": 80,
+        "MaterialTest_collar_knurl.094": 80,
+        "MaterialTest_collar_knurl.095": 80,
+        "MaterialTest_collar_knurl.096": 80,
+        "MaterialTest_collar_knurl.097": 80,
+        "MaterialTest_collar_knurl.098": 80,
+        "MaterialTest_collar_knurl.099": 80,
+        "MaterialTest_curved_spring_grip_cheek": 174,
+        "MaterialTest_sliding_jaw_wedge": 98,
+        "MaterialTest_diagonal_jaw_return_spring": 1456,
+        "MaterialTest_jaw_spring_anchor": 122,
+        "MaterialTest_jaw_spring_anchor.001": 122,
+        "MaterialTest_jaw_spring_anchor.002": 122,
+        "MaterialTest_curved_spring_grip_cheek.001": 174,
+        "MaterialTest_sliding_jaw_wedge.001": 98,
+        "MaterialTest_diagonal_jaw_return_spring.001": 1456,
+        "MaterialTest_jaw_spring_anchor.003": 122,
+        "MaterialTest_jaw_spring_anchor.004": 122,
+        "MaterialTest_jaw_spring_anchor.005": 122,
+        "MaterialTest_grip_top_bridge": 98,
+        "MaterialTest_grip_bridge_fastener": 122,
+        "MaterialTest_grip_bridge_fastener.001": 122,
+        "MaterialTest_curved_spring_grip_cheek.002": 174,
+        "MaterialTest_sliding_jaw_wedge.002": 98,
+        "MaterialTest_diagonal_jaw_return_spring.002": 1456,
+        "MaterialTest_jaw_spring_anchor.006": 122,
+        "MaterialTest_jaw_spring_anchor.007": 122,
+        "MaterialTest_jaw_spring_anchor.008": 122,
+        "MaterialTest_curved_spring_grip_cheek.003": 174,
+        "MaterialTest_sliding_jaw_wedge.003": 98,
+        "MaterialTest_diagonal_jaw_return_spring.003": 1456,
+        "MaterialTest_jaw_spring_anchor.009": 122,
+        "MaterialTest_jaw_spring_anchor.010": 122,
+        "MaterialTest_jaw_spring_anchor.011": 122,
+        "MaterialTest_grip_top_bridge.001": 98,
+        "MaterialTest_grip_bridge_fastener.002": 122,
+        "MaterialTest_grip_bridge_fastener.003": 122,
+        "MaterialTest_black_fabric_tensile_specimen": 248,
+        "MaterialTest_sloped_operator_bezel": 98,
+        "MaterialTest_yellow_emergency_stop_field": 98,
+        "MaterialTest_emergency_stop_shank": 242,
+        "MaterialTest_red_emergency_stop_mushroom": 242,
+        "MaterialTest_black_jog_rocker": 98,
+        "MaterialTest_load_cell_signal_cable": 192
+      },
+      "sourceDimensionsAfterRotation": [
+        0.3499999940395355,
+        0.33901941776275635,
+        0.8529999852180481
+      ],
+      "dimensions": [
+        1800,
+        1200
+      ],
+      "cameraDirectionBlenderZUp": [
+        0.4647594690322876,
+        -0.7900910973548889,
+        0.39969316124916077
+      ],
+      "angleIndex": 0,
+      "samples": 192,
+      "geometryPolicy": "Photo-based reconstruction of the actual single-column tensile test equipment. Display geometry, not manufacturer CAD. The older MTS-style model is not the instrument used in this experiment.",
+      "materialDefaults": {
+        "steel": {
+          "color": "BBC1C8",
+          "metallic": 0.9,
+          "roughness": 0.32
+        },
+        "printed": {
+          "color": "30363D",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "printed"
+        },
+        "dark": {
+          "color": "202328",
+          "metallic": 0.12,
+          "roughness": 0.4
+        },
+        "aero": {
+          "color": "E3E1DB",
+          "metallic": 0,
+          "roughness": 0.45
+        },
+        "rubber": {
+          "color": "181B1E",
+          "metallic": 0,
+          "roughness": 0.62
+        },
+        "brass": {
+          "color": "AD8954",
+          "metallic": 0.8,
+          "roughness": 0.34
+        },
+        "glass": {
+          "color": "E7EDF0",
+          "metallic": 0,
+          "roughness": 0.1,
+          "transmission": 1
+        },
+        "wood": {
+          "color": "BE9C68",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "wood"
+        },
+        "carbon": {
+          "color": "171A20",
+          "metallic": 0.05,
+          "roughness": 0.3,
+          "texture": "carbon",
+          "coat": 0.3
+        },
+        "pcb": {
+          "color": "166C79",
+          "metallic": 0,
+          "roughness": 0.44
+        }
+      },
+      "materialAssignments": {},
+      "references": [
+        "assets/material-instron-frame.webp",
+        "assets/material-specimen-md.webp"
+      ],
+      "notes": []
+    },
+    "variants": [
+      {
+        "src": "assets/editorial/materialTest-wide-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 5932,
+        "sha256": "134e35a96a2ea7b4b84d8809a22937d96ca927677f3ad3f8c46dc144e1f76936"
+      },
+      {
+        "src": "assets/editorial/materialTest-wide-960.webp",
+        "width": 960,
+        "height": 640,
+        "bytes": 14262,
+        "sha256": "381515a7334f4b3bf5e1c97a4dc22807e982bebfe72c591a81546d0f89bdfbef"
+      },
+      {
+        "src": "assets/editorial/materialTest-wide.webp",
+        "width": 1800,
+        "height": 1200,
+        "bytes": 39008,
+        "sha256": "72cf8eac2c06f9adebbf22b095d44a6aabafad871a12d409830d27cae33adf4f"
+      }
+    ]
+  },
+  {
+    "project": "ansysCfd",
+    "renderProvenance": {
+      "project": "ansysCfd",
+      "source": null,
+      "sourceSha256": null,
+      "renderer": "tools/editorial-render/render_catalog.py",
+      "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+      "builder": null,
+      "builderSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+      "sourceMeshFaceCounts": {
+        "Display back enclosure": 6,
+        "Display front bezel": 6,
+        "Stand riser": 6,
+        "Stand foot": 6,
+        "Actual Ansys Fluent Cp result, unmodified texture": 1
+      },
+      "sourceDimensionsAfterRotation": [
+        2.799999952316284,
+        0.49000000953674316,
+        2.119999885559082
+      ],
+      "dimensions": [
+        1800,
+        1200
+      ],
+      "cameraDirectionBlenderZUp": [
+        0.36064252257347107,
+        -0.8909990787506104,
+        0.2757854163646698
+      ],
+      "angleIndex": 0,
+      "samples": 192,
+      "geometryPolicy": "Procedural presentation monitor; unchanged original Ansys Fluent Cp result mapped to its screen. Monitor is presentation furniture, not claimed project hardware.",
+      "materialDefaults": {
+        "steel": {
+          "color": "BBC1C8",
+          "metallic": 0.9,
+          "roughness": 0.32
+        },
+        "printed": {
+          "color": "30363D",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "printed"
+        },
+        "dark": {
+          "color": "202328",
+          "metallic": 0.12,
+          "roughness": 0.4
+        },
+        "aero": {
+          "color": "E3E1DB",
+          "metallic": 0,
+          "roughness": 0.45
+        },
+        "rubber": {
+          "color": "181B1E",
+          "metallic": 0,
+          "roughness": 0.62
+        },
+        "brass": {
+          "color": "AD8954",
+          "metallic": 0.8,
+          "roughness": 0.34
+        },
+        "glass": {
+          "color": "E7EDF0",
+          "metallic": 0,
+          "roughness": 0.1,
+          "transmission": 1
+        },
+        "wood": {
+          "color": "BE9C68",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "wood"
+        },
+        "carbon": {
+          "color": "171A20",
+          "metallic": 0.05,
+          "roughness": 0.3,
+          "texture": "carbon",
+          "coat": 0.3
+        },
+        "pcb": {
+          "color": "166C79",
+          "metallic": 0,
+          "roughness": 0.44
+        }
+      },
+      "materialAssignments": {},
+      "references": [
+        "assets/cover-ansys-cfd.webp"
+      ],
+      "notes": []
+    },
+    "variants": [
+      {
+        "src": "assets/editorial/ansysCfd-wide-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 7580,
+        "sha256": "fb61b5c5c32064798d48105321e523649de0f5377a940e6519f38e2bbd813898"
+      },
+      {
+        "src": "assets/editorial/ansysCfd-wide-960.webp",
+        "width": 960,
+        "height": 640,
+        "bytes": 18544,
+        "sha256": "85447c417ebfd0c52bbbe7f5259453148121f21f6154f3d1fd8f35b90cf8dbb9"
+      },
+      {
+        "src": "assets/editorial/ansysCfd-wide.webp",
+        "width": 1800,
+        "height": 1200,
+        "bytes": 53768,
+        "sha256": "6afed94bb0da81f82ffa61a22e1d3cf22b362098457bf7316f39ceb28602ae07"
+      }
+    ]
+  },
+  {
+    "project": "pool",
+    "renderProvenance": {
+      "project": "pool",
+      "source": "models/real/pool.glb",
+      "sourceSha256": "254758e5c3795c28f316427dcec8c20fcfc669e41715c0785e2eaa35339cb9e9",
+      "renderer": "tools/editorial-render/render_catalog.py",
+      "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+      "builder": null,
+      "builderSha256": null,
+      "sourceMeshFaceCounts": {
+        "mat_steel": 79463,
+        "mat_dark": 464,
+        "mat_printed": 9352,
+        "mat_wood": 288,
+        "mat_aero": 10536,
+        "mat_glass": 9896
+      },
+      "sourceDimensionsAfterRotation": [
+        165.40000915527344,
+        463.3594055175781,
+        112.42091369628906
+      ],
+      "dimensions": [
+        1800,
+        1200
+      ],
+      "cameraDirectionBlenderZUp": [
+        0.4647594690322876,
+        -0.7900910973548889,
+        0.39969316124916077
+      ],
+      "angleIndex": 0,
+      "samples": 192,
+      "geometryPolicy": "Supplied CAD geometry: rotation, uniform scale, translation, and shading only. No replacement or decimation.",
+      "materialDefaults": {
+        "steel": {
+          "color": "BBC1C8",
+          "metallic": 0.9,
+          "roughness": 0.32
+        },
+        "printed": {
+          "color": "30363D",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "printed"
+        },
+        "dark": {
+          "color": "202328",
+          "metallic": 0.12,
+          "roughness": 0.4
+        },
+        "aero": {
+          "color": "E3E1DB",
+          "metallic": 0,
+          "roughness": 0.45
+        },
+        "rubber": {
+          "color": "181B1E",
+          "metallic": 0,
+          "roughness": 0.62
+        },
+        "brass": {
+          "color": "AD8954",
+          "metallic": 0.8,
+          "roughness": 0.34
+        },
+        "glass": {
+          "color": "E7EDF0",
+          "metallic": 0,
+          "roughness": 0.1,
+          "transmission": 1
+        },
+        "wood": {
+          "color": "BE9C68",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "wood"
+        },
+        "carbon": {
+          "color": "171A20",
+          "metallic": 0.05,
+          "roughness": 0.3,
+          "texture": "carbon",
+          "coat": 0.3
+        },
+        "pcb": {
+          "color": "166C79",
+          "metallic": 0,
+          "roughness": 0.44
+        }
+      },
+      "materialAssignments": {
+        "printed": {
+          "color": "2A5FC4",
+          "metallic": 0,
+          "roughness": 0.5
+        },
+        "aero": {
+          "color": "84827E",
+          "metallic": 0.5,
+          "roughness": 0.5
+        },
+        "wood": {
+          "color": "AEB0B3",
+          "metallic": 0.8,
+          "roughness": 0.4,
+          "texture": null
+        },
+        "steel": {
+          "color": "ABB2BA",
+          "metallic": 1,
+          "roughness": 0.35
+        },
+        "dark": {
+          "color": "25282C",
+          "metallic": 0.1,
+          "roughness": 0.48
+        },
+        "glass": {
+          "color": "F1F4F4",
+          "metallic": 0,
+          "roughness": 0.1,
+          "transmission": 1
+        }
+      },
+      "references": [
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\pool-sniper.webp",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\pool-sniper-exploded.webp",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\pool-sniper-build.webp"
+      ],
+      "notes": []
+    },
+    "variants": [
+      {
+        "src": "assets/editorial/pool-wide-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 10312,
+        "sha256": "6de08880da19686779bdc42553bad5c4018518bf7b8e1f605be4b76c55791bb4"
+      },
+      {
+        "src": "assets/editorial/pool-wide-960.webp",
+        "width": 960,
+        "height": 640,
+        "bytes": 23872,
+        "sha256": "26a9f753e3d19cff8e63bf9d8208d9c62fda350a1cff39bf3d593e89620573dc"
+      },
+      {
+        "src": "assets/editorial/pool-wide.webp",
+        "width": 1800,
+        "height": 1200,
+        "bytes": 62386,
+        "sha256": "756d445dcf661c75fa155f5668afd90f80abfb826282919c703f98c3fb269b5f"
+      }
+    ]
+  },
+  {
+    "project": "lineFollower",
+    "renderProvenance": {
+      "project": "lineFollower",
+      "source": "tools/editorial-render/sources/lineFollower.glb",
+      "sourceSha256": "aa8c4253e0a38cc5c2e07bc1d161a44fe243e7a3c39e4c26e2e7e582ac1f29ad",
+      "renderer": "tools/editorial-render/render_catalog.py",
+      "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+      "builder": null,
+      "builderSha256": null,
+      "sourceMeshFaceCounts": {
+        "mat_battery_wrap": 168,
+        "mat_pcb_green": 20254,
+        "mat_pcb_teal": 6594,
+        "mat_plastic_black": 56959,
+        "mat_printed_black": 20908,
+        "mat_rubber_orange": 25708,
+        "mat_solder": 4862,
+        "mat_steel": 94837
+      },
+      "sourceDimensionsAfterRotation": [
+        144.00001525878906,
+        191.98765563964844,
+        51.412803649902344
+      ],
+      "dimensions": [
+        1800,
+        1200
+      ],
+      "cameraDirectionBlenderZUp": [
+        0.4647594690322876,
+        -0.7900910973548889,
+        0.39969316124916077
+      ],
+      "angleIndex": 0,
+      "samples": 192,
+      "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+      "materialDefaults": {
+        "steel": {
+          "color": "BBC1C8",
+          "metallic": 0.9,
+          "roughness": 0.32
+        },
+        "printed": {
+          "color": "30363D",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "printed"
+        },
+        "dark": {
+          "color": "202328",
+          "metallic": 0.12,
+          "roughness": 0.4
+        },
+        "aero": {
+          "color": "E3E1DB",
+          "metallic": 0,
+          "roughness": 0.45
+        },
+        "rubber": {
+          "color": "181B1E",
+          "metallic": 0,
+          "roughness": 0.62
+        },
+        "brass": {
+          "color": "AD8954",
+          "metallic": 0.8,
+          "roughness": 0.34
+        },
+        "glass": {
+          "color": "E7EDF0",
+          "metallic": 0,
+          "roughness": 0.1,
+          "transmission": 1
+        },
+        "wood": {
+          "color": "BE9C68",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "wood"
+        },
+        "carbon": {
+          "color": "171A20",
+          "metallic": 0.05,
+          "roughness": 0.3,
+          "texture": "carbon",
+          "coat": 0.3
+        },
+        "pcb": {
+          "color": "166C79",
+          "metallic": 0,
+          "roughness": 0.44
+        }
+      },
+      "materialAssignments": {
+        "battery_wrap": {
+          "color": "D4D7D6",
+          "metallic": 0,
+          "roughness": 0.38
+        },
+        "pcb_green": {
+          "color": "237153",
+          "metallic": 0,
+          "roughness": 0.47
+        },
+        "pcb_teal": {
+          "color": "17616B",
+          "metallic": 0,
+          "roughness": 0.46
+        },
+        "plastic_black": {
+          "color": "202329",
+          "metallic": 0,
+          "roughness": 0.48
+        },
+        "printed_black": {
+          "color": "292D34",
+          "metallic": 0,
+          "roughness": 0.56,
+          "texture": "printed"
+        },
+        "rubber_orange": {
+          "color": "E78B32",
+          "metallic": 0,
+          "roughness": 0.62
+        },
+        "solder": {
+          "color": "BAC1C4",
+          "metallic": 1,
+          "roughness": 0.34
+        },
+        "steel": {
+          "color": "ABB2BA",
+          "metallic": 1,
+          "roughness": 0.35
+        }
+      },
+      "references": [
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\line-follower-cover.webp",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\line-follower-wiring.webp",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\line-follower-built.webp"
+      ],
+      "notes": []
+    },
+    "variants": [
+      {
+        "src": "assets/editorial/lineFollower-wide-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 13356,
+        "sha256": "732385fdc99ff44d9ff724ee99ba7e4d6d33ec3e613c445f99b40b4979615651"
+      },
+      {
+        "src": "assets/editorial/lineFollower-wide-960.webp",
+        "width": 960,
+        "height": 640,
+        "bytes": 32794,
+        "sha256": "4195a14e95b6f7312dbd249b087c25692cd5e95e1761bb0d3b2a707d990deaba"
+      },
+      {
+        "src": "assets/editorial/lineFollower-wide.webp",
+        "width": 1800,
+        "height": 1200,
+        "bytes": 85014,
+        "sha256": "6066f4159fa7f75fe54bd15e9c80df50ff2a2c7689b8b5203ec939c9024371c7"
+      }
+    ]
+  },
+  {
+    "project": "formlabs",
+    "renderProvenance": {
+      "project": "formlabs",
+      "source": "tools/editorial-render/sources/formlabs.glb",
+      "sourceSha256": "814cb55be3a9f3e9f4932581de47805a86c84db15d8581d50c51eccab1dd116f",
+      "renderer": "tools/editorial-render/render_catalog.py",
+      "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+      "builder": null,
+      "builderSha256": null,
+      "sourceMeshFaceCounts": {
+        "mat_amber_resin": 1188,
+        "mat_clear_acrylic": 5492,
+        "mat_plastic_black": 16462,
+        "mat_printed_white": 59584,
+        "mat_steel": 390528
+      },
+      "sourceDimensionsAfterRotation": [
+        530.0,
+        329.5671081542969,
+        342.4765930175781
+      ],
+      "dimensions": [
+        1800,
+        1200
+      ],
+      "cameraDirectionBlenderZUp": [
+        0.4647594690322876,
+        -0.7900910973548889,
+        0.39969316124916077
+      ],
+      "angleIndex": 0,
+      "samples": 192,
+      "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+      "materialDefaults": {
+        "steel": {
+          "color": "BBC1C8",
+          "metallic": 0.9,
+          "roughness": 0.32
+        },
+        "printed": {
+          "color": "30363D",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "printed"
+        },
+        "dark": {
+          "color": "202328",
+          "metallic": 0.12,
+          "roughness": 0.4
+        },
+        "aero": {
+          "color": "E3E1DB",
+          "metallic": 0,
+          "roughness": 0.45
+        },
+        "rubber": {
+          "color": "181B1E",
+          "metallic": 0,
+          "roughness": 0.62
+        },
+        "brass": {
+          "color": "AD8954",
+          "metallic": 0.8,
+          "roughness": 0.34
+        },
+        "glass": {
+          "color": "E7EDF0",
+          "metallic": 0,
+          "roughness": 0.1,
+          "transmission": 1
+        },
+        "wood": {
+          "color": "BE9C68",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "wood"
+        },
+        "carbon": {
+          "color": "171A20",
+          "metallic": 0.05,
+          "roughness": 0.3,
+          "texture": "carbon",
+          "coat": 0.3
+        },
+        "pcb": {
+          "color": "166C79",
+          "metallic": 0,
+          "roughness": 0.44
+        }
+      },
+      "materialAssignments": {
+        "amber_resin": {
+          "color": "C8A754",
+          "metallic": 0,
+          "roughness": 0.34,
+          "transmission": 0.38,
+          "ior": 1.48
+        },
+        "clear_acrylic": {
+          "color": "F1F4F4",
+          "metallic": 0,
+          "roughness": 0.09,
+          "transmission": 1,
+          "ior": 1.49
+        },
+        "plastic_black": {
+          "color": "202329",
+          "metallic": 0,
+          "roughness": 0.48
+        },
+        "printed_white": {
+          "color": "E6E4DD",
+          "metallic": 0,
+          "roughness": 0.51,
+          "texture": "printed"
+        },
+        "steel": {
+          "color": "ABB2BA",
+          "metallic": 1,
+          "roughness": 0.35
+        }
+      },
+      "references": [
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\formlabs-smelly-table.webp",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\formlabs-smelly-actuator.webp",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\formlabs-smelly.webp",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-smelly-cad.webp"
+      ],
+      "notes": []
+    },
+    "variants": [
+      {
+        "src": "assets/editorial/formlabs-wide-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 10778,
+        "sha256": "8a993901644f7b1cd7f713d7162f8c6ff96bc40e812c13f2584c19d19565e0cb"
+      },
+      {
+        "src": "assets/editorial/formlabs-wide-960.webp",
+        "width": 960,
+        "height": 640,
+        "bytes": 25696,
+        "sha256": "38821480a551f5270053670f6310a8c1423a6202a29187098eb423fd0bbeffa4"
+      },
+      {
+        "src": "assets/editorial/formlabs-wide.webp",
+        "width": 1800,
+        "height": 1200,
+        "bytes": 71884,
+        "sha256": "a5bb7ee35d211a739e99717bb1fd694b0765b60db8759fb8903d72abc6414e02"
+      }
+    ]
+  },
+  {
+    "project": "telecaster",
+    "renderProvenance": {
+      "project": "telecaster",
+      "source": "tools/editorial-render/sources/telecaster.glb",
+      "sourceSha256": "bbd3e00a4443406f2bd12e02cf40e42be441b7e22e4ee6722131d01155ac19f5",
+      "renderer": "tools/editorial-render/render_catalog.py",
+      "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+      "builder": null,
+      "builderSha256": null,
+      "sourceMeshFaceCounts": {
+        "mat_chrome": 763810,
+        "mat_fretboard": 1846,
+        "mat_maple": 4244,
+        "mat_paint_white": 15494,
+        "mat_pickguard_red": 1905,
+        "mat_plastic_black": 4405
+      },
+      "sourceDimensionsAfterRotation": [
+        316.9296569824219,
+        59.44999694824219,
+        975.8803100585938
+      ],
+      "dimensions": [
+        1800,
+        1200
+      ],
+      "cameraDirectionBlenderZUp": [
+        0.4647594690322876,
+        -0.7900910973548889,
+        0.39969316124916077
+      ],
+      "angleIndex": 0,
+      "samples": 192,
+      "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+      "materialDefaults": {
+        "steel": {
+          "color": "BBC1C8",
+          "metallic": 0.9,
+          "roughness": 0.32
+        },
+        "printed": {
+          "color": "30363D",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "printed"
+        },
+        "dark": {
+          "color": "202328",
+          "metallic": 0.12,
+          "roughness": 0.4
+        },
+        "aero": {
+          "color": "E3E1DB",
+          "metallic": 0,
+          "roughness": 0.45
+        },
+        "rubber": {
+          "color": "181B1E",
+          "metallic": 0,
+          "roughness": 0.62
+        },
+        "brass": {
+          "color": "AD8954",
+          "metallic": 0.8,
+          "roughness": 0.34
+        },
+        "glass": {
+          "color": "E7EDF0",
+          "metallic": 0,
+          "roughness": 0.1,
+          "transmission": 1
+        },
+        "wood": {
+          "color": "BE9C68",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "wood"
+        },
+        "carbon": {
+          "color": "171A20",
+          "metallic": 0.05,
+          "roughness": 0.3,
+          "texture": "carbon",
+          "coat": 0.3
+        },
+        "pcb": {
+          "color": "166C79",
+          "metallic": 0,
+          "roughness": 0.44
+        }
+      },
+      "materialAssignments": {
+        "chrome": {
+          "color": "D2D5D7",
+          "metallic": 1,
+          "roughness": 0.2
+        },
+        "fretboard": {
+          "color": "503B32",
+          "metallic": 0,
+          "roughness": 0.48,
+          "texture": "wood",
+          "grainRotation": 0,
+          "grainAxis": "Z"
+        },
+        "maple": {
+          "color": "BC9766",
+          "metallic": 0,
+          "roughness": 0.46,
+          "texture": "wood",
+          "grainRotation": 0,
+          "grainAxis": "Z"
+        },
+        "paint_white": {
+          "color": "E9E8DE",
+          "metallic": 0,
+          "roughness": 0.3,
+          "coat": 0.3
+        },
+        "pickguard_red": {
+          "color": "B71932",
+          "metallic": 0,
+          "roughness": 0.38,
+          "coat": 0.18,
+          "texture": "pearloid",
+          "specular": 0.3
+        },
+        "plastic_black": {
+          "color": "202329",
+          "metallic": 0,
+          "roughness": 0.48
+        }
+      },
+      "references": [
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-telecaster.webp",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\telecaster-finish.webp",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\telecaster-wood.webp",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\telecaster-body.webp",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\telecaster-assembly.webp"
+      ],
+      "notes": []
+    },
+    "variants": [
+      {
+        "src": "assets/editorial/telecaster-wide-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 4794,
+        "sha256": "68a2e52389efcfb51987a2d948ae204e5c2e7739390026c0084cfde8927a6d6c"
+      },
+      {
+        "src": "assets/editorial/telecaster-wide-960.webp",
+        "width": 960,
+        "height": 640,
+        "bytes": 12606,
+        "sha256": "094d8182b7c53439add7f1c4311628c7ab3568cdb1a60d4834aa4f7f91603e48"
+      },
+      {
+        "src": "assets/editorial/telecaster-wide.webp",
+        "width": 1800,
+        "height": 1200,
+        "bytes": 36434,
+        "sha256": "a4f7ee54bcd0729ddb19e5e27b9e103a4fae67800351b137cb32088d394587fa"
+      }
+    ]
+  },
+  {
+    "project": "education",
+    "renderProvenance": {
+      "project": "education",
+      "source": "tools/editorial-render/sources/education.glb",
+      "sourceSha256": "c4373769dac0263b7a8a1447484abb0859f797e050c1da1c3fbbd407624d8e2d",
+      "renderer": "tools/editorial-render/render_catalog.py",
+      "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+      "builder": null,
+      "builderSha256": null,
+      "sourceMeshFaceCounts": {
+        "mat_chrome": 516660,
+        "mat_fretboard": 7596,
+        "mat_maple": 5469,
+        "mat_pickguard_white": 3288,
+        "mat_plastic_black": 18909,
+        "mat_printed_navy": 5284
+      },
+      "sourceDimensionsAfterRotation": [
+        649.3324584960938,
+        67.9412841796875,
+        391.83258056640625
+      ],
+      "dimensions": [
+        1800,
+        1200
+      ],
+      "cameraDirectionBlenderZUp": [
+        0.4647594690322876,
+        -0.7900910973548889,
+        0.39969316124916077
+      ],
+      "angleIndex": 0,
+      "samples": 192,
+      "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+      "materialDefaults": {
+        "steel": {
+          "color": "BBC1C8",
+          "metallic": 0.9,
+          "roughness": 0.32
+        },
+        "printed": {
+          "color": "30363D",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "printed"
+        },
+        "dark": {
+          "color": "202328",
+          "metallic": 0.12,
+          "roughness": 0.4
+        },
+        "aero": {
+          "color": "E3E1DB",
+          "metallic": 0,
+          "roughness": 0.45
+        },
+        "rubber": {
+          "color": "181B1E",
+          "metallic": 0,
+          "roughness": 0.62
+        },
+        "brass": {
+          "color": "AD8954",
+          "metallic": 0.8,
+          "roughness": 0.34
+        },
+        "glass": {
+          "color": "E7EDF0",
+          "metallic": 0,
+          "roughness": 0.1,
+          "transmission": 1
+        },
+        "wood": {
+          "color": "BE9C68",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "wood"
+        },
+        "carbon": {
+          "color": "171A20",
+          "metallic": 0.05,
+          "roughness": 0.3,
+          "texture": "carbon",
+          "coat": 0.3
+        },
+        "pcb": {
+          "color": "166C79",
+          "metallic": 0,
+          "roughness": 0.44
+        }
+      },
+      "materialAssignments": {
+        "chrome": {
+          "color": "D2D5D7",
+          "metallic": 1,
+          "roughness": 0.2
+        },
+        "fretboard": {
+          "color": "503B32",
+          "metallic": 0,
+          "roughness": 0.48,
+          "texture": "wood"
+        },
+        "maple": {
+          "color": "BC9766",
+          "metallic": 0,
+          "roughness": 0.46,
+          "texture": "wood"
+        },
+        "pickguard_white": {
+          "color": "ECEBE5",
+          "metallic": 0,
+          "roughness": 0.35
+        },
+        "plastic_black": {
+          "color": "202329",
+          "metallic": 0,
+          "roughness": 0.48
+        },
+        "printed_navy": {
+          "color": "28334D",
+          "metallic": 0,
+          "roughness": 0.51,
+          "texture": "printed"
+        }
+      },
+      "references": [
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\education-kit.webp",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\education-kit-render.webp",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\education-kit-experiment.webp",
+        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-guitar-education-cad.webp"
+      ],
+      "notes": []
+    },
+    "variants": [
+      {
+        "src": "assets/editorial/education-wide-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 8032,
+        "sha256": "57bc1818505a8d9cbfe72796c61b1d6270f95f850fd3cc91be275d48fe194e17"
+      },
+      {
+        "src": "assets/editorial/education-wide-960.webp",
+        "width": 960,
+        "height": 640,
+        "bytes": 19592,
+        "sha256": "ac2f611852b3fd3fa2c4a73373a4e97d19798ea1a4b8917fb55e3e7a3f91ab2a"
+      },
+      {
+        "src": "assets/editorial/education-wide.webp",
+        "width": 1800,
+        "height": 1200,
+        "bytes": 57472,
+        "sha256": "f682a9c5f45f632fcbb61fd12ab76ebc08d99ee1422dc5af01a8efd129779312"
+      }
+    ]
+  },
+  {
+    "project": "ftc",
+    "renderProvenance": {
+      "project": "ftc",
+      "source": null,
+      "sourceSha256": null,
+      "renderer": "tools/editorial-render/render_catalog.py",
+      "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+      "builder": "tools/editorial-render/ftc/build_ftc.py",
+      "builderSha256": "dd18741c7be4620ea40eade9a99bfcc48abddf91cd4dd3f137f5b0b8bf1c4fe7",
+      "sourceMeshFaceCounts": {
+        "FTC_longitudinal_chassis_channel_web": 5100,
+        "FTC_longitudinal_chassis_channel_flange": 3680,
+        "FTC_longitudinal_chassis_channel_flange.001": 3680,
+        "FTC_longitudinal_chassis_channel_web.001": 5100,
+        "FTC_longitudinal_chassis_channel_flange.002": 3680,
+        "FTC_longitudinal_chassis_channel_flange.003": 3680,
+        "FTC_cross_chassis_channel_web": 4220,
+        "FTC_cross_chassis_channel_flange": 3040,
+        "FTC_cross_chassis_channel_flange.001": 3040,
+        "FTC_cross_chassis_channel_web.001": 4220,
+        "FTC_cross_chassis_channel_flange.002": 3040,
+        "FTC_cross_chassis_channel_flange.003": 3040,
+        "FTC_electronics_tray": 54,
+        "FTC_drive_axle": 34,
+        "FTC_mecanum_center": 34,
+        "FTC_wheel_center_disc": 34,
+        "FTC_wheel_spoke": 54,
+        "FTC_wheel_spoke.001": 54,
+        "FTC_wheel_spoke.002": 54,
+        "FTC_wheel_spoke.003": 54,
+        "FTC_wheel_spoke.004": 54,
+        "FTC_wheel_center_disc.001": 34,
+        "FTC_wheel_spoke.005": 54,
+        "FTC_wheel_spoke.006": 54,
+        "FTC_wheel_spoke.007": 54,
+        "FTC_wheel_spoke.008": 54,
+        "FTC_wheel_spoke.009": 54,
+        "FTC_mecanum_barrel": 142,
+        "FTC_roller_pin": 14,
+        "FTC_mecanum_barrel.001": 142,
+        "FTC_roller_pin.001": 14,
+        "FTC_mecanum_barrel.002": 142,
+        "FTC_roller_pin.002": 14,
+        "FTC_mecanum_barrel.003": 142,
+        "FTC_roller_pin.003": 14,
+        "FTC_mecanum_barrel.004": 142,
+        "FTC_roller_pin.004": 14,
+        "FTC_mecanum_barrel.005": 142,
+        "FTC_roller_pin.005": 14,
+        "FTC_mecanum_barrel.006": 142,
+        "FTC_roller_pin.006": 14,
+        "FTC_mecanum_barrel.007": 142,
+        "FTC_roller_pin.007": 14,
+        "FTC_mecanum_barrel.008": 142,
+        "FTC_roller_pin.008": 14,
+        "FTC_mecanum_barrel.009": 142,
+        "FTC_roller_pin.009": 14,
+        "FTC_axle_screw_washer": 22,
+        "FTC_axle_screw_head": 8,
+        "FTC_drive_axle.001": 34,
+        "FTC_mecanum_center.001": 34,
+        "FTC_wheel_center_disc.002": 34,
+        "FTC_wheel_spoke.010": 54,
+        "FTC_wheel_spoke.011": 54,
+        "FTC_wheel_spoke.012": 54,
+        "FTC_wheel_spoke.013": 54,
+        "FTC_wheel_spoke.014": 54,
+        "FTC_wheel_center_disc.003": 34,
+        "FTC_wheel_spoke.015": 54,
+        "FTC_wheel_spoke.016": 54,
+        "FTC_wheel_spoke.017": 54,
+        "FTC_wheel_spoke.018": 54,
+        "FTC_wheel_spoke.019": 54,
+        "FTC_mecanum_barrel.010": 142,
+        "FTC_roller_pin.010": 14,
+        "FTC_mecanum_barrel.011": 142,
+        "FTC_roller_pin.011": 14,
+        "FTC_mecanum_barrel.012": 142,
+        "FTC_roller_pin.012": 14,
+        "FTC_mecanum_barrel.013": 142,
+        "FTC_roller_pin.013": 14,
+        "FTC_mecanum_barrel.014": 142,
+        "FTC_roller_pin.014": 14,
+        "FTC_mecanum_barrel.015": 142,
+        "FTC_roller_pin.015": 14,
+        "FTC_mecanum_barrel.016": 142,
+        "FTC_roller_pin.016": 14,
+        "FTC_mecanum_barrel.017": 142,
+        "FTC_roller_pin.017": 14,
+        "FTC_mecanum_barrel.018": 142,
+        "FTC_roller_pin.018": 14,
+        "FTC_mecanum_barrel.019": 142,
+        "FTC_roller_pin.019": 14,
+        "FTC_axle_screw_washer.001": 22,
+        "FTC_axle_screw_head.001": 8,
+        "FTC_drive_axle.002": 34,
+        "FTC_mecanum_center.002": 34,
+        "FTC_wheel_center_disc.004": 34,
+        "FTC_wheel_spoke.020": 54,
+        "FTC_wheel_spoke.021": 54,
+        "FTC_wheel_spoke.022": 54,
+        "FTC_wheel_spoke.023": 54,
+        "FTC_wheel_spoke.024": 54,
+        "FTC_wheel_center_disc.005": 34,
+        "FTC_wheel_spoke.025": 54,
+        "FTC_wheel_spoke.026": 54,
+        "FTC_wheel_spoke.027": 54,
+        "FTC_wheel_spoke.028": 54,
+        "FTC_wheel_spoke.029": 54,
+        "FTC_mecanum_barrel.020": 142,
+        "FTC_roller_pin.020": 14,
+        "FTC_mecanum_barrel.021": 142,
+        "FTC_roller_pin.021": 14,
+        "FTC_mecanum_barrel.022": 142,
+        "FTC_roller_pin.022": 14,
+        "FTC_mecanum_barrel.023": 142,
+        "FTC_roller_pin.023": 14,
+        "FTC_mecanum_barrel.024": 142,
+        "FTC_roller_pin.024": 14,
+        "FTC_mecanum_barrel.025": 142,
+        "FTC_roller_pin.025": 14,
+        "FTC_mecanum_barrel.026": 142,
+        "FTC_roller_pin.026": 14,
+        "FTC_mecanum_barrel.027": 142,
+        "FTC_roller_pin.027": 14,
+        "FTC_mecanum_barrel.028": 142,
+        "FTC_roller_pin.028": 14,
+        "FTC_mecanum_barrel.029": 142,
+        "FTC_roller_pin.029": 14,
+        "FTC_axle_screw_washer.002": 22,
+        "FTC_axle_screw_head.002": 8,
+        "FTC_drive_axle.003": 34,
+        "FTC_mecanum_center.003": 34,
+        "FTC_wheel_center_disc.006": 34,
+        "FTC_wheel_spoke.030": 54,
+        "FTC_wheel_spoke.031": 54,
+        "FTC_wheel_spoke.032": 54,
+        "FTC_wheel_spoke.033": 54,
+        "FTC_wheel_spoke.034": 54,
+        "FTC_wheel_center_disc.007": 34,
+        "FTC_wheel_spoke.035": 54,
+        "FTC_wheel_spoke.036": 54,
+        "FTC_wheel_spoke.037": 54,
+        "FTC_wheel_spoke.038": 54,
+        "FTC_wheel_spoke.039": 54,
+        "FTC_mecanum_barrel.030": 142,
+        "FTC_roller_pin.030": 14,
+        "FTC_mecanum_barrel.031": 142,
+        "FTC_roller_pin.031": 14,
+        "FTC_mecanum_barrel.032": 142,
+        "FTC_roller_pin.032": 14,
+        "FTC_mecanum_barrel.033": 142,
+        "FTC_roller_pin.033": 14,
+        "FTC_mecanum_barrel.034": 142,
+        "FTC_roller_pin.034": 14,
+        "FTC_mecanum_barrel.035": 142,
+        "FTC_roller_pin.035": 14,
+        "FTC_mecanum_barrel.036": 142,
+        "FTC_roller_pin.036": 14,
+        "FTC_mecanum_barrel.037": 142,
+        "FTC_roller_pin.037": 14,
+        "FTC_mecanum_barrel.038": 142,
+        "FTC_roller_pin.038": 14,
+        "FTC_mecanum_barrel.039": 142,
+        "FTC_roller_pin.039": 14,
+        "FTC_axle_screw_washer.003": 22,
+        "FTC_axle_screw_head.003": 8,
+        "FTC_silver_DC_motor": 34,
+        "FTC_black_gearhead": 34,
+        "FTC_motor_rear_cap": 34,
+        "FTC_motor_output": 34,
+        "FTC_red_motor_lead": 240,
+        "FTC_black_motor_lead": 240,
+        "FTC_silver_DC_motor.001": 34,
+        "FTC_black_gearhead.001": 34,
+        "FTC_motor_rear_cap.001": 34,
+        "FTC_motor_output.001": 34,
+        "FTC_red_motor_lead.001": 240,
+        "FTC_black_motor_lead.001": 240,
+        "FTC_silver_DC_motor.002": 34,
+        "FTC_black_gearhead.002": 34,
+        "FTC_motor_rear_cap.002": 34,
+        "FTC_motor_output.002": 34,
+        "FTC_red_motor_lead.002": 240,
+        "FTC_black_motor_lead.002": 240,
+        "FTC_silver_DC_motor.003": 34,
+        "FTC_black_gearhead.003": 34,
+        "FTC_motor_rear_cap.003": 34,
+        "FTC_motor_output.003": 34,
+        "FTC_red_motor_lead.003": 240,
+        "FTC_black_motor_lead.003": 240,
+        "FTC_belt_pulley": 34,
+        "FTC_pulley_boss": 34,
+        "FTC_belt_pulley.001": 34,
+        "FTC_pulley_boss.001": 34,
+        "FTC_belt_straight_run": 54,
+        "FTC_belt_straight_run.001": 54,
+        "FTC_belt_end": 162,
+        "FTC_belt_end.001": 162,
+        "FTC_belt_pulley.002": 34,
+        "FTC_pulley_boss.002": 34,
+        "FTC_belt_pulley.003": 34,
+        "FTC_pulley_boss.003": 34,
+        "FTC_belt_straight_run.002": 54,
+        "FTC_belt_straight_run.003": 54,
+        "FTC_belt_end.002": 162,
+        "FTC_belt_end.003": 162,
+        "FTC_rear_red_guard": 54,
+        "FTC_front_red_guard": 54,
+        "FTC_red_side_guard": 54,
+        "FTC_panel_rivet_washer": 22,
+        "FTC_panel_rivet_head": 8,
+        "FTC_panel_rivet_washer.001": 22,
+        "FTC_panel_rivet_head.001": 8,
+        "FTC_panel_rivet_washer.002": 22,
+        "FTC_panel_rivet_head.002": 8,
+        "FTC_panel_rivet_washer.003": 22,
+        "FTC_panel_rivet_head.003": 8,
+        "FTC_red_side_guard.001": 54,
+        "FTC_panel_rivet_washer.004": 22,
+        "FTC_panel_rivet_head.004": 8,
+        "FTC_panel_rivet_washer.005": 22,
+        "FTC_panel_rivet_head.005": 8,
+        "FTC_panel_rivet_washer.006": 22,
+        "FTC_panel_rivet_head.006": 8,
+        "FTC_panel_rivet_washer.007": 22,
+        "FTC_panel_rivet_head.007": 8,
+        "FTC_black_Aframe_link": 54,
+        "FTC_link_identification_tape": 54,
+        "FTC_link_identification_tape.001": 54,
+        "FTC_link_pivot_washer": 22,
+        "FTC_link_pivot_head": 8,
+        "FTC_link_pivot_washer.001": 22,
+        "FTC_link_pivot_head.001": 8,
+        "FTC_black_Aframe_link.001": 54,
+        "FTC_link_identification_tape.002": 54,
+        "FTC_link_identification_tape.003": 54,
+        "FTC_link_pivot_washer.002": 22,
+        "FTC_link_pivot_head.002": 8,
+        "FTC_link_pivot_washer.003": 22,
+        "FTC_link_pivot_head.003": 8,
+        "FTC_routed_black_sleeve": 240,
+        "FTC_black_Aframe_link.002": 54,
+        "FTC_link_identification_tape.004": 54,
+        "FTC_link_identification_tape.005": 54,
+        "FTC_link_pivot_washer.004": 22,
+        "FTC_link_pivot_head.004": 8,
+        "FTC_link_pivot_washer.005": 22,
+        "FTC_link_pivot_head.005": 8,
+        "FTC_black_Aframe_link.003": 54,
+        "FTC_link_identification_tape.006": 54,
+        "FTC_link_identification_tape.007": 54,
+        "FTC_link_pivot_washer.006": 22,
+        "FTC_link_pivot_head.006": 8,
+        "FTC_link_pivot_washer.007": 22,
+        "FTC_link_pivot_head.007": 8,
+        "FTC_routed_black_sleeve.001": 240,
+        "FTC_Aframe_top_tie": 54,
+        "FTC_fixed_lift_support_web": 3040,
+        "FTC_fixed_lift_support_flange": 3040,
+        "FTC_fixed_lift_support_flange.001": 3040,
+        "FTC_fixed_lift_support_web.001": 3040,
+        "FTC_fixed_lift_support_flange.002": 3040,
+        "FTC_fixed_lift_support_flange.003": 3040,
+        "FTC_lift_support_bridge_web": 2080,
+        "FTC_lift_support_bridge_flange": 1040,
+        "FTC_lift_support_bridge_flange.001": 1040,
+        "FTC_slide_stage_body": 54,
+        "FTC_slide_running_lip": 54,
+        "FTC_slide_running_lip.001": 54,
+        "FTC_slide_longitudinal_slot": 54,
+        "FTC_slide_end_plate": 320,
+        "FTC_slide_guide_roller": 22,
+        "FTC_slide_end_plate.001": 320,
+        "FTC_slide_guide_roller.001": 22,
+        "FTC_slide_stage_body.001": 54,
+        "FTC_slide_running_lip.002": 54,
+        "FTC_slide_running_lip.003": 54,
+        "FTC_slide_longitudinal_slot.001": 54,
+        "FTC_slide_end_plate.002": 320,
+        "FTC_slide_guide_roller.002": 22,
+        "FTC_slide_end_plate.003": 320,
+        "FTC_slide_guide_roller.003": 22,
+        "FTC_slide_stage_body.002": 54,
+        "FTC_slide_running_lip.004": 54,
+        "FTC_slide_running_lip.005": 54,
+        "FTC_slide_longitudinal_slot.002": 54,
+        "FTC_slide_end_plate.004": 320,
+        "FTC_slide_guide_roller.004": 22,
+        "FTC_slide_end_plate.005": 320,
+        "FTC_slide_guide_roller.005": 22,
+        "FTC_spool_core": 34,
+        "FTC_spool_flange": 34,
+        "FTC_spool_flange.001": 34,
+        "FTC_lift_string": 320,
+        "FTC_string_idler": 26,
+        "FTC_string_idler.001": 26,
+        "FTC_deposit_red_carriage": 54,
+        "FTC_deposit_blue_backplate": 54,
+        "FTC_blue_concave_deposit_support": 162,
+        "FTC_white_deposit_fork": 54,
+        "FTC_red_deposit_tip": 54,
+        "FTC_deposit_mount_washer": 22,
+        "FTC_deposit_mount_head": 8,
+        "FTC_white_deposit_fork.001": 54,
+        "FTC_red_deposit_tip.001": 54,
+        "FTC_deposit_mount_washer.001": 22,
+        "FTC_deposit_mount_head.001": 8,
+        "FTC_intake_horizontal_slide": 54,
+        "FTC_intake_white_link": 54,
+        "FTC_intake_horizontal_slide.001": 54,
+        "FTC_intake_white_link.001": 54,
+        "FTC_intake_swing_arm_web": 960,
+        "FTC_intake_swing_arm_flange": 480,
+        "FTC_intake_swing_arm_flange.001": 480,
+        "FTC_intake_servo_body": 54,
+        "FTC_white_curved_intake_jaw": 162,
+        "FTC_red_jaw_grip_wrap": 22,
+        "FTC_red_jaw_grip_wrap.001": 22,
+        "FTC_red_jaw_grip_wrap.002": 22,
+        "FTC_jaw_drive_gear": 50,
+        "FTC_white_jaw_root": 54,
+        "FTC_jaw_root_bolt_washer": 22,
+        "FTC_jaw_root_bolt_head": 8,
+        "FTC_gear_tooth": 54,
+        "FTC_gear_tooth.001": 54,
+        "FTC_gear_tooth.002": 54,
+        "FTC_gear_tooth.003": 54,
+        "FTC_gear_tooth.004": 54,
+        "FTC_gear_tooth.005": 54,
+        "FTC_gear_tooth.006": 54,
+        "FTC_gear_tooth.007": 54,
+        "FTC_gear_tooth.008": 54,
+        "FTC_gear_tooth.009": 54,
+        "FTC_gear_tooth.010": 54,
+        "FTC_gear_tooth.011": 54,
+        "FTC_gear_tooth.012": 54,
+        "FTC_gear_tooth.013": 54,
+        "FTC_gear_tooth.014": 54,
+        "FTC_gear_tooth.015": 54,
+        "FTC_gear_tooth.016": 54,
+        "FTC_gear_tooth.017": 54,
+        "FTC_gear_tooth.018": 54,
+        "FTC_gear_tooth.019": 54,
+        "FTC_gear_tooth.020": 54,
+        "FTC_gear_tooth.021": 54,
+        "FTC_gear_tooth.022": 54,
+        "FTC_gear_tooth.023": 54,
+        "FTC_white_curved_intake_jaw.001": 162,
+        "FTC_red_jaw_grip_wrap.003": 22,
+        "FTC_red_jaw_grip_wrap.004": 22,
+        "FTC_red_jaw_grip_wrap.005": 22,
+        "FTC_jaw_drive_gear.001": 50,
+        "FTC_white_jaw_root.001": 54,
+        "FTC_jaw_root_bolt_washer.001": 22,
+        "FTC_jaw_root_bolt_head.001": 8,
+        "FTC_gear_tooth.024": 54,
+        "FTC_gear_tooth.025": 54,
+        "FTC_gear_tooth.026": 54,
+        "FTC_gear_tooth.027": 54,
+        "FTC_gear_tooth.028": 54,
+        "FTC_gear_tooth.029": 54,
+        "FTC_gear_tooth.030": 54,
+        "FTC_gear_tooth.031": 54,
+        "FTC_gear_tooth.032": 54,
+        "FTC_gear_tooth.033": 54,
+        "FTC_gear_tooth.034": 54,
+        "FTC_gear_tooth.035": 54,
+        "FTC_gear_tooth.036": 54,
+        "FTC_gear_tooth.037": 54,
+        "FTC_gear_tooth.038": 54,
+        "FTC_gear_tooth.039": 54,
+        "FTC_gear_tooth.040": 54,
+        "FTC_gear_tooth.041": 54,
+        "FTC_gear_tooth.042": 54,
+        "FTC_gear_tooth.043": 54,
+        "FTC_gear_tooth.044": 54,
+        "FTC_gear_tooth.045": 54,
+        "FTC_gear_tooth.046": 54,
+        "FTC_gear_tooth.047": 54,
+        "FTC_black_control_hub": 54,
+        "FTC_hub_connector": 54,
+        "FTC_hub_connector.001": 54,
+        "FTC_hub_connector.002": 54,
+        "FTC_hub_connector.003": 54,
+        "FTC_hub_connector.004": 54,
+        "FTC_hub_connector.005": 54,
+        "FTC_blue_cable_bracket": 54,
+        "FTC_intake_signal_black": 240,
+        "FTC_intake_signal_red": 240,
+        "FTC_intake_signal_yellow": 240
+      },
+      "sourceDimensionsAfterRotation": [
+        0.4643999934196472,
+        0.6727825403213501,
+        0.770455539226532
+      ],
+      "dimensions": [
+        1800,
+        1200
+      ],
+      "cameraDirectionBlenderZUp": [
+        0.4647594690322876,
+        -0.7900910973548889,
+        0.39969316124916077
+      ],
+      "angleIndex": 0,
+      "samples": 192,
+      "geometryPolicy": "Photo-informed display reconstruction, not original manufacturing CAD.",
+      "materialDefaults": {
+        "steel": {
+          "color": "BBC1C8",
+          "metallic": 0.9,
+          "roughness": 0.32
+        },
+        "printed": {
+          "color": "30363D",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "printed"
+        },
+        "dark": {
+          "color": "202328",
+          "metallic": 0.12,
+          "roughness": 0.4
+        },
+        "aero": {
+          "color": "E3E1DB",
+          "metallic": 0,
+          "roughness": 0.45
+        },
+        "rubber": {
+          "color": "181B1E",
+          "metallic": 0,
+          "roughness": 0.62
+        },
+        "brass": {
+          "color": "AD8954",
+          "metallic": 0.8,
+          "roughness": 0.34
+        },
+        "glass": {
+          "color": "E7EDF0",
+          "metallic": 0,
+          "roughness": 0.1,
+          "transmission": 1
+        },
+        "wood": {
+          "color": "BE9C68",
+          "metallic": 0,
+          "roughness": 0.43,
+          "texture": "wood"
+        },
+        "carbon": {
+          "color": "171A20",
+          "metallic": 0.05,
+          "roughness": 0.3,
+          "texture": "carbon",
+          "coat": 0.3
+        },
+        "pcb": {
+          "color": "166C79",
+          "metallic": 0,
+          "roughness": 0.44
+        }
+      },
+      "materialAssignments": {},
+      "references": [
+        "assets/cover-ftc-robot.webp",
+        "assets/ftc-mechanism.webp"
+      ],
+      "notes": []
+    },
+    "variants": [
+      {
+        "src": "assets/editorial/ftc-wide-480.webp",
+        "width": 480,
+        "height": 320,
+        "bytes": 11732,
+        "sha256": "25a104202b559ce7596497a11333dde03ad608e4e6396a92db6ae5f11000435e"
+      },
+      {
+        "src": "assets/editorial/ftc-wide-960.webp",
+        "width": 960,
+        "height": 640,
+        "bytes": 31288,
+        "sha256": "3a8acffb07c3af10245e77766307fb9793d4a07f340d80e5c870bede95b749e6"
+      },
+      {
+        "src": "assets/editorial/ftc-wide.webp",
+        "width": 1800,
+        "height": 1200,
+        "bytes": 84626,
+        "sha256": "cff6f2c1548434ac581f9827d4c59c5ad55fccd4fb139d8856a53aef0f7ff7a7"
+      }
+    ]
+  }
+]

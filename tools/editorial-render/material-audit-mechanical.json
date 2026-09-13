@@ -1,0 +1,694 @@
+{
+  "schemaVersion": 1,
+  "auditedAt": "2026-09-13",
+  "scope": [
+    "brakeSim",
+    "carbonSeat",
+    "seat",
+    "materialTest",
+    "javelin",
+    "ansysCfd"
+  ],
+  "purpose": "Read-only source geometry and appearance audit for local project-cover rendering. No geometry, website, source photographs, or render scripts were changed by this audit.",
+  "pathBase": "C:/Users/oc/Desktop/WEBSITE/portfolio-site",
+  "parameterConvention": {
+    "hex": "Proposed sRGB base color, not a measured reflectance value. Convert sRGB to linear before assigning numeric Blender shader colors.",
+    "metallic": "PBR metalness in [0,1]; coated polymer and carbon/epoxy surfaces are dielectric even if the old studio bucket used nonzero metalness.",
+    "roughness": "PBR roughness in [0,1], an appearance estimate to validate under neutral lighting.",
+    "confidence": "Photos establish visible color families and finish; none are color-chart-calibrated. Numeric shader values are proposed starting points, not photographically exact measurements.",
+    "priority": "Actual project photograph and current project record > matching source geometry > CAD material labels > existing studio shaders. FEA/CFD colors are data visualization, never physical pigment evidence.",
+    "sourceMaterials": "All five inspected models/real GLBs have no glTF materials array. mat_* mesh names are converter classifications, not authored or measured material appearances.",
+    "geometryUnits": "STL/GLB coordinates are retained CAD coordinates, interpreted as millimeters by the existing conversion workflow. Do not assume glTF meter conventions for these files."
+  },
+  "criticalFindings": [
+    "materialTest.glb is a two-column MTS Insight-style source model. The project's own photographs and project-data.js identify a single-column Instron 3345. Recoloring the old GLB cannot resolve this identity mismatch.",
+    "javelin.glb has mat_wood for Battery_Base due to the generic base-<instance> regex, and its four motors are in mat_aero because the Wing_Assem prefix matches the aero regex before the motor rule. Both require project-specific correction.",
+    "brakeSim.glb is exactly the single Front 2.STL rotor: one connected component, 82,888 triangles, no bracket/caliper/hat assembly merged into the steel bucket.",
+    "carbonSeat maps to models/real/seat.glb; seat maps to models/real/driverseat.glb. These are different source parts and must not be swapped.",
+    "The CFD source case really uses Javelin, but it is a simplified aero-core case without propellers. A newly lit CAD illustration is not a new CFD result."
+  ],
+  "projects": {
+    "brakeSim": {
+      "sourceGLB": "models/real/brakeSim.glb",
+      "sourceSHA256": "694811cb504337a39d1170a34694683e4960e1115c2512044884c0b12278acc5",
+      "sourceSTL": "C:/Users/oc/Desktop/STL/Brake/Front 2.STL",
+      "sourceSTLSHA256": "4e4c19129ba5c2270fdd61bb86855598eaf3626a2bd54d7c82352c235c788f68",
+      "sourceCAD": "C:/Users/oc/Desktop/Brake_Rotor_CAD/Front 2.SLDPRT",
+      "converter": "tools/stl2glb_new.py",
+      "geometry": {
+        "triangles": 82888,
+        "connectedComponents": 1,
+        "bounds": [
+          [
+            0,
+            0.020347535610198975,
+            0
+          ],
+          [
+            4.749800205230713,
+            190.4796600341797,
+            190.5
+          ]
+        ],
+        "planeNormalAxis": "X",
+        "sourceSTLCoordinateTrianglesEqualGLB": true,
+        "partLevelFinding": "The only file in Desktop/STL/Brake is Front 2.STL; its single connected mesh exactly equals the GLB's mat_steel geometry after canonical triangle-coordinate comparison. There is no second bracket body to separate.",
+        "otherCADAvailable": [
+          "C:/Users/oc/Desktop/Brake_Rotor_CAD/Front 1.SLDPRT",
+          "C:/Users/oc/Desktop/Brake_Rotor_CAD/Front 3.SLDPRT",
+          "C:/Users/oc/Desktop/Brake_Rotor_CAD/Rear 2.SLDPRT",
+          "C:/Users/oc/Desktop/Brake_Rotor_CAD/Rear 3.SLDPRT",
+          "C:/Users/oc/Desktop/Brake_Rotor_CAD/Rear 4.SLDPRT",
+          "C:/Users/oc/Desktop/Brake_Rotor_CAD/Brake Pad.SLDPRT"
+        ],
+        "otherCADLimit": "Existence verified only. These other CAD parts were not opened or identified as fitted hardware. Brake Pad is not evidence of a bracket. Do not add calipers or mounts from unrelated assemblies."
+      },
+      "references": [
+        {
+          "path": "project-data.js",
+          "kind": "project record",
+          "locator": "brakeSim, lines 304-357",
+          "evidence": "Specifies cast iron ASTM A48 Class 40 rotors, not generic steel; 25 percent mass reduction is a design target."
+        },
+        {
+          "path": "assets/oem-brake-fea.webp",
+          "kind": "FEA plot",
+          "viewed": true,
+          "evidence": "Rainbow URES displacement contour, loads and constraints. Supports analyzed rotor topology, not finish or pigment. The hole pattern differs from the later dense-perforation CAD image."
+        },
+        {
+          "path": "assets/fsae-mk8-live-3.webp",
+          "kind": "CAD image",
+          "viewed": true,
+          "evidence": "Dense circular perforations and scalloped internal mount interface. Default gray is not measured cast-iron appearance."
+        },
+        {
+          "path": "experience.js",
+          "kind": "existing display shader",
+          "locator": "brakeSim matTweak around line 930",
+          "evidence": "steel is set to #bcc2c9, metalness 1, roughness 0.4 for shelf readability. This is not an independent material measurement."
+        }
+      ],
+      "materialBuckets": {
+        "mat_steel": {
+          "physicalMaterial": "Machined gray cast iron rotor, ASTM A48 Class 40 per project record",
+          "hex": "#a3a5a8",
+          "metallic": 1.0,
+          "roughness": 0.48,
+          "finish": "Neutral silver-gray working face; subtle machining direction. Avoid chrome, rust, heat glow, rainbow temperature coloration, or invented wear marks.",
+          "confidence": "Material identity is documented; exact as-built finish is unverified because the inspected gallery contains CAD/FEA rather than a close physical rotor photograph."
+        }
+      },
+      "coverRecommendation": "Render the real Front 2 rotor alone, with enough tilt to reveal its 4.75 mm thickness and keep the perforation pattern intact. Label as CAD render when needed; do not imply the FEA image and this CAD iteration are numerically identical."
+    },
+    "carbonSeat": {
+      "sourceGLB": "models/real/seat.glb",
+      "sourceSHA256": "923d4c76cd68962bec1bcae614bd02a5a6de7aa1cf7610cc1558e7498bcac006",
+      "sourceSTL": "C:/Users/oc/Desktop/STL/CF_Seat.STL",
+      "sourceSTLSHA256": "e6246ee074137909664b195b6acfd5ae2f7247ce0646abc41bf8eec03d7d8cba",
+      "sourceCAD": "C:/Users/oc/Desktop/Carbon Fiber Seat/CF_Seat.SLDPRT",
+      "converter": "tools/stl2glb_carbonseat.py",
+      "geometry": {
+        "triangles": 20430,
+        "bounds": [
+          [
+            207.0107421875,
+            13.908814430236816,
+            101.18592071533203
+          ],
+          [
+            759.1543579101562,
+            619.2757568359375,
+            708.7075805664062
+          ]
+        ],
+        "sourceSTLCoordinateTrianglesEqualGLB": true,
+        "notes": "Actual shell source, not CF_Seat_Mold.STL. The converter preserves positions and splits normals at 40 degrees. Its notes document a non-manifold mirrored center seam: do not apply geometry smoothing/subdivision merely to improve highlights. Exact final hand-trimmed perimeter is not guaranteed by CAD."
+      },
+      "references": [
+        {
+          "path": "project-data.js",
+          "kind": "project record",
+          "locator": "carbonSeat, lines 250-303",
+          "evidence": "Carbon/epoxy layup, demolding and trimming; shoulder/hip shell for Mk.8."
+        },
+        {
+          "path": "assets/cover-carbon-fiber-seat.webp",
+          "kind": "build photograph",
+          "viewed": true,
+          "evidence": "Dark woven shell with masking tape and residue; white material around the edge is temporary tape, not the composite color."
+        },
+        {
+          "path": "assets/carbon-seat-weave-close.webp",
+          "kind": "build photograph",
+          "viewed": true,
+          "evidence": "Clearly visible diagonal woven fiber pattern, directional reflection and resin sheen. Warm tint is room lighting, not bronze or gold material."
+        },
+        {
+          "path": "assets/carbon-seat-trimmed-shell.webp",
+          "kind": "build photograph",
+          "viewed": true,
+          "evidence": "Trimmed charcoal-black composite shell; patch-dependent weave direction and broad satin/gloss highlights."
+        },
+        {
+          "path": "experience.js",
+          "kind": "existing display shader",
+          "locator": "ASSEMBLY_MATS.carbon around lines 251-266",
+          "evidence": "Uses a twill map with emissiveIntensity 1.1, metalness 0.3 and boosted environment intensity to remain visible on a dark shelf. Do not copy those emission/metalness settings as physical carbon/epoxy."
+        }
+      ],
+      "materialBuckets": {
+        "mat_carbon": {
+          "physicalMaterial": "Carbon fiber fabric in cured epoxy",
+          "hex": "#242628",
+          "metallic": 0.0,
+          "roughness": 0.5,
+          "weaveDarkHex": "#101214",
+          "weaveLightHex": "#343739",
+          "clearcoat": 0.12,
+          "clearcoatRoughness": 0.3,
+          "emissionStrength": 0,
+          "finish": "Subtle directional woven pattern and low-amplitude bump/roughness variation; broad resin highlights. Keep the weave scale fine enough for the actual shell, not a giant checkerboard. No metallic glitter.",
+          "confidence": "High for dark woven composite and variable sheen. Exact weave repeat, ply directions, resin gloss and base reflectance are not calibrated by the photographs."
+        }
+      },
+      "coverRecommendation": "Use the existing shell, preserve flanges and creases, show the inner support surface in a three-quarter view. A clean CAD presentation can omit tape and workshop residue without inventing upholstery or a different trim geometry."
+    },
+    "seat": {
+      "sourceGLB": "models/real/driverseat.glb",
+      "sourceSHA256": "c6b1842b4cb5103b316441e649fba95fefedcbf968b4ab70098c7caefd13880d",
+      "sourceSTL": "C:/Users/oc/Desktop/STL/7-CP06-P00-SEAT.STL",
+      "sourceSTLSHA256": "e863ae6941d366671e140dbc085436dcde0ea07295551290b5caa63b72453454",
+      "sourceCAD": "C:/Users/oc/Desktop/STL/7-CP06-P00-SEAT.SLDPRT",
+      "converter": "tools/stl2glb_seat.py",
+      "geometry": {
+        "triangles": 9526,
+        "bounds": [
+          [
+            75.58724212646484,
+            281.0792236328125,
+            1587.2117919921875
+          ],
+          [
+            632.437744140625,
+            787.078125,
+            2312.477783203125
+          ]
+        ],
+        "sourceSTLCoordinateTrianglesEqualGLB": true,
+        "notes": "Perforated bent-sheet driver seat. Seat pan, back and lateral tabs are one source part. Harness straps are not present in this geometry. Preserve bends, mounting holes and the exact perforations."
+      },
+      "references": [
+        {
+          "path": "project-data.js",
+          "kind": "project record",
+          "locator": "seat, lines 195-249",
+          "evidence": "Seat/harness integration and driver fit; geometry is distinct from carbonSeat."
+        },
+        {
+          "path": "tools/stl2glb_seat.py",
+          "kind": "source conversion documentation",
+          "evidence": "Explicitly identifies bent-sheet aluminum; names its lone mesh mat_steel as a shared display bucket."
+        },
+        {
+          "path": "assets/seat-cad.webp",
+          "kind": "CAD image",
+          "viewed": true,
+          "evidence": "Pale gray/lavender CAD shading; confirms perforated folded geometry but not physical pigment."
+        },
+        {
+          "path": "assets/cover-aluminum-seat.webp",
+          "kind": "FEA image",
+          "viewed": true,
+          "evidence": "Rainbow contour plus magenta loads and green constraints. This is analysis coloration, not a colorful painted seat."
+        },
+        {
+          "path": "assets/fsae-mk7-cockpit.webp",
+          "kind": "vehicle context photograph",
+          "viewed": true,
+          "evidence": "Person seated in the car; the relevant seat-pan surface is largely occluded. Does not justify a precise brushed finish or harness color."
+        },
+        {
+          "path": "experience.js",
+          "kind": "existing display shader",
+          "locator": "driverseat matTweak around line 1039",
+          "evidence": "Light brushed aluminum display values #ccd2da, metalness 0.85, roughness 0.35."
+        }
+      ],
+      "materialBuckets": {
+        "mat_steel": {
+          "physicalMaterial": "Unpainted sheet aluminum, despite the generic steel bucket name",
+          "hex": "#c8ccd0",
+          "metallic": 1.0,
+          "roughness": 0.4,
+          "finish": "Neutral satin sheet metal with restrained directional brushing. Do not copy lavender CAD tint or rainbow FEA coloring.",
+          "confidence": "Aluminum identification follows the conversion documentation and existing project presentation. Alloy, exact finish and as-built surface reflectance were not established by the inspected photographs."
+        }
+      },
+      "coverRecommendation": "Render the native sheet-seat model alone. Do not add guessed harness straps, cushions, black paint or carbon weave just because the project title includes harness integration."
+    },
+    "materialTest": {
+      "sourceGLB": "models/real/materialTest.glb",
+      "sourceSHA256": "41fb44d057e292c89c5391bde86331c3f774b64d8c883c6b61b83ebc20a9f85e",
+      "sourceSTL": "C:/Users/oc/Desktop/STL/Tensile Machine.STL",
+      "sourceCAD": "C:/Users/oc/Desktop/WEBSITE/instron-machine-1.snapshot.3/Tensile Machine.IGS",
+      "converter": "tools/stl2glb.py + tools/tensile_geometry.py",
+      "suitableAsActualProjectMachine": false,
+      "geometry": {
+        "triangles": 22302,
+        "connectedComponents": 19,
+        "extents": [
+          152.12310791015625,
+          310.0000114440918,
+          150.00000762939453
+        ],
+        "identity": "Two-column MTS Insight-style machine from a separate local downloaded model/reference package.",
+        "mismatch": "The actual experiment record and the project's material-instron-frame.webp show an Instron 3345 single-column frame with silver spring-loaded grips, a black bellows face and a dark gray base. The existing model instead has two off-white columns, an off-white base, dark yoke grips, copper-colored collars and a separate pendant. These are not equivalent machines."
+      },
+      "references": [
+        {
+          "path": "project-data.js",
+          "kind": "project record",
+          "locator": "materialTest, lines 566-650",
+          "evidence": "Instron 3345 (5 kN), 30 film/fabric tensile specimens and 11 bamboo bending tests; 100 mm specimen gauge length, roughly 25 mm strip widths."
+        },
+        {
+          "path": "assets/material-instron-frame.webp",
+          "kind": "actual experiment photograph",
+          "viewed": true,
+          "evidence": "Clearly labeled INSTRON 3345. Off-white single column, black bellows, dark gray textured base, silver grips/couplings, red mushroom stop on a yellow field, black controller bezel. The blue workbench and loose tools are surroundings, not machine material."
+        },
+        {
+          "path": "assets/material-specimen-md.webp",
+          "kind": "actual experiment photograph",
+          "viewed": true,
+          "evidence": "Dark charcoal coated-fabric strip marked MD-1, silver grips and caliper. Do not transfer caliper LCD color or background objects to the specimen."
+        },
+        {
+          "path": "assets/material-bending-fixture.webp",
+          "kind": "actual experiment photograph",
+          "viewed": true,
+          "evidence": "Pale tan bamboo, silver/darkened metal flexure hardware, black load transducer housing. Label says 4-Point Flexure Fixture - Bottom; actual pictured configuration uses a central loading nose and two lower supports, consistent with the project's three-point test."
+        },
+        {
+          "path": "C:/Users/oc/Desktop/WEBSITE/instron-machine-1.snapshot.3/Renderings/IMG_0378.JPG",
+          "kind": "reference photo of DIFFERENT machine",
+          "viewed": true,
+          "evidence": "Despite the package name 'instron-machine', the beam reads MTS Insight and the frame has two columns. Supports the existing model's appearance only, not the equipment used in this project's tests."
+        },
+        {
+          "path": "tools/tensile_geometry.py",
+          "kind": "source classifier",
+          "evidence": "Uses IMG_0378.JPG to assign 19 disconnected shells into four buckets. Classification is geometric and machine-specific; not an Instron 3345 material survey."
+        },
+        {
+          "path": "experience.js",
+          "kind": "existing display shader",
+          "locator": "materialTest matTweak around lines 949-967",
+          "evidence": "Off-white aero, charcoal dark, copper brass tweaks follow the old MTS reference, not the newer actual experiment photographs."
+        }
+      ],
+      "materialBuckets": {
+        "mat_aero": {
+          "hex": "#e0ddd0",
+          "metallic": 0.0,
+          "roughness": 0.5,
+          "appliesTo": "Existing MTS model ONLY: two columns plus base, merged together.",
+          "useForActualProjectCover": false
+        },
+        "mat_dark": {
+          "hex": "#2f2d2d",
+          "metallic": 0.0,
+          "roughness": 0.48,
+          "appliesTo": "Existing MTS model ONLY: fixed beam, crosshead, two grips, pendant body. Pendant's medium gray differs from the merged dark grips.",
+          "useForActualProjectCover": false
+        },
+        "mat_steel": {
+          "hex": "#a8abad",
+          "metallic": 1.0,
+          "roughness": 0.42,
+          "appliesTo": "Existing MTS model ONLY: load cylinder, base coupling, pins and pendant hardware.",
+          "useForActualProjectCover": false
+        },
+        "mat_brass": {
+          "hex": "#aa7648",
+          "metallic": 0.9,
+          "roughness": 0.4,
+          "appliesTo": "Existing MTS model ONLY: two copper-toned rings inferred from its separate reference. Not evidence that the actual Instron has brass fixtures.",
+          "useForActualProjectCover": false
+        }
+      },
+      "replacementRecommendation": {
+        "preferred": "Make a photo-informed reconstruction of the actual single-column Instron 3345 with a dark fabric specimen, or a tighter reconstruction of the two silver tensile grips and specimen. Use the actual photo as the construction reference. A focused grip/specimen scene reduces invented details and avoids misidentifying the old machine.",
+        "replacementGLB": null,
+        "replacementStatus": "Assigned by main task to the separate material-test/build_material_test.py builder. This audit briefly produced an independent draft, then withdrew its materialTest source files when the dedicated owner was confirmed.",
+        "geometryGuidance": "Use one off-white rectangular column behind the load axis with a black ribbed bellows face; dark gray sloped-front base; silver spring-loaded jaw bodies; cylindrical couplings; dark load-transducer body; red emergency stop with yellow surround. Do not copy two columns, a cream base, black square yoke grips or the MTS pendant. Use the documented 100 mm gauge span and approximately 25 mm strip width only for the test coupon; machine dimensions are unmeasured.",
+        "materials": {
+          "column_offwhite": {
+            "hex": "#dfded5",
+            "metallic": 0.0,
+            "roughness": 0.5
+          },
+          "base_textured_gray": {
+            "hex": "#626461",
+            "metallic": 0.0,
+            "roughness": 0.63
+          },
+          "bellows_black": {
+            "hex": "#191b1a",
+            "metallic": 0.0,
+            "roughness": 0.7
+          },
+          "load_cell_dark": {
+            "hex": "#292b29",
+            "metallic": 0.0,
+            "roughness": 0.52
+          },
+          "grips_and_couplings": {
+            "hex": "#b4b4aa",
+            "metallic": 1.0,
+            "roughness": 0.42
+          },
+          "controller_black": {
+            "hex": "#242624",
+            "metallic": 0.0,
+            "roughness": 0.5
+          },
+          "emergency_stop_red": {
+            "hex": "#c84846",
+            "metallic": 0.0,
+            "roughness": 0.46
+          },
+          "emergency_stop_yellow": {
+            "hex": "#e2cb32",
+            "metallic": 0.0,
+            "roughness": 0.48
+          },
+          "coated_fabric_specimen": {
+            "hex": "#282a2d",
+            "metallic": 0.0,
+            "roughness": 0.58
+          },
+          "bamboo_if_bending_scene": {
+            "hex": "#d7bd7f",
+            "metallic": 0.0,
+            "roughness": 0.56
+          }
+        },
+        "precisionLimit": "These colors and roughness values are proposed neutral-light starting points based on uncalibrated photographs. Geometry is a visual reconstruction, not manufacturer CAD or a dimensionally certified digital twin. No toolbox colors, colored charts or FEA palettes may be treated as physical material."
+      }
+    },
+    "javelin": {
+      "sourceGLB": "models/real/javelin.glb",
+      "sourceSHA256": "ab982698b97f23604334b752281a3ba94d3359a6ab4a6a78cd07794d0dc04fe1",
+      "sourceSTLDirectory": "C:/Users/oc/Desktop/STL",
+      "sourceSTLPattern": "Javelin_V1 - *.STL",
+      "sourceCAD": "C:/Users/oc/Desktop/Javeline/Javelin_V1.SLDASM",
+      "converter": "tools/stl2glb.py",
+      "geometry": {
+        "triangles": 149876,
+        "bucketTriangles": {
+          "mat_dark": 17778,
+          "mat_wood": 7212,
+          "mat_aero": 118726,
+          "mat_steel": 6160
+        },
+        "identity": "Actual local Javelin airframe assembly export; source STL set does not include separately named propeller files.",
+        "currentBucketingErrors": [
+          "Battery_Base-1 matches generic base-\\d before any battery rule, becoming mat_wood. No evidence supports a wood battery tray.",
+          "Four T Motor F90 STL basenames include Wing_Assem, so nosecone|tailcone|wing|naca wins before the later motor regex. The motors are in mat_aero, not mat_dark.",
+          "Battery_Retainer-1 is in mat_dark due to 'battery'. It is a structural retainer, not proof of black battery casing material.",
+          "The studio's javelin matTweak includes printed, but the actual GLB has no mat_printed mesh. It does not fix mat_wood."
+        ]
+      },
+      "references": [
+        {
+          "path": "project-data.js",
+          "kind": "project record",
+          "locator": "javelin, lines 64-129",
+          "evidence": "PPA-CF chassis, ASA antenna fairings, PC-FR parts, bonded carbon tube spars. Do not substitute a woven carbon laminate appearance over all printed skin."
+        },
+        {
+          "path": "C:/Users/oc/Desktop/Javeline/Javelin_Project_Overview.md",
+          "kind": "original project record",
+          "evidence": "Identifies printed polymer families and candidate APC prop sizes. The overview says KV1300 while the vendor CAD filename says 1500kV; appearance audit does not certify motor electrical identity or change website specs."
+        },
+        {
+          "path": "C:/Users/oc/Desktop/Javeline/Javelin_pics/__W_9706.jpg",
+          "kind": "original build photograph",
+          "viewed": true,
+          "evidence": "Four black two-blade props, dark printed body/wing surfaces, black-and-silver motors with visible copper windings, silver prop nuts. Actual photo agrees with the relevant website visual references."
+        },
+        {
+          "path": "assets/javelin-3q.webp",
+          "kind": "existing build image",
+          "viewed": true,
+          "evidence": "Charcoal body, evident print/finishing lines, patchy satin reflection; black props, silver motor edges and pitot tube."
+        },
+        {
+          "path": "assets/javelin-motor.webp",
+          "kind": "existing motor close-up",
+          "viewed": true,
+          "evidence": "Black motor bell with exposed silver rim/spokes and orange-copper winding highlights; black two-blade propeller and bright silver nut. Do not make the whole motor gray plastic."
+        },
+        {
+          "path": "assets/javelin-nose.webp",
+          "kind": "existing nose close-up",
+          "viewed": true,
+          "evidence": "Dark printed/fairing surface, black lens and vent interiors, silver pitot with dark tip. Gold marking is a decal, not a gold airframe material."
+        },
+        {
+          "path": "experience.js",
+          "kind": "existing display shader",
+          "locator": "javelin matTweak around line 914",
+          "evidence": "Aero #3a3e44 and dark #24272c support a dark presentation but inherit generic material/mesh classification mistakes."
+        }
+      ],
+      "materialBuckets": {
+        "mat_aero": {
+          "hex": "#242629",
+          "metallic": 0.0,
+          "roughness": 0.58,
+          "physicalMaterial": "Dark printed airframe polymers; exact per-part polymer family is not fully resolved by the photographs.",
+          "mandatoryException": "Remove the four motor parts from this assignment before rendering. Use per-STL isolation below; the current merged bucket cannot give airframe and motors distinct finish."
+        },
+        "mat_wood": {
+          "hex": "#292c30",
+          "metallic": 0.0,
+          "roughness": 0.58,
+          "physicalMaterial": "Battery support/tray, likely printed polymer, not wood",
+          "confidence": "Correction away from wood is supported by source naming and project material descriptions. Precise tray pigment is not visible in the inspected assembled photos; dark neutral polymer is a conservative interior approximation."
+        },
+        "mat_dark": {
+          "hex": "#24272a",
+          "metallic": 0.0,
+          "roughness": 0.5,
+          "physicalMaterial": "Mixed small electronics housings and battery retainer",
+          "confidence": "Broad default only. Visible optical glass and metal fittings deserve separate shaders if isolated; cannot infer every electronic component's finish from this merged mesh."
+        },
+        "mat_steel": {
+          "hex": "#b7bdc1",
+          "metallic": 1.0,
+          "roughness": 0.3,
+          "physicalMaterial": "Pitot tube metal",
+          "mandatoryException": "Photo shows a dark tip. If the tube mesh includes that tip, isolate it geometrically and apply dielectric #242629; do not paint the entire tube black."
+        }
+      },
+      "partLevelSources": {
+        "printedAirframe": [
+          "C:/Users/oc/Desktop/STL/Javelin_V1 - Nosecone-3.STL",
+          "C:/Users/oc/Desktop/STL/Javelin_V1 - Nosecone_Cover-1.STL",
+          "C:/Users/oc/Desktop/STL/Javelin_V1 - Tailcone-1.STL",
+          "C:/Users/oc/Desktop/STL/Javelin_V1 - Wing_Assem-3 NACA0008_Wing-1.STL",
+          "C:/Users/oc/Desktop/STL/Javelin_V1 - Wing_Assem-3 NACA0008_Wing-2.STL",
+          "C:/Users/oc/Desktop/STL/Javelin_V1 - Wing_Assem-3 NACA0008_Wing-3.STL",
+          "C:/Users/oc/Desktop/STL/Javelin_V1 - Wing_Assem-3 NACA0008_Wing-4.STL"
+        ],
+        "motors": [
+          "C:/Users/oc/Desktop/STL/Javelin_V1 - Wing_Assem-3 T Motor F90 2806 1500kV-2.STL",
+          "C:/Users/oc/Desktop/STL/Javelin_V1 - Wing_Assem-3 T Motor F90 2806 1500kV-3.STL",
+          "C:/Users/oc/Desktop/STL/Javelin_V1 - Wing_Assem-3 T Motor F90 2806 1500kV-4.STL",
+          "C:/Users/oc/Desktop/STL/Javelin_V1 - Wing_Assem-3 T Motor F90 2806 1500kV-5.STL"
+        ],
+        "motorVendorSTEP": "C:/Users/oc/Desktop/Javeline/t-motor-f90-2806-1500kv-1.snapshot.1/T Motor F90 2806 1500kV/T Motor F90 2806 1500kV.STEP",
+        "motorIsolationLimit": "The inspected motor instance -2 has 7,102 faces and ONE connected shell, approximately 34.7 x 33.4 x 33.4 mm. Splitting connected components will not recover separate silver, black and copper surfaces. Use the vendor STEP topology or intentional face-level masks reviewed against the photo. STEP includes gray/white/red COLOUR_RGB values, but those CAD colors do not override the actual black/silver/copper photo.",
+        "batteryTray": "C:/Users/oc/Desktop/STL/Javelin_V1 - Battery_Base-1.STL",
+        "batteryRetainer": "C:/Users/oc/Desktop/STL/Javelin_V1 - Battery_Retainer-1.STL",
+        "pitot": "C:/Users/oc/Desktop/STL/Javelin_V1 - Pitot_tube2-1.STL"
+      },
+      "partMaterials": {
+        "motor_black_finish": {
+          "hex": "#171b1f",
+          "metallic": 0.65,
+          "roughness": 0.34,
+          "note": "Black anodized-looking motor exterior; underlying finish chemistry is not proven by photo."
+        },
+        "motor_exposed_metal": {
+          "hex": "#c4c9ce",
+          "metallic": 1.0,
+          "roughness": 0.27
+        },
+        "motor_copper_winding": {
+          "hex": "#ab542c",
+          "metallic": 1.0,
+          "roughness": 0.36,
+          "note": "Use only on actual or explicitly reconstructed winding geometry visible through the motor openings, never arbitrary orange rings."
+        },
+        "propeller": {
+          "hex": "#202327",
+          "metallic": 0.0,
+          "roughness": 0.48,
+          "note": "Four dark two-blade props are visible in the real build. Exact blade sections/pitch are not recovered from photos; any added prop mesh must be described as a visual reconstruction, not the certified APC blade geometry."
+        },
+        "camera_lens": {
+          "hex": "#0b1012",
+          "metallic": 0.0,
+          "roughness": 0.12
+        }
+      },
+      "coverRecommendation": "Keep original airframe geometry and dark polymer texture; isolate motors by their original STL names before assigning materials. Add photo-informed propellers only if needed for the as-built presentation. Do not invent woven carbon skin, blue bodywork, glowing motors or unsupported material distinctions.",
+      "coverSource": {
+        "source": "tools/editorial-render/sources/javelin.glb",
+        "preserveMaterials": true,
+        "provenance": "tools/editorial-render/sources/javelin.json",
+        "builder": "tools/editorial-render/mechanical_sources.py",
+        "sourceTrianglesPreserved": 149876,
+        "allOriginalTriangleCoordinatesPresent": true,
+        "coverTriangles": 153620,
+        "addedGeometry": "Four 132.08 mm nominal diameter, two-blade display propellers, annular hubs and silver prop nuts. Chord, twist, handedness and blade profiles are illustrative approximations informed by photos and the 5.2-inch candidate size, not original APC CAD or flight-ready geometry.",
+        "materialLimit": "Motor face masks expose shaft/front lip in silver and retain black bell; they are appearance approximations on the exact supplied motor mesh. Copper windings are absent from that simplified source and were not fabricated.",
+        "awaitsRenderedVisualReview": true,
+        "searchedGeometryFiles": {
+          "Desktop/Javeline": 53,
+          "Desktop/STL": 843
+        },
+        "propellerNamedGeometryFilesFound": 0,
+        "assemblyReferenceFilenameScan": [
+          {
+            "path": "C:\\Users\\oc\\Desktop\\Javeline\\Javelin_V1.SLDASM",
+            "embeddedPropFilenameHits": []
+          },
+          {
+            "path": "C:\\Users\\oc\\Desktop\\Javeline\\Wing_Assem.SLDASM",
+            "embeddedPropFilenameHits": []
+          },
+          {
+            "path": "C:\\Users\\oc\\Desktop\\Javeline\\Javeline - Copy\\Javelin_V1.SLDASM",
+            "embeddedPropFilenameHits": []
+          },
+          {
+            "path": "C:\\Users\\oc\\Desktop\\Javeline\\Javeline - Copy\\Wing_Assem.SLDASM",
+            "embeddedPropFilenameHits": []
+          }
+        ],
+        "searchLimit": "No separate or identifiable embedded prop filename was found. Binary assembly string scanning does not prove that every proprietary CAD configuration is absent; no complete source export with blades was discovered in these supplied folders."
+      }
+    },
+    "ansysCfd": {
+      "sourceGLB": "models/real/javelin.glb",
+      "sourceGLBRole": "Available geometry of the real analysis object, suitable for an explicitly illustrative CAD cover; not byte-identical to the solver's simplified aero-core geometry.",
+      "preferredExactAnalysisSource": "Javelin_V1_aero_core_fused_validation.step",
+      "preferredExactAnalysisSourceStatus": "Documented in the local CFD case study. The reference scripts point to C:/Users/oc/Desktop/Codex_Ansys, which does not exist at audit time. Exact STEP and solved case/data were not located in the inspected CFD package or Javelin/STL directories; do not claim they were loaded.",
+      "analysisObjectVerified": true,
+      "references": [
+        {
+          "path": "project-data.js",
+          "kind": "project record",
+          "locator": "ansysCfd, lines 130-194",
+          "evidence": "Explicitly identifies the completed Javelin VTOL cruise validation case at 300 kph / Mach 0.245, with estimated references limiting coefficient claims to process validation."
+        },
+        {
+          "path": "C:/Users/oc/Desktop/claude_ansys_cfd/examples/Javelin_V1_case_study.md",
+          "kind": "source CFD case documentation",
+          "evidence": "Flow case identifies Javelin_V1, an aero-core 8-solid-body subset from the full 54-body model, propellers ignored, alpha 3 degrees. Continuation names the fused validation STEP and its conforming-mesh workflow."
+        },
+        {
+          "path": "C:/Users/oc/Desktop/claude_ansys_cfd/scripts/conforming_postproc_imaging_reference.py",
+          "kind": "reference postprocessing code",
+          "evidence": "Names the saved conforming_alpha3 case/data workflow and external aircraft wall selection. It is evidence of the documented workflow, not proof the local solved files are currently available."
+        },
+        {
+          "path": "assets/cover-ansys-cfd.webp",
+          "kind": "existing CFD result image",
+          "viewed": true,
+          "evidence": "Actual saved presentation shows Cp on Javelin's aerodynamic shape with a labeled numerical legend. Yellow/green/red/blue are pressure-coefficient values, not the body finish."
+        }
+      ],
+      "materialBuckets": {
+        "mat_aero": {
+          "hex": "#303236",
+          "metallic": 0.0,
+          "roughness": 0.49,
+          "appliesTo": "Javelin's physical printed airframe, for a neutral-lit geometry illustration only. Exclude motor pieces from this bucket."
+        },
+        "mat_wood": {
+          "hex": "#292c30",
+          "metallic": 0.0,
+          "roughness": 0.58,
+          "appliesTo": "Battery support only if the full illustrative model is shown; omit for an aero-core-inspired illustration."
+        },
+        "mat_dark": {
+          "hex": "#24272a",
+          "metallic": 0.0,
+          "roughness": 0.5,
+          "appliesTo": "Electronics only if showing the full illustrative assembly; omit from aero-core-inspired view."
+        },
+        "mat_steel": {
+          "hex": "#b7bdc1",
+          "metallic": 1.0,
+          "roughness": 0.3,
+          "appliesTo": "Pitot only if part of the displayed illustrative assembly; exact solver inclusion was not verified."
+        }
+      },
+      "coverRecommendation": "Use a distinct top/three-quarter view of the real Javelin analysis object. Prefer the original airframe STLs listed under javelin.partLevelSources.printedAirframe when making an aero-core-inspired illustration; do not claim that this seven-file assembly reconstructs the documented eight-solid solver subset exactly. Omit newly modeled propellers from a depiction of the analysis setup. Pairing a real saved CFD result image with the geometric render is acceptable if the result remains identifiable as that original image.",
+      "nonFabricationRules": [
+        "No invented streamline paths, velocity vectors, pressure bands, Mach fields, Cp scales, force numbers or colorful mesh plots on newly rendered geometry.",
+        "If adding computational-looking geometry edges, label them as a geometry illustration; they are not a Fluent mesh or converged flow solution.",
+        "A real data overlay requires the matching solved surface data, correct geometry correspondence, original units and legend. Existing saved plots may be retained with their provenance; do not synthesize a new field by recoloring the body.",
+        "Keep process-validation limitations for estimated area, length and moment center. An attractive cover does not upgrade numerical credibility or prove flight performance."
+      ],
+      "currentCoverDecision": "Main task has built a presentation monitor textured with the unchanged genuine Cp plot. No new CFD geometry or fields are needed from this audit."
+    }
+  },
+  "verification": {
+    "readProjectData": true,
+    "readConverters": [
+      "tools/stl2glb.py",
+      "tools/stl2glb_new.py",
+      "tools/stl2glb_seat.py",
+      "tools/stl2glb_carbonseat.py",
+      "tools/tensile_geometry.py"
+    ],
+    "readExperienceMaterialBucketsAndTweaks": true,
+    "inspectedGLBJSONAndMeshes": true,
+    "canonicalTriangleEqualityChecked": [
+      "brakeSim",
+      "carbonSeat",
+      "seat"
+    ],
+    "photoInspectionMethod": "view_image on actual local image files; sources marked viewed above.",
+    "browserUsed": false,
+    "gpuRenderingStarted": false,
+    "newGeometryCreated": true,
+    "sourceFilesModified": false,
+    "pushedOrDeployed": false,
+    "coverOnlyGeometryCreated": [
+      "tools/editorial-render/sources/javelin.glb"
+    ],
+    "sourcePreservation": "All five original GLB SHA-256 values rechecked unchanged after cover-source construction."
+  },
+  "followUpDraftReview": {
+    "reviewedDrafts": [
+      "tools/editorial-render/catalog-drafts/javelin-wide-angle0.png",
+      "tools/editorial-render/catalog-drafts/carbonSeat-wide-angle0.png",
+      "tools/editorial-render/catalog-drafts/seat-wide-angle0.png",
+      "tools/editorial-render/catalog-drafts/brakeSim-wide-angle0.png",
+      "tools/editorial-render/catalog-drafts/materialTest-wide-angle0.png"
+    ],
+    "javelin": "Draft is too light/smooth and lacks all four propellers. Darken airframe to #242629, metalness 0, roughness 0.58; use the cover-only source with isolated black/silver motors and dark polymer battery tray. Original photos show print/finishing marks, not a polished gray aircraft.",
+    "carbonSeat": "Draft has an over-wide bright reflection and conspicuous checker pattern. Keep dielectric carbon/epoxy, metalness 0, roughness about 0.5, clearcoat about 0.12; reduce checker contrast and retain fine directional weave. These are neutral-light visual recommendations, not measured resin values.",
+    "seat": "Draft silhouette and silver family are reasonable; neutral #C8CCD0, metallic 1, roughness 0.4. Avoid making it white plastic or mirror chrome.",
+    "brakeSim": "Draft is too bright/chrome-like for the conservative cast-iron interpretation. #A3A5A8, metallic 1, roughness 0.48. Geometry is the real dense-perforated rotor; keep its thickness/holes.",
+    "materialTest": "Reject the draft as the project apparatus: it depicts the different two-column MTS machine. Main task delegated the real Instron 3345 photo reconstruction to material-test/build_material_test.py; this audit no longer owns that geometry."
+  }
+}

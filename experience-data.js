@@ -11,9 +11,9 @@ export const RESUME = {
   role: "Mechanical Lead — Olin Electric Motorsports",
   meta: "MechE @ Olin College of Engineering '28 · GPA 3.9",
   summary:
-    "Mechanical engineering student leading mechanical systems for Olin Electric Motorsports, building tested hardware across motorsport, robotics, and fabrication — from load cases and CAD to machined, welded, and validated parts.",
+    "Mechanical engineering student leading 30 mechanical engineers at Olin Electric Motorsports, building tested hardware across motorsport, robotics, and fabrication — from load cases and CAD to machined, welded, and validated parts.",
   highlights: [
-    "Mechanical Lead directing 4 mechanical subteams — suspension & chassis, aerodynamics, drivetrain, accumulator — on an 85 kW FSAE electric racecar.",
+    "Mechanical Lead directing 30 mechanical engineers across 4 subteams on an 85 kW FSAE electric racecar, from design reviews to fabrication and vehicle integration.",
     "Cut brake rotor mass 25% at a 3.0 FEA factor of safety; steering on matched 27.5° dual U-joints with bearing cages 0.9 kg lighter.",
     "Summer research at the Olin Vine Robotics Lab: a 5 psi pressure-vessel robot plus 30 ASTM D882 tensile tests feeding a deformation model.",
     "Comfortable from kinematics and FEA/CFD to lathe, waterjet, CNC, TIG, and composites.",

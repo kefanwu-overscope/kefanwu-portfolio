@@ -1,0 +1,1101 @@
+{
+  "schemaVersion": 2,
+  "auditDate": "2026-09-13",
+  "appearancePolicy": "Physical photos outrank CAD defaults. Hex values are approximate sRGB render inputs, not calibrated measured colors. Metallic/roughness/transmission are physically plausible suggestions. Bright softbox reflections alone do not justify changing base colors; adjust specular/roughness/light instead. No carbon-fiber finish is supported for these six projects.",
+  "coordinatePolicy": "All region coordinates refer to raw untransformed STL/GLB positions (mm-scale exports). New sources retain included input face counts and exact bounds; no pose edits or simplification.",
+  "consumption": "For each key merge projects[key].catalogPatch into catalog.json. New node names are mat_<bucket>; materials keys omit mat_. Alternatively preserveMaterials=true uses embedded PBR, but procedural wood/pearl textures are not embedded. Sources are offline render inputs, not website downloads.",
+  "projects": {
+    "aura": {
+      "sourceGLB": "tools/editorial-render/sources/aura.glb",
+      "originalGLB": "models/real/aura.glb",
+      "sourcePartRoot": "C:/Users/oc/Desktop/STL",
+      "references": [
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\aura-swerve.jpeg",
+          "kind": "physical",
+          "observed": "Gray painted wheel housings; black tires, black motor cans and silver end covers. Blue separate stepper mounts are not evidence that all brackets are blue.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\aura-swerve-mount.jpeg",
+          "kind": "physical fabrication",
+          "observed": "Unpainted waterjet A36 steel blank, not aluminum.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\aura-wheels-bearing-shaft.jpeg",
+          "kind": "physical",
+          "observed": "Gray steel housing, silver bearing/shaft hardware and wheel hub.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-aura-swerve-cad.webp",
+          "kind": "CAD",
+          "observed": "CAD blue encoders and spacers are not reliable as-built colors.",
+          "viewed": true
+        }
+      ],
+      "legacyBuckets": {
+        "mat_printed": "Actually gray-coated A36 wheel housing/top mount/reinforcement, not generic printed plastic. Use paint_gray (metallic=0 because opaque paint).",
+        "mat_dark": "Motor_Mount-2 and Motor_Mount_Reinforcement-2 were swallowed by the motor regex. Separate to paint_gray; motor covers to steel, central can stays black.",
+        "mat_steel": "Sprockets, bearings and shafts remain bare metal. Spacer composition is uncertain.",
+        "mat_rubber": "Black tire; this simplified wheel STL does not separate the silver hub."
+      },
+      "separation": {
+        "implemented": "Reads the existing single-module GLB; keeps all 106314 faces/coordinates. Source STL bounds identify two mislabeled motor mounts; 20 mm motor-end zones get silver covers.",
+        "partSources": [
+          "Drive_System - Motor_Mount-2.STL",
+          "Drive_System - Motor_Mount_Reinforcement-2.STL",
+          "Drive_System - Motor MY1016Z3-4.STL"
+        ],
+        "coordinates": "Raw GLB/STL frame. No re-export of both Drive_System modules."
+      },
+      "uncertain": [
+        "Motor end-zone boundaries are an approximate region split; colors are photo-supported, exact casting break needs the next draft.",
+        "Model is one swerve module, not the whole luggage robot. Original CAD omits chains and simplifies the tire/hub.",
+        "Do not call gray painted A36 parts bare aluminum; do not add carbon-fiber texture."
+      ],
+      "threeRotation": [
+        0,
+        0,
+        -90
+      ],
+      "status": "Prior draft broadly acceptable; updated source is ready for optional higher-fidelity pass.",
+      "draftReviewed": {
+        "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\tools\\editorial-render\\catalog-drafts\\aura-wide-angle0.png",
+        "viewed": true,
+        "version": "BEFORE material separation; updated renders still require main visual review"
+      },
+      "catalogPatch": {
+        "source": "tools/editorial-render/sources/aura.glb",
+        "preserveMaterials": false,
+        "materials": {
+          "paint_gray": {
+            "color": "8A9195",
+            "metallic": 0,
+            "roughness": 0.52
+          },
+          "plastic_black": {
+            "color": "202329",
+            "metallic": 0,
+            "roughness": 0.48
+          },
+          "rubber_black": {
+            "color": "24272B",
+            "metallic": 0,
+            "roughness": 0.7
+          },
+          "steel": {
+            "color": "ABB2BA",
+            "metallic": 1,
+            "roughness": 0.35
+          }
+        },
+        "threeRotation": [
+          0,
+          0,
+          -90
+        ]
+      }
+    },
+    "lineFollower": {
+      "sourceGLB": "tools/editorial-render/sources/lineFollower.glb",
+      "originalGLB": "models/real/lineFollower.glb",
+      "sourcePartRoot": "C:/Users/oc/Desktop/STL/Line_Follower",
+      "references": [
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\line-follower-cover.webp",
+          "kind": "physical",
+          "observed": "Orange tires, dark chassis, teal Arduino, green carrier boards, black ICs/headers, silver USB-B shell.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\line-follower-wiring.webp",
+          "kind": "physical",
+          "observed": "284 g revision: silver/white battery wrap and dark wiring mounts.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\line-follower-built.webp",
+          "kind": "physical",
+          "observed": "428 g earlier revision has different battery/wiring; do not treat the two as the same configuration.",
+          "viewed": true
+        }
+      ],
+      "legacyBuckets": {
+        "mat_pcb": "Whole Arduino contains FR4, black connectors/ICs and metal USB/pins; two motor-driver carriers are green; front IR arrays are mostly black.",
+        "mat_dark": "White/silver-wrapped battery is dielectric; DC motor cans are metal. Whole-bucket metallic=.6 is inappropriate.",
+        "mat_printed": "Dark printed chassis/mounts; the large Nutri Fit black object in photos is the weighing scale, not a robot part.",
+        "mat_rubber": "Orange tire polymer, not orange metal. Coupler hardware stays silver.",
+        "mat_steel": "Motor/coupler/standoff/caster hardware."
+      },
+      "separation": {
+        "implemented": "Original per-part STLs, without decimation. Arduino board slab Y45.725..47.376; USB-B can X56.7..70.3, Z<=20, Y>47.38; barrel-power socket X86..97 stays black. Two capacitor cans and underside pin relief split to solder. Motor-driver board slabs found from dominant parallel face planes (~1.575 mm apart).",
+        "partSources": [
+          "Line_Follower_Assem - ArduinoMega-1.STL",
+          "Line_Follower_Assem - Motor_Driver-2.STL",
+          "Line_Follower_Assem - Motor_Driver-3.STL",
+          "Line_Follower_Assem - 12V Battery-1.STL",
+          "Line_Follower_Assem - DC_Motor-1.STL",
+          "Line_Follower_Assem - DC_Motor-2.STL"
+        ],
+        "coordinates": "Raw STL coordinates in mm; no pose changes."
+      },
+      "uncertain": [
+        "Photo and CAD chassis/battery revision differ. Preserve supplied complete CAD configuration; do not claim exact 284 g packaging.",
+        "No new wiring, breadboard, legends or solder geometry was invented. Tiny component/terminal finishes remain simplified.",
+        "USB/PCB boundaries are geometry masks, not native SolidWorks face appearances; inspect updated draft."
+      ],
+      "status": "Use the separated source; old all-teal Arduino draft is not acceptable.",
+      "draftReviewed": {
+        "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\tools\\editorial-render\\catalog-drafts\\lineFollower-wide-angle0.png",
+        "viewed": true,
+        "version": "BEFORE material separation; updated renders still require main visual review"
+      },
+      "catalogPatch": {
+        "source": "tools/editorial-render/sources/lineFollower.glb",
+        "preserveMaterials": false,
+        "materials": {
+          "battery_wrap": {
+            "color": "D4D7D6",
+            "metallic": 0,
+            "roughness": 0.38
+          },
+          "pcb_green": {
+            "color": "237153",
+            "metallic": 0,
+            "roughness": 0.47
+          },
+          "pcb_teal": {
+            "color": "17616B",
+            "metallic": 0,
+            "roughness": 0.46
+          },
+          "plastic_black": {
+            "color": "202329",
+            "metallic": 0,
+            "roughness": 0.48
+          },
+          "printed_black": {
+            "color": "292D34",
+            "metallic": 0,
+            "roughness": 0.56,
+            "texture": "printed"
+          },
+          "rubber_orange": {
+            "color": "E78B32",
+            "metallic": 0,
+            "roughness": 0.62
+          },
+          "solder": {
+            "color": "BAC1C4",
+            "metallic": 1,
+            "roughness": 0.34
+          },
+          "steel": {
+            "color": "ABB2BA",
+            "metallic": 1,
+            "roughness": 0.35
+          }
+        }
+      }
+    },
+    "pool": {
+      "sourceGLB": "models/real/pool.glb",
+      "originalGLB": "models/real/pool.glb",
+      "sourcePartRoot": "C:/Users/oc/Desktop/STL/Pool Sniper",
+      "references": [
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\pool-sniper.webp",
+          "kind": "CAD",
+          "observed": "Blue rack/pinion/cradle/brackets; clear side windows; silver cue and hardware; gray structure.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\pool-sniper-exploded.webp",
+          "kind": "CAD",
+          "observed": "Component identity and original palette; no wood-colored cue.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\pool-sniper-build.webp",
+          "kind": "physical fabrication",
+          "observed": "Only bare metal plate is physically confirmed here. CAD blue and transparency are design appearances, not verified complete-build photography.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\pool-sniper-white.webp",
+          "kind": "CAD",
+          "observed": "CAD assembled view reconfirms blue mechanisms, transparent windows, gray housing and silver cue.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\pool-sniper-release.webp",
+          "kind": "CAD",
+          "observed": "Cyan face is a SolidWorks selection highlight, not evidence of an actual blue trigger material.",
+          "viewed": true
+        }
+      ],
+      "legacyBuckets": {
+        "mat_printed": "Blue rackpart/pinionpart/cue_base/angle tester/trigger_structure.",
+        "mat_wood": "Misleading name: Cue-1.STL is a silver rod in CAD, no wood grain.",
+        "mat_glass": "HousingSide-1 and HousingSide-2; clear windows.",
+        "mat_steel": "Sprockets, standoffs, shafts, front plate.",
+        "mat_aero": "Mixed gray housings/floor/covers/trigger parts. Keep neutral; no evidence of carbon.",
+        "mat_dark": "Motor assembly."
+      },
+      "separation": {
+        "implemented": "No geometry change required for the current cover. Existing source has separate useful buckets.",
+        "partSources": [
+          "ReleaseMechanism - HousingSide-1.STL",
+          "ReleaseMechanism - HousingSide-2.STL",
+          "ReleaseMechanism - Cue-1.STL",
+          "ReleaseMechanism - Sheet_Metal_Cover-2.STL"
+        ],
+        "futureOnly": "If physical plate finish is refined, import Sheet_Metal_Cover/Floor/Latch/Switch_Mount individually from the source folder rather than assuming the whole aero bucket is one alloy."
+      },
+      "uncertain": [
+        "Blue material, clear-side substrate, metal alloy and gray coating are not all physically verified. Suggested PBR is a CAD interpretation.",
+        "Surgical tubing, wiring and chain details absent from supplied meshes are not added."
+      ],
+      "threeRotation": [
+        0,
+        -90,
+        90
+      ],
+      "status": "Draft broadly acceptable; ready for final render with CAD appearance qualification.",
+      "draftReviewed": {
+        "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\tools\\editorial-render\\catalog-drafts\\pool-wide-angle0.png",
+        "viewed": true,
+        "version": "BEFORE material separation; updated renders still require main visual review"
+      },
+      "catalogPatch": {
+        "source": "models/real/pool.glb",
+        "preserveMaterials": false,
+        "materials": {
+          "printed": {
+            "color": "2A5FC4",
+            "metallic": 0,
+            "roughness": 0.5
+          },
+          "aero": {
+            "color": "84827E",
+            "metallic": 0.5,
+            "roughness": 0.5
+          },
+          "wood": {
+            "color": "AEB0B3",
+            "metallic": 0.8,
+            "roughness": 0.4,
+            "texture": null
+          },
+          "steel": {
+            "color": "ABB2BA",
+            "metallic": 1,
+            "roughness": 0.35
+          },
+          "dark": {
+            "color": "25282C",
+            "metallic": 0.1,
+            "roughness": 0.48
+          },
+          "glass": {
+            "color": "F1F4F4",
+            "metallic": 0,
+            "roughness": 0.1,
+            "transmission": 1
+          }
+        },
+        "threeRotation": [
+          0,
+          -90,
+          90
+        ]
+      }
+    },
+    "formlabs": {
+      "sourceGLB": "tools/editorial-render/sources/formlabs.glb",
+      "originalGLB": "models/real/smelly.glb",
+      "sourcePartRoot": "C:/Users/oc/Desktop/STL/Smelly",
+      "references": [
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\formlabs-smelly-table.webp",
+          "kind": "physical",
+          "observed": "Transparent base and tall side plates, warm white printed supports, silver guide rods, amber translucent compartment box.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\formlabs-smelly-actuator.webp",
+          "kind": "physical",
+          "observed": "White printed gantry; black steppers/servos, silver guides/couplings; clear base, loose external wiring.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\formlabs-smelly.webp",
+          "kind": "physical",
+          "observed": "Overall completed prototype context.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-smelly-cad.webp",
+          "kind": "CAD",
+          "observed": "Useful geometry only: the uniform CAD gray does not represent printed/clear/metal materials.",
+          "viewed": true
+        }
+      ],
+      "legacyBuckets": {
+        "mat_printed": "Base-Plate and Side_Frame_2023 are clear acrylic-like sheets; Reservior is amber translucent. Remaining large supports/holders are white polymer.",
+        "mat_dark": "Steppers/servos and dark drive pieces; not all gray CAD plastic.",
+        "mat_steel": "Guide rods, lead screws, couplers and bearings."
+      },
+      "separation": {
+        "implemented": "Per-part STL source with clear sheets, amber box, white structure, black motors and silver hardware separated. Original assembly pose retained. Visible couplers/bearings restored; motor winding/internal exports remain excluded.",
+        "partSources": [
+          "MAIN-Perfume-Mixer - Base-Plate-1.STL",
+          "MAIN-Perfume-Mixer - Side_Frame_2023-1.STL",
+          "MAIN-Perfume-Mixer - Side_Frame_2023-2.STL",
+          "MAIN-Perfume-Mixer - Reservior-1.STL"
+        ]
+      },
+      "uncertain": [
+        "Amber box observed; exact resin formulation and transmission are not measured.",
+        "The native CAD lacks the complete photo wiring, external controller and bottle/syringe integration. Cover represents the mechanical gantry.",
+        "Acrylic identification is a visual/material inference; transparency is certain from photos."
+      ],
+      "status": "Wait for separated-source render. Old opaque-white base/side panels are visibly incorrect.",
+      "draftReviewed": {
+        "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\tools\\editorial-render\\catalog-drafts\\formlabs-wide-angle0.png",
+        "viewed": true,
+        "version": "BEFORE material separation; updated renders still require main visual review"
+      },
+      "catalogPatch": {
+        "source": "tools/editorial-render/sources/formlabs.glb",
+        "preserveMaterials": false,
+        "materials": {
+          "amber_resin": {
+            "color": "C8A754",
+            "metallic": 0,
+            "roughness": 0.34,
+            "transmission": 0.38,
+            "ior": 1.48
+          },
+          "clear_acrylic": {
+            "color": "F1F4F4",
+            "metallic": 0,
+            "roughness": 0.09,
+            "transmission": 1,
+            "ior": 1.49
+          },
+          "plastic_black": {
+            "color": "202329",
+            "metallic": 0,
+            "roughness": 0.48
+          },
+          "printed_white": {
+            "color": "E6E4DD",
+            "metallic": 0,
+            "roughness": 0.51,
+            "texture": "printed"
+          },
+          "steel": {
+            "color": "ABB2BA",
+            "metallic": 1,
+            "roughness": 0.35
+          }
+        }
+      }
+    },
+    "education": {
+      "sourceGLB": "tools/editorial-render/sources/education.glb",
+      "originalGLB": "models/real/education.glb",
+      "sourcePartRoot": "C:/Users/oc/Desktop/STL/Guitar Education",
+      "references": [
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\education-kit.webp",
+          "kind": "physical",
+          "observed": "Deep navy printed compact body, copper cavity shielding, dark brown fretboard, chrome pickups/bridge/control panel.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\education-kit-render.webp",
+          "kind": "CAD",
+          "observed": "Blue compact body; neck/cover rendering differs from actual test kit.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\education-kit-experiment.webp",
+          "kind": "CAD",
+          "observed": "Separate white pickguard, blue body and metal controls.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-guitar-education-cad.webp",
+          "kind": "CAD",
+          "observed": "Exploded layout and white pickguard identity; pale CAD neck is not proof of a pale actual fretboard.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\education-kit-user-test.webp",
+          "kind": "physical",
+          "observed": "Larger kit-layout image reconfirms navy printed body, dark fingerboard, copper cavity shielding and chrome pickups; no white pickguard installed.",
+          "viewed": true
+        }
+      ],
+      "legacyBuckets": {
+        "mat_wood": "Incorrectly merges Tele_Neck, Finger_Board (actually PICKGUARD), and the neck pickup because its filename contains neck. Three material identities required.",
+        "mat_printed": "Compact body is deep-blue printed polymer in the real kit, not bare wood. HBtelecaster Body in filename is not material evidence.",
+        "mat_steel": "Bridge/control panel, screws, saddles.",
+        "mat_dark": "Bridge pickup black body; pole pieces/metal cover remain a finer optional refinement."
+      },
+      "separation": {
+        "implemented": "Uses exploded - *.STL exclusively, preserving the kit layout (never mix with V2 assembly positions). Finger_Board maps to pickguard_white. Single-Coil_Neck_Pickup explicitly maps to chrome before any neck rule. Tele_Neck top playing face (Y>185.62, Z>51.17) maps to dark fretboard, back/headstock stays maple.",
+        "partSources": [
+          "exploded - Finger_Board-1.STL",
+          "exploded - HBtelecaster Body.step-1 Body.step-1.STL",
+          "exploded - Tele_Neck-1.STL",
+          "exploded - Pick_Up_1-1 Telecaster_Single-Coil_Neck_Pickup.step-1 Single-Coil_Neck_Pickup.step-1.STL"
+        ],
+        "pickguardBoundsMm": [
+          [
+            63.335,
+            90.281,
+            45.661
+          ],
+          [
+            279.261,
+            238.721,
+            48.836
+          ]
+        ]
+      },
+      "uncertain": [
+        "White guard is supported by engineering CAD, not a visible assembled physical-guard photo.",
+        "Dark fretboard is photo-supported; wood species and exact finish unconfirmed. Neck face boundary is an approximate raw-coordinate region.",
+        "Source lacks modeled copper shielding and final wiring. They are not invented here.",
+        "User mention of wood body conflicts with supplied physical education-kit photograph and project text: both support a printed blue body. Telecaster has the walnut/maple body."
+      ],
+      "threeRotation": [
+        0,
+        0,
+        90
+      ],
+      "status": "Use corrected source; wooden guard/wooden neck pickup in old draft are incorrect.",
+      "draftReviewed": {
+        "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\tools\\editorial-render\\catalog-drafts\\education-wide-angle0.png",
+        "viewed": true,
+        "version": "BEFORE material separation; updated renders still require main visual review"
+      },
+      "catalogPatch": {
+        "source": "tools/editorial-render/sources/education.glb",
+        "preserveMaterials": false,
+        "materials": {
+          "chrome": {
+            "color": "D2D5D7",
+            "metallic": 1,
+            "roughness": 0.2
+          },
+          "fretboard": {
+            "color": "503B32",
+            "metallic": 0,
+            "roughness": 0.48,
+            "texture": "wood"
+          },
+          "maple": {
+            "color": "BC9766",
+            "metallic": 0,
+            "roughness": 0.46,
+            "texture": "wood"
+          },
+          "pickguard_white": {
+            "color": "ECEBE5",
+            "metallic": 0,
+            "roughness": 0.35
+          },
+          "plastic_black": {
+            "color": "202329",
+            "metallic": 0,
+            "roughness": 0.48
+          },
+          "printed_navy": {
+            "color": "28334D",
+            "metallic": 0,
+            "roughness": 0.51,
+            "texture": "printed"
+          }
+        },
+        "threeRotation": [
+          0,
+          0,
+          90
+        ]
+      }
+    },
+    "telecaster": {
+      "sourceGLB": "tools/editorial-render/sources/telecaster.glb",
+      "originalGLB": "models/real/telecaster.glb",
+      "sourcePartRoot": "C:/Users/oc/Desktop/STL/Telecaster",
+      "references": [
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-telecaster.webp",
+          "kind": "physical finished",
+          "observed": "Ivory/white opaque body, red pearloid guard, dark brown fretboard, reflective metal controls/neck pickup and black bridge pickup.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\telecaster-finish.webp",
+          "kind": "physical wood fabrication",
+          "observed": "Actual glued strips: walnut/maple blank. File is glue-up despite finish filename.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\telecaster-wood.webp",
+          "kind": "physical early finish",
+          "observed": "Wood grain remains visible under early primer; not final-body finish.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\telecaster-body.webp",
+          "kind": "physical finishing",
+          "observed": "Opaque white finish hides the underlying walnut/maple grain.",
+          "viewed": true
+        },
+        {
+          "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\telecaster-assembly.webp",
+          "kind": "physical fabrication",
+          "observed": "Laser-cut drilling template over wood; template is not the final visible body material.",
+          "viewed": true
+        }
+      ],
+      "legacyBuckets": {
+        "mat_printed": "Fused body includes white painted wood, red guard, metal controls/knobs/neck pickup, black bridge pickup; nut stays pale.",
+        "mat_wood": "Actual source neck contains separate back, dark fretboard and 21 metal fret components. All-honey wood is incorrect.",
+        "mat_steel": "Bridge/saddles/strings/tuners remain reflective metal; source has extensive modeled threads retained for offline covers."
+      },
+      "separation": {
+        "implemented": "Per-part source preserves all included faces. Raw body has 3 connected components: two knobs and fused body. Guard/control separated by top-plane Z64.36 and edge-band flood above Z62.36. Raised pickup/knob/switch regions use their measured bounds. Neck STL split by actual connected components into maple back, dark fretboard, metal frets.",
+        "partSources": [
+          "telecaster - body-1.STL",
+          "telecaster - telecaster_neck-2.STL",
+          "telecaster - nut-2.STL"
+        ],
+        "guardTopBoundsMm": [
+          [
+            100.895,
+            301.149,
+            64.36
+          ],
+          [
+            313.232,
+            482.327,
+            64.36
+          ]
+        ],
+        "controlTopBoundsMm": [
+          [
+            257.486,
+            163.413,
+            64.36
+          ],
+          [
+            286.072,
+            311.23,
+            64.36
+          ]
+        ],
+        "fretboardBoundsMm": [
+          [
+            154.147,
+            416.636,
+            61.36
+          ],
+          [
+            212.07,
+            896.836,
+            66.96
+          ]
+        ]
+      },
+      "uncertain": [
+        "White finished body should not show walnut/maple grain. Wood is the substrate, not exposed final appearance.",
+        "Exact lacquer hue, wood species of the dark fingerboard and hardware plating cannot be measured from photos. Warm reflected surroundings do not prove gold hardware.",
+        "Red pearloid base color is corrected; source PBR has clear coat but no exact pearloid flake texture. A restrained pearl shader is optional in the main renderer.",
+        "Wood grain must follow the neck long axis after normalization; do not apply the renderer default X-oriented grain blindly."
+      ],
+      "status": "Use separated source; previous white-on-white guard and hardware draft is visibly incorrect.",
+      "draftReviewed": {
+        "path": "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\tools\\editorial-render\\catalog-drafts\\telecaster-wide-angle0.png",
+        "viewed": true,
+        "version": "BEFORE material separation; updated renders still require main visual review"
+      },
+      "catalogPatch": {
+        "source": "tools/editorial-render/sources/telecaster.glb",
+        "preserveMaterials": false,
+        "materials": {
+          "chrome": {
+            "color": "D2D5D7",
+            "metallic": 1,
+            "roughness": 0.2
+          },
+          "fretboard": {
+            "color": "503B32",
+            "metallic": 0,
+            "roughness": 0.48,
+            "texture": "wood"
+          },
+          "maple": {
+            "color": "BC9766",
+            "metallic": 0,
+            "roughness": 0.46,
+            "texture": "wood"
+          },
+          "paint_white": {
+            "color": "E9E8DE",
+            "metallic": 0,
+            "roughness": 0.3,
+            "coat": 0.3
+          },
+          "pickguard_red": {
+            "color": "B71932",
+            "metallic": 0,
+            "roughness": 0.27,
+            "coat": 0.45
+          },
+          "plastic_black": {
+            "color": "202329",
+            "metallic": 0,
+            "roughness": 0.48
+          }
+        }
+      }
+    }
+  },
+  "generatedSources": {
+    "telecaster": {
+      "path": "tools/editorial-render/sources/telecaster.glb",
+      "sha256": "bbd3e00a4443406f2bd12e02cf40e42be441b7e22e4ee6722131d01155ac19f5",
+      "bytes": 14285816,
+      "buckets": {
+        "mat_chrome": {
+          "triangles": 763810,
+          "vertices": 382216
+        },
+        "mat_fretboard": {
+          "triangles": 1846,
+          "vertices": 925
+        },
+        "mat_maple": {
+          "triangles": 4244,
+          "vertices": 2112
+        },
+        "mat_paint_white": {
+          "triangles": 15494,
+          "vertices": 8149
+        },
+        "mat_pickguard_red": {
+          "triangles": 1905,
+          "vertices": 1183
+        },
+        "mat_plastic_black": {
+          "triangles": 4405,
+          "vertices": 2355
+        }
+      },
+      "sourceTriangles": 791704,
+      "bounds": [
+        [
+          24.740934371948242,
+          102.01078796386719,
+          17.90996551513672
+        ],
+        [
+          341.67059326171875,
+          1077.89111328125,
+          77.3599624633789
+        ]
+      ],
+      "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+      "sourcePartCount": 79,
+      "preserveMaterialsSupported": true,
+      "materials": {
+        "chrome": {
+          "color": "D2D5D7",
+          "metallic": 1,
+          "roughness": 0.2
+        },
+        "fretboard": {
+          "color": "503B32",
+          "metallic": 0,
+          "roughness": 0.48,
+          "texture": "wood"
+        },
+        "maple": {
+          "color": "BC9766",
+          "metallic": 0,
+          "roughness": 0.46,
+          "texture": "wood"
+        },
+        "paint_white": {
+          "color": "E9E8DE",
+          "metallic": 0,
+          "roughness": 0.3,
+          "coat": 0.3
+        },
+        "pickguard_red": {
+          "color": "B71932",
+          "metallic": 0,
+          "roughness": 0.27,
+          "coat": 0.45
+        },
+        "plastic_black": {
+          "color": "202329",
+          "metallic": 0,
+          "roughness": 0.48
+        }
+      }
+    },
+    "education": {
+      "path": "tools/editorial-render/sources/education.glb",
+      "sha256": "c4373769dac0263b7a8a1447484abb0859f797e050c1da1c3fbbd407624d8e2d",
+      "bytes": 10058976,
+      "buckets": {
+        "mat_chrome": {
+          "triangles": 516660,
+          "vertices": 258049
+        },
+        "mat_fretboard": {
+          "triangles": 7596,
+          "vertices": 3918
+        },
+        "mat_maple": {
+          "triangles": 5470,
+          "vertices": 2842
+        },
+        "mat_pickguard_white": {
+          "triangles": 3288,
+          "vertices": 1618
+        },
+        "mat_plastic_black": {
+          "triangles": 18909,
+          "vertices": 11156
+        },
+        "mat_printed_navy": {
+          "triangles": 5284,
+          "vertices": 2632
+        }
+      },
+      "sourceTriangles": 557207,
+      "bounds": [
+        [
+          2.6251108646392822,
+          3.267192840576172,
+          1.2113335132598877
+        ],
+        [
+          394.4577331542969,
+          652.599609375,
+          69.15262603759766
+        ]
+      ],
+      "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+      "sourcePartCount": 18,
+      "preserveMaterialsSupported": true,
+      "materials": {
+        "chrome": {
+          "color": "D2D5D7",
+          "metallic": 1,
+          "roughness": 0.2
+        },
+        "fretboard": {
+          "color": "503B32",
+          "metallic": 0,
+          "roughness": 0.48,
+          "texture": "wood"
+        },
+        "maple": {
+          "color": "BC9766",
+          "metallic": 0,
+          "roughness": 0.46,
+          "texture": "wood"
+        },
+        "pickguard_white": {
+          "color": "ECEBE5",
+          "metallic": 0,
+          "roughness": 0.35
+        },
+        "plastic_black": {
+          "color": "202329",
+          "metallic": 0,
+          "roughness": 0.48
+        },
+        "printed_navy": {
+          "color": "28334D",
+          "metallic": 0,
+          "roughness": 0.51,
+          "texture": "printed"
+        }
+      }
+    },
+    "lineFollower": {
+      "path": "tools/editorial-render/sources/lineFollower.glb",
+      "sha256": "aa8c4253e0a38cc5c2e07bc1d161a44fe243e7a3c39e4c26e2e7e582ac1f29ad",
+      "bytes": 4213316,
+      "buckets": {
+        "mat_battery_wrap": {
+          "triangles": 168,
+          "vertices": 86
+        },
+        "mat_pcb_green": {
+          "triangles": 20256,
+          "vertices": 11330
+        },
+        "mat_pcb_teal": {
+          "triangles": 6594,
+          "vertices": 4394
+        },
+        "mat_plastic_black": {
+          "triangles": 56959,
+          "vertices": 29993
+        },
+        "mat_printed_black": {
+          "triangles": 20908,
+          "vertices": 10301
+        },
+        "mat_rubber_orange": {
+          "triangles": 25708,
+          "vertices": 12842
+        },
+        "mat_solder": {
+          "triangles": 4862,
+          "vertices": 3542
+        },
+        "mat_steel": {
+          "triangles": 94839,
+          "vertices": 47355
+        }
+      },
+      "sourceTriangles": 230294,
+      "bounds": [
+        [
+          6.645447731018066,
+          6.7580952644348145,
+          2.500183343887329
+        ],
+        [
+          150.6454620361328,
+          58.1708984375,
+          194.4878387451172
+        ]
+      ],
+      "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+      "sourcePartCount": 24,
+      "preserveMaterialsSupported": true,
+      "materials": {
+        "battery_wrap": {
+          "color": "D4D7D6",
+          "metallic": 0,
+          "roughness": 0.38
+        },
+        "pcb_green": {
+          "color": "237153",
+          "metallic": 0,
+          "roughness": 0.47
+        },
+        "pcb_teal": {
+          "color": "17616B",
+          "metallic": 0,
+          "roughness": 0.46
+        },
+        "plastic_black": {
+          "color": "202329",
+          "metallic": 0,
+          "roughness": 0.48
+        },
+        "printed_black": {
+          "color": "292D34",
+          "metallic": 0,
+          "roughness": 0.56,
+          "texture": "printed"
+        },
+        "rubber_orange": {
+          "color": "E78B32",
+          "metallic": 0,
+          "roughness": 0.62
+        },
+        "solder": {
+          "color": "BAC1C4",
+          "metallic": 1,
+          "roughness": 0.34
+        },
+        "steel": {
+          "color": "ABB2BA",
+          "metallic": 1,
+          "roughness": 0.35
+        }
+      }
+    },
+    "formlabs": {
+      "path": "tools/editorial-render/sources/formlabs.glb",
+      "sha256": "814cb55be3a9f3e9f4932581de47805a86c84db15d8581d50c51eccab1dd116f",
+      "bytes": 8537696,
+      "buckets": {
+        "mat_amber_resin": {
+          "triangles": 1188,
+          "vertices": 596
+        },
+        "mat_clear_acrylic": {
+          "triangles": 5492,
+          "vertices": 2692
+        },
+        "mat_plastic_black": {
+          "triangles": 16462,
+          "vertices": 8158
+        },
+        "mat_printed_white": {
+          "triangles": 59584,
+          "vertices": 29620
+        },
+        "mat_steel": {
+          "triangles": 390528,
+          "vertices": 195495
+        }
+      },
+      "sourceTriangles": 473254,
+      "bounds": [
+        [
+          4.5404276847839355,
+          19.829423904418945,
+          1.6288045644760132
+        ],
+        [
+          534.5404052734375,
+          362.3060302734375,
+          331.1959228515625
+        ]
+      ],
+      "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+      "sourcePartCount": 63,
+      "preserveMaterialsSupported": true,
+      "materials": {
+        "amber_resin": {
+          "color": "C8A754",
+          "metallic": 0,
+          "roughness": 0.34,
+          "transmission": 0.38,
+          "ior": 1.48
+        },
+        "clear_acrylic": {
+          "color": "F1F4F4",
+          "metallic": 0,
+          "roughness": 0.09,
+          "transmission": 1,
+          "ior": 1.49
+        },
+        "plastic_black": {
+          "color": "202329",
+          "metallic": 0,
+          "roughness": 0.48
+        },
+        "printed_white": {
+          "color": "E6E4DD",
+          "metallic": 0,
+          "roughness": 0.51,
+          "texture": "printed"
+        },
+        "steel": {
+          "color": "ABB2BA",
+          "metallic": 1,
+          "roughness": 0.35
+        }
+      }
+    },
+    "aura": {
+      "path": "tools/editorial-render/sources/aura.glb",
+      "sha256": "a6ffbea4c9b4d5b1e8043a5a6c732314840caff70a5e2a02b03d1ad5992d5014",
+      "bytes": 1916804,
+      "buckets": {
+        "mat_paint_gray": {
+          "triangles": 7021,
+          "vertices": 3476
+        },
+        "mat_plastic_black": {
+          "triangles": 67531,
+          "vertices": 33873
+        },
+        "mat_rubber_black": {
+          "triangles": 392,
+          "vertices": 196
+        },
+        "mat_steel": {
+          "triangles": 31370,
+          "vertices": 15550
+        }
+      },
+      "sourceTriangles": 106314,
+      "bounds": [
+        [
+          575.4097900390625,
+          0.14988361299037933,
+          1201.8218994140625
+        ],
+        [
+          775.9117431640625,
+          297.67828369140625,
+          1537.5047607421875
+        ]
+      ],
+      "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+      "sourcePartCount": 4,
+      "preserveMaterialsSupported": true,
+      "materials": {
+        "paint_gray": {
+          "color": "8A9195",
+          "metallic": 0,
+          "roughness": 0.52
+        },
+        "plastic_black": {
+          "color": "202329",
+          "metallic": 0,
+          "roughness": 0.48
+        },
+        "rubber_black": {
+          "color": "24272B",
+          "metallic": 0,
+          "roughness": 0.7
+        },
+        "steel": {
+          "color": "ABB2BA",
+          "metallic": 1,
+          "roughness": 0.35
+        }
+      }
+    }
+  },
+  "validation": {
+    "binaryReadback": "All included source triangles retained and exact bounds preserved.",
+    "cpuBlenderImport": {
+      "version": "4.5.9",
+      "gpuRenderStarted": false,
+      "meshCounts": {
+        "telecaster": 6,
+        "education": 6,
+        "lineFollower": 8,
+        "formlabs": 5,
+        "aura": 4
+      },
+      "importedFaces": {
+        "telecaster": 791704,
+        "education": 557206,
+        "lineFollower": 230290,
+        "formlabs": 473254,
+        "aura": 106314
+      },
+      "sanitizedDuplicates": {
+        "education": 1,
+        "lineFollower": 4
+      },
+      "note": "Duplicate source triangles, not changes in new geometry; source GLBs intentionally retain them."
+    },
+    "correctedVisualApproval": "Pending main agent updated renders; all six initial drafts and cited photos/CAD references were inspected.",
+    "sourcesFinal": true
+  }
+}

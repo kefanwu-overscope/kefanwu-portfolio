@@ -1,0 +1,305 @@
+{
+  "project": "ftc",
+  "title": "FTC Team 12589 photo-based display reconstruction",
+  "created": "2026-09-13",
+  "classification": "New procedural display mesh reconstructed from local photographs; not original manufacturing CAD",
+  "scope": "Geometry/material deliverable for the main agent's common studio-render pipeline. Does not replace real project evidence, photographs, the homepage or models/real.",
+  "cad_search": {
+    "roots": [
+      "C:/Users/oc/Desktop",
+      "C:/Users/oc/Desktop/STL",
+      "C:/Users/oc/Desktop/WEBSITE/portfolio-site/models/real",
+      "C:/Users/oc/Desktop/WEBSITE/ftc"
+    ],
+    "geometry_paths_examined_by_name": 2047,
+    "terms": [
+      "ftc",
+      "12589",
+      "pioneer",
+      "mecanum",
+      "gobilda",
+      "tetrix",
+      "powerplay",
+      "REV Robotics"
+    ],
+    "matching_geometry_paths": 0,
+    "result": "No identifiable FTC assembly/CAD found in the searched local trees. Desktop/STL contains Brake, Bucketbot, Guitar Education, Line_Follower, Pool Sniper, Smelly and Telecaster; those assemblies are not this FTC robot. No unrelated CAD transplanted as FTC geometry.",
+    "existing_procedural_reference": {
+      "path": "../../../experience.js",
+      "function": "buildFtcBot",
+      "lines_at_review": "5420-5487",
+      "use": "Cross-check only: four mecanum wheels, aluminum structure, lift/claw and black control hub. Existing model is too simplified for the requested photographic cover; no geometry copied or presented as CAD."
+    }
+  },
+  "reviewed_project_gallery": [
+    {
+      "path": "../../../assets/cover-ftc-robot.webp",
+      "view_image": true,
+      "use": "Competition machine: black triangular links, angled aluminum sliding mast, thin red chassis panels, red/white markings, blue deposit support, visible red/black wiring."
+    },
+    {
+      "path": "../../../assets/ftc-mechanism.webp",
+      "view_image": true,
+      "use": "Exposed perforated channel and silver DC motors/black gearheads, toothed black belts, multiple slotted aluminum stages, white horizontal links."
+    },
+    {
+      "path": "../../../assets/ftc-action.webp",
+      "view_image": true,
+      "use": "Scoreboard, not robot geometry or material evidence."
+    },
+    {
+      "path": "../../../assets/ftc-cad.webp",
+      "view_image": true,
+      "use": "Despite filename, this is a photograph of trophies, not CAD. Not used as geometry evidence."
+    },
+    {
+      "path": "../../../assets/ftc-robot.webp",
+      "view_image": true,
+      "use": "Team photograph, lower robot mostly cropped. Only corroborates compact folded upper structure."
+    }
+  ],
+  "additional_local_photo_evidence": [
+    {
+      "path": "../../../../ftc/f28d9b081344071b9f827e526dd463c.jpg",
+      "view_image": true,
+      "use": "Higher-resolution mechanism prototype; open drilled aluminum channel, silver motors, black gearbox caps, toothed belts, nested slotted rails and shaft couplers."
+    },
+    {
+      "path": "../../../../ftc/ecee64487494405ce2cf26147dffd9d.jpg",
+      "view_image": true,
+      "use": "Overhead prototype: inclined slide, extended low intake link, white paired claw, wire runs. This photo omits the wheels and completed panels; it is not treated as the whole final assembly."
+    },
+    {
+      "path": "../../../../ftc/e1b76d3f1f8704576b042e62a625c9c.jpg",
+      "view_image": true,
+      "use": "Exact defining appearance: curved off-white paired jaws with red grip-tape bands, black gears/servo and perforated swing arm. A loose red game cone is excluded from the model."
+    },
+    {
+      "path": "../../../../ftc/db90beae1e610e218c5a9235bb4e951.jpg",
+      "view_image": true,
+      "use": "White jaw profile and blue/red cone transfer support, visible raw silver bracket finish. Excluded external game cone."
+    },
+    {
+      "path": "../../../../ftc/cab06e723e146573a2c6989c63a66e7.jpg",
+      "view_image": true,
+      "use": "Competition close-up: white curved jaw/red tape, silver drilled bearing plates, dark gray servo housing, black structural links."
+    },
+    {
+      "path": "../../../../ftc/efd4d339310f67c5666342ea152f00c.jpg",
+      "view_image": true,
+      "use": "Competition pit view: paired black A-frame, red/white link markings, red chassis guards, blue deposit part, dark electronics and wiring."
+    },
+    {
+      "path": "../../../../ftc/ef1c9d5d317e5d225df69738120d108.jpg",
+      "view_image": true,
+      "use": "Slide and bearing block close-up: aluminum grooves, small black guide rollers, white printed pulley, threaded fasteners and nonmetallic wiring."
+    },
+    {
+      "path": "../../../../ftc/40b329e3e060056e3c3601ae1429c31.jpg",
+      "view_image": true,
+      "use": "White string spool on silver motor shaft, black string, bright raw aluminum hole edges and multicolored wires."
+    },
+    {
+      "path": "../../../../ftc/e1582b3719e1e34fc36b9710f49d6bf.jpg",
+      "view_image": true,
+      "use": "Blue printed bracket, white connector, red/black/yellow wires; control hardware is dark, not blue."
+    },
+    {
+      "path": "../../../../ftc/8aa348ebf7df35f47f4577cb9dff7e6.jpg",
+      "view_image": true,
+      "use": "Original team photo: small cropped folded robot; secondary silhouette reference only."
+    },
+    {
+      "path": "../../../../ftc/b5397fe28dc9bd38a827857638f055e.jpg",
+      "view_image": true,
+      "use": "Scoreboard; not used for reconstruction."
+    },
+    {
+      "path": "../../../../ftc/bf5537758c3a12eeb3e29e3991e5c8a.jpg",
+      "view_image": true,
+      "use": "Person and awards; not used for reconstruction."
+    },
+    {
+      "path": "../../../../ftc/893ce709866e302954a52abbc93b208.jpg",
+      "view_image": true,
+      "use": "Pit photo; machine obscured, not used for reconstruction."
+    },
+    {
+      "path": "../../../../ftc/Screenshot 2025-05-22 135142.png",
+      "view_image": true,
+      "use": "Awards; not used for reconstruction."
+    }
+  ],
+  "material_assignments": [
+    {
+      "material": "FTC_Silver_aluminum_channels",
+      "srgb": "#C6C8CA",
+      "metallic": 0.88,
+      "roughness": 0.29,
+      "evidence": "Bare silver perforated chassis channels and motor cans in mechanism/competition photos."
+    },
+    {
+      "material": "FTC_Satin_extruded_slide",
+      "srgb": "#AAAEB2",
+      "metallic": 0.86,
+      "roughness": 0.3,
+      "evidence": "Gray-silver slotted slide rails with restrained satin reflections."
+    },
+    {
+      "material": "FTC_Steel_fasteners_shafts",
+      "srgb": "#B9BDC2",
+      "metallic": 0.92,
+      "roughness": 0.25,
+      "evidence": "Silver screws, exposed shafts and couplers."
+    },
+    {
+      "material": "FTC_Black_structural_links",
+      "srgb": "#20242A",
+      "metallic": 0.25,
+      "roughness": 0.38,
+      "evidence": "Black A-frame/links. Substrate/alloy not identified from photos, so appearance is modeled without asserting a specific material grade."
+    },
+    {
+      "material": "FTC_Black_polymer_electronics",
+      "srgb": "#181B20",
+      "metallic": 0,
+      "roughness": 0.44,
+      "evidence": "Dark control hub, gearbox covers and servo case."
+    },
+    {
+      "material": "FTC_Graphite_elastomer_rollers",
+      "srgb": "#45484D",
+      "metallic": 0,
+      "roughness": 0.62,
+      "evidence": "Gray/black mecanum appearance from user's constraint and existing studio model. Wheel hardware not exposed clearly enough in useful local stills to claim exact rim or roller construction."
+    },
+    {
+      "material": "FTC_Red_polymer_panels",
+      "srgb": "#BF2825",
+      "metallic": 0,
+      "roughness": 0.34,
+      "evidence": "Competition red side guards and red brackets. Polymer appearance; exact resin is unknown."
+    },
+    {
+      "material": "FTC_Red_grip_tape",
+      "srgb": "#DC3027",
+      "metallic": 0,
+      "roughness": 0.4,
+      "evidence": "Red tape bands around white claw and structural links, red cable insulation."
+    },
+    {
+      "material": "FTC_Blue_printed_deposit_support",
+      "srgb": "#244AA5",
+      "metallic": 0,
+      "roughness": 0.43,
+      "evidence": "Blue physical deposit cradle and printed wire bracket, not a recolored control hub."
+    },
+    {
+      "material": "FTC_Offwhite_claw_and_spool",
+      "srgb": "#E9E3D7",
+      "metallic": 0,
+      "roughness": 0.4,
+      "evidence": "Off-white curved jaw plates and string spool. Exact polymer/stock specification unknown."
+    },
+    {
+      "material": "FTC_Black_belts_wire_sleeves",
+      "srgb": "#101317",
+      "metallic": 0,
+      "roughness": 0.6,
+      "evidence": "Black belt, string and cable insulation in local macro photos."
+    },
+    {
+      "material": "FTC_Yellow_signal_wire",
+      "srgb": "#D7B849",
+      "metallic": 0,
+      "roughness": 0.45,
+      "evidence": "Yellow servo/signal wire visible with red and black leads."
+    }
+  ],
+  "reconstruction_limits": [
+    "Topology is newly built for a static display render. No original FTC CAD was found, imported or altered.",
+    "Overall dimensions, hole patterns and counts, fastener positions, exact wheel rim/roller profile, hidden backside, wiring route and gearbox internals are inferred. Not suitable for fabrication, engineering measurement or kinematic claims.",
+    "Combines clearly photographed mechanism details with the completed competition machine's A-frame and color scheme. A partially extended display pose is selected for legibility; it is not a measured reconstruction of one exact instant.",
+    "Recognizable visible structure is retained: open perforated aluminum channels, inclined multistage mast, black triangular supports, exposed silver motors, belt runs, string winch, curved white/red-taped intake jaws, blue/red deposit support and thin red lower panels.",
+    "PBR values are visual estimates from differently lit images, not spectrophotometer measurements. Real image colors/material families are preserved without introducing an invented paint scheme.",
+    "No logos, supplier badges, sponsor names, fabricated labels, trophy geometry or external game/field objects are added."
+  ],
+  "integration": {
+    "build_api": "Import build_ftc.py under Blender Python and call build(); returns only mesh objects with assigned materials. No scene reset, lights, camera or floor in build().",
+    "blender_coordinates": "Z-up, nominal metres, XY bounding-box center zero, bottom z=0. All modifiers/curves/transforms baked.",
+    "glb_coordinates": "Standard glTF Y-up on disk (export_yup=True); Blender glTF import restores Z-up. Units metres. No camera/lights/floor exported.",
+    "recommended_view": {
+      "direction_from_target": [
+        1.1,
+        -1.55,
+        0.65
+      ],
+      "target": [
+        0,
+        -0.012,
+        0.35
+      ],
+      "note": "Three-quarter intake-side view. Keep both curved jaws and inclined mast in frame; adjust shared pipeline crop to the full mesh bounds."
+    },
+    "standalone": "blender --background --factory-startup --threads 4 --python tools/editorial-render/ftc/build_ftc.py -- --preview",
+    "large_proof": "Add --large to --preview for a 1600x1067 proof. Proof is CPU Cycles, 4 threads, 24 samples. Main agent owns final studio lights and camera.",
+    "final_cover_not_created_here": true
+  },
+  "visual_qa": {
+    "status": "passed direct view_image inspection",
+    "proofs": [
+      "proof-720x480.png",
+      "proof-1600x1067.png"
+    ],
+    "engine": "Cycles CPU only, 4 threads, 24 samples",
+    "checks": [
+      "Full model fits frame with breathing room at both sizes",
+      "Distinct curved white/red intake, inclined slotted mast, perforated chassis and black triangular supports readable",
+      "Silver metal, dark electronics/rollers, white polymer and red/blue accent families checked against physical photographs",
+      "Initial overbright/cropped proof corrected and replaced"
+    ],
+    "limitation": "Proof lighting only; main agent owns final common-studio render. Geometry/dimensions remain explicitly photo-inferred."
+  },
+  "build_result": {
+    "meshes": 381,
+    "vertices": 98020,
+    "polygons": 92894,
+    "bounds_min": [
+      -0.2321999967098236,
+      -0.33639127016067505,
+      0.0
+    ],
+    "bounds_max": [
+      0.2321999967098236,
+      0.33639127016067505,
+      0.770455539226532
+    ],
+    "materials": [
+      "FTC_Black_belts_wire_sleeves",
+      "FTC_Black_polymer_electronics",
+      "FTC_Black_structural_links",
+      "FTC_Blue_printed_deposit_support",
+      "FTC_Graphite_elastomer_rollers",
+      "FTC_Offwhite_claw_and_spool",
+      "FTC_Red_grip_tape",
+      "FTC_Red_polymer_panels",
+      "FTC_Satin_extruded_slide",
+      "FTC_Silver_aluminum_channels",
+      "FTC_Steel_fasteners_shafts",
+      "FTC_Yellow_signal_wire"
+    ],
+    "build_sha256": "dd18741c7be4620ea40eade9a99bfcc48abddf91cd4dd3f137f5b0b8bf1c4fe7",
+    "glb_sha256": "903158a41998dff3bf946ffcd5f02b9255a92527e3310798d24a626f97cf8cea"
+  },
+  "contract_check": {
+    "meshOnly": true,
+    "materialsAssigned": true,
+    "modifiersBaked": true,
+    "finiteVertices": true,
+    "bottomZero": true,
+    "XYCentered": true,
+    "callerScenePreserved": true,
+    "noLightsOrCamerasReturned": true,
+    "meshCount": 381
+  }
+}

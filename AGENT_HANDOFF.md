@@ -1,5 +1,155 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## 2026-09-13 — authorized cinematic release and next interaction
+
+The user explicitly requested publishing the latest local version, making a
+backup, updating Markdown documentation, then adding scroll-controlled exploded
+animations to all project cards. This supersedes the local-only restriction in
+the historical entries below.
+
+- Release baseline: cinematic race-car homepage, complete 16-project rendered
+  catalogue, latest cover angles, larger typography and 30-engineer leadership
+  copy. Three full case pages and the existing 3D studio remain available.
+- Before changes, the complete 981-file website working copy was archived with
+  per-file SHA-256 and a successful ZIP CRC check. Recovery location:
+  `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-pre-publish/`.
+  `RESTORE.md` and release metadata there identify the exact release commit,
+  previous production commit `e5ea5c6`, and online verification results.
+- Verification before publication: all 31 owned JS/MJS files parse; all 16 cards
+  and three case records resolve; 176 explicit static resource references exist;
+  all 48 responsive catalogue images match their provenance hashes. The local
+  homepage, Motorsport filter and steering modal/gallery were checked in Browser.
+- The unrelated untracked LOD experiments are excluded from this release.
+- Next work: hover a project card and scroll to separate/reassemble its parts.
+  Preserve original galleries, normal page scrolling at interaction boundaries,
+  keyboard/touch access and reduced-motion behavior. Single-piece geometry needs
+  an explicitly identified section view rather than invented assembly joints.
+
+## 2026-09-13 — larger type and ticker placement, LOCAL ONLY
+
+- Removed the project-section sentence beginning “16 projects. Motorsport…”
+  per the user's screenshot. Project count/filter status and all cards remain.
+- Moved the original skill marquee before the Mechanical Engineering / Olin ’28
+  eyebrow in the DOM. The animation and pause behavior are unchanged.
+- Increased small homepage type: desktop project titles 21px, descriptions 15px,
+  main body 16px, labels 12px; phone titles 19px and descriptions 14px. Navigation,
+  buttons, filters, search, role details and footer are larger too. Hero spacing
+  was adjusted to accommodate the more readable copy.
+- CSS tag: `readability-20260913`. No new assets, JS changes, commit or deployment.
+  Latest screenshots: `../.codex/readability-20260913/`.
+
+## 2026-09-13 — cover angles, original skills ticker and 30-engineer team
+
+Latest user revision, still LOCAL ONLY. Selected new front three-quarter views
+for Javelin and Driver Seat, and a near-front rotor view for FSAE Brake Sim.
+Only these three images were re-rendered; updated camera directions and output
+hashes are in the catalogue. The other thirteen covers retain their bytes.
+
+- Removed `Photo-based model` image badges at user request. Source provenance
+  remains in the rendering files; existing original photo galleries are intact.
+  `apply_covers.py` and its validator preserve the badge-free presentation.
+- Restored the original outlined horizontal skill marquee above the name, using
+  the existing two-track CSS and existing ambient-motion observer. It pauses on
+  hover/offscreen/hidden pages and stops under reduced motion. No new JS loop.
+- User now leads 30 mechanical engineers. Hero, leadership section, search/social
+  description and the 3D desk's condensed resume data reflect this current fact.
+  `experience-data.js` changes text only; no studio rendering logic changed.
+- CSS tag `cover-angles-team-20260913`. Three-size covers now total 149,702 bytes
+  at 480px and 361,024 bytes at 960px. All 16 card galleries are unchanged.
+- Current screenshots/checks: `../.codex/cover-refinement-20260913/`.
+  Preview `http://127.0.0.1:4176/`. No commit, push or deployment.
+
+## 2026-09-13 — complete rendered project catalogue, LOCAL ONLY
+
+The user requested the remaining covers in the same studio render style, using
+all local CAD and allowing missing display models to be built. Still no publish,
+push, or commit. Homepage structure and cinematic race-car hero are retained.
+
+- All 16 `index.html` cards now use 480/960/1800 WebP variants, explicit dimensions,
+  lazy loading and accurate alt text. The three previously approved wide images
+  retain their exact bytes. CSS tag: `rendered-covers-20260913`; JS tags unchanged.
+- `tools/editorial-render/render_catalog.py` / `catalog.json` render the other
+  13 images. `pack_catalog.py`, `apply_covers.py`, `build_proof.py` and
+  `validate_catalog.py` encode, integrate, review and validate the catalogue.
+  Source/output hashes and actual render settings: `catalog-manifest.json`.
+- Mechanical/robotics audits distinguish painted steel, cast iron, aluminum,
+  resin, printed polymers, circuit boards, red pearloid and finished white paint.
+  Material splits preserve included source faces; omitted standard fasteners and
+  motor internals are documented in the offline source builders.
+- FTC and materialTest use explicitly labeled photo-based display reconstructions
+  (`ftc/`, `material-test/`, each with builder, BLEND, GLB and provenance).
+  The old materialTest GLB depicts an MTS-style two-column machine; actual project
+  photos show a single-column Instron. The old 3D source is untouched; this identity
+  mismatch should be considered if that 3D exhibit is changed in future.
+- Javelin retains original airframe geometry and adds four photo-informed props.
+  CFD uses the original Cp image on presentation furniture, not new solver data.
+  Pool colors are CAD-supported; no complete physical-build photo verifies them.
+- All original galleries/details and `models/real` files are unchanged. Large
+  offline model/render inputs stay under tools; homepage only downloads stills.
+  The sixteen 480px covers total 139,748 bytes; 960px total 338,982 bytes.
+- QA: `../.codex/rendered-covers-20260913/`; visual proof sheet:
+  `/tools/editorial-render/catalog-proof.html`. Preview: `http://127.0.0.1:4176/#work`.
+  Desktop/mobile checks include all cover loads, responsive layout, search,
+  filters and original FTC modal gallery. Unrelated LOD work remains unstaged.
+
+## 2026-09-13 — cinematic homepage revision, LOCAL PREVIEW ONLY
+
+Latest user feedback supersedes the CAD-led concept below: they want the original
+photograph of themselves driving the race car, an epic first impression, and
+quick access to the other projects. Still no publishing, committing, or pushing.
+
+- `index.html`: original responsive track photograph, large name, a short intro,
+  and a direct all-projects CTA. The next section is the entire 16-project grid
+  (four desktop columns), followed by methods/leadership, studio, and contact.
+  The three oversized flagship stories and long steering walkthrough are removed
+  from the homepage. `editorial.js` is no longer loaded there.
+- All cards use the existing quick modal. `script.js` shows `#modal-case-link`
+  only for steering, vineRobot, and scanner; other projects hide it and clear
+  its href. Full case pages and all original galleries/details are retained.
+- `editorial.css` replaces the old hero/story rules with responsive photo
+  composition, a 2.4-second transform-only entrance, and compact project layouts.
+  Reduced motion disables the entrance. Mobile photo edges feather into the
+  background. Card text starts at the same height in each row.
+- Homepage script/style tag: `cinematic-preview-20260913`. Shared project data
+  and case-page tags remain as documented below. No 3D rendering changes.
+- Local preview remains `http://127.0.0.1:4176/`, with the same parent-directory
+  server `.codex/editorial-20260913/server.mjs`. Current QA artifacts are in
+  `../.codex/cinematic-20260913/`. Older editorial screenshots are superseded.
+
+## 2026-09-13 — editorial redesign, LOCAL PREVIEW ONLY
+
+The user approved the nine-item main-site redesign, explicitly requested a local
+preview, and said not to publish. These changes are uncommitted. Do not push or
+deploy them based on older automatic-push preferences. Production remains e5ea5c6.
+
+- Main homepage now presents the real steering CAD hero, three flagship stories,
+  an ordinary-scroll engineering narrative, method/leadership, a searchable and
+  filterable 13-project archive, optional studio entry, and contact.
+- `editorial.css` layers the new layout over existing modal styles; `editorial.js`
+  handles the three-step image sequence. Existing modal behavior stays in
+  `script.js`; obsolete hero skill-tooltip code was removed. Filter/search share
+  the existing latest-intent queue. The hidden modal image has no initial src.
+- `case-study.html?project=steering|vineRobot|scanner` uses `case-study-data.js`,
+  `case-study.js`, and `case-study.css`. All original project galleries and
+  technical detail sections still come from `project-data.js`. Native dialog
+  supports keyboard image browsing and returns focus. Unknown keys show choices.
+- Four `assets/editorial/*.webp` stills (230,416 bytes total) were rendered from
+  actual CAD GLBs. Geometry provenance and reproduction: `tools/editorial-render/`.
+  Original images and GLBs are untouched; images are explicitly CAD renders.
+- Brake summary/highlight now label 25% mass reduction as a design target;
+  `experience.html` changes only the shared-data cache tag. Studio rendering,
+  lighting, camera behavior, and LOD code are untouched.
+- Main script, editorial files, and shared data use `editorial-preview-20260913`;
+  case page scripts/style/data use `editorial-20260913`. Existing fonts/base CSS
+  keep their previous tags. IO center bands use viewport-height pixel margins.
+- Preview: `http://127.0.0.1:4176/`. Start from parent WEBSITE with Node:
+  `.codex/editorial-20260913/server.mjs`. The server is bound to loopback only.
+  Optional `index.html?qa=<name>` exposes local-only performance diagnostics;
+  that instrumentation is outside website source and absent from normal preview.
+- QA report and screenshots: `../.codex/editorial-20260913/`; see
+  `LOCAL_PREVIEW.md` for handoff and scope. Existing untracked LOD experiments
+  remain unrelated and must not be staged automatically.
+
 ## 2026-09-07 — compact hint, repeat camera tour and room details
 
 The 3D HTML styles/script and new `experience-realism.js` use

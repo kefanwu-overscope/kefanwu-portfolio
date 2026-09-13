@@ -1,0 +1,20 @@
+{
+  "steering": {
+    "sourceTriangles": 158758,
+    "zeroAreaSourceTriangles": 0,
+    "repeatedIndexSourceTriangles": 0,
+    "duplicateSourceTriangles": 220
+  },
+  "vineRobot": {
+    "sourceTriangles": 122814,
+    "zeroAreaSourceTriangles": 0,
+    "repeatedIndexSourceTriangles": 0,
+    "duplicateSourceTriangles": 0
+  },
+  "scanner": {
+    "sourceTriangles": 161404,
+    "zeroAreaSourceTriangles": 0,
+    "repeatedIndexSourceTriangles": 0,
+    "duplicateSourceTriangles": 45
+  }
+}

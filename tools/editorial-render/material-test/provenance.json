@@ -1,0 +1,191 @@
+{
+  "project": "materialTest",
+  "created": "2026-09-13",
+  "classification": "Photo-derived display reconstruction of the visible single-column tensile tester; NOT original manufacturer CAD",
+  "scope": "A separate new mesh for the project cover, not a modification of models/real/materialTest.glb or its source files. Main agent owns final common studio rendering and website integration.",
+  "reason_for_reconstruction": "The checked material audit identifies the old source GLB as a two-column MTS Insight-style assembly. Actual project photographs and records identify a single-column Instron 3345. The old geometry cannot be made faithful by recoloring. It is not reused here.",
+  "evidence": [
+    {
+      "path": "../../../assets/material-instron-frame.webp",
+      "view_image": true,
+      "observed": "One off-white column surrounding a black accordion face; dark gray rough-textured sloped base; silver curved spring-loaded grips and couplings; dark upper load cell; red mushroom stop on yellow field and black jog control. Top of the machine is cropped. The surrounding blue table, flexible extraction hose, monitor and loose tools do not belong to the rendered model."
+    },
+    {
+      "path": "../../../assets/material-specimen-md.webp",
+      "view_image": true,
+      "observed": "A dark charcoal fabric strip between the silver jaws, with MD-1 handwritten on the physical sample. Grip cheek thickness, metal springs and sliding jaw shape are visible. The caliper and hand are excluded; label not duplicated."
+    },
+    {
+      "path": "../material-audit-mechanical.json",
+      "locator": "projects.materialTest",
+      "observed": "Confirms identity mismatch and recommends single-column photo reconstruction with evidence-based materials."
+    },
+    {
+      "path": "../../../project-data.js",
+      "locator": "materialTest",
+      "observed": "Current experiment record names Instron 3345; 100mm adapted gauge length, specimen widths 23.6-25.4mm, coated fabric thickness 0.19-0.22mm. Those specimen values inform a nominal 100mm visible span, 25mm width and 0.2mm sheet. Machine dimensions are not measured."
+    }
+  ],
+  "geometry": {
+    "source": "New Blender Python mesh generation from directly inspected local photographs",
+    "visible_structure": [
+      "Single enclosed off-white column",
+      "Black physical accordion folds",
+      "Dark sloped control base",
+      "Dark load transducer with silver cylindrical couplers",
+      "Curved silver jaw cheek plates and diagonal return springs",
+      "Separated inward jaw wedges holding the charcoal strip",
+      "Red emergency mushroom and yellow backing",
+      "Black jog control",
+      "Simplified visible signal cable"
+    ],
+    "not_included": [
+      "Second column",
+      "Old MTS geometry",
+      "Manufacturer or supplier branding",
+      "Model-number label",
+      "Invented control values or calibration marks",
+      "Unseen lead screws, internal drives or machine internals",
+      "Surrounding laboratory tools/furniture",
+      "Hand or caliper",
+      "Load results or simulated stress colors"
+    ],
+    "accuracy_limit": "Visual reconstruction, not an exact digital twin, manufacturer CAD, mechanical specification or fabricated replacement part. Overall dimensions, housing depth, top closure, hidden back, fastener details and specific clamp radii are inferred from the visible silhouette. The cropped uppermost housing is represented by a plain enclosed continuation/cap, without inventing exposed mechanisms.",
+    "specimen_limit": "Nominal strip dimensions fall within the recorded experiment values. Tiny surface variation only suggests coated fabric; it is not a measured deformation, broken sample, or new test result."
+  },
+  "materials": [
+    {
+      "name": "MaterialTest_Offwhite_column_shell",
+      "srgb": "#DFDED5",
+      "metallic": 0,
+      "roughness": 0.5,
+      "evidence": "Photographed white/off-white coated housing; treated as dielectric painted surface."
+    },
+    {
+      "name": "MaterialTest_Textured_dark_gray_base",
+      "srgb": "#626461",
+      "metallic": 0,
+      "roughness": 0.63,
+      "evidence": "Dark textured base in actual experiment photo; subtle procedural micrograin only in Blender shader."
+    },
+    {
+      "name": "MaterialTest_Black_flexible_bellows",
+      "srgb": "#191B1A",
+      "metallic": 0,
+      "roughness": 0.7,
+      "evidence": "Black matte accordion face behind the working axis; real folded geometry."
+    },
+    {
+      "name": "MaterialTest_Dark_load_transducer",
+      "srgb": "#292B29",
+      "metallic": 0,
+      "roughness": 0.52,
+      "evidence": "Dark load-cell barrel and upper crosshead."
+    },
+    {
+      "name": "MaterialTest_Satin_silver_grips_couplings",
+      "srgb": "#B4B4AA",
+      "metallic": 1,
+      "roughness": 0.42,
+      "evidence": "Machined silver slightly warm-neutral jaw plates, couplers and mounting plate; no old copper collars."
+    },
+    {
+      "name": "MaterialTest_Polished_silver_spring_wire",
+      "srgb": "#BEC1BC",
+      "metallic": 1,
+      "roughness": 0.28,
+      "evidence": "Bright silver return springs and fasteners."
+    },
+    {
+      "name": "MaterialTest_Black_controller_bezel",
+      "srgb": "#242624",
+      "metallic": 0,
+      "roughness": 0.5,
+      "evidence": "Black control bezel, rocker, wire and feet."
+    },
+    {
+      "name": "MaterialTest_Red_mushroom_stop",
+      "srgb": "#C84846",
+      "metallic": 0,
+      "roughness": 0.46,
+      "evidence": "Red physical emergency mushroom button."
+    },
+    {
+      "name": "MaterialTest_Yellow_emergency_stop_field",
+      "srgb": "#E2CB32",
+      "metallic": 0,
+      "roughness": 0.48,
+      "evidence": "Yellow stop field and small physical travel markers."
+    },
+    {
+      "name": "MaterialTest_Charcoal_coated_fabric",
+      "srgb": "#282A2D",
+      "metallic": 0,
+      "roughness": 0.58,
+      "evidence": "Actual MD coated fabric specimen; no borrowed screen, graph or FEA color."
+    }
+  ],
+  "material_precision_limit": "Color and roughness values are neutral-light visual estimates from uncalibrated photographs, not measured spectral reflectance or manufacturer material specifications. Blender materials convert sRGB values to linear. GLB preserves base PBR factors, but Blender-only procedural micrograin is not baked to textures.",
+  "integration": {
+    "api": "Import build_material_test.py in Blender; call build() to get mesh-only list with materials. build() does not reset scene or introduce floor/camera/lights.",
+    "coordinates": "Blender: Z-up, XY bbox centered, bottom z=0, identity object transforms. Nominal metres are a display convention, not verified machine dimensions.",
+    "glb": "Standard Y-up GLB on disk; Blender glTF import restores Z-up. No camera, lights or floor exported.",
+    "recommendation": "Favor a front three-quarter view to reveal the single column and silver grip springs. Keep cloth visible against the lighter jaw metal. Preserve provided material assignments.",
+    "standalone": "blender --background --factory-startup --threads 4 --python tools/editorial-render/material-test/build_material_test.py -- --preview",
+    "proof_engine": "Cycles CPU, 4 threads, 24 samples, 720x480"
+  },
+  "visual_qa": {
+    "status": "passed direct view_image inspection",
+    "proofs": [
+      "proof-720x480.png",
+      "proof-1600x1067.png"
+    ],
+    "engine": "Cycles CPU only, 4 threads, 24 samples",
+    "checks": [
+      "Single column silhouette and working axis clear",
+      "Black fabric is visibly distinct from silver grip hardware",
+      "Offwhite column, dark textured gray base, black bellows and red-yellow emergency control checked against both actual photos",
+      "Complete model fits frame; no added brands, fabricated control labels, second column or exposed unseen drive"
+    ],
+    "originalGLBUnchanged": true
+  },
+  "build_result": {
+    "meshes": 172,
+    "vertices": 26446,
+    "bounds_min": [
+      -0.17499999701976776,
+      -0.16950970888137817,
+      0.0
+    ],
+    "bounds_max": [
+      0.17499999701976776,
+      0.16950970888137817,
+      0.8529999852180481
+    ],
+    "materials": [
+      "MaterialTest_Black_controller_bezel",
+      "MaterialTest_Black_flexible_bellows",
+      "MaterialTest_Charcoal_coated_fabric",
+      "MaterialTest_Dark_load_transducer",
+      "MaterialTest_Offwhite_column_shell",
+      "MaterialTest_Polished_silver_spring_wire",
+      "MaterialTest_Red_mushroom_stop",
+      "MaterialTest_Satin_silver_grips_couplings",
+      "MaterialTest_Textured_dark_gray_base",
+      "MaterialTest_Yellow_emergency_stop_field"
+    ],
+    "build_sha256": "06a60961b3000d08bcf96c16f912687fec104fca9f3b6d2da44f11c48a3e39cb",
+    "glb_sha256": "79d0529435229e1418c975ee8e8b43e102d78de4ef74cf2a469593271c19c540"
+  },
+  "contract_check": {
+    "meshOnly": true,
+    "materialsAssigned": true,
+    "modifiersBaked": true,
+    "finiteVertices": true,
+    "bottomZero": true,
+    "XYCentered": true,
+    "callerScenePreserved": true,
+    "noLightsOrCamerasReturned": true,
+    "meshCount": 172
+  }
+}

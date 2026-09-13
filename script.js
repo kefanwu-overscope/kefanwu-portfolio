@@ -46,308 +46,6 @@ window.addEventListener("load", () => body.classList.add("is-loaded"));
 // Fallback in case load already fired or assets stall.
 setTimeout(() => body.classList.add("is-loaded"), 900);
 
-/* ============ hero skill glass cards ============ */
-
-const heroSkillDetails = {
-  arduino: {
-    title: "Arduino",
-    meta: "Embedded prototyping",
-    image: "assets/skill-arduino-online.jpg",
-    alt: "Arduino Uno development board",
-    text:
-      "Fast control loops for sensors, motors, and bench prototypes when a mechanical idea needs physical feedback quickly."
-  },
-  "tig welding": {
-    title: "TIG Welding",
-    meta: "Precision fabrication",
-    image: "assets/skill-tig-welding.jpg",
-    alt: "TIG welding operation on metal tubing",
-    text:
-      "Clean welded joints for brackets, fixtures, and motorsport hardware where heat control and fit-up matter."
-  },
-  autocad: {
-    title: "AutoCAD",
-    meta: "Fabrication drawings",
-    image: "assets/cover-steering-system-cad.webp",
-    alt: "CAD assembly of the Mk.8 steering system used for fabrication drawings",
-    text:
-      "2D layouts, DXF cleanup, shop-ready profiles, and fabrication handoff details before parts hit the machine."
-  },
-  "topology study": {
-    title: "Topology Study",
-    meta: "Load-path exploration",
-    image: "assets/skill-topology.webp",
-    alt: "Finite element load-path study on a seat support structure",
-    text:
-      "Constraint-first material studies that reveal load paths before committing weight and geometry in final CAD."
-  },
-  solidworks: {
-    title: "SolidWorks",
-    meta: "Parametric CAD",
-    image: "assets/cover-steering-system-cad.webp",
-    alt: "SolidWorks CAD render of the Mk.8 steering column assembly",
-    text:
-      "Assemblies, packaging studies, drawings, and design reviews that connect concept geometry to buildable hardware."
-  },
-  matlab: {
-    title: "MATLAB",
-    meta: "Engineering models",
-    image: "assets/skill-matlab.webp",
-    alt: "MATLAB surface plot of steering U-joint speed ripple",
-    text:
-      "Parameter sweeps, kinematics, thermal models, and plots that turn assumptions into traceable decisions."
-  },
-  fea: {
-    title: "FEA",
-    meta: "Structural validation",
-    image: "assets/skill-fea.webp",
-    alt: "Finite element analysis stress result on a brake rotor",
-    text:
-      "Stress and stiffness checks for seats, mounts, brackets, and motorsport hardware under explicit load cases."
-  },
-  cfd: {
-    title: "CFD",
-    meta: "Flow-aware design",
-    image: "assets/ansys-cfd-pressure.webp",
-    alt: "Ansys CFD pressure-field result over a VTOL drone body",
-    text:
-      "Flow and pressure tradeoff thinking for cooling, bodywork, and geometry choices where air becomes a design constraint."
-  },
-  "cnc mill": {
-    title: "CNC Mill",
-    meta: "Precision machining",
-    image: "assets/skill-cnc-mill.jpg",
-    alt: "CNC milling machine cutting metal with coolant",
-    text:
-      "Machined interfaces, bearing cages, mounts, and tolerance-critical details where fit and repeatability matter."
-  },
-  lathe: {
-    title: "Lathe",
-    meta: "Round hardware",
-    image: "assets/skill-lathe.jpg",
-    alt: "Metal lathe turning a shiny workpiece in the chuck",
-    text:
-      "Shafts, spacers, bushings, and clean rotational fits for steering, drivetrain, and assembly hardware."
-  },
-  waterjet: {
-    title: "Waterjet",
-    meta: "Flat-pattern fabrication",
-    image: "assets/skill-waterjet.webp",
-    alt: "Waterjet-cut, TIG-welded A36 steel swerve mount",
-    text:
-      "Fast plate and bracket manufacturing for seats, mounts, fixtures, and chassis-adjacent hardware."
-  },
-  "carbon fiber": {
-    title: "Carbon Fiber",
-    meta: "Composite structures",
-    image: "assets/skill-carbon.webp",
-    alt: "Close view of the carbon fiber weave on the FSAE seat shell",
-    text:
-      "Layup, trimming, support geometry, and lightweight structure decisions for motorsport packaging."
-  },
-  "team management": {
-    title: "Team Management",
-    meta: "Engineering leadership",
-    image: "assets/skill-team-management.jpg",
-    alt: "Olin Electric Motorsports team standing with the race car",
-    text:
-      "Task breakdown, design reviews, fabrication planning, and cross-team execution from CAD to tested assemblies."
-  },
-  "ai-assisted eng": {
-    title: "AI-Assisted Engineering",
-    meta: "PyFluent / headless CFD / automation",
-    image: "assets/skill-vibe-coding.jpg",
-    alt: "Code on a dark screen with blue and red ambient lighting",
-    text:
-      "AI-paired engineering automation — working scripts, tools, and pipelines for simulation (headless Ansys via PyFluent), data wrangling, and hardware workflows."
-  },
-  "3d printing": {
-    title: "3D Printing",
-    meta: "Rapid prototyping",
-    image: "assets/skill-3d-printing.jpg",
-    alt: "3D printer in operation under colored ambient lighting",
-    text:
-      "FDM prints for fixtures, jigs, housings, and functional prototypes — from tolerance-aware design to support strategy and finish."
-  },
-  "esp32": {
-    title: "ESP32",
-    meta: "Embedded compute",
-    image: "assets/skill-esp32.jpg",
-    alt: "ESP32 microcontroller development board on a dark background",
-    text:
-      "Wi-Fi-capable microcontroller for sensor fusion, motor control, and data logging across robotics and instrumentation builds."
-  },
-  "embedded sensors": {
-    title: "Embedded Sensors",
-    meta: "Sensing and feedback",
-    image: "assets/line-follower-white.webp",
-    alt: "Robot packed with sensors and wiring",
-    text:
-      "LiDAR, encoders, reflectance arrays, and IMUs integrated with calibration and noise control for closed-loop robotics."
-  }
-};
-
-function initHeroSkillCards() {
-  const skillItems = [
-    ...document.querySelectorAll(".hero-skill-track span"),
-    ...document.querySelectorAll(".matrix-cell li"),
-  ];
-  if (!skillItems.length) return;
-
-  const card = document.createElement("aside");
-  card.className = "skill-glass-card";
-  card.id = "skill-detail-card";
-  card.setAttribute("role", "tooltip");
-  card.setAttribute("aria-hidden", "true");
-  card.innerHTML = `
-    <div class="skill-card-inner">
-      <div class="skill-card-media"><img alt="" decoding="async" /></div>
-      <div class="skill-card-content">
-        <p class="skill-card-kicker"></p>
-        <h2></h2>
-        <p class="skill-card-text"></p>
-      </div>
-    </div>
-  `;
-  document.body.append(card);
-
-  const cardImage = card.querySelector("img");
-  const cardKicker = card.querySelector(".skill-card-kicker");
-  const cardTitle = card.querySelector("h2");
-  const cardText = card.querySelector(".skill-card-text");
-  let activeItem = null;
-  let positionFrame = 0;
-  let dismissedItem = null;
-  const heroTitle = document.querySelector(".hero h1");
-  const heroCue = document.querySelector(".scroll-cue");
-
-  const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
-  const skillKey = (item) => item.textContent.trim().toLowerCase();
-
-  function positionCard(item) {
-    const rect = item.getBoundingClientRect();
-    const margin = 16;
-    const gap = 14;
-    const cardWidth = card.offsetWidth || 304;
-    const cardHeight = card.offsetHeight || 178;
-    const titleRect = heroTitle?.getBoundingClientRect();
-    const cueRect = heroCue && !heroCue.classList.contains("is-gone")
-      ? heroCue.getBoundingClientRect() : null;
-    const maxX = Math.max(margin, window.innerWidth - cardWidth - margin);
-    let x = clamp(rect.left + rect.width / 2 - cardWidth / 2, margin, maxX);
-    let y = rect.bottom + gap;
-
-    if (y + cardHeight > window.innerHeight - margin) {
-      y = Math.max(margin, rect.top - cardHeight - gap);
-    }
-
-    const titleGuardRight = titleRect
-      ? Math.min(titleRect.right, titleRect.left + Math.min(440, window.innerWidth * 0.38))
-      : 0;
-
-    if (
-      titleRect &&
-      y < titleRect.bottom + gap &&
-      y + cardHeight > titleRect.top - gap &&
-      x < titleGuardRight + gap &&
-      x + cardWidth > titleRect.left - gap
-    ) {
-      x = clamp(titleGuardRight + gap, margin, maxX);
-    }
-
-    if (
-      cueRect &&
-      y < cueRect.bottom + gap &&
-      y + cardHeight > cueRect.top - gap &&
-      x < cueRect.right + gap &&
-      x + cardWidth > cueRect.left - gap
-    ) {
-      x = clamp(cueRect.left - cardWidth - gap, margin, maxX);
-    }
-
-    card.style.setProperty("--skill-card-x", `${Math.round(x)}px`);
-    card.style.setProperty("--skill-card-y", `${Math.round(y)}px`);
-  }
-
-  function schedulePosition() {
-    if (!activeItem || positionFrame || document.hidden) return;
-    positionFrame = requestAnimationFrame(() => {
-      positionFrame = 0;
-      if (activeItem) positionCard(activeItem);
-    });
-  }
-
-  function showSkillCard(item) {
-    if (dismissedItem === item || document.hidden) return;
-    const detail = heroSkillDetails[skillKey(item)];
-    if (!detail) return;
-    if (activeItem === item) return;
-
-    activeItem?.removeAttribute("aria-describedby");
-    activeItem = item;
-    cardKicker.textContent = detail.meta;
-    cardTitle.textContent = detail.title;
-    cardText.textContent = detail.text;
-    cardImage.src = detail.image;
-    cardImage.alt = detail.alt;
-    schedulePosition();
-    item.setAttribute("aria-describedby", "skill-detail-card");
-    card.setAttribute("aria-hidden", "false");
-    card.classList.add("is-visible");
-  }
-
-  function hideSkillCard(item) {
-    if (item && activeItem !== item) return;
-    activeItem?.removeAttribute("aria-describedby");
-    activeItem = null;
-    cancelAnimationFrame(positionFrame);
-    positionFrame = 0;
-    card.classList.remove("is-visible");
-    card.setAttribute("aria-hidden", "true");
-  }
-
-  // WCAG 1.4.13: the hover/focus card must be dismissable without moving
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      dismissedItem = activeItem;
-      hideSkillCard();
-    }
-  });
-
-  skillItems.forEach((item) => {
-    const isDuplicateTrack = item.closest(".hero-skill-track")?.getAttribute("aria-hidden") === "true";
-
-    item.addEventListener("pointerenter", (event) => {
-      if (event.pointerType === "touch") return;
-      dismissedItem = null;
-      showSkillCard(item);
-    });
-    item.addEventListener("pointermove", schedulePosition);
-    item.addEventListener("pointerleave", () => {
-      dismissedItem = null;
-      if (document.activeElement !== item) hideSkillCard(item);
-    });
-
-    if (!isDuplicateTrack) {
-      // no aria-label override: the li/span text IS the accessible name
-      item.tabIndex = 0;
-      item.addEventListener("focus", () => {
-        dismissedItem = null;
-        showSkillCard(item);
-      });
-      item.addEventListener("blur", () => hideSkillCard(item));
-    }
-  });
-
-  window.addEventListener("resize", schedulePosition);
-  window.addEventListener("scroll", () => hideSkillCard(), { passive: true });
-  motionUpdates.add(() => {
-    if (document.hidden || body.classList.contains("modal-open")) hideSkillCard();
-  });
-}
-
-initHeroSkillCards();
-
 /* ============ scroll effects (rAF-gated) ============ */
 
 const progress = document.querySelector(".progress");
@@ -453,7 +151,10 @@ const spyLinks = new Map(
   ])
 );
 
-const spyObserver = new IntersectionObserver(
+let spyObserver;
+function configureScrollSpy() {
+  spyObserver?.disconnect();
+  spyObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
@@ -465,12 +166,19 @@ const spyObserver = new IntersectionObserver(
       });
     });
   },
-  { rootMargin: "-35% 0px -60% 0px" }
+  { rootMargin: `-${Math.round(innerHeight * .35)}px 0px -${Math.round(innerHeight * .60)}px 0px` }
 );
 
 spyLinks.forEach((link, id) => {
   const section = document.getElementById(id);
   if (section) spyObserver.observe(section);
+});
+}
+configureScrollSpy();
+let spyResizeFrame = 0;
+window.addEventListener("resize", () => {
+  cancelAnimationFrame(spyResizeFrame);
+  spyResizeFrame = requestAnimationFrame(configureScrollSpy);
 });
 
 /* ============ reveal system with stagger ============ */
@@ -578,10 +286,13 @@ let filterJob = null;
 let activeFilter = filters.find((button) => button.getAttribute("aria-pressed") === "true") || null;
 const realProjectCards = cards.filter((card) => !card.classList.contains("project-card--studio"));
 const filterStatus = document.getElementById("filter-status");
+const projectSearch = document.getElementById("project-search");
+const searchEmpty = document.querySelector(".search-empty");
 
 function applyProjectFilter(button) {
   activeFilter = button;
   const filter = button.dataset.filter;
+  const query = (projectSearch?.value || "").trim().toLowerCase();
   filters.forEach((item) => {
     const isActive = item === button;
     item.classList.toggle("active", isActive);
@@ -589,13 +300,16 @@ function applyProjectFilter(button) {
   });
   cards.forEach((card) => {
     // The studio tile stays visible under every filter.
-    const show = filter === "all"
+    const categoryMatch = filter === "all"
       || card.classList.contains("project-card--studio")
       || (card.dataset.category || "").split(/\s+/).includes(filter);
+    const searchText = `${card.textContent} ${card.dataset.category || ""}`.toLowerCase();
+    const show = categoryMatch && (!query || searchText.includes(query));
     card.classList.toggle("is-hidden", !show);
   });
   const shown = realProjectCards.filter((card) => !card.classList.contains("is-hidden")).length;
   if (filterStatus) filterStatus.textContent = `Showing ${shown} of ${realProjectCards.length} projects`;
+  if (searchEmpty) searchEmpty.hidden = shown !== 0;
   scheduleScrollEffects();
 }
 
@@ -652,6 +366,11 @@ filters.forEach((button) => {
     runPendingFilter();
   });
 });
+projectSearch?.addEventListener("input", () => {
+  // Flush the latest category before combining it with the current search.
+  flushPendingFilter();
+  if (activeFilter) applyProjectFilter(activeFilter);
+});
 
 /* ============ project cards: keyboard, tilt, specular ============ */
 
@@ -672,13 +391,13 @@ cards.forEach((card) => {
   // link is a legal sibling instead of an interactive nested in a role=button
 
   card.addEventListener("pointerenter", () => {
-    if (!finePointer.matches || !canAnimatePage()) return;
+    if (body.classList.contains("editorial") || !finePointer.matches || !canAnimatePage()) return;
     card.style.transition = "border-color 200ms, box-shadow 200ms";
     card.style.willChange = "transform";
   });
 
   card.addEventListener("pointermove", (event) => {
-    if (!finePointer.matches || !canAnimatePage()) return;
+    if (body.classList.contains("editorial") || !finePointer.matches || !canAnimatePage()) return;
     pointer = { x: event.clientX, y: event.clientY };
     if (tiltFrame) return;
     tiltFrame = requestAnimationFrame(() => {
@@ -935,6 +654,13 @@ function openModal(projectKey, sourceCard = null) {
   modalKicker.textContent = project.kicker;
   modalTitle.textContent = project.title;
   modalSummary.textContent = project.summary;
+  const caseLink = document.querySelector("#modal-case-link");
+  if (caseLink) {
+    const hasCaseStudy = ["steering", "vineRobot", "scanner"].includes(projectKey);
+    caseLink.hidden = !hasCaseStudy;
+    if (hasCaseStudy) caseLink.href = `case-study.html?project=${projectKey}`;
+    else caseLink.removeAttribute("href");
+  }
   const studioLink = document.querySelector("#modal-studio-link");
   if (studioLink) {
     // projects flagged noStudio have no 3D exhibit (no model in the scene) —

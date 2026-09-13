@@ -306,13 +306,13 @@ const projectData = {
     title: "FSAE Brake Sim",
     image: "assets/oem-brake-fea.webp",
     summary:
-      "Track-based rotor and pad temperature model for OEM Mk.8, balancing endurance heat load, pad operating range, 25 percent mass reduction, and structural safety margin.",
+      "Rotor and pad temperature model for Mk.8: a 25 percent rotor mass-reduction target, checked against endurance heat loads and structural FEA.",
     highlights: [
       "Modeled a 22-lap FSAE endurance cycle with 25 track segments of varying velocity and brake demand.",
       "Predicted rotor temperature using heat input, hub conduction, radiation, and velocity-dependent convection.",
       "Used brake-bias assumptions and high-load course zones to locate critical temperature peaks.",
       "Selected cast iron ASTM A48 Class 40 rotors over exotic materials for conductivity, cost, and manufacturability.",
-      "Linked results to Wilwood GP200 calipers, BP-28 pads, AN3 service disconnects, 25 percent rotor mass reduction, and a 3.0 structural FEA safety factor."
+      "Linked results to Wilwood GP200 calipers, BP-28 pads, AN3 service disconnects, a 25 percent rotor mass-reduction target, and a 3.0 structural FEA safety factor."
     ],
     tools: ["MATLAB", "Thermal modeling", "Track segmentation", "FEA", "Brake bias", "Wilwood BP-28 data"],
     details: [

@@ -1,0 +1,167 @@
+[
+  {
+    "source": "models\\real\\steering.glb",
+    "sourceBytes": 2852580,
+    "sourceSha256": "e787d66353912c1f47f9008a4995176ae4d1270e9e5aece02980278a4630595d",
+    "sourceTriangles": 158758,
+    "sourceMeshNames": [
+      "mat_printed",
+      "mat_steel"
+    ],
+    "cameraDirectionBlenderZUp": [
+      0.487713098526001,
+      -0.7664062976837158,
+      0.41803979873657227
+    ],
+    "cameraAngleIndex": 0,
+    "dimensions": [
+      1800,
+      1200
+    ],
+    "samples": 192,
+    "geometryChanges": "Blender removes exactly the audited coincident duplicate source faces during import. Unique surface geometry is unchanged. Uniform scale/translation and shallow-edge shading normals only after import.",
+    "sourceDimensionsBlender": [
+      457.1618347167969,
+      453.1054992675781,
+      428.20501708984375
+    ],
+    "importedTriangles": 158538,
+    "zeroAreaSourceTriangles": 0,
+    "repeatedIndexSourceTriangles": 0,
+    "duplicateSourceTriangles": 220,
+    "image": "assets/editorial/steering-wide.webp",
+    "imageDimensions": [
+      1800,
+      1200
+    ],
+    "imageBytes": 37334,
+    "imageSha256": "fad8026dd920bdc5b82adb312742a3d6b315bf2372646869706bd978a9e75b69",
+    "encoding": "WebP quality 91; original resolution, no cropping or compositing"
+  },
+  {
+    "source": "models\\real\\steering.glb",
+    "sourceBytes": 2852580,
+    "sourceSha256": "e787d66353912c1f47f9008a4995176ae4d1270e9e5aece02980278a4630595d",
+    "sourceTriangles": 158758,
+    "sourceMeshNames": [
+      "mat_printed",
+      "mat_steel"
+    ],
+    "cameraDirectionBlenderZUp": [
+      0.487713098526001,
+      -0.7664062976837158,
+      0.41803979873657227
+    ],
+    "cameraAngleIndex": 0,
+    "dimensions": [
+      1200,
+      1500
+    ],
+    "samples": 192,
+    "geometryChanges": "Blender removes exactly the audited coincident duplicate source faces during import. Unique surface geometry is unchanged. Uniform scale/translation and shallow-edge shading normals only after import.",
+    "sourceDimensionsBlender": [
+      457.1618347167969,
+      453.1054992675781,
+      428.20501708984375
+    ],
+    "importedTriangles": 158538,
+    "zeroAreaSourceTriangles": 0,
+    "repeatedIndexSourceTriangles": 0,
+    "duplicateSourceTriangles": 220,
+    "image": "assets/editorial/steering-portrait.webp",
+    "imageDimensions": [
+      1200,
+      1500
+    ],
+    "imageBytes": 37570,
+    "imageSha256": "07b942d2ae648d9cf9fb09bf7bf8442b9e8957c2e07018bc046d52d4025640ba",
+    "encoding": "WebP quality 91; original resolution, no cropping or compositing"
+  },
+  {
+    "source": "models\\real\\vineRobot.glb",
+    "sourceBytes": 2209044,
+    "sourceSha256": "d5b552b2c95de5aef9665542ec2d30edde9c3321a664e32d45dc78831ac3bee7",
+    "sourceTriangles": 122814,
+    "sourceMeshNames": [
+      "mat_steel",
+      "mat_aero",
+      "mat_printed",
+      "mat_dark",
+      "mat_glass",
+      "mat_brass",
+      "mat_rubber"
+    ],
+    "cameraDirectionBlenderZUp": [
+      -0.786716639995575,
+      -0.50262451171875,
+      0.358393132686615
+    ],
+    "cameraAngleIndex": 0,
+    "dimensions": [
+      1800,
+      1200
+    ],
+    "samples": 192,
+    "geometryChanges": "Blender removes exactly the audited coincident duplicate source faces during import. Unique surface geometry is unchanged. Uniform scale/translation and shallow-edge shading normals only after import.",
+    "sourceDimensionsBlender": [
+      379.8729553222656,
+      298.4605407714844,
+      423.6509704589844
+    ],
+    "importedTriangles": 122814,
+    "zeroAreaSourceTriangles": 0,
+    "repeatedIndexSourceTriangles": 0,
+    "duplicateSourceTriangles": 0,
+    "image": "assets/editorial/vineRobot-wide.webp",
+    "imageDimensions": [
+      1800,
+      1200
+    ],
+    "imageBytes": 65922,
+    "imageSha256": "8cf9a4865674716ce9034e7603f6c09c50a65552b3dec5e31c64fae64a11483f",
+    "encoding": "WebP quality 91; original resolution, no cropping or compositing"
+  },
+  {
+    "source": "models\\real\\scanner.glb",
+    "sourceBytes": 2895392,
+    "sourceSha256": "b072a6981c5850e1ac14af331515f0ec8c75e7bc90477b8d412478f0633e5ab6",
+    "sourceTriangles": 161404,
+    "sourceMeshNames": [
+      "mat_wood",
+      "mat_printed",
+      "mat_dark",
+      "mat_brass",
+      "mat_steel",
+      "mat_aero"
+    ],
+    "cameraDirectionBlenderZUp": [
+      0.4647594690322876,
+      -0.7900910973548889,
+      0.39969316124916077
+    ],
+    "cameraAngleIndex": 0,
+    "dimensions": [
+      1800,
+      1200
+    ],
+    "samples": 192,
+    "geometryChanges": "Blender removes exactly the audited coincident duplicate source faces during import. Unique surface geometry is unchanged. Uniform scale/translation and shallow-edge shading normals only after import.",
+    "sourceDimensionsBlender": [
+      495.95550537109375,
+      223.9276885986328,
+      342.4765930175781
+    ],
+    "importedTriangles": 161359,
+    "zeroAreaSourceTriangles": 0,
+    "repeatedIndexSourceTriangles": 0,
+    "duplicateSourceTriangles": 45,
+    "image": "assets/editorial/scanner-wide.webp",
+    "imageDimensions": [
+      1800,
+      1200
+    ],
+    "imageBytes": 89590,
+    "imageSha256": "378717b8f28f56d81c851615213d6ad8715d5f960f6e47eb4b80f368d877532d",
+    "encoding": "WebP quality 91; original resolution, no cropping or compositing"
+  }
+]

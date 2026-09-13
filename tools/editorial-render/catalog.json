@@ -1,0 +1,475 @@
+{
+  "javelin": {
+    "source": "tools/editorial-render/sources/javelin.glb",
+    "materials": {
+      "dark": {
+        "color": "222528",
+        "metallic": 0,
+        "roughness": 0.54
+      },
+      "printed": {
+        "color": "292C30",
+        "metallic": 0,
+        "roughness": 0.58,
+        "texture": "printed"
+      },
+      "aero": {
+        "color": "242629",
+        "metallic": 0,
+        "roughness": 0.61,
+        "texture": "printed",
+        "specular": 0.22
+      },
+      "steel": {
+        "color": "B7BDC1",
+        "metallic": 1,
+        "roughness": 0.32
+      },
+      "motor_silver": {
+        "color": "C4C9CE",
+        "metallic": 1,
+        "roughness": 0.3
+      },
+      "motor_black": {
+        "color": "171B1F",
+        "metallic": 0.65,
+        "roughness": 0.36
+      },
+      "propeller": {
+        "color": "1D2023",
+        "metallic": 0,
+        "roughness": 0.52
+      }
+    },
+    "directions": [
+      [
+        -2.8,
+        -0.7,
+        0.7
+      ],
+      [
+        -2.2,
+        -1.3,
+        0.9
+      ],
+      [
+        -1.6,
+        -1.6,
+        1.5
+      ]
+    ],
+    "references": [
+      "assets/javelin-3q.webp",
+      "assets/javelin-outdoor.webp"
+    ],
+    "geometryPolicy": "Original Javelin STL assembly, material regrouping and face masks only, plus four explicitly reconstructed display propellers/nuts. No CAD triangle simplification. Motor copper windings are not modeled by the supplied simplified part and were not invented."
+  },
+  "brakeSim": {
+    "source": "models/real/brakeSim.glb",
+    "materials": {
+      "steel": {
+        "color": "A3A5A8",
+        "metallic": 1.0,
+        "roughness": 0.48
+      }
+    },
+    "references": [
+      "assets/fsae-mk8-live-3.webp",
+      "project-data.js#brakeSim"
+    ],
+    "notes": [
+      "The project record specifies ASTM A48 Class 40 cast iron. FEA colors are not physical pigments."
+    ],
+    "directions": [
+      [
+        2.8,
+        -0.8,
+        0.9
+      ],
+      [
+        2.6,
+        -0.4,
+        1.5
+      ],
+      [
+        3,
+        -0.25,
+        0.35
+      ]
+    ]
+  },
+  "aura": {
+    "references": [
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\aura-swerve.jpeg",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\aura-swerve-mount.jpeg",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\aura-wheels-bearing-shaft.jpeg",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-aura-swerve-cad.webp"
+    ],
+    "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+    "source": "tools/editorial-render/sources/aura.glb",
+    "preserveMaterials": false,
+    "materials": {
+      "paint_gray": {
+        "color": "8A9195",
+        "metallic": 0,
+        "roughness": 0.52
+      },
+      "plastic_black": {
+        "color": "202329",
+        "metallic": 0,
+        "roughness": 0.48
+      },
+      "rubber_black": {
+        "color": "24272B",
+        "metallic": 0,
+        "roughness": 0.7
+      },
+      "steel": {
+        "color": "ABB2BA",
+        "metallic": 1,
+        "roughness": 0.35
+      }
+    },
+    "threeRotation": [
+      0,
+      0,
+      -90
+    ]
+  },
+  "carbonSeat": {
+    "source": "models/real/seat.glb",
+    "materials": {
+      "carbon": {
+        "color": "242628",
+        "metallic": 0.0,
+        "roughness": 0.5,
+        "coat": 0.12,
+        "specular": 0.25
+      }
+    },
+    "references": [
+      "assets/carbon-seat-trimmed-shell.webp",
+      "assets/carbon-seat-weave-close.webp"
+    ],
+    "notes": [
+      "Cured carbon/epoxy is a dielectric composite. Fine weave and resin finish follow the build photos; no geometry smoothing or invented upholstery."
+    ]
+  },
+  "seat": {
+    "source": "models/real/driverseat.glb",
+    "threeRotation": [
+      90,
+      -90,
+      90
+    ],
+    "materials": {
+      "steel": {
+        "color": "C8CCD0",
+        "metallic": 1.0,
+        "roughness": 0.4
+      }
+    },
+    "references": [
+      "assets/seat-cad.webp",
+      "tools/stl2glb_seat.py"
+    ],
+    "notes": [
+      "The mat_steel bucket is unpainted sheet aluminum. No harness straps are present in the supplied model."
+    ],
+    "directions": [
+      [
+        -1.8,
+        -1.3,
+        1.3
+      ],
+      [
+        1.9,
+        -0.9,
+        1.4
+      ],
+      [
+        2.4,
+        0.9,
+        1.2
+      ]
+    ]
+  },
+  "materialTest": {
+    "builder": "tools/editorial-render/material-test/build_material_test.py",
+    "references": [
+      "assets/material-instron-frame.webp",
+      "assets/material-specimen-md.webp"
+    ],
+    "geometryPolicy": "Photo-based reconstruction of the actual single-column tensile test equipment. Display geometry, not manufacturer CAD. The older MTS-style model is not the instrument used in this experiment."
+  },
+  "ansysCfd": {
+    "geometryPolicy": "Procedural presentation monitor; unchanged original Ansys Fluent Cp result mapped to its screen. Monitor is presentation furniture, not claimed project hardware.",
+    "references": [
+      "assets/cover-ansys-cfd.webp"
+    ],
+    "directions": [
+      [
+        0.85,
+        -2.1,
+        0.65
+      ]
+    ]
+  },
+  "pool": {
+    "references": [
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\pool-sniper.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\pool-sniper-exploded.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\pool-sniper-build.webp"
+    ],
+    "source": "models/real/pool.glb",
+    "preserveMaterials": false,
+    "materials": {
+      "printed": {
+        "color": "2A5FC4",
+        "metallic": 0,
+        "roughness": 0.5
+      },
+      "aero": {
+        "color": "84827E",
+        "metallic": 0.5,
+        "roughness": 0.5
+      },
+      "wood": {
+        "color": "AEB0B3",
+        "metallic": 0.8,
+        "roughness": 0.4,
+        "texture": null
+      },
+      "steel": {
+        "color": "ABB2BA",
+        "metallic": 1,
+        "roughness": 0.35
+      },
+      "dark": {
+        "color": "25282C",
+        "metallic": 0.1,
+        "roughness": 0.48
+      },
+      "glass": {
+        "color": "F1F4F4",
+        "metallic": 0,
+        "roughness": 0.1,
+        "transmission": 1
+      }
+    },
+    "threeRotation": [
+      0,
+      -90,
+      90
+    ]
+  },
+  "lineFollower": {
+    "references": [
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\line-follower-cover.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\line-follower-wiring.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\line-follower-built.webp"
+    ],
+    "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+    "source": "tools/editorial-render/sources/lineFollower.glb",
+    "preserveMaterials": false,
+    "materials": {
+      "battery_wrap": {
+        "color": "D4D7D6",
+        "metallic": 0,
+        "roughness": 0.38
+      },
+      "pcb_green": {
+        "color": "237153",
+        "metallic": 0,
+        "roughness": 0.47
+      },
+      "pcb_teal": {
+        "color": "17616B",
+        "metallic": 0,
+        "roughness": 0.46
+      },
+      "plastic_black": {
+        "color": "202329",
+        "metallic": 0,
+        "roughness": 0.48
+      },
+      "printed_black": {
+        "color": "292D34",
+        "metallic": 0,
+        "roughness": 0.56,
+        "texture": "printed"
+      },
+      "rubber_orange": {
+        "color": "E78B32",
+        "metallic": 0,
+        "roughness": 0.62
+      },
+      "solder": {
+        "color": "BAC1C4",
+        "metallic": 1,
+        "roughness": 0.34
+      },
+      "steel": {
+        "color": "ABB2BA",
+        "metallic": 1,
+        "roughness": 0.35
+      }
+    }
+  },
+  "formlabs": {
+    "references": [
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\formlabs-smelly-table.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\formlabs-smelly-actuator.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\formlabs-smelly.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-smelly-cad.webp"
+    ],
+    "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+    "source": "tools/editorial-render/sources/formlabs.glb",
+    "preserveMaterials": false,
+    "materials": {
+      "amber_resin": {
+        "color": "C8A754",
+        "metallic": 0,
+        "roughness": 0.34,
+        "transmission": 0.38,
+        "ior": 1.48
+      },
+      "clear_acrylic": {
+        "color": "F1F4F4",
+        "metallic": 0,
+        "roughness": 0.09,
+        "transmission": 1,
+        "ior": 1.49
+      },
+      "plastic_black": {
+        "color": "202329",
+        "metallic": 0,
+        "roughness": 0.48
+      },
+      "printed_white": {
+        "color": "E6E4DD",
+        "metallic": 0,
+        "roughness": 0.51,
+        "texture": "printed"
+      },
+      "steel": {
+        "color": "ABB2BA",
+        "metallic": 1,
+        "roughness": 0.35
+      }
+    }
+  },
+  "telecaster": {
+    "references": [
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-telecaster.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\telecaster-finish.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\telecaster-wood.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\telecaster-body.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\telecaster-assembly.webp"
+    ],
+    "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+    "source": "tools/editorial-render/sources/telecaster.glb",
+    "preserveMaterials": false,
+    "materials": {
+      "chrome": {
+        "color": "D2D5D7",
+        "metallic": 1,
+        "roughness": 0.2
+      },
+      "fretboard": {
+        "color": "503B32",
+        "metallic": 0,
+        "roughness": 0.48,
+        "texture": "wood",
+        "grainRotation": 0,
+        "grainAxis": "Z"
+      },
+      "maple": {
+        "color": "BC9766",
+        "metallic": 0,
+        "roughness": 0.46,
+        "texture": "wood",
+        "grainRotation": 0,
+        "grainAxis": "Z"
+      },
+      "paint_white": {
+        "color": "E9E8DE",
+        "metallic": 0,
+        "roughness": 0.3,
+        "coat": 0.3
+      },
+      "pickguard_red": {
+        "color": "B71932",
+        "metallic": 0,
+        "roughness": 0.38,
+        "coat": 0.18,
+        "texture": "pearloid",
+        "specular": 0.3
+      },
+      "plastic_black": {
+        "color": "202329",
+        "metallic": 0,
+        "roughness": 0.48
+      }
+    }
+  },
+  "education": {
+    "references": [
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\education-kit.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\education-kit-render.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\education-kit-experiment.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-guitar-education-cad.webp"
+    ],
+    "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+    "source": "tools/editorial-render/sources/education.glb",
+    "preserveMaterials": false,
+    "materials": {
+      "chrome": {
+        "color": "D2D5D7",
+        "metallic": 1,
+        "roughness": 0.2
+      },
+      "fretboard": {
+        "color": "503B32",
+        "metallic": 0,
+        "roughness": 0.48,
+        "texture": "wood"
+      },
+      "maple": {
+        "color": "BC9766",
+        "metallic": 0,
+        "roughness": 0.46,
+        "texture": "wood"
+      },
+      "pickguard_white": {
+        "color": "ECEBE5",
+        "metallic": 0,
+        "roughness": 0.35
+      },
+      "plastic_black": {
+        "color": "202329",
+        "metallic": 0,
+        "roughness": 0.48
+      },
+      "printed_navy": {
+        "color": "28334D",
+        "metallic": 0,
+        "roughness": 0.51,
+        "texture": "printed"
+      }
+    },
+    "threeRotation": [
+      0,
+      0,
+      90
+    ]
+  },
+  "ftc": {
+    "builder": "tools/editorial-render/ftc/build_ftc.py",
+    "geometryPolicy": "Photo-informed display reconstruction, not original manufacturing CAD.",
+    "references": [
+      "assets/cover-ftc-robot.webp",
+      "assets/ftc-mechanism.webp"
+    ]
+  }
+}
