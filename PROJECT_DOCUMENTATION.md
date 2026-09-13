@@ -1,5 +1,49 @@
 # Portfolio Website Project Documentation
 
+## Authorized functional animation release · 2026-09-13
+
+The previous production version is the cinematic release `b59c0e8`, with 16
+projects and current 30-engineer leadership copy. This authorized release uses
+cache label `functional-release-20260913` and includes 15 animations, leaving Telecaster static,
+with 121 frames each except 145 for vine and tensile test: 1,863 frames in total.
+All 48 approved cover files remain unchanged. `EXPLODED_VIEWS.md` records final
+byte totals, packing and verification evidence, including CFD's 121 frames.
+
+Modes cover steering linkage, vine eversion, propeller rotation, scanner/Smelly
+gantries, tensile deformation/rupture, brake heating, seat unfolding, ten-ply
+carbon layup and selected component extraction. Pool and LineFollower each have
+six checked stages. Education uses 23 strict stages and matching original
+exploded/V2 CAD to reach an assembled guitar. Its documented 2.319 mm neck-height
+and pickup-front adjustments are display fit clearances, not manufacturing
+tolerances. All original covers, galleries and source models remain preserved.
+
+Scroll progression is slower and interpolated, with keyboard/touch sliders,
+endpoint page-scroll release, reduced-motion behavior and a 160 MiB decoded-image
+budget. The homepage still uses static images, with no WebGL/video addition.
+
+The real Fluent 24.1.0 reconstruction completed 400 iterations and passed
+`audit_final_solution.py`, accepted only for qualitative visualization. Its
+final 377,141-tetrahedron flow region and 47,450-triangle wall provide actual
+pressure and 49 numerical paths. Very low orthogonal quality, no prism boundary
+layer/grid-independence study and first-order transport limit local accuracy.
+The release reuses this solved data and changes its pressure display to
+zero-centered asinh normalization with a 750 Pa scale. Cool blue negative
+pressure and orange/red positive pressure retain the complete −10645.81 to
++7817.95 Pa range without clipping or modifying the field. The legend identifies
+the asinh scale, −2k/0/+2k and both extremes; the solver is not rerun.
+It is not a validated replacement for the missing original case/data. Evidence
+is in `../.codex/functional-motion-20260913/cfd/solution-audit.json` and
+`rebuild-report.md` there; final animation totals are in `EXPLODED_VIEWS.md`.
+The release recovery entry is
+`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-functional-release/RESTORE.md`.
+The adjacent `release-metadata.json` identifies the exact release commit;
+`deployment-verification.json` records the actual production verification result.
+The earlier `functional-motion` backup remains a historical snapshot.
+
+The current first four cards are steering, vine robot, Javelin and LiDAR scanner.
+The original brief below is historical where its section order or file map
+differs from README/AGENT_HANDOFF.
+
 ## Project Overview
 
 This project is a static rebuild of `www.kefanwu.com` for Kefan Wu, a Mechanical Engineering student at Olin College and current Mechanical Lead at Olin Electric Motorsports.

@@ -1,0 +1,1663 @@
+{
+  "project": "aura",
+  "width": 640,
+  "height": 427,
+  "frameCount": 121,
+  "samples": 48,
+  "cameraOrthoScale": 5.790632247924805,
+  "cameraBaseScale": 4.528417110443115,
+  "mode": "assembly",
+  "sourceLayout": "Original approved cover source pose",
+  "motionRevision": "functional-motion-20260913",
+  "motion": {
+    "version": 15,
+    "project": "aura",
+    "geometryDigest": "ec478b3f3721ff8f33c62f3296343a4ffb103977c2b83ee78511d6de3231bc8f",
+    "policy": "Sequential rigid extraction with continuous triangle SAT over swept AABB candidates. Original contacts starting within t=0.000001 may withdraw within the first quarter of a stage, bounded by their baseline triangle-intersection count and sampled solid penetration depth. New later-entering triangle contacts and ground crossings are rejected.",
+    "containmentPolicy": "Bidirectional vertex probes from every original component. Coordinate welding at 0.000001 is used only to identify watertight source components for ray-parity inside tests; nearest-surface distance bounds penetration. Open meshes have no invented solid volume. This complements continuous surface checking; it is not a continuous volumetric manufacturing certificate.",
+    "stages": [
+      {
+        "group": "left_motor",
+        "translation": [
+          0.0,
+          0.7,
+          0.0
+        ],
+        "verification": {
+          "positiveSamples": 36,
+          "triangleBVHPairTests": 7,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        },
+        "start": 0.0,
+        "end": 0.3333333333333333
+      },
+      {
+        "group": "upper_bearing_stack",
+        "translation": [
+          0.0,
+          0.0,
+          0.7
+        ],
+        "verification": {
+          "positiveSamples": 36,
+          "triangleBVHPairTests": 9,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 14112,
+          "continuousCandidatePairs": 14112,
+          "initialTriangleContactsWithdrawing": 4679,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        },
+        "start": 0.3333333333333333,
+        "end": 0.6666666666666666
+      },
+      {
+        "group": "right_motor",
+        "translation": [
+          0.0,
+          -0.7,
+          0.0
+        ],
+        "verification": {
+          "positiveSamples": 36,
+          "triangleBVHPairTests": 18,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 5339,
+          "continuousCandidatePairs": 5339,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        },
+        "start": 0.6666666666666666,
+        "end": 1.0
+      }
+    ],
+    "retainedGroups": [
+      "wheel_and_hub",
+      "mounting_structure"
+    ],
+    "blockedCandidates": {
+      "wheel_and_hub": [
+        {
+          "translation": [
+            0.0,
+            0.7,
+            0.0
+          ],
+          "reason": "surface_intersection",
+          "t": 0.0001,
+          "obstacle": "mounting_structure",
+          "trianglePairs": 1937,
+          "baselinePairs": 1914,
+          "newPatchPairs": 6,
+          "orientedDepth": 0.0,
+          "baselineOrientedDepth": 0.0
+        },
+        {
+          "translation": [
+            0.7,
+            0.0,
+            0.0
+          ],
+          "reason": "oriented_surface_penetration",
+          "t": 0.001,
+          "obstacle": "mounting_structure",
+          "orientedDepth": 0.0007000567275099456,
+          "baselineOrientedDepth": 0.0
+        },
+        {
+          "translation": [
+            -0.7,
+            0.0,
+            0.0
+          ],
+          "reason": "oriented_surface_penetration",
+          "t": 0.01,
+          "obstacle": "mounting_structure",
+          "orientedDepth": 0.001987963914871216,
+          "baselineOrientedDepth": 0.0
+        },
+        {
+          "translation": [
+            0.0,
+            0.0,
+            0.7
+          ],
+          "reason": "surface_intersection",
+          "t": 0.0001,
+          "obstacle": "mounting_structure",
+          "trianglePairs": 1924,
+          "baselinePairs": 1914,
+          "newPatchPairs": 6,
+          "orientedDepth": 0.0,
+          "baselineOrientedDepth": 0.0
+        },
+        {
+          "translation": [
+            0.0,
+            -0.7,
+            0.0
+          ],
+          "reason": "oriented_surface_penetration",
+          "t": 0.001,
+          "obstacle": "mounting_structure",
+          "orientedDepth": 0.0005233294214121997,
+          "baselineOrientedDepth": 0.0
+        }
+      ],
+      "mounting_structure": [
+        {
+          "translation": [
+            0.0,
+            0.7,
+            0.0
+          ],
+          "reason": "oriented_surface_penetration",
+          "t": 0.001,
+          "obstacle": "wheel_and_hub",
+          "orientedDepth": 0.0005233294214121997,
+          "baselineOrientedDepth": 0.0
+        },
+        {
+          "translation": [
+            -0.7,
+            0.0,
+            0.0
+          ],
+          "reason": "oriented_surface_penetration",
+          "t": 0.001,
+          "obstacle": "wheel_and_hub",
+          "orientedDepth": 0.0007000567275099456,
+          "baselineOrientedDepth": 0.0
+        },
+        {
+          "translation": [
+            0.0,
+            0.0,
+            0.7
+          ],
+          "reason": "surface_intersection",
+          "t": 0.0001,
+          "obstacle": "wheel_and_hub",
+          "trianglePairs": 1921,
+          "baselinePairs": 1914,
+          "newPatchPairs": 7,
+          "orientedDepth": 0.0,
+          "baselineOrientedDepth": 0.0
+        },
+        {
+          "translation": [
+            0.7,
+            0.0,
+            0.0
+          ],
+          "reason": "oriented_surface_penetration",
+          "t": 0.01,
+          "obstacle": "wheel_and_hub",
+          "orientedDepth": 0.001987963914871216,
+          "baselineOrientedDepth": 0.0
+        },
+        {
+          "translation": [
+            0.0,
+            -0.7,
+            0.0
+          ],
+          "reason": "surface_intersection",
+          "t": 0.0001,
+          "obstacle": "wheel_and_hub",
+          "trianglePairs": 1937,
+          "baselinePairs": 1914,
+          "newPatchPairs": 6,
+          "orientedDepth": 0.0,
+          "baselineOrientedDepth": 0.0
+        }
+      ]
+    },
+    "embeddedHardwareAttachments": [
+      [
+        "mat_paint_gray_part_0",
+        "mat_plastic_black_part_6"
+      ]
+    ],
+    "partGroups": {
+      "mat_paint_gray_part_0": "wheel_and_hub",
+      "mat_paint_gray_part_1": "right_motor",
+      "mat_paint_gray_part_2": "mounting_structure",
+      "mat_paint_gray_part_3": "upper_bearing_stack",
+      "mat_paint_gray_part_4": "mounting_structure",
+      "mat_plastic_black_part_0": "left_motor",
+      "mat_plastic_black_part_1": "left_motor",
+      "mat_plastic_black_part_2": "left_motor",
+      "mat_plastic_black_part_3": "left_motor",
+      "mat_plastic_black_part_4": "left_motor",
+      "mat_plastic_black_part_5": "wheel_and_hub",
+      "mat_plastic_black_part_6": "wheel_and_hub",
+      "mat_plastic_black_part_7": "right_motor",
+      "mat_rubber_black_part_0": "wheel_and_hub",
+      "mat_steel_part_0": "left_motor",
+      "mat_steel_part_1": "mounting_structure",
+      "mat_steel_part_2": "mounting_structure",
+      "mat_steel_part_3": "mounting_structure",
+      "mat_steel_part_4": "mounting_structure",
+      "mat_steel_part_5": "upper_bearing_stack",
+      "mat_steel_part_6": "upper_bearing_stack",
+      "mat_steel_part_7": "upper_bearing_stack",
+      "mat_steel_part_8": "mounting_structure",
+      "mat_steel_part_9": "mounting_structure",
+      "mat_steel_part_10": "mounting_structure",
+      "mat_steel_part_11": "upper_bearing_stack",
+      "mat_steel_part_12": "upper_bearing_stack",
+      "mat_steel_part_13": "upper_bearing_stack",
+      "mat_steel_part_14": "upper_bearing_stack",
+      "mat_steel_part_15": "mounting_structure",
+      "mat_steel_part_16": "mounting_structure",
+      "mat_steel_part_17": "mounting_structure",
+      "mat_steel_part_18": "mounting_structure",
+      "mat_steel_part_19": "mounting_structure",
+      "mat_steel_part_20": "mounting_structure",
+      "mat_steel_part_21": "right_motor",
+      "mat_steel_part_22": "right_motor"
+    },
+    "geometryTriangles": 106314
+  },
+  "cameraBoundsSamples": 121,
+  "cameraMaximumScale": 5.790632441249844,
+  "cameraTracking": "Original source camera position and direction",
+  "cameraLocation": [
+    5.6258225440979,
+    -9.44029712677002,
+    5.669037342071533
+  ],
+  "cameraRotation": [
+    1.1596143245697021,
+    4.4814473909582375e-08,
+    0.5317239761352539
+  ],
+  "timings": [
+    {
+      "index": 0,
+      "seconds": 1.063,
+      "bytes": 267332
+    },
+    {
+      "index": 1,
+      "seconds": 1.171,
+      "bytes": 267601
+    },
+    {
+      "index": 2,
+      "seconds": 1.032,
+      "bytes": 267612
+    },
+    {
+      "index": 3,
+      "seconds": 0.906,
+      "bytes": 267491
+    },
+    {
+      "index": 4,
+      "seconds": 0.953,
+      "bytes": 267518
+    },
+    {
+      "index": 5,
+      "seconds": 0.938,
+      "bytes": 267412
+    },
+    {
+      "index": 6,
+      "seconds": 1.125,
+      "bytes": 267594
+    },
+    {
+      "index": 7,
+      "seconds": 0.953,
+      "bytes": 267613
+    },
+    {
+      "index": 8,
+      "seconds": 1.203,
+      "bytes": 267770
+    },
+    {
+      "index": 9,
+      "seconds": 1.032,
+      "bytes": 268025
+    },
+    {
+      "index": 10,
+      "seconds": 1.047,
+      "bytes": 268086
+    },
+    {
+      "index": 11,
+      "seconds": 1.015,
+      "bytes": 268416
+    },
+    {
+      "index": 12,
+      "seconds": 0.938,
+      "bytes": 268185
+    },
+    {
+      "index": 13,
+      "seconds": 0.922,
+      "bytes": 268587
+    },
+    {
+      "index": 14,
+      "seconds": 0.921,
+      "bytes": 268281
+    },
+    {
+      "index": 15,
+      "seconds": 0.969,
+      "bytes": 267964
+    },
+    {
+      "index": 16,
+      "seconds": 0.906,
+      "bytes": 268301
+    },
+    {
+      "index": 17,
+      "seconds": 0.891,
+      "bytes": 267714
+    },
+    {
+      "index": 18,
+      "seconds": 0.938,
+      "bytes": 267450
+    },
+    {
+      "index": 19,
+      "seconds": 0.984,
+      "bytes": 267364
+    },
+    {
+      "index": 20,
+      "seconds": 0.921,
+      "bytes": 266970
+    },
+    {
+      "index": 21,
+      "seconds": 1.11,
+      "bytes": 267186
+    },
+    {
+      "index": 22,
+      "seconds": 1.015,
+      "bytes": 266601
+    },
+    {
+      "index": 23,
+      "seconds": 1.079,
+      "bytes": 266214
+    },
+    {
+      "index": 24,
+      "seconds": 1.062,
+      "bytes": 266293
+    },
+    {
+      "index": 25,
+      "seconds": 1.047,
+      "bytes": 266314
+    },
+    {
+      "index": 26,
+      "seconds": 1.328,
+      "bytes": 266275
+    },
+    {
+      "index": 27,
+      "seconds": 1.0,
+      "bytes": 265991
+    },
+    {
+      "index": 28,
+      "seconds": 0.985,
+      "bytes": 265295
+    },
+    {
+      "index": 29,
+      "seconds": 0.984,
+      "bytes": 265473
+    },
+    {
+      "index": 30,
+      "seconds": 0.922,
+      "bytes": 265522
+    },
+    {
+      "index": 31,
+      "seconds": 0.921,
+      "bytes": 265393
+    },
+    {
+      "index": 32,
+      "seconds": 0.907,
+      "bytes": 265684
+    },
+    {
+      "index": 33,
+      "seconds": 0.922,
+      "bytes": 265640
+    },
+    {
+      "index": 34,
+      "seconds": 0.921,
+      "bytes": 265574
+    },
+    {
+      "index": 35,
+      "seconds": 0.907,
+      "bytes": 265956
+    },
+    {
+      "index": 36,
+      "seconds": 0.89,
+      "bytes": 265313
+    },
+    {
+      "index": 37,
+      "seconds": 0.875,
+      "bytes": 265650
+    },
+    {
+      "index": 38,
+      "seconds": 0.86,
+      "bytes": 265607
+    },
+    {
+      "index": 39,
+      "seconds": 0.906,
+      "bytes": 265572
+    },
+    {
+      "index": 40,
+      "seconds": 0.953,
+      "bytes": 265510
+    },
+    {
+      "index": 41,
+      "seconds": 0.953,
+      "bytes": 265623
+    },
+    {
+      "index": 42,
+      "seconds": 0.953,
+      "bytes": 265804
+    },
+    {
+      "index": 43,
+      "seconds": 0.938,
+      "bytes": 266142
+    },
+    {
+      "index": 44,
+      "seconds": 0.922,
+      "bytes": 266025
+    },
+    {
+      "index": 45,
+      "seconds": 0.906,
+      "bytes": 266282
+    },
+    {
+      "index": 46,
+      "seconds": 0.922,
+      "bytes": 266878
+    },
+    {
+      "index": 47,
+      "seconds": 0.937,
+      "bytes": 267553
+    },
+    {
+      "index": 48,
+      "seconds": 0.969,
+      "bytes": 267380
+    },
+    {
+      "index": 49,
+      "seconds": 1.016,
+      "bytes": 267427
+    },
+    {
+      "index": 50,
+      "seconds": 1.015,
+      "bytes": 267168
+    },
+    {
+      "index": 51,
+      "seconds": 0.907,
+      "bytes": 267264
+    },
+    {
+      "index": 52,
+      "seconds": 0.906,
+      "bytes": 266754
+    },
+    {
+      "index": 53,
+      "seconds": 0.937,
+      "bytes": 266971
+    },
+    {
+      "index": 54,
+      "seconds": 0.938,
+      "bytes": 266720
+    },
+    {
+      "index": 55,
+      "seconds": 0.922,
+      "bytes": 266153
+    },
+    {
+      "index": 56,
+      "seconds": 0.89,
+      "bytes": 266149
+    },
+    {
+      "index": 57,
+      "seconds": 0.891,
+      "bytes": 266563
+    },
+    {
+      "index": 58,
+      "seconds": 0.891,
+      "bytes": 266406
+    },
+    {
+      "index": 59,
+      "seconds": 0.906,
+      "bytes": 266241
+    },
+    {
+      "index": 60,
+      "seconds": 0.89,
+      "bytes": 266974
+    },
+    {
+      "index": 61,
+      "seconds": 0.907,
+      "bytes": 266865
+    },
+    {
+      "index": 62,
+      "seconds": 0.937,
+      "bytes": 265573
+    },
+    {
+      "index": 63,
+      "seconds": 0.938,
+      "bytes": 265186
+    },
+    {
+      "index": 64,
+      "seconds": 0.906,
+      "bytes": 264401
+    },
+    {
+      "index": 65,
+      "seconds": 0.906,
+      "bytes": 263430
+    },
+    {
+      "index": 66,
+      "seconds": 0.969,
+      "bytes": 263588
+    },
+    {
+      "index": 67,
+      "seconds": 0.984,
+      "bytes": 263301
+    },
+    {
+      "index": 68,
+      "seconds": 1.016,
+      "bytes": 263118
+    },
+    {
+      "index": 69,
+      "seconds": 0.891,
+      "bytes": 262283
+    },
+    {
+      "index": 70,
+      "seconds": 0.89,
+      "bytes": 262031
+    },
+    {
+      "index": 71,
+      "seconds": 0.891,
+      "bytes": 261722
+    },
+    {
+      "index": 72,
+      "seconds": 0.89,
+      "bytes": 261514
+    },
+    {
+      "index": 73,
+      "seconds": 0.891,
+      "bytes": 261153
+    },
+    {
+      "index": 74,
+      "seconds": 0.89,
+      "bytes": 261414
+    },
+    {
+      "index": 75,
+      "seconds": 0.907,
+      "bytes": 260851
+    },
+    {
+      "index": 76,
+      "seconds": 0.921,
+      "bytes": 261500
+    },
+    {
+      "index": 77,
+      "seconds": 0.907,
+      "bytes": 261144
+    },
+    {
+      "index": 78,
+      "seconds": 0.906,
+      "bytes": 261266
+    },
+    {
+      "index": 79,
+      "seconds": 0.953,
+      "bytes": 261199
+    },
+    {
+      "index": 80,
+      "seconds": 1.156,
+      "bytes": 261097
+    },
+    {
+      "index": 81,
+      "seconds": 0.937,
+      "bytes": 261107
+    },
+    {
+      "index": 82,
+      "seconds": 0.969,
+      "bytes": 261230
+    },
+    {
+      "index": 83,
+      "seconds": 0.938,
+      "bytes": 261164
+    },
+    {
+      "index": 84,
+      "seconds": 0.937,
+      "bytes": 261458
+    },
+    {
+      "index": 85,
+      "seconds": 0.922,
+      "bytes": 261297
+    },
+    {
+      "index": 86,
+      "seconds": 0.922,
+      "bytes": 261343
+    },
+    {
+      "index": 87,
+      "seconds": 0.875,
+      "bytes": 261216
+    },
+    {
+      "index": 88,
+      "seconds": 0.953,
+      "bytes": 261287
+    },
+    {
+      "index": 89,
+      "seconds": 0.906,
+      "bytes": 261399
+    },
+    {
+      "index": 90,
+      "seconds": 0.875,
+      "bytes": 261214
+    },
+    {
+      "index": 91,
+      "seconds": 0.937,
+      "bytes": 261313
+    },
+    {
+      "index": 92,
+      "seconds": 0.938,
+      "bytes": 261217
+    },
+    {
+      "index": 93,
+      "seconds": 0.968,
+      "bytes": 261617
+    },
+    {
+      "index": 94,
+      "seconds": 0.875,
+      "bytes": 261888
+    },
+    {
+      "index": 95,
+      "seconds": 0.875,
+      "bytes": 261867
+    },
+    {
+      "index": 96,
+      "seconds": 0.859,
+      "bytes": 261907
+    },
+    {
+      "index": 97,
+      "seconds": 0.86,
+      "bytes": 261888
+    },
+    {
+      "index": 98,
+      "seconds": 0.875,
+      "bytes": 262288
+    },
+    {
+      "index": 99,
+      "seconds": 0.922,
+      "bytes": 262695
+    },
+    {
+      "index": 100,
+      "seconds": 0.906,
+      "bytes": 262674
+    },
+    {
+      "index": 101,
+      "seconds": 0.875,
+      "bytes": 263105
+    },
+    {
+      "index": 102,
+      "seconds": 0.89,
+      "bytes": 262881
+    },
+    {
+      "index": 103,
+      "seconds": 0.891,
+      "bytes": 263138
+    },
+    {
+      "index": 104,
+      "seconds": 0.906,
+      "bytes": 263221
+    },
+    {
+      "index": 105,
+      "seconds": 0.891,
+      "bytes": 263296
+    },
+    {
+      "index": 106,
+      "seconds": 0.906,
+      "bytes": 263491
+    },
+    {
+      "index": 107,
+      "seconds": 0.891,
+      "bytes": 263389
+    },
+    {
+      "index": 108,
+      "seconds": 0.89,
+      "bytes": 263432
+    },
+    {
+      "index": 109,
+      "seconds": 0.907,
+      "bytes": 263580
+    },
+    {
+      "index": 110,
+      "seconds": 0.922,
+      "bytes": 263370
+    },
+    {
+      "index": 111,
+      "seconds": 0.89,
+      "bytes": 263196
+    },
+    {
+      "index": 112,
+      "seconds": 1.016,
+      "bytes": 263136
+    },
+    {
+      "index": 113,
+      "seconds": 0.953,
+      "bytes": 263480
+    },
+    {
+      "index": 114,
+      "seconds": 0.875,
+      "bytes": 263403
+    },
+    {
+      "index": 115,
+      "seconds": 0.891,
+      "bytes": 263079
+    },
+    {
+      "index": 116,
+      "seconds": 0.89,
+      "bytes": 263276
+    },
+    {
+      "index": 117,
+      "seconds": 0.906,
+      "bytes": 263270
+    },
+    {
+      "index": 118,
+      "seconds": 0.907,
+      "bytes": 263421
+    },
+    {
+      "index": 119,
+      "seconds": 0.953,
+      "bytes": 263366
+    },
+    {
+      "index": 120,
+      "seconds": 0.984,
+      "bytes": 263292
+    }
+  ],
+  "totalSeconds": 116.234,
+  "baseCoverSource": {
+    "project": "aura",
+    "source": "tools/editorial-render/sources/aura.glb",
+    "sourceSha256": "a6ffbea4c9b4d5b1e8043a5a6c732314840caff70a5e2a02b03d1ad5992d5014",
+    "renderer": "tools/editorial-render/render_catalog.py",
+    "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+    "builder": null,
+    "builderSha256": null,
+    "sourceMeshFaceCounts": {
+      "mat_paint_gray": 7021,
+      "mat_plastic_black": 67531,
+      "mat_rubber_black": 392,
+      "mat_steel": 31370
+    },
+    "sourceDimensionsAfterRotation": [
+      297.52838134765625,
+      335.6829833984375,
+      200.501953125
+    ],
+    "dimensions": [
+      1800,
+      1200
+    ],
+    "cameraDirectionBlenderZUp": [
+      0.4647594690322876,
+      -0.7900910973548889,
+      0.39969316124916077
+    ],
+    "angleIndex": 0,
+    "samples": 192,
+    "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+    "materialDefaults": {
+      "steel": {
+        "color": "BBC1C8",
+        "metallic": 0.9,
+        "roughness": 0.32
+      },
+      "printed": {
+        "color": "30363D",
+        "metallic": 0,
+        "roughness": 0.43,
+        "texture": "printed"
+      },
+      "dark": {
+        "color": "202328",
+        "metallic": 0.12,
+        "roughness": 0.4
+      },
+      "aero": {
+        "color": "E3E1DB",
+        "metallic": 0,
+        "roughness": 0.45
+      },
+      "rubber": {
+        "color": "181B1E",
+        "metallic": 0,
+        "roughness": 0.62
+      },
+      "brass": {
+        "color": "AD8954",
+        "metallic": 0.8,
+        "roughness": 0.34
+      },
+      "glass": {
+        "color": "E7EDF0",
+        "metallic": 0,
+        "roughness": 0.1,
+        "transmission": 1
+      },
+      "wood": {
+        "color": "BE9C68",
+        "metallic": 0,
+        "roughness": 0.43,
+        "texture": "wood"
+      },
+      "carbon": {
+        "color": "171A20",
+        "metallic": 0.05,
+        "roughness": 0.3,
+        "texture": "carbon",
+        "coat": 0.3
+      },
+      "pcb": {
+        "color": "166C79",
+        "metallic": 0,
+        "roughness": 0.44
+      }
+    },
+    "materialAssignments": {
+      "paint_gray": {
+        "color": "8A9195",
+        "metallic": 0,
+        "roughness": 0.52
+      },
+      "plastic_black": {
+        "color": "202329",
+        "metallic": 0,
+        "roughness": 0.48
+      },
+      "rubber_black": {
+        "color": "24272B",
+        "metallic": 0,
+        "roughness": 0.7
+      },
+      "steel": {
+        "color": "ABB2BA",
+        "metallic": 1,
+        "roughness": 0.35
+      }
+    },
+    "references": [
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\aura-swerve.jpeg",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\aura-swerve-mount.jpeg",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\aura-wheels-bearing-shaft.jpeg",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-aura-swerve-cad.webp"
+    ],
+    "notes": []
+  },
+  "encodedFrames": [
+    {
+      "file": "00.webp",
+      "bytes": 8192,
+      "sha256": "6dbd92b86a0ac6bcb783a9dead0b3a0cd5f9def03ec46daefbf644d46bdbcf3f"
+    },
+    {
+      "file": "01.webp",
+      "bytes": 8132,
+      "sha256": "ea2dd3b805be5f6725672b268240c9d30b1640956d65163fef34f555dac0a821"
+    },
+    {
+      "file": "02.webp",
+      "bytes": 8154,
+      "sha256": "bbad0fbdd55ef1fab7556ba342475e7be5a7c633a2cd216639b4b2da7be890c4"
+    },
+    {
+      "file": "03.webp",
+      "bytes": 8188,
+      "sha256": "23d99e1f1951454f11bae13ff83999c9eb9770f27f7c554141af8867adfbfb4f"
+    },
+    {
+      "file": "04.webp",
+      "bytes": 8238,
+      "sha256": "850197c584032da61fecc959302ca89ed50e6e9a10681310ea7bc3ef2d64b094"
+    },
+    {
+      "file": "05.webp",
+      "bytes": 8170,
+      "sha256": "9b90be0a5584e3f1af746aaf42d2cebf8efd6e4b04a83b8fe04480737b087664"
+    },
+    {
+      "file": "06.webp",
+      "bytes": 8210,
+      "sha256": "a71978e4e3324103dd63683b3d9326f3e30a49fbbc44416a53fd57913e65bb1f"
+    },
+    {
+      "file": "07.webp",
+      "bytes": 8090,
+      "sha256": "7c4a387dc46f225a0c79d381ccad8feef7bf1457dddd7bd450f30f9a62ca07f5"
+    },
+    {
+      "file": "08.webp",
+      "bytes": 8126,
+      "sha256": "44027bad442146c67a02ff0db7f6ceac8c097c852026ab9b6dacf860e65cb4de"
+    },
+    {
+      "file": "09.webp",
+      "bytes": 8202,
+      "sha256": "c7484bc4c8749f0ea5a7d52ed3ae70b489c0be1a3d0d57f55386d5383bfb6554"
+    },
+    {
+      "file": "10.webp",
+      "bytes": 8198,
+      "sha256": "1f3520adba6f89cdbd84debc7d10a1987964f60351e99ced981f1c80cb793c79"
+    },
+    {
+      "file": "11.webp",
+      "bytes": 8148,
+      "sha256": "9e08b8d257e28cbf5328532565a7ae34b51d50886cc74f08c0c3e17f5f71a6a8"
+    },
+    {
+      "file": "12.webp",
+      "bytes": 8186,
+      "sha256": "bb6d59396cf4e4ab19f317368ec63b926060763e58d383d066b436ed4f8ef01c"
+    },
+    {
+      "file": "13.webp",
+      "bytes": 8272,
+      "sha256": "9792cd35131fb8b6b7655d4fc4f87fef0731611e545afd7f0607a85894867d33"
+    },
+    {
+      "file": "14.webp",
+      "bytes": 8230,
+      "sha256": "c5e19b0d7c7a31e5dc26f95125e463b9affdaee69979cb27e16326518344e51b"
+    },
+    {
+      "file": "15.webp",
+      "bytes": 8198,
+      "sha256": "3a3aacb7cd4cd1d79f4864fc67f40caed8b83ac5078fbdb63bc97a8fe72fbdd8"
+    },
+    {
+      "file": "16.webp",
+      "bytes": 8138,
+      "sha256": "1660f0a049e38736e3df2e6e967d028e32c9c071a80c6738cb9b9e8dc49a3f1a"
+    },
+    {
+      "file": "17.webp",
+      "bytes": 8182,
+      "sha256": "639af569cd5ade14cb88e0512632dcb2cca50517b0295237d9accaf22247856c"
+    },
+    {
+      "file": "18.webp",
+      "bytes": 8170,
+      "sha256": "0368ee381fefe4754ba2ad0e75cf8943f4866893f2baeaf5c25b6220a8e62f7e"
+    },
+    {
+      "file": "19.webp",
+      "bytes": 8158,
+      "sha256": "12eb3778e851a86472dc2bc948e6f3351fbbcb417689ac447d9c254b47f45ca8"
+    },
+    {
+      "file": "20.webp",
+      "bytes": 8140,
+      "sha256": "8c2709d0506cc2cef15091a554ffbb855e62855f3086c5db0f65b3bf8ff6a9d5"
+    },
+    {
+      "file": "21.webp",
+      "bytes": 8138,
+      "sha256": "6b893ecb4b0a1cebf1937f1ff410718f7e3d66b815a13147415bd36681024a77"
+    },
+    {
+      "file": "22.webp",
+      "bytes": 8090,
+      "sha256": "43b2b854d27ee6180d50785bf796d9594dda7f4a1cde7ceeb34cf911450072f0"
+    },
+    {
+      "file": "23.webp",
+      "bytes": 8134,
+      "sha256": "7b6916dd085d75f04f02fb7a35981e89c82dc0d2590d7fb781a0e35195e4aa9a"
+    },
+    {
+      "file": "24.webp",
+      "bytes": 8190,
+      "sha256": "a50a8031b5d541204d1ffdf74047e027af1048217adfee47042f621bb086828d"
+    },
+    {
+      "file": "25.webp",
+      "bytes": 8000,
+      "sha256": "e0f71f312d9380a54afa8f4340f0d1a09db03e05d73a850f0aae4d409b5a2da1"
+    },
+    {
+      "file": "26.webp",
+      "bytes": 8110,
+      "sha256": "3448eb41c78a9b8e0ad8c4dcbf82c06986383edf3797ebf6cef9e5b01c0b479b"
+    },
+    {
+      "file": "27.webp",
+      "bytes": 7972,
+      "sha256": "1733face9244b22d0fe84c20631b0a9b52a6386b178a963410184f25f23a3e14"
+    },
+    {
+      "file": "28.webp",
+      "bytes": 7918,
+      "sha256": "74f9dbcdd431f5d40def3d308314da303d99bcbf474b609a8b64e4a07c72c1a0"
+    },
+    {
+      "file": "29.webp",
+      "bytes": 7990,
+      "sha256": "ab356f34a9abaa86b5bfea0ee138a21799bebf52b65de420b4e93eddb0904f8e"
+    },
+    {
+      "file": "30.webp",
+      "bytes": 7896,
+      "sha256": "ccd98c168dc3b14cc57f07f867e8dfc6a0b0ef9eb5c4b146fccfa92cb1259c68"
+    },
+    {
+      "file": "31.webp",
+      "bytes": 7878,
+      "sha256": "0d09be4796a6ed49eed3c159f8e0a7bc1830267032d200677533bbdad4cddb93"
+    },
+    {
+      "file": "32.webp",
+      "bytes": 8008,
+      "sha256": "a343b475a5a85c63a1fea4358e66eada5c00c1cbb0105d0c5099d127b3c7597d"
+    },
+    {
+      "file": "33.webp",
+      "bytes": 7994,
+      "sha256": "2929470d7b4ba625f1cf650649934423db86cf9e00a08ba210c6dd9c7c13fbbd"
+    },
+    {
+      "file": "34.webp",
+      "bytes": 7906,
+      "sha256": "e913f372a3ed373f4c1db555efa0b2710727ee4e63f4fd8c37bfe289523e86e3"
+    },
+    {
+      "file": "35.webp",
+      "bytes": 7800,
+      "sha256": "0665c1345532e0dbe2cdb528c14ee015c21bdabf5d2fb179b3630988661f7380"
+    },
+    {
+      "file": "36.webp",
+      "bytes": 7788,
+      "sha256": "41e2d93b0bb33936ef05182e73cc3da7eed1f03a1ce3569b07be784e23f13f61"
+    },
+    {
+      "file": "37.webp",
+      "bytes": 7760,
+      "sha256": "b1e288f16ce717aa44223284431bedbfa56a0547de53192f804931ed28ca6e78"
+    },
+    {
+      "file": "38.webp",
+      "bytes": 7742,
+      "sha256": "aef3add3eccc1f27f42073a8d3bcff7f6c3be402a966e6a50b566f6228476131"
+    },
+    {
+      "file": "39.webp",
+      "bytes": 7792,
+      "sha256": "0d5983b19eedbc0a840e028468ae2f93f771076ae443327858ee8797227e37f1"
+    },
+    {
+      "file": "40.webp",
+      "bytes": 7806,
+      "sha256": "962886ec91c4464731f5509865b613fffc2b675e35057e9a55d0ec998421efa6"
+    },
+    {
+      "file": "41.webp",
+      "bytes": 7830,
+      "sha256": "65fd2184e21493691d35aa37dd8ba4e71a4b829cfdabd7439cfcd5ab5cb26196"
+    },
+    {
+      "file": "42.webp",
+      "bytes": 7914,
+      "sha256": "ded82551b31cc7410efcbf54a7b40d04a924bc2366ae549643367839056cba2c"
+    },
+    {
+      "file": "43.webp",
+      "bytes": 7950,
+      "sha256": "ffcab2da05510c26f41202ae73fe032d86d7c71f45aa5b15905bfb16cd875c54"
+    },
+    {
+      "file": "44.webp",
+      "bytes": 7948,
+      "sha256": "97cb4afe53f32188da44a038c75d6171408c9dd7aa5e6c9fc8449166d2cc8f46"
+    },
+    {
+      "file": "45.webp",
+      "bytes": 8026,
+      "sha256": "071c135a7cdd105e160e8360b8adefee260d24562234dfa47772e1e62dc14475"
+    },
+    {
+      "file": "46.webp",
+      "bytes": 8140,
+      "sha256": "99b89c1929283f57374f3cc6c4ac937407f71f65f3a19ebf9199b209606f4d82"
+    },
+    {
+      "file": "47.webp",
+      "bytes": 8022,
+      "sha256": "87bdfa2aad6a1fe79df680b7565798defa19223367b67b065f3beb1246540fd8"
+    },
+    {
+      "file": "48.webp",
+      "bytes": 8132,
+      "sha256": "b4c5d812b72c36b3656888376df71ca69061c62dbf06abd67f37c4423c446071"
+    },
+    {
+      "file": "49.webp",
+      "bytes": 8030,
+      "sha256": "2bc12b432e35ad21c9d00da9e2cbfbd7bb5a45c2dc6515a29c2c3bb0086d9f5f"
+    },
+    {
+      "file": "50.webp",
+      "bytes": 7968,
+      "sha256": "0c2f26507be299a3b6abd040537eaae122ffe58e33e0b83e00bfc047370afa66"
+    },
+    {
+      "file": "51.webp",
+      "bytes": 7938,
+      "sha256": "12105585fe4c8c37a0756040973e5f40d091a1951b4e44a024b64e45580e2f8c"
+    },
+    {
+      "file": "52.webp",
+      "bytes": 7984,
+      "sha256": "edbbbf26dd3ed78e01bb167c745bb3db501105f2564078217a09f93afe2c4baf"
+    },
+    {
+      "file": "53.webp",
+      "bytes": 7916,
+      "sha256": "1bfd01b865e42a535b9f5cd8b53998b42b6304b1d0a8d035e5bc40a20392e635"
+    },
+    {
+      "file": "54.webp",
+      "bytes": 8080,
+      "sha256": "27476c1159377ab4438571fecfe842e5b2863ea198facd283366a28733840812"
+    },
+    {
+      "file": "55.webp",
+      "bytes": 7862,
+      "sha256": "e20e76143789e5827339d9ce673ce912279a5f88e3cddae4ea33fd0268d842c2"
+    },
+    {
+      "file": "56.webp",
+      "bytes": 7976,
+      "sha256": "e08ee298c20236b1b7da094c952c87e09c94c360f731adcfe9af5141a792c934"
+    },
+    {
+      "file": "57.webp",
+      "bytes": 7888,
+      "sha256": "a378d5fadf641690c79bff16c65f9d0dc8208a4eb7e6fb10db333a9c6b0ce96a"
+    },
+    {
+      "file": "58.webp",
+      "bytes": 7916,
+      "sha256": "4a40da094e7a0e6c9ad35b3ab351fa736102cecd95d0db1848f3a6b4f290e2b5"
+    },
+    {
+      "file": "59.webp",
+      "bytes": 7934,
+      "sha256": "ccc990f0274727f7964c0daeeef8576cce4c537527e2053adaa2e04f2ef429c6"
+    },
+    {
+      "file": "60.webp",
+      "bytes": 7958,
+      "sha256": "9ebd04d2c9f2d0beb7ac1369f9872312d0e94f6eb2edd78fc39095a6b011ad06"
+    },
+    {
+      "file": "61.webp",
+      "bytes": 7984,
+      "sha256": "7c0aa368a254ae118b5484cacb6797e719c032a0f8651f3ea818c2f918600a53"
+    },
+    {
+      "file": "62.webp",
+      "bytes": 7958,
+      "sha256": "efe2b1e35cd6bb37ab20dce88080bd20eb2417ccbfd9e3367877493497145ef3"
+    },
+    {
+      "file": "63.webp",
+      "bytes": 7980,
+      "sha256": "23363ddbeb25b64f3acf32ecc39a5bf777b9ee95d7264be6167a78d79b5d5c46"
+    },
+    {
+      "file": "64.webp",
+      "bytes": 7810,
+      "sha256": "06531dc039812fad6651e9f57a4c652aa5ff5d996b7baeafac96cb4218c6e0a4"
+    },
+    {
+      "file": "65.webp",
+      "bytes": 7822,
+      "sha256": "651d7e48502e87b895cbfd75e9264fb8948e90f79e4b832690f7de12c6d90938"
+    },
+    {
+      "file": "66.webp",
+      "bytes": 7834,
+      "sha256": "f3f2a2c8d114ef7fcfc5eb505a95d5b9f231deb327b8ac84d04f40180fe16dda"
+    },
+    {
+      "file": "67.webp",
+      "bytes": 7718,
+      "sha256": "e777c1df246aefa646d568367d35ed1afe3208ad6edcf386a215710a9121b043"
+    },
+    {
+      "file": "68.webp",
+      "bytes": 7734,
+      "sha256": "20126283453e7a477637f6b91075df1d1fff89ec0ced6f10685d57b765e5ba24"
+    },
+    {
+      "file": "69.webp",
+      "bytes": 7706,
+      "sha256": "80f640147a754b8df6933df468612fbb334384499778a3e55f7581c16e6f3bf1"
+    },
+    {
+      "file": "70.webp",
+      "bytes": 7674,
+      "sha256": "ea858613096b9ba26cb9e6901cc84ddcac4d33176434381581797241f3e62453"
+    },
+    {
+      "file": "71.webp",
+      "bytes": 7602,
+      "sha256": "b946ab36081ed59e1c649c36d99a5f43a2acaeff621654c53d4496bf87272c6c"
+    },
+    {
+      "file": "72.webp",
+      "bytes": 7574,
+      "sha256": "ce069bafd3c8972a896e0bae0d2bad39ab77d1c01c6bc96305179c3d1dd19184"
+    },
+    {
+      "file": "73.webp",
+      "bytes": 7558,
+      "sha256": "22cab0a9bf6e760a6e68fde010577b43bc55c6e28f4fea953d7f80297f24f5af"
+    },
+    {
+      "file": "74.webp",
+      "bytes": 7508,
+      "sha256": "d7557a482b06dc363aaa5f602a1005e2214b71003e48b17a7d9b0e91b9de6a16"
+    },
+    {
+      "file": "75.webp",
+      "bytes": 7494,
+      "sha256": "e11e2c6ab536b3ba8910a056d94570b5f319eb9a272624390c78aa95f92e4bf0"
+    },
+    {
+      "file": "76.webp",
+      "bytes": 7510,
+      "sha256": "6420db282d00016f2bbef5648e0d882944293d73f821587b7cdc691f2d51cf2d"
+    },
+    {
+      "file": "77.webp",
+      "bytes": 7446,
+      "sha256": "7399d2e439ebc9eed4e1b19304144da773ec8cb6e71ec753dd546db7955aeaa1"
+    },
+    {
+      "file": "78.webp",
+      "bytes": 7494,
+      "sha256": "269b7d460fb7a327facf1b523eb4544ba7eaf57521c8fe5ad9cfff0fe361ce8b"
+    },
+    {
+      "file": "79.webp",
+      "bytes": 7568,
+      "sha256": "3fc07148fd36ec5d50eefc31117689470f4e4da61597420a8b7b2b72552af3df"
+    },
+    {
+      "file": "80.webp",
+      "bytes": 7514,
+      "sha256": "cf3a3b643949ac01a453269cc111903852efc05569f3e3f1859c557872f03ab2"
+    },
+    {
+      "file": "81.webp",
+      "bytes": 7464,
+      "sha256": "0bff16aa8210e9c21df5231df9a2f4b0a402e3924cf4f141a0292b30c57f822f"
+    },
+    {
+      "file": "82.webp",
+      "bytes": 7530,
+      "sha256": "9a639df8a60ef2aaaa4d93eb566eb5ce3b6916e89254d6547b0391be49b8ece1"
+    },
+    {
+      "file": "83.webp",
+      "bytes": 7602,
+      "sha256": "0f8b46756d4bc7b211deb458ef5d93c4c0f4710f6fd0517255a7513128ae29fa"
+    },
+    {
+      "file": "84.webp",
+      "bytes": 7534,
+      "sha256": "323499af178feecf4566ee6dac5a18f0f3ff2163592584c0470cf1dd243f8167"
+    },
+    {
+      "file": "85.webp",
+      "bytes": 7450,
+      "sha256": "9ed69f4958d1ecb0e07596c3ef7622d234048e1e3d54cb1e0eaed93e97256a65"
+    },
+    {
+      "file": "86.webp",
+      "bytes": 7490,
+      "sha256": "2dfc44b636331f99a3fa4bb8faf222411054e65f353763ec2fa24aac6b16bd66"
+    },
+    {
+      "file": "87.webp",
+      "bytes": 7562,
+      "sha256": "ca849049410fd13384bbf648ccbf174437ead4949260ed66602c6eed78d29299"
+    },
+    {
+      "file": "88.webp",
+      "bytes": 7462,
+      "sha256": "331423e0e5b7a108ec9345db42c73220efad676154df5e03d48ca465b71d829c"
+    },
+    {
+      "file": "89.webp",
+      "bytes": 7462,
+      "sha256": "70e91b494f00b60460ad0474181640ecc38d7e8c6009a8bc6b7bf29592c08201"
+    },
+    {
+      "file": "90.webp",
+      "bytes": 7492,
+      "sha256": "9fd4bb01a5b7b16aeff7f1c3d3a34b770c1e9f178c3d06ff6a7811d4900b291f"
+    },
+    {
+      "file": "91.webp",
+      "bytes": 7482,
+      "sha256": "02d30d89e28b3e218d877b0bf7e631710a33870f9e91eb64f17f9565cf389886"
+    },
+    {
+      "file": "92.webp",
+      "bytes": 7566,
+      "sha256": "afc0d7b2b8540c9abb8e09f80dbc731f64dfd53f4bdc2f96567fe044f9fd829b"
+    },
+    {
+      "file": "93.webp",
+      "bytes": 7562,
+      "sha256": "d301ea36194a6f60ce5693560d87453505452c4b69a7c0303c7c6ef8d76e73b1"
+    },
+    {
+      "file": "94.webp",
+      "bytes": 7586,
+      "sha256": "b0341e1922de0fcfe28d0f0492890d59687f455e692fdb66bc53783a9ce092e9"
+    },
+    {
+      "file": "95.webp",
+      "bytes": 7596,
+      "sha256": "f2fca528bea8f577523072bc9d7b91a81021ce7abbec2b8557adabe740353904"
+    },
+    {
+      "file": "96.webp",
+      "bytes": 7562,
+      "sha256": "9631cb478abc3e72563501038437046839df0c14a79c6be03f4a3ccb3c4536ba"
+    },
+    {
+      "file": "97.webp",
+      "bytes": 7726,
+      "sha256": "c33f9ad5a2a704e297108ac014090db88569f29238e39035de2246fe09379ccb"
+    },
+    {
+      "file": "98.webp",
+      "bytes": 7598,
+      "sha256": "6abeda234b18774cde1acb05aa5f495c5b921e01769df507443ff5e26152278b"
+    },
+    {
+      "file": "99.webp",
+      "bytes": 7588,
+      "sha256": "1807adac465a4d15c34bf0683cf70784af387ce54bbc19df37c630e18ed8496c"
+    },
+    {
+      "file": "100.webp",
+      "bytes": 7672,
+      "sha256": "cc3f49690cec43e29387ae9ac6152bc1877cbe6d1fc12086f1de648350f82896"
+    },
+    {
+      "file": "101.webp",
+      "bytes": 7588,
+      "sha256": "ca7741a5bac8e4b346a098b273ed129935b71ff170fd4376c203f6aad9491b8d"
+    },
+    {
+      "file": "102.webp",
+      "bytes": 7638,
+      "sha256": "263ac542506aee4c58c752ce25998d5867fb491cf3d333ecdd3920e240fbb72d"
+    },
+    {
+      "file": "103.webp",
+      "bytes": 7696,
+      "sha256": "a307f2b418008d69f2b00b4598f8000af36aeb09c625bed105c164c5e7239d17"
+    },
+    {
+      "file": "104.webp",
+      "bytes": 7866,
+      "sha256": "5aae9671a78dd930b193700ba1c0c3c1e5c28f5799ed3be89f52d12c856b1079"
+    },
+    {
+      "file": "105.webp",
+      "bytes": 7780,
+      "sha256": "c0adb9a1e61c98205eb012e5976eb5b311a7f4bb680a48d5ff87cc1a1643c69e"
+    },
+    {
+      "file": "106.webp",
+      "bytes": 7732,
+      "sha256": "1283dff55581fa1de3b4f62109e4e25b489e5533241d5007ca1c08287cec682f"
+    },
+    {
+      "file": "107.webp",
+      "bytes": 7730,
+      "sha256": "976350a7860530d8522d0712ac51ebf05b849c41ef02e74b64540379d8a6498f"
+    },
+    {
+      "file": "108.webp",
+      "bytes": 7762,
+      "sha256": "6a51b830bcb15efb5e13ac4305f735a51abf057cd9e5746f1c32d5196b3abf04"
+    },
+    {
+      "file": "109.webp",
+      "bytes": 7680,
+      "sha256": "3e41f33d6973c6372f83b6eb131577490a0736f483c8a579cbe0b4605e34bad9"
+    },
+    {
+      "file": "110.webp",
+      "bytes": 7604,
+      "sha256": "83ca2a90d9cc7fa6690661ddf97f7bf55ad1248ab48e2a19681b386ba41d236b"
+    },
+    {
+      "file": "111.webp",
+      "bytes": 7604,
+      "sha256": "8d16253a273528978774ba62393640e67db7b05cb31be45c6b495f6b696a3509"
+    },
+    {
+      "file": "112.webp",
+      "bytes": 7750,
+      "sha256": "81d9d052049afcfaf9563451009c568fda1e1c73a4bb235f5dc3b15d8aa36e0f"
+    },
+    {
+      "file": "113.webp",
+      "bytes": 7858,
+      "sha256": "6458ac36ff39bbed6167498fe13179a1c1a89cd3b8b2df2b7f8d98339c5036b0"
+    },
+    {
+      "file": "114.webp",
+      "bytes": 7806,
+      "sha256": "24a07a831bc90da72608e1318eaa87222bfaca42ad452d484fdd1e80347c3295"
+    },
+    {
+      "file": "115.webp",
+      "bytes": 7772,
+      "sha256": "f7531a46814d43d95b070cf7eb3d737b34e4f636c5bce73d2313c0c683c78c77"
+    },
+    {
+      "file": "116.webp",
+      "bytes": 7784,
+      "sha256": "c052621356dc8b34238565ef90ed8cb4d34bccf29fe75a485c8bb55bcd0cd38f"
+    },
+    {
+      "file": "117.webp",
+      "bytes": 7800,
+      "sha256": "89aa80373952d6dc1ecc0adce18231fff2e7b466a7da911ce82d2360709d02ee"
+    },
+    {
+      "file": "118.webp",
+      "bytes": 7780,
+      "sha256": "e0e6da84edb05366d9b39b246762740594692d14f8392d1469293a173cc1604b"
+    },
+    {
+      "file": "119.webp",
+      "bytes": 7858,
+      "sha256": "530c50073fac5dd79ec05903b7a8a9b89045301a4cd953cf5e059b0217b403e4"
+    },
+    {
+      "file": "120.webp",
+      "bytes": 7816,
+      "sha256": "1405a4ea09e6540df9b91cdadc02b4358aafba2645ef73cc20fbb8a9a4e429c0"
+    }
+  ],
+  "encoding": {
+    "format": "WebP static images",
+    "quality": 85,
+    "method": 6,
+    "rasterRetouching": false
+  },
+  "sourceComponentNames": [
+    "mat_paint_gray_part_0",
+    "mat_paint_gray_part_1",
+    "mat_paint_gray_part_2",
+    "mat_paint_gray_part_3",
+    "mat_paint_gray_part_4",
+    "mat_plastic_black_part_0",
+    "mat_plastic_black_part_1",
+    "mat_plastic_black_part_2",
+    "mat_plastic_black_part_3",
+    "mat_plastic_black_part_4",
+    "mat_plastic_black_part_5",
+    "mat_plastic_black_part_6",
+    "mat_plastic_black_part_7",
+    "mat_rubber_black_part_0",
+    "mat_steel_part_0",
+    "mat_steel_part_1",
+    "mat_steel_part_2",
+    "mat_steel_part_3",
+    "mat_steel_part_4",
+    "mat_steel_part_5",
+    "mat_steel_part_6",
+    "mat_steel_part_7",
+    "mat_steel_part_8",
+    "mat_steel_part_9",
+    "mat_steel_part_10",
+    "mat_steel_part_11",
+    "mat_steel_part_12",
+    "mat_steel_part_13",
+    "mat_steel_part_14",
+    "mat_steel_part_15",
+    "mat_steel_part_16",
+    "mat_steel_part_17",
+    "mat_steel_part_18",
+    "mat_steel_part_19",
+    "mat_steel_part_20",
+    "mat_steel_part_21",
+    "mat_steel_part_22"
+  ]
+}

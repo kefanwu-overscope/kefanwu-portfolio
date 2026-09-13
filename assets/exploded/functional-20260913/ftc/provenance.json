@@ -1,0 +1,2852 @@
+{
+  "project": "ftc",
+  "width": 640,
+  "height": 427,
+  "frameCount": 121,
+  "samples": 48,
+  "cameraOrthoScale": 5.321163654327393,
+  "cameraBaseScale": 5.195988655090332,
+  "mode": "reconstruction",
+  "sourceLayout": "Original approved cover source pose",
+  "motionRevision": "functional-motion-20260913",
+  "motion": {
+    "version": 15,
+    "project": "ftc",
+    "geometryDigest": "06e4542c7312d9bbebb91c9385dfca4d025afb666fcf0bfed1568fcb4eae666e",
+    "policy": "Sequential rigid extraction with continuous triangle SAT over swept AABB candidates. Original contacts starting within t=0.000001 may withdraw within the first quarter of a stage, bounded by their baseline triangle-intersection count and sampled solid penetration depth. New later-entering triangle contacts and ground crossings are rejected.",
+    "containmentPolicy": "Bidirectional vertex probes from every original component. Coordinate welding at 0.000001 is used only to identify watertight source components for ray-parity inside tests; nearest-surface distance bounds penetration. Open meshes have no invented solid volume. This complements continuous surface checking; it is not a continuous volumetric manufacturing certificate.",
+    "stages": [
+      {
+        "group": "wheel_left_front",
+        "translation": [
+          -0.7,
+          0.0,
+          0.0
+        ],
+        "verification": {
+          "positiveSamples": 36,
+          "triangleBVHPairTests": 10,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        },
+        "start": 0.0,
+        "end": 0.2
+      },
+      {
+        "group": "wheel_right_front",
+        "translation": [
+          0.7,
+          0.0,
+          0.0
+        ],
+        "verification": {
+          "positiveSamples": 36,
+          "triangleBVHPairTests": 10,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        },
+        "start": 0.2,
+        "end": 0.4
+      },
+      {
+        "group": "wheel_left_rear",
+        "translation": [
+          -0.7,
+          0.0,
+          0.0
+        ],
+        "verification": {
+          "positiveSamples": 36,
+          "triangleBVHPairTests": 10,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        },
+        "start": 0.4,
+        "end": 0.6
+      },
+      {
+        "group": "wheel_right_rear",
+        "translation": [
+          0.7,
+          0.0,
+          0.0
+        ],
+        "verification": {
+          "positiveSamples": 36,
+          "triangleBVHPairTests": 10,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        },
+        "start": 0.6,
+        "end": 0.8
+      },
+      {
+        "group": "intake",
+        "translation": [
+          0.0,
+          -0.7,
+          0.0
+        ],
+        "verification": {
+          "positiveSamples": 36,
+          "triangleBVHPairTests": 72,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 42,
+          "continuousCandidatePairs": 42,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        },
+        "start": 0.8,
+        "end": 1.0
+      }
+    ],
+    "retainedGroups": [
+      "chassis_and_electronics",
+      "lift_and_deposit"
+    ],
+    "blockedCandidates": {
+      "lift_and_deposit": [
+        {
+          "translation": [
+            0.0,
+            0.7,
+            0.0
+          ],
+          "reason": "surface_intersection",
+          "t": 0.0001,
+          "obstacle": "chassis_and_electronics",
+          "trianglePairs": 8558,
+          "baselinePairs": 8079,
+          "newPatchPairs": 1046,
+          "orientedDepth": 0.019988179206848145,
+          "baselineOrientedDepth": 0.019988179206848145
+        },
+        {
+          "translation": [
+            0.0,
+            0.0,
+            0.7
+          ],
+          "reason": "surface_intersection",
+          "t": 0.0001,
+          "obstacle": "chassis_and_electronics",
+          "trianglePairs": 8387,
+          "baselinePairs": 8079,
+          "newPatchPairs": 305,
+          "orientedDepth": 0.019988179206848145,
+          "baselineOrientedDepth": 0.019988179206848145
+        },
+        {
+          "translation": [
+            -0.7,
+            0.0,
+            0.0
+          ],
+          "reason": "surface_intersection",
+          "t": 0.0001,
+          "obstacle": "chassis_and_electronics",
+          "trianglePairs": 9593,
+          "baselinePairs": 8079,
+          "newPatchPairs": 1309,
+          "orientedDepth": 0.02005818486213684,
+          "baselineOrientedDepth": 0.019988179206848145
+        },
+        {
+          "translation": [
+            0.7,
+            0.0,
+            0.0
+          ],
+          "reason": "surface_intersection",
+          "t": 0.0001,
+          "obstacle": "chassis_and_electronics",
+          "trianglePairs": 9331,
+          "baselinePairs": 8079,
+          "newPatchPairs": 1452,
+          "orientedDepth": 0.019918173551559448,
+          "baselineOrientedDepth": 0.019988179206848145
+        },
+        {
+          "translation": [
+            0.0,
+            -0.7,
+            0.0
+          ],
+          "reason": "surface_intersection",
+          "t": 0.0001,
+          "obstacle": "chassis_and_electronics",
+          "trianglePairs": 8539,
+          "baselinePairs": 8079,
+          "newPatchPairs": 1309,
+          "orientedDepth": 0.019988179206848145,
+          "baselineOrientedDepth": 0.019988179206848145
+        }
+      ]
+    },
+    "embeddedHardwareAttachments": [
+      [
+        "FTC_longitudinal_chassis_channel_flange.001",
+        "FTC_black_Aframe_link"
+      ],
+      [
+        "FTC_longitudinal_chassis_channel_flange.001",
+        "FTC_black_Aframe_link.001"
+      ],
+      [
+        "FTC_longitudinal_chassis_channel_flange.002",
+        "FTC_black_Aframe_link.002"
+      ],
+      [
+        "FTC_longitudinal_chassis_channel_flange.002",
+        "FTC_black_Aframe_link.003"
+      ],
+      [
+        "FTC_red_motor_lead",
+        "FTC_spool_core"
+      ],
+      [
+        "FTC_red_motor_lead",
+        "FTC_spool_flange"
+      ],
+      [
+        "FTC_red_motor_lead",
+        "FTC_intake_horizontal_slide"
+      ],
+      [
+        "FTC_black_motor_lead",
+        "FTC_spool_flange"
+      ],
+      [
+        "FTC_red_motor_lead.001",
+        "FTC_spool_core"
+      ],
+      [
+        "FTC_red_motor_lead.001",
+        "FTC_spool_flange"
+      ],
+      [
+        "FTC_red_motor_lead.001",
+        "FTC_intake_horizontal_slide"
+      ],
+      [
+        "FTC_black_motor_lead.001",
+        "FTC_spool_flange"
+      ],
+      [
+        "FTC_red_motor_lead.002",
+        "FTC_spool_core"
+      ],
+      [
+        "FTC_red_motor_lead.002",
+        "FTC_spool_flange"
+      ],
+      [
+        "FTC_red_motor_lead.002",
+        "FTC_intake_horizontal_slide"
+      ],
+      [
+        "FTC_black_motor_lead.002",
+        "FTC_spool_core"
+      ],
+      [
+        "FTC_black_motor_lead.002",
+        "FTC_spool_flange"
+      ],
+      [
+        "FTC_black_motor_lead.002",
+        "FTC_intake_horizontal_slide"
+      ],
+      [
+        "FTC_silver_DC_motor.003",
+        "FTC_slide_stage_body"
+      ],
+      [
+        "FTC_silver_DC_motor.003",
+        "FTC_slide_running_lip"
+      ],
+      [
+        "FTC_silver_DC_motor.003",
+        "FTC_slide_running_lip.001"
+      ],
+      [
+        "FTC_silver_DC_motor.003",
+        "FTC_slide_longitudinal_slot"
+      ],
+      [
+        "FTC_silver_DC_motor.003",
+        "FTC_slide_end_plate"
+      ],
+      [
+        "FTC_black_gearhead.003",
+        "FTC_fixed_lift_support_web.001"
+      ],
+      [
+        "FTC_black_gearhead.003",
+        "FTC_fixed_lift_support_flange.002"
+      ],
+      [
+        "FTC_motor_rear_cap.003",
+        "FTC_fixed_lift_support_web"
+      ],
+      [
+        "FTC_motor_rear_cap.003",
+        "FTC_fixed_lift_support_flange.001"
+      ],
+      [
+        "FTC_red_motor_lead.003",
+        "FTC_spool_core"
+      ],
+      [
+        "FTC_red_motor_lead.003",
+        "FTC_spool_flange"
+      ],
+      [
+        "FTC_black_motor_lead.003",
+        "FTC_spool_flange"
+      ],
+      [
+        "FTC_black_Aframe_link",
+        "FTC_routed_black_sleeve"
+      ],
+      [
+        "FTC_link_identification_tape",
+        "FTC_routed_black_sleeve"
+      ],
+      [
+        "FTC_black_Aframe_link.001",
+        "FTC_routed_black_sleeve"
+      ],
+      [
+        "FTC_black_Aframe_link.002",
+        "FTC_routed_black_sleeve.001"
+      ],
+      [
+        "FTC_link_identification_tape.004",
+        "FTC_routed_black_sleeve.001"
+      ],
+      [
+        "FTC_black_Aframe_link.003",
+        "FTC_routed_black_sleeve.001"
+      ],
+      [
+        "FTC_routed_black_sleeve.001",
+        "FTC_Aframe_top_tie"
+      ],
+      [
+        "FTC_fixed_lift_support_web.001",
+        "FTC_black_control_hub"
+      ],
+      [
+        "FTC_fixed_lift_support_flange.002",
+        "FTC_black_control_hub"
+      ],
+      [
+        "FTC_fixed_lift_support_flange.002",
+        "FTC_hub_connector.005"
+      ],
+      [
+        "FTC_spool_flange.001",
+        "FTC_black_control_hub"
+      ],
+      [
+        "FTC_spool_flange.001",
+        "FTC_hub_connector.002"
+      ]
+    ],
+    "partGroups": {
+      "FTC_longitudinal_chassis_channel_web": "chassis_and_electronics",
+      "FTC_longitudinal_chassis_channel_flange": "chassis_and_electronics",
+      "FTC_longitudinal_chassis_channel_flange.001": "lift_and_deposit",
+      "FTC_longitudinal_chassis_channel_web.001": "chassis_and_electronics",
+      "FTC_longitudinal_chassis_channel_flange.002": "lift_and_deposit",
+      "FTC_longitudinal_chassis_channel_flange.003": "chassis_and_electronics",
+      "FTC_cross_chassis_channel_web": "chassis_and_electronics",
+      "FTC_cross_chassis_channel_flange": "chassis_and_electronics",
+      "FTC_cross_chassis_channel_flange.001": "chassis_and_electronics",
+      "FTC_cross_chassis_channel_web.001": "chassis_and_electronics",
+      "FTC_cross_chassis_channel_flange.002": "chassis_and_electronics",
+      "FTC_cross_chassis_channel_flange.003": "chassis_and_electronics",
+      "FTC_electronics_tray": "chassis_and_electronics",
+      "FTC_drive_axle": "wheel_left_front",
+      "FTC_mecanum_center": "wheel_left_front",
+      "FTC_wheel_center_disc": "wheel_left_front",
+      "FTC_wheel_spoke": "wheel_left_front",
+      "FTC_wheel_spoke.001": "wheel_left_front",
+      "FTC_wheel_spoke.002": "wheel_left_front",
+      "FTC_wheel_spoke.003": "wheel_left_front",
+      "FTC_wheel_spoke.004": "wheel_left_front",
+      "FTC_wheel_center_disc.001": "wheel_left_front",
+      "FTC_wheel_spoke.005": "wheel_left_front",
+      "FTC_wheel_spoke.006": "wheel_left_front",
+      "FTC_wheel_spoke.007": "wheel_left_front",
+      "FTC_wheel_spoke.008": "wheel_left_front",
+      "FTC_wheel_spoke.009": "wheel_left_front",
+      "FTC_mecanum_barrel": "wheel_left_front",
+      "FTC_roller_pin": "wheel_left_front",
+      "FTC_mecanum_barrel.001": "wheel_left_front",
+      "FTC_roller_pin.001": "wheel_left_front",
+      "FTC_mecanum_barrel.002": "wheel_left_front",
+      "FTC_roller_pin.002": "wheel_left_front",
+      "FTC_mecanum_barrel.003": "wheel_left_front",
+      "FTC_roller_pin.003": "wheel_left_front",
+      "FTC_mecanum_barrel.004": "wheel_left_front",
+      "FTC_roller_pin.004": "wheel_left_front",
+      "FTC_mecanum_barrel.005": "wheel_left_front",
+      "FTC_roller_pin.005": "wheel_left_front",
+      "FTC_mecanum_barrel.006": "wheel_left_front",
+      "FTC_roller_pin.006": "wheel_left_front",
+      "FTC_mecanum_barrel.007": "wheel_left_front",
+      "FTC_roller_pin.007": "wheel_left_front",
+      "FTC_mecanum_barrel.008": "wheel_left_front",
+      "FTC_roller_pin.008": "wheel_left_front",
+      "FTC_mecanum_barrel.009": "wheel_left_front",
+      "FTC_roller_pin.009": "wheel_left_front",
+      "FTC_axle_screw_washer": "wheel_left_front",
+      "FTC_axle_screw_head": "wheel_left_front",
+      "FTC_drive_axle.001": "wheel_left_rear",
+      "FTC_mecanum_center.001": "wheel_left_rear",
+      "FTC_wheel_center_disc.002": "wheel_left_rear",
+      "FTC_wheel_spoke.010": "wheel_left_rear",
+      "FTC_wheel_spoke.011": "wheel_left_rear",
+      "FTC_wheel_spoke.012": "wheel_left_rear",
+      "FTC_wheel_spoke.013": "wheel_left_rear",
+      "FTC_wheel_spoke.014": "wheel_left_rear",
+      "FTC_wheel_center_disc.003": "wheel_left_rear",
+      "FTC_wheel_spoke.015": "wheel_left_rear",
+      "FTC_wheel_spoke.016": "wheel_left_rear",
+      "FTC_wheel_spoke.017": "wheel_left_rear",
+      "FTC_wheel_spoke.018": "wheel_left_rear",
+      "FTC_wheel_spoke.019": "wheel_left_rear",
+      "FTC_mecanum_barrel.010": "wheel_left_rear",
+      "FTC_roller_pin.010": "wheel_left_rear",
+      "FTC_mecanum_barrel.011": "wheel_left_rear",
+      "FTC_roller_pin.011": "wheel_left_rear",
+      "FTC_mecanum_barrel.012": "wheel_left_rear",
+      "FTC_roller_pin.012": "wheel_left_rear",
+      "FTC_mecanum_barrel.013": "wheel_left_rear",
+      "FTC_roller_pin.013": "wheel_left_rear",
+      "FTC_mecanum_barrel.014": "wheel_left_rear",
+      "FTC_roller_pin.014": "wheel_left_rear",
+      "FTC_mecanum_barrel.015": "wheel_left_rear",
+      "FTC_roller_pin.015": "wheel_left_rear",
+      "FTC_mecanum_barrel.016": "wheel_left_rear",
+      "FTC_roller_pin.016": "wheel_left_rear",
+      "FTC_mecanum_barrel.017": "wheel_left_rear",
+      "FTC_roller_pin.017": "wheel_left_rear",
+      "FTC_mecanum_barrel.018": "wheel_left_rear",
+      "FTC_roller_pin.018": "wheel_left_rear",
+      "FTC_mecanum_barrel.019": "wheel_left_rear",
+      "FTC_roller_pin.019": "wheel_left_rear",
+      "FTC_axle_screw_washer.001": "wheel_left_rear",
+      "FTC_axle_screw_head.001": "wheel_left_rear",
+      "FTC_drive_axle.002": "wheel_right_front",
+      "FTC_mecanum_center.002": "wheel_right_front",
+      "FTC_wheel_center_disc.004": "wheel_right_front",
+      "FTC_wheel_spoke.020": "wheel_right_front",
+      "FTC_wheel_spoke.021": "wheel_right_front",
+      "FTC_wheel_spoke.022": "wheel_right_front",
+      "FTC_wheel_spoke.023": "wheel_right_front",
+      "FTC_wheel_spoke.024": "wheel_right_front",
+      "FTC_wheel_center_disc.005": "wheel_right_front",
+      "FTC_wheel_spoke.025": "wheel_right_front",
+      "FTC_wheel_spoke.026": "wheel_right_front",
+      "FTC_wheel_spoke.027": "wheel_right_front",
+      "FTC_wheel_spoke.028": "wheel_right_front",
+      "FTC_wheel_spoke.029": "wheel_right_front",
+      "FTC_mecanum_barrel.020": "wheel_right_front",
+      "FTC_roller_pin.020": "wheel_right_front",
+      "FTC_mecanum_barrel.021": "wheel_right_front",
+      "FTC_roller_pin.021": "wheel_right_front",
+      "FTC_mecanum_barrel.022": "wheel_right_front",
+      "FTC_roller_pin.022": "wheel_right_front",
+      "FTC_mecanum_barrel.023": "wheel_right_front",
+      "FTC_roller_pin.023": "wheel_right_front",
+      "FTC_mecanum_barrel.024": "wheel_right_front",
+      "FTC_roller_pin.024": "wheel_right_front",
+      "FTC_mecanum_barrel.025": "wheel_right_front",
+      "FTC_roller_pin.025": "wheel_right_front",
+      "FTC_mecanum_barrel.026": "wheel_right_front",
+      "FTC_roller_pin.026": "wheel_right_front",
+      "FTC_mecanum_barrel.027": "wheel_right_front",
+      "FTC_roller_pin.027": "wheel_right_front",
+      "FTC_mecanum_barrel.028": "wheel_right_front",
+      "FTC_roller_pin.028": "wheel_right_front",
+      "FTC_mecanum_barrel.029": "wheel_right_front",
+      "FTC_roller_pin.029": "wheel_right_front",
+      "FTC_axle_screw_washer.002": "wheel_right_front",
+      "FTC_axle_screw_head.002": "wheel_right_front",
+      "FTC_drive_axle.003": "wheel_right_rear",
+      "FTC_mecanum_center.003": "wheel_right_rear",
+      "FTC_wheel_center_disc.006": "wheel_right_rear",
+      "FTC_wheel_spoke.030": "wheel_right_rear",
+      "FTC_wheel_spoke.031": "wheel_right_rear",
+      "FTC_wheel_spoke.032": "wheel_right_rear",
+      "FTC_wheel_spoke.033": "wheel_right_rear",
+      "FTC_wheel_spoke.034": "wheel_right_rear",
+      "FTC_wheel_center_disc.007": "wheel_right_rear",
+      "FTC_wheel_spoke.035": "wheel_right_rear",
+      "FTC_wheel_spoke.036": "wheel_right_rear",
+      "FTC_wheel_spoke.037": "wheel_right_rear",
+      "FTC_wheel_spoke.038": "wheel_right_rear",
+      "FTC_wheel_spoke.039": "wheel_right_rear",
+      "FTC_mecanum_barrel.030": "wheel_right_rear",
+      "FTC_roller_pin.030": "wheel_right_rear",
+      "FTC_mecanum_barrel.031": "wheel_right_rear",
+      "FTC_roller_pin.031": "wheel_right_rear",
+      "FTC_mecanum_barrel.032": "wheel_right_rear",
+      "FTC_roller_pin.032": "wheel_right_rear",
+      "FTC_mecanum_barrel.033": "wheel_right_rear",
+      "FTC_roller_pin.033": "wheel_right_rear",
+      "FTC_mecanum_barrel.034": "wheel_right_rear",
+      "FTC_roller_pin.034": "wheel_right_rear",
+      "FTC_mecanum_barrel.035": "wheel_right_rear",
+      "FTC_roller_pin.035": "wheel_right_rear",
+      "FTC_mecanum_barrel.036": "wheel_right_rear",
+      "FTC_roller_pin.036": "wheel_right_rear",
+      "FTC_mecanum_barrel.037": "wheel_right_rear",
+      "FTC_roller_pin.037": "wheel_right_rear",
+      "FTC_mecanum_barrel.038": "wheel_right_rear",
+      "FTC_roller_pin.038": "wheel_right_rear",
+      "FTC_mecanum_barrel.039": "wheel_right_rear",
+      "FTC_roller_pin.039": "wheel_right_rear",
+      "FTC_axle_screw_washer.003": "wheel_right_rear",
+      "FTC_axle_screw_head.003": "wheel_right_rear",
+      "FTC_silver_DC_motor": "chassis_and_electronics",
+      "FTC_black_gearhead": "chassis_and_electronics",
+      "FTC_motor_rear_cap": "chassis_and_electronics",
+      "FTC_motor_output": "chassis_and_electronics",
+      "FTC_red_motor_lead": "chassis_and_electronics",
+      "FTC_black_motor_lead": "chassis_and_electronics",
+      "FTC_silver_DC_motor.001": "chassis_and_electronics",
+      "FTC_black_gearhead.001": "chassis_and_electronics",
+      "FTC_motor_rear_cap.001": "chassis_and_electronics",
+      "FTC_motor_output.001": "chassis_and_electronics",
+      "FTC_red_motor_lead.001": "chassis_and_electronics",
+      "FTC_black_motor_lead.001": "chassis_and_electronics",
+      "FTC_silver_DC_motor.002": "chassis_and_electronics",
+      "FTC_black_gearhead.002": "chassis_and_electronics",
+      "FTC_motor_rear_cap.002": "chassis_and_electronics",
+      "FTC_motor_output.002": "chassis_and_electronics",
+      "FTC_red_motor_lead.002": "chassis_and_electronics",
+      "FTC_black_motor_lead.002": "chassis_and_electronics",
+      "FTC_silver_DC_motor.003": "lift_and_deposit",
+      "FTC_black_gearhead.003": "chassis_and_electronics",
+      "FTC_motor_rear_cap.003": "lift_and_deposit",
+      "FTC_motor_output.003": "chassis_and_electronics",
+      "FTC_red_motor_lead.003": "chassis_and_electronics",
+      "FTC_black_motor_lead.003": "chassis_and_electronics",
+      "FTC_belt_pulley": "chassis_and_electronics",
+      "FTC_pulley_boss": "chassis_and_electronics",
+      "FTC_belt_pulley.001": "chassis_and_electronics",
+      "FTC_pulley_boss.001": "chassis_and_electronics",
+      "FTC_belt_straight_run": "chassis_and_electronics",
+      "FTC_belt_straight_run.001": "chassis_and_electronics",
+      "FTC_belt_end": "chassis_and_electronics",
+      "FTC_belt_end.001": "chassis_and_electronics",
+      "FTC_belt_pulley.002": "chassis_and_electronics",
+      "FTC_pulley_boss.002": "chassis_and_electronics",
+      "FTC_belt_pulley.003": "chassis_and_electronics",
+      "FTC_pulley_boss.003": "chassis_and_electronics",
+      "FTC_belt_straight_run.002": "chassis_and_electronics",
+      "FTC_belt_straight_run.003": "chassis_and_electronics",
+      "FTC_belt_end.002": "chassis_and_electronics",
+      "FTC_belt_end.003": "chassis_and_electronics",
+      "FTC_rear_red_guard": "chassis_and_electronics",
+      "FTC_front_red_guard": "chassis_and_electronics",
+      "FTC_red_side_guard": "chassis_and_electronics",
+      "FTC_panel_rivet_washer": "chassis_and_electronics",
+      "FTC_panel_rivet_head": "chassis_and_electronics",
+      "FTC_panel_rivet_washer.001": "chassis_and_electronics",
+      "FTC_panel_rivet_head.001": "chassis_and_electronics",
+      "FTC_panel_rivet_washer.002": "chassis_and_electronics",
+      "FTC_panel_rivet_head.002": "chassis_and_electronics",
+      "FTC_panel_rivet_washer.003": "chassis_and_electronics",
+      "FTC_panel_rivet_head.003": "chassis_and_electronics",
+      "FTC_red_side_guard.001": "chassis_and_electronics",
+      "FTC_panel_rivet_washer.004": "chassis_and_electronics",
+      "FTC_panel_rivet_head.004": "chassis_and_electronics",
+      "FTC_panel_rivet_washer.005": "chassis_and_electronics",
+      "FTC_panel_rivet_head.005": "chassis_and_electronics",
+      "FTC_panel_rivet_washer.006": "chassis_and_electronics",
+      "FTC_panel_rivet_head.006": "chassis_and_electronics",
+      "FTC_panel_rivet_washer.007": "chassis_and_electronics",
+      "FTC_panel_rivet_head.007": "chassis_and_electronics",
+      "FTC_black_Aframe_link": "lift_and_deposit",
+      "FTC_link_identification_tape": "lift_and_deposit",
+      "FTC_link_identification_tape.001": "lift_and_deposit",
+      "FTC_link_pivot_washer": "lift_and_deposit",
+      "FTC_link_pivot_head": "lift_and_deposit",
+      "FTC_link_pivot_washer.001": "lift_and_deposit",
+      "FTC_link_pivot_head.001": "lift_and_deposit",
+      "FTC_black_Aframe_link.001": "lift_and_deposit",
+      "FTC_link_identification_tape.002": "lift_and_deposit",
+      "FTC_link_identification_tape.003": "lift_and_deposit",
+      "FTC_link_pivot_washer.002": "lift_and_deposit",
+      "FTC_link_pivot_head.002": "lift_and_deposit",
+      "FTC_link_pivot_washer.003": "lift_and_deposit",
+      "FTC_link_pivot_head.003": "lift_and_deposit",
+      "FTC_routed_black_sleeve": "lift_and_deposit",
+      "FTC_black_Aframe_link.002": "lift_and_deposit",
+      "FTC_link_identification_tape.004": "lift_and_deposit",
+      "FTC_link_identification_tape.005": "lift_and_deposit",
+      "FTC_link_pivot_washer.004": "lift_and_deposit",
+      "FTC_link_pivot_head.004": "lift_and_deposit",
+      "FTC_link_pivot_washer.005": "lift_and_deposit",
+      "FTC_link_pivot_head.005": "lift_and_deposit",
+      "FTC_black_Aframe_link.003": "lift_and_deposit",
+      "FTC_link_identification_tape.006": "lift_and_deposit",
+      "FTC_link_identification_tape.007": "lift_and_deposit",
+      "FTC_link_pivot_washer.006": "lift_and_deposit",
+      "FTC_link_pivot_head.006": "lift_and_deposit",
+      "FTC_link_pivot_washer.007": "lift_and_deposit",
+      "FTC_link_pivot_head.007": "lift_and_deposit",
+      "FTC_routed_black_sleeve.001": "lift_and_deposit",
+      "FTC_Aframe_top_tie": "lift_and_deposit",
+      "FTC_fixed_lift_support_web": "lift_and_deposit",
+      "FTC_fixed_lift_support_flange": "lift_and_deposit",
+      "FTC_fixed_lift_support_flange.001": "lift_and_deposit",
+      "FTC_fixed_lift_support_web.001": "chassis_and_electronics",
+      "FTC_fixed_lift_support_flange.002": "chassis_and_electronics",
+      "FTC_fixed_lift_support_flange.003": "lift_and_deposit",
+      "FTC_lift_support_bridge_web": "lift_and_deposit",
+      "FTC_lift_support_bridge_flange": "lift_and_deposit",
+      "FTC_lift_support_bridge_flange.001": "lift_and_deposit",
+      "FTC_slide_stage_body": "lift_and_deposit",
+      "FTC_slide_running_lip": "lift_and_deposit",
+      "FTC_slide_running_lip.001": "lift_and_deposit",
+      "FTC_slide_longitudinal_slot": "lift_and_deposit",
+      "FTC_slide_end_plate": "lift_and_deposit",
+      "FTC_slide_guide_roller": "lift_and_deposit",
+      "FTC_slide_end_plate.001": "lift_and_deposit",
+      "FTC_slide_guide_roller.001": "lift_and_deposit",
+      "FTC_slide_stage_body.001": "lift_and_deposit",
+      "FTC_slide_running_lip.002": "lift_and_deposit",
+      "FTC_slide_running_lip.003": "lift_and_deposit",
+      "FTC_slide_longitudinal_slot.001": "lift_and_deposit",
+      "FTC_slide_end_plate.002": "lift_and_deposit",
+      "FTC_slide_guide_roller.002": "lift_and_deposit",
+      "FTC_slide_end_plate.003": "lift_and_deposit",
+      "FTC_slide_guide_roller.003": "lift_and_deposit",
+      "FTC_slide_stage_body.002": "lift_and_deposit",
+      "FTC_slide_running_lip.004": "lift_and_deposit",
+      "FTC_slide_running_lip.005": "lift_and_deposit",
+      "FTC_slide_longitudinal_slot.002": "lift_and_deposit",
+      "FTC_slide_end_plate.004": "lift_and_deposit",
+      "FTC_slide_guide_roller.004": "lift_and_deposit",
+      "FTC_slide_end_plate.005": "lift_and_deposit",
+      "FTC_slide_guide_roller.005": "lift_and_deposit",
+      "FTC_spool_core": "chassis_and_electronics",
+      "FTC_spool_flange": "chassis_and_electronics",
+      "FTC_spool_flange.001": "chassis_and_electronics",
+      "FTC_lift_string": "lift_and_deposit",
+      "FTC_string_idler": "lift_and_deposit",
+      "FTC_string_idler.001": "lift_and_deposit",
+      "FTC_deposit_red_carriage": "lift_and_deposit",
+      "FTC_deposit_blue_backplate": "lift_and_deposit",
+      "FTC_blue_concave_deposit_support": "lift_and_deposit",
+      "FTC_white_deposit_fork": "lift_and_deposit",
+      "FTC_red_deposit_tip": "lift_and_deposit",
+      "FTC_deposit_mount_washer": "lift_and_deposit",
+      "FTC_deposit_mount_head": "lift_and_deposit",
+      "FTC_white_deposit_fork.001": "lift_and_deposit",
+      "FTC_red_deposit_tip.001": "lift_and_deposit",
+      "FTC_deposit_mount_washer.001": "lift_and_deposit",
+      "FTC_deposit_mount_head.001": "lift_and_deposit",
+      "FTC_intake_horizontal_slide": "chassis_and_electronics",
+      "FTC_intake_white_link": "intake",
+      "FTC_intake_horizontal_slide.001": "intake",
+      "FTC_intake_white_link.001": "intake",
+      "FTC_intake_swing_arm_web": "intake",
+      "FTC_intake_swing_arm_flange": "intake",
+      "FTC_intake_swing_arm_flange.001": "intake",
+      "FTC_intake_servo_body": "intake",
+      "FTC_white_curved_intake_jaw": "intake",
+      "FTC_red_jaw_grip_wrap": "intake",
+      "FTC_red_jaw_grip_wrap.001": "intake",
+      "FTC_red_jaw_grip_wrap.002": "intake",
+      "FTC_jaw_drive_gear": "intake",
+      "FTC_white_jaw_root": "intake",
+      "FTC_jaw_root_bolt_washer": "intake",
+      "FTC_jaw_root_bolt_head": "intake",
+      "FTC_gear_tooth": "intake",
+      "FTC_gear_tooth.001": "intake",
+      "FTC_gear_tooth.002": "intake",
+      "FTC_gear_tooth.003": "intake",
+      "FTC_gear_tooth.004": "intake",
+      "FTC_gear_tooth.005": "intake",
+      "FTC_gear_tooth.006": "intake",
+      "FTC_gear_tooth.007": "intake",
+      "FTC_gear_tooth.008": "intake",
+      "FTC_gear_tooth.009": "intake",
+      "FTC_gear_tooth.010": "intake",
+      "FTC_gear_tooth.011": "intake",
+      "FTC_gear_tooth.012": "intake",
+      "FTC_gear_tooth.013": "intake",
+      "FTC_gear_tooth.014": "intake",
+      "FTC_gear_tooth.015": "intake",
+      "FTC_gear_tooth.016": "intake",
+      "FTC_gear_tooth.017": "intake",
+      "FTC_gear_tooth.018": "intake",
+      "FTC_gear_tooth.019": "intake",
+      "FTC_gear_tooth.020": "intake",
+      "FTC_gear_tooth.021": "intake",
+      "FTC_gear_tooth.022": "intake",
+      "FTC_gear_tooth.023": "intake",
+      "FTC_white_curved_intake_jaw.001": "intake",
+      "FTC_red_jaw_grip_wrap.003": "intake",
+      "FTC_red_jaw_grip_wrap.004": "intake",
+      "FTC_red_jaw_grip_wrap.005": "intake",
+      "FTC_jaw_drive_gear.001": "intake",
+      "FTC_white_jaw_root.001": "intake",
+      "FTC_jaw_root_bolt_washer.001": "intake",
+      "FTC_jaw_root_bolt_head.001": "intake",
+      "FTC_gear_tooth.024": "intake",
+      "FTC_gear_tooth.025": "intake",
+      "FTC_gear_tooth.026": "intake",
+      "FTC_gear_tooth.027": "intake",
+      "FTC_gear_tooth.028": "intake",
+      "FTC_gear_tooth.029": "intake",
+      "FTC_gear_tooth.030": "intake",
+      "FTC_gear_tooth.031": "intake",
+      "FTC_gear_tooth.032": "intake",
+      "FTC_gear_tooth.033": "intake",
+      "FTC_gear_tooth.034": "intake",
+      "FTC_gear_tooth.035": "intake",
+      "FTC_gear_tooth.036": "intake",
+      "FTC_gear_tooth.037": "intake",
+      "FTC_gear_tooth.038": "intake",
+      "FTC_gear_tooth.039": "intake",
+      "FTC_gear_tooth.040": "intake",
+      "FTC_gear_tooth.041": "intake",
+      "FTC_gear_tooth.042": "intake",
+      "FTC_gear_tooth.043": "intake",
+      "FTC_gear_tooth.044": "intake",
+      "FTC_gear_tooth.045": "intake",
+      "FTC_gear_tooth.046": "intake",
+      "FTC_gear_tooth.047": "intake",
+      "FTC_black_control_hub": "chassis_and_electronics",
+      "FTC_hub_connector": "chassis_and_electronics",
+      "FTC_hub_connector.001": "chassis_and_electronics",
+      "FTC_hub_connector.002": "chassis_and_electronics",
+      "FTC_hub_connector.003": "chassis_and_electronics",
+      "FTC_hub_connector.004": "chassis_and_electronics",
+      "FTC_hub_connector.005": "chassis_and_electronics",
+      "FTC_blue_cable_bracket": "chassis_and_electronics",
+      "FTC_intake_signal_black": "intake",
+      "FTC_intake_signal_red": "intake",
+      "FTC_intake_signal_yellow": "intake"
+    },
+    "geometryTriangles": 191428
+  },
+  "cameraBoundsSamples": 121,
+  "cameraMaximumScale": 5.321163691682614,
+  "cameraTracking": "Original source camera position and direction",
+  "cameraLocation": [
+    5.79655647277832,
+    -9.369441986083984,
+    6.174357891082764
+  ],
+  "cameraRotation": [
+    1.1596143245697021,
+    4.4814473909582375e-08,
+    0.5317239761352539
+  ],
+  "timings": [
+    {
+      "index": 0,
+      "seconds": 1.625,
+      "bytes": 297440
+    },
+    {
+      "index": 1,
+      "seconds": 1.594,
+      "bytes": 297519
+    },
+    {
+      "index": 2,
+      "seconds": 1.984,
+      "bytes": 297536
+    },
+    {
+      "index": 3,
+      "seconds": 1.75,
+      "bytes": 297608
+    },
+    {
+      "index": 4,
+      "seconds": 1.703,
+      "bytes": 297689
+    },
+    {
+      "index": 5,
+      "seconds": 2.172,
+      "bytes": 297915
+    },
+    {
+      "index": 6,
+      "seconds": 2.016,
+      "bytes": 298050
+    },
+    {
+      "index": 7,
+      "seconds": 1.938,
+      "bytes": 298263
+    },
+    {
+      "index": 8,
+      "seconds": 2.125,
+      "bytes": 298554
+    },
+    {
+      "index": 9,
+      "seconds": 2.062,
+      "bytes": 298646
+    },
+    {
+      "index": 10,
+      "seconds": 2.0,
+      "bytes": 298777
+    },
+    {
+      "index": 11,
+      "seconds": 1.828,
+      "bytes": 298810
+    },
+    {
+      "index": 12,
+      "seconds": 1.797,
+      "bytes": 298710
+    },
+    {
+      "index": 13,
+      "seconds": 1.938,
+      "bytes": 298534
+    },
+    {
+      "index": 14,
+      "seconds": 1.844,
+      "bytes": 298788
+    },
+    {
+      "index": 15,
+      "seconds": 2.172,
+      "bytes": 298771
+    },
+    {
+      "index": 16,
+      "seconds": 1.672,
+      "bytes": 298804
+    },
+    {
+      "index": 17,
+      "seconds": 2.078,
+      "bytes": 299064
+    },
+    {
+      "index": 18,
+      "seconds": 1.813,
+      "bytes": 298602
+    },
+    {
+      "index": 19,
+      "seconds": 1.828,
+      "bytes": 298756
+    },
+    {
+      "index": 20,
+      "seconds": 1.891,
+      "bytes": 298907
+    },
+    {
+      "index": 21,
+      "seconds": 2.25,
+      "bytes": 298806
+    },
+    {
+      "index": 22,
+      "seconds": 1.906,
+      "bytes": 298797
+    },
+    {
+      "index": 23,
+      "seconds": 2.032,
+      "bytes": 298860
+    },
+    {
+      "index": 24,
+      "seconds": 1.953,
+      "bytes": 298742
+    },
+    {
+      "index": 25,
+      "seconds": 1.86,
+      "bytes": 298855
+    },
+    {
+      "index": 26,
+      "seconds": 1.937,
+      "bytes": 298835
+    },
+    {
+      "index": 27,
+      "seconds": 1.844,
+      "bytes": 299007
+    },
+    {
+      "index": 28,
+      "seconds": 1.922,
+      "bytes": 298911
+    },
+    {
+      "index": 29,
+      "seconds": 1.765,
+      "bytes": 299347
+    },
+    {
+      "index": 30,
+      "seconds": 1.734,
+      "bytes": 299309
+    },
+    {
+      "index": 31,
+      "seconds": 2.156,
+      "bytes": 299458
+    },
+    {
+      "index": 32,
+      "seconds": 1.906,
+      "bytes": 299469
+    },
+    {
+      "index": 33,
+      "seconds": 1.937,
+      "bytes": 299332
+    },
+    {
+      "index": 34,
+      "seconds": 1.891,
+      "bytes": 299452
+    },
+    {
+      "index": 35,
+      "seconds": 1.922,
+      "bytes": 299346
+    },
+    {
+      "index": 36,
+      "seconds": 1.875,
+      "bytes": 299206
+    },
+    {
+      "index": 37,
+      "seconds": 1.969,
+      "bytes": 299421
+    },
+    {
+      "index": 38,
+      "seconds": 1.766,
+      "bytes": 299394
+    },
+    {
+      "index": 39,
+      "seconds": 1.829,
+      "bytes": 299197
+    },
+    {
+      "index": 40,
+      "seconds": 1.891,
+      "bytes": 298799
+    },
+    {
+      "index": 41,
+      "seconds": 2.141,
+      "bytes": 298221
+    },
+    {
+      "index": 42,
+      "seconds": 1.844,
+      "bytes": 298432
+    },
+    {
+      "index": 43,
+      "seconds": 1.812,
+      "bytes": 298339
+    },
+    {
+      "index": 44,
+      "seconds": 2.047,
+      "bytes": 298182
+    },
+    {
+      "index": 45,
+      "seconds": 2.11,
+      "bytes": 297812
+    },
+    {
+      "index": 46,
+      "seconds": 2.031,
+      "bytes": 297575
+    },
+    {
+      "index": 47,
+      "seconds": 2.297,
+      "bytes": 297761
+    },
+    {
+      "index": 48,
+      "seconds": 1.968,
+      "bytes": 297999
+    },
+    {
+      "index": 49,
+      "seconds": 1.61,
+      "bytes": 297804
+    },
+    {
+      "index": 50,
+      "seconds": 2.204,
+      "bytes": 298032
+    },
+    {
+      "index": 51,
+      "seconds": 1.969,
+      "bytes": 297911
+    },
+    {
+      "index": 52,
+      "seconds": 1.765,
+      "bytes": 297891
+    },
+    {
+      "index": 53,
+      "seconds": 1.844,
+      "bytes": 298014
+    },
+    {
+      "index": 54,
+      "seconds": 1.563,
+      "bytes": 297793
+    },
+    {
+      "index": 55,
+      "seconds": 1.281,
+      "bytes": 298139
+    },
+    {
+      "index": 56,
+      "seconds": 1.984,
+      "bytes": 297834
+    },
+    {
+      "index": 57,
+      "seconds": 1.594,
+      "bytes": 297830
+    },
+    {
+      "index": 58,
+      "seconds": 1.859,
+      "bytes": 297906
+    },
+    {
+      "index": 59,
+      "seconds": 2.109,
+      "bytes": 298031
+    },
+    {
+      "index": 60,
+      "seconds": 1.594,
+      "bytes": 298214
+    },
+    {
+      "index": 61,
+      "seconds": 1.625,
+      "bytes": 298621
+    },
+    {
+      "index": 62,
+      "seconds": 1.704,
+      "bytes": 298869
+    },
+    {
+      "index": 63,
+      "seconds": 1.594,
+      "bytes": 299180
+    },
+    {
+      "index": 64,
+      "seconds": 1.671,
+      "bytes": 299413
+    },
+    {
+      "index": 65,
+      "seconds": 2.391,
+      "bytes": 299696
+    },
+    {
+      "index": 66,
+      "seconds": 1.985,
+      "bytes": 300023
+    },
+    {
+      "index": 67,
+      "seconds": 1.75,
+      "bytes": 300188
+    },
+    {
+      "index": 68,
+      "seconds": 2.219,
+      "bytes": 300014
+    },
+    {
+      "index": 69,
+      "seconds": 1.797,
+      "bytes": 299896
+    },
+    {
+      "index": 70,
+      "seconds": 2.25,
+      "bytes": 300088
+    },
+    {
+      "index": 71,
+      "seconds": 2.25,
+      "bytes": 300135
+    },
+    {
+      "index": 72,
+      "seconds": 3.328,
+      "bytes": 300217
+    },
+    {
+      "index": 73,
+      "seconds": 2.375,
+      "bytes": 300157
+    },
+    {
+      "index": 74,
+      "seconds": 1.36,
+      "bytes": 300122
+    },
+    {
+      "index": 75,
+      "seconds": 1.39,
+      "bytes": 300083
+    },
+    {
+      "index": 76,
+      "seconds": 2.187,
+      "bytes": 300344
+    },
+    {
+      "index": 77,
+      "seconds": 2.0,
+      "bytes": 300407
+    },
+    {
+      "index": 78,
+      "seconds": 1.907,
+      "bytes": 300359
+    },
+    {
+      "index": 79,
+      "seconds": 2.218,
+      "bytes": 300641
+    },
+    {
+      "index": 80,
+      "seconds": 2.235,
+      "bytes": 300448
+    },
+    {
+      "index": 81,
+      "seconds": 2.515,
+      "bytes": 300388
+    },
+    {
+      "index": 82,
+      "seconds": 1.531,
+      "bytes": 300404
+    },
+    {
+      "index": 83,
+      "seconds": 1.86,
+      "bytes": 300365
+    },
+    {
+      "index": 84,
+      "seconds": 1.516,
+      "bytes": 300645
+    },
+    {
+      "index": 85,
+      "seconds": 1.344,
+      "bytes": 300568
+    },
+    {
+      "index": 86,
+      "seconds": 2.235,
+      "bytes": 300559
+    },
+    {
+      "index": 87,
+      "seconds": 2.047,
+      "bytes": 300535
+    },
+    {
+      "index": 88,
+      "seconds": 2.0,
+      "bytes": 300711
+    },
+    {
+      "index": 89,
+      "seconds": 2.281,
+      "bytes": 300702
+    },
+    {
+      "index": 90,
+      "seconds": 2.0,
+      "bytes": 300873
+    },
+    {
+      "index": 91,
+      "seconds": 1.594,
+      "bytes": 300694
+    },
+    {
+      "index": 92,
+      "seconds": 1.969,
+      "bytes": 300629
+    },
+    {
+      "index": 93,
+      "seconds": 2.328,
+      "bytes": 300675
+    },
+    {
+      "index": 94,
+      "seconds": 1.891,
+      "bytes": 300401
+    },
+    {
+      "index": 95,
+      "seconds": 1.609,
+      "bytes": 300774
+    },
+    {
+      "index": 96,
+      "seconds": 1.562,
+      "bytes": 300631
+    },
+    {
+      "index": 97,
+      "seconds": 1.641,
+      "bytes": 300505
+    },
+    {
+      "index": 98,
+      "seconds": 2.0,
+      "bytes": 300615
+    },
+    {
+      "index": 99,
+      "seconds": 1.937,
+      "bytes": 300696
+    },
+    {
+      "index": 100,
+      "seconds": 1.75,
+      "bytes": 300987
+    },
+    {
+      "index": 101,
+      "seconds": 1.797,
+      "bytes": 301161
+    },
+    {
+      "index": 102,
+      "seconds": 2.265,
+      "bytes": 301567
+    },
+    {
+      "index": 103,
+      "seconds": 1.641,
+      "bytes": 301530
+    },
+    {
+      "index": 104,
+      "seconds": 1.5,
+      "bytes": 301317
+    },
+    {
+      "index": 105,
+      "seconds": 1.516,
+      "bytes": 301502
+    },
+    {
+      "index": 106,
+      "seconds": 1.406,
+      "bytes": 302056
+    },
+    {
+      "index": 107,
+      "seconds": 1.594,
+      "bytes": 302127
+    },
+    {
+      "index": 108,
+      "seconds": 2.0,
+      "bytes": 302470
+    },
+    {
+      "index": 109,
+      "seconds": 2.204,
+      "bytes": 302579
+    },
+    {
+      "index": 110,
+      "seconds": 1.86,
+      "bytes": 302872
+    },
+    {
+      "index": 111,
+      "seconds": 2.235,
+      "bytes": 302927
+    },
+    {
+      "index": 112,
+      "seconds": 2.171,
+      "bytes": 303284
+    },
+    {
+      "index": 113,
+      "seconds": 1.688,
+      "bytes": 303189
+    },
+    {
+      "index": 114,
+      "seconds": 1.89,
+      "bytes": 303417
+    },
+    {
+      "index": 115,
+      "seconds": 2.015,
+      "bytes": 303648
+    },
+    {
+      "index": 116,
+      "seconds": 2.156,
+      "bytes": 303539
+    },
+    {
+      "index": 117,
+      "seconds": 1.703,
+      "bytes": 303851
+    },
+    {
+      "index": 118,
+      "seconds": 1.547,
+      "bytes": 304009
+    },
+    {
+      "index": 119,
+      "seconds": 1.641,
+      "bytes": 303934
+    },
+    {
+      "index": 120,
+      "seconds": 2.156,
+      "bytes": 304181
+    }
+  ],
+  "totalSeconds": 242.734,
+  "baseCoverSource": {
+    "project": "ftc",
+    "source": null,
+    "sourceSha256": null,
+    "renderer": "tools/editorial-render/render_catalog.py",
+    "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+    "builder": "tools/editorial-render/ftc/build_ftc.py",
+    "builderSha256": "dd18741c7be4620ea40eade9a99bfcc48abddf91cd4dd3f137f5b0b8bf1c4fe7",
+    "sourceMeshFaceCounts": {
+      "FTC_longitudinal_chassis_channel_web": 5100,
+      "FTC_longitudinal_chassis_channel_flange": 3680,
+      "FTC_longitudinal_chassis_channel_flange.001": 3680,
+      "FTC_longitudinal_chassis_channel_web.001": 5100,
+      "FTC_longitudinal_chassis_channel_flange.002": 3680,
+      "FTC_longitudinal_chassis_channel_flange.003": 3680,
+      "FTC_cross_chassis_channel_web": 4220,
+      "FTC_cross_chassis_channel_flange": 3040,
+      "FTC_cross_chassis_channel_flange.001": 3040,
+      "FTC_cross_chassis_channel_web.001": 4220,
+      "FTC_cross_chassis_channel_flange.002": 3040,
+      "FTC_cross_chassis_channel_flange.003": 3040,
+      "FTC_electronics_tray": 54,
+      "FTC_drive_axle": 34,
+      "FTC_mecanum_center": 34,
+      "FTC_wheel_center_disc": 34,
+      "FTC_wheel_spoke": 54,
+      "FTC_wheel_spoke.001": 54,
+      "FTC_wheel_spoke.002": 54,
+      "FTC_wheel_spoke.003": 54,
+      "FTC_wheel_spoke.004": 54,
+      "FTC_wheel_center_disc.001": 34,
+      "FTC_wheel_spoke.005": 54,
+      "FTC_wheel_spoke.006": 54,
+      "FTC_wheel_spoke.007": 54,
+      "FTC_wheel_spoke.008": 54,
+      "FTC_wheel_spoke.009": 54,
+      "FTC_mecanum_barrel": 142,
+      "FTC_roller_pin": 14,
+      "FTC_mecanum_barrel.001": 142,
+      "FTC_roller_pin.001": 14,
+      "FTC_mecanum_barrel.002": 142,
+      "FTC_roller_pin.002": 14,
+      "FTC_mecanum_barrel.003": 142,
+      "FTC_roller_pin.003": 14,
+      "FTC_mecanum_barrel.004": 142,
+      "FTC_roller_pin.004": 14,
+      "FTC_mecanum_barrel.005": 142,
+      "FTC_roller_pin.005": 14,
+      "FTC_mecanum_barrel.006": 142,
+      "FTC_roller_pin.006": 14,
+      "FTC_mecanum_barrel.007": 142,
+      "FTC_roller_pin.007": 14,
+      "FTC_mecanum_barrel.008": 142,
+      "FTC_roller_pin.008": 14,
+      "FTC_mecanum_barrel.009": 142,
+      "FTC_roller_pin.009": 14,
+      "FTC_axle_screw_washer": 22,
+      "FTC_axle_screw_head": 8,
+      "FTC_drive_axle.001": 34,
+      "FTC_mecanum_center.001": 34,
+      "FTC_wheel_center_disc.002": 34,
+      "FTC_wheel_spoke.010": 54,
+      "FTC_wheel_spoke.011": 54,
+      "FTC_wheel_spoke.012": 54,
+      "FTC_wheel_spoke.013": 54,
+      "FTC_wheel_spoke.014": 54,
+      "FTC_wheel_center_disc.003": 34,
+      "FTC_wheel_spoke.015": 54,
+      "FTC_wheel_spoke.016": 54,
+      "FTC_wheel_spoke.017": 54,
+      "FTC_wheel_spoke.018": 54,
+      "FTC_wheel_spoke.019": 54,
+      "FTC_mecanum_barrel.010": 142,
+      "FTC_roller_pin.010": 14,
+      "FTC_mecanum_barrel.011": 142,
+      "FTC_roller_pin.011": 14,
+      "FTC_mecanum_barrel.012": 142,
+      "FTC_roller_pin.012": 14,
+      "FTC_mecanum_barrel.013": 142,
+      "FTC_roller_pin.013": 14,
+      "FTC_mecanum_barrel.014": 142,
+      "FTC_roller_pin.014": 14,
+      "FTC_mecanum_barrel.015": 142,
+      "FTC_roller_pin.015": 14,
+      "FTC_mecanum_barrel.016": 142,
+      "FTC_roller_pin.016": 14,
+      "FTC_mecanum_barrel.017": 142,
+      "FTC_roller_pin.017": 14,
+      "FTC_mecanum_barrel.018": 142,
+      "FTC_roller_pin.018": 14,
+      "FTC_mecanum_barrel.019": 142,
+      "FTC_roller_pin.019": 14,
+      "FTC_axle_screw_washer.001": 22,
+      "FTC_axle_screw_head.001": 8,
+      "FTC_drive_axle.002": 34,
+      "FTC_mecanum_center.002": 34,
+      "FTC_wheel_center_disc.004": 34,
+      "FTC_wheel_spoke.020": 54,
+      "FTC_wheel_spoke.021": 54,
+      "FTC_wheel_spoke.022": 54,
+      "FTC_wheel_spoke.023": 54,
+      "FTC_wheel_spoke.024": 54,
+      "FTC_wheel_center_disc.005": 34,
+      "FTC_wheel_spoke.025": 54,
+      "FTC_wheel_spoke.026": 54,
+      "FTC_wheel_spoke.027": 54,
+      "FTC_wheel_spoke.028": 54,
+      "FTC_wheel_spoke.029": 54,
+      "FTC_mecanum_barrel.020": 142,
+      "FTC_roller_pin.020": 14,
+      "FTC_mecanum_barrel.021": 142,
+      "FTC_roller_pin.021": 14,
+      "FTC_mecanum_barrel.022": 142,
+      "FTC_roller_pin.022": 14,
+      "FTC_mecanum_barrel.023": 142,
+      "FTC_roller_pin.023": 14,
+      "FTC_mecanum_barrel.024": 142,
+      "FTC_roller_pin.024": 14,
+      "FTC_mecanum_barrel.025": 142,
+      "FTC_roller_pin.025": 14,
+      "FTC_mecanum_barrel.026": 142,
+      "FTC_roller_pin.026": 14,
+      "FTC_mecanum_barrel.027": 142,
+      "FTC_roller_pin.027": 14,
+      "FTC_mecanum_barrel.028": 142,
+      "FTC_roller_pin.028": 14,
+      "FTC_mecanum_barrel.029": 142,
+      "FTC_roller_pin.029": 14,
+      "FTC_axle_screw_washer.002": 22,
+      "FTC_axle_screw_head.002": 8,
+      "FTC_drive_axle.003": 34,
+      "FTC_mecanum_center.003": 34,
+      "FTC_wheel_center_disc.006": 34,
+      "FTC_wheel_spoke.030": 54,
+      "FTC_wheel_spoke.031": 54,
+      "FTC_wheel_spoke.032": 54,
+      "FTC_wheel_spoke.033": 54,
+      "FTC_wheel_spoke.034": 54,
+      "FTC_wheel_center_disc.007": 34,
+      "FTC_wheel_spoke.035": 54,
+      "FTC_wheel_spoke.036": 54,
+      "FTC_wheel_spoke.037": 54,
+      "FTC_wheel_spoke.038": 54,
+      "FTC_wheel_spoke.039": 54,
+      "FTC_mecanum_barrel.030": 142,
+      "FTC_roller_pin.030": 14,
+      "FTC_mecanum_barrel.031": 142,
+      "FTC_roller_pin.031": 14,
+      "FTC_mecanum_barrel.032": 142,
+      "FTC_roller_pin.032": 14,
+      "FTC_mecanum_barrel.033": 142,
+      "FTC_roller_pin.033": 14,
+      "FTC_mecanum_barrel.034": 142,
+      "FTC_roller_pin.034": 14,
+      "FTC_mecanum_barrel.035": 142,
+      "FTC_roller_pin.035": 14,
+      "FTC_mecanum_barrel.036": 142,
+      "FTC_roller_pin.036": 14,
+      "FTC_mecanum_barrel.037": 142,
+      "FTC_roller_pin.037": 14,
+      "FTC_mecanum_barrel.038": 142,
+      "FTC_roller_pin.038": 14,
+      "FTC_mecanum_barrel.039": 142,
+      "FTC_roller_pin.039": 14,
+      "FTC_axle_screw_washer.003": 22,
+      "FTC_axle_screw_head.003": 8,
+      "FTC_silver_DC_motor": 34,
+      "FTC_black_gearhead": 34,
+      "FTC_motor_rear_cap": 34,
+      "FTC_motor_output": 34,
+      "FTC_red_motor_lead": 240,
+      "FTC_black_motor_lead": 240,
+      "FTC_silver_DC_motor.001": 34,
+      "FTC_black_gearhead.001": 34,
+      "FTC_motor_rear_cap.001": 34,
+      "FTC_motor_output.001": 34,
+      "FTC_red_motor_lead.001": 240,
+      "FTC_black_motor_lead.001": 240,
+      "FTC_silver_DC_motor.002": 34,
+      "FTC_black_gearhead.002": 34,
+      "FTC_motor_rear_cap.002": 34,
+      "FTC_motor_output.002": 34,
+      "FTC_red_motor_lead.002": 240,
+      "FTC_black_motor_lead.002": 240,
+      "FTC_silver_DC_motor.003": 34,
+      "FTC_black_gearhead.003": 34,
+      "FTC_motor_rear_cap.003": 34,
+      "FTC_motor_output.003": 34,
+      "FTC_red_motor_lead.003": 240,
+      "FTC_black_motor_lead.003": 240,
+      "FTC_belt_pulley": 34,
+      "FTC_pulley_boss": 34,
+      "FTC_belt_pulley.001": 34,
+      "FTC_pulley_boss.001": 34,
+      "FTC_belt_straight_run": 54,
+      "FTC_belt_straight_run.001": 54,
+      "FTC_belt_end": 162,
+      "FTC_belt_end.001": 162,
+      "FTC_belt_pulley.002": 34,
+      "FTC_pulley_boss.002": 34,
+      "FTC_belt_pulley.003": 34,
+      "FTC_pulley_boss.003": 34,
+      "FTC_belt_straight_run.002": 54,
+      "FTC_belt_straight_run.003": 54,
+      "FTC_belt_end.002": 162,
+      "FTC_belt_end.003": 162,
+      "FTC_rear_red_guard": 54,
+      "FTC_front_red_guard": 54,
+      "FTC_red_side_guard": 54,
+      "FTC_panel_rivet_washer": 22,
+      "FTC_panel_rivet_head": 8,
+      "FTC_panel_rivet_washer.001": 22,
+      "FTC_panel_rivet_head.001": 8,
+      "FTC_panel_rivet_washer.002": 22,
+      "FTC_panel_rivet_head.002": 8,
+      "FTC_panel_rivet_washer.003": 22,
+      "FTC_panel_rivet_head.003": 8,
+      "FTC_red_side_guard.001": 54,
+      "FTC_panel_rivet_washer.004": 22,
+      "FTC_panel_rivet_head.004": 8,
+      "FTC_panel_rivet_washer.005": 22,
+      "FTC_panel_rivet_head.005": 8,
+      "FTC_panel_rivet_washer.006": 22,
+      "FTC_panel_rivet_head.006": 8,
+      "FTC_panel_rivet_washer.007": 22,
+      "FTC_panel_rivet_head.007": 8,
+      "FTC_black_Aframe_link": 54,
+      "FTC_link_identification_tape": 54,
+      "FTC_link_identification_tape.001": 54,
+      "FTC_link_pivot_washer": 22,
+      "FTC_link_pivot_head": 8,
+      "FTC_link_pivot_washer.001": 22,
+      "FTC_link_pivot_head.001": 8,
+      "FTC_black_Aframe_link.001": 54,
+      "FTC_link_identification_tape.002": 54,
+      "FTC_link_identification_tape.003": 54,
+      "FTC_link_pivot_washer.002": 22,
+      "FTC_link_pivot_head.002": 8,
+      "FTC_link_pivot_washer.003": 22,
+      "FTC_link_pivot_head.003": 8,
+      "FTC_routed_black_sleeve": 240,
+      "FTC_black_Aframe_link.002": 54,
+      "FTC_link_identification_tape.004": 54,
+      "FTC_link_identification_tape.005": 54,
+      "FTC_link_pivot_washer.004": 22,
+      "FTC_link_pivot_head.004": 8,
+      "FTC_link_pivot_washer.005": 22,
+      "FTC_link_pivot_head.005": 8,
+      "FTC_black_Aframe_link.003": 54,
+      "FTC_link_identification_tape.006": 54,
+      "FTC_link_identification_tape.007": 54,
+      "FTC_link_pivot_washer.006": 22,
+      "FTC_link_pivot_head.006": 8,
+      "FTC_link_pivot_washer.007": 22,
+      "FTC_link_pivot_head.007": 8,
+      "FTC_routed_black_sleeve.001": 240,
+      "FTC_Aframe_top_tie": 54,
+      "FTC_fixed_lift_support_web": 3040,
+      "FTC_fixed_lift_support_flange": 3040,
+      "FTC_fixed_lift_support_flange.001": 3040,
+      "FTC_fixed_lift_support_web.001": 3040,
+      "FTC_fixed_lift_support_flange.002": 3040,
+      "FTC_fixed_lift_support_flange.003": 3040,
+      "FTC_lift_support_bridge_web": 2080,
+      "FTC_lift_support_bridge_flange": 1040,
+      "FTC_lift_support_bridge_flange.001": 1040,
+      "FTC_slide_stage_body": 54,
+      "FTC_slide_running_lip": 54,
+      "FTC_slide_running_lip.001": 54,
+      "FTC_slide_longitudinal_slot": 54,
+      "FTC_slide_end_plate": 320,
+      "FTC_slide_guide_roller": 22,
+      "FTC_slide_end_plate.001": 320,
+      "FTC_slide_guide_roller.001": 22,
+      "FTC_slide_stage_body.001": 54,
+      "FTC_slide_running_lip.002": 54,
+      "FTC_slide_running_lip.003": 54,
+      "FTC_slide_longitudinal_slot.001": 54,
+      "FTC_slide_end_plate.002": 320,
+      "FTC_slide_guide_roller.002": 22,
+      "FTC_slide_end_plate.003": 320,
+      "FTC_slide_guide_roller.003": 22,
+      "FTC_slide_stage_body.002": 54,
+      "FTC_slide_running_lip.004": 54,
+      "FTC_slide_running_lip.005": 54,
+      "FTC_slide_longitudinal_slot.002": 54,
+      "FTC_slide_end_plate.004": 320,
+      "FTC_slide_guide_roller.004": 22,
+      "FTC_slide_end_plate.005": 320,
+      "FTC_slide_guide_roller.005": 22,
+      "FTC_spool_core": 34,
+      "FTC_spool_flange": 34,
+      "FTC_spool_flange.001": 34,
+      "FTC_lift_string": 320,
+      "FTC_string_idler": 26,
+      "FTC_string_idler.001": 26,
+      "FTC_deposit_red_carriage": 54,
+      "FTC_deposit_blue_backplate": 54,
+      "FTC_blue_concave_deposit_support": 162,
+      "FTC_white_deposit_fork": 54,
+      "FTC_red_deposit_tip": 54,
+      "FTC_deposit_mount_washer": 22,
+      "FTC_deposit_mount_head": 8,
+      "FTC_white_deposit_fork.001": 54,
+      "FTC_red_deposit_tip.001": 54,
+      "FTC_deposit_mount_washer.001": 22,
+      "FTC_deposit_mount_head.001": 8,
+      "FTC_intake_horizontal_slide": 54,
+      "FTC_intake_white_link": 54,
+      "FTC_intake_horizontal_slide.001": 54,
+      "FTC_intake_white_link.001": 54,
+      "FTC_intake_swing_arm_web": 960,
+      "FTC_intake_swing_arm_flange": 480,
+      "FTC_intake_swing_arm_flange.001": 480,
+      "FTC_intake_servo_body": 54,
+      "FTC_white_curved_intake_jaw": 162,
+      "FTC_red_jaw_grip_wrap": 22,
+      "FTC_red_jaw_grip_wrap.001": 22,
+      "FTC_red_jaw_grip_wrap.002": 22,
+      "FTC_jaw_drive_gear": 50,
+      "FTC_white_jaw_root": 54,
+      "FTC_jaw_root_bolt_washer": 22,
+      "FTC_jaw_root_bolt_head": 8,
+      "FTC_gear_tooth": 54,
+      "FTC_gear_tooth.001": 54,
+      "FTC_gear_tooth.002": 54,
+      "FTC_gear_tooth.003": 54,
+      "FTC_gear_tooth.004": 54,
+      "FTC_gear_tooth.005": 54,
+      "FTC_gear_tooth.006": 54,
+      "FTC_gear_tooth.007": 54,
+      "FTC_gear_tooth.008": 54,
+      "FTC_gear_tooth.009": 54,
+      "FTC_gear_tooth.010": 54,
+      "FTC_gear_tooth.011": 54,
+      "FTC_gear_tooth.012": 54,
+      "FTC_gear_tooth.013": 54,
+      "FTC_gear_tooth.014": 54,
+      "FTC_gear_tooth.015": 54,
+      "FTC_gear_tooth.016": 54,
+      "FTC_gear_tooth.017": 54,
+      "FTC_gear_tooth.018": 54,
+      "FTC_gear_tooth.019": 54,
+      "FTC_gear_tooth.020": 54,
+      "FTC_gear_tooth.021": 54,
+      "FTC_gear_tooth.022": 54,
+      "FTC_gear_tooth.023": 54,
+      "FTC_white_curved_intake_jaw.001": 162,
+      "FTC_red_jaw_grip_wrap.003": 22,
+      "FTC_red_jaw_grip_wrap.004": 22,
+      "FTC_red_jaw_grip_wrap.005": 22,
+      "FTC_jaw_drive_gear.001": 50,
+      "FTC_white_jaw_root.001": 54,
+      "FTC_jaw_root_bolt_washer.001": 22,
+      "FTC_jaw_root_bolt_head.001": 8,
+      "FTC_gear_tooth.024": 54,
+      "FTC_gear_tooth.025": 54,
+      "FTC_gear_tooth.026": 54,
+      "FTC_gear_tooth.027": 54,
+      "FTC_gear_tooth.028": 54,
+      "FTC_gear_tooth.029": 54,
+      "FTC_gear_tooth.030": 54,
+      "FTC_gear_tooth.031": 54,
+      "FTC_gear_tooth.032": 54,
+      "FTC_gear_tooth.033": 54,
+      "FTC_gear_tooth.034": 54,
+      "FTC_gear_tooth.035": 54,
+      "FTC_gear_tooth.036": 54,
+      "FTC_gear_tooth.037": 54,
+      "FTC_gear_tooth.038": 54,
+      "FTC_gear_tooth.039": 54,
+      "FTC_gear_tooth.040": 54,
+      "FTC_gear_tooth.041": 54,
+      "FTC_gear_tooth.042": 54,
+      "FTC_gear_tooth.043": 54,
+      "FTC_gear_tooth.044": 54,
+      "FTC_gear_tooth.045": 54,
+      "FTC_gear_tooth.046": 54,
+      "FTC_gear_tooth.047": 54,
+      "FTC_black_control_hub": 54,
+      "FTC_hub_connector": 54,
+      "FTC_hub_connector.001": 54,
+      "FTC_hub_connector.002": 54,
+      "FTC_hub_connector.003": 54,
+      "FTC_hub_connector.004": 54,
+      "FTC_hub_connector.005": 54,
+      "FTC_blue_cable_bracket": 54,
+      "FTC_intake_signal_black": 240,
+      "FTC_intake_signal_red": 240,
+      "FTC_intake_signal_yellow": 240
+    },
+    "sourceDimensionsAfterRotation": [
+      0.4643999934196472,
+      0.6727825403213501,
+      0.770455539226532
+    ],
+    "dimensions": [
+      1800,
+      1200
+    ],
+    "cameraDirectionBlenderZUp": [
+      0.4647594690322876,
+      -0.7900910973548889,
+      0.39969316124916077
+    ],
+    "angleIndex": 0,
+    "samples": 192,
+    "geometryPolicy": "Photo-informed display reconstruction, not original manufacturing CAD.",
+    "materialDefaults": {
+      "steel": {
+        "color": "BBC1C8",
+        "metallic": 0.9,
+        "roughness": 0.32
+      },
+      "printed": {
+        "color": "30363D",
+        "metallic": 0,
+        "roughness": 0.43,
+        "texture": "printed"
+      },
+      "dark": {
+        "color": "202328",
+        "metallic": 0.12,
+        "roughness": 0.4
+      },
+      "aero": {
+        "color": "E3E1DB",
+        "metallic": 0,
+        "roughness": 0.45
+      },
+      "rubber": {
+        "color": "181B1E",
+        "metallic": 0,
+        "roughness": 0.62
+      },
+      "brass": {
+        "color": "AD8954",
+        "metallic": 0.8,
+        "roughness": 0.34
+      },
+      "glass": {
+        "color": "E7EDF0",
+        "metallic": 0,
+        "roughness": 0.1,
+        "transmission": 1
+      },
+      "wood": {
+        "color": "BE9C68",
+        "metallic": 0,
+        "roughness": 0.43,
+        "texture": "wood"
+      },
+      "carbon": {
+        "color": "171A20",
+        "metallic": 0.05,
+        "roughness": 0.3,
+        "texture": "carbon",
+        "coat": 0.3
+      },
+      "pcb": {
+        "color": "166C79",
+        "metallic": 0,
+        "roughness": 0.44
+      }
+    },
+    "materialAssignments": {},
+    "references": [
+      "assets/cover-ftc-robot.webp",
+      "assets/ftc-mechanism.webp"
+    ],
+    "notes": []
+  },
+  "encodedFrames": [
+    {
+      "file": "00.webp",
+      "bytes": 15018,
+      "sha256": "bdd13a62894efcc5be88ff50c53b1ab832d2f209b32eece8c6c9f73c15bc1257"
+    },
+    {
+      "file": "01.webp",
+      "bytes": 14970,
+      "sha256": "169c8975143aa4f570f7342c1dc14f417f6bdf774be4ad4c6af2febbb482b3ba"
+    },
+    {
+      "file": "02.webp",
+      "bytes": 14974,
+      "sha256": "12da948a42b353678cae775c376d282f42dbe063e6e57eb9eb586410b8473e8d"
+    },
+    {
+      "file": "03.webp",
+      "bytes": 14966,
+      "sha256": "d487ca64d4d9894cc1a673215a14b1019573311dcae06d0e32ae4e2edf54cc16"
+    },
+    {
+      "file": "04.webp",
+      "bytes": 15016,
+      "sha256": "977812a763680edb01d8b2a5e2678ccf8c554627aa20e7a9a60e72b7f8832bc0"
+    },
+    {
+      "file": "05.webp",
+      "bytes": 15044,
+      "sha256": "529bd390dab76b9f54f8f48d4ad4f99ef88f3fbe40bb964d2017cf704c26c12e"
+    },
+    {
+      "file": "06.webp",
+      "bytes": 15084,
+      "sha256": "16206328f2b862549fea0dfb8d42290d6b9cf6bb603291bc3e9ddea0defe5176"
+    },
+    {
+      "file": "07.webp",
+      "bytes": 15132,
+      "sha256": "1646681876d3964a30ce8f36ea19dc3e374f07f302e7785546e58bcc06505f25"
+    },
+    {
+      "file": "08.webp",
+      "bytes": 15124,
+      "sha256": "81b56cfd03b382fe2df0b6a692c31ebfd04bf6cc873ebe146901aae1b08724bb"
+    },
+    {
+      "file": "09.webp",
+      "bytes": 15184,
+      "sha256": "227b46f5bb5f2fc59d1c625e030ca371690b698486ad507909df717b05b26f04"
+    },
+    {
+      "file": "10.webp",
+      "bytes": 15242,
+      "sha256": "495fddb5be6c1ad32cc22eb7093b2e6bb662d9813810d3634130b3c7571f9cac"
+    },
+    {
+      "file": "11.webp",
+      "bytes": 15228,
+      "sha256": "bad9f125f0ad73b35d97295785c2071e421cfaea81841f5fc214eef6fb7022b1"
+    },
+    {
+      "file": "12.webp",
+      "bytes": 15298,
+      "sha256": "f29d24d243e2959d49e0d28a6284967e146bf60f7a5b1d2cd8d922390bd02bee"
+    },
+    {
+      "file": "13.webp",
+      "bytes": 15232,
+      "sha256": "4de95fdd7c22898f0f12a5d0a87adf73adcf1f39e76e10817c95679ae2a256a3"
+    },
+    {
+      "file": "14.webp",
+      "bytes": 15264,
+      "sha256": "a9106193a3f62b52830f5350e6b99ba8a1c743045f1ef8a026e222d7ceb38286"
+    },
+    {
+      "file": "15.webp",
+      "bytes": 15298,
+      "sha256": "520939f02e9f02f50beef7eadadc5710542ecb6ed44bb0cd2dfaf1ff595eca5a"
+    },
+    {
+      "file": "16.webp",
+      "bytes": 15298,
+      "sha256": "e2da64bc61a54c6582fecff1cdf58e85e800fb22eab55896e672dbbb933bccaa"
+    },
+    {
+      "file": "17.webp",
+      "bytes": 15266,
+      "sha256": "0b3b93d030168f15b31c968bdc8cf329f6121329f80e56afa9de2c907a5a22e7"
+    },
+    {
+      "file": "18.webp",
+      "bytes": 15296,
+      "sha256": "9766ed7946289cede19c3a8a2855762592a39c3169feb54e0f86ccaf74242dd7"
+    },
+    {
+      "file": "19.webp",
+      "bytes": 15274,
+      "sha256": "4a4cdbcbf40cb32361b9720cb2a4d886b87f961b5040b066022b6e9cbdb23b66"
+    },
+    {
+      "file": "20.webp",
+      "bytes": 15292,
+      "sha256": "678cf8992e122689a8abdb54ceb431a2725336638825dab018f00dad53573dcb"
+    },
+    {
+      "file": "21.webp",
+      "bytes": 15336,
+      "sha256": "2a7d2123fd83c1704d075e84ecba2199c917ec33e53cb6c988b3922346a8bcf9"
+    },
+    {
+      "file": "22.webp",
+      "bytes": 15342,
+      "sha256": "39c8320f8f34a2fcd8d310ed174864540f40d468d4c7bade660d86703cccc649"
+    },
+    {
+      "file": "23.webp",
+      "bytes": 15320,
+      "sha256": "a1fccbf1313acae8414de2697c9cdd82e06777de451f3ff3f86baa55a0afc337"
+    },
+    {
+      "file": "24.webp",
+      "bytes": 15310,
+      "sha256": "17237b0e28444d90072a7d19464241bf47016890fa41f2156b3d5b0c3c45e407"
+    },
+    {
+      "file": "25.webp",
+      "bytes": 15340,
+      "sha256": "c8e429bc3ae96201f66cc881931183ac1e7ea23d81943188d61140eb246e96b3"
+    },
+    {
+      "file": "26.webp",
+      "bytes": 15342,
+      "sha256": "02dfc1e4b3b517a55dbd3d0350d958131899ca399b74b212da4ef15d2d8b848f"
+    },
+    {
+      "file": "27.webp",
+      "bytes": 15308,
+      "sha256": "ddf8684ff7399f4f1064125f5caf53672958a2f0e9f8cc3429d76007f35ad0a1"
+    },
+    {
+      "file": "28.webp",
+      "bytes": 15388,
+      "sha256": "b31c1dc1582fcd33cf1d35341a77124f2971c4944c1c115b8bbfd0219502c4ec"
+    },
+    {
+      "file": "29.webp",
+      "bytes": 15346,
+      "sha256": "eaec1563b39491d81cadb22aa07e9e771b0f84edac5555a9d1845227bfd66a6e"
+    },
+    {
+      "file": "30.webp",
+      "bytes": 15326,
+      "sha256": "f455f36cad4976e154a90f12ee406353992209e1fb6d73e19ce406324fd61605"
+    },
+    {
+      "file": "31.webp",
+      "bytes": 15334,
+      "sha256": "ecc272573b24d4aaa62b3329392debab4aca9d2d7eb9478f6cb48b0da474f8c7"
+    },
+    {
+      "file": "32.webp",
+      "bytes": 15362,
+      "sha256": "2b779c93930ef28a230966cff41b65c9d78c70603a88120708d024ff1b654fa8"
+    },
+    {
+      "file": "33.webp",
+      "bytes": 15320,
+      "sha256": "ae6458ef16ce53f65e0b99ca66b71c5a11d0915a6ddf3d5b5e55fe4a3c894ce9"
+    },
+    {
+      "file": "34.webp",
+      "bytes": 15376,
+      "sha256": "7fd71841ac9f222876fefc316c32811e9352ba8da88e22a7b683222111a121a9"
+    },
+    {
+      "file": "35.webp",
+      "bytes": 15404,
+      "sha256": "47cce7c7281dc1ceba86475c0a8586a2cbb4bb0502a042b0532aa478f56cf610"
+    },
+    {
+      "file": "36.webp",
+      "bytes": 15374,
+      "sha256": "fa11e0bca02faa2a39987207f71b6dd003c4ef4d8e030d84fe73cff8a1a155d6"
+    },
+    {
+      "file": "37.webp",
+      "bytes": 15396,
+      "sha256": "f2b77e0ac05665c6fe2d731ab28ca79efd8a005266b0309bed582db8e0247931"
+    },
+    {
+      "file": "38.webp",
+      "bytes": 15270,
+      "sha256": "fb1aa3b0dba7aecb47d5744f6af3db13380045e4b44391ded89f7c9a81a37de6"
+    },
+    {
+      "file": "39.webp",
+      "bytes": 15386,
+      "sha256": "242b571ebfcce828bd2f86361eca4552d45eb285e993d75fefb386042b646b78"
+    },
+    {
+      "file": "40.webp",
+      "bytes": 15362,
+      "sha256": "43c40c3a4c4ded290cf89a6855f0685eed38d8035c8c43c6737df2de4419e2f4"
+    },
+    {
+      "file": "41.webp",
+      "bytes": 15286,
+      "sha256": "2edba1b3f9a7b628ba69ac4c4cb32a8bd1b490946c8da1c5667cd930c119d7ba"
+    },
+    {
+      "file": "42.webp",
+      "bytes": 15130,
+      "sha256": "9fc5131c16b9dd322aff8202165853a095af05932018cc24465628f0b7cd9f04"
+    },
+    {
+      "file": "43.webp",
+      "bytes": 15214,
+      "sha256": "35bdceaf937b26bda7eca0a5612035221cef0d0368f5bf627da35450e7872cf4"
+    },
+    {
+      "file": "44.webp",
+      "bytes": 15134,
+      "sha256": "e6f151a252d8099073cbed58767a172ff54560a857843297da90870e05355bcb"
+    },
+    {
+      "file": "45.webp",
+      "bytes": 15156,
+      "sha256": "3a544fbc684d556c557dfd7802fce004f0279cd65c0163cc0ce84da6eeba6b78"
+    },
+    {
+      "file": "46.webp",
+      "bytes": 15168,
+      "sha256": "5abc12be01af6e4341692e920b1da676a97828cbec83aa339fb483f4926ae3ff"
+    },
+    {
+      "file": "47.webp",
+      "bytes": 15102,
+      "sha256": "7e42bc9fa90194913fc9dbbfa35add1260d1d67eb53a0604c7904c8f1c315308"
+    },
+    {
+      "file": "48.webp",
+      "bytes": 15134,
+      "sha256": "5cd2ec650c7e16ef54b3cddc8f9ffc5f2c0f183e550660aa751e4f71afa12ec6"
+    },
+    {
+      "file": "49.webp",
+      "bytes": 15168,
+      "sha256": "5522bc5b5fffddaf3e7befb2b5eaaf1d6a4b60b3db6b8c6b088fd80b5e5fb37f"
+    },
+    {
+      "file": "50.webp",
+      "bytes": 15190,
+      "sha256": "17155de0f95165987d7890fe97595ef3a581a9ed622e8abd51cd0e7a1383ec7e"
+    },
+    {
+      "file": "51.webp",
+      "bytes": 15150,
+      "sha256": "582c175d49229c25d9d8f8fc156dd680d06652010afe8718ee02380dc9ed9753"
+    },
+    {
+      "file": "52.webp",
+      "bytes": 15134,
+      "sha256": "f92e3c9b2ec8c1c755a1c55459a02ca1a3cc29d672c21c5efa0763d3f72ba64c"
+    },
+    {
+      "file": "53.webp",
+      "bytes": 15174,
+      "sha256": "02655a83eb4b51614d1d22ce0f1b7b25119a2088b2854bf02fe171d99c34c7cb"
+    },
+    {
+      "file": "54.webp",
+      "bytes": 15196,
+      "sha256": "ae5ecc5fc609ddcab57ae5cbfcc1e9759c83020436e10192761dae332cee6ccf"
+    },
+    {
+      "file": "55.webp",
+      "bytes": 15160,
+      "sha256": "49953df84ea08fc800f3efd20acf5771058064a2ee1c8aaf0949e9bc6f5d9e55"
+    },
+    {
+      "file": "56.webp",
+      "bytes": 15160,
+      "sha256": "1d0b79af799b145d1785979dd4ed9832d50e64e7511c6e00db31b5aa0ec2b42e"
+    },
+    {
+      "file": "57.webp",
+      "bytes": 15202,
+      "sha256": "a5a0d1d3db864139c12c3b75476e2233d7c3c361ff475d722d91910d012e93ba"
+    },
+    {
+      "file": "58.webp",
+      "bytes": 15170,
+      "sha256": "935be89b086d9c071e58a63779f68e9320de42bd59714b672c9fa27465c5bfbf"
+    },
+    {
+      "file": "59.webp",
+      "bytes": 15158,
+      "sha256": "b7dee7572b52225e5bc776023914cff738251a060abdd65b68dc38808fb9b6f1"
+    },
+    {
+      "file": "60.webp",
+      "bytes": 15192,
+      "sha256": "0d8c93420f8e473e783a83f3fa7dd12301e100a7bacacfe317ac1641ba816cd7"
+    },
+    {
+      "file": "61.webp",
+      "bytes": 15308,
+      "sha256": "5901b4c2a65d75d48f6cce60c7fd8936d39c9663aa2d0d1e5082017c08ecf8ce"
+    },
+    {
+      "file": "62.webp",
+      "bytes": 15282,
+      "sha256": "c80ee6ebc6edae18dd9049d39457160192b9f440c85c83f305fe02218c19f59b"
+    },
+    {
+      "file": "63.webp",
+      "bytes": 15432,
+      "sha256": "2e9cc0e0c612616b124f8d37585af86355ae56025ab352e375173ad582d6c145"
+    },
+    {
+      "file": "64.webp",
+      "bytes": 15526,
+      "sha256": "cc40a2f4492a770865b7c8396b684d3bc1572efcdac7a7d656ed661d1c3df600"
+    },
+    {
+      "file": "65.webp",
+      "bytes": 15548,
+      "sha256": "b8a2dfabd02e6c6a3c141548228e6358f9b0370a59da4fef0a221d261b4de71e"
+    },
+    {
+      "file": "66.webp",
+      "bytes": 15556,
+      "sha256": "d346e416e95f4a3391c821ab2057af480580550b0fa0031e003448c87df7cd38"
+    },
+    {
+      "file": "67.webp",
+      "bytes": 15610,
+      "sha256": "60e88d09560ac7cca47935679a6ba7493ab5dd96daa94f58a0aae4c57fa21e8b"
+    },
+    {
+      "file": "68.webp",
+      "bytes": 15628,
+      "sha256": "4eb5f73361bf9c0a63ceb49cb0624d305afa34d158c510bcb34dd94757e98738"
+    },
+    {
+      "file": "69.webp",
+      "bytes": 15606,
+      "sha256": "df981524557a20cbfc0f6ace60a49db909756e9ef5ad806eeb5e4f7dce0efdbb"
+    },
+    {
+      "file": "70.webp",
+      "bytes": 15574,
+      "sha256": "bda230bfc1db1e1ed71ef13b305981924120b2095a1908659b1709ca39877f34"
+    },
+    {
+      "file": "71.webp",
+      "bytes": 15606,
+      "sha256": "fa7105f9a97d325e946f5a578597675ca08d8c3483b340632f3ed369f7cbebe3"
+    },
+    {
+      "file": "72.webp",
+      "bytes": 15580,
+      "sha256": "6c1aaa99076528ea85d8973f0af99950a2c22fb759629c0e4b9ebe6c35463d46"
+    },
+    {
+      "file": "73.webp",
+      "bytes": 15594,
+      "sha256": "8ec8eddf75cfb8562e7bc4bae3711de98b1987ecf6a69872712282ae4fdd2073"
+    },
+    {
+      "file": "74.webp",
+      "bytes": 15592,
+      "sha256": "f545d12ffd65847d66fd99608e2eadc9d9c5e5ddb66902c3749fd8d9de4caccf"
+    },
+    {
+      "file": "75.webp",
+      "bytes": 15740,
+      "sha256": "356a60e7f7f4b7444e3d7bd48a794f94535812bdefbf123e1cde07cce295111a"
+    },
+    {
+      "file": "76.webp",
+      "bytes": 15634,
+      "sha256": "2a8a37ab778623413a3c7765b700e41c56eafa419f2787e039cfa2fbde6bee1f"
+    },
+    {
+      "file": "77.webp",
+      "bytes": 15660,
+      "sha256": "4c95667d0240a2ffd0ecca04dea41e7e0e493b88fbfdbde5efe74c87dd177f0b"
+    },
+    {
+      "file": "78.webp",
+      "bytes": 15696,
+      "sha256": "04f05f2e85d0ee49226fc69f7bc47fe42b15240bc1f0f7996a582e7dca830092"
+    },
+    {
+      "file": "79.webp",
+      "bytes": 15654,
+      "sha256": "209f4efba1c1a100748d3ef45b201a5f5c33e38b983d8d52d5c8344eaf209dfc"
+    },
+    {
+      "file": "80.webp",
+      "bytes": 15736,
+      "sha256": "364f9a40a01be68cd5507d1b9dd96a2fadfd350974c0e7a6b57dae014d1c121a"
+    },
+    {
+      "file": "81.webp",
+      "bytes": 15720,
+      "sha256": "6c368fcc566999baeeec9a54a3d7c5f926a5123e990c0960d9d19c901d33dbb6"
+    },
+    {
+      "file": "82.webp",
+      "bytes": 15738,
+      "sha256": "00d74a331fe308a26566b5aa62611c0cac2eb91dc16b861374bf193e76622819"
+    },
+    {
+      "file": "83.webp",
+      "bytes": 15766,
+      "sha256": "0a9809f59360c6f9725a398901edca24e48541bd67b81c762fe0e90df4eaa7e8"
+    },
+    {
+      "file": "84.webp",
+      "bytes": 15736,
+      "sha256": "4f39d2f8bda1a02a3e3499d655f2954f1561894816783fb4420fdd8522d31e14"
+    },
+    {
+      "file": "85.webp",
+      "bytes": 15734,
+      "sha256": "49e6c71d792577317d8ee9fe76794de7d181e8a5b2c60db75399c0feaca11f92"
+    },
+    {
+      "file": "86.webp",
+      "bytes": 15732,
+      "sha256": "2fcc34595f33f046cd2c702aac4b634d31bc29fe986f7295191987867383853f"
+    },
+    {
+      "file": "87.webp",
+      "bytes": 15696,
+      "sha256": "813b002936e08b0924196c7bca2bd9bf24ebce71c51b25bc29427775304202d2"
+    },
+    {
+      "file": "88.webp",
+      "bytes": 15778,
+      "sha256": "a87ec43d5bdf49a810aff1d3c5b88bc15f20bfa1b8a9cc1bbba49586ce4cd5b7"
+    },
+    {
+      "file": "89.webp",
+      "bytes": 15770,
+      "sha256": "a4d8a4e22dc8b6f39cf21fcc5e1c4dd86b03c46d547fd08306bcfed16788be7d"
+    },
+    {
+      "file": "90.webp",
+      "bytes": 15820,
+      "sha256": "5cad006d412c6107e07ac311968df71204037fa5672ca01cde5c44de7357f59b"
+    },
+    {
+      "file": "91.webp",
+      "bytes": 15838,
+      "sha256": "72080f030ab6efae5764555c9731e135a12be73c46ea4b9c226502de3d471d03"
+    },
+    {
+      "file": "92.webp",
+      "bytes": 15828,
+      "sha256": "94c5d63a8c694a1f2f3ac4b1452f4ab3c0bb408699a1731d4d366e4395b66838"
+    },
+    {
+      "file": "93.webp",
+      "bytes": 15816,
+      "sha256": "8b5a9c7abdd77aa11fc255d7437b250e76b81ba2cffb8359a790a316fc8e1997"
+    },
+    {
+      "file": "94.webp",
+      "bytes": 15792,
+      "sha256": "2eeae60c08d07060f53d358bf7e6aa1f2eada114e673b937ab4cb7b120598eba"
+    },
+    {
+      "file": "95.webp",
+      "bytes": 15802,
+      "sha256": "d9fd5a912d7f62d6b080fdd7c02158fda2f92942c8d6059673d976f9193ec06f"
+    },
+    {
+      "file": "96.webp",
+      "bytes": 15860,
+      "sha256": "978d9b4aa1e356418e07988819fcc67bb2dd4d3135d9656384c00fc1b6098dd5"
+    },
+    {
+      "file": "97.webp",
+      "bytes": 15848,
+      "sha256": "1f56743ce2911445f0ffc53b22379ff81f2a5d08c76291738587d3a19920c1cd"
+    },
+    {
+      "file": "98.webp",
+      "bytes": 15910,
+      "sha256": "0ecb79a7c328fe1c7f973fee6b550ac71730716dcedf24e40c8e0734e1e7cb90"
+    },
+    {
+      "file": "99.webp",
+      "bytes": 16022,
+      "sha256": "39fd973c1ec5a1054649a3a138050d82b7fee99d86107f9532f17cc08c806d61"
+    },
+    {
+      "file": "100.webp",
+      "bytes": 15892,
+      "sha256": "a6a2a7e10057b775bb72fe6f7ee0d98ac1429e3746542def2aac89a52e864572"
+    },
+    {
+      "file": "101.webp",
+      "bytes": 15888,
+      "sha256": "9f200d98d67498595a57ac14fab75a2acbec63f04124efd163584e767bca5785"
+    },
+    {
+      "file": "102.webp",
+      "bytes": 15964,
+      "sha256": "c2101e964fc4e85563252566eef5f2536a943eb86c0bef954f5f04db3b99e625"
+    },
+    {
+      "file": "103.webp",
+      "bytes": 16070,
+      "sha256": "45d1d42c91b86def2017d15e2dceb995042dac7d7a7427180d0358841398c51d"
+    },
+    {
+      "file": "104.webp",
+      "bytes": 15934,
+      "sha256": "eb65578dc0be1e15b2af148a697bc42d4c8f251f604c3fc2d006943819a0e1bb"
+    },
+    {
+      "file": "105.webp",
+      "bytes": 16082,
+      "sha256": "8fd36f97fcdbbfffe007725d005b6a862391d79e620409ae654c92ef13b5ed87"
+    },
+    {
+      "file": "106.webp",
+      "bytes": 16056,
+      "sha256": "ee571f2095c157d7f29231eda5dfda4c50d31cbd925d98928dcec1bf1574ddfe"
+    },
+    {
+      "file": "107.webp",
+      "bytes": 16138,
+      "sha256": "24cc5aa41921c20f853c45c872e5aabf7c4e5d080cd47a81870367cde9ee81d0"
+    },
+    {
+      "file": "108.webp",
+      "bytes": 16166,
+      "sha256": "a936a8a059f3d595880793fe6ab4b5ce1494a50c5c1bf4119a6dca5289ac55d5"
+    },
+    {
+      "file": "109.webp",
+      "bytes": 16234,
+      "sha256": "ef72011e0a7bc6cf364c21a1fdaab4da8de13e1efbcefb3799a738b68f88e873"
+    },
+    {
+      "file": "110.webp",
+      "bytes": 16346,
+      "sha256": "25082c22100d4949373ecd5263e66d8f32730704d5493553acdcaf3cf0e4f871"
+    },
+    {
+      "file": "111.webp",
+      "bytes": 16448,
+      "sha256": "3e8df332eee2df6f95cd53c8b8f0788996ac580287f3ea216427e6f63897399b"
+    },
+    {
+      "file": "112.webp",
+      "bytes": 16460,
+      "sha256": "7510c10a5454784c9e76049a2f79882eb51a24f58f7a0b90c2e936a89cd4849e"
+    },
+    {
+      "file": "113.webp",
+      "bytes": 16420,
+      "sha256": "593686fa3d723eb52ae5e062fd4715754f1c9492f9ea911a67ac76f758598b49"
+    },
+    {
+      "file": "114.webp",
+      "bytes": 16544,
+      "sha256": "288edefae4f15d86e6cea683e6b9774925a890cf6896bd8dbebed565ba599947"
+    },
+    {
+      "file": "115.webp",
+      "bytes": 16516,
+      "sha256": "7663741a207f985985868f0072375bada60bbca4b9026cdd9df6c61787064c04"
+    },
+    {
+      "file": "116.webp",
+      "bytes": 16534,
+      "sha256": "9b33d9923ef1db25d4beabdde11d0694612644e94b34f934e30c3859faa2451d"
+    },
+    {
+      "file": "117.webp",
+      "bytes": 16568,
+      "sha256": "10c14b571f133e5788d954e7f6ac90325942f4f2eff00e31b4e1e4944c8d2a27"
+    },
+    {
+      "file": "118.webp",
+      "bytes": 16440,
+      "sha256": "355a0d5899423346e9a60c35ae3ad532013c0cf07346ca0b2ee33a977c6a211f"
+    },
+    {
+      "file": "119.webp",
+      "bytes": 16638,
+      "sha256": "aceabe24ff64436e20e75907d2db052c609e5a92cdf8d485457a67ef0e1d12d7"
+    },
+    {
+      "file": "120.webp",
+      "bytes": 16546,
+      "sha256": "65c971f5dc2f12aaab7fe805f766226af395e43118c948f0f34411be58eb8a77"
+    }
+  ],
+  "encoding": {
+    "format": "WebP static images",
+    "quality": 85,
+    "method": 6,
+    "rasterRetouching": false
+  },
+  "sourceComponentNames": [
+    "FTC_longitudinal_chassis_channel_web",
+    "FTC_longitudinal_chassis_channel_flange",
+    "FTC_longitudinal_chassis_channel_flange.001",
+    "FTC_longitudinal_chassis_channel_web.001",
+    "FTC_longitudinal_chassis_channel_flange.002",
+    "FTC_longitudinal_chassis_channel_flange.003",
+    "FTC_cross_chassis_channel_web",
+    "FTC_cross_chassis_channel_flange",
+    "FTC_cross_chassis_channel_flange.001",
+    "FTC_cross_chassis_channel_web.001",
+    "FTC_cross_chassis_channel_flange.002",
+    "FTC_cross_chassis_channel_flange.003",
+    "FTC_electronics_tray",
+    "FTC_drive_axle",
+    "FTC_mecanum_center",
+    "FTC_wheel_center_disc",
+    "FTC_wheel_spoke",
+    "FTC_wheel_spoke.001",
+    "FTC_wheel_spoke.002",
+    "FTC_wheel_spoke.003",
+    "FTC_wheel_spoke.004",
+    "FTC_wheel_center_disc.001",
+    "FTC_wheel_spoke.005",
+    "FTC_wheel_spoke.006",
+    "FTC_wheel_spoke.007",
+    "FTC_wheel_spoke.008",
+    "FTC_wheel_spoke.009",
+    "FTC_mecanum_barrel",
+    "FTC_roller_pin",
+    "FTC_mecanum_barrel.001",
+    "FTC_roller_pin.001",
+    "FTC_mecanum_barrel.002",
+    "FTC_roller_pin.002",
+    "FTC_mecanum_barrel.003",
+    "FTC_roller_pin.003",
+    "FTC_mecanum_barrel.004",
+    "FTC_roller_pin.004",
+    "FTC_mecanum_barrel.005",
+    "FTC_roller_pin.005",
+    "FTC_mecanum_barrel.006",
+    "FTC_roller_pin.006",
+    "FTC_mecanum_barrel.007",
+    "FTC_roller_pin.007",
+    "FTC_mecanum_barrel.008",
+    "FTC_roller_pin.008",
+    "FTC_mecanum_barrel.009",
+    "FTC_roller_pin.009",
+    "FTC_axle_screw_washer",
+    "FTC_axle_screw_head",
+    "FTC_drive_axle.001",
+    "FTC_mecanum_center.001",
+    "FTC_wheel_center_disc.002",
+    "FTC_wheel_spoke.010",
+    "FTC_wheel_spoke.011",
+    "FTC_wheel_spoke.012",
+    "FTC_wheel_spoke.013",
+    "FTC_wheel_spoke.014",
+    "FTC_wheel_center_disc.003",
+    "FTC_wheel_spoke.015",
+    "FTC_wheel_spoke.016",
+    "FTC_wheel_spoke.017",
+    "FTC_wheel_spoke.018",
+    "FTC_wheel_spoke.019",
+    "FTC_mecanum_barrel.010",
+    "FTC_roller_pin.010",
+    "FTC_mecanum_barrel.011",
+    "FTC_roller_pin.011",
+    "FTC_mecanum_barrel.012",
+    "FTC_roller_pin.012",
+    "FTC_mecanum_barrel.013",
+    "FTC_roller_pin.013",
+    "FTC_mecanum_barrel.014",
+    "FTC_roller_pin.014",
+    "FTC_mecanum_barrel.015",
+    "FTC_roller_pin.015",
+    "FTC_mecanum_barrel.016",
+    "FTC_roller_pin.016",
+    "FTC_mecanum_barrel.017",
+    "FTC_roller_pin.017",
+    "FTC_mecanum_barrel.018",
+    "FTC_roller_pin.018",
+    "FTC_mecanum_barrel.019",
+    "FTC_roller_pin.019",
+    "FTC_axle_screw_washer.001",
+    "FTC_axle_screw_head.001",
+    "FTC_drive_axle.002",
+    "FTC_mecanum_center.002",
+    "FTC_wheel_center_disc.004",
+    "FTC_wheel_spoke.020",
+    "FTC_wheel_spoke.021",
+    "FTC_wheel_spoke.022",
+    "FTC_wheel_spoke.023",
+    "FTC_wheel_spoke.024",
+    "FTC_wheel_center_disc.005",
+    "FTC_wheel_spoke.025",
+    "FTC_wheel_spoke.026",
+    "FTC_wheel_spoke.027",
+    "FTC_wheel_spoke.028",
+    "FTC_wheel_spoke.029",
+    "FTC_mecanum_barrel.020",
+    "FTC_roller_pin.020",
+    "FTC_mecanum_barrel.021",
+    "FTC_roller_pin.021",
+    "FTC_mecanum_barrel.022",
+    "FTC_roller_pin.022",
+    "FTC_mecanum_barrel.023",
+    "FTC_roller_pin.023",
+    "FTC_mecanum_barrel.024",
+    "FTC_roller_pin.024",
+    "FTC_mecanum_barrel.025",
+    "FTC_roller_pin.025",
+    "FTC_mecanum_barrel.026",
+    "FTC_roller_pin.026",
+    "FTC_mecanum_barrel.027",
+    "FTC_roller_pin.027",
+    "FTC_mecanum_barrel.028",
+    "FTC_roller_pin.028",
+    "FTC_mecanum_barrel.029",
+    "FTC_roller_pin.029",
+    "FTC_axle_screw_washer.002",
+    "FTC_axle_screw_head.002",
+    "FTC_drive_axle.003",
+    "FTC_mecanum_center.003",
+    "FTC_wheel_center_disc.006",
+    "FTC_wheel_spoke.030",
+    "FTC_wheel_spoke.031",
+    "FTC_wheel_spoke.032",
+    "FTC_wheel_spoke.033",
+    "FTC_wheel_spoke.034",
+    "FTC_wheel_center_disc.007",
+    "FTC_wheel_spoke.035",
+    "FTC_wheel_spoke.036",
+    "FTC_wheel_spoke.037",
+    "FTC_wheel_spoke.038",
+    "FTC_wheel_spoke.039",
+    "FTC_mecanum_barrel.030",
+    "FTC_roller_pin.030",
+    "FTC_mecanum_barrel.031",
+    "FTC_roller_pin.031",
+    "FTC_mecanum_barrel.032",
+    "FTC_roller_pin.032",
+    "FTC_mecanum_barrel.033",
+    "FTC_roller_pin.033",
+    "FTC_mecanum_barrel.034",
+    "FTC_roller_pin.034",
+    "FTC_mecanum_barrel.035",
+    "FTC_roller_pin.035",
+    "FTC_mecanum_barrel.036",
+    "FTC_roller_pin.036",
+    "FTC_mecanum_barrel.037",
+    "FTC_roller_pin.037",
+    "FTC_mecanum_barrel.038",
+    "FTC_roller_pin.038",
+    "FTC_mecanum_barrel.039",
+    "FTC_roller_pin.039",
+    "FTC_axle_screw_washer.003",
+    "FTC_axle_screw_head.003",
+    "FTC_silver_DC_motor",
+    "FTC_black_gearhead",
+    "FTC_motor_rear_cap",
+    "FTC_motor_output",
+    "FTC_red_motor_lead",
+    "FTC_black_motor_lead",
+    "FTC_silver_DC_motor.001",
+    "FTC_black_gearhead.001",
+    "FTC_motor_rear_cap.001",
+    "FTC_motor_output.001",
+    "FTC_red_motor_lead.001",
+    "FTC_black_motor_lead.001",
+    "FTC_silver_DC_motor.002",
+    "FTC_black_gearhead.002",
+    "FTC_motor_rear_cap.002",
+    "FTC_motor_output.002",
+    "FTC_red_motor_lead.002",
+    "FTC_black_motor_lead.002",
+    "FTC_silver_DC_motor.003",
+    "FTC_black_gearhead.003",
+    "FTC_motor_rear_cap.003",
+    "FTC_motor_output.003",
+    "FTC_red_motor_lead.003",
+    "FTC_black_motor_lead.003",
+    "FTC_belt_pulley",
+    "FTC_pulley_boss",
+    "FTC_belt_pulley.001",
+    "FTC_pulley_boss.001",
+    "FTC_belt_straight_run",
+    "FTC_belt_straight_run.001",
+    "FTC_belt_end",
+    "FTC_belt_end.001",
+    "FTC_belt_pulley.002",
+    "FTC_pulley_boss.002",
+    "FTC_belt_pulley.003",
+    "FTC_pulley_boss.003",
+    "FTC_belt_straight_run.002",
+    "FTC_belt_straight_run.003",
+    "FTC_belt_end.002",
+    "FTC_belt_end.003",
+    "FTC_rear_red_guard",
+    "FTC_front_red_guard",
+    "FTC_red_side_guard",
+    "FTC_panel_rivet_washer",
+    "FTC_panel_rivet_head",
+    "FTC_panel_rivet_washer.001",
+    "FTC_panel_rivet_head.001",
+    "FTC_panel_rivet_washer.002",
+    "FTC_panel_rivet_head.002",
+    "FTC_panel_rivet_washer.003",
+    "FTC_panel_rivet_head.003",
+    "FTC_red_side_guard.001",
+    "FTC_panel_rivet_washer.004",
+    "FTC_panel_rivet_head.004",
+    "FTC_panel_rivet_washer.005",
+    "FTC_panel_rivet_head.005",
+    "FTC_panel_rivet_washer.006",
+    "FTC_panel_rivet_head.006",
+    "FTC_panel_rivet_washer.007",
+    "FTC_panel_rivet_head.007",
+    "FTC_black_Aframe_link",
+    "FTC_link_identification_tape",
+    "FTC_link_identification_tape.001",
+    "FTC_link_pivot_washer",
+    "FTC_link_pivot_head",
+    "FTC_link_pivot_washer.001",
+    "FTC_link_pivot_head.001",
+    "FTC_black_Aframe_link.001",
+    "FTC_link_identification_tape.002",
+    "FTC_link_identification_tape.003",
+    "FTC_link_pivot_washer.002",
+    "FTC_link_pivot_head.002",
+    "FTC_link_pivot_washer.003",
+    "FTC_link_pivot_head.003",
+    "FTC_routed_black_sleeve",
+    "FTC_black_Aframe_link.002",
+    "FTC_link_identification_tape.004",
+    "FTC_link_identification_tape.005",
+    "FTC_link_pivot_washer.004",
+    "FTC_link_pivot_head.004",
+    "FTC_link_pivot_washer.005",
+    "FTC_link_pivot_head.005",
+    "FTC_black_Aframe_link.003",
+    "FTC_link_identification_tape.006",
+    "FTC_link_identification_tape.007",
+    "FTC_link_pivot_washer.006",
+    "FTC_link_pivot_head.006",
+    "FTC_link_pivot_washer.007",
+    "FTC_link_pivot_head.007",
+    "FTC_routed_black_sleeve.001",
+    "FTC_Aframe_top_tie",
+    "FTC_fixed_lift_support_web",
+    "FTC_fixed_lift_support_flange",
+    "FTC_fixed_lift_support_flange.001",
+    "FTC_fixed_lift_support_web.001",
+    "FTC_fixed_lift_support_flange.002",
+    "FTC_fixed_lift_support_flange.003",
+    "FTC_lift_support_bridge_web",
+    "FTC_lift_support_bridge_flange",
+    "FTC_lift_support_bridge_flange.001",
+    "FTC_slide_stage_body",
+    "FTC_slide_running_lip",
+    "FTC_slide_running_lip.001",
+    "FTC_slide_longitudinal_slot",
+    "FTC_slide_end_plate",
+    "FTC_slide_guide_roller",
+    "FTC_slide_end_plate.001",
+    "FTC_slide_guide_roller.001",
+    "FTC_slide_stage_body.001",
+    "FTC_slide_running_lip.002",
+    "FTC_slide_running_lip.003",
+    "FTC_slide_longitudinal_slot.001",
+    "FTC_slide_end_plate.002",
+    "FTC_slide_guide_roller.002",
+    "FTC_slide_end_plate.003",
+    "FTC_slide_guide_roller.003",
+    "FTC_slide_stage_body.002",
+    "FTC_slide_running_lip.004",
+    "FTC_slide_running_lip.005",
+    "FTC_slide_longitudinal_slot.002",
+    "FTC_slide_end_plate.004",
+    "FTC_slide_guide_roller.004",
+    "FTC_slide_end_plate.005",
+    "FTC_slide_guide_roller.005",
+    "FTC_spool_core",
+    "FTC_spool_flange",
+    "FTC_spool_flange.001",
+    "FTC_lift_string",
+    "FTC_string_idler",
+    "FTC_string_idler.001",
+    "FTC_deposit_red_carriage",
+    "FTC_deposit_blue_backplate",
+    "FTC_blue_concave_deposit_support",
+    "FTC_white_deposit_fork",
+    "FTC_red_deposit_tip",
+    "FTC_deposit_mount_washer",
+    "FTC_deposit_mount_head",
+    "FTC_white_deposit_fork.001",
+    "FTC_red_deposit_tip.001",
+    "FTC_deposit_mount_washer.001",
+    "FTC_deposit_mount_head.001",
+    "FTC_intake_horizontal_slide",
+    "FTC_intake_white_link",
+    "FTC_intake_horizontal_slide.001",
+    "FTC_intake_white_link.001",
+    "FTC_intake_swing_arm_web",
+    "FTC_intake_swing_arm_flange",
+    "FTC_intake_swing_arm_flange.001",
+    "FTC_intake_servo_body",
+    "FTC_white_curved_intake_jaw",
+    "FTC_red_jaw_grip_wrap",
+    "FTC_red_jaw_grip_wrap.001",
+    "FTC_red_jaw_grip_wrap.002",
+    "FTC_jaw_drive_gear",
+    "FTC_white_jaw_root",
+    "FTC_jaw_root_bolt_washer",
+    "FTC_jaw_root_bolt_head",
+    "FTC_gear_tooth",
+    "FTC_gear_tooth.001",
+    "FTC_gear_tooth.002",
+    "FTC_gear_tooth.003",
+    "FTC_gear_tooth.004",
+    "FTC_gear_tooth.005",
+    "FTC_gear_tooth.006",
+    "FTC_gear_tooth.007",
+    "FTC_gear_tooth.008",
+    "FTC_gear_tooth.009",
+    "FTC_gear_tooth.010",
+    "FTC_gear_tooth.011",
+    "FTC_gear_tooth.012",
+    "FTC_gear_tooth.013",
+    "FTC_gear_tooth.014",
+    "FTC_gear_tooth.015",
+    "FTC_gear_tooth.016",
+    "FTC_gear_tooth.017",
+    "FTC_gear_tooth.018",
+    "FTC_gear_tooth.019",
+    "FTC_gear_tooth.020",
+    "FTC_gear_tooth.021",
+    "FTC_gear_tooth.022",
+    "FTC_gear_tooth.023",
+    "FTC_white_curved_intake_jaw.001",
+    "FTC_red_jaw_grip_wrap.003",
+    "FTC_red_jaw_grip_wrap.004",
+    "FTC_red_jaw_grip_wrap.005",
+    "FTC_jaw_drive_gear.001",
+    "FTC_white_jaw_root.001",
+    "FTC_jaw_root_bolt_washer.001",
+    "FTC_jaw_root_bolt_head.001",
+    "FTC_gear_tooth.024",
+    "FTC_gear_tooth.025",
+    "FTC_gear_tooth.026",
+    "FTC_gear_tooth.027",
+    "FTC_gear_tooth.028",
+    "FTC_gear_tooth.029",
+    "FTC_gear_tooth.030",
+    "FTC_gear_tooth.031",
+    "FTC_gear_tooth.032",
+    "FTC_gear_tooth.033",
+    "FTC_gear_tooth.034",
+    "FTC_gear_tooth.035",
+    "FTC_gear_tooth.036",
+    "FTC_gear_tooth.037",
+    "FTC_gear_tooth.038",
+    "FTC_gear_tooth.039",
+    "FTC_gear_tooth.040",
+    "FTC_gear_tooth.041",
+    "FTC_gear_tooth.042",
+    "FTC_gear_tooth.043",
+    "FTC_gear_tooth.044",
+    "FTC_gear_tooth.045",
+    "FTC_gear_tooth.046",
+    "FTC_gear_tooth.047",
+    "FTC_black_control_hub",
+    "FTC_hub_connector",
+    "FTC_hub_connector.001",
+    "FTC_hub_connector.002",
+    "FTC_hub_connector.003",
+    "FTC_hub_connector.004",
+    "FTC_hub_connector.005",
+    "FTC_blue_cable_bracket",
+    "FTC_intake_signal_black",
+    "FTC_intake_signal_red",
+    "FTC_intake_signal_yellow"
+  ]
+}

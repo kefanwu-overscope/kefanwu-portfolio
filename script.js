@@ -303,9 +303,10 @@ function applyProjectFilter(button) {
     const categoryMatch = filter === "all"
       || card.classList.contains("project-card--studio")
       || (card.dataset.category || "").split(/\s+/).includes(filter);
-    const searchText = `${card.textContent} ${card.dataset.category || ""}`.toLowerCase();
+    const searchText = `${card.querySelector(".project-body")?.textContent || card.textContent} ${card.dataset.category || ""}`.toLowerCase();
     const show = categoryMatch && (!query || searchText.includes(query));
     card.classList.toggle("is-hidden", !show);
+    if (!show) window.cardExplosions?.reset(card, true);
   });
   const shown = realProjectCards.filter((card) => !card.classList.contains("is-hidden")).length;
   if (filterStatus) filterStatus.textContent = `Showing ${shown} of ${realProjectCards.length} projects`;
@@ -646,6 +647,7 @@ function openModal(projectKey, sourceCard = null) {
   // modal is already up) must not restart the sequence — restarting the view
   // transition mid-capture flashes and can leave stale view-transition-names.
   if (modalOpenPending || modal.getAttribute("aria-hidden") === "false") return;
+  window.cardExplosions?.resetAll(true);
   flushPendingFilter();
   modalOpenPending = true;
   lastFocusedElement = sourceCard?.querySelector(".card-open") || document.activeElement;

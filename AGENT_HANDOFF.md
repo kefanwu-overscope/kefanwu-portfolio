@@ -1,5 +1,143 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## 2026-09-13 — functional animation release, AUTHORIZED
+
+This entry supersedes the two animation snapshots below. Preview:
+`http://127.0.0.1:4176/#work`. The previous production version is `b59c0e8`.
+The user authorized publishing this release; the cache label is
+`functional-release-20260913`. Preserve unrelated LOD experiments.
+
+- Fifteen animated cards; Telecaster retains its static cover/gallery. Delivered:
+  1,863 frames at 640×427 and 48 Cycles samples, comprising 121 frames per
+  animation and 145 each for vine and tensile test. All 48 approved cover files
+  remain unchanged. See `EXPLODED_VIEWS.md` and `asset-validation.json` for final
+  frame bytes, packing and validation evidence.
+- Functional modes: steering wheel/shafts/universal-joint yokes/rack; vine
+  eversion at the actual outlet; four rotating propellers; scanner and Smelly
+  gantry/carriage travel; tensile stretch and rupture; intact brake heating;
+  continuous seat unfolding; ten carbon plies; AURA/FTC component extraction;
+  expanded Pool/LineFollower disassembly; and genuine Education guitar assembly.
+  CFD uses actual wall pressure and numerical paths from the audited 400-iteration
+  Fluent reconstruction; this release includes its complete 121-frame sequence.
+- `exploded.js` uses slower wheel progression and bounded interpolation,
+  reversible native sliders, endpoint release to page scroll and the existing
+  reduced-motion/offscreen guards. Three concurrent fetches and at most two
+  cached sequences are also constrained by a 160 MiB decoded RGBA budget.
+  A full current sequence generally occupies the budget alone. Original covers,
+  source models, galleries, modal clicks and the 3D studio remain preserved.
+- New controllers: `mechanism_motion.py`, `functional_processes.py`,
+  `expanded_assembly.py` plus Education helpers, and `cfd_flow.py`. Existing
+  assembly/material/seat controllers remain where appropriate. Do not replace
+  tested paths with simultaneous offsets or turn qualitative deformation into
+  claims of measured load, strain, pressure or speed.
+- Pool and LineFollower each have six strict extraction stages. They passed
+  600 positive sampled poses with 24,512 and 322,405 continuous triangle tests,
+  respectively. Education's 23 stages passed 2,100 positive translation poses
+  and 99,368 continuous tests, plus a continuous isolated-rotation bound. Each
+  controller passed 363 forward/reverse/random seeks with zero matrix drift.
+- Education progress 1 is fitted to matching original assembled `V2` STL
+  triangle correspondences, not the separated cover layout. Original geometry
+  and materials remain intact. Explicit display corrections: neck +Z 0.01
+  scene units (2.319 mm), neck -Y 0.00002, pickup front plate -Y 0.01 at both
+  endpoints, and common upward floor lift 0.035. The original plate and coil
+  enter opposite bridge faces. These are schematic fit clearances, not CAD
+  manufacturing tolerances. Every accepted stage passed without the optional
+  initial seam extension. Independent bridge/source-end checks also passed.
+- Seat still has two documented render-only corner reliefs and all 44 holes;
+  the original GLB is unchanged. Vine film and tensile deformation are explicitly
+  added display geometry; original source files remain untouched.
+- Current evidence: `../.codex/functional-motion-20260913/`, including
+  `assembly-*-plan.json`, `assembly-*-seek.json`,
+  `education-bridge-final-validation.json`, mechanism/process reports and proofs.
+  PNG masters are in its `generated/` folder. Packed assets are in
+  `assets/exploded/functional-20260913/`, with hashed frame URLs and one manifest.
+
+The real Ansys Fluent 24.1.0 reconstruction completed 400 iterations and passed
+`audit_final_solution.py`. The final mesh contains 377,141 tetrahedra and 47,450
+wall triangles; pressure and 49 numerical paths are tied to hashed saved case/data.
+Acceptance is qualitative only: minimum orthogonal quality remains 3.187e-9,
+there is no prism boundary layer or mesh-independence study, and transport is
+first-order upwind. Global residual/force stability does not prove local accuracy.
+The pressure display uses zero-centered asinh normalization with a 750 Pa scale:
+cool blue negative pressure and orange/red positive pressure retain the entire
+−10645.81 to +7817.95 Pa range without clipping or changing solved data. The legend
+identifies the asinh scale, −2k/0/+2k and both extremes. This display revision
+reuses the existing 400-iteration solve. CFD-only geometry seals
+cavities, removes propulsion and regularizes the skin; original CAD is unchanged.
+`cfd_flow.py` requires hashed real exports and has no synthetic flow fallback;
+schema fixtures are not solver evidence. Exact status and limitations are in
+`../.codex/functional-motion-20260913/cfd/solution-audit.json` and
+`rebuild-report.md` in that directory. Final frame delivery is recorded in
+`EXPLODED_VIEWS.md`.
+
+The release recovery entry is
+`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-functional-release/RESTORE.md`.
+The adjacent `release-metadata.json` identifies the exact release commit;
+`deployment-verification.json` records the actual production verification result.
+The earlier `...-functional-motion/`, `...-motion-revision/`, `...-exploded-local/`
+and `...-pre-publish/` backups remain historical snapshots.
+Exact asset totals, CFD frame delivery and browser checks are documented in
+`EXPLODED_VIEWS.md`; snapshot completion and verification use the recovery
+records above. The release backup also retains the earlier
+`../.codex/exploded-revision-20260913/motion-plans/` used by `assembly_motion.py`.
+
+## 2026-09-13 — interference fixes and material-process snapshot (superseded)
+
+Supersedes the original section/simultaneous-offset previews below. Local preview:
+`http://127.0.0.1:4176/#work`. Production remains cinematic commit `b59c0e8`.
+
+- All 16 cards now use the revised assets: 772 WebPs, 8,622,856 bytes, 640×427,
+  48 Cycles samples. Manifest URLs include per-frame content hashes.
+- Brake is intact metal warming to red; driver seat unfolds continuously; carbon
+  uses exactly 10 cloth plies with a visible 0/10–10/10 count.
+- Driver seat retains all 44 holes. Two tiny render-only corner reliefs remove
+  unavoidable unfolded tab overlaps; original GLB/cover unchanged. 318-pose audit
+  passed; carbon shell/previous-ply checks passed at 121 poses.
+- Ordinary paths are sequential and checked with continuous triangle SAT plus
+  bidirectional closed-component containment. Interlocked source groups remain
+  together. Group recipes fix wheel hardware, finish masks, supports and controls.
+- Current code/provenance/verification and operation: `EXPLODED_VIEWS.md` and
+  `tools/exploded-render/README.md`; evidence in
+  `../.codex/exploded-revision-20260913/`. Controller/browser checks passed.
+- Complete revision backup: `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-motion-revision/`. The previous local animation backup and
+  production release backup remain separate. Keep unrelated LOD files uncommitted.
+
+## 2026-09-13 — original local animation snapshot (superseded)
+
+Production cinematic release `b59c0e8` was pushed and verified: all 59 checked
+pages/resources match the commit. Its exact release, previous release, complete
+pre-release working copy and Git bundle are in the pre-publish backup below.
+
+The subsequent requested animation work is implemented locally, not committed or
+deployed. Current preview: `http://127.0.0.1:4176/#work`.
+
+- `exploded.js` and `exploded.css` enhance all 16 existing cards. Hover and scroll
+  to separate/reassemble; endpoints release the wheel to normal page scrolling.
+  Native sliders support keyboard/touch; loading and failures never trap scroll.
+- 400 offline-rendered static WebPs, 25/project, 640x427 and 48 Cycles samples,
+  total 4,525,198 bytes. Only the active project is fetched, three requests at a
+  time; at most two decoded sequences are retained. No new homepage WebGL/video.
+- `assets/exploded/manifest.json` maps actual card keys, including `formlabs`
+  (the displayed name is Smelly). All frames and provenance are local assets.
+  Reproduction scripts and geometry policies: `tools/exploded-render/README.md`.
+- `brakeSim`, `carbonSeat`, `seat` are explicitly labeled section studies of
+  monolithic shapes. CFD separates display furniture, preserving the real result
+  texture. FTC/materialTest retain the earlier photo reconstructions. Education
+  begins in its existing separated source layout. No original galleries, cover
+  images, case content or 3D studio models are changed by this animation work.
+- Existing `script.js` changes are limited to searching `.project-body` text,
+  resetting hidden cards, and resetting previews before modal capture. Index
+  loads the new CSS/JS with `exploded-20260913` cache tags.
+- Browser checks: all 16 sequences reach their full state with decoded images;
+  wheel forward/reverse, endpoint page scroll, pointer leave, keyboard slider,
+  modal preservation, search isolation, reduced motion and missing-frame fallback.
+  Phone-size layout has no horizontal overflow and a 44px slider hit area.
+  Actual touch dispatch is unavailable in the current in-app browser; the touch
+  release event order is covered by the controller tests, not a physical-device test.
+- Checks/proofs: `../.codex/exploded-20260913/`; complete local backup:
+  `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-exploded-local/`.
+  Keep the unrelated pre-existing untracked LOD experiments separate when staging.
+
 ## 2026-09-13 — authorized cinematic release and next interaction
 
 The user explicitly requested publishing the latest local version, making a

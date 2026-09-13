@@ -1,16 +1,53 @@
-# Cinematic portfolio release and local preview · 2026-09-13
+# Functional animation release and local preview · 2026-09-13
 
 Local preview: **http://127.0.0.1:4176/**
 
-The user authorized publishing this redesign on September 13, superseding its
-earlier local-only status. The previous production baseline is `e5ea5c6`.
-The complete pre-release working copy, including untracked assets and modeling
-experiments, is backed up at
-`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-pre-publish/`.
-The backup's release metadata records the exact new commit and deployment checks.
+The user authorized publishing this functional animation release on September
+13. The previous production version is the cinematic release `b59c0e8`, whose
+59 checked online files matched that commit. The current cache label is
+`functional-release-20260913`.
 
-The next requested change is a scroll-controlled exploded view for every project
-card. That work follows this release and will be documented separately.
+This release includes 15 scroll-controlled animations; Telecaster remains a
+static card. It contains 1,863 WebPs: 121 frames per animation, with 145 each
+for vine and tensile test. All 48 approved cover files remain unchanged.
+`EXPLODED_VIEWS.md` records final asset totals, packing and verification evidence.
+
+Hover an animated card and scroll to advance/reverse its function, or use the
+native keyboard/touch slider. Slower wheel progression and bounded interpolation
+keep intermediate poses visible. Outward scrolls at either endpoint continue
+moving the page. Only the active sequence loads; decoded images share a 160 MiB
+budget, with at most two cached sequences. Original clicks/galleries remain
+available, and reduced motion/offscreen behavior is preserved.
+
+The modes now show steering linkage, vine eversion, four rotating propellers,
+scanner/Smelly gantry travel, tensile deformation and rupture, brake heating,
+seat unfolding and ten carbon plies. AURA/FTC retain checked extraction paths;
+Pool and LineFollower each expose six meaningful component groups. Education
+uses 23 strictly checked stages to assemble into its matched original V2 CAD
+layout, with explicit 2.319 mm neck-height and pickup-front display clearances.
+That is a rigid-fit assembly illustration, not a manufacturing tolerance claim.
+The seat retains the previous two render-only corner reliefs and all 44 holes.
+Original covers, source meshes and galleries remain preserved.
+
+CFD uses a real Fluent 24.1.0 reconstruction, completed for 400 iterations and
+accepted by `audit_final_solution.py` for qualitative animation. The final mesh
+has 377,141 tetrahedra and 47,450 wall triangles, with actual wall pressure and
+49 exported numerical paths. Very low orthogonal quality, no prism boundary
+layer/grid-independence study and first-order transport limit aerodynamic
+accuracy. See `../.codex/functional-motion-20260913/cfd/solution-audit.json` and
+`rebuild-report.md` there; this does not reproduce the missing original case.
+This release changes only the pressure display, using zero-centered asinh
+normalization with a 750 Pa scale, cool blue negative pressure and orange/red
+positive pressure. It retains the complete −10645.81 to +7817.95 Pa range without
+clipping or modifying solved data; the 400-iteration solve is reused. The legend
+identifies the asinh scale and marks −2k/0/+2k and both extremes.
+
+The release recovery entry is
+`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-functional-release/RESTORE.md`.
+The adjacent `release-metadata.json` identifies the exact release commit;
+`deployment-verification.json` records the actual production verification result.
+The earlier `functional-motion`, `motion-revision` and `pre-publish` backups
+remain historical snapshots.
 
 The homepage keeps the black, graphite, silver, and restrained blue visual style.
 The user's latest direction restores the original track photograph of Kefan in

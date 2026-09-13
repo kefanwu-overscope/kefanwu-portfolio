@@ -1,0 +1,1548 @@
+{
+  "project": "formlabs",
+  "width": 640,
+  "height": 427,
+  "frameCount": 121,
+  "samples": 48,
+  "cameraOrthoScale": 4.582230091094971,
+  "cameraBaseScale": 4.582230091094971,
+  "mode": "gantry",
+  "sourceLayout": "Original approved cover source pose",
+  "motionRevision": "functional-motion-20260913",
+  "motion": {
+    "project": "formlabs",
+    "mode": "mechanism",
+    "periodic": true,
+    "sourcePartCount": 58,
+    "preservedTriangles": 473254,
+    "geometryPolicy": "Original connected CAD meshes and material slots; object transforms only.",
+    "seekPolicy": "Absolute transforms from saved source matrices; source pose at progress 0 and 1.",
+    "leadscrew": {
+      "sourceHelixStarts": 4,
+      "stagedAxialPitch": 0.010566037735849,
+      "stagedLeadPerTurn": 0.042264150943396,
+      "calibration": "Four-start helical periodicity recovered from source screw surface; 8 mm lead at the source 530 mm overall width."
+    },
+    "motion": "Horizontal gantry rises on its vertical guide rods while the complete tool carriage travels along the two horizontal rails, then both return.",
+    "gantryAxis": [
+      -1.8822742049451335e-06,
+      -9.496926622887258e-07,
+      1.0
+    ],
+    "carriageAxis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "gantryTravel": [
+      0,
+      0.18
+    ],
+    "carriageTravel": [
+      0,
+      -0.5
+    ],
+    "fixedVerticalGuides": [
+      "mat_steel_part_14",
+      "mat_steel_part_6"
+    ],
+    "movingHorizontalRails": [
+      "mat_steel_part_25",
+      "mat_steel_part_26"
+    ],
+    "limitations": "A conservative demonstration stroke within the modeled rail travel; it does not specify programmed machine travel, speed or tool operation.",
+    "groups": {
+      "carriage": [
+        "mat_plastic_black_part_3",
+        "mat_plastic_black_part_4",
+        "mat_printed_white_part_2",
+        "mat_printed_white_part_4",
+        "mat_printed_white_part_9",
+        "mat_steel_part_2",
+        "mat_steel_part_3"
+      ],
+      "fixed_frame": [
+        "mat_amber_resin_part_0",
+        "mat_clear_acrylic_part_0",
+        "mat_clear_acrylic_part_1",
+        "mat_clear_acrylic_part_2",
+        "mat_plastic_black_part_1",
+        "mat_plastic_black_part_2",
+        "mat_plastic_black_part_5",
+        "mat_printed_white_part_0",
+        "mat_printed_white_part_1",
+        "mat_printed_white_part_10",
+        "mat_printed_white_part_11",
+        "mat_printed_white_part_12",
+        "mat_printed_white_part_13",
+        "mat_printed_white_part_14",
+        "mat_printed_white_part_15",
+        "mat_printed_white_part_16",
+        "mat_printed_white_part_7",
+        "mat_printed_white_part_8",
+        "mat_steel_part_12",
+        "mat_steel_part_13",
+        "mat_steel_part_14",
+        "mat_steel_part_6",
+        "mat_steel_part_9"
+      ],
+      "gantry": [
+        "mat_plastic_black_part_0",
+        "mat_printed_white_part_3",
+        "mat_printed_white_part_5",
+        "mat_printed_white_part_6",
+        "mat_steel_part_0",
+        "mat_steel_part_1",
+        "mat_steel_part_10",
+        "mat_steel_part_11",
+        "mat_steel_part_25",
+        "mat_steel_part_26",
+        "mat_steel_part_27",
+        "mat_steel_part_28",
+        "mat_steel_part_29",
+        "mat_steel_part_30",
+        "mat_steel_part_7",
+        "mat_steel_part_8"
+      ],
+      "left_leadscrew_and_coupling": [
+        "mat_steel_part_20",
+        "mat_steel_part_21",
+        "mat_steel_part_22",
+        "mat_steel_part_23",
+        "mat_steel_part_24",
+        "mat_steel_part_5"
+      ],
+      "right_leadscrew_and_coupling": [
+        "mat_steel_part_15",
+        "mat_steel_part_16",
+        "mat_steel_part_17",
+        "mat_steel_part_18",
+        "mat_steel_part_19",
+        "mat_steel_part_4"
+      ]
+    }
+  },
+  "cameraBoundsSamples": 121,
+  "cameraMaximumScale": 4.582230091094971,
+  "cameraTracking": "Original source camera position and direction",
+  "cameraLocation": [
+    5.618419170379639,
+    -9.513915061950684,
+    5.6005635261535645
+  ],
+  "cameraRotation": [
+    1.1596143245697021,
+    4.4814473909582375e-08,
+    0.5317239761352539
+  ],
+  "timings": [
+    {
+      "index": 0,
+      "seconds": 1.641,
+      "bytes": 291069
+    },
+    {
+      "index": 1,
+      "seconds": 1.422,
+      "bytes": 290704
+    },
+    {
+      "index": 2,
+      "seconds": 1.312,
+      "bytes": 290994
+    },
+    {
+      "index": 3,
+      "seconds": 1.469,
+      "bytes": 290786
+    },
+    {
+      "index": 4,
+      "seconds": 1.406,
+      "bytes": 291509
+    },
+    {
+      "index": 5,
+      "seconds": 1.282,
+      "bytes": 290970
+    },
+    {
+      "index": 6,
+      "seconds": 1.406,
+      "bytes": 290997
+    },
+    {
+      "index": 7,
+      "seconds": 1.5,
+      "bytes": 290941
+    },
+    {
+      "index": 8,
+      "seconds": 1.515,
+      "bytes": 290819
+    },
+    {
+      "index": 9,
+      "seconds": 1.485,
+      "bytes": 290985
+    },
+    {
+      "index": 10,
+      "seconds": 1.359,
+      "bytes": 290817
+    },
+    {
+      "index": 11,
+      "seconds": 1.375,
+      "bytes": 290651
+    },
+    {
+      "index": 12,
+      "seconds": 1.375,
+      "bytes": 290980
+    },
+    {
+      "index": 13,
+      "seconds": 1.375,
+      "bytes": 291256
+    },
+    {
+      "index": 14,
+      "seconds": 1.375,
+      "bytes": 291355
+    },
+    {
+      "index": 15,
+      "seconds": 1.344,
+      "bytes": 291258
+    },
+    {
+      "index": 16,
+      "seconds": 1.89,
+      "bytes": 291334
+    },
+    {
+      "index": 17,
+      "seconds": 1.656,
+      "bytes": 291382
+    },
+    {
+      "index": 18,
+      "seconds": 1.407,
+      "bytes": 291278
+    },
+    {
+      "index": 19,
+      "seconds": 1.375,
+      "bytes": 291700
+    },
+    {
+      "index": 20,
+      "seconds": 1.468,
+      "bytes": 291516
+    },
+    {
+      "index": 21,
+      "seconds": 1.36,
+      "bytes": 291599
+    },
+    {
+      "index": 22,
+      "seconds": 1.5,
+      "bytes": 291917
+    },
+    {
+      "index": 23,
+      "seconds": 1.469,
+      "bytes": 291917
+    },
+    {
+      "index": 24,
+      "seconds": 1.39,
+      "bytes": 291784
+    },
+    {
+      "index": 25,
+      "seconds": 1.391,
+      "bytes": 292157
+    },
+    {
+      "index": 26,
+      "seconds": 1.344,
+      "bytes": 291877
+    },
+    {
+      "index": 27,
+      "seconds": 1.343,
+      "bytes": 292151
+    },
+    {
+      "index": 28,
+      "seconds": 1.297,
+      "bytes": 292175
+    },
+    {
+      "index": 29,
+      "seconds": 1.438,
+      "bytes": 292222
+    },
+    {
+      "index": 30,
+      "seconds": 1.297,
+      "bytes": 292204
+    },
+    {
+      "index": 31,
+      "seconds": 1.328,
+      "bytes": 292201
+    },
+    {
+      "index": 32,
+      "seconds": 1.218,
+      "bytes": 291815
+    },
+    {
+      "index": 33,
+      "seconds": 1.391,
+      "bytes": 292186
+    },
+    {
+      "index": 34,
+      "seconds": 1.359,
+      "bytes": 292256
+    },
+    {
+      "index": 35,
+      "seconds": 1.407,
+      "bytes": 291953
+    },
+    {
+      "index": 36,
+      "seconds": 1.578,
+      "bytes": 292165
+    },
+    {
+      "index": 37,
+      "seconds": 1.329,
+      "bytes": 291941
+    },
+    {
+      "index": 38,
+      "seconds": 1.312,
+      "bytes": 291502
+    },
+    {
+      "index": 39,
+      "seconds": 1.422,
+      "bytes": 292031
+    },
+    {
+      "index": 40,
+      "seconds": 1.437,
+      "bytes": 292172
+    },
+    {
+      "index": 41,
+      "seconds": 1.391,
+      "bytes": 292013
+    },
+    {
+      "index": 42,
+      "seconds": 1.438,
+      "bytes": 291816
+    },
+    {
+      "index": 43,
+      "seconds": 1.406,
+      "bytes": 291989
+    },
+    {
+      "index": 44,
+      "seconds": 1.422,
+      "bytes": 292552
+    },
+    {
+      "index": 45,
+      "seconds": 1.5,
+      "bytes": 292025
+    },
+    {
+      "index": 46,
+      "seconds": 1.406,
+      "bytes": 292480
+    },
+    {
+      "index": 47,
+      "seconds": 1.344,
+      "bytes": 292447
+    },
+    {
+      "index": 48,
+      "seconds": 1.375,
+      "bytes": 291944
+    },
+    {
+      "index": 49,
+      "seconds": 1.5,
+      "bytes": 292261
+    },
+    {
+      "index": 50,
+      "seconds": 1.328,
+      "bytes": 292116
+    },
+    {
+      "index": 51,
+      "seconds": 1.547,
+      "bytes": 292211
+    },
+    {
+      "index": 52,
+      "seconds": 1.312,
+      "bytes": 292181
+    },
+    {
+      "index": 53,
+      "seconds": 1.469,
+      "bytes": 292248
+    },
+    {
+      "index": 54,
+      "seconds": 1.266,
+      "bytes": 292235
+    },
+    {
+      "index": 55,
+      "seconds": 1.265,
+      "bytes": 292282
+    },
+    {
+      "index": 56,
+      "seconds": 1.25,
+      "bytes": 292490
+    },
+    {
+      "index": 57,
+      "seconds": 1.219,
+      "bytes": 292507
+    },
+    {
+      "index": 58,
+      "seconds": 1.141,
+      "bytes": 292378
+    },
+    {
+      "index": 59,
+      "seconds": 1.234,
+      "bytes": 292319
+    },
+    {
+      "index": 60,
+      "seconds": 1.187,
+      "bytes": 292395
+    },
+    {
+      "index": 61,
+      "seconds": 1.438,
+      "bytes": 292259
+    },
+    {
+      "index": 62,
+      "seconds": 1.296,
+      "bytes": 292253
+    },
+    {
+      "index": 63,
+      "seconds": 1.391,
+      "bytes": 292461
+    },
+    {
+      "index": 64,
+      "seconds": 1.172,
+      "bytes": 292649
+    },
+    {
+      "index": 65,
+      "seconds": 1.266,
+      "bytes": 292401
+    },
+    {
+      "index": 66,
+      "seconds": 1.14,
+      "bytes": 292179
+    },
+    {
+      "index": 67,
+      "seconds": 1.141,
+      "bytes": 292191
+    },
+    {
+      "index": 68,
+      "seconds": 1.094,
+      "bytes": 292237
+    },
+    {
+      "index": 69,
+      "seconds": 1.109,
+      "bytes": 292440
+    },
+    {
+      "index": 70,
+      "seconds": 1.078,
+      "bytes": 292095
+    },
+    {
+      "index": 71,
+      "seconds": 1.109,
+      "bytes": 292123
+    },
+    {
+      "index": 72,
+      "seconds": 1.172,
+      "bytes": 291888
+    },
+    {
+      "index": 73,
+      "seconds": 1.11,
+      "bytes": 292476
+    },
+    {
+      "index": 74,
+      "seconds": 1.125,
+      "bytes": 292577
+    },
+    {
+      "index": 75,
+      "seconds": 1.172,
+      "bytes": 291964
+    },
+    {
+      "index": 76,
+      "seconds": 1.203,
+      "bytes": 292499
+    },
+    {
+      "index": 77,
+      "seconds": 1.25,
+      "bytes": 292157
+    },
+    {
+      "index": 78,
+      "seconds": 1.218,
+      "bytes": 291826
+    },
+    {
+      "index": 79,
+      "seconds": 1.157,
+      "bytes": 291956
+    },
+    {
+      "index": 80,
+      "seconds": 1.156,
+      "bytes": 292039
+    },
+    {
+      "index": 81,
+      "seconds": 1.141,
+      "bytes": 292089
+    },
+    {
+      "index": 82,
+      "seconds": 1.234,
+      "bytes": 291707
+    },
+    {
+      "index": 83,
+      "seconds": 1.25,
+      "bytes": 291991
+    },
+    {
+      "index": 84,
+      "seconds": 1.156,
+      "bytes": 292293
+    },
+    {
+      "index": 85,
+      "seconds": 1.141,
+      "bytes": 292035
+    },
+    {
+      "index": 86,
+      "seconds": 1.172,
+      "bytes": 292298
+    },
+    {
+      "index": 87,
+      "seconds": 1.156,
+      "bytes": 292265
+    },
+    {
+      "index": 88,
+      "seconds": 1.312,
+      "bytes": 291779
+    },
+    {
+      "index": 89,
+      "seconds": 1.172,
+      "bytes": 292288
+    },
+    {
+      "index": 90,
+      "seconds": 1.203,
+      "bytes": 292265
+    },
+    {
+      "index": 91,
+      "seconds": 1.11,
+      "bytes": 292322
+    },
+    {
+      "index": 92,
+      "seconds": 1.172,
+      "bytes": 292088
+    },
+    {
+      "index": 93,
+      "seconds": 1.172,
+      "bytes": 292239
+    },
+    {
+      "index": 94,
+      "seconds": 1.187,
+      "bytes": 291960
+    },
+    {
+      "index": 95,
+      "seconds": 1.172,
+      "bytes": 292104
+    },
+    {
+      "index": 96,
+      "seconds": 1.234,
+      "bytes": 291873
+    },
+    {
+      "index": 97,
+      "seconds": 1.125,
+      "bytes": 291821
+    },
+    {
+      "index": 98,
+      "seconds": 1.203,
+      "bytes": 291799
+    },
+    {
+      "index": 99,
+      "seconds": 1.125,
+      "bytes": 291673
+    },
+    {
+      "index": 100,
+      "seconds": 1.204,
+      "bytes": 291513
+    },
+    {
+      "index": 101,
+      "seconds": 1.156,
+      "bytes": 291782
+    },
+    {
+      "index": 102,
+      "seconds": 1.187,
+      "bytes": 291557
+    },
+    {
+      "index": 103,
+      "seconds": 1.032,
+      "bytes": 291412
+    },
+    {
+      "index": 104,
+      "seconds": 1.0,
+      "bytes": 291450
+    },
+    {
+      "index": 105,
+      "seconds": 0.984,
+      "bytes": 291342
+    },
+    {
+      "index": 106,
+      "seconds": 0.984,
+      "bytes": 291429
+    },
+    {
+      "index": 107,
+      "seconds": 1.0,
+      "bytes": 291104
+    },
+    {
+      "index": 108,
+      "seconds": 0.985,
+      "bytes": 290849
+    },
+    {
+      "index": 109,
+      "seconds": 1.0,
+      "bytes": 290728
+    },
+    {
+      "index": 110,
+      "seconds": 0.984,
+      "bytes": 290790
+    },
+    {
+      "index": 111,
+      "seconds": 1.031,
+      "bytes": 291072
+    },
+    {
+      "index": 112,
+      "seconds": 1.0,
+      "bytes": 290522
+    },
+    {
+      "index": 113,
+      "seconds": 1.016,
+      "bytes": 290801
+    },
+    {
+      "index": 114,
+      "seconds": 1.0,
+      "bytes": 290982
+    },
+    {
+      "index": 115,
+      "seconds": 0.984,
+      "bytes": 290922
+    },
+    {
+      "index": 116,
+      "seconds": 0.985,
+      "bytes": 291422
+    },
+    {
+      "index": 117,
+      "seconds": 1.078,
+      "bytes": 290814
+    },
+    {
+      "index": 118,
+      "seconds": 1.187,
+      "bytes": 291164
+    },
+    {
+      "index": 119,
+      "seconds": 1.203,
+      "bytes": 290809
+    },
+    {
+      "index": 120,
+      "seconds": 1.266,
+      "bytes": 290918
+    }
+  ],
+  "totalSeconds": 161.469,
+  "baseCoverSource": {
+    "project": "formlabs",
+    "source": "tools/editorial-render/sources/formlabs.glb",
+    "sourceSha256": "814cb55be3a9f3e9f4932581de47805a86c84db15d8581d50c51eccab1dd116f",
+    "renderer": "tools/editorial-render/render_catalog.py",
+    "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+    "builder": null,
+    "builderSha256": null,
+    "sourceMeshFaceCounts": {
+      "mat_amber_resin": 1188,
+      "mat_clear_acrylic": 5492,
+      "mat_plastic_black": 16462,
+      "mat_printed_white": 59584,
+      "mat_steel": 390528
+    },
+    "sourceDimensionsAfterRotation": [
+      530.0,
+      329.5671081542969,
+      342.4765930175781
+    ],
+    "dimensions": [
+      1800,
+      1200
+    ],
+    "cameraDirectionBlenderZUp": [
+      0.4647594690322876,
+      -0.7900910973548889,
+      0.39969316124916077
+    ],
+    "angleIndex": 0,
+    "samples": 192,
+    "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+    "materialDefaults": {
+      "steel": {
+        "color": "BBC1C8",
+        "metallic": 0.9,
+        "roughness": 0.32
+      },
+      "printed": {
+        "color": "30363D",
+        "metallic": 0,
+        "roughness": 0.43,
+        "texture": "printed"
+      },
+      "dark": {
+        "color": "202328",
+        "metallic": 0.12,
+        "roughness": 0.4
+      },
+      "aero": {
+        "color": "E3E1DB",
+        "metallic": 0,
+        "roughness": 0.45
+      },
+      "rubber": {
+        "color": "181B1E",
+        "metallic": 0,
+        "roughness": 0.62
+      },
+      "brass": {
+        "color": "AD8954",
+        "metallic": 0.8,
+        "roughness": 0.34
+      },
+      "glass": {
+        "color": "E7EDF0",
+        "metallic": 0,
+        "roughness": 0.1,
+        "transmission": 1
+      },
+      "wood": {
+        "color": "BE9C68",
+        "metallic": 0,
+        "roughness": 0.43,
+        "texture": "wood"
+      },
+      "carbon": {
+        "color": "171A20",
+        "metallic": 0.05,
+        "roughness": 0.3,
+        "texture": "carbon",
+        "coat": 0.3
+      },
+      "pcb": {
+        "color": "166C79",
+        "metallic": 0,
+        "roughness": 0.44
+      }
+    },
+    "materialAssignments": {
+      "amber_resin": {
+        "color": "C8A754",
+        "metallic": 0,
+        "roughness": 0.34,
+        "transmission": 0.38,
+        "ior": 1.48
+      },
+      "clear_acrylic": {
+        "color": "F1F4F4",
+        "metallic": 0,
+        "roughness": 0.09,
+        "transmission": 1,
+        "ior": 1.49
+      },
+      "plastic_black": {
+        "color": "202329",
+        "metallic": 0,
+        "roughness": 0.48
+      },
+      "printed_white": {
+        "color": "E6E4DD",
+        "metallic": 0,
+        "roughness": 0.51,
+        "texture": "printed"
+      },
+      "steel": {
+        "color": "ABB2BA",
+        "metallic": 1,
+        "roughness": 0.35
+      }
+    },
+    "references": [
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\formlabs-smelly-table.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\formlabs-smelly-actuator.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\formlabs-smelly.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-smelly-cad.webp"
+    ],
+    "notes": []
+  },
+  "encodedFrames": [
+    {
+      "file": "00.webp",
+      "bytes": 12740,
+      "sha256": "85651d469b0a6a5dc9ed408f26d2476581cf356036463937cb9e23c7ad7348e7"
+    },
+    {
+      "file": "01.webp",
+      "bytes": 12662,
+      "sha256": "3919c4ddac62cc1629890f0ea346c31f15a371d22b83e3d4fa7ae71e2998d5f6"
+    },
+    {
+      "file": "02.webp",
+      "bytes": 12620,
+      "sha256": "cc97d9265a75c36f20dc873e738f6b0c3f3e76615c2f10daf130afde3652d216"
+    },
+    {
+      "file": "03.webp",
+      "bytes": 12600,
+      "sha256": "cde5bbc5db6d4cb2e85383e61113f7857bd9817ebe579d7d0ab5cab1fbf031e5"
+    },
+    {
+      "file": "04.webp",
+      "bytes": 12716,
+      "sha256": "9a4b93a9c0c77048cae75703551f25ad86c19bbb7e6f9a7be8444a042d904fe1"
+    },
+    {
+      "file": "05.webp",
+      "bytes": 12694,
+      "sha256": "965b76c85fde362883f0bb0a277e6aaeeb94b1f2bdcf4ee29e6e733af0ad42a1"
+    },
+    {
+      "file": "06.webp",
+      "bytes": 12738,
+      "sha256": "85cdc61a2b5bef720a7fb52d1e7bf527c8b95ba2cf42ec7b4b128d334f622e21"
+    },
+    {
+      "file": "07.webp",
+      "bytes": 12742,
+      "sha256": "f330db3d09a0d51c5eaed2b9b2dd74fba80a7381e1e4b84791887d8e0a16f044"
+    },
+    {
+      "file": "08.webp",
+      "bytes": 12678,
+      "sha256": "8ef54a3ebe3f8f912ce7f4f58504f773ebda7778f2fab78d9230b1c94582bbde"
+    },
+    {
+      "file": "09.webp",
+      "bytes": 12738,
+      "sha256": "7c9f8c934324618b84b6926a0ad11f401c53a231385667745c2b97dabb0464d5"
+    },
+    {
+      "file": "10.webp",
+      "bytes": 12630,
+      "sha256": "d6be781a83b63de89db47ab93ca4fbdb1ed5ffa6631c752882c442f2e249cb60"
+    },
+    {
+      "file": "11.webp",
+      "bytes": 12776,
+      "sha256": "78d1fffef77234b0c06543b5e13303291b9fbb1bbeb51cfb63e1f4e04c558cb0"
+    },
+    {
+      "file": "12.webp",
+      "bytes": 12712,
+      "sha256": "51c702a3bc96b3219f02abe450471d447a63072168356ac867b63c53b1cd5c3a"
+    },
+    {
+      "file": "13.webp",
+      "bytes": 12858,
+      "sha256": "40edcfb9c752db8b62de01e27adccb3f25bf73eda7dea7756cff0b9992383223"
+    },
+    {
+      "file": "14.webp",
+      "bytes": 12796,
+      "sha256": "5ed6f85db81e325bd61cd8801d96f320116accb307438f6693bd76f80bf4b1d6"
+    },
+    {
+      "file": "15.webp",
+      "bytes": 12744,
+      "sha256": "08ae47e561a251a58425d0da3bf2571468b0801d33d9bd3ab05cbea791c2f11b"
+    },
+    {
+      "file": "16.webp",
+      "bytes": 12740,
+      "sha256": "a4556875151c0d9c65447aec00139be2f121d8fd6da5bf2c89df9e126ae19053"
+    },
+    {
+      "file": "17.webp",
+      "bytes": 12796,
+      "sha256": "f7e2a0f0a6c2a420bd3a8d36bf35964124fdf2a5f118ade15d20e042bd10d042"
+    },
+    {
+      "file": "18.webp",
+      "bytes": 12728,
+      "sha256": "28a9de670253b532ea379a06516908f41fbb1643e3ea1948c921222dab76d34e"
+    },
+    {
+      "file": "19.webp",
+      "bytes": 12822,
+      "sha256": "c8761875aae35d493f5a5bb42786abcde6d88182f82be35fba6ffc14f4ca20a4"
+    },
+    {
+      "file": "20.webp",
+      "bytes": 12820,
+      "sha256": "24121487896277e6140dfc2abd2c2fec97023f106c101b2a7afbba555adde864"
+    },
+    {
+      "file": "21.webp",
+      "bytes": 12884,
+      "sha256": "7e0a28b0a0d32c09ffea42dfe7911dba38adfec2747f379ab898cde831a6d77c"
+    },
+    {
+      "file": "22.webp",
+      "bytes": 12778,
+      "sha256": "db7c1f588041a51c8e720f63ae4f7df96c4c8b13d31190072e74f10cf6356477"
+    },
+    {
+      "file": "23.webp",
+      "bytes": 12844,
+      "sha256": "4619c44cb0a51ac5e09b0775dbf8865afacbb9fc64c83804f981738fd2bbed5e"
+    },
+    {
+      "file": "24.webp",
+      "bytes": 12656,
+      "sha256": "eda99921fb74bf5c6001c23ca176f7622144f050c06d6ed6e6ec4d404645b10b"
+    },
+    {
+      "file": "25.webp",
+      "bytes": 12846,
+      "sha256": "2742bc72555976777b59a56a1ac75fdf3489e9d810175580ef15ad2c9f3a26f2"
+    },
+    {
+      "file": "26.webp",
+      "bytes": 12850,
+      "sha256": "09f812ec8a4843ce9859a828a3f707d7645738dd7e0649ee0974c63b22be6495"
+    },
+    {
+      "file": "27.webp",
+      "bytes": 12890,
+      "sha256": "6e9ceb995dd3b97ea3d7a9f691c7bf8480dcbcadc0afc3e72f0aa715110c1bb5"
+    },
+    {
+      "file": "28.webp",
+      "bytes": 12878,
+      "sha256": "8126d1a922291906892593afb7f3fee630b243af2780755d7398d362a8509f7b"
+    },
+    {
+      "file": "29.webp",
+      "bytes": 12812,
+      "sha256": "4a4a00d3bc238b425ccefc29e0f6f27658b478affd840f4e2740ee6487944154"
+    },
+    {
+      "file": "30.webp",
+      "bytes": 12816,
+      "sha256": "b63f3b7d8d4ad60461d85f243dd6b0842ffd51ec9b4be0efa95f4237ec8bfbb4"
+    },
+    {
+      "file": "31.webp",
+      "bytes": 12858,
+      "sha256": "fc35f7b5a8e5bfdf60d838c5c62d61c9c24c33592332656a1400f7f11d7ae46e"
+    },
+    {
+      "file": "32.webp",
+      "bytes": 13010,
+      "sha256": "3075b6e1845233dcfd8c103ae7f7bcbc435856b8d70c133099833362cae8305a"
+    },
+    {
+      "file": "33.webp",
+      "bytes": 12904,
+      "sha256": "e39b23e902763f36458cf4fc1218a00e521bd4b7c17c2f255d426a19407edc7c"
+    },
+    {
+      "file": "34.webp",
+      "bytes": 12832,
+      "sha256": "fe39b2785d44f7a59e15637bc0e8d5a8b6c11e9483d88778fb4e32e48ae8a11f"
+    },
+    {
+      "file": "35.webp",
+      "bytes": 12948,
+      "sha256": "aa85e511e60876dc9133f4037062af8084c107f5e8aa15c1f3eba9539b3d894e"
+    },
+    {
+      "file": "36.webp",
+      "bytes": 12872,
+      "sha256": "3d820c2732f46e9d209113cb96a2f24e14327301e88565d94d43b95f99042350"
+    },
+    {
+      "file": "37.webp",
+      "bytes": 12886,
+      "sha256": "59d68baad7972e1f089e725f4d9ad2d4b1e67a83269a183e044cfc93a79046b1"
+    },
+    {
+      "file": "38.webp",
+      "bytes": 12838,
+      "sha256": "fda7d08cae855634f34ff0d646b38d81de4d13b691f3181ad3664e3a516052f3"
+    },
+    {
+      "file": "39.webp",
+      "bytes": 12864,
+      "sha256": "c9dad8cb3bde6248e36462d7b225d05b8977752e47f10ee5325b454333c47be2"
+    },
+    {
+      "file": "40.webp",
+      "bytes": 12738,
+      "sha256": "d4c1b8ec6acf444101626aadffcfd2e38cfb2a75be2d8aaedf3ab45188911298"
+    },
+    {
+      "file": "41.webp",
+      "bytes": 12884,
+      "sha256": "e71aea2ac8f8c4cb252e77b6b77218de2bd28bbe498aa58bb6e180e055864d9f"
+    },
+    {
+      "file": "42.webp",
+      "bytes": 12796,
+      "sha256": "b794ff154d7aa4e378e860a6474d4cb103dc38a5fdd9f208488755ac02643c18"
+    },
+    {
+      "file": "43.webp",
+      "bytes": 12820,
+      "sha256": "31cab886907dd47bab7c9b158463ba811a6adc2e68fb8e5b06a99d2de2e896e2"
+    },
+    {
+      "file": "44.webp",
+      "bytes": 12912,
+      "sha256": "62dd178bd6d4599c23280a95f973fb875433ee333d25816d8483810bbdb8cea5"
+    },
+    {
+      "file": "45.webp",
+      "bytes": 12930,
+      "sha256": "954f00716385463d2a23e00e579619e3876ac3af4135bc3ea6ac2c1e7bad8ba6"
+    },
+    {
+      "file": "46.webp",
+      "bytes": 12794,
+      "sha256": "770872d783b70308e4c6b06584fce404bb3328053ca585f28b96d15ad69b7bde"
+    },
+    {
+      "file": "47.webp",
+      "bytes": 12884,
+      "sha256": "3f32359906c5607cedd918a13f3abd25c1488e610d08761c554ef6ae88a0dc6b"
+    },
+    {
+      "file": "48.webp",
+      "bytes": 12848,
+      "sha256": "0612cfa8d3b2d8db2281de355fb9e61ac03133a0a4e578ac5b331322c1bc465a"
+    },
+    {
+      "file": "49.webp",
+      "bytes": 12902,
+      "sha256": "242d8d0c09a2987e623ee6d2a4a7306842079e5926d44ad364feda167787a46b"
+    },
+    {
+      "file": "50.webp",
+      "bytes": 12814,
+      "sha256": "2beef9da46899082de5923513c5701c60b987f44fa16a8c97f968704a563a38b"
+    },
+    {
+      "file": "51.webp",
+      "bytes": 12730,
+      "sha256": "4a7284451163ee5a5580c7d2599030e202d995b6befe120bcda4d4ff2f84c97f"
+    },
+    {
+      "file": "52.webp",
+      "bytes": 12834,
+      "sha256": "0b3fc201c52ab653ac26710e1a3d96619089da41f9bf0d022b896f9718119bd4"
+    },
+    {
+      "file": "53.webp",
+      "bytes": 12876,
+      "sha256": "dbcd9d7ab14a4b823a44f4d15b30d7f5f37c6e876ba3a5be471768c764135dd8"
+    },
+    {
+      "file": "54.webp",
+      "bytes": 12868,
+      "sha256": "a96b875a200074027fef3a904e25be353821baa5da59f7020a45593138e93213"
+    },
+    {
+      "file": "55.webp",
+      "bytes": 12828,
+      "sha256": "9fc26bc92754ff3334fbcd2b4faf5725a54d5e40793f01652c46881046e97ee5"
+    },
+    {
+      "file": "56.webp",
+      "bytes": 12778,
+      "sha256": "99bb9c73117c2617b7f5de2fa43f2bdb0fc7f4281bbe6d260238ab7290809797"
+    },
+    {
+      "file": "57.webp",
+      "bytes": 12810,
+      "sha256": "ea5a20299a9bf0b48e6b90460cda76a901080b0fdbf50c996e0b17624fd335c5"
+    },
+    {
+      "file": "58.webp",
+      "bytes": 12812,
+      "sha256": "ac7d328a68fe882425cf7e2a8496c713f3a95d52a1acc3d35fb022b5afa5ab83"
+    },
+    {
+      "file": "59.webp",
+      "bytes": 12778,
+      "sha256": "6ac963a3bd5fd0d5dd7db160e64453c55c97f5d43ca09c9072e169ea750922a8"
+    },
+    {
+      "file": "60.webp",
+      "bytes": 12828,
+      "sha256": "991a550d80af70572305f1392187c193355f79c4986ab2d032eea58bf7d94395"
+    },
+    {
+      "file": "61.webp",
+      "bytes": 12774,
+      "sha256": "c5cec44021ba4d0bf4a6613685769c837fcf9a8bd08dcfb0fbf3cea362e12401"
+    },
+    {
+      "file": "62.webp",
+      "bytes": 12788,
+      "sha256": "c20b432bd3f3d841bd201b4f87606d37ec9063c7045cbcae5a9194e3f0ec6c2c"
+    },
+    {
+      "file": "63.webp",
+      "bytes": 12812,
+      "sha256": "bbf691f13181f0055d95404bc2549ec7eef76433c13f594675d6ec9a06c79979"
+    },
+    {
+      "file": "64.webp",
+      "bytes": 12780,
+      "sha256": "e07882395aad58587d052fb29cfccb8af3ed45564003fd31e8eee0f19f50ccef"
+    },
+    {
+      "file": "65.webp",
+      "bytes": 12844,
+      "sha256": "7d7ae615bd1f13529724243f5079aee2768f37635c0a00d460a98c101a4c785a"
+    },
+    {
+      "file": "66.webp",
+      "bytes": 12872,
+      "sha256": "9cd7abb6e9337328d0c54e13300a87b3acf26d588a389abfc42400fd35b400a0"
+    },
+    {
+      "file": "67.webp",
+      "bytes": 12884,
+      "sha256": "d48385919659003d3c35d0777e35e24f04ec533f5986fd1e30c93badbe31612d"
+    },
+    {
+      "file": "68.webp",
+      "bytes": 12834,
+      "sha256": "ff17bf10519f3b02a217f4db178a0872d1e9fe3c5fa2693a9137c853461f136b"
+    },
+    {
+      "file": "69.webp",
+      "bytes": 12736,
+      "sha256": "2610f3cd798695cf277bf7a0e4b70fe4876e3c214ec11fe8171df9fe41181624"
+    },
+    {
+      "file": "70.webp",
+      "bytes": 12814,
+      "sha256": "63fd17d375b4ceced7c5f9b77f636930a9c0482b9c5e2e7ff20199f68377f99e"
+    },
+    {
+      "file": "71.webp",
+      "bytes": 12902,
+      "sha256": "65d85c483936f78c032b78e156a694c003446affb77510e573639426acf6bdb4"
+    },
+    {
+      "file": "72.webp",
+      "bytes": 12844,
+      "sha256": "bca0e2c52253dc57749596130faf8e8a6577692b519e89ebc24bc6cde8ea29e2"
+    },
+    {
+      "file": "73.webp",
+      "bytes": 12852,
+      "sha256": "73e773d436a41704f857306426e5aa75963796632f739db31cca6155aa85f8c1"
+    },
+    {
+      "file": "74.webp",
+      "bytes": 12780,
+      "sha256": "174f0c18eccf204ccdcb25ddd57c3a51832c5be9e6861a003554b61f287eb9af"
+    },
+    {
+      "file": "75.webp",
+      "bytes": 12928,
+      "sha256": "e07f311450bf4ccca490fbb082abb894fc54ca7930b9c6b2b3e489b3f9322365"
+    },
+    {
+      "file": "76.webp",
+      "bytes": 12912,
+      "sha256": "62dd178bd6d4599c23280a95f973fb875433ee333d25816d8483810bbdb8cea5"
+    },
+    {
+      "file": "77.webp",
+      "bytes": 12848,
+      "sha256": "65159a7aefaa17a7fbba735a508253e37b2ea78be2b3f9d3ad2c01cd9a63a0bf"
+    },
+    {
+      "file": "78.webp",
+      "bytes": 12718,
+      "sha256": "1e0e5495b0fd12b1a6ef3c2523cc6b88f3ea87b0ed9e485d485289ae099a4369"
+    },
+    {
+      "file": "79.webp",
+      "bytes": 12910,
+      "sha256": "51be069bd457fb2bcc701dd70065781cec104ebab35d7641e4e0095679a0a603"
+    },
+    {
+      "file": "80.webp",
+      "bytes": 12738,
+      "sha256": "d4c1b8ec6acf444101626aadffcfd2e38cfb2a75be2d8aaedf3ab45188911298"
+    },
+    {
+      "file": "81.webp",
+      "bytes": 12866,
+      "sha256": "57c37526ce4b3c2b9ca264d9a52998483981bd1d61f045fce694416da1a59980"
+    },
+    {
+      "file": "82.webp",
+      "bytes": 12838,
+      "sha256": "fda7d08cae855634f34ff0d646b38d81de4d13b691f3181ad3664e3a516052f3"
+    },
+    {
+      "file": "83.webp",
+      "bytes": 12886,
+      "sha256": "59d68baad7972e1f089e725f4d9ad2d4b1e67a83269a183e044cfc93a79046b1"
+    },
+    {
+      "file": "84.webp",
+      "bytes": 12872,
+      "sha256": "3d820c2732f46e9d209113cb96a2f24e14327301e88565d94d43b95f99042350"
+    },
+    {
+      "file": "85.webp",
+      "bytes": 12914,
+      "sha256": "b8ff56647a07ddb3e4ed99910606027d592025c2df6baec7cf9b0689a2567085"
+    },
+    {
+      "file": "86.webp",
+      "bytes": 12828,
+      "sha256": "0026fd0df0bcf3eb1db63939338938edff13738a327347fa6e8fa4722b677e84"
+    },
+    {
+      "file": "87.webp",
+      "bytes": 12904,
+      "sha256": "e39b23e902763f36458cf4fc1218a00e521bd4b7c17c2f255d426a19407edc7c"
+    },
+    {
+      "file": "88.webp",
+      "bytes": 13010,
+      "sha256": "3075b6e1845233dcfd8c103ae7f7bcbc435856b8d70c133099833362cae8305a"
+    },
+    {
+      "file": "89.webp",
+      "bytes": 12836,
+      "sha256": "fbae8865a6afba45c602df52ef4fec5141b1f108bc5c00e8e595240d5c951ed6"
+    },
+    {
+      "file": "90.webp",
+      "bytes": 12816,
+      "sha256": "b63f3b7d8d4ad60461d85f243dd6b0842ffd51ec9b4be0efa95f4237ec8bfbb4"
+    },
+    {
+      "file": "91.webp",
+      "bytes": 12812,
+      "sha256": "0c4707567abde672056613125860f5307d9c1d7556dc9b109842911b77a16629"
+    },
+    {
+      "file": "92.webp",
+      "bytes": 12878,
+      "sha256": "bd311882f088a6ce8a0a753c4a54799f7c8d7af3a2dfeed414c800e0650f1e6a"
+    },
+    {
+      "file": "93.webp",
+      "bytes": 12890,
+      "sha256": "351746c9dc6d04ceff7c610c7ac6b72a01d28235990a077afaa638618c4b9881"
+    },
+    {
+      "file": "94.webp",
+      "bytes": 12850,
+      "sha256": "90704ee0343ce6163b93211f1e45fe14ff0d147e80ef215d8f62d38d25e8e0bf"
+    },
+    {
+      "file": "95.webp",
+      "bytes": 12844,
+      "sha256": "df0bd0d7652595337dacc6db34047691462a911f01d7992d64a542ccb059478d"
+    },
+    {
+      "file": "96.webp",
+      "bytes": 12660,
+      "sha256": "06e04d76c36a08ee68834e0310c039dd79f17d2b22a0398c5e4329b799ed1cb9"
+    },
+    {
+      "file": "97.webp",
+      "bytes": 12842,
+      "sha256": "60f2a686a217dc7a4c2235da97a03c2e70dce3ed169e6f8b8db8429d21aa8c70"
+    },
+    {
+      "file": "98.webp",
+      "bytes": 12778,
+      "sha256": "86dcf3668a0a5f9e17e3c347435d6857052226baa1cf9b259ce6e64e202bf824"
+    },
+    {
+      "file": "99.webp",
+      "bytes": 12886,
+      "sha256": "6ea969721db53da10cb2e2a1cdd617b67b13074d2f53fd1536aefd613e0f8015"
+    },
+    {
+      "file": "100.webp",
+      "bytes": 12806,
+      "sha256": "b28480aece0599752476b9f11a23989fe836c3012ed41e7e1515d0cc27d34b4a"
+    },
+    {
+      "file": "101.webp",
+      "bytes": 12822,
+      "sha256": "c8761875aae35d493f5a5bb42786abcde6d88182f82be35fba6ffc14f4ca20a4"
+    },
+    {
+      "file": "102.webp",
+      "bytes": 12728,
+      "sha256": "28a9de670253b532ea379a06516908f41fbb1643e3ea1948c921222dab76d34e"
+    },
+    {
+      "file": "103.webp",
+      "bytes": 12792,
+      "sha256": "7b3f1e224d14e6f9106d8d4d551155c6f432b8fbf1e3b32a29bfb825389f80f2"
+    },
+    {
+      "file": "104.webp",
+      "bytes": 12740,
+      "sha256": "e8ef2994b722f950505e52c2a4399a925498d254d6d4ebe3b8fd1530aa2a78aa"
+    },
+    {
+      "file": "105.webp",
+      "bytes": 12746,
+      "sha256": "bb47942e14b9eeebb8aa0d2e60628f507acbdef9538b058327e7e4abd7cc8c41"
+    },
+    {
+      "file": "106.webp",
+      "bytes": 12810,
+      "sha256": "0c0e03fd1c7e5b1bda49223410d2a0d55eb556d57dc98992fde0fc83a9673c4a"
+    },
+    {
+      "file": "107.webp",
+      "bytes": 12858,
+      "sha256": "3718a1fac7aa5c33c33229877d40510a27f8ec3f72308b53f0d6f688a474bfa6"
+    },
+    {
+      "file": "108.webp",
+      "bytes": 12680,
+      "sha256": "4a1e84bf1c508ee4c7e0241c08c9677ae1d6d566e8acabb2f8d7c1bd5a1b1a70"
+    },
+    {
+      "file": "109.webp",
+      "bytes": 12776,
+      "sha256": "b122db7483a342a2e503d90d3054f7dcac3a945c2dfb53cf1bae03cbacdc6db2"
+    },
+    {
+      "file": "110.webp",
+      "bytes": 12630,
+      "sha256": "8e65fadea53bd699771afd683b845d017398b1d9272c1fb6c1fb866bc3d9f81d"
+    },
+    {
+      "file": "111.webp",
+      "bytes": 12738,
+      "sha256": "7c9f8c934324618b84b6926a0ad11f401c53a231385667745c2b97dabb0464d5"
+    },
+    {
+      "file": "112.webp",
+      "bytes": 12678,
+      "sha256": "8ce360d12167b57b568d1e7b1ba8dac79fefe8c54b50a23c09ddd8d2d5ba5bb9"
+    },
+    {
+      "file": "113.webp",
+      "bytes": 12742,
+      "sha256": "f330db3d09a0d51c5eaed2b9b2dd74fba80a7381e1e4b84791887d8e0a16f044"
+    },
+    {
+      "file": "114.webp",
+      "bytes": 12720,
+      "sha256": "455a55e73c1ff848356a7a478a9acea2fe58a4c455c3b8713ed1678142a387b0"
+    },
+    {
+      "file": "115.webp",
+      "bytes": 12694,
+      "sha256": "340fa1b71c3430ce83bda0eac2ed92a7e5f1d00859c92ab0d39e1055b2f06e7c"
+    },
+    {
+      "file": "116.webp",
+      "bytes": 12718,
+      "sha256": "3b38cbb591a4de851cdff63268f05778d3008f726224cd862676bd2cca37d911"
+    },
+    {
+      "file": "117.webp",
+      "bytes": 12614,
+      "sha256": "30069446935d7c7b442dea68f2240decdd28173dc486923e9e84e0f469d8064a"
+    },
+    {
+      "file": "118.webp",
+      "bytes": 12620,
+      "sha256": "cc97d9265a75c36f20dc873e738f6b0c3f3e76615c2f10daf130afde3652d216"
+    },
+    {
+      "file": "119.webp",
+      "bytes": 12660,
+      "sha256": "5d6bf4def125491df46b578fcda7656aa1673d309af8961fd48c151191419647"
+    },
+    {
+      "file": "120.webp",
+      "bytes": 12740,
+      "sha256": "85651d469b0a6a5dc9ed408f26d2476581cf356036463937cb9e23c7ad7348e7"
+    }
+  ],
+  "encoding": {
+    "format": "WebP static images",
+    "quality": 85,
+    "method": 6,
+    "rasterRetouching": false
+  },
+  "sourceComponentNames": [
+    "mat_amber_resin_part_0",
+    "mat_clear_acrylic_part_0",
+    "mat_clear_acrylic_part_1",
+    "mat_clear_acrylic_part_2",
+    "mat_plastic_black_part_0",
+    "mat_plastic_black_part_1",
+    "mat_plastic_black_part_2",
+    "mat_plastic_black_part_3",
+    "mat_plastic_black_part_4",
+    "mat_plastic_black_part_5",
+    "mat_printed_white_part_0",
+    "mat_printed_white_part_1",
+    "mat_printed_white_part_2",
+    "mat_printed_white_part_3",
+    "mat_printed_white_part_4",
+    "mat_printed_white_part_5",
+    "mat_printed_white_part_6",
+    "mat_printed_white_part_7",
+    "mat_printed_white_part_8",
+    "mat_printed_white_part_9",
+    "mat_printed_white_part_10",
+    "mat_printed_white_part_11",
+    "mat_printed_white_part_12",
+    "mat_printed_white_part_13",
+    "mat_printed_white_part_14",
+    "mat_printed_white_part_15",
+    "mat_printed_white_part_16",
+    "mat_steel_part_0",
+    "mat_steel_part_1",
+    "mat_steel_part_2",
+    "mat_steel_part_3",
+    "mat_steel_part_4",
+    "mat_steel_part_5",
+    "mat_steel_part_6",
+    "mat_steel_part_7",
+    "mat_steel_part_8",
+    "mat_steel_part_9",
+    "mat_steel_part_10",
+    "mat_steel_part_11",
+    "mat_steel_part_12",
+    "mat_steel_part_13",
+    "mat_steel_part_14",
+    "mat_steel_part_15",
+    "mat_steel_part_16",
+    "mat_steel_part_17",
+    "mat_steel_part_18",
+    "mat_steel_part_19",
+    "mat_steel_part_20",
+    "mat_steel_part_21",
+    "mat_steel_part_22",
+    "mat_steel_part_23",
+    "mat_steel_part_24",
+    "mat_steel_part_25",
+    "mat_steel_part_26",
+    "mat_steel_part_27",
+    "mat_steel_part_28",
+    "mat_steel_part_29",
+    "mat_steel_part_30"
+  ]
+}

@@ -1,0 +1,2036 @@
+{
+  "project": "materialTest",
+  "width": 640,
+  "height": 427,
+  "frameCount": 145,
+  "samples": 48,
+  "cameraOrthoScale": 5.550699710845947,
+  "cameraBaseScale": 5.550699710845947,
+  "mode": "tensile",
+  "sourceLayout": "Original approved cover source pose",
+  "motionRevision": "functional-motion-20260913",
+  "motion": {
+    "mode": "tensile",
+    "source": "Photo-based single-column instrument reconstruction in material-test/build_material_test.py; actual source strip and coaxial spring grips.",
+    "demonstration": "Qualitative extension, local necking and rupture of the displayed fabric strip. Not a measured stress-strain curve or fracture load; machine proportions are photo inferred.",
+    "axis": [
+      0,
+      0,
+      1
+    ],
+    "fixedLowerFixture": true,
+    "initialSpecimenSpan": 0.361080527305603,
+    "upperFixtureTravel": 0.235,
+    "fractureProgress": 0.74,
+    "retainedHalves": 2,
+    "motionGroups": [
+      {
+        "name": "upper_crosshead_and_grip",
+        "parts": [
+          "MaterialTest_black_crosshead",
+          "MaterialTest_crosshead_fastener",
+          "MaterialTest_crosshead_fastener.001",
+          "MaterialTest_upper_load_cell",
+          "MaterialTest_upper_load_cell_top",
+          "MaterialTest_load_cell_socket",
+          "MaterialTest_upper_coupling",
+          "MaterialTest_upper_knurled_ring",
+          "MaterialTest_upper_cross_pin",
+          "MaterialTest_collar_knurl.050",
+          "MaterialTest_collar_knurl.051",
+          "MaterialTest_collar_knurl.052",
+          "MaterialTest_collar_knurl.053",
+          "MaterialTest_collar_knurl.054",
+          "MaterialTest_collar_knurl.055",
+          "MaterialTest_collar_knurl.056",
+          "MaterialTest_collar_knurl.057",
+          "MaterialTest_collar_knurl.058",
+          "MaterialTest_collar_knurl.059",
+          "MaterialTest_collar_knurl.060",
+          "MaterialTest_collar_knurl.061",
+          "MaterialTest_collar_knurl.062",
+          "MaterialTest_collar_knurl.063",
+          "MaterialTest_collar_knurl.064",
+          "MaterialTest_collar_knurl.065",
+          "MaterialTest_collar_knurl.066",
+          "MaterialTest_collar_knurl.067",
+          "MaterialTest_collar_knurl.068",
+          "MaterialTest_collar_knurl.069",
+          "MaterialTest_collar_knurl.070",
+          "MaterialTest_collar_knurl.071",
+          "MaterialTest_collar_knurl.072",
+          "MaterialTest_collar_knurl.073",
+          "MaterialTest_collar_knurl.074",
+          "MaterialTest_collar_knurl.075",
+          "MaterialTest_collar_knurl.076",
+          "MaterialTest_collar_knurl.077",
+          "MaterialTest_collar_knurl.078",
+          "MaterialTest_collar_knurl.079",
+          "MaterialTest_collar_knurl.080",
+          "MaterialTest_collar_knurl.081",
+          "MaterialTest_collar_knurl.082",
+          "MaterialTest_collar_knurl.083",
+          "MaterialTest_collar_knurl.084",
+          "MaterialTest_collar_knurl.085",
+          "MaterialTest_collar_knurl.086",
+          "MaterialTest_collar_knurl.087",
+          "MaterialTest_collar_knurl.088",
+          "MaterialTest_collar_knurl.089",
+          "MaterialTest_collar_knurl.090",
+          "MaterialTest_collar_knurl.091",
+          "MaterialTest_collar_knurl.092",
+          "MaterialTest_collar_knurl.093",
+          "MaterialTest_collar_knurl.094",
+          "MaterialTest_collar_knurl.095",
+          "MaterialTest_collar_knurl.096",
+          "MaterialTest_collar_knurl.097",
+          "MaterialTest_collar_knurl.098",
+          "MaterialTest_collar_knurl.099",
+          "MaterialTest_curved_spring_grip_cheek",
+          "MaterialTest_sliding_jaw_wedge",
+          "MaterialTest_diagonal_jaw_return_spring",
+          "MaterialTest_jaw_spring_anchor",
+          "MaterialTest_jaw_spring_anchor.001",
+          "MaterialTest_jaw_spring_anchor.002",
+          "MaterialTest_curved_spring_grip_cheek.001",
+          "MaterialTest_sliding_jaw_wedge.001",
+          "MaterialTest_diagonal_jaw_return_spring.001",
+          "MaterialTest_jaw_spring_anchor.003",
+          "MaterialTest_jaw_spring_anchor.004",
+          "MaterialTest_jaw_spring_anchor.005",
+          "MaterialTest_grip_top_bridge",
+          "MaterialTest_grip_bridge_fastener",
+          "MaterialTest_grip_bridge_fastener.001"
+        ],
+        "axis": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "name": "specimen_deformation",
+        "parts": [
+          "Functional tensile specimen \u2014 two retained fracture halves"
+        ]
+      }
+    ],
+    "specimenEndPlanes": [
+      1.2362533807754517,
+      1.5973339080810547
+    ],
+    "arbitrarySeek": true,
+    "sourceMatingContacts": "The source crosshead remains at its existing bellows/column guide interface while sliding vertically; gripped specimen ends remain within the source jaws."
+  },
+  "cameraBoundsSamples": 121,
+  "cameraMaximumScale": 5.550699710845947,
+  "cameraTracking": "Original source camera position and direction",
+  "cameraLocation": [
+    5.581137180328369,
+    -9.487800598144531,
+    6.190881252288818
+  ],
+  "cameraRotation": [
+    1.1596143245697021,
+    4.4814473909582375e-08,
+    0.5317239761352539
+  ],
+  "timings": [
+    {
+      "index": 0,
+      "seconds": 1.453,
+      "bytes": 262228
+    },
+    {
+      "index": 1,
+      "seconds": 2.016,
+      "bytes": 262008
+    },
+    {
+      "index": 2,
+      "seconds": 1.672,
+      "bytes": 262222
+    },
+    {
+      "index": 3,
+      "seconds": 1.39,
+      "bytes": 262249
+    },
+    {
+      "index": 4,
+      "seconds": 1.266,
+      "bytes": 262294
+    },
+    {
+      "index": 5,
+      "seconds": 1.797,
+      "bytes": 262321
+    },
+    {
+      "index": 6,
+      "seconds": 1.39,
+      "bytes": 262320
+    },
+    {
+      "index": 7,
+      "seconds": 1.235,
+      "bytes": 262366
+    },
+    {
+      "index": 8,
+      "seconds": 1.375,
+      "bytes": 262269
+    },
+    {
+      "index": 9,
+      "seconds": 1.844,
+      "bytes": 262364
+    },
+    {
+      "index": 10,
+      "seconds": 1.875,
+      "bytes": 262297
+    },
+    {
+      "index": 11,
+      "seconds": 1.562,
+      "bytes": 262305
+    },
+    {
+      "index": 12,
+      "seconds": 1.484,
+      "bytes": 262383
+    },
+    {
+      "index": 13,
+      "seconds": 1.766,
+      "bytes": 262408
+    },
+    {
+      "index": 14,
+      "seconds": 1.516,
+      "bytes": 262352
+    },
+    {
+      "index": 15,
+      "seconds": 1.312,
+      "bytes": 262232
+    },
+    {
+      "index": 16,
+      "seconds": 1.469,
+      "bytes": 262171
+    },
+    {
+      "index": 17,
+      "seconds": 1.312,
+      "bytes": 262204
+    },
+    {
+      "index": 18,
+      "seconds": 1.203,
+      "bytes": 262067
+    },
+    {
+      "index": 19,
+      "seconds": 1.313,
+      "bytes": 262463
+    },
+    {
+      "index": 20,
+      "seconds": 1.734,
+      "bytes": 262075
+    },
+    {
+      "index": 21,
+      "seconds": 1.594,
+      "bytes": 262250
+    },
+    {
+      "index": 22,
+      "seconds": 1.187,
+      "bytes": 262267
+    },
+    {
+      "index": 23,
+      "seconds": 1.375,
+      "bytes": 262152
+    },
+    {
+      "index": 24,
+      "seconds": 1.5,
+      "bytes": 262093
+    },
+    {
+      "index": 25,
+      "seconds": 1.86,
+      "bytes": 262027
+    },
+    {
+      "index": 26,
+      "seconds": 1.625,
+      "bytes": 262277
+    },
+    {
+      "index": 27,
+      "seconds": 1.328,
+      "bytes": 262145
+    },
+    {
+      "index": 28,
+      "seconds": 1.515,
+      "bytes": 262111
+    },
+    {
+      "index": 29,
+      "seconds": 1.391,
+      "bytes": 262379
+    },
+    {
+      "index": 30,
+      "seconds": 1.266,
+      "bytes": 262338
+    },
+    {
+      "index": 31,
+      "seconds": 1.563,
+      "bytes": 262174
+    },
+    {
+      "index": 32,
+      "seconds": 1.984,
+      "bytes": 262292
+    },
+    {
+      "index": 33,
+      "seconds": 1.813,
+      "bytes": 262279
+    },
+    {
+      "index": 34,
+      "seconds": 1.5,
+      "bytes": 262430
+    },
+    {
+      "index": 35,
+      "seconds": 1.312,
+      "bytes": 262416
+    },
+    {
+      "index": 36,
+      "seconds": 1.36,
+      "bytes": 262258
+    },
+    {
+      "index": 37,
+      "seconds": 1.812,
+      "bytes": 262191
+    },
+    {
+      "index": 38,
+      "seconds": 1.703,
+      "bytes": 262406
+    },
+    {
+      "index": 39,
+      "seconds": 1.547,
+      "bytes": 262285
+    },
+    {
+      "index": 40,
+      "seconds": 1.703,
+      "bytes": 262028
+    },
+    {
+      "index": 41,
+      "seconds": 1.453,
+      "bytes": 262383
+    },
+    {
+      "index": 42,
+      "seconds": 1.313,
+      "bytes": 262358
+    },
+    {
+      "index": 43,
+      "seconds": 1.531,
+      "bytes": 262478
+    },
+    {
+      "index": 44,
+      "seconds": 1.172,
+      "bytes": 262414
+    },
+    {
+      "index": 45,
+      "seconds": 1.094,
+      "bytes": 262555
+    },
+    {
+      "index": 46,
+      "seconds": 1.094,
+      "bytes": 262416
+    },
+    {
+      "index": 47,
+      "seconds": 1.156,
+      "bytes": 262309
+    },
+    {
+      "index": 48,
+      "seconds": 1.125,
+      "bytes": 262314
+    },
+    {
+      "index": 49,
+      "seconds": 1.125,
+      "bytes": 262420
+    },
+    {
+      "index": 50,
+      "seconds": 1.062,
+      "bytes": 262394
+    },
+    {
+      "index": 51,
+      "seconds": 1.11,
+      "bytes": 262244
+    },
+    {
+      "index": 52,
+      "seconds": 1.062,
+      "bytes": 262477
+    },
+    {
+      "index": 53,
+      "seconds": 1.063,
+      "bytes": 262297
+    },
+    {
+      "index": 54,
+      "seconds": 1.094,
+      "bytes": 262387
+    },
+    {
+      "index": 55,
+      "seconds": 1.125,
+      "bytes": 262428
+    },
+    {
+      "index": 56,
+      "seconds": 1.14,
+      "bytes": 262204
+    },
+    {
+      "index": 57,
+      "seconds": 1.125,
+      "bytes": 262406
+    },
+    {
+      "index": 58,
+      "seconds": 1.141,
+      "bytes": 262439
+    },
+    {
+      "index": 59,
+      "seconds": 1.14,
+      "bytes": 262270
+    },
+    {
+      "index": 60,
+      "seconds": 1.11,
+      "bytes": 262302
+    },
+    {
+      "index": 61,
+      "seconds": 1.156,
+      "bytes": 262133
+    },
+    {
+      "index": 62,
+      "seconds": 1.094,
+      "bytes": 262247
+    },
+    {
+      "index": 63,
+      "seconds": 1.094,
+      "bytes": 262569
+    },
+    {
+      "index": 64,
+      "seconds": 1.14,
+      "bytes": 262474
+    },
+    {
+      "index": 65,
+      "seconds": 1.219,
+      "bytes": 262312
+    },
+    {
+      "index": 66,
+      "seconds": 1.125,
+      "bytes": 262378
+    },
+    {
+      "index": 67,
+      "seconds": 1.141,
+      "bytes": 262238
+    },
+    {
+      "index": 68,
+      "seconds": 1.125,
+      "bytes": 262406
+    },
+    {
+      "index": 69,
+      "seconds": 1.375,
+      "bytes": 262286
+    },
+    {
+      "index": 70,
+      "seconds": 1.484,
+      "bytes": 262437
+    },
+    {
+      "index": 71,
+      "seconds": 1.437,
+      "bytes": 262300
+    },
+    {
+      "index": 72,
+      "seconds": 1.625,
+      "bytes": 262284
+    },
+    {
+      "index": 73,
+      "seconds": 1.719,
+      "bytes": 262299
+    },
+    {
+      "index": 74,
+      "seconds": 1.406,
+      "bytes": 262193
+    },
+    {
+      "index": 75,
+      "seconds": 1.407,
+      "bytes": 262192
+    },
+    {
+      "index": 76,
+      "seconds": 1.328,
+      "bytes": 262159
+    },
+    {
+      "index": 77,
+      "seconds": 1.094,
+      "bytes": 262316
+    },
+    {
+      "index": 78,
+      "seconds": 1.125,
+      "bytes": 262313
+    },
+    {
+      "index": 79,
+      "seconds": 1.094,
+      "bytes": 262166
+    },
+    {
+      "index": 80,
+      "seconds": 1.156,
+      "bytes": 262084
+    },
+    {
+      "index": 81,
+      "seconds": 1.172,
+      "bytes": 262173
+    },
+    {
+      "index": 82,
+      "seconds": 1.156,
+      "bytes": 262285
+    },
+    {
+      "index": 83,
+      "seconds": 1.219,
+      "bytes": 262435
+    },
+    {
+      "index": 84,
+      "seconds": 1.297,
+      "bytes": 262281
+    },
+    {
+      "index": 85,
+      "seconds": 1.375,
+      "bytes": 262331
+    },
+    {
+      "index": 86,
+      "seconds": 1.312,
+      "bytes": 262337
+    },
+    {
+      "index": 87,
+      "seconds": 1.406,
+      "bytes": 262352
+    },
+    {
+      "index": 88,
+      "seconds": 1.532,
+      "bytes": 262226
+    },
+    {
+      "index": 89,
+      "seconds": 1.75,
+      "bytes": 262408
+    },
+    {
+      "index": 90,
+      "seconds": 1.562,
+      "bytes": 262492
+    },
+    {
+      "index": 91,
+      "seconds": 1.313,
+      "bytes": 262283
+    },
+    {
+      "index": 92,
+      "seconds": 1.312,
+      "bytes": 262389
+    },
+    {
+      "index": 93,
+      "seconds": 1.328,
+      "bytes": 262397
+    },
+    {
+      "index": 94,
+      "seconds": 1.391,
+      "bytes": 262497
+    },
+    {
+      "index": 95,
+      "seconds": 1.422,
+      "bytes": 262476
+    },
+    {
+      "index": 96,
+      "seconds": 1.531,
+      "bytes": 262287
+    },
+    {
+      "index": 97,
+      "seconds": 1.391,
+      "bytes": 262188
+    },
+    {
+      "index": 98,
+      "seconds": 1.296,
+      "bytes": 262398
+    },
+    {
+      "index": 99,
+      "seconds": 1.344,
+      "bytes": 262327
+    },
+    {
+      "index": 100,
+      "seconds": 1.406,
+      "bytes": 262045
+    },
+    {
+      "index": 101,
+      "seconds": 1.656,
+      "bytes": 262136
+    },
+    {
+      "index": 102,
+      "seconds": 1.516,
+      "bytes": 262119
+    },
+    {
+      "index": 103,
+      "seconds": 1.437,
+      "bytes": 262331
+    },
+    {
+      "index": 104,
+      "seconds": 1.547,
+      "bytes": 262290
+    },
+    {
+      "index": 105,
+      "seconds": 1.844,
+      "bytes": 262326
+    },
+    {
+      "index": 106,
+      "seconds": 1.5,
+      "bytes": 262448
+    },
+    {
+      "index": 107,
+      "seconds": 1.359,
+      "bytes": 262428
+    },
+    {
+      "index": 108,
+      "seconds": 1.359,
+      "bytes": 262445
+    },
+    {
+      "index": 109,
+      "seconds": 1.329,
+      "bytes": 262461
+    },
+    {
+      "index": 110,
+      "seconds": 1.359,
+      "bytes": 262371
+    },
+    {
+      "index": 111,
+      "seconds": 1.266,
+      "bytes": 262268
+    },
+    {
+      "index": 112,
+      "seconds": 1.25,
+      "bytes": 262273
+    },
+    {
+      "index": 113,
+      "seconds": 1.281,
+      "bytes": 262294
+    },
+    {
+      "index": 114,
+      "seconds": 1.328,
+      "bytes": 262218
+    },
+    {
+      "index": 115,
+      "seconds": 1.297,
+      "bytes": 262317
+    },
+    {
+      "index": 116,
+      "seconds": 1.406,
+      "bytes": 262323
+    },
+    {
+      "index": 117,
+      "seconds": 1.281,
+      "bytes": 262214
+    },
+    {
+      "index": 118,
+      "seconds": 1.36,
+      "bytes": 262270
+    },
+    {
+      "index": 119,
+      "seconds": 1.39,
+      "bytes": 262390
+    },
+    {
+      "index": 120,
+      "seconds": 1.485,
+      "bytes": 262184
+    },
+    {
+      "index": 121,
+      "seconds": 1.5,
+      "bytes": 262312
+    },
+    {
+      "index": 122,
+      "seconds": 1.328,
+      "bytes": 262245
+    },
+    {
+      "index": 123,
+      "seconds": 1.375,
+      "bytes": 262321
+    },
+    {
+      "index": 124,
+      "seconds": 1.39,
+      "bytes": 262613
+    },
+    {
+      "index": 125,
+      "seconds": 1.406,
+      "bytes": 262256
+    },
+    {
+      "index": 126,
+      "seconds": 1.469,
+      "bytes": 262182
+    },
+    {
+      "index": 127,
+      "seconds": 1.422,
+      "bytes": 262265
+    },
+    {
+      "index": 128,
+      "seconds": 1.5,
+      "bytes": 262409
+    },
+    {
+      "index": 129,
+      "seconds": 1.391,
+      "bytes": 262364
+    },
+    {
+      "index": 130,
+      "seconds": 1.359,
+      "bytes": 262367
+    },
+    {
+      "index": 131,
+      "seconds": 1.375,
+      "bytes": 262370
+    },
+    {
+      "index": 132,
+      "seconds": 1.406,
+      "bytes": 262475
+    },
+    {
+      "index": 133,
+      "seconds": 1.375,
+      "bytes": 262423
+    },
+    {
+      "index": 134,
+      "seconds": 1.344,
+      "bytes": 262278
+    },
+    {
+      "index": 135,
+      "seconds": 1.453,
+      "bytes": 262344
+    },
+    {
+      "index": 136,
+      "seconds": 1.39,
+      "bytes": 262312
+    },
+    {
+      "index": 137,
+      "seconds": 1.328,
+      "bytes": 262282
+    },
+    {
+      "index": 138,
+      "seconds": 1.25,
+      "bytes": 262344
+    },
+    {
+      "index": 139,
+      "seconds": 1.266,
+      "bytes": 262344
+    },
+    {
+      "index": 140,
+      "seconds": 1.266,
+      "bytes": 262461
+    },
+    {
+      "index": 141,
+      "seconds": 1.265,
+      "bytes": 262017
+    },
+    {
+      "index": 142,
+      "seconds": 1.203,
+      "bytes": 262206
+    },
+    {
+      "index": 143,
+      "seconds": 1.172,
+      "bytes": 262256
+    },
+    {
+      "index": 144,
+      "seconds": 1.172,
+      "bytes": 262299
+    }
+  ],
+  "totalSeconds": 202.0,
+  "baseCoverSource": {
+    "project": "materialTest",
+    "source": null,
+    "sourceSha256": null,
+    "renderer": "tools/editorial-render/render_catalog.py",
+    "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+    "builder": "tools/editorial-render/material-test/build_material_test.py",
+    "builderSha256": "06a60961b3000d08bcf96c16f912687fec104fca9f3b6d2da44f11c48a3e39cb",
+    "sourceMeshFaceCounts": {
+      "MaterialTest_sloped_base_shell": 122,
+      "MaterialTest_base_foot": 242,
+      "MaterialTest_base_foot.001": 242,
+      "MaterialTest_base_foot.002": 242,
+      "MaterialTest_base_foot.003": 242,
+      "MaterialTest_single_column_back_shell": 98,
+      "MaterialTest_column_face_border": 98,
+      "MaterialTest_column_face_border.001": 98,
+      "MaterialTest_column_top_cap": 98,
+      "MaterialTest_bellows_shadow_face": 98,
+      "MaterialTest_accordion_folded_front": 442,
+      "MaterialTest_side_scale_recess": 6,
+      "MaterialTest_yellow_travel_marker": 98,
+      "MaterialTest_travel_marker_knob": 242,
+      "MaterialTest_yellow_travel_marker.001": 98,
+      "MaterialTest_travel_marker_knob.001": 242,
+      "MaterialTest_black_crosshead": 98,
+      "MaterialTest_crosshead_fastener": 242,
+      "MaterialTest_crosshead_fastener.001": 242,
+      "MaterialTest_upper_load_cell": 242,
+      "MaterialTest_upper_load_cell_top": 242,
+      "MaterialTest_load_cell_socket": 242,
+      "MaterialTest_upper_coupling": 242,
+      "MaterialTest_upper_knurled_ring": 242,
+      "MaterialTest_upper_cross_pin": 242,
+      "MaterialTest_lower_mount_gasket": 98,
+      "MaterialTest_lower_machined_plate": 98,
+      "MaterialTest_mount_plate_bolt": 122,
+      "MaterialTest_mount_plate_bolt.001": 122,
+      "MaterialTest_mount_plate_bolt.002": 122,
+      "MaterialTest_mount_plate_bolt.003": 122,
+      "MaterialTest_lower_fixed_coupler": 242,
+      "MaterialTest_lower_coupler_lock_ring": 242,
+      "MaterialTest_lower_lock_pin": 242,
+      "MaterialTest_lower_grip_stem": 242,
+      "MaterialTest_collar_knurl": 80,
+      "MaterialTest_collar_knurl.001": 80,
+      "MaterialTest_collar_knurl.002": 80,
+      "MaterialTest_collar_knurl.003": 80,
+      "MaterialTest_collar_knurl.004": 80,
+      "MaterialTest_collar_knurl.005": 80,
+      "MaterialTest_collar_knurl.006": 80,
+      "MaterialTest_collar_knurl.007": 80,
+      "MaterialTest_collar_knurl.008": 80,
+      "MaterialTest_collar_knurl.009": 80,
+      "MaterialTest_collar_knurl.010": 80,
+      "MaterialTest_collar_knurl.011": 80,
+      "MaterialTest_collar_knurl.012": 80,
+      "MaterialTest_collar_knurl.013": 80,
+      "MaterialTest_collar_knurl.014": 80,
+      "MaterialTest_collar_knurl.015": 80,
+      "MaterialTest_collar_knurl.016": 80,
+      "MaterialTest_collar_knurl.017": 80,
+      "MaterialTest_collar_knurl.018": 80,
+      "MaterialTest_collar_knurl.019": 80,
+      "MaterialTest_collar_knurl.020": 80,
+      "MaterialTest_collar_knurl.021": 80,
+      "MaterialTest_collar_knurl.022": 80,
+      "MaterialTest_collar_knurl.023": 80,
+      "MaterialTest_collar_knurl.024": 80,
+      "MaterialTest_collar_knurl.025": 80,
+      "MaterialTest_collar_knurl.026": 80,
+      "MaterialTest_collar_knurl.027": 80,
+      "MaterialTest_collar_knurl.028": 80,
+      "MaterialTest_collar_knurl.029": 80,
+      "MaterialTest_collar_knurl.030": 80,
+      "MaterialTest_collar_knurl.031": 80,
+      "MaterialTest_collar_knurl.032": 80,
+      "MaterialTest_collar_knurl.033": 80,
+      "MaterialTest_collar_knurl.034": 80,
+      "MaterialTest_collar_knurl.035": 80,
+      "MaterialTest_collar_knurl.036": 80,
+      "MaterialTest_collar_knurl.037": 80,
+      "MaterialTest_collar_knurl.038": 80,
+      "MaterialTest_collar_knurl.039": 80,
+      "MaterialTest_collar_knurl.040": 80,
+      "MaterialTest_collar_knurl.041": 80,
+      "MaterialTest_collar_knurl.042": 80,
+      "MaterialTest_collar_knurl.043": 80,
+      "MaterialTest_collar_knurl.044": 80,
+      "MaterialTest_collar_knurl.045": 80,
+      "MaterialTest_collar_knurl.046": 80,
+      "MaterialTest_collar_knurl.047": 80,
+      "MaterialTest_collar_knurl.048": 80,
+      "MaterialTest_collar_knurl.049": 80,
+      "MaterialTest_collar_knurl.050": 80,
+      "MaterialTest_collar_knurl.051": 80,
+      "MaterialTest_collar_knurl.052": 80,
+      "MaterialTest_collar_knurl.053": 80,
+      "MaterialTest_collar_knurl.054": 80,
+      "MaterialTest_collar_knurl.055": 80,
+      "MaterialTest_collar_knurl.056": 80,
+      "MaterialTest_collar_knurl.057": 80,
+      "MaterialTest_collar_knurl.058": 80,
+      "MaterialTest_collar_knurl.059": 80,
+      "MaterialTest_collar_knurl.060": 80,
+      "MaterialTest_collar_knurl.061": 80,
+      "MaterialTest_collar_knurl.062": 80,
+      "MaterialTest_collar_knurl.063": 80,
+      "MaterialTest_collar_knurl.064": 80,
+      "MaterialTest_collar_knurl.065": 80,
+      "MaterialTest_collar_knurl.066": 80,
+      "MaterialTest_collar_knurl.067": 80,
+      "MaterialTest_collar_knurl.068": 80,
+      "MaterialTest_collar_knurl.069": 80,
+      "MaterialTest_collar_knurl.070": 80,
+      "MaterialTest_collar_knurl.071": 80,
+      "MaterialTest_collar_knurl.072": 80,
+      "MaterialTest_collar_knurl.073": 80,
+      "MaterialTest_collar_knurl.074": 80,
+      "MaterialTest_collar_knurl.075": 80,
+      "MaterialTest_collar_knurl.076": 80,
+      "MaterialTest_collar_knurl.077": 80,
+      "MaterialTest_collar_knurl.078": 80,
+      "MaterialTest_collar_knurl.079": 80,
+      "MaterialTest_collar_knurl.080": 80,
+      "MaterialTest_collar_knurl.081": 80,
+      "MaterialTest_collar_knurl.082": 80,
+      "MaterialTest_collar_knurl.083": 80,
+      "MaterialTest_collar_knurl.084": 80,
+      "MaterialTest_collar_knurl.085": 80,
+      "MaterialTest_collar_knurl.086": 80,
+      "MaterialTest_collar_knurl.087": 80,
+      "MaterialTest_collar_knurl.088": 80,
+      "MaterialTest_collar_knurl.089": 80,
+      "MaterialTest_collar_knurl.090": 80,
+      "MaterialTest_collar_knurl.091": 80,
+      "MaterialTest_collar_knurl.092": 80,
+      "MaterialTest_collar_knurl.093": 80,
+      "MaterialTest_collar_knurl.094": 80,
+      "MaterialTest_collar_knurl.095": 80,
+      "MaterialTest_collar_knurl.096": 80,
+      "MaterialTest_collar_knurl.097": 80,
+      "MaterialTest_collar_knurl.098": 80,
+      "MaterialTest_collar_knurl.099": 80,
+      "MaterialTest_curved_spring_grip_cheek": 174,
+      "MaterialTest_sliding_jaw_wedge": 98,
+      "MaterialTest_diagonal_jaw_return_spring": 1456,
+      "MaterialTest_jaw_spring_anchor": 122,
+      "MaterialTest_jaw_spring_anchor.001": 122,
+      "MaterialTest_jaw_spring_anchor.002": 122,
+      "MaterialTest_curved_spring_grip_cheek.001": 174,
+      "MaterialTest_sliding_jaw_wedge.001": 98,
+      "MaterialTest_diagonal_jaw_return_spring.001": 1456,
+      "MaterialTest_jaw_spring_anchor.003": 122,
+      "MaterialTest_jaw_spring_anchor.004": 122,
+      "MaterialTest_jaw_spring_anchor.005": 122,
+      "MaterialTest_grip_top_bridge": 98,
+      "MaterialTest_grip_bridge_fastener": 122,
+      "MaterialTest_grip_bridge_fastener.001": 122,
+      "MaterialTest_curved_spring_grip_cheek.002": 174,
+      "MaterialTest_sliding_jaw_wedge.002": 98,
+      "MaterialTest_diagonal_jaw_return_spring.002": 1456,
+      "MaterialTest_jaw_spring_anchor.006": 122,
+      "MaterialTest_jaw_spring_anchor.007": 122,
+      "MaterialTest_jaw_spring_anchor.008": 122,
+      "MaterialTest_curved_spring_grip_cheek.003": 174,
+      "MaterialTest_sliding_jaw_wedge.003": 98,
+      "MaterialTest_diagonal_jaw_return_spring.003": 1456,
+      "MaterialTest_jaw_spring_anchor.009": 122,
+      "MaterialTest_jaw_spring_anchor.010": 122,
+      "MaterialTest_jaw_spring_anchor.011": 122,
+      "MaterialTest_grip_top_bridge.001": 98,
+      "MaterialTest_grip_bridge_fastener.002": 122,
+      "MaterialTest_grip_bridge_fastener.003": 122,
+      "MaterialTest_black_fabric_tensile_specimen": 248,
+      "MaterialTest_sloped_operator_bezel": 98,
+      "MaterialTest_yellow_emergency_stop_field": 98,
+      "MaterialTest_emergency_stop_shank": 242,
+      "MaterialTest_red_emergency_stop_mushroom": 242,
+      "MaterialTest_black_jog_rocker": 98,
+      "MaterialTest_load_cell_signal_cable": 192
+    },
+    "sourceDimensionsAfterRotation": [
+      0.3499999940395355,
+      0.33901941776275635,
+      0.8529999852180481
+    ],
+    "dimensions": [
+      1800,
+      1200
+    ],
+    "cameraDirectionBlenderZUp": [
+      0.4647594690322876,
+      -0.7900910973548889,
+      0.39969316124916077
+    ],
+    "angleIndex": 0,
+    "samples": 192,
+    "geometryPolicy": "Photo-based reconstruction of the actual single-column tensile test equipment. Display geometry, not manufacturer CAD. The older MTS-style model is not the instrument used in this experiment.",
+    "materialDefaults": {
+      "steel": {
+        "color": "BBC1C8",
+        "metallic": 0.9,
+        "roughness": 0.32
+      },
+      "printed": {
+        "color": "30363D",
+        "metallic": 0,
+        "roughness": 0.43,
+        "texture": "printed"
+      },
+      "dark": {
+        "color": "202328",
+        "metallic": 0.12,
+        "roughness": 0.4
+      },
+      "aero": {
+        "color": "E3E1DB",
+        "metallic": 0,
+        "roughness": 0.45
+      },
+      "rubber": {
+        "color": "181B1E",
+        "metallic": 0,
+        "roughness": 0.62
+      },
+      "brass": {
+        "color": "AD8954",
+        "metallic": 0.8,
+        "roughness": 0.34
+      },
+      "glass": {
+        "color": "E7EDF0",
+        "metallic": 0,
+        "roughness": 0.1,
+        "transmission": 1
+      },
+      "wood": {
+        "color": "BE9C68",
+        "metallic": 0,
+        "roughness": 0.43,
+        "texture": "wood"
+      },
+      "carbon": {
+        "color": "171A20",
+        "metallic": 0.05,
+        "roughness": 0.3,
+        "texture": "carbon",
+        "coat": 0.3
+      },
+      "pcb": {
+        "color": "166C79",
+        "metallic": 0,
+        "roughness": 0.44
+      }
+    },
+    "materialAssignments": {},
+    "references": [
+      "assets/material-instron-frame.webp",
+      "assets/material-specimen-md.webp"
+    ],
+    "notes": []
+  },
+  "encodedFrames": [
+    {
+      "file": "00.webp",
+      "bytes": 7272,
+      "sha256": "0955dec69788cc91604631568dce7497642cddcc74108cfeeba60aef52b644ce"
+    },
+    {
+      "file": "01.webp",
+      "bytes": 7314,
+      "sha256": "9c5cb820a573e362e321edf9867f26bf71b28fdbf5d23f77320ed9d1d40fab29"
+    },
+    {
+      "file": "02.webp",
+      "bytes": 7366,
+      "sha256": "5511731afa0d05f462fe048044a52440e9062875befea5d3f02930c248c61698"
+    },
+    {
+      "file": "03.webp",
+      "bytes": 7382,
+      "sha256": "d5a8a8eb63fb3e481cd31e4909fb29f656688dcdd0449ec7b277948a9f8855b3"
+    },
+    {
+      "file": "04.webp",
+      "bytes": 7264,
+      "sha256": "691ba5dee95c049c34e9b7fd5fb1a09fb7174d488fead98eb30582a815bb3222"
+    },
+    {
+      "file": "05.webp",
+      "bytes": 7400,
+      "sha256": "3d2af3d48096afe1bf1a307a876842e3029eceec5d9ca14535bbf7ba62141f3c"
+    },
+    {
+      "file": "06.webp",
+      "bytes": 7386,
+      "sha256": "3f83547abb5276ee9301ba1aee7af4e6d75755b95ed1b376d2da5f308c21b6c2"
+    },
+    {
+      "file": "07.webp",
+      "bytes": 7398,
+      "sha256": "8b6491f4b36379ffb27222511ae6ac8cfc66c7e82a39d3c4cb27f6d45331780a"
+    },
+    {
+      "file": "08.webp",
+      "bytes": 7558,
+      "sha256": "68ba50b107755aef25d44a9168fa76dfd2d8548ca65fc0207f9a488f42187d6e"
+    },
+    {
+      "file": "09.webp",
+      "bytes": 7418,
+      "sha256": "257ca46b7e62af0100724cb8570af6d73dd2b7ed4f6e5135b229ecaedb536717"
+    },
+    {
+      "file": "10.webp",
+      "bytes": 7408,
+      "sha256": "b9df69b8de650008113fdf61211d7d2322086b8b176ec8bcea2b678c84be06da"
+    },
+    {
+      "file": "11.webp",
+      "bytes": 7310,
+      "sha256": "81de758f5c0c3a83fcb42d79bfa4248c7fe5e3646cf7aebade8cfaa446a6118c"
+    },
+    {
+      "file": "12.webp",
+      "bytes": 7374,
+      "sha256": "5d19023644e5605fcbf7081d6d2d9228b58e64f380d2efb56b7114e3ee801898"
+    },
+    {
+      "file": "13.webp",
+      "bytes": 7262,
+      "sha256": "904261389e23564d3d630772225fc2a385816e1f245049eb6bf2d7e67edf749d"
+    },
+    {
+      "file": "14.webp",
+      "bytes": 7266,
+      "sha256": "ece457adb246174bdecc3ae6569ac4533dad00bdef35447fa7fd0ceaac589a03"
+    },
+    {
+      "file": "15.webp",
+      "bytes": 7256,
+      "sha256": "fcc1c28abe43c741aa998ae9496f40aeefc01ecfaf9714f49270c828544bde5a"
+    },
+    {
+      "file": "16.webp",
+      "bytes": 7276,
+      "sha256": "3585b1e39a213e9be7c5b5f3f3ad9eabca1b8377240c748e7bae6cfb5f6abe5e"
+    },
+    {
+      "file": "17.webp",
+      "bytes": 7386,
+      "sha256": "3a555c9d2dd421553585e91635c2c54f5eddea9a405ab9a2bcd96e9a29421031"
+    },
+    {
+      "file": "18.webp",
+      "bytes": 7256,
+      "sha256": "3c87adc337d9b61e041220ff386b37ab8b1833ca68849d223810d6298bc8e6b8"
+    },
+    {
+      "file": "19.webp",
+      "bytes": 7304,
+      "sha256": "1fd15ce68cbb45b75110ffc7e1d9e6d6b42383677acadef01e9642a5e9d4d66d"
+    },
+    {
+      "file": "20.webp",
+      "bytes": 7326,
+      "sha256": "8a5fbc77f68300838971fee16ee119f93bcb66af57444135753b33159004d7f1"
+    },
+    {
+      "file": "21.webp",
+      "bytes": 7286,
+      "sha256": "7dd15661df9110e479652e57021b62458242052b988fae4aff2d56451c1b6885"
+    },
+    {
+      "file": "22.webp",
+      "bytes": 7282,
+      "sha256": "b5fcbc8b54a625753402d8f6f9ad39de04a0e306a72e3fbd2d6b0a53dded309e"
+    },
+    {
+      "file": "23.webp",
+      "bytes": 7274,
+      "sha256": "fba1c7c8dca05f85d94b7f135bbacbb9a18ca5258860261960ad197483445657"
+    },
+    {
+      "file": "24.webp",
+      "bytes": 7276,
+      "sha256": "f6acdaaf31163edc4096ca409b5ad9cdbd3152e63fda051f0e1f57e1093cb8a1"
+    },
+    {
+      "file": "25.webp",
+      "bytes": 7260,
+      "sha256": "8ed4d4c1164fbd4cd8952de9ba3177428add39d9f283d126423a61aa52c3d00a"
+    },
+    {
+      "file": "26.webp",
+      "bytes": 7284,
+      "sha256": "c3590e7f98b10e35f38ef368d9872856a8b9001133c835a12d69cf11c57b792b"
+    },
+    {
+      "file": "27.webp",
+      "bytes": 7276,
+      "sha256": "d3014d6df1e2a30c3c8d190738cac40937a178f8d9ecfd8c5b426762dcf312c3"
+    },
+    {
+      "file": "28.webp",
+      "bytes": 7252,
+      "sha256": "36372a03ae9bafcb2d5731f3806615070e35946ea75e95dd85ab72e67576802a"
+    },
+    {
+      "file": "29.webp",
+      "bytes": 7266,
+      "sha256": "4b31175f4e4320b7401919137d1b373c152261adf80b0db7a05f0df7fa489a49"
+    },
+    {
+      "file": "30.webp",
+      "bytes": 7304,
+      "sha256": "916aac3ad44ed9c414b5df4d9eb13eddf2b7e3383d841a7f14c6ea6a1de46d78"
+    },
+    {
+      "file": "31.webp",
+      "bytes": 7294,
+      "sha256": "b9e65ec2beb65f8d28b3e3cff7c545485fe824131becb65f9bcf95876ba59b54"
+    },
+    {
+      "file": "32.webp",
+      "bytes": 7254,
+      "sha256": "bfa3523dc0a8bdedf403fd65582b747ba62a245c5a41a66e87e50db7dd2d0ca9"
+    },
+    {
+      "file": "33.webp",
+      "bytes": 7294,
+      "sha256": "2a2e92e024699ce89db164cce6ce2890496ab683d846143d4aa73043e0ae9129"
+    },
+    {
+      "file": "34.webp",
+      "bytes": 7308,
+      "sha256": "6034d132f368fef4f1e59eea083980b36b63608f0c2fec3b62f92d684337b43a"
+    },
+    {
+      "file": "35.webp",
+      "bytes": 7344,
+      "sha256": "1d02d3012854e49ab15e1d6dd1f6c71a29a86311b8f1cf3ad9d7c3193480572e"
+    },
+    {
+      "file": "36.webp",
+      "bytes": 7312,
+      "sha256": "fb570f7a83c27ddbc570fcefbc532729686c7cedfbee78cf2770f05aae5036e7"
+    },
+    {
+      "file": "37.webp",
+      "bytes": 7322,
+      "sha256": "a5fec521007923dac9e0d68e54d94475315b8ab4e39f3dfad2241e5045f416a8"
+    },
+    {
+      "file": "38.webp",
+      "bytes": 7252,
+      "sha256": "169b24a75de2c23f0491523d377b0ef28de2c05dc748f7de1cfa5e3e94082973"
+    },
+    {
+      "file": "39.webp",
+      "bytes": 7308,
+      "sha256": "cde7266a36b41218e36ae0bd723af44ab1e3b1357cdde6e792eb90b3dc32e5e5"
+    },
+    {
+      "file": "40.webp",
+      "bytes": 7276,
+      "sha256": "1904fa505f99ef4ace37b1aae6acb859764b8da375601b467a1ed6509300bd25"
+    },
+    {
+      "file": "41.webp",
+      "bytes": 7270,
+      "sha256": "9483136cc52060ca6f1220a8c298a48d27333f7cca649da4b413a691ce76c954"
+    },
+    {
+      "file": "42.webp",
+      "bytes": 7274,
+      "sha256": "3cbc2a02cb0a5674b57d116efb30f56dc3328d821342180b1b81f69b1945cbf9"
+    },
+    {
+      "file": "43.webp",
+      "bytes": 7250,
+      "sha256": "7e7ed6b646b037994106bfc17a5e7466aea672d995cd4f28519b6d159b5a7d8a"
+    },
+    {
+      "file": "44.webp",
+      "bytes": 7340,
+      "sha256": "d60084a0820f67829dd2b80895a7681a98647c201469c58407fd458f09e744a7"
+    },
+    {
+      "file": "45.webp",
+      "bytes": 7460,
+      "sha256": "e1c6547eefbb29388ffabf14ce6794fdeb7453a248380a0e637320f22a7135f4"
+    },
+    {
+      "file": "46.webp",
+      "bytes": 7414,
+      "sha256": "d53a10abea6c31f8aa610846c9d621e88bc709d8de19e767e13307c6caea32ed"
+    },
+    {
+      "file": "47.webp",
+      "bytes": 7270,
+      "sha256": "432e9396df55ffcfc8c15bda52a5ff2b420712add03b7f6d6b0ce8d207fe7ee2"
+    },
+    {
+      "file": "48.webp",
+      "bytes": 7304,
+      "sha256": "12b8ce9f8f09aa6b4ce491a7bab86e20c021efa6bd19ff93e734028ed6770ea0"
+    },
+    {
+      "file": "49.webp",
+      "bytes": 7348,
+      "sha256": "7358bc42af0e77d08b06ba0187b710edef5a9479013ad47037dd0a8848f846ed"
+    },
+    {
+      "file": "50.webp",
+      "bytes": 7310,
+      "sha256": "7c4eeab16e556b37105e1fb663cd19d7b4a14f7edd4096a412fc50fa871bbb99"
+    },
+    {
+      "file": "51.webp",
+      "bytes": 7266,
+      "sha256": "0d74ad1a654d3dd538ed86e130d2b1c8fdf5844a4178799f06a1515898269054"
+    },
+    {
+      "file": "52.webp",
+      "bytes": 7358,
+      "sha256": "9192a7464d8c0273851435450fe77cc9908cf93adff9207fd34e4c2a01108f03"
+    },
+    {
+      "file": "53.webp",
+      "bytes": 7366,
+      "sha256": "99a6b8816529a14af2025810658a3206f3988c9565c4f7299010cd82cf5075f6"
+    },
+    {
+      "file": "54.webp",
+      "bytes": 7308,
+      "sha256": "95f3f91345c223b85f1e8f4f1041734d13df57077866ca4f580349b5afdda057"
+    },
+    {
+      "file": "55.webp",
+      "bytes": 7324,
+      "sha256": "0e29ca117f19ca0c41c199cd2bb561f9bc3e7764df1a654b2392cdbad232f030"
+    },
+    {
+      "file": "56.webp",
+      "bytes": 7316,
+      "sha256": "5471e150d8e1979380a98d1f0a75cbb485faf86178c67e8166ee66c920aac4f4"
+    },
+    {
+      "file": "57.webp",
+      "bytes": 7340,
+      "sha256": "09d9adb1416ba03b7bef69067a2224d8667c6acf0f6aae2a5c96b007d87a2fa6"
+    },
+    {
+      "file": "58.webp",
+      "bytes": 7336,
+      "sha256": "32d50fa789223380cdf350c59270537ea3129d793058555679d34fe707ff9376"
+    },
+    {
+      "file": "59.webp",
+      "bytes": 7318,
+      "sha256": "2737e42efb2a1d68e78153986069e51c0e628aaa9d85dd108ee242785eb5d03b"
+    },
+    {
+      "file": "60.webp",
+      "bytes": 7314,
+      "sha256": "8401f09b05991f68e0f5851acded2792b4e499fafe257f6df80a4197b9f6d0b9"
+    },
+    {
+      "file": "61.webp",
+      "bytes": 7284,
+      "sha256": "b7c8bbca0621d49b7ef51eb0550ac4775a44f5ead485600aaf88fd8dbfb7d088"
+    },
+    {
+      "file": "62.webp",
+      "bytes": 7296,
+      "sha256": "86c40492ed62a6b60c51b7753c9a91b09059c540e2b6eacf31dd85c713f3fadf"
+    },
+    {
+      "file": "63.webp",
+      "bytes": 7324,
+      "sha256": "d3ee05ab24f90b23c57a52f304c064a1cd569deda63d905aeca77dc7fd101ca1"
+    },
+    {
+      "file": "64.webp",
+      "bytes": 7284,
+      "sha256": "18bca69d05488f7dacf923b88afd722b0046437c8193fdb1c2e9ccf6447185a6"
+    },
+    {
+      "file": "65.webp",
+      "bytes": 7340,
+      "sha256": "689a15f5efdf7c7ddb51175200b267b001e523ccbce1388f8e56facfd413c96b"
+    },
+    {
+      "file": "66.webp",
+      "bytes": 7272,
+      "sha256": "1a9857274c7bf929b4924577107ce949dbaa3a6af1bcf9cddff9bd5c0813b72d"
+    },
+    {
+      "file": "67.webp",
+      "bytes": 7268,
+      "sha256": "a225152dad8252e7870a6e0c13202f499c19ed4c60aea33a67a86c1de81e760e"
+    },
+    {
+      "file": "68.webp",
+      "bytes": 7388,
+      "sha256": "5ca1041bce080fce5b03657c2d836be155ff49091500b672837534ce28a90ed1"
+    },
+    {
+      "file": "69.webp",
+      "bytes": 7262,
+      "sha256": "3525940bbcbb0dd6236265b4c479b0b27d790515b0e18421b6f943d29f37a45e"
+    },
+    {
+      "file": "70.webp",
+      "bytes": 7282,
+      "sha256": "8f61d39ffa77197de6c0b979ef549742e0f6a683b5f2c6a38c7cff2e75233c46"
+    },
+    {
+      "file": "71.webp",
+      "bytes": 7308,
+      "sha256": "2e6355aae4fe1887e8751526b9774bc56c5f4a39dbd8de845ef3a43b70564296"
+    },
+    {
+      "file": "72.webp",
+      "bytes": 7358,
+      "sha256": "caec1e64f6144cb3ba708bc5dcfaac4c537dab190cc362dba466e6d7d9e0543d"
+    },
+    {
+      "file": "73.webp",
+      "bytes": 7398,
+      "sha256": "47d7ec3dfb2a236d607ffff6dd0705c7e297bf207feae2e19ea7eacfc4f5ce61"
+    },
+    {
+      "file": "74.webp",
+      "bytes": 7308,
+      "sha256": "e0f0d3f20340ba0332c46c9263280d13a99cd36255abf1df53da6eae3c5bd150"
+    },
+    {
+      "file": "75.webp",
+      "bytes": 7254,
+      "sha256": "d1b4a0bfbd2e884cd194a7ed83f08a9bb52050ffd57ea7bc615086988f3f0fc1"
+    },
+    {
+      "file": "76.webp",
+      "bytes": 7234,
+      "sha256": "d26a9d6e05f0bb12f0825bf85892b93267f5035aa70a32fb609e86d0a8d8de29"
+    },
+    {
+      "file": "77.webp",
+      "bytes": 7238,
+      "sha256": "be1b6619dd2bb1368ea2ed05f02508eb02a4fff298a9bcc6bf53c7b82c5a8f2d"
+    },
+    {
+      "file": "78.webp",
+      "bytes": 7320,
+      "sha256": "1008fdbb3dc7665178969cf1a861d40445af847df9d95fe9c3b626a2b68ac676"
+    },
+    {
+      "file": "79.webp",
+      "bytes": 7244,
+      "sha256": "9f80abad725e64b85aaadb66d9fb41f01f2e27b9ef0f6673b31c7a449f6ff139"
+    },
+    {
+      "file": "80.webp",
+      "bytes": 7346,
+      "sha256": "b602c134ebb6722914eb1d6aca8617085b8d532a3e2922b3639e373aad0a604f"
+    },
+    {
+      "file": "81.webp",
+      "bytes": 7328,
+      "sha256": "382e89b27e8e77856940c3a820cbdbecc1ec5fad377c40a60e6f2c022ab7edb0"
+    },
+    {
+      "file": "82.webp",
+      "bytes": 7296,
+      "sha256": "6760d527a14a7623ebe57badddfea20f4353a8728136f179c0c79b578af4bbc2"
+    },
+    {
+      "file": "83.webp",
+      "bytes": 7364,
+      "sha256": "c424524ed73753e706994f940575ce65e98a5e1139e0a8397da217118286bc58"
+    },
+    {
+      "file": "84.webp",
+      "bytes": 7266,
+      "sha256": "ef517a981c659b1a6d910df7bcf9559390df0f6c71758a65b79d9cb2d9671eee"
+    },
+    {
+      "file": "85.webp",
+      "bytes": 7330,
+      "sha256": "4311194be70b8b74f7a6c02e625eb4530596c1d0e3f93c86b9b7c4a79400429b"
+    },
+    {
+      "file": "86.webp",
+      "bytes": 7318,
+      "sha256": "6c8379735c816c919c35762f38c14a7f405d6ea7d81f18f10b463b027517306e"
+    },
+    {
+      "file": "87.webp",
+      "bytes": 7322,
+      "sha256": "376ca0ec8fc5012784258f04c3224ff2371639bab18aa9f3a869132bbaa9e06d"
+    },
+    {
+      "file": "88.webp",
+      "bytes": 7308,
+      "sha256": "11a02ff14d783b0b2fadc9fc67dabf7487e816366e1e21aa98a17a68c74b13ea"
+    },
+    {
+      "file": "89.webp",
+      "bytes": 7338,
+      "sha256": "1c5d4996066b9eea266d4c15dffc7c66cc3c7dc48be8244d1d6835f8e4104641"
+    },
+    {
+      "file": "90.webp",
+      "bytes": 7298,
+      "sha256": "d3505b1522f05ea3d25bbd3cda8797ad5519d101ce9ffed0061dcdf83e1b0322"
+    },
+    {
+      "file": "91.webp",
+      "bytes": 7318,
+      "sha256": "48df3fd61b3888bf2a7c37b1e071020a38aa5cc9b4762230f47be776171aae66"
+    },
+    {
+      "file": "92.webp",
+      "bytes": 7272,
+      "sha256": "1f4527fca38304f292550c96ff72f5458fd76ea87c30d69d490ba5932ea7e2d4"
+    },
+    {
+      "file": "93.webp",
+      "bytes": 7388,
+      "sha256": "b70ae9b83058391e15dc11b46810fe19fb27628dd54f3416eb7bf251a1097124"
+    },
+    {
+      "file": "94.webp",
+      "bytes": 7326,
+      "sha256": "5bed890f98f8aaa9b6e8d9f296208900252fd41b4797b127c992faea716c0130"
+    },
+    {
+      "file": "95.webp",
+      "bytes": 7250,
+      "sha256": "b71d92491410ad3ffa506151e62fa9684752ab2bf35411afcfd582731038c3f6"
+    },
+    {
+      "file": "96.webp",
+      "bytes": 7420,
+      "sha256": "6b1aac1ebb1946cf9dd8a5e801e45c22911061936ce333c5316b47b30c57b79e"
+    },
+    {
+      "file": "97.webp",
+      "bytes": 7304,
+      "sha256": "c4b6dfaa3b84fdb196600ae20729eb27436217c32b3e25246e312a518343a43b"
+    },
+    {
+      "file": "98.webp",
+      "bytes": 7280,
+      "sha256": "9999109e8ad1595e906b17c4cb53b4b3bdb98524c4e7d5899e3a85ceecfe7d92"
+    },
+    {
+      "file": "99.webp",
+      "bytes": 7306,
+      "sha256": "0c617c264319ebf00fdce19b9f3a5c1fb0e67024471473a669917493fc677d58"
+    },
+    {
+      "file": "100.webp",
+      "bytes": 7304,
+      "sha256": "d17b0cb3defc24ce75e02d2227c9bd71a2a59709bb6e2562e588c1b238c62e2e"
+    },
+    {
+      "file": "101.webp",
+      "bytes": 7316,
+      "sha256": "a6555615b56ecc2a6ee04ed5ba12dde134126dff88c72e4e17c53744fa470d40"
+    },
+    {
+      "file": "102.webp",
+      "bytes": 7330,
+      "sha256": "2c42d873b383706ea2bb494d4110e7dc29b4c0791619c7c234c1ed7da99af854"
+    },
+    {
+      "file": "103.webp",
+      "bytes": 7312,
+      "sha256": "e04b4de4d1d66356496803520e0592668366d89c96cafe073fd3dc5963a0e0ec"
+    },
+    {
+      "file": "104.webp",
+      "bytes": 7300,
+      "sha256": "88e16412e80acae9c2d550e53232fb7c56c5b279b5e84a23132122d72e67e550"
+    },
+    {
+      "file": "105.webp",
+      "bytes": 7374,
+      "sha256": "778a5e2820fcd9bdf3747d0e7548bfa973067750847b94675b56d8fa04c71f27"
+    },
+    {
+      "file": "106.webp",
+      "bytes": 7350,
+      "sha256": "a3d128ced38efc62a77bf504459e2230255c8a7e59692427d76122419c1a529c"
+    },
+    {
+      "file": "107.webp",
+      "bytes": 7340,
+      "sha256": "68f759116274ce78afd308f87f60e7c94dfec64a258630aaca615a52a1662662"
+    },
+    {
+      "file": "108.webp",
+      "bytes": 7300,
+      "sha256": "15193a6c9468f479c7bc086ae42f54fe1376940a095d843611a0273d22676643"
+    },
+    {
+      "file": "109.webp",
+      "bytes": 7292,
+      "sha256": "a1bb0b37e45567c57e1e9462f1842b6f869f61f3040c3e6f3063f414497ebc00"
+    },
+    {
+      "file": "110.webp",
+      "bytes": 7316,
+      "sha256": "f038060fd20e591d2506f008b43d2bba55907682b5c7728711dface18622e349"
+    },
+    {
+      "file": "111.webp",
+      "bytes": 7300,
+      "sha256": "abcfc0e4e687febbbe3b0a0f0e84465f1ed16c0b88d0818ff21745825e762f82"
+    },
+    {
+      "file": "112.webp",
+      "bytes": 7286,
+      "sha256": "727c27dff9713ab299c0615ab7003d57dadfe205de27d19906f340fa854236b6"
+    },
+    {
+      "file": "113.webp",
+      "bytes": 7330,
+      "sha256": "06740d56efc281c31735afe7399652050e60c2bb0fa476bb1f92b4b2cdbc240c"
+    },
+    {
+      "file": "114.webp",
+      "bytes": 7308,
+      "sha256": "8fb2b6d47ce41b57b816ad3d25e9b015d0ca6cff7eb05691b181bb5aa41bb394"
+    },
+    {
+      "file": "115.webp",
+      "bytes": 7312,
+      "sha256": "b147f7a702b4c34149eb156f491171f555f28a3ac97196f2d8c35fc0320e43f2"
+    },
+    {
+      "file": "116.webp",
+      "bytes": 7306,
+      "sha256": "3e919a327c1f39f66c5b88149f76faa7038b72dc51fbc0db7b8c95506f4c4654"
+    },
+    {
+      "file": "117.webp",
+      "bytes": 7266,
+      "sha256": "8f7b80e5d7ade695c90ab5e19d144d3f2303b0bf30883a29aa085355a62b7e19"
+    },
+    {
+      "file": "118.webp",
+      "bytes": 7292,
+      "sha256": "3d32608b0a109eef2bd5d6c018bf6884ff46af2c02b26ca43fc729329e7d6451"
+    },
+    {
+      "file": "119.webp",
+      "bytes": 7336,
+      "sha256": "6dac4a0adc145b2430da20c290af14455c47d037809a070cf54b5839f7110c31"
+    },
+    {
+      "file": "120.webp",
+      "bytes": 7438,
+      "sha256": "2dc420ceefb113dcef7c04e53b4ce3a5db374710b0ddd55080fa12149c13d7d8"
+    },
+    {
+      "file": "121.webp",
+      "bytes": 7362,
+      "sha256": "0c9909ac78ca9292251d793e8a41a01408807861e9faf052a99907c587e3b822"
+    },
+    {
+      "file": "122.webp",
+      "bytes": 7304,
+      "sha256": "a9aaf6f0a2c423963801748d056b878a9e808486bc315f4ecd8f3e435c5274fd"
+    },
+    {
+      "file": "123.webp",
+      "bytes": 7356,
+      "sha256": "d8a426c8857c0d439ce1aa97b83215da51412298625d30884468a9c0425bdf03"
+    },
+    {
+      "file": "124.webp",
+      "bytes": 7336,
+      "sha256": "f1d904db2c6816fd808ade90e6c45523d20d1f0958fb7989214a9d9aa380dc56"
+    },
+    {
+      "file": "125.webp",
+      "bytes": 7340,
+      "sha256": "2dc60b20955c81a617946a2dc7706cc438f714df9d0d976da82f4c04b89cadcd"
+    },
+    {
+      "file": "126.webp",
+      "bytes": 7324,
+      "sha256": "78836c3d2085d17538b0606b5fbc578cb2a37eefa091e3cdb68bc138e50aedc1"
+    },
+    {
+      "file": "127.webp",
+      "bytes": 7500,
+      "sha256": "aaa442e9c38729a95c4242df5fc4352bd7e67b5e3150f09692f09d9c1bff8fd3"
+    },
+    {
+      "file": "128.webp",
+      "bytes": 7292,
+      "sha256": "18605f0c8700329088a4813bb3f97bd1f485c18a3eab838fbb2e56aa7e1fccfd"
+    },
+    {
+      "file": "129.webp",
+      "bytes": 7368,
+      "sha256": "6a97aef8e126aba182397e105b8a90f409810810b027d03cb01fcbfef5696f9e"
+    },
+    {
+      "file": "130.webp",
+      "bytes": 7304,
+      "sha256": "f6c716105bce90beb964ea85951b871cbe375cc62b8ba2afcb0a8f8dd63f229a"
+    },
+    {
+      "file": "131.webp",
+      "bytes": 7380,
+      "sha256": "090f543623b7b49e00c67fc17a08dca315049dffc26a0c1885f5ba1932532603"
+    },
+    {
+      "file": "132.webp",
+      "bytes": 7286,
+      "sha256": "6c0372ca2435160a77bf75fde4de12a6067d3d03a02c3f579ba0d3b2044842d9"
+    },
+    {
+      "file": "133.webp",
+      "bytes": 7330,
+      "sha256": "053c69927e7ca0320cc41cbe86c90ca0d16a517184f355c8246c275be4f29a69"
+    },
+    {
+      "file": "134.webp",
+      "bytes": 7384,
+      "sha256": "3043c32005152595013f784b96c33d675e98c6b8895160bc1e76c8493ad8d4ef"
+    },
+    {
+      "file": "135.webp",
+      "bytes": 7314,
+      "sha256": "de268766765c138678d17b1485f3c74f26a73888ef776d28976a258e8ef788be"
+    },
+    {
+      "file": "136.webp",
+      "bytes": 7396,
+      "sha256": "d6d5d556e1ce1b3f1c30338ebecf4fdbf8659b7273dabc208f28293ae744a6ee"
+    },
+    {
+      "file": "137.webp",
+      "bytes": 7330,
+      "sha256": "aa5cc8480d7c8254322ad04711438658e9c906e42d0aabb71b448a60e6991366"
+    },
+    {
+      "file": "138.webp",
+      "bytes": 7334,
+      "sha256": "8fb5c189ceb81272b5529d1688c6bdbebb2015e1dd7946009ec46c9583589b83"
+    },
+    {
+      "file": "139.webp",
+      "bytes": 7330,
+      "sha256": "2dbe83180901cfa724c1be9c96dd48bfeef1fdbf7d259b6a5c648bd7037139e6"
+    },
+    {
+      "file": "140.webp",
+      "bytes": 7356,
+      "sha256": "a95e3f8a1dfd99646eee264110b6d467c5e92f37bcbd52c570ff2db2ac61e2d2"
+    },
+    {
+      "file": "141.webp",
+      "bytes": 7346,
+      "sha256": "7a1d73339c6d975e20161e60a955a0f099884f9b409d33ac4f080294c4ae3b8c"
+    },
+    {
+      "file": "142.webp",
+      "bytes": 7336,
+      "sha256": "da61a45dd07b295b360ffffcbc07fe46fd524bef1673e20d284c77a83060e732"
+    },
+    {
+      "file": "143.webp",
+      "bytes": 7320,
+      "sha256": "1e5740ce03793761ceb9dda16def2a42cea04f7e2b6672cc791ca84142821582"
+    },
+    {
+      "file": "144.webp",
+      "bytes": 7296,
+      "sha256": "d5bec84e91da9d08601f7c802f7c8936d9ac6b964b0319228bf220cd3dcf1da3"
+    }
+  ],
+  "encoding": {
+    "format": "WebP static images",
+    "quality": 85,
+    "method": 6,
+    "rasterRetouching": false
+  },
+  "sourceComponentNames": [
+    "MaterialTest_sloped_base_shell",
+    "MaterialTest_base_foot",
+    "MaterialTest_base_foot.001",
+    "MaterialTest_base_foot.002",
+    "MaterialTest_base_foot.003",
+    "MaterialTest_single_column_back_shell",
+    "MaterialTest_column_face_border",
+    "MaterialTest_column_face_border.001",
+    "MaterialTest_column_top_cap",
+    "MaterialTest_bellows_shadow_face",
+    "MaterialTest_accordion_folded_front",
+    "MaterialTest_side_scale_recess",
+    "MaterialTest_yellow_travel_marker",
+    "MaterialTest_travel_marker_knob",
+    "MaterialTest_yellow_travel_marker.001",
+    "MaterialTest_travel_marker_knob.001",
+    "MaterialTest_black_crosshead",
+    "MaterialTest_crosshead_fastener",
+    "MaterialTest_crosshead_fastener.001",
+    "MaterialTest_upper_load_cell",
+    "MaterialTest_upper_load_cell_top",
+    "MaterialTest_load_cell_socket",
+    "MaterialTest_upper_coupling",
+    "MaterialTest_upper_knurled_ring",
+    "MaterialTest_upper_cross_pin",
+    "MaterialTest_lower_mount_gasket",
+    "MaterialTest_lower_machined_plate",
+    "MaterialTest_mount_plate_bolt",
+    "MaterialTest_mount_plate_bolt.001",
+    "MaterialTest_mount_plate_bolt.002",
+    "MaterialTest_mount_plate_bolt.003",
+    "MaterialTest_lower_fixed_coupler",
+    "MaterialTest_lower_coupler_lock_ring",
+    "MaterialTest_lower_lock_pin",
+    "MaterialTest_lower_grip_stem",
+    "MaterialTest_collar_knurl",
+    "MaterialTest_collar_knurl.001",
+    "MaterialTest_collar_knurl.002",
+    "MaterialTest_collar_knurl.003",
+    "MaterialTest_collar_knurl.004",
+    "MaterialTest_collar_knurl.005",
+    "MaterialTest_collar_knurl.006",
+    "MaterialTest_collar_knurl.007",
+    "MaterialTest_collar_knurl.008",
+    "MaterialTest_collar_knurl.009",
+    "MaterialTest_collar_knurl.010",
+    "MaterialTest_collar_knurl.011",
+    "MaterialTest_collar_knurl.012",
+    "MaterialTest_collar_knurl.013",
+    "MaterialTest_collar_knurl.014",
+    "MaterialTest_collar_knurl.015",
+    "MaterialTest_collar_knurl.016",
+    "MaterialTest_collar_knurl.017",
+    "MaterialTest_collar_knurl.018",
+    "MaterialTest_collar_knurl.019",
+    "MaterialTest_collar_knurl.020",
+    "MaterialTest_collar_knurl.021",
+    "MaterialTest_collar_knurl.022",
+    "MaterialTest_collar_knurl.023",
+    "MaterialTest_collar_knurl.024",
+    "MaterialTest_collar_knurl.025",
+    "MaterialTest_collar_knurl.026",
+    "MaterialTest_collar_knurl.027",
+    "MaterialTest_collar_knurl.028",
+    "MaterialTest_collar_knurl.029",
+    "MaterialTest_collar_knurl.030",
+    "MaterialTest_collar_knurl.031",
+    "MaterialTest_collar_knurl.032",
+    "MaterialTest_collar_knurl.033",
+    "MaterialTest_collar_knurl.034",
+    "MaterialTest_collar_knurl.035",
+    "MaterialTest_collar_knurl.036",
+    "MaterialTest_collar_knurl.037",
+    "MaterialTest_collar_knurl.038",
+    "MaterialTest_collar_knurl.039",
+    "MaterialTest_collar_knurl.040",
+    "MaterialTest_collar_knurl.041",
+    "MaterialTest_collar_knurl.042",
+    "MaterialTest_collar_knurl.043",
+    "MaterialTest_collar_knurl.044",
+    "MaterialTest_collar_knurl.045",
+    "MaterialTest_collar_knurl.046",
+    "MaterialTest_collar_knurl.047",
+    "MaterialTest_collar_knurl.048",
+    "MaterialTest_collar_knurl.049",
+    "MaterialTest_collar_knurl.050",
+    "MaterialTest_collar_knurl.051",
+    "MaterialTest_collar_knurl.052",
+    "MaterialTest_collar_knurl.053",
+    "MaterialTest_collar_knurl.054",
+    "MaterialTest_collar_knurl.055",
+    "MaterialTest_collar_knurl.056",
+    "MaterialTest_collar_knurl.057",
+    "MaterialTest_collar_knurl.058",
+    "MaterialTest_collar_knurl.059",
+    "MaterialTest_collar_knurl.060",
+    "MaterialTest_collar_knurl.061",
+    "MaterialTest_collar_knurl.062",
+    "MaterialTest_collar_knurl.063",
+    "MaterialTest_collar_knurl.064",
+    "MaterialTest_collar_knurl.065",
+    "MaterialTest_collar_knurl.066",
+    "MaterialTest_collar_knurl.067",
+    "MaterialTest_collar_knurl.068",
+    "MaterialTest_collar_knurl.069",
+    "MaterialTest_collar_knurl.070",
+    "MaterialTest_collar_knurl.071",
+    "MaterialTest_collar_knurl.072",
+    "MaterialTest_collar_knurl.073",
+    "MaterialTest_collar_knurl.074",
+    "MaterialTest_collar_knurl.075",
+    "MaterialTest_collar_knurl.076",
+    "MaterialTest_collar_knurl.077",
+    "MaterialTest_collar_knurl.078",
+    "MaterialTest_collar_knurl.079",
+    "MaterialTest_collar_knurl.080",
+    "MaterialTest_collar_knurl.081",
+    "MaterialTest_collar_knurl.082",
+    "MaterialTest_collar_knurl.083",
+    "MaterialTest_collar_knurl.084",
+    "MaterialTest_collar_knurl.085",
+    "MaterialTest_collar_knurl.086",
+    "MaterialTest_collar_knurl.087",
+    "MaterialTest_collar_knurl.088",
+    "MaterialTest_collar_knurl.089",
+    "MaterialTest_collar_knurl.090",
+    "MaterialTest_collar_knurl.091",
+    "MaterialTest_collar_knurl.092",
+    "MaterialTest_collar_knurl.093",
+    "MaterialTest_collar_knurl.094",
+    "MaterialTest_collar_knurl.095",
+    "MaterialTest_collar_knurl.096",
+    "MaterialTest_collar_knurl.097",
+    "MaterialTest_collar_knurl.098",
+    "MaterialTest_collar_knurl.099",
+    "MaterialTest_curved_spring_grip_cheek",
+    "MaterialTest_sliding_jaw_wedge",
+    "MaterialTest_diagonal_jaw_return_spring",
+    "MaterialTest_jaw_spring_anchor",
+    "MaterialTest_jaw_spring_anchor.001",
+    "MaterialTest_jaw_spring_anchor.002",
+    "MaterialTest_curved_spring_grip_cheek.001",
+    "MaterialTest_sliding_jaw_wedge.001",
+    "MaterialTest_diagonal_jaw_return_spring.001",
+    "MaterialTest_jaw_spring_anchor.003",
+    "MaterialTest_jaw_spring_anchor.004",
+    "MaterialTest_jaw_spring_anchor.005",
+    "MaterialTest_grip_top_bridge",
+    "MaterialTest_grip_bridge_fastener",
+    "MaterialTest_grip_bridge_fastener.001",
+    "MaterialTest_curved_spring_grip_cheek.002",
+    "MaterialTest_sliding_jaw_wedge.002",
+    "MaterialTest_diagonal_jaw_return_spring.002",
+    "MaterialTest_jaw_spring_anchor.006",
+    "MaterialTest_jaw_spring_anchor.007",
+    "MaterialTest_jaw_spring_anchor.008",
+    "MaterialTest_curved_spring_grip_cheek.003",
+    "MaterialTest_sliding_jaw_wedge.003",
+    "MaterialTest_diagonal_jaw_return_spring.003",
+    "MaterialTest_jaw_spring_anchor.009",
+    "MaterialTest_jaw_spring_anchor.010",
+    "MaterialTest_jaw_spring_anchor.011",
+    "MaterialTest_grip_top_bridge.001",
+    "MaterialTest_grip_bridge_fastener.002",
+    "MaterialTest_grip_bridge_fastener.003",
+    "MaterialTest_black_fabric_tensile_specimen",
+    "MaterialTest_sloped_operator_bezel",
+    "MaterialTest_yellow_emergency_stop_field",
+    "MaterialTest_emergency_stop_shank",
+    "MaterialTest_red_emergency_stop_mushroom",
+    "MaterialTest_black_jog_rocker",
+    "MaterialTest_load_cell_signal_cable"
+  ]
+}

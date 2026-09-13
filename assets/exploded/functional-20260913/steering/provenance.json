@@ -1,0 +1,1473 @@
+{
+  "project": "steering",
+  "width": 640,
+  "height": 427,
+  "frameCount": 121,
+  "samples": 48,
+  "cameraOrthoScale": 6.632091522216797,
+  "cameraBaseScale": 6.632091522216797,
+  "mode": "steering",
+  "sourceLayout": "Original approved cover source pose",
+  "motionRevision": "functional-motion-20260913",
+  "motion": {
+    "project": "steering",
+    "mode": "mechanism",
+    "periodic": true,
+    "sourcePartCount": 52,
+    "preservedTriangles": 158538,
+    "geometryPolicy": "Original connected CAD meshes and material slots; object transforms only.",
+    "seekPolicy": "Absolute transforms from saved source matrices; source pose at progress 0 and 1.",
+    "motion": "Steering wheel, three individually coaxial shaft segments and both pairs of universal-joint yokes drive the horizontal rack.",
+    "shaftAxes": [
+      {
+        "point": [
+          0.020632831379771233,
+          0.7481511235237122,
+          2.1602742671966553
+        ],
+        "direction": [
+          -9.358618768828819e-08,
+          0.9781476259231567,
+          0.20791156589984894
+        ]
+      },
+      {
+        "point": [
+          0.02063283883035183,
+          -0.137972891330719,
+          1.7275497913360596
+        ],
+        "direction": [
+          2.2621215610332118e-13,
+          0.7716246247291565,
+          0.6360781788825989
+        ]
+      },
+      {
+        "point": [
+          0.020632846280932426,
+          -0.9127449989318848,
+          0.5140593647956848
+        ],
+        "direction": [
+          -2.582039542176062e-07,
+          0.39073115587234497,
+          0.9205048680305481
+        ]
+      }
+    ],
+    "universalJoints": [
+      {
+        "center": [
+          0.020632857456803322,
+          0.26147326827049255,
+          2.0568277835845947
+        ],
+        "axisLineResidual": 3.91131574732647e-08,
+        "bendDegrees": 27.500006231657768
+      },
+      {
+        "center": [
+          0.02063271775841713,
+          -0.5374190807342529,
+          1.3982717990875244
+        ],
+        "axisLineResidual": 2.4057314254939283e-07,
+        "bendDegrees": 27.499998835654406
+      }
+    ],
+    "wheelRangeDegrees": [
+      -32,
+      0
+    ],
+    "rackRange": [
+      -0.1,
+      0
+    ],
+    "directionChoice": "The clockwise-and-return stroke releases the source upper-yoke overlap. The opposite stroke was rejected because it deepened that pre-existing CAD interference.",
+    "limitations": "The supplied CAD omits separate universal-joint cross pins and internal rack teeth. The source yokes remain intact; Cardan phase coupling and rack travel illustrate their function, without claiming a calibrated steering ratio.",
+    "groups": {
+      "fixed_frame": [
+        "mat_printed_part_0",
+        "mat_printed_part_1",
+        "mat_printed_part_2",
+        "mat_printed_part_3",
+        "mat_printed_part_4",
+        "mat_printed_part_5",
+        "mat_printed_part_6",
+        "mat_printed_part_7",
+        "mat_printed_part_8",
+        "mat_printed_part_9",
+        "mat_steel_part_14",
+        "mat_steel_part_15",
+        "mat_steel_part_16",
+        "mat_steel_part_17",
+        "mat_steel_part_18",
+        "mat_steel_part_19",
+        "mat_steel_part_20",
+        "mat_steel_part_21",
+        "mat_steel_part_22",
+        "mat_steel_part_28",
+        "mat_steel_part_29",
+        "mat_steel_part_30",
+        "mat_steel_part_31",
+        "mat_steel_part_32",
+        "mat_steel_part_33",
+        "mat_steel_part_34",
+        "mat_steel_part_35",
+        "mat_steel_part_36",
+        "mat_steel_part_37",
+        "mat_steel_part_38",
+        "mat_steel_part_39",
+        "mat_steel_part_40"
+      ],
+      "lower_shaft_and_yoke": [
+        "mat_steel_part_11",
+        "mat_steel_part_5",
+        "mat_steel_part_8"
+      ],
+      "middle_shaft_and_yokes": [
+        "mat_steel_part_10",
+        "mat_steel_part_12",
+        "mat_steel_part_3",
+        "mat_steel_part_4",
+        "mat_steel_part_7"
+      ],
+      "rack_and_tie_rod_ends": [
+        "mat_steel_part_23",
+        "mat_steel_part_24",
+        "mat_steel_part_25",
+        "mat_steel_part_26",
+        "mat_steel_part_27"
+      ],
+      "wheel_and_upper_shaft": [
+        "mat_printed_part_10",
+        "mat_steel_part_0",
+        "mat_steel_part_1",
+        "mat_steel_part_13",
+        "mat_steel_part_2",
+        "mat_steel_part_6",
+        "mat_steel_part_9"
+      ]
+    }
+  },
+  "cameraBoundsSamples": 121,
+  "cameraMaximumScale": 6.632091522216797,
+  "cameraTracking": "Original source camera position and direction",
+  "cameraLocation": [
+    5.688638687133789,
+    -9.365671157836914,
+    6.24458122253418
+  ],
+  "cameraRotation": [
+    1.1395100355148315,
+    5.5959603173505457e-08,
+    0.5667292475700378
+  ],
+  "timings": [
+    {
+      "index": 0,
+      "seconds": 1.5,
+      "bytes": 258894
+    },
+    {
+      "index": 1,
+      "seconds": 1.312,
+      "bytes": 258739
+    },
+    {
+      "index": 2,
+      "seconds": 1.61,
+      "bytes": 258815
+    },
+    {
+      "index": 3,
+      "seconds": 1.531,
+      "bytes": 258899
+    },
+    {
+      "index": 4,
+      "seconds": 1.375,
+      "bytes": 259022
+    },
+    {
+      "index": 5,
+      "seconds": 1.219,
+      "bytes": 259011
+    },
+    {
+      "index": 6,
+      "seconds": 1.171,
+      "bytes": 258866
+    },
+    {
+      "index": 7,
+      "seconds": 1.313,
+      "bytes": 259054
+    },
+    {
+      "index": 8,
+      "seconds": 1.375,
+      "bytes": 258677
+    },
+    {
+      "index": 9,
+      "seconds": 1.531,
+      "bytes": 258721
+    },
+    {
+      "index": 10,
+      "seconds": 1.594,
+      "bytes": 258908
+    },
+    {
+      "index": 11,
+      "seconds": 1.437,
+      "bytes": 258716
+    },
+    {
+      "index": 12,
+      "seconds": 1.297,
+      "bytes": 258676
+    },
+    {
+      "index": 13,
+      "seconds": 1.11,
+      "bytes": 258587
+    },
+    {
+      "index": 14,
+      "seconds": 1.218,
+      "bytes": 258574
+    },
+    {
+      "index": 15,
+      "seconds": 1.297,
+      "bytes": 258461
+    },
+    {
+      "index": 16,
+      "seconds": 1.469,
+      "bytes": 258317
+    },
+    {
+      "index": 17,
+      "seconds": 1.484,
+      "bytes": 258110
+    },
+    {
+      "index": 18,
+      "seconds": 1.594,
+      "bytes": 258105
+    },
+    {
+      "index": 19,
+      "seconds": 1.75,
+      "bytes": 258020
+    },
+    {
+      "index": 20,
+      "seconds": 1.625,
+      "bytes": 257855
+    },
+    {
+      "index": 21,
+      "seconds": 1.125,
+      "bytes": 257544
+    },
+    {
+      "index": 22,
+      "seconds": 1.078,
+      "bytes": 257865
+    },
+    {
+      "index": 23,
+      "seconds": 1.328,
+      "bytes": 257705
+    },
+    {
+      "index": 24,
+      "seconds": 1.234,
+      "bytes": 257705
+    },
+    {
+      "index": 25,
+      "seconds": 1.375,
+      "bytes": 257785
+    },
+    {
+      "index": 26,
+      "seconds": 1.532,
+      "bytes": 257589
+    },
+    {
+      "index": 27,
+      "seconds": 1.39,
+      "bytes": 257528
+    },
+    {
+      "index": 28,
+      "seconds": 1.125,
+      "bytes": 257529
+    },
+    {
+      "index": 29,
+      "seconds": 1.032,
+      "bytes": 257486
+    },
+    {
+      "index": 30,
+      "seconds": 1.062,
+      "bytes": 257591
+    },
+    {
+      "index": 31,
+      "seconds": 1.078,
+      "bytes": 257663
+    },
+    {
+      "index": 32,
+      "seconds": 1.094,
+      "bytes": 257741
+    },
+    {
+      "index": 33,
+      "seconds": 1.141,
+      "bytes": 257678
+    },
+    {
+      "index": 34,
+      "seconds": 1.14,
+      "bytes": 257541
+    },
+    {
+      "index": 35,
+      "seconds": 1.125,
+      "bytes": 257792
+    },
+    {
+      "index": 36,
+      "seconds": 1.141,
+      "bytes": 257978
+    },
+    {
+      "index": 37,
+      "seconds": 1.156,
+      "bytes": 257545
+    },
+    {
+      "index": 38,
+      "seconds": 1.188,
+      "bytes": 257836
+    },
+    {
+      "index": 39,
+      "seconds": 1.093,
+      "bytes": 257795
+    },
+    {
+      "index": 40,
+      "seconds": 1.0,
+      "bytes": 257519
+    },
+    {
+      "index": 41,
+      "seconds": 1.235,
+      "bytes": 257575
+    },
+    {
+      "index": 42,
+      "seconds": 1.547,
+      "bytes": 257900
+    },
+    {
+      "index": 43,
+      "seconds": 1.156,
+      "bytes": 257545
+    },
+    {
+      "index": 44,
+      "seconds": 1.265,
+      "bytes": 257853
+    },
+    {
+      "index": 45,
+      "seconds": 1.391,
+      "bytes": 257736
+    },
+    {
+      "index": 46,
+      "seconds": 1.125,
+      "bytes": 257510
+    },
+    {
+      "index": 47,
+      "seconds": 1.156,
+      "bytes": 257345
+    },
+    {
+      "index": 48,
+      "seconds": 1.219,
+      "bytes": 257485
+    },
+    {
+      "index": 49,
+      "seconds": 1.234,
+      "bytes": 257637
+    },
+    {
+      "index": 50,
+      "seconds": 1.407,
+      "bytes": 257469
+    },
+    {
+      "index": 51,
+      "seconds": 1.203,
+      "bytes": 257494
+    },
+    {
+      "index": 52,
+      "seconds": 1.25,
+      "bytes": 257451
+    },
+    {
+      "index": 53,
+      "seconds": 1.453,
+      "bytes": 257898
+    },
+    {
+      "index": 54,
+      "seconds": 1.094,
+      "bytes": 257552
+    },
+    {
+      "index": 55,
+      "seconds": 1.281,
+      "bytes": 257437
+    },
+    {
+      "index": 56,
+      "seconds": 1.328,
+      "bytes": 257497
+    },
+    {
+      "index": 57,
+      "seconds": 1.078,
+      "bytes": 257548
+    },
+    {
+      "index": 58,
+      "seconds": 1.266,
+      "bytes": 257620
+    },
+    {
+      "index": 59,
+      "seconds": 1.578,
+      "bytes": 257586
+    },
+    {
+      "index": 60,
+      "seconds": 1.125,
+      "bytes": 257624
+    },
+    {
+      "index": 61,
+      "seconds": 1.187,
+      "bytes": 257459
+    },
+    {
+      "index": 62,
+      "seconds": 1.594,
+      "bytes": 257480
+    },
+    {
+      "index": 63,
+      "seconds": 1.031,
+      "bytes": 257563
+    },
+    {
+      "index": 64,
+      "seconds": 1.25,
+      "bytes": 257622
+    },
+    {
+      "index": 65,
+      "seconds": 1.25,
+      "bytes": 257504
+    },
+    {
+      "index": 66,
+      "seconds": 1.094,
+      "bytes": 257625
+    },
+    {
+      "index": 67,
+      "seconds": 1.344,
+      "bytes": 257916
+    },
+    {
+      "index": 68,
+      "seconds": 1.141,
+      "bytes": 257372
+    },
+    {
+      "index": 69,
+      "seconds": 1.234,
+      "bytes": 257648
+    },
+    {
+      "index": 70,
+      "seconds": 1.328,
+      "bytes": 257390
+    },
+    {
+      "index": 71,
+      "seconds": 1.156,
+      "bytes": 257605
+    },
+    {
+      "index": 72,
+      "seconds": 1.25,
+      "bytes": 257397
+    },
+    {
+      "index": 73,
+      "seconds": 1.391,
+      "bytes": 257434
+    },
+    {
+      "index": 74,
+      "seconds": 1.203,
+      "bytes": 257475
+    },
+    {
+      "index": 75,
+      "seconds": 1.281,
+      "bytes": 257565
+    },
+    {
+      "index": 76,
+      "seconds": 1.578,
+      "bytes": 257879
+    },
+    {
+      "index": 77,
+      "seconds": 1.11,
+      "bytes": 257566
+    },
+    {
+      "index": 78,
+      "seconds": 1.172,
+      "bytes": 257541
+    },
+    {
+      "index": 79,
+      "seconds": 1.593,
+      "bytes": 257533
+    },
+    {
+      "index": 80,
+      "seconds": 1.047,
+      "bytes": 257463
+    },
+    {
+      "index": 81,
+      "seconds": 1.203,
+      "bytes": 257789
+    },
+    {
+      "index": 82,
+      "seconds": 1.594,
+      "bytes": 257935
+    },
+    {
+      "index": 83,
+      "seconds": 1.0,
+      "bytes": 257516
+    },
+    {
+      "index": 84,
+      "seconds": 1.265,
+      "bytes": 258244
+    },
+    {
+      "index": 85,
+      "seconds": 1.454,
+      "bytes": 257923
+    },
+    {
+      "index": 86,
+      "seconds": 1.156,
+      "bytes": 257564
+    },
+    {
+      "index": 87,
+      "seconds": 1.078,
+      "bytes": 257642
+    },
+    {
+      "index": 88,
+      "seconds": 1.422,
+      "bytes": 257527
+    },
+    {
+      "index": 89,
+      "seconds": 1.125,
+      "bytes": 257674
+    },
+    {
+      "index": 90,
+      "seconds": 1.344,
+      "bytes": 257372
+    },
+    {
+      "index": 91,
+      "seconds": 1.343,
+      "bytes": 257638
+    },
+    {
+      "index": 92,
+      "seconds": 1.141,
+      "bytes": 257672
+    },
+    {
+      "index": 93,
+      "seconds": 1.312,
+      "bytes": 257495
+    },
+    {
+      "index": 94,
+      "seconds": 1.282,
+      "bytes": 257457
+    },
+    {
+      "index": 95,
+      "seconds": 1.109,
+      "bytes": 257712
+    },
+    {
+      "index": 96,
+      "seconds": 1.359,
+      "bytes": 257835
+    },
+    {
+      "index": 97,
+      "seconds": 1.266,
+      "bytes": 257846
+    },
+    {
+      "index": 98,
+      "seconds": 1.219,
+      "bytes": 257857
+    },
+    {
+      "index": 99,
+      "seconds": 1.375,
+      "bytes": 257594
+    },
+    {
+      "index": 100,
+      "seconds": 1.281,
+      "bytes": 257836
+    },
+    {
+      "index": 101,
+      "seconds": 1.281,
+      "bytes": 258074
+    },
+    {
+      "index": 102,
+      "seconds": 1.391,
+      "bytes": 257929
+    },
+    {
+      "index": 103,
+      "seconds": 1.266,
+      "bytes": 257899
+    },
+    {
+      "index": 104,
+      "seconds": 1.234,
+      "bytes": 258171
+    },
+    {
+      "index": 105,
+      "seconds": 1.312,
+      "bytes": 258410
+    },
+    {
+      "index": 106,
+      "seconds": 1.375,
+      "bytes": 258428
+    },
+    {
+      "index": 107,
+      "seconds": 1.297,
+      "bytes": 258389
+    },
+    {
+      "index": 108,
+      "seconds": 1.422,
+      "bytes": 258590
+    },
+    {
+      "index": 109,
+      "seconds": 1.25,
+      "bytes": 258735
+    },
+    {
+      "index": 110,
+      "seconds": 1.188,
+      "bytes": 258860
+    },
+    {
+      "index": 111,
+      "seconds": 1.547,
+      "bytes": 258881
+    },
+    {
+      "index": 112,
+      "seconds": 1.187,
+      "bytes": 258667
+    },
+    {
+      "index": 113,
+      "seconds": 1.281,
+      "bytes": 259021
+    },
+    {
+      "index": 114,
+      "seconds": 1.375,
+      "bytes": 258763
+    },
+    {
+      "index": 115,
+      "seconds": 1.094,
+      "bytes": 259012
+    },
+    {
+      "index": 116,
+      "seconds": 1.125,
+      "bytes": 258907
+    },
+    {
+      "index": 117,
+      "seconds": 1.438,
+      "bytes": 258878
+    },
+    {
+      "index": 118,
+      "seconds": 1.078,
+      "bytes": 258788
+    },
+    {
+      "index": 119,
+      "seconds": 1.25,
+      "bytes": 258654
+    },
+    {
+      "index": 120,
+      "seconds": 1.531,
+      "bytes": 258894
+    }
+  ],
+  "totalSeconds": 157.875,
+  "baseCoverSource": {
+    "source": "models\\real\\steering.glb",
+    "sourceBytes": 2852580,
+    "sourceSha256": "e787d66353912c1f47f9008a4995176ae4d1270e9e5aece02980278a4630595d",
+    "sourceTriangles": 158758,
+    "sourceMeshNames": [
+      "mat_printed",
+      "mat_steel"
+    ],
+    "cameraDirectionBlenderZUp": [
+      0.487713098526001,
+      -0.7664062976837158,
+      0.41803979873657227
+    ],
+    "cameraAngleIndex": 0,
+    "dimensions": [
+      1800,
+      1200
+    ],
+    "samples": 192,
+    "geometryChanges": "Blender removes exactly the audited coincident duplicate source faces during import. Unique surface geometry is unchanged. Uniform scale/translation and shallow-edge shading normals only after import.",
+    "sourceDimensionsBlender": [
+      457.1618347167969,
+      453.1054992675781,
+      428.20501708984375
+    ],
+    "importedTriangles": 158538,
+    "zeroAreaSourceTriangles": 0,
+    "repeatedIndexSourceTriangles": 0,
+    "duplicateSourceTriangles": 220
+  },
+  "encodedFrames": [
+    {
+      "file": "00.webp",
+      "bytes": 7330,
+      "sha256": "a64f10625fa58722c7c35b51e9d6e743b8724f49c4c612b3b79c91e67be35434"
+    },
+    {
+      "file": "01.webp",
+      "bytes": 7278,
+      "sha256": "69257cc2b19a5d353fb3202bb02c694638de40b64657ec69fc253ee2309b1d14"
+    },
+    {
+      "file": "02.webp",
+      "bytes": 7176,
+      "sha256": "139ed511b88bd1573d9f9c9406d3e7576d131206eafa9d9b4ff94aa49c7a7427"
+    },
+    {
+      "file": "03.webp",
+      "bytes": 7296,
+      "sha256": "d9f965460724a98dc78974d1202b13e8e826d8d768957fa58dba32c796c914be"
+    },
+    {
+      "file": "04.webp",
+      "bytes": 7228,
+      "sha256": "95eacb31d4d704b3ac1c4dc72dd1cd4265c2d2a16d95ad4b585308862cb1ca9a"
+    },
+    {
+      "file": "05.webp",
+      "bytes": 7118,
+      "sha256": "72c7f192c243ea204f585ca121e507f4c5cc60657a2c262f76f79e047533291f"
+    },
+    {
+      "file": "06.webp",
+      "bytes": 7140,
+      "sha256": "ff8b8c90710d1ed2fe558b7091539521fdfb3d19635a7f72ec6b5817b9e64b64"
+    },
+    {
+      "file": "07.webp",
+      "bytes": 7326,
+      "sha256": "cce745dcd8ede27dd3e4857d7d1b222e6de4f60c24bf4c423f992904169bceb0"
+    },
+    {
+      "file": "08.webp",
+      "bytes": 7208,
+      "sha256": "3df7234fbf9132c4e73b8095d8bcc55a0374a02ae52d9d3a63f7a6e84e24bec1"
+    },
+    {
+      "file": "09.webp",
+      "bytes": 7232,
+      "sha256": "838a1827f51dad23982ea278bf7e26765444a73f1dfe6893fcbf0a5e7894fdf6"
+    },
+    {
+      "file": "10.webp",
+      "bytes": 7082,
+      "sha256": "ee2a64a758f7e34c7e4e2155e12103abb7f31ca92e889b5626b2040e56b8152e"
+    },
+    {
+      "file": "11.webp",
+      "bytes": 7146,
+      "sha256": "526e03f5de3b5d5b78ed09eaf3aa5bb91d4d91dd9ac940d0490bfef07ec8b5c6"
+    },
+    {
+      "file": "12.webp",
+      "bytes": 7168,
+      "sha256": "c08f1265e6798d9a67a7cae89640f97a4f64f89105f65e0303afcc994a08f402"
+    },
+    {
+      "file": "13.webp",
+      "bytes": 7146,
+      "sha256": "8ef48c74574b93c93c901db59983ea5a70b6a211e05633d4fd18f83f348836d4"
+    },
+    {
+      "file": "14.webp",
+      "bytes": 7202,
+      "sha256": "05880168e428e0b6094a038ce77b25ff122afa59dbfbf1be452ba94ed8f0eeea"
+    },
+    {
+      "file": "15.webp",
+      "bytes": 7110,
+      "sha256": "ec96a6d6750b2972086cd586b27d27a607c94f0f4b550a0c443159c778bc95a5"
+    },
+    {
+      "file": "16.webp",
+      "bytes": 7096,
+      "sha256": "2f3078267e98251f0245a2cfaf96aa40a2ac05a12ab5db17b55447e103954551"
+    },
+    {
+      "file": "17.webp",
+      "bytes": 7018,
+      "sha256": "b228e60bf66768eca3fe20e1372d31b6f45a12e2c01082ee9c137d7c4a7da035"
+    },
+    {
+      "file": "18.webp",
+      "bytes": 7008,
+      "sha256": "3f736d669ef0ea3510457f4382e25c2a24a243ea7f0489d53a61c4057ddf3d6e"
+    },
+    {
+      "file": "19.webp",
+      "bytes": 7078,
+      "sha256": "25925cd5d183a42e79fba5459774d845285f3758c4f4e96671e44c234f796432"
+    },
+    {
+      "file": "20.webp",
+      "bytes": 7018,
+      "sha256": "daec3305f494e25bd13807e2fb26fbce735d64630e28910d8eb69e6570e8cec2"
+    },
+    {
+      "file": "21.webp",
+      "bytes": 7034,
+      "sha256": "a2bc51c98f2f97653e760eb06ec70a494f562817b325a4bd57797196e5c7c163"
+    },
+    {
+      "file": "22.webp",
+      "bytes": 7004,
+      "sha256": "d274eb24924b5d8950a3ecb43e91ea091de3756409adfca7ded2bc1a168c2c22"
+    },
+    {
+      "file": "23.webp",
+      "bytes": 7012,
+      "sha256": "7f88c522453f8f1cc260ee7bea70e9f1e2808deb8f0c9f27e71f3babe944ce03"
+    },
+    {
+      "file": "24.webp",
+      "bytes": 6912,
+      "sha256": "e13d65538d58f87997de62ae391251ba58452e3cfd2cb828b7b2759134588c29"
+    },
+    {
+      "file": "25.webp",
+      "bytes": 6880,
+      "sha256": "07aa90494247698c47e38b967c630c8a6da74b06c615eea8b3bf375960aa8393"
+    },
+    {
+      "file": "26.webp",
+      "bytes": 6948,
+      "sha256": "c4973e35b14f6368fceaccbb13a6722f0cb6d57aaf096c0005071e523820b7cf"
+    },
+    {
+      "file": "27.webp",
+      "bytes": 6852,
+      "sha256": "0a6d28db2332a57b08dd002871872a5d2501404cca902905f7c90f452644679d"
+    },
+    {
+      "file": "28.webp",
+      "bytes": 6900,
+      "sha256": "a7a38ff6c19c06a0b2ce8461ebcb7b62acc3b7326b9b2111c759bda3b28f3622"
+    },
+    {
+      "file": "29.webp",
+      "bytes": 6898,
+      "sha256": "35245c000e9b237f3b5fece34fa03e2ac7ef30888eaa98fe66a4e4fe2ce56081"
+    },
+    {
+      "file": "30.webp",
+      "bytes": 6840,
+      "sha256": "832dbc631a308b6dc22d6af0b5dcf88de8e7c0136e1a94657a31492acea326fa"
+    },
+    {
+      "file": "31.webp",
+      "bytes": 6866,
+      "sha256": "7184055655fe2f13f077b34a39a4480fd0f3880f56adbb327bdd9bfc1c727857"
+    },
+    {
+      "file": "32.webp",
+      "bytes": 6880,
+      "sha256": "5ccaada12d6eba753d073a08f33e7033bc4f2ea1a48fdd7ea8ae3d71aa4476b9"
+    },
+    {
+      "file": "33.webp",
+      "bytes": 6924,
+      "sha256": "44c6ddc3503ef435a7b7e2bc2fb95cdf4b5040e4ee84da2332caa376a5a34baf"
+    },
+    {
+      "file": "34.webp",
+      "bytes": 6868,
+      "sha256": "6f36b123ce48995194c15ae1e059b94f3ff667780ff309491149d5944c81afec"
+    },
+    {
+      "file": "35.webp",
+      "bytes": 6908,
+      "sha256": "0febf8695aedb09050e639418a08b0bf9e906763bc22f3b43d97c4130e162f24"
+    },
+    {
+      "file": "36.webp",
+      "bytes": 6918,
+      "sha256": "980f901f31e58b4a07cb8459fa44297d1c3c94a21048778f31b6c58f32a18b12"
+    },
+    {
+      "file": "37.webp",
+      "bytes": 6878,
+      "sha256": "7fd48b3fcc92ce38017046ab6441e7046a39263bb81e2bb9c3851030d3449fa5"
+    },
+    {
+      "file": "38.webp",
+      "bytes": 6830,
+      "sha256": "f75b4ef23f105cdc71e8a65e57abad966c788aab41899bf72d619da9bfbd9cbd"
+    },
+    {
+      "file": "39.webp",
+      "bytes": 6898,
+      "sha256": "bb04c11968f9f0c5e66ea0f7b4cb12c625def89bb43e1652f8ee17f70fe3130a"
+    },
+    {
+      "file": "40.webp",
+      "bytes": 6976,
+      "sha256": "c08a779676cd4005cd320efa72bd8b3614ca5642420f710bc918be672d615e68"
+    },
+    {
+      "file": "41.webp",
+      "bytes": 6992,
+      "sha256": "828ab3e9286504bae5ea8e4175ee7ab34a16493e445e0f3293336ee3bbaf4730"
+    },
+    {
+      "file": "42.webp",
+      "bytes": 6974,
+      "sha256": "5def8a3a410f7b78f8cb6307db8b9c8599b3cb13f31e6c4dd67f7e09e926e16b"
+    },
+    {
+      "file": "43.webp",
+      "bytes": 6884,
+      "sha256": "9f0a23e661be8895bcf3e6e2840912048077fab2ef99367d3b3610642c35f8c5"
+    },
+    {
+      "file": "44.webp",
+      "bytes": 6874,
+      "sha256": "e10c8a6fdba970f5be8e9e3378da100fc87ee5ed83358f5c218fe3f20c467d95"
+    },
+    {
+      "file": "45.webp",
+      "bytes": 6884,
+      "sha256": "3214c48fee1625bcdcfe693ecdc6dfac03e8598829a2e0ec40c60b173169f58a"
+    },
+    {
+      "file": "46.webp",
+      "bytes": 6976,
+      "sha256": "dd46c7e5f648dadc72b358a18303bb2bd4f215d68bbc226dd2de9b707cc06048"
+    },
+    {
+      "file": "47.webp",
+      "bytes": 6958,
+      "sha256": "96bb6c969f72a2187073e92859af780edc7252ff54b930b79211ed172a4cd4ec"
+    },
+    {
+      "file": "48.webp",
+      "bytes": 6888,
+      "sha256": "1a08fffeb655ec38f9c505b6b4612fbc7a2f2789e63e6ede418debb8ec1300e3"
+    },
+    {
+      "file": "49.webp",
+      "bytes": 6888,
+      "sha256": "95198cea88142bb732b10aa6da2ece7c6f2a99be30ef619145bf605ecf5092e8"
+    },
+    {
+      "file": "50.webp",
+      "bytes": 6916,
+      "sha256": "313f014feb91ac9e1e85b507cf9312ec5cb9510f1d2fa3aa63912d75fc46d228"
+    },
+    {
+      "file": "51.webp",
+      "bytes": 6952,
+      "sha256": "9e565cd77b19dccfb3cbe49023d8a2ddeb72c754bdd369ab51e3c4a1e2439d75"
+    },
+    {
+      "file": "52.webp",
+      "bytes": 6946,
+      "sha256": "302b6daedda91641cf9878c2a7df3df4e7c1b4c7abe774fe989c374b25ad5d95"
+    },
+    {
+      "file": "53.webp",
+      "bytes": 7020,
+      "sha256": "c56043850c37b047dbf0e4c7614be82982de8d5367e60b779f4ca6fefd17b2ce"
+    },
+    {
+      "file": "54.webp",
+      "bytes": 7028,
+      "sha256": "990e22822c8cea8f92fa2425c66aa154f3775f37f3123ad6fd320968af30bbb7"
+    },
+    {
+      "file": "55.webp",
+      "bytes": 6980,
+      "sha256": "77008fafa59fbca93e5008412ed3522a1e6976b059f5fe460215945f0731bbf5"
+    },
+    {
+      "file": "56.webp",
+      "bytes": 6944,
+      "sha256": "1931a8ab307680eb29c43c6a382c4714e850e0446689d5e5cad2efe256267317"
+    },
+    {
+      "file": "57.webp",
+      "bytes": 6904,
+      "sha256": "295674022c272ac373fdef33fc63d5d8b8245510c63ccb138630755da1267d69"
+    },
+    {
+      "file": "58.webp",
+      "bytes": 6970,
+      "sha256": "445489d8d5fc2fade4d24ea044a1be1661a08b824772a90b2c62b18cbdf94d60"
+    },
+    {
+      "file": "59.webp",
+      "bytes": 6952,
+      "sha256": "97ffd220d9233f4ab425afb963caade227f401a819c1c84c9801ea9c035ac9c3"
+    },
+    {
+      "file": "60.webp",
+      "bytes": 6966,
+      "sha256": "933815b7e295f20b236b303f8190d671dc712229f8322ec6154afcc03c20e064"
+    },
+    {
+      "file": "61.webp",
+      "bytes": 6950,
+      "sha256": "11e4df9fe07738fe4a687c88165d154ae207ce5d185d55531f61e1ed41fdad38"
+    },
+    {
+      "file": "62.webp",
+      "bytes": 6974,
+      "sha256": "0a0ae29d9447e1e2a62f65f551c6b7d1d9fc7c891e37e49f513e2b74a3c1900b"
+    },
+    {
+      "file": "63.webp",
+      "bytes": 6902,
+      "sha256": "2ad9596fe6c00c6ffcc13938401d77cced8faeb180b6fb2e80411764138ad5e2"
+    },
+    {
+      "file": "64.webp",
+      "bytes": 6944,
+      "sha256": "1931a8ab307680eb29c43c6a382c4714e850e0446689d5e5cad2efe256267317"
+    },
+    {
+      "file": "65.webp",
+      "bytes": 6982,
+      "sha256": "4d585d2e9093101ee7f71644b9af775ae7c62662f7f59b757d59546c2c74a49b"
+    },
+    {
+      "file": "66.webp",
+      "bytes": 7028,
+      "sha256": "990e22822c8cea8f92fa2425c66aa154f3775f37f3123ad6fd320968af30bbb7"
+    },
+    {
+      "file": "67.webp",
+      "bytes": 7018,
+      "sha256": "e3694d9d301bacfd7bc23dcedf84e0bdc330dd1f44770295e8bdd622ddf0be33"
+    },
+    {
+      "file": "68.webp",
+      "bytes": 6936,
+      "sha256": "60d74927acbd3ee3f61fd52a2d42be6409247bd3f728a75db946d459ab4af715"
+    },
+    {
+      "file": "69.webp",
+      "bytes": 6952,
+      "sha256": "9e565cd77b19dccfb3cbe49023d8a2ddeb72c754bdd369ab51e3c4a1e2439d75"
+    },
+    {
+      "file": "70.webp",
+      "bytes": 6916,
+      "sha256": "313f014feb91ac9e1e85b507cf9312ec5cb9510f1d2fa3aa63912d75fc46d228"
+    },
+    {
+      "file": "71.webp",
+      "bytes": 6886,
+      "sha256": "7947bc6f4693bd05a07c1f8a88b43b566b0b356ae276242fd9ec7c2dd23b128f"
+    },
+    {
+      "file": "72.webp",
+      "bytes": 6888,
+      "sha256": "7279bd7c28342c7b40ee1576d8966394d7e0b2d5fd62f7d1600a9b65e004c995"
+    },
+    {
+      "file": "73.webp",
+      "bytes": 6958,
+      "sha256": "56e1a683730541403d098486af9216084cd754fc63127c6292745c8af124427e"
+    },
+    {
+      "file": "74.webp",
+      "bytes": 6974,
+      "sha256": "60dfe3405baadb60c9727014df683128ef6ab21c455b69e74f4e54d0927adaf0"
+    },
+    {
+      "file": "75.webp",
+      "bytes": 6884,
+      "sha256": "3214c48fee1625bcdcfe693ecdc6dfac03e8598829a2e0ec40c60b173169f58a"
+    },
+    {
+      "file": "76.webp",
+      "bytes": 6868,
+      "sha256": "30f9006ed99136540e067067ec153130bffe488840c401681329c0ba9ef1efe3"
+    },
+    {
+      "file": "77.webp",
+      "bytes": 6884,
+      "sha256": "c993beaac8912c741706e20f2c089c848c647f1f6f47e3c00ba9542184d25c5d"
+    },
+    {
+      "file": "78.webp",
+      "bytes": 6974,
+      "sha256": "5def8a3a410f7b78f8cb6307db8b9c8599b3cb13f31e6c4dd67f7e09e926e16b"
+    },
+    {
+      "file": "79.webp",
+      "bytes": 6998,
+      "sha256": "f268bc5498ebc145826000e5738d6feee9a6945443fe863f8bcfefcbe8b86f34"
+    },
+    {
+      "file": "80.webp",
+      "bytes": 6976,
+      "sha256": "0c6431b3c4b5a1e9bf9dfeef834de3d2c3b81f08c26bc1a033d642161c64f2e0"
+    },
+    {
+      "file": "81.webp",
+      "bytes": 6892,
+      "sha256": "f464eeb6dc7bc57710cb428de8ed3a1d0d00b76f328852bea7fc71d79ffeeee4"
+    },
+    {
+      "file": "82.webp",
+      "bytes": 6824,
+      "sha256": "2af9a6187c464f5b124cad3be92bff1e7f47f7911b60303fc04ca6a0e1c22ffd"
+    },
+    {
+      "file": "83.webp",
+      "bytes": 6878,
+      "sha256": "7fd48b3fcc92ce38017046ab6441e7046a39263bb81e2bb9c3851030d3449fa5"
+    },
+    {
+      "file": "84.webp",
+      "bytes": 6920,
+      "sha256": "5859b4d9ab6224e3bc669cc38336a04bd2cd5924c8f2e8dcb6c873853608fd81"
+    },
+    {
+      "file": "85.webp",
+      "bytes": 6908,
+      "sha256": "0febf8695aedb09050e639418a08b0bf9e906763bc22f3b43d97c4130e162f24"
+    },
+    {
+      "file": "86.webp",
+      "bytes": 6870,
+      "sha256": "0b386d5778b6db0abe333b71c3b25cd1c74b0283f87f5a17d1e5e49e30ab725d"
+    },
+    {
+      "file": "87.webp",
+      "bytes": 6924,
+      "sha256": "0451c3e8cee81db409852d83d82e48fd4921a09302a7cf335ee8786ae512d0be"
+    },
+    {
+      "file": "88.webp",
+      "bytes": 6880,
+      "sha256": "5ccaada12d6eba753d073a08f33e7033bc4f2ea1a48fdd7ea8ae3d71aa4476b9"
+    },
+    {
+      "file": "89.webp",
+      "bytes": 6872,
+      "sha256": "cfcd14c70f4ab1afb0d6878ea3b1a392ee3cf3c1f20d823886e73effed70b181"
+    },
+    {
+      "file": "90.webp",
+      "bytes": 6946,
+      "sha256": "26da3f3087923868cf9fe22322f7b2cc7674a1a1556ed00597ea36aee28cb2c2"
+    },
+    {
+      "file": "91.webp",
+      "bytes": 6898,
+      "sha256": "35245c000e9b237f3b5fece34fa03e2ac7ef30888eaa98fe66a4e4fe2ce56081"
+    },
+    {
+      "file": "92.webp",
+      "bytes": 6896,
+      "sha256": "383fa346dc16acbf6bc6d6ae2a7c9f038dbf7b3dbc96ac51b24a3e4386ce386c"
+    },
+    {
+      "file": "93.webp",
+      "bytes": 6852,
+      "sha256": "ad59f49f5870cb736c0c00ba777b00c15f7d1a7c51d1853215a38b10925942e7"
+    },
+    {
+      "file": "94.webp",
+      "bytes": 6948,
+      "sha256": "c4973e35b14f6368fceaccbb13a6722f0cb6d57aaf096c0005071e523820b7cf"
+    },
+    {
+      "file": "95.webp",
+      "bytes": 6880,
+      "sha256": "07aa90494247698c47e38b967c630c8a6da74b06c615eea8b3bf375960aa8393"
+    },
+    {
+      "file": "96.webp",
+      "bytes": 6912,
+      "sha256": "e13d65538d58f87997de62ae391251ba58452e3cfd2cb828b7b2759134588c29"
+    },
+    {
+      "file": "97.webp",
+      "bytes": 7012,
+      "sha256": "37d60e0546591b6b54884b3f003449307346d43dc0f4e0e9ee3f78d2b36c779a"
+    },
+    {
+      "file": "98.webp",
+      "bytes": 7006,
+      "sha256": "bbae0da5fe04b56a124c765b86626eb50193d127da21adfdf65ba9facaec1570"
+    },
+    {
+      "file": "99.webp",
+      "bytes": 7028,
+      "sha256": "d56dc9c689d2d24b832a66a233c129cacaffd5c46206ac8502f2467a59d24d85"
+    },
+    {
+      "file": "100.webp",
+      "bytes": 7018,
+      "sha256": "daec3305f494e25bd13807e2fb26fbce735d64630e28910d8eb69e6570e8cec2"
+    },
+    {
+      "file": "101.webp",
+      "bytes": 7086,
+      "sha256": "76218397106813ce932f96beed66f08476f6f97f3246eb953f9457580166791d"
+    },
+    {
+      "file": "102.webp",
+      "bytes": 7022,
+      "sha256": "65b51210f0501c0adfab292d674d3c099d7ac52c8330c8e48d13d024f31ca999"
+    },
+    {
+      "file": "103.webp",
+      "bytes": 7018,
+      "sha256": "1ee89af96ba2f59454db88588264623574a1a46e6e342793b6ae8cfee9dc1461"
+    },
+    {
+      "file": "104.webp",
+      "bytes": 7096,
+      "sha256": "cf185d7576a04325d43215ef32125cc42bef582305ae9b55d9ce43f59fe8c06e"
+    },
+    {
+      "file": "105.webp",
+      "bytes": 7086,
+      "sha256": "cbf22687cfdbf59caafc52b3b20379ea4ab6b4abf86d2b555e7bf45e01c19829"
+    },
+    {
+      "file": "106.webp",
+      "bytes": 7202,
+      "sha256": "b3144b35e2179588218c079393285c38b6fe372a79d0ce6d5eab27a54dd7f0da"
+    },
+    {
+      "file": "107.webp",
+      "bytes": 7144,
+      "sha256": "14d139a944c44cc191804ff66de365dcda1b55cce52dca7f9516373e65280cf3"
+    },
+    {
+      "file": "108.webp",
+      "bytes": 7170,
+      "sha256": "c04e247a98d9cf4d900b8cd01c1313c764b45c512a4f5292fcec77309cc68e0f"
+    },
+    {
+      "file": "109.webp",
+      "bytes": 7146,
+      "sha256": "526e03f5de3b5d5b78ed09eaf3aa5bb91d4d91dd9ac940d0490bfef07ec8b5c6"
+    },
+    {
+      "file": "110.webp",
+      "bytes": 7082,
+      "sha256": "ee2a64a758f7e34c7e4e2155e12103abb7f31ca92e889b5626b2040e56b8152e"
+    },
+    {
+      "file": "111.webp",
+      "bytes": 7230,
+      "sha256": "b88bd299e02c47a1ac162e3e67f76683895ec4617b0305b90d38a634443a9680"
+    },
+    {
+      "file": "112.webp",
+      "bytes": 7208,
+      "sha256": "3df7234fbf9132c4e73b8095d8bcc55a0374a02ae52d9d3a63f7a6e84e24bec1"
+    },
+    {
+      "file": "113.webp",
+      "bytes": 7308,
+      "sha256": "c310e792ecf289b92710f2ba60065a8682fd4bbae5f69a7e1249b03bbf09d69a"
+    },
+    {
+      "file": "114.webp",
+      "bytes": 7146,
+      "sha256": "a102836b386183009634c528950758268a8fdbde7242cd3168118c1057a46f78"
+    },
+    {
+      "file": "115.webp",
+      "bytes": 7118,
+      "sha256": "e9067c72cf581c09690fbb66545a64cc984a417aa70be08aa063df64977532fe"
+    },
+    {
+      "file": "116.webp",
+      "bytes": 7228,
+      "sha256": "95eacb31d4d704b3ac1c4dc72dd1cd4265c2d2a16d95ad4b585308862cb1ca9a"
+    },
+    {
+      "file": "117.webp",
+      "bytes": 7296,
+      "sha256": "d9f965460724a98dc78974d1202b13e8e826d8d768957fa58dba32c796c914be"
+    },
+    {
+      "file": "118.webp",
+      "bytes": 7174,
+      "sha256": "6e6d23ffc2642123ec3da0e347b87940555f33c86dfa7940b02339b0a7563a16"
+    },
+    {
+      "file": "119.webp",
+      "bytes": 7262,
+      "sha256": "6e16b57f81bbec1c0243d43259ff7005cdf77def5bb9fd2d27a0bce02a1cba1d"
+    },
+    {
+      "file": "120.webp",
+      "bytes": 7330,
+      "sha256": "a64f10625fa58722c7c35b51e9d6e743b8724f49c4c612b3b79c91e67be35434"
+    }
+  ],
+  "encoding": {
+    "format": "WebP static images",
+    "quality": 85,
+    "method": 6,
+    "rasterRetouching": false
+  },
+  "sourceComponentNames": [
+    "mat_printed_part_0",
+    "mat_printed_part_1",
+    "mat_printed_part_2",
+    "mat_printed_part_3",
+    "mat_printed_part_4",
+    "mat_printed_part_5",
+    "mat_printed_part_6",
+    "mat_printed_part_7",
+    "mat_printed_part_8",
+    "mat_printed_part_9",
+    "mat_printed_part_10",
+    "mat_steel_part_0",
+    "mat_steel_part_1",
+    "mat_steel_part_2",
+    "mat_steel_part_3",
+    "mat_steel_part_4",
+    "mat_steel_part_5",
+    "mat_steel_part_6",
+    "mat_steel_part_7",
+    "mat_steel_part_8",
+    "mat_steel_part_9",
+    "mat_steel_part_10",
+    "mat_steel_part_11",
+    "mat_steel_part_12",
+    "mat_steel_part_13",
+    "mat_steel_part_14",
+    "mat_steel_part_15",
+    "mat_steel_part_16",
+    "mat_steel_part_17",
+    "mat_steel_part_18",
+    "mat_steel_part_19",
+    "mat_steel_part_20",
+    "mat_steel_part_21",
+    "mat_steel_part_22",
+    "mat_steel_part_23",
+    "mat_steel_part_24",
+    "mat_steel_part_25",
+    "mat_steel_part_26",
+    "mat_steel_part_27",
+    "mat_steel_part_28",
+    "mat_steel_part_29",
+    "mat_steel_part_30",
+    "mat_steel_part_31",
+    "mat_steel_part_32",
+    "mat_steel_part_33",
+    "mat_steel_part_34",
+    "mat_steel_part_35",
+    "mat_steel_part_36",
+    "mat_steel_part_37",
+    "mat_steel_part_38",
+    "mat_steel_part_39",
+    "mat_steel_part_40"
+  ]
+}
