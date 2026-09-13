@@ -21,48 +21,43 @@ framework, no build step, no package install. Auto-deploys to Vercel from the
 `project-data.js` is the single source of truth for case-study content, shared
 by both pages.
 
-## Authorized functional animation release · 2026-09-13
+## Motion and cover refinement · 2026-09-13
 
-The user authorized publishing this functional animation release on September
-13. The previous production version is the cinematic release `b59c0e8`.
-Open `http://127.0.0.1:4176/` for the working copy; see `LOCAL_PREVIEW.md` for
-startup details. The cache label is `functional-release-20260913`.
+This release supersedes production `ce30134`. The exact new commit and actual
+online status are recorded in `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-motion-refinement/release-metadata.json` and
+`deployment-verification.json`. Preview: http://127.0.0.1:4176/#work.
+The homepage cache label is `motion-refinement-20260913`.
 
-This release includes 15 reversible project animations; Telecaster stays static. Steering, vine
-eversion, propellers, gantries, tensile rupture, heat, unfolding and ten carbon
-plies show function; Pool/LineFollower gain six extraction stages each, and
-Education genuinely assembles its source kit into the matched V2 CAD layout.
-Its 23 strict stages use documented small rigid-fit display clearances.
+- Vine, CFD and Education covers now come directly from their animation scenes:
+  an extended translucent vine, the solved pressure/flow field, and the assembled
+  teaching guitar. The tensile cover and animated specimen share orange #F27A2A.
+- Steering now reaches 90° from neutral, coupling both universal joints and rack.
+  Pool retracts its front cylinder, rack and latches, holds, then releases quickly;
+  pinion and drive sprockets rotate in step. LineFollower rolls both tires/hubs
+  and sways left/right by 10°, with corresponding differential wheel rotation.
+- AURA expands in eleven checked stages, with individually removed top fasteners
+  and separate cover/bearing rings. Its camera follows the expanding stack.
+  Carbon's ten plies share the original cover shader and fixed source coordinates.
 
-The delivery has 1,863 frames: 121 per animation, except 145 for vine and tensile
-test. Slower scroll interpolation, keyboard/touch sliders and a 160 MiB decoded
-image budget support smooth reversible use without homepage WebGL or video.
-The real Fluent reconstruction completed 400 iterations and
-passed its solution audit for qualitative animation. Very low mesh quality,
-no prism boundary layer and first-order transport limit aerodynamic accuracy;
-see `../.codex/functional-motion-20260913/cfd/rebuild-report.md`.
-CFD pressure colors use zero-centered asinh normalization with a 750 Pa scale:
-negative pressure is cool blue and positive pressure is orange/red. The complete
-−10645.81 to +7817.95 Pa range and solved data remain unchanged, without clipping
-or a new solve. The legend identifies the asinh scale, −2k/0/+2k and both extremes.
-All 48 approved cover files remain unchanged. `EXPLODED_VIEWS.md` records final
-frame bytes, packing and validation evidence for all fifteen sequences.
+Fifteen animations contain 1,911 static 640×427 WebP frames (23,864,252 bytes),
+48 Cycles samples each. Vine, tensile, AURA and Pool have 145 frames; others 121.
+Six revised sequences use `assets/exploded/refined-20260913/`; the remaining nine
+retain their previously verified `functional-20260913/` assets. Telecaster is static.
+Four covers use twelve new responsive images; the other 36 current variants
+and all 48 historical cover files remain unchanged. Original CAD, galleries,
+project content and the 3D studio are preserved.
 
-Release recovery entry:
-`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-functional-release/RESTORE.md`.
-The adjacent `release-metadata.json` identifies the exact release commit;
-`deployment-verification.json` records the actual production verification result.
-The earlier `functional-motion` and `pre-publish` backups remain historical snapshots.
+Sliders, smooth reversible wheel input, endpoint page scrolling, reduced motion,
+modal reset and the 160 MiB decoded-image budget remain supported. The CFD uses
+the existing audited 400-iteration Fluent solve and the full-range, zero-centered
+asinh pressure colors; no new solve or altered pressure data is introduced.
+It remains a qualitative reconstruction with the limitations documented in
+`../.codex/functional-motion-20260913/cfd/rebuild-report.md`.
 
-All 16 project cards use responsive studio renders from local CAD and documented
-photo reconstructions. Source audits, reproduction commands and image hashes are
-in `tools/editorial-render/README.md` and `catalog-manifest.json` there. Original
-project galleries and 3D models remain intact.
-
-The site is plain static files — serve the folder with any static server and
-open `index.html`. There is no Python on PATH on this machine; use a bundled
-interpreter or the editor's live-preview. During development it is served on
-`http://localhost:4173/`.
+See `EXPLODED_VIEWS.md` for current motion details and verification, and
+`tools/exploded-render/README.md` for reproduction. Current evidence and PNG
+masters are in `../.codex/motion-refinement-20260913/`. The previous
+`functional-release` backup remains a separate, verified historical release.
 
 ## Docs
 

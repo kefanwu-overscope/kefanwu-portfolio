@@ -1,5 +1,20 @@
 # Real CAD editorial stills
 
+## Current animation-derived covers · 2026-09-13
+
+Vine, CFD, Education and Material Test now use matched motion-scene stills from
+`../exploded-render/pack_motion_covers.py`. Progress values are 0.75, 0.5, 1 and 0
+respectively; masters use 1800×1200 and 192 samples. Twelve new variants live in
+`assets/editorial/motion-20260913/`. The other 36 current variants are unchanged,
+and all 48 previous cover files remain present with their original hashes.
+Carbon retains its original cover; its ten animated plies now use the identical
+source shader and fixed source coordinates. `apply_covers.py` reads current
+catalogue paths so it will retain these selections. `validate_catalog.py` checks
+both animation-derived and original provenance, plus original model/gallery
+preservation against ce30134. The reproduction notes below describe the earlier
+source covers; do not overwrite current catalogue entries with those old scenes.
+Current evidence: `../../../.codex/motion-refinement-20260913/`.
+
 Current full catalogue: `/tools/editorial-render/catalog-proof.html` on the local
 portfolio server at `http://127.0.0.1:4176/`. All 16 homepage cards use these stills.
 

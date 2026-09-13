@@ -1,124 +1,132 @@
-# Functional project animations · 2026-09-13
+# Project animation and cover refinement · 2026-09-13
 
-Local preview: http://127.0.0.1:4176/#work
+## Motion and cover refinement · 2026-09-13
 
-The authorized functional animation release supersedes cinematic release
-`b59c0e8`. Fifteen cards animate; Telecaster guitar is static. The exact release
-commit and online verification are recorded in the release backup below.
+This release supersedes production `ce30134`. The exact new commit and actual
+online status are recorded in `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-motion-refinement/release-metadata.json` and
+`deployment-verification.json`. Preview: http://127.0.0.1:4176/#work.
+The homepage cache label is `motion-refinement-20260913`.
+
+- Vine, CFD and Education covers now come directly from their animation scenes:
+  an extended translucent vine, the solved pressure/flow field, and the assembled
+  teaching guitar. The tensile cover and animated specimen share orange #F27A2A.
+- Steering now reaches 90° from neutral, coupling both universal joints and rack.
+  Pool retracts its front cylinder, rack and latches, holds, then releases quickly;
+  pinion and drive sprockets rotate in step. LineFollower rolls both tires/hubs
+  and sways left/right by 10°, with corresponding differential wheel rotation.
+- AURA expands in eleven checked stages, with individually removed top fasteners
+  and separate cover/bearing rings. Its camera follows the expanding stack.
+  Carbon's ten plies share the original cover shader and fixed source coordinates.
+
+Fifteen animations contain 1,911 static 640×427 WebP frames (23,864,252 bytes),
+48 Cycles samples each. Vine, tensile, AURA and Pool have 145 frames; others 121.
+Six revised sequences use `assets/exploded/refined-20260913/`; the remaining nine
+retain their previously verified `functional-20260913/` assets. Telecaster is static.
+Four covers use twelve new responsive images; the other 36 current variants
+and all 48 historical cover files remain unchanged. Original CAD, galleries,
+project content and the 3D studio are preserved.
+
+Sliders, smooth reversible wheel input, endpoint page scrolling, reduced motion,
+modal reset and the 160 MiB decoded-image budget remain supported. The CFD uses
+the existing audited 400-iteration Fluent solve and the full-range, zero-centered
+asinh pressure colors; no new solve or altered pressure data is introduced.
+It remains a qualitative reconstruction with the limitations documented in
+`../.codex/functional-motion-20260913/cfd/rebuild-report.md`.
+
+See `EXPLODED_VIEWS.md` for current motion details and verification, and
+`tools/exploded-render/README.md` for reproduction. Current evidence and PNG
+masters are in `../.codex/motion-refinement-20260913/`. The previous
+`functional-release` backup remains a separate, verified historical release.
 
 ## Interaction
 
-Hover a card and scroll forward to advance, backward to reverse. Outward wheel
-input at either endpoint continues scrolling the page. Moving away restores the
-original cover. Native sliders support keyboard and touch; project clicks still
-open the original galleries. Carbon displays the number of completed plies.
+Hover and scroll to advance or reverse; outward input at either endpoint scrolls
+the page. Keyboard/touch sliders retain subpercent progress. Leaving the card,
+opening a gallery or hiding/filtering it restores its cover. Carbon reports its
+completed ply count. Large jumps take at least about 1.8 seconds for a full sweep.
+Only the active sequence loads, three requests at a time. The cache permits at
+most two sequences within 160 MiB; a 145-frame sequence estimates 151.16 MiB.
+Reduced motion changes frames directly. Failed downloads leave the cover usable.
 
-The revised controller preserves subpercent slider values, eases wheel movement,
-and limits large jumps so a full sweep takes at least about 1.8 seconds. It handles
-focus scrolling a previously offscreen card into view, cancels old loading work,
-and resets immediately for modals, filtering and hidden cards. Reduced-motion
-users receive direct frame changes. Download failures preserve the static cover.
+## Geometry, materials and source interpretation
 
-## Project motion and source interpretation
+- Steering follows neutral → −90° → neutral. All 121 rendered poses plus each
+  integer angle (210 unique combined poses) introduce no new contact pairs;
+  maximum source upper-yoke penetration remains 0.00630016 scene units. The source
+  lacks explicit joint cross pins and rack teeth; this is a kinematic illustration.
+- Pool retracts along its source +Y axis by 0.14 scene units (about 23.17 mm).
+  Retraction occupies 64% of the cycle, hold 8%, release 12%, and rest 16%.
+  The fixed 250 mm support remains stationary; continuous path analysis places
+  its first new solid obstruction at 0.148417 scene units. The displayed stroke
+  retains about 1.39 mm clearance. The original simplified rack/pinion tooth
+  overlap varies from 0.0017343 to at most 0.00228265 scene units during meshing;
+  this limitation is explicit, not presented as a perfect tooth contact model.
+  All 145 sampled poses add no new contacting component pairs. Meshes and axis
+  spacing are unchanged. Cycle timing is illustrative, not measured launch speed.
+- LineFollower uses its real wheel centers and X axle. The complete chassis yaws
+  ±10°, both wheels complete two nominal turns, and differential rotation follows
+  the yaw. Translation is suppressed to keep the model on the card; this does
+  not claim a measured path or controller response. All 121 sampled poses add
+  no new contacts. All three mechanisms pass reverse/random seeking without drift.
+- AURA retains all 37 source components and 106,314 triangles. Eleven extraction
+  stages pass 1,100 path samples and 66,476 continuous triangle tests with no new
+  interference or floor crossing; 435 seeks have zero drift. Wheel/axle/fork and
+  embedded fasteners retain their source grouping where independent extraction
+  fails strict checks. Thirty-five source contact/intersection pairs are recorded.
+- Carbon copies the complete original cover material graph. The shell and all
+  ten plies share a single material and source-space coordinates; the weave does
+  not slide or rescale during deformation. Same-point render comparisons differ
+  by at most 2/255 in channel values. The source cover stays unchanged. All 363
+  carbon and 435 tensile seeks match the previous geometric motion exactly.
+- The orange tensile specimen keeps its original fabric roughness/noise/bump.
+  Both ends stay clamped; the upper grip stretches and separates it into retained
+  halves. This is a qualitative fracture display on the documented photo-based
+  reconstruction, not a measured stress-strain or fracture-load result.
+- Vine uses a translucent double-wall film at the actual outlet; hardware stays
+  fixed. Javelin rotates four propellers on their measured axes. Scanner/Smelly
+  retain guide-axis gantry motion, with Smelly's coupled four-start screw.
+- Education retains its 23 strict assembly stages and matched original V2 STL
+  layout. Its new cover shows the assembled endpoint from the same front view.
+  Existing display-fit adjustments are about 2.319 mm at the neck and pickup
+  front plate, plus a common floor lift; they are not manufacturing tolerances.
+  No accepted stage uses the optional numerical seam extension.
+- Brake heating, the connected driver-seat unfold with 44 holes and two existing
+  render-only corner reliefs, FTC disassembly and Telecaster's static card retain
+  their prior verified behavior. Original GLBs and galleries remain unchanged.
 
-- **Mk.8 steering:** the wheel drives three fitted shaft axes, two phased universal
-  joints and rack translation. The cycle uses neutral → −32° → neutral, avoiding
-  added interference in the source yokes. The source lacks explicit cross pins
-  and rack teeth; the linkage is an illustrated mechanism, not a tolerance model.
-- **Vine robot:** a semitransparent double-wall film tube everts from the actual
-  side outlet. The vessel and hardware remain fixed.
-- **Javelin:** four propellers rotate about their measured hub axes; motor bases,
-  nuts, wings and fuselage stay fixed. Source mating contacts are retained.
-- **LiDAR / Smelly:** gantries and carriages follow the fitted guide axes. Smelly's
-  four-start leadscrew also turns in step with carriage travel.
-- **Material testing:** the upper fixture pulls the specimen against the fixed
-  lower grip. It necks and splits into two retained halves, with both ends still
-  clamped. The tester retains its documented photographic reconstruction; this
-  demonstration is not a newly calibrated constitutive material simulation.
-- **CFD:** actual Ansys Fluent 400-iteration rebuilt cruise results
-  provide the surface pressure field and numerical paths. Markers move along
-  exported paths using physical travel time. The pressure field is steady. The
-  enhanced color scale centers on zero gauge pressure: negative pressure is blue,
-  positive pressure orange/red. Full-range asinh normalization (750 Pa scale)
-  makes common high-pressure regions visible without clipping or changing data.
-  The nonlinear legend marks both extrema, −2,000, zero and +2,000 Pa.
-  lost original case is not reproduced exactly; the new airframe-only case uses
-  documented geometry cleanup and has no rotor wake, prism boundary layers or
-  mesh-convergence study. See `../.codex/functional-motion-20260913/cfd/rebuild-report.md`
-  for accepted data, numerical checks and limitations. The original CFD cover
-  and gallery remain unchanged.
-- **Pool / LineFollower:** each has six sequential extraction groups. Pool adds
-  side supports, metal bracket and cross-shafts; LineFollower separates tires,
-  USB/power hardware, header groups and front sensors.
-- **Education guitar:** 23 stages assemble the kit into the source V2 CAD layout.
-  The neck turns upright; pickups, bridge, guard and controls enter through clear
-  paths. The pickup's two original independent pieces enter from opposite sides
-  of the bridge. A fixed front view makes the completed teaching guitar readable.
-  Explicit display-fit adjustments are approximately 2.319 mm of neck seating
-  height and pickup front-plate clearance, plus a common floor lift. They are not
-  manufacturing tolerances. Original meshes and materials are preserved.
-- **Brake / driver seat / carbon:** intact metal heats from silver to red; the
-  driver seat unfolds into a continuous sheet retaining all 44 holes; exactly ten
-  cloth plies are laid one at a time. Heat colors and ply spacing are illustrative.
-  The earlier two render-only corner reliefs remain documented; source GLBs are
-  unchanged. AURA and FTC retain their checked sequential assembly previews.
+## CFD and matching covers
 
-## Assets and loading
+The new CFD cover directly shows the same steady pressure field and physical-time
+path markers as the animation at progress 0.5. The existing real Fluent 24.1.0
+solve completed 400 iterations: 377,141 tetrahedra, 47,450 wall triangles and 49
+numerical paths. Pressure remains −10645.81 to +7817.95 Pa, without clipping.
+The zero-centered asinh scale (750 Pa) uses blue for negative and orange/red for
+positive gauge pressure. Legend and wall share one color transfer.
+Very low minimum orthogonal quality (~3.187e−9), no prism boundary layer or
+grid-independence study, and first-order transport limit aerodynamic accuracy.
+The original lost case is not reproduced exactly. Native case/data and raw fields
+remain in the previous evidence folder and are included in the new backup.
 
-1,863 static WebP frames, 23,684,170 bytes,
-640×427, 48 Cycles samples. Asset revision: `functional-20260913`.
-The controller, stylesheet and manifest cache revision is `functional-release-20260913`.
-Every frame URL carries a content hash. The new subdirectory keeps previously
-opened manifests from mixing old and new sequences.
-
-| Project key | Mode | Frames |
-| --- | --- | ---: |
-| steering | steering | 121 |
-| vineRobot | extension | 145 |
-| javelin | propellers | 121 |
-| brakeSim | heat | 121 |
-| aura | assembly | 121 |
-| scanner | gantry | 121 |
-| carbonSeat | layup | 121 |
-| seat | unfold | 121 |
-| materialTest | tensile | 145 |
-| ansysCfd | flow | 121 |
-| pool | assembly | 121 |
-| lineFollower | assembly | 121 |
-| formlabs | gantry | 121 |
-| education | assembling | 121 |
-| ftc | reconstruction | 121 |
-
-Only the manifest loads initially. Interaction fetches three frames at a time.
-At most two sequences are retained, with a further 160 MiB decoded-pixel budget;
-two full-length sequences exceed that budget and cause eviction. The largest
-145-frame sequence estimates 151.16 MiB of decoded pixels. The homepage adds no
-WebGL runtime or video stream. Original responsive covers, modal galleries,
-project content and 3D studio models remain intact.
+The four revised covers are rendered at 1800×1200 with 192 samples, using the
+same controllers/cameras as their animations: vine progress 0.75, CFD 0.5,
+Education 1, tensile 0. They ship at 480/960/1800 pixels. Camera, material/motion
+provenance, master image hashes and final variant hashes are recorded in the
+catalogue. This changes current cover selection while preserving old image files.
 
 ## Verification and recovery
 
-All delivered frames decode and match their recorded dimensions and SHA-256.
-All 48 approved cover files retain their original hashes. Mechanisms and process
-motions were checked for new interference, source contacts and exact seeking.
-Pool and LineFollower each pass six checked stages; Education passes all 23,
-including continuous rotation-clearance proofs. Its checker did not enable the
-optional seam extension. Assembly reverse/random seek checks show zero drift.
+`asset-validation.json` checks every current frame's content hash, decoded size,
+mode, frame count and memory estimate, plus controller evidence and real CFD data.
+`catalog-validation.json` checks all 48 current variants and all 48 historical
+cover files, source provenance and preservation of original galleries/models.
+Browser evidence checks current covers, new modes, reversible sliders, carbon
+counting, modal reset and a narrow layout. The interaction regression covers
+load cancellation, wheel boundaries, easing, memory eviction and reduced motion.
+Automated browser checks do not claim physical touchscreen device testing.
 
-Browser checks cover actual sequence loading, mode labels, keyboard progress,
-carbon counting, the static Telecaster, modal reset, search and narrow layout.
-The controller regression suite covers wheel boundaries, reversal, easing,
-loading races, memory eviction, reduced motion and touch-release state. Physical
-touchscreen gestures are not claimed as an automated device test.
-
-Source tools: `tools/exploded-render/README.md`. Evidence, PNG masters, CAD input
-copies and CFD case/data: `../.codex/functional-motion-20260913/`.
-
-Final recovery location:
-`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-functional-release/RESTORE.md`.
-That file and `release-metadata.json` establish snapshot completion; online checks
-are in `deployment-verification.json`. The exact release, previous production,
-full working copy, Git history, current motion/CFD evidence and required earlier
-motion-plan cache are retained. The previous `functional-motion`, `motion-revision`,
-`exploded-local` and `pre-publish` backups remain
-separate. Do not blindly stage unrelated pre-existing LOD experiments.
+Exact production verification compares responses against canonical Git blobs;
+Windows archive line-ending conversion is explicitly disabled for release ZIPs.
+The backup contains the exact release and previous release, full working copy,
+verified Git bundle, new/old PNG masters, source CAD copies, Fluent case/data,
+geometry/material/browser evidence and required earlier motion-plan caches.
+Preserve unrelated untracked LOD experiments; do not blindly stage directories.

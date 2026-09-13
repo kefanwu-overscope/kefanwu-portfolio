@@ -112,91 +112,6 @@ class BrakeHeating:
             light.energy = energy * (1.0 - .73 * warming)
 
 
-def _carbon_cloth_material():
-    material = bpy.data.materials.new('Visible woven carbon cloth — illustrative plies')
-    material.use_nodes = True
-    nodes, links = material.node_tree.nodes, material.node_tree.links
-    shader = nodes.get('Principled BSDF')
-    shader.inputs['Metallic'].default_value = 0.0
-    shader.inputs['Roughness'].default_value = .57
-    shader.inputs['Specular IOR Level'].default_value = .18
-    shader.inputs['Coat Weight'].default_value = 0
-    shader.inputs['Anisotropic'].default_value = .45
-    uv = nodes.new('ShaderNodeTexCoord')
-    mapping = nodes.new('ShaderNodeMapping')
-    mapping.inputs['Rotation'].default_value[2] = .12
-    links.new(uv.outputs['UV'], mapping.inputs['Vector'])
-    separate = nodes.new('ShaderNodeSeparateXYZ')
-    links.new(mapping.outputs['Vector'], separate.inputs[0])
-
-    def math_node(operation, first, second=None):
-        node = nodes.new('ShaderNodeMath')
-        node.operation = operation
-        if isinstance(first, (int, float)):
-            node.inputs[0].default_value = first
-        else:
-            links.new(first, node.inputs[0])
-        if second is not None:
-            if isinstance(second, (int, float)):
-                node.inputs[1].default_value = second
-            else:
-                links.new(second, node.inputs[1])
-        return node.outputs[0]
-
-    # Two-over/two-under twill: rounded yarn bundles and alternating fiber
-    # direction, rather than a checkerboard standing in for woven carbon.
-    cell_x = math_node('MULTIPLY', separate.outputs['X'], 62)
-    cell_y = math_node('MULTIPLY', separate.outputs['Y'], 62)
-    diagonal = math_node('ADD', math_node('FLOOR', cell_x), math_node('FLOOR', cell_y))
-    weave = math_node('LESS_THAN', math_node('MODULO', diagonal, 4), 2)
-    yarn_x = math_node('SINE', math_node('MULTIPLY', math_node('FRACT', cell_x), math.pi))
-    yarn_y = math_node('SINE', math_node('MULTIPLY', math_node('FRACT', cell_y), math.pi))
-    bundle = nodes.new('ShaderNodeMixRGB')
-    links.new(weave, bundle.inputs[0])
-    links.new(yarn_x, bundle.inputs[1])
-    links.new(yarn_y, bundle.inputs[2])
-    yarn_color = nodes.new('ShaderNodeMixRGB')
-    links.new(bundle.outputs[0], yarn_color.inputs[0])
-    yarn_color.inputs[1].default_value = (.004, .0055, .008, 1)
-    yarn_color.inputs[2].default_value = (.016, .020, .025, 1)
-    waves = []
-    for axis in ('X', 'Y'):
-        wave = nodes.new('ShaderNodeTexWave')
-        wave.wave_type = 'BANDS'
-        wave.bands_direction = axis
-        wave.wave_profile = 'SIN'
-        wave.inputs['Scale'].default_value = 210
-        wave.inputs['Distortion'].default_value = 0
-        links.new(mapping.outputs['Vector'], wave.inputs['Vector'])
-        waves.append(wave)
-    fibers = nodes.new('ShaderNodeMixRGB')
-    links.new(weave, fibers.inputs[0])
-    links.new(waves[0].outputs['Fac'], fibers.inputs[1])
-    links.new(waves[1].outputs['Fac'], fibers.inputs[2])
-    color = nodes.new('ShaderNodeMixRGB')
-    color.blend_type = 'MULTIPLY'
-    color.inputs[0].default_value = .19
-    links.new(yarn_color.outputs[0], color.inputs[1])
-    links.new(fibers.outputs['Color'], color.inputs[2])
-    links.new(color.outputs[0], shader.inputs['Base Color'])
-    bump = nodes.new('ShaderNodeBump')
-    bump.inputs['Strength'].default_value = .28
-    bump.inputs['Distance'].default_value = .006
-    bump_height = nodes.new('ShaderNodeMixRGB')
-    bump_height.blend_type = 'MULTIPLY'
-    bump_height.inputs[0].default_value = .16
-    links.new(bundle.outputs[0], bump_height.inputs[1])
-    links.new(fibers.outputs[0], bump_height.inputs[2])
-    links.new(bump_height.outputs[0], bump.inputs['Height'])
-    links.new(bump.outputs['Normal'], shader.inputs['Normal'])
-    orientation = nodes.new('ShaderNodeMath')
-    orientation.operation = 'MULTIPLY'
-    orientation.inputs[1].default_value = .25
-    links.new(weave, orientation.inputs[0])
-    links.new(orientation.outputs[0], shader.inputs['Anisotropic Rotation'])
-    return material
-
-
 def _unobstructed_skin(objects, pull):
     """Keep original front skin triangles with a clear, common layup direction.
 
@@ -204,14 +119,25 @@ def _unobstructed_skin(objects, pull):
     the shell. Original surface positions and boundary openings are preserved.
     Visibility checks exclude the reverse skin and overhung geometry.
     """
-    points, polygons = _world_geometry(objects)
-    triangles = []
-    for polygon in polygons:
-        triangles.extend((polygon[0], polygon[i], polygon[i + 1]) for i in range(1, len(polygon) - 1))
+    points, _ = _world_geometry(objects)
+    triangles, triangle_normals = [], []
+    offset = 0
+    for obj in objects:
+        if obj.type != 'MESH':
+            continue
+        normal_matrix = obj.matrix_world.to_3x3().inverted().transposed()
+        for polygon in obj.data.polygons:
+            vertices, loops = polygon.vertices, polygon.loop_indices
+            for i in range(1, len(vertices) - 1):
+                corners = (0, i, i + 1)
+                triangles.append(tuple(offset + vertices[j] for j in corners))
+                triangle_normals.append(tuple(tuple((normal_matrix @ obj.data.corner_normals[loops[j]].vector).normalized())
+                                              for j in corners))
+        offset += len(obj.data.vertices)
     source_bvh = BVHTree.FromPolygons(points, triangles, all_triangles=True, epsilon=0)
-    kept = []
+    kept, kept_normals = [], []
     tolerance = .00045
-    for tri in triangles:
+    for tri, normals in zip(triangles, triangle_normals):
         a, b, c = (points[index] for index in tri)
         normal = (b - a).cross(c - a)
         if normal.length < 1e-10 or normal.normalized().dot(pull) < .025:
@@ -225,13 +151,14 @@ def _unobstructed_skin(objects, pull):
                 break
         else:
             kept.append(tri)
+            kept_normals.append(normals)
     used = sorted({index for triangle in kept for index in triangle})
     remap = {old: index for index, old in enumerate(used)}
     coords = np.asarray([tuple(points[index]) for index in used], dtype=np.float64)
     faces = [tuple(remap[index] for index in triangle) for triangle in kept]
     if len(faces) < 100:
         raise ValueError('Unable to derive a usable unobstructed carbon-shell surface')
-    return coords, faces, source_bvh, len(triangles)
+    return coords, faces, source_bvh, len(triangles), used, kept_normals
 
 
 class CarbonLayup:
@@ -242,7 +169,7 @@ class CarbonLayup:
         self.originals = [obj for obj in objects if obj.type == 'MESH']
         self.pull = Vector((0, -1, .6)).normalized()
         self.up = Vector((1, 0, 0)).cross(self.pull).normalized()
-        self.base, self.faces, self.source_bvh, source_faces = _unobstructed_skin(self.originals, self.pull)
+        self.base, self.faces, self.source_bvh, source_faces, source_vertices, normals = _unobstructed_skin(self.originals, self.pull)
         self.direction = np.asarray(tuple(self.pull))
         self.depth = self.base @ self.direction
         height = self.base @ np.asarray(tuple(self.up))
@@ -270,23 +197,26 @@ class CarbonLayup:
             raise ValueError('The chosen carbon-cloth approach is obstructed by the shell')
         if unsafe:
             self.faces = [face for index, face in enumerate(self.faces) if index not in unsafe]
-        material = _carbon_cloth_material()
+            normals = [face for index, face in enumerate(normals) if index not in unsafe]
+        from shared_material_carbon import assign_source_coordinates, bind_carbon_cover_material
+        material, source_coordinates, appearance = bind_carbon_cover_material(self.originals)
+        self.source_vertices = np.asarray(source_vertices, dtype=np.int32)
+        self.source_coordinates = source_coordinates[self.source_vertices]
         self.plies = []
         self._states = [None] * self.layer_count
-        width = self.base[:, 0].max() - self.base[:, 0].min()
-        u = (self.base[:, 0] - self.base[:, 0].min()) / width
-        v = (height - height.min()) / width
+        self._normal_states = [True] * self.layer_count
+        self.seated_normals = [normal for face in normals for normal in face]
         for index in range(self.layer_count):
             data = bpy.data.meshes.new(f'Actual-shell carbon cloth ply {index + 1:02d}')
             data.from_pydata(self.base.tolist(), [], self.faces)
             data.materials.append(material)
-            uv = data.uv_layers.new(name='Cloth weave coordinates')
             for polygon in data.polygons:
                 polygon.use_smooth = True
-                for loop_index in polygon.loop_indices:
-                    vertex = data.loops[loop_index].vertex_index
-                    uv.data[loop_index].uv = (float(u[vertex]), float(v[vertex]))
             data.update()
+            assign_source_coordinates(data, self.source_coordinates)
+            # Source corner normals also retain the cover's cured-resin sheen
+            # at seated poses, even where the visible skin was trimmed.
+            data.normals_split_custom_set(self.seated_normals)
             obj = bpy.data.objects.new(f'Carbon cloth ply {index + 1:02d} of 10', data)
             bpy.context.collection.objects.link(obj)
             obj['illustrative_ply_index'] = index + 1
@@ -297,6 +227,8 @@ class CarbonLayup:
             'process': 'ten carbon cloth plies progressively draped onto the actual shell profile',
             'mode': self.mode,
             'layerCount': self.layer_count,
+            'appearance': appearance,
+            'seatedNormals': 'Original source corner normals carried onto corresponding retained skin triangles.',
             'recommendedFrameCount': 61,
             'sourceFaceCount': source_faces,
             'clothFacesPerPly': len(self.faces),
@@ -326,6 +258,10 @@ class CarbonLayup:
             coords = self.base + offset[:, None] * self.direction
             obj.data.vertices.foreach_set('co', coords.astype(np.float32).ravel())
             obj.data.update()
+            seated = local == 1
+            if self._normal_states[index] != seated:
+                obj.data.normals_split_custom_set(self.seated_normals if seated else [(0, 0, 0)] * len(obj.data.loops))
+                self._normal_states[index] = seated
             self._states[index] = local
         bpy.context.view_layer.update()
 

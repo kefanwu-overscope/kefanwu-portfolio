@@ -149,6 +149,18 @@ class TensileTest(_Base):
         super().__init__(parts,scene)
         specimen=next(p['object'] for p in parts if 'tensile_specimen' in p['name'])
         self.source_specimen=specimen
+        # Change only the display sample's color; retain its original fabric
+        # grain, roughness and response. The static start pose and both retained
+        # fracture halves use the same material, independent of seek order.
+        specimen_color='F27A2A'
+        channels=[int(specimen_color[i:i+2],16)/255 for i in (0,2,4)]
+        rgba=(*[v/12.92 if v<=.04045 else ((v+.055)/1.055)**2.4 for v in channels],1)
+        for slot in specimen.material_slots:
+            material=slot.material.copy()
+            material.name='Visible warm orange tensile fabric'
+            material.diffuse_color=rgba
+            material.node_tree.nodes['Principled BSDF'].inputs['Base Color'].default_value=rgba
+            slot.material=material
         self.base=_coords(specimen)
         lo=self.base.min(0);hi=self.base.max(0)
         self.bottom=float(lo[2]);self.top=float(hi[2]);self.mid=(self.bottom+self.top)*.5
@@ -206,6 +218,8 @@ class TensileTest(_Base):
             'demonstration':'Qualitative extension, local necking and rupture of the displayed fabric strip. Not a measured stress-strain curve or fracture load; machine proportions are photo inferred.',
             'axis':[0,0,1],'fixedLowerFixture':True,'initialSpecimenSpan':self.gauge,
             'upperFixtureTravel':.235,'fractureProgress':.74,'retainedHalves':2,
+            'specimenColorSRGB':specimen_color,
+            'specimenAppearance':'Warm orange display sample for contrast against silver jaws and dark studio. Original fabric noise, bump and roughness retained; static start pose and both fracture halves share the material.',
             'motionGroups':[{'name':'upper_crosshead_and_grip','parts':[o.name for o in self.moving],'axis':[0,0,1]},
                             {'name':'specimen_deformation','parts':[self.strip.name]}],
             'specimenEndPlanes':[self.bottom,self.top],'arbitrarySeek':True}

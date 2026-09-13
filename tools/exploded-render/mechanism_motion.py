@@ -105,7 +105,7 @@ class MechanismMotion:
         self._assign('middle_shaft_and_yokes', _names('steel', [3, 4, 7, 10, 12]))
         self._assign('lower_shaft_and_yoke', _names('steel', [5, 8, 11]))
         self._assign('rack_and_tie_rod_ends', _names('steel', [23, 24, 25, 26, 27]))
-        self.wheel_amplitude = math.radians(32)
+        self.wheel_amplitude = math.radians(90)
         self.rack_amplitude = .10
         self.report.update({
             'motion': 'Steering wheel, three individually coaxial shaft segments and both pairs of universal-joint yokes drive the horizontal rack.',
@@ -113,8 +113,9 @@ class MechanismMotion:
             'universalJoints': [{'center': list(p), 'axisLineResidual': error,
                                  'bendDegrees': math.degrees(math.acos(c))}
                                 for (p, error), c in zip(self.joints, self.cos_bends)],
-            'wheelRangeDegrees': [-32, 0], 'rackRange': [-.10, 0],
-            'directionChoice': 'The clockwise-and-return stroke releases the source upper-yoke overlap. The opposite stroke was rejected because it deepened that pre-existing CAD interference.',
+            'wheelRangeDegrees': [-90, 0], 'rackRange': [-.10, 0],
+            'directionChoice': 'A clockwise 90-degree stroke and return, measured from the source neutral wheel pose. The complete negative stroke does not deepen the original upper-yoke interference; the opposite stroke is not used.',
+            'previousRangeReason': 'The former 32-degree stroke was a conservatively checked display range, not a CAD hard stop. Extending the existing negative stroke to 90 degrees retains the original parts, shaft centers, and contact geometry without assembly corrections.',
             'limitations': 'The supplied CAD omits separate universal-joint cross pins and internal rack teeth. The source yokes remain intact; Cardan phase coupling and rack travel illustrate their function, without claiming a calibrated steering ratio.',
         })
 

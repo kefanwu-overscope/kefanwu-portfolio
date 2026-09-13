@@ -1,0 +1,2218 @@
+{
+  "project": "aura",
+  "width": 640,
+  "height": 427,
+  "frameCount": 145,
+  "samples": 48,
+  "cameraOrthoScale": 6.498754501342773,
+  "cameraBaseScale": 4.528417110443115,
+  "mode": "assembly",
+  "sourceLayout": "Original approved cover source pose",
+  "motionRevision": "motion-refinement-20260913",
+  "motion": {
+    "version": 1,
+    "project": "aura",
+    "mode": "assembly",
+    "frameCount": 145,
+    "geometryDigest": "9016ce91f299f9fa4dee6ad115e01d3d1b2cf307d485a2531d576aa733aeb068",
+    "geometryTriangles": 106314,
+    "sourceComponentCount": 37,
+    "movingStageCount": 11,
+    "floorMinimum": 0.025000005960464478,
+    "policy": "Sequential rigid extraction using the unchanged assembly_motion.check_path checker: continuous triangle SAT and 100 positive sampled poses per stage. No added seam relaxation, sliding allowance, or source geometry edit.",
+    "sourceContactPolicy": "Original contacts must begin by normalized path time 0.000001 and withdraw within the first quarter of their stage. Baseline contact counts and sampled solid penetration depth are bounded by the original checker. Later-entering contacts, increasing source interference and floor crossings are rejected.",
+    "containmentPolicy": "Bidirectional distributed vertex probes against welded watertight source components at sampled poses complement continuous surface checking. Open finish meshes remain surfaces; this is not a continuous volumetric manufacturing certificate.",
+    "stages": [
+      {
+        "group": "steering_motor",
+        "translation": [
+          0.0,
+          0.7,
+          0.0
+        ],
+        "start": 0.0,
+        "end": 0.10416666666666667,
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 14,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        }
+      },
+      {
+        "group": "drive_motor_and_finish",
+        "translation": [
+          0.0,
+          -0.7,
+          0.0
+        ],
+        "start": 0.10416666666666667,
+        "end": 0.20833333333333334,
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 56,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 5339,
+          "continuousCandidatePairs": 5339,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        }
+      },
+      {
+        "group": "bearing_fastener_1",
+        "translation": [
+          0.0,
+          0.0,
+          1.35
+        ],
+        "start": 0.20833333333333334,
+        "end": 0.25,
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 42,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 2878,
+          "continuousCandidatePairs": 2878,
+          "initialTriangleContactsWithdrawing": 515,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        }
+      },
+      {
+        "group": "bearing_fastener_2",
+        "translation": [
+          0.0,
+          0.0,
+          1.35
+        ],
+        "start": 0.25,
+        "end": 0.2916666666666667,
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 42,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 3005,
+          "continuousCandidatePairs": 3005,
+          "initialTriangleContactsWithdrawing": 502,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        }
+      },
+      {
+        "group": "bearing_fastener_3",
+        "translation": [
+          0.0,
+          0.0,
+          1.35
+        ],
+        "start": 0.2916666666666667,
+        "end": 0.3333333333333333,
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 42,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 1583,
+          "continuousCandidatePairs": 1583,
+          "initialTriangleContactsWithdrawing": 510,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        }
+      },
+      {
+        "group": "bearing_fastener_4",
+        "translation": [
+          0.0,
+          0.0,
+          1.35
+        ],
+        "start": 0.3333333333333333,
+        "end": 0.375,
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 42,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 1601,
+          "continuousCandidatePairs": 1601,
+          "initialTriangleContactsWithdrawing": 487,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        }
+      },
+      {
+        "group": "bearing_top_cover",
+        "translation": [
+          0.0,
+          0.0,
+          1.4
+        ],
+        "start": 0.375,
+        "end": 0.5,
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 0,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 18803,
+          "continuousCandidatePairs": 18803,
+          "initialTriangleContactsWithdrawing": 6059,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        }
+      },
+      {
+        "group": "bearing_inner_ring",
+        "translation": [
+          0.0,
+          0.0,
+          1.1
+        ],
+        "start": 0.5,
+        "end": 0.625,
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 11,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 11036,
+          "continuousCandidatePairs": 11036,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        }
+      },
+      {
+        "group": "bearing_outer_ring",
+        "translation": [
+          0.0,
+          0.0,
+          0.85
+        ],
+        "start": 0.625,
+        "end": 0.75,
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 0,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 9899,
+          "continuousCandidatePairs": 9899,
+          "initialTriangleContactsWithdrawing": 3043,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        }
+      },
+      {
+        "group": "bearing_support_ring",
+        "translation": [
+          0.0,
+          0.0,
+          0.62
+        ],
+        "start": 0.75,
+        "end": 0.875,
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 10,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 11525,
+          "continuousCandidatePairs": 11525,
+          "initialTriangleContactsWithdrawing": 4679,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        }
+      },
+      {
+        "group": "lower_mount_plate_and_embedded_fasteners",
+        "translation": [
+          0.0,
+          0.0,
+          0.33
+        ],
+        "start": 0.875,
+        "end": 1.0,
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 42,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 807,
+          "continuousCandidatePairs": 807,
+          "initialTriangleContactsWithdrawing": 216,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+        }
+      }
+    ],
+    "partGroups": {
+      "mat_paint_gray_part_0": "wheel_axle_fork_and_side_drive",
+      "mat_paint_gray_part_1": "drive_motor_and_finish",
+      "mat_paint_gray_part_2": "wheel_axle_fork_and_side_drive",
+      "mat_paint_gray_part_3": "bearing_top_cover",
+      "mat_paint_gray_part_4": "lower_mount_plate_and_embedded_fasteners",
+      "mat_plastic_black_part_0": "steering_motor",
+      "mat_plastic_black_part_1": "steering_motor",
+      "mat_plastic_black_part_2": "steering_motor",
+      "mat_plastic_black_part_3": "steering_motor",
+      "mat_plastic_black_part_4": "steering_motor",
+      "mat_plastic_black_part_5": "wheel_axle_fork_and_side_drive",
+      "mat_plastic_black_part_6": "wheel_axle_fork_and_side_drive",
+      "mat_plastic_black_part_7": "drive_motor_and_finish",
+      "mat_rubber_black_part_0": "wheel_axle_fork_and_side_drive",
+      "mat_steel_part_0": "steering_motor",
+      "mat_steel_part_1": "wheel_axle_fork_and_side_drive",
+      "mat_steel_part_2": "wheel_axle_fork_and_side_drive",
+      "mat_steel_part_3": "wheel_axle_fork_and_side_drive",
+      "mat_steel_part_4": "lower_mount_plate_and_embedded_fasteners",
+      "mat_steel_part_5": "bearing_support_ring",
+      "mat_steel_part_6": "bearing_outer_ring",
+      "mat_steel_part_7": "bearing_inner_ring",
+      "mat_steel_part_8": "wheel_axle_fork_and_side_drive",
+      "mat_steel_part_9": "wheel_axle_fork_and_side_drive",
+      "mat_steel_part_10": "wheel_axle_fork_and_side_drive",
+      "mat_steel_part_11": "bearing_fastener_1",
+      "mat_steel_part_12": "bearing_fastener_2",
+      "mat_steel_part_13": "bearing_fastener_3",
+      "mat_steel_part_14": "bearing_fastener_4",
+      "mat_steel_part_15": "lower_mount_plate_and_embedded_fasteners",
+      "mat_steel_part_16": "lower_mount_plate_and_embedded_fasteners",
+      "mat_steel_part_17": "lower_mount_plate_and_embedded_fasteners",
+      "mat_steel_part_18": "wheel_axle_fork_and_side_drive",
+      "mat_steel_part_19": "wheel_axle_fork_and_side_drive",
+      "mat_steel_part_20": "wheel_axle_fork_and_side_drive",
+      "mat_steel_part_21": "drive_motor_and_finish",
+      "mat_steel_part_22": "drive_motor_and_finish"
+    },
+    "retainedGroups": [
+      "wheel_axle_fork_and_side_drive"
+    ],
+    "retainedComponentReason": "The source wheel/axle/fork, side-drive geometry and embedded side fasteners are mechanically interlocked or intersect in the source. Tested independent translations introduce new contacts. The lower mount plate retains its three embedded source screws; the motor retains its shaft fitting and contiguous finish masks.",
+    "sourceGeometryChanges": [],
+    "sourceSurfaceContacts": [
+      {
+        "parts": [
+          "mat_paint_gray_part_0",
+          "mat_paint_gray_part_2"
+        ],
+        "trianglePairs": 108,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_paint_gray_part_0",
+          "mat_plastic_black_part_6"
+        ],
+        "trianglePairs": 1,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_paint_gray_part_1",
+          "mat_plastic_black_part_7"
+        ],
+        "trianglePairs": 32,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_paint_gray_part_2",
+          "mat_paint_gray_part_4"
+        ],
+        "trianglePairs": 79,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_paint_gray_part_2",
+          "mat_plastic_black_part_6"
+        ],
+        "trianglePairs": 736,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_paint_gray_part_2",
+          "mat_steel_part_4"
+        ],
+        "trianglePairs": 29,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_paint_gray_part_2",
+          "mat_steel_part_18"
+        ],
+        "trianglePairs": 443,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_paint_gray_part_2",
+          "mat_steel_part_19"
+        ],
+        "trianglePairs": 447,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_paint_gray_part_2",
+          "mat_steel_part_20"
+        ],
+        "trianglePairs": 447,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_paint_gray_part_3",
+          "mat_steel_part_7"
+        ],
+        "trianglePairs": 524,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_paint_gray_part_4",
+          "mat_steel_part_4"
+        ],
+        "trianglePairs": 670,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_paint_gray_part_4",
+          "mat_steel_part_15"
+        ],
+        "trianglePairs": 233,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_plastic_black_part_0",
+          "mat_plastic_black_part_1"
+        ],
+        "trianglePairs": 72,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_plastic_black_part_1",
+          "mat_plastic_black_part_2"
+        ],
+        "trianglePairs": 72,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_plastic_black_part_1",
+          "mat_plastic_black_part_3"
+        ],
+        "trianglePairs": 72,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_plastic_black_part_1",
+          "mat_plastic_black_part_4"
+        ],
+        "trianglePairs": 72,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_plastic_black_part_1",
+          "mat_steel_part_0"
+        ],
+        "trianglePairs": 370,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_plastic_black_part_7",
+          "mat_steel_part_21"
+        ],
+        "trianglePairs": 31,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_plastic_black_part_7",
+          "mat_steel_part_22"
+        ],
+        "trianglePairs": 8,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_rubber_black_part_0",
+          "mat_steel_part_2"
+        ],
+        "trianglePairs": 288,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_rubber_black_part_0",
+          "mat_steel_part_3"
+        ],
+        "trianglePairs": 782,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_steel_part_1",
+          "mat_steel_part_3"
+        ],
+        "trianglePairs": 452,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_steel_part_2",
+          "mat_steel_part_3"
+        ],
+        "trianglePairs": 288,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_steel_part_4",
+          "mat_steel_part_5"
+        ],
+        "trianglePairs": 1355,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_steel_part_4",
+          "mat_steel_part_15"
+        ],
+        "trianglePairs": 324,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_steel_part_4",
+          "mat_steel_part_16"
+        ],
+        "trianglePairs": 332,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_steel_part_4",
+          "mat_steel_part_17"
+        ],
+        "trianglePairs": 328,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_steel_part_5",
+          "mat_steel_part_6"
+        ],
+        "trianglePairs": 1200,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_steel_part_6",
+          "mat_steel_part_11"
+        ],
+        "trianglePairs": 132,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_steel_part_6",
+          "mat_steel_part_12"
+        ],
+        "trianglePairs": 136,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_steel_part_6",
+          "mat_steel_part_13"
+        ],
+        "trianglePairs": 173,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_steel_part_6",
+          "mat_steel_part_14"
+        ],
+        "trianglePairs": 151,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_steel_part_8",
+          "mat_steel_part_18"
+        ],
+        "trianglePairs": 828,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_steel_part_9",
+          "mat_steel_part_20"
+        ],
+        "trianglePairs": 827,
+        "type": "original source surface contact/intersection"
+      },
+      {
+        "parts": [
+          "mat_steel_part_10",
+          "mat_steel_part_19"
+        ],
+        "trianglePairs": 861,
+        "type": "original source surface contact/intersection"
+      }
+    ],
+    "newContinuousTriangleContacts": 0,
+    "floorCrossings": 0
+  },
+  "cameraBoundsSamples": 121,
+  "cameraMaximumScale": 6.4987543282435345,
+  "cameraTracking": "Projected component bounds during disassembly; fixed source view direction",
+  "cameraLocation": [
+    5.538911819458008,
+    -9.292549133300781,
+    6.062157154083252
+  ],
+  "cameraRotation": [
+    1.1596143245697021,
+    4.4814473909582375e-08,
+    0.5317239761352539
+  ],
+  "sourceComponentNames": [
+    "mat_paint_gray_part_0",
+    "mat_paint_gray_part_1",
+    "mat_paint_gray_part_2",
+    "mat_paint_gray_part_3",
+    "mat_paint_gray_part_4",
+    "mat_plastic_black_part_0",
+    "mat_plastic_black_part_1",
+    "mat_plastic_black_part_2",
+    "mat_plastic_black_part_3",
+    "mat_plastic_black_part_4",
+    "mat_plastic_black_part_5",
+    "mat_plastic_black_part_6",
+    "mat_plastic_black_part_7",
+    "mat_rubber_black_part_0",
+    "mat_steel_part_0",
+    "mat_steel_part_1",
+    "mat_steel_part_2",
+    "mat_steel_part_3",
+    "mat_steel_part_4",
+    "mat_steel_part_5",
+    "mat_steel_part_6",
+    "mat_steel_part_7",
+    "mat_steel_part_8",
+    "mat_steel_part_9",
+    "mat_steel_part_10",
+    "mat_steel_part_11",
+    "mat_steel_part_12",
+    "mat_steel_part_13",
+    "mat_steel_part_14",
+    "mat_steel_part_15",
+    "mat_steel_part_16",
+    "mat_steel_part_17",
+    "mat_steel_part_18",
+    "mat_steel_part_19",
+    "mat_steel_part_20",
+    "mat_steel_part_21",
+    "mat_steel_part_22"
+  ],
+  "timings": [
+    {
+      "index": 0,
+      "seconds": 0.797,
+      "bytes": 267496
+    },
+    {
+      "index": 1,
+      "seconds": 0.625,
+      "bytes": 267632
+    },
+    {
+      "index": 2,
+      "seconds": 0.625,
+      "bytes": 267628
+    },
+    {
+      "index": 3,
+      "seconds": 0.609,
+      "bytes": 267493
+    },
+    {
+      "index": 4,
+      "seconds": 0.641,
+      "bytes": 267737
+    },
+    {
+      "index": 5,
+      "seconds": 0.609,
+      "bytes": 267424
+    },
+    {
+      "index": 6,
+      "seconds": 0.61,
+      "bytes": 267819
+    },
+    {
+      "index": 7,
+      "seconds": 0.625,
+      "bytes": 267491
+    },
+    {
+      "index": 8,
+      "seconds": 0.609,
+      "bytes": 267387
+    },
+    {
+      "index": 9,
+      "seconds": 0.625,
+      "bytes": 267218
+    },
+    {
+      "index": 10,
+      "seconds": 0.609,
+      "bytes": 267368
+    },
+    {
+      "index": 11,
+      "seconds": 0.625,
+      "bytes": 266821
+    },
+    {
+      "index": 12,
+      "seconds": 0.641,
+      "bytes": 267046
+    },
+    {
+      "index": 13,
+      "seconds": 0.609,
+      "bytes": 266300
+    },
+    {
+      "index": 14,
+      "seconds": 0.61,
+      "bytes": 266517
+    },
+    {
+      "index": 15,
+      "seconds": 0.609,
+      "bytes": 266355
+    },
+    {
+      "index": 16,
+      "seconds": 0.61,
+      "bytes": 266447
+    },
+    {
+      "index": 17,
+      "seconds": 0.609,
+      "bytes": 266680
+    },
+    {
+      "index": 18,
+      "seconds": 0.594,
+      "bytes": 266507
+    },
+    {
+      "index": 19,
+      "seconds": 0.61,
+      "bytes": 266372
+    },
+    {
+      "index": 20,
+      "seconds": 0.609,
+      "bytes": 266823
+    },
+    {
+      "index": 21,
+      "seconds": 0.594,
+      "bytes": 267120
+    },
+    {
+      "index": 22,
+      "seconds": 0.594,
+      "bytes": 267157
+    },
+    {
+      "index": 23,
+      "seconds": 0.609,
+      "bytes": 267355
+    },
+    {
+      "index": 24,
+      "seconds": 0.594,
+      "bytes": 267769
+    },
+    {
+      "index": 25,
+      "seconds": 0.625,
+      "bytes": 267711
+    },
+    {
+      "index": 26,
+      "seconds": 0.609,
+      "bytes": 268183
+    },
+    {
+      "index": 27,
+      "seconds": 0.609,
+      "bytes": 267169
+    },
+    {
+      "index": 28,
+      "seconds": 0.594,
+      "bytes": 267577
+    },
+    {
+      "index": 29,
+      "seconds": 0.594,
+      "bytes": 267286
+    },
+    {
+      "index": 30,
+      "seconds": 0.593,
+      "bytes": 266178
+    },
+    {
+      "index": 31,
+      "seconds": 0.594,
+      "bytes": 261175
+    },
+    {
+      "index": 32,
+      "seconds": 0.609,
+      "bytes": 260563
+    },
+    {
+      "index": 33,
+      "seconds": 0.61,
+      "bytes": 259293
+    },
+    {
+      "index": 34,
+      "seconds": 0.594,
+      "bytes": 260261
+    },
+    {
+      "index": 35,
+      "seconds": 0.593,
+      "bytes": 260069
+    },
+    {
+      "index": 36,
+      "seconds": 0.61,
+      "bytes": 259778
+    },
+    {
+      "index": 37,
+      "seconds": 0.593,
+      "bytes": 259523
+    },
+    {
+      "index": 38,
+      "seconds": 0.594,
+      "bytes": 258475
+    },
+    {
+      "index": 39,
+      "seconds": 0.594,
+      "bytes": 258114
+    },
+    {
+      "index": 40,
+      "seconds": 0.609,
+      "bytes": 257457
+    },
+    {
+      "index": 41,
+      "seconds": 0.594,
+      "bytes": 257627
+    },
+    {
+      "index": 42,
+      "seconds": 0.594,
+      "bytes": 257952
+    },
+    {
+      "index": 43,
+      "seconds": 0.594,
+      "bytes": 257926
+    },
+    {
+      "index": 44,
+      "seconds": 0.609,
+      "bytes": 257946
+    },
+    {
+      "index": 45,
+      "seconds": 0.609,
+      "bytes": 258950
+    },
+    {
+      "index": 46,
+      "seconds": 0.61,
+      "bytes": 258657
+    },
+    {
+      "index": 47,
+      "seconds": 0.593,
+      "bytes": 257807
+    },
+    {
+      "index": 48,
+      "seconds": 0.61,
+      "bytes": 257937
+    },
+    {
+      "index": 49,
+      "seconds": 0.594,
+      "bytes": 258439
+    },
+    {
+      "index": 50,
+      "seconds": 0.593,
+      "bytes": 258399
+    },
+    {
+      "index": 51,
+      "seconds": 0.594,
+      "bytes": 258699
+    },
+    {
+      "index": 52,
+      "seconds": 0.609,
+      "bytes": 259332
+    },
+    {
+      "index": 53,
+      "seconds": 0.61,
+      "bytes": 258816
+    },
+    {
+      "index": 54,
+      "seconds": 0.609,
+      "bytes": 258621
+    },
+    {
+      "index": 55,
+      "seconds": 0.61,
+      "bytes": 258951
+    },
+    {
+      "index": 56,
+      "seconds": 0.578,
+      "bytes": 259566
+    },
+    {
+      "index": 57,
+      "seconds": 0.594,
+      "bytes": 259697
+    },
+    {
+      "index": 58,
+      "seconds": 0.594,
+      "bytes": 259536
+    },
+    {
+      "index": 59,
+      "seconds": 0.609,
+      "bytes": 259326
+    },
+    {
+      "index": 60,
+      "seconds": 0.61,
+      "bytes": 258969
+    },
+    {
+      "index": 61,
+      "seconds": 0.593,
+      "bytes": 259407
+    },
+    {
+      "index": 62,
+      "seconds": 0.594,
+      "bytes": 260407
+    },
+    {
+      "index": 63,
+      "seconds": 0.594,
+      "bytes": 261720
+    },
+    {
+      "index": 64,
+      "seconds": 0.609,
+      "bytes": 262471
+    },
+    {
+      "index": 65,
+      "seconds": 0.625,
+      "bytes": 262216
+    },
+    {
+      "index": 66,
+      "seconds": 0.594,
+      "bytes": 261447
+    },
+    {
+      "index": 67,
+      "seconds": 0.625,
+      "bytes": 260845
+    },
+    {
+      "index": 68,
+      "seconds": 0.609,
+      "bytes": 261618
+    },
+    {
+      "index": 69,
+      "seconds": 0.625,
+      "bytes": 260779
+    },
+    {
+      "index": 70,
+      "seconds": 0.61,
+      "bytes": 260569
+    },
+    {
+      "index": 71,
+      "seconds": 0.593,
+      "bytes": 260654
+    },
+    {
+      "index": 72,
+      "seconds": 0.594,
+      "bytes": 260886
+    },
+    {
+      "index": 73,
+      "seconds": 0.61,
+      "bytes": 261130
+    },
+    {
+      "index": 74,
+      "seconds": 0.593,
+      "bytes": 261730
+    },
+    {
+      "index": 75,
+      "seconds": 0.594,
+      "bytes": 261918
+    },
+    {
+      "index": 76,
+      "seconds": 0.609,
+      "bytes": 261915
+    },
+    {
+      "index": 77,
+      "seconds": 0.594,
+      "bytes": 262121
+    },
+    {
+      "index": 78,
+      "seconds": 0.625,
+      "bytes": 262424
+    },
+    {
+      "index": 79,
+      "seconds": 0.594,
+      "bytes": 261763
+    },
+    {
+      "index": 80,
+      "seconds": 0.594,
+      "bytes": 261994
+    },
+    {
+      "index": 81,
+      "seconds": 0.609,
+      "bytes": 262356
+    },
+    {
+      "index": 82,
+      "seconds": 0.609,
+      "bytes": 263269
+    },
+    {
+      "index": 83,
+      "seconds": 0.61,
+      "bytes": 263801
+    },
+    {
+      "index": 84,
+      "seconds": 0.609,
+      "bytes": 264575
+    },
+    {
+      "index": 85,
+      "seconds": 0.625,
+      "bytes": 264684
+    },
+    {
+      "index": 86,
+      "seconds": 0.61,
+      "bytes": 265300
+    },
+    {
+      "index": 87,
+      "seconds": 0.609,
+      "bytes": 265088
+    },
+    {
+      "index": 88,
+      "seconds": 0.609,
+      "bytes": 264813
+    },
+    {
+      "index": 89,
+      "seconds": 0.594,
+      "bytes": 264495
+    },
+    {
+      "index": 90,
+      "seconds": 0.594,
+      "bytes": 264483
+    },
+    {
+      "index": 91,
+      "seconds": 0.609,
+      "bytes": 264900
+    },
+    {
+      "index": 92,
+      "seconds": 0.594,
+      "bytes": 265230
+    },
+    {
+      "index": 93,
+      "seconds": 0.609,
+      "bytes": 265782
+    },
+    {
+      "index": 94,
+      "seconds": 0.594,
+      "bytes": 265711
+    },
+    {
+      "index": 95,
+      "seconds": 0.594,
+      "bytes": 264925
+    },
+    {
+      "index": 96,
+      "seconds": 0.594,
+      "bytes": 264465
+    },
+    {
+      "index": 97,
+      "seconds": 0.609,
+      "bytes": 264480
+    },
+    {
+      "index": 98,
+      "seconds": 0.609,
+      "bytes": 264957
+    },
+    {
+      "index": 99,
+      "seconds": 0.594,
+      "bytes": 265373
+    },
+    {
+      "index": 100,
+      "seconds": 0.594,
+      "bytes": 265531
+    },
+    {
+      "index": 101,
+      "seconds": 0.609,
+      "bytes": 265838
+    },
+    {
+      "index": 102,
+      "seconds": 0.594,
+      "bytes": 265779
+    },
+    {
+      "index": 103,
+      "seconds": 0.594,
+      "bytes": 266031
+    },
+    {
+      "index": 104,
+      "seconds": 0.593,
+      "bytes": 265748
+    },
+    {
+      "index": 105,
+      "seconds": 0.61,
+      "bytes": 265802
+    },
+    {
+      "index": 106,
+      "seconds": 0.594,
+      "bytes": 265428
+    },
+    {
+      "index": 107,
+      "seconds": 0.609,
+      "bytes": 265486
+    },
+    {
+      "index": 108,
+      "seconds": 0.609,
+      "bytes": 265686
+    },
+    {
+      "index": 109,
+      "seconds": 0.594,
+      "bytes": 265909
+    },
+    {
+      "index": 110,
+      "seconds": 0.609,
+      "bytes": 266639
+    },
+    {
+      "index": 111,
+      "seconds": 0.594,
+      "bytes": 266895
+    },
+    {
+      "index": 112,
+      "seconds": 0.625,
+      "bytes": 267792
+    },
+    {
+      "index": 113,
+      "seconds": 0.625,
+      "bytes": 268147
+    },
+    {
+      "index": 114,
+      "seconds": 0.594,
+      "bytes": 267907
+    },
+    {
+      "index": 115,
+      "seconds": 0.609,
+      "bytes": 267412
+    },
+    {
+      "index": 116,
+      "seconds": 0.594,
+      "bytes": 266747
+    },
+    {
+      "index": 117,
+      "seconds": 0.609,
+      "bytes": 266564
+    },
+    {
+      "index": 118,
+      "seconds": 0.61,
+      "bytes": 266349
+    },
+    {
+      "index": 119,
+      "seconds": 0.609,
+      "bytes": 266480
+    },
+    {
+      "index": 120,
+      "seconds": 0.594,
+      "bytes": 266447
+    },
+    {
+      "index": 121,
+      "seconds": 0.594,
+      "bytes": 266720
+    },
+    {
+      "index": 122,
+      "seconds": 0.593,
+      "bytes": 266573
+    },
+    {
+      "index": 123,
+      "seconds": 0.625,
+      "bytes": 266213
+    },
+    {
+      "index": 124,
+      "seconds": 0.578,
+      "bytes": 265952
+    },
+    {
+      "index": 125,
+      "seconds": 0.61,
+      "bytes": 265819
+    },
+    {
+      "index": 126,
+      "seconds": 0.593,
+      "bytes": 265862
+    },
+    {
+      "index": 127,
+      "seconds": 0.578,
+      "bytes": 266155
+    },
+    {
+      "index": 128,
+      "seconds": 0.593,
+      "bytes": 266623
+    },
+    {
+      "index": 129,
+      "seconds": 0.594,
+      "bytes": 266602
+    },
+    {
+      "index": 130,
+      "seconds": 0.61,
+      "bytes": 266934
+    },
+    {
+      "index": 131,
+      "seconds": 0.609,
+      "bytes": 267477
+    },
+    {
+      "index": 132,
+      "seconds": 0.594,
+      "bytes": 267624
+    },
+    {
+      "index": 133,
+      "seconds": 0.609,
+      "bytes": 268039
+    },
+    {
+      "index": 134,
+      "seconds": 0.594,
+      "bytes": 268147
+    },
+    {
+      "index": 135,
+      "seconds": 0.594,
+      "bytes": 268199
+    },
+    {
+      "index": 136,
+      "seconds": 0.609,
+      "bytes": 268443
+    },
+    {
+      "index": 137,
+      "seconds": 0.594,
+      "bytes": 268484
+    },
+    {
+      "index": 138,
+      "seconds": 0.609,
+      "bytes": 268364
+    },
+    {
+      "index": 139,
+      "seconds": 0.609,
+      "bytes": 268338
+    },
+    {
+      "index": 140,
+      "seconds": 0.594,
+      "bytes": 268323
+    },
+    {
+      "index": 141,
+      "seconds": 0.61,
+      "bytes": 268520
+    },
+    {
+      "index": 142,
+      "seconds": 0.593,
+      "bytes": 268738
+    },
+    {
+      "index": 143,
+      "seconds": 0.61,
+      "bytes": 268665
+    },
+    {
+      "index": 144,
+      "seconds": 0.593,
+      "bytes": 268567
+    }
+  ],
+  "totalSeconds": 89.25,
+  "baseCoverSource": {
+    "project": "aura",
+    "source": "tools/editorial-render/sources/aura.glb",
+    "sourceSha256": "a6ffbea4c9b4d5b1e8043a5a6c732314840caff70a5e2a02b03d1ad5992d5014",
+    "renderer": "tools/editorial-render/render_catalog.py",
+    "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+    "builder": null,
+    "builderSha256": null,
+    "sourceMeshFaceCounts": {
+      "mat_paint_gray": 7021,
+      "mat_plastic_black": 67531,
+      "mat_rubber_black": 392,
+      "mat_steel": 31370
+    },
+    "sourceDimensionsAfterRotation": [
+      297.52838134765625,
+      335.6829833984375,
+      200.501953125
+    ],
+    "dimensions": [
+      1800,
+      1200
+    ],
+    "cameraDirectionBlenderZUp": [
+      0.4647594690322876,
+      -0.7900910973548889,
+      0.39969316124916077
+    ],
+    "angleIndex": 0,
+    "samples": 192,
+    "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+    "materialDefaults": {
+      "steel": {
+        "color": "BBC1C8",
+        "metallic": 0.9,
+        "roughness": 0.32
+      },
+      "printed": {
+        "color": "30363D",
+        "metallic": 0,
+        "roughness": 0.43,
+        "texture": "printed"
+      },
+      "dark": {
+        "color": "202328",
+        "metallic": 0.12,
+        "roughness": 0.4
+      },
+      "aero": {
+        "color": "E3E1DB",
+        "metallic": 0,
+        "roughness": 0.45
+      },
+      "rubber": {
+        "color": "181B1E",
+        "metallic": 0,
+        "roughness": 0.62
+      },
+      "brass": {
+        "color": "AD8954",
+        "metallic": 0.8,
+        "roughness": 0.34
+      },
+      "glass": {
+        "color": "E7EDF0",
+        "metallic": 0,
+        "roughness": 0.1,
+        "transmission": 1
+      },
+      "wood": {
+        "color": "BE9C68",
+        "metallic": 0,
+        "roughness": 0.43,
+        "texture": "wood"
+      },
+      "carbon": {
+        "color": "171A20",
+        "metallic": 0.05,
+        "roughness": 0.3,
+        "texture": "carbon",
+        "coat": 0.3
+      },
+      "pcb": {
+        "color": "166C79",
+        "metallic": 0,
+        "roughness": 0.44
+      }
+    },
+    "materialAssignments": {
+      "paint_gray": {
+        "color": "8A9195",
+        "metallic": 0,
+        "roughness": 0.52
+      },
+      "plastic_black": {
+        "color": "202329",
+        "metallic": 0,
+        "roughness": 0.48
+      },
+      "rubber_black": {
+        "color": "24272B",
+        "metallic": 0,
+        "roughness": 0.7
+      },
+      "steel": {
+        "color": "ABB2BA",
+        "metallic": 1,
+        "roughness": 0.35
+      }
+    },
+    "references": [
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\aura-swerve.jpeg",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\aura-swerve-mount.jpeg",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\aura-wheels-bearing-shaft.jpeg",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-aura-swerve-cad.webp"
+    ],
+    "notes": []
+  },
+  "encodedFrames": [
+    {
+      "file": "00.webp",
+      "bytes": 8192,
+      "sha256": "6dbd92b86a0ac6bcb783a9dead0b3a0cd5f9def03ec46daefbf644d46bdbcf3f"
+    },
+    {
+      "file": "01.webp",
+      "bytes": 8138,
+      "sha256": "c201efbc155b3897c2bd40b31b3a282191a35a3673d29fd0cfb3bf82cb282ab9"
+    },
+    {
+      "file": "02.webp",
+      "bytes": 8182,
+      "sha256": "4fe599281531fbbb0e90e5aed80187c1f7fbbb626d4b357e5ffaaa26f9b05497"
+    },
+    {
+      "file": "03.webp",
+      "bytes": 8186,
+      "sha256": "d6cd933401c682f9647d4e52eb8292299827f1a3994fb8f6d206c2908b2068b3"
+    },
+    {
+      "file": "04.webp",
+      "bytes": 8134,
+      "sha256": "e0ae9ec74f98262af5466d7bf9b2df4ce8ea3d13f63328f29e0bb08f31c1b305"
+    },
+    {
+      "file": "05.webp",
+      "bytes": 8180,
+      "sha256": "27c1e6e6633c71a8c9118dad12a5a37afb21cef0539d33ce6576fdd89aa5e7e5"
+    },
+    {
+      "file": "06.webp",
+      "bytes": 8180,
+      "sha256": "d491e223b40f3781b2c65ba2fffe305b772ecdf20a39d12ed341e9d045e10e1b"
+    },
+    {
+      "file": "07.webp",
+      "bytes": 8180,
+      "sha256": "042aad620bb7471699f85362b3e61a9f61e6c01f5bf8182159ec43e62c9bfbfe"
+    },
+    {
+      "file": "08.webp",
+      "bytes": 8172,
+      "sha256": "80ed7f5bfed451b5650e4fec8e95f8a38010862e2325af84bcfd4b52247d507c"
+    },
+    {
+      "file": "09.webp",
+      "bytes": 8294,
+      "sha256": "0e1299cbb68f7fef2c0c294e2e0bf37c0270412767ae6c2598f1cb2a2e63a782"
+    },
+    {
+      "file": "10.webp",
+      "bytes": 8192,
+      "sha256": "1a507d224eebb285f08115cbc1fbf185e06afe62d26f501271a4f0b8b6343cb4"
+    },
+    {
+      "file": "11.webp",
+      "bytes": 8104,
+      "sha256": "1618caf994420173efd405518c4dbed8a80730846fe3a0cbe4462246add832f1"
+    },
+    {
+      "file": "12.webp",
+      "bytes": 8142,
+      "sha256": "206f3d7d421afc788195b80aa38ae72b22405a1ec835cdf12e65b05ed5e644d2"
+    },
+    {
+      "file": "13.webp",
+      "bytes": 7916,
+      "sha256": "e4d1cf0983d6245490a076b95157d3a8e1b496b4933d128272a555fa24f6dbe0"
+    },
+    {
+      "file": "14.webp",
+      "bytes": 7928,
+      "sha256": "69446ff5b7f25126a6c4f8d110f24ebf25e66773ba90b5c6f5ddc6b47366269c"
+    },
+    {
+      "file": "15.webp",
+      "bytes": 7992,
+      "sha256": "53af623980b54f7d9e2dad5c932416cb03c66df2a259dbb72bb2cb0b45feb501"
+    },
+    {
+      "file": "16.webp",
+      "bytes": 7952,
+      "sha256": "8c36cfe3f87578910504bf9787e87bbc8944e8224bfd77af8ca724eda834e61f"
+    },
+    {
+      "file": "17.webp",
+      "bytes": 7982,
+      "sha256": "1bf84a8ceb6c2baa1657785ad813139ddf3f00b124e3b9e30637fe3cf8f1869e"
+    },
+    {
+      "file": "18.webp",
+      "bytes": 8096,
+      "sha256": "760e72d47f7077cf462907cb87a6ae0b164c1f537fbbe3bc024802c578d88c3b"
+    },
+    {
+      "file": "19.webp",
+      "bytes": 8034,
+      "sha256": "24213aa31bebfddf91cac8a441ebeae4c366550efef451eb51c3d57d7d3e1e6a"
+    },
+    {
+      "file": "20.webp",
+      "bytes": 8166,
+      "sha256": "082ca8ff486e5ce24c240fd9900807cd2226151efd7c7eec8aab9e842f5624f1"
+    },
+    {
+      "file": "21.webp",
+      "bytes": 8166,
+      "sha256": "45a10db3991a5477823dbecd101c699e933071c35704ab53180d6c82d3b06713"
+    },
+    {
+      "file": "22.webp",
+      "bytes": 8130,
+      "sha256": "26c25ddcb013fa5eacc8b80c3670a93cab960c190c1b4ca77ef8ea2ad9fba07b"
+    },
+    {
+      "file": "23.webp",
+      "bytes": 8056,
+      "sha256": "2bd76b6541aa0ad20aa5fced929370222c644a09190d1048363182db3b689d37"
+    },
+    {
+      "file": "24.webp",
+      "bytes": 8114,
+      "sha256": "48dd7b87d45ef19e142d029b93595f18e95a9381eb90e3e1dcc09ea84f57683d"
+    },
+    {
+      "file": "25.webp",
+      "bytes": 8102,
+      "sha256": "ad74695e97dc2898b391e88e9eab193ed959283229b2ae272e4c2de06f5e486a"
+    },
+    {
+      "file": "26.webp",
+      "bytes": 8150,
+      "sha256": "5a59facab1bd7cad0a3210d6bd7e4bb1c8c41d67c86a609447e941844dead259"
+    },
+    {
+      "file": "27.webp",
+      "bytes": 8140,
+      "sha256": "4e08624dd0b8163dac4cc09c33d229e69dfa66b95cc6f13ce13533838ab2e18e"
+    },
+    {
+      "file": "28.webp",
+      "bytes": 8112,
+      "sha256": "f68756da84aaed1f59150a6a8e281ab96b0481d927beec529b65b8c502935fb9"
+    },
+    {
+      "file": "29.webp",
+      "bytes": 8124,
+      "sha256": "d676faed8b8d8fa0465998688a119bf3d0fb0eea4ce0d068275315954fc1a455"
+    },
+    {
+      "file": "30.webp",
+      "bytes": 7984,
+      "sha256": "756070bb7c72f781baae39e5da8221e7a909a35634c63efc4f8234df17f1d02f"
+    },
+    {
+      "file": "31.webp",
+      "bytes": 7488,
+      "sha256": "397746deb585f3dd8a049e61d8eebbc619bcd79d00e195e8b522c248de0f030b"
+    },
+    {
+      "file": "32.webp",
+      "bytes": 7292,
+      "sha256": "e5912255c2c815b3680ec9c6e57bd6ce7c8d870103be8e411d317a157d200931"
+    },
+    {
+      "file": "33.webp",
+      "bytes": 7092,
+      "sha256": "f5c5a0048bcdd926574de98e0efbd78f74020fda76b479025087eacde125e24c"
+    },
+    {
+      "file": "34.webp",
+      "bytes": 7166,
+      "sha256": "830496c4d2b8682e06c001c8f4153fc1d22242530f57aa7531361cf753cb13d4"
+    },
+    {
+      "file": "35.webp",
+      "bytes": 7146,
+      "sha256": "9265857bb713578bdf3d4bbfa903a74afeff7e5b173c27da881ddff5e645cd89"
+    },
+    {
+      "file": "36.webp",
+      "bytes": 7154,
+      "sha256": "91c17ea9bec404f1f724200315551d77cec2d21cf270f8bc5eab4e88a717175c"
+    },
+    {
+      "file": "37.webp",
+      "bytes": 7008,
+      "sha256": "5d53674d0f6b30c2362aef77cf17643d2cf49fcc4d90b8e24708f6bc36ca02c8"
+    },
+    {
+      "file": "38.webp",
+      "bytes": 6896,
+      "sha256": "94778e2abe86319687b5ac4c0f38f3e35c41e10a71f7a08f07af217085c08fd2"
+    },
+    {
+      "file": "39.webp",
+      "bytes": 6870,
+      "sha256": "0058f2159d22b308a1bb59f61d6032852d47e8473909f2ba03bfd6ea4da091d6"
+    },
+    {
+      "file": "40.webp",
+      "bytes": 6882,
+      "sha256": "4a58c45386fbc7b2f6a5340a4acdf70d75402851a2002dbf9453e0de36a86a4b"
+    },
+    {
+      "file": "41.webp",
+      "bytes": 6774,
+      "sha256": "90ba579633bb766a1230fee8173ee7d59699efeee8b66f59a991a462a648a32e"
+    },
+    {
+      "file": "42.webp",
+      "bytes": 6792,
+      "sha256": "f55f0e07f6c7f6d63c423ad9524c65e920831e6d8588af08e8ff380701ac89c3"
+    },
+    {
+      "file": "43.webp",
+      "bytes": 6746,
+      "sha256": "c351a9a3313dd200dce4e16fd62bae3d0a7019dad57ca1ce9a3da9e8588e1606"
+    },
+    {
+      "file": "44.webp",
+      "bytes": 6782,
+      "sha256": "21d0c88f8679207e24e96830e83a312531f6d4361b2fc7043d2edc31b6661b69"
+    },
+    {
+      "file": "45.webp",
+      "bytes": 6784,
+      "sha256": "51af9084e0b27cccade5162b01fec4eecb9173f2918aae494f39284ab2513eb1"
+    },
+    {
+      "file": "46.webp",
+      "bytes": 6808,
+      "sha256": "b8adb161723568580d2fb35e2bbaa9b70961723eb620f302f74df51bdc99c0fc"
+    },
+    {
+      "file": "47.webp",
+      "bytes": 6788,
+      "sha256": "1615a75d22c64e2638c330037616fd211e9c64feac90c79a8f90f5d7aba04a32"
+    },
+    {
+      "file": "48.webp",
+      "bytes": 6826,
+      "sha256": "352a0abe0681a8c56828749187551968c18cd7a8fd6c59304525a6631a097b12"
+    },
+    {
+      "file": "49.webp",
+      "bytes": 6864,
+      "sha256": "c652e98a2db6dd9ccb05f9051ef2e29736318edad6697bc27b31159f1b580b93"
+    },
+    {
+      "file": "50.webp",
+      "bytes": 6890,
+      "sha256": "32bcd20777d7cf5255b4fa3d30dc9293e9dd09214cd36a6999e43707b3e89eb4"
+    },
+    {
+      "file": "51.webp",
+      "bytes": 6922,
+      "sha256": "07b7d3ab081d91ac82b45065ffacb536c94cdf66c8ece2b9b4c34f39a6da4d0a"
+    },
+    {
+      "file": "52.webp",
+      "bytes": 6964,
+      "sha256": "7f380c542ac5f312890d35f451cdf309382647f8c5ed791cebab2be7186b57aa"
+    },
+    {
+      "file": "53.webp",
+      "bytes": 6926,
+      "sha256": "b68cc3769a9b9a9fb761446cb630aff1cd6c7f0c7d347de267e27edd390ea533"
+    },
+    {
+      "file": "54.webp",
+      "bytes": 6964,
+      "sha256": "1dcd72eb2914af49b09e619033a4787a1f824d97769196f93257f4e9e15b386b"
+    },
+    {
+      "file": "55.webp",
+      "bytes": 7106,
+      "sha256": "86db7fbc40e36ce5235ef85cc6b3d2a6e9b79877c6d09cdcacc8e19249a220ea"
+    },
+    {
+      "file": "56.webp",
+      "bytes": 7126,
+      "sha256": "85726027fdacc78d0b57c9602769f1e84cfc253dd57f09060c78ebb693f59783"
+    },
+    {
+      "file": "57.webp",
+      "bytes": 7018,
+      "sha256": "00ca6577c9d7cdcd7e3d0f3c201599542fe0ffe92a3653b049b402e1a7d3bbcf"
+    },
+    {
+      "file": "58.webp",
+      "bytes": 7044,
+      "sha256": "e455d6952c135231d1978011ecfafcbd070d62a41b87d4eecef27af3725c9cb3"
+    },
+    {
+      "file": "59.webp",
+      "bytes": 7050,
+      "sha256": "a86ed668a95c9f6e007628dcab56024a27e8a03cef971e86214e5d5cff69f570"
+    },
+    {
+      "file": "60.webp",
+      "bytes": 7004,
+      "sha256": "0ab4caf039e7db5331b5bd76dfaccf5b6c2bc6b11154a8a031784f209b98f98a"
+    },
+    {
+      "file": "61.webp",
+      "bytes": 7094,
+      "sha256": "9234d1136ace9897c569c5e770e3f44ec150a842d914d03b17e2c17e6ffbff11"
+    },
+    {
+      "file": "62.webp",
+      "bytes": 7236,
+      "sha256": "b15ba12ac7a7f5a6db7dd1253191381e08587f141a62e2c34a0e1eb9b999f232"
+    },
+    {
+      "file": "63.webp",
+      "bytes": 7362,
+      "sha256": "5bfebc1fa9c3cdfa716adbcebb42d16c564a152abf432b30408dd20d7802be83"
+    },
+    {
+      "file": "64.webp",
+      "bytes": 7392,
+      "sha256": "942648d065e6beb0be80f20071b7d48608f8af85f88ca091058820ebd9448d51"
+    },
+    {
+      "file": "65.webp",
+      "bytes": 7474,
+      "sha256": "e929bfb107559151921e2d61f981fcb6e32871df5d7a570f5f9ad82731832d9b"
+    },
+    {
+      "file": "66.webp",
+      "bytes": 7414,
+      "sha256": "4c32c4b624b83e88d8ba567943ba19321eaca51ff4a4c947fe8cfbc337050e55"
+    },
+    {
+      "file": "67.webp",
+      "bytes": 7300,
+      "sha256": "e96c346bad187123cb8a15763848e18e50eaa609449ee67395cb477f4360fe5d"
+    },
+    {
+      "file": "68.webp",
+      "bytes": 7224,
+      "sha256": "84dd25e0ad1b3cb5fb956d5a154709c417ddaffefb3b3e24c0cd2c5bc2b30ab0"
+    },
+    {
+      "file": "69.webp",
+      "bytes": 7272,
+      "sha256": "90aae87b06fc7c08de04c839dfa94a1627720538f7d72d242dd018da7a8c63d5"
+    },
+    {
+      "file": "70.webp",
+      "bytes": 7236,
+      "sha256": "31c0cd6c317d0b83f8475f60c821c4587d6cfb2e29850977eef3628d5b2bcadd"
+    },
+    {
+      "file": "71.webp",
+      "bytes": 7270,
+      "sha256": "4f4b953486ade711e00acb6652aa0b250ce9997b0e47c2aad94cd112d8e5fded"
+    },
+    {
+      "file": "72.webp",
+      "bytes": 7300,
+      "sha256": "9f0ae791b21482afd6faa549e78513ef3511873ade8830ded72723949ce43ea3"
+    },
+    {
+      "file": "73.webp",
+      "bytes": 7400,
+      "sha256": "b756f12ff6e085521d372db877974e2c7956ab5f966ad9c885eca497ad5687f4"
+    },
+    {
+      "file": "74.webp",
+      "bytes": 7366,
+      "sha256": "733fb826c28a6e198c6ee2bbf6106e74280337c9a49e9ba5e6ac356575f544cb"
+    },
+    {
+      "file": "75.webp",
+      "bytes": 7472,
+      "sha256": "30b3144341986e8a4aa6504669564cb8e39a6d536de520b505fae5867426f152"
+    },
+    {
+      "file": "76.webp",
+      "bytes": 7476,
+      "sha256": "972e66491d1682fd46ec00360df9489a8b2bff41892a440aed641e493a9a09d6"
+    },
+    {
+      "file": "77.webp",
+      "bytes": 7502,
+      "sha256": "f0d26e8636c0c653584bbf1cfa9fd9c603fb94a2e4fa45024f3141825b26bcd0"
+    },
+    {
+      "file": "78.webp",
+      "bytes": 7480,
+      "sha256": "807a718624669248c922892e37a2cd0d32341f5d345cd0f9e654a7be1fb3b7e3"
+    },
+    {
+      "file": "79.webp",
+      "bytes": 7686,
+      "sha256": "3a3b742e16065815cc2aa00e264c1f674b4c63e8c320aa075bc2eaa8c3b0a0cf"
+    },
+    {
+      "file": "80.webp",
+      "bytes": 7676,
+      "sha256": "c627329ad4fc40cac3aac3bcf762184c088922abbc7a86f4d726bb37025e40fb"
+    },
+    {
+      "file": "81.webp",
+      "bytes": 7514,
+      "sha256": "50b52e80482fafc0f22f1d84bf9c60b5fca4ace374f409b832f1fc88574fd33c"
+    },
+    {
+      "file": "82.webp",
+      "bytes": 7660,
+      "sha256": "c616a0bbb297c79b9fe3338ecf2ede5895f3862840449fbc19c103083966e0f3"
+    },
+    {
+      "file": "83.webp",
+      "bytes": 7730,
+      "sha256": "a518edc494b4a5a57c904edb9f35e93b43377de47fa3786e739621509c27dcef"
+    },
+    {
+      "file": "84.webp",
+      "bytes": 7774,
+      "sha256": "3e084c250b8b7f1bb63f381064c5a04cab3b7f2a108fbf18f55fb4ff4ecbf2e5"
+    },
+    {
+      "file": "85.webp",
+      "bytes": 7948,
+      "sha256": "5975ca082ae9c8efc2dab8458812e5ca4d944572f25aaa6d9d2ebff1090e2f95"
+    },
+    {
+      "file": "86.webp",
+      "bytes": 7844,
+      "sha256": "b6b7abba9cb3c92c3f6176a728b7f0942e4c81dc607efd9a86f5670c6db5e9a3"
+    },
+    {
+      "file": "87.webp",
+      "bytes": 7910,
+      "sha256": "e5e2ea848c8ae7ee056c8e55cbebb7dee678a2daad27d7a872f3d2d1f089467c"
+    },
+    {
+      "file": "88.webp",
+      "bytes": 7850,
+      "sha256": "f98886ecf73ac048f644fa15e5e515899625f64e5420266f7a50a37fa14d7417"
+    },
+    {
+      "file": "89.webp",
+      "bytes": 7804,
+      "sha256": "973eee8e94aa811bc08323e9bb6fa1557a79bfab8579a1fd40ebd65d9547f28d"
+    },
+    {
+      "file": "90.webp",
+      "bytes": 7738,
+      "sha256": "c7aae4cd4c03c7de97a9c4396d7c1dc4156ea39ed0eb261ee2df9644d0164fc7"
+    },
+    {
+      "file": "91.webp",
+      "bytes": 7800,
+      "sha256": "cecef9959fc2b01f48c4043841aee09639dd31178b0fdc75b7221ecf3943a0fa"
+    },
+    {
+      "file": "92.webp",
+      "bytes": 7964,
+      "sha256": "98f5bfbd50ad6b38b6c8f7206fca2814131208c2a3c92f5f2a2d0bf77e561e43"
+    },
+    {
+      "file": "93.webp",
+      "bytes": 8032,
+      "sha256": "5b50870ba2a96ae50e64c36f754af230e52755deefb12c378f88133aaebc0fbd"
+    },
+    {
+      "file": "94.webp",
+      "bytes": 8094,
+      "sha256": "0879181d360b46796b12cdd41abfdbdaff5bac419b3c2a4177df8533ecf568f6"
+    },
+    {
+      "file": "95.webp",
+      "bytes": 7876,
+      "sha256": "97d76a927432f8e6aa96f78658310b917b917edbe5d6a3f897ef5173ccccfba8"
+    },
+    {
+      "file": "96.webp",
+      "bytes": 7904,
+      "sha256": "bcb2019b3ccbc8c5bf5431d089eb2d7bb876744bba3ddcaf4dc552c11c4765bd"
+    },
+    {
+      "file": "97.webp",
+      "bytes": 8058,
+      "sha256": "b47f75affa9c17c8467b5b3b7aac54d12b2fa8ef8b3fbe0ff2aec94609cef3ff"
+    },
+    {
+      "file": "98.webp",
+      "bytes": 8132,
+      "sha256": "a840c36576aa695839ab95f8fca0a0fa956e4b86ef22fa9fe9f421080f6984b2"
+    },
+    {
+      "file": "99.webp",
+      "bytes": 8130,
+      "sha256": "dfd1b576fea509e2db2f919ea0ae67cd2ccf153ced0173a299d91419c3f3cbd4"
+    },
+    {
+      "file": "100.webp",
+      "bytes": 8214,
+      "sha256": "648e350b27c545820b414fad804c6584a47970fc441a94f31bb590c4e0bc11f1"
+    },
+    {
+      "file": "101.webp",
+      "bytes": 8288,
+      "sha256": "0c40965b032284f38a20bc4f1f7127066f09f9a056e11432c713fd7fca162ad7"
+    },
+    {
+      "file": "102.webp",
+      "bytes": 8218,
+      "sha256": "23d6ad0631799f87d5eb938adf0b87bc6b788cd9f29d8967715986fe1dc1e8b9"
+    },
+    {
+      "file": "103.webp",
+      "bytes": 8182,
+      "sha256": "97a6ca9c30247fd86cd7213a0f0f6072016c2e9b6c8b61515b5e8ff38067a72c"
+    },
+    {
+      "file": "104.webp",
+      "bytes": 8146,
+      "sha256": "2ee367a557c90e8dc253b1e69f379e5a12033432679e6895215f212cdc65301e"
+    },
+    {
+      "file": "105.webp",
+      "bytes": 8090,
+      "sha256": "0a96cb18a6c4efde725d8387c85b9503be1614f2c1119b8ca657a3b4651e7e69"
+    },
+    {
+      "file": "106.webp",
+      "bytes": 8076,
+      "sha256": "947dd8d1f0b07d20e2fdcee8c0e45199962fb9a97fc880f034f02ec858753495"
+    },
+    {
+      "file": "107.webp",
+      "bytes": 8012,
+      "sha256": "92c45ea4edd890e9697803a00af5c7a965b596e52217b231c55aa041d24a532d"
+    },
+    {
+      "file": "108.webp",
+      "bytes": 8054,
+      "sha256": "d9d21304ae5a50bba37e01e1dc57918b53d67bb3f940f7d8ad749de734229aa1"
+    },
+    {
+      "file": "109.webp",
+      "bytes": 8114,
+      "sha256": "469779a2092c76426859f2620e407114d384ff1b5ada8eb4561cd9efc0ad25bf"
+    },
+    {
+      "file": "110.webp",
+      "bytes": 8358,
+      "sha256": "3631faacc203cfc02d122639a41402eac5e2e90016ad116f567fdc502f0fe003"
+    },
+    {
+      "file": "111.webp",
+      "bytes": 8254,
+      "sha256": "218b5138d6762fbd20ff47a5a35bd29c514b540212b948d329f3924e611e9cb8"
+    },
+    {
+      "file": "112.webp",
+      "bytes": 8446,
+      "sha256": "334d4f14ee8d0f39ed0f8e7373fa07850f8f63b8696e18560cc0328a3af98b3a"
+    },
+    {
+      "file": "113.webp",
+      "bytes": 8438,
+      "sha256": "df9f635b8c09c8c78e0bb06fc7bf0eabca00a282b4f900433785182933e97052"
+    },
+    {
+      "file": "114.webp",
+      "bytes": 8472,
+      "sha256": "874238acd5786bf8575f0a0bc0f5fe9cbf1619ab1e6922021da93f6dcf262df8"
+    },
+    {
+      "file": "115.webp",
+      "bytes": 8366,
+      "sha256": "874b674dd0cd404a763a67154d4eb4c3e376af723cf0f852f7d77058357f4cb5"
+    },
+    {
+      "file": "116.webp",
+      "bytes": 8378,
+      "sha256": "83463103c0c9475d1808ad7eca2091618053a98b0a2ef6385c1758067742a430"
+    },
+    {
+      "file": "117.webp",
+      "bytes": 8322,
+      "sha256": "a125c3dd854c6c740333fd6bf71cad3866857af4556c0661dd83dbae9e94968e"
+    },
+    {
+      "file": "118.webp",
+      "bytes": 8366,
+      "sha256": "f527a827963059a399d9a4ca09deb03ea4cb19c70b27d7d9d28d35450b1b534f"
+    },
+    {
+      "file": "119.webp",
+      "bytes": 8354,
+      "sha256": "bfc5647a31ca65f4ec0714d70b43f2fe9254375a3e64eb73ff472cb1c56df7a8"
+    },
+    {
+      "file": "120.webp",
+      "bytes": 8388,
+      "sha256": "a60cb7e6436a7689ca249c3c6f3581ae1b57883cf3dfe6e52dcf7c2d08f3cc4e"
+    },
+    {
+      "file": "121.webp",
+      "bytes": 8414,
+      "sha256": "cc592eaeb6a78f81ed8e688159f6ee4a645778a767ae684bf3b90cca90c87ac3"
+    },
+    {
+      "file": "122.webp",
+      "bytes": 8430,
+      "sha256": "7f5123561561349eeeb1a86d1dcc453af16c63618809f7f5324ee644043be15d"
+    },
+    {
+      "file": "123.webp",
+      "bytes": 8358,
+      "sha256": "b6b1c52079ef79998dd629cc4c4699cbe59db1a65925689f810e32cd61b5a3f5"
+    },
+    {
+      "file": "124.webp",
+      "bytes": 8346,
+      "sha256": "41dfe7023aac80503a2c13044ce4383dbacee4f094ab60b4acb84b6873961803"
+    },
+    {
+      "file": "125.webp",
+      "bytes": 8274,
+      "sha256": "e9b1c0686864bd983a685bb91a338d128ed429ecbc500ea1a22e55dd9f5d4876"
+    },
+    {
+      "file": "126.webp",
+      "bytes": 8332,
+      "sha256": "60723bb4de04ba8942658f6c73df0c9b712b3203578ddcb07602e8267f45fc07"
+    },
+    {
+      "file": "127.webp",
+      "bytes": 8338,
+      "sha256": "62f0f7a53ba7c696b14b6465b6e4255fe73cfd54910783000a785ade38f0de08"
+    },
+    {
+      "file": "128.webp",
+      "bytes": 8264,
+      "sha256": "bcb668794ac5f686f9c7cdaa1b626b1fe130d3f4b5b46c6c637b2c0fa4265a01"
+    },
+    {
+      "file": "129.webp",
+      "bytes": 8348,
+      "sha256": "0a2ffd8e22b53c91ec578c9776d5d52d5831b91fb3324c1c057db0e9c24c81d6"
+    },
+    {
+      "file": "130.webp",
+      "bytes": 8408,
+      "sha256": "61b85866b7c31faf4a1f32775ea8c1698cfdce0bcc977c98bd70c7a7ff151828"
+    },
+    {
+      "file": "131.webp",
+      "bytes": 8470,
+      "sha256": "b40754ea2994827909d686a154d5d80891d3544cf71479dc20104d53178a1a81"
+    },
+    {
+      "file": "132.webp",
+      "bytes": 8516,
+      "sha256": "13bde2c5c1840c8539e0885e53d73c3fd83ee99b82815d4f84f5234b15986327"
+    },
+    {
+      "file": "133.webp",
+      "bytes": 8502,
+      "sha256": "afc360e9cb987d62fda65b23dcee5f3f5bf6897968d6808a18036cba813fbdb6"
+    },
+    {
+      "file": "134.webp",
+      "bytes": 8510,
+      "sha256": "e45d9d19cf0f2b3b59ea4bda82d066b7cbb1ce7985546dfae46ed60340f2933f"
+    },
+    {
+      "file": "135.webp",
+      "bytes": 8508,
+      "sha256": "ee7d8045e8da484c9448c9a02350bec38d4de0a825f44d65596df01e2fb5adfb"
+    },
+    {
+      "file": "136.webp",
+      "bytes": 8600,
+      "sha256": "c51d8e2739f155edd5e0d8eb3c9cbaa01f763a69e1b1a2cf758b9b8eca0adafe"
+    },
+    {
+      "file": "137.webp",
+      "bytes": 8630,
+      "sha256": "538350d4bf4db543c1b18fc26802cd374a594c70ebca6d9cf402841c985c3cda"
+    },
+    {
+      "file": "138.webp",
+      "bytes": 8592,
+      "sha256": "7b7f7322a7902f0876860c243db08ba29bb6b6c280323973af7838b1f2f2b4e2"
+    },
+    {
+      "file": "139.webp",
+      "bytes": 8722,
+      "sha256": "1b509ce6067dc15032213b2c1881d8cb60981aa69724382f653b3e726f945369"
+    },
+    {
+      "file": "140.webp",
+      "bytes": 8548,
+      "sha256": "9de357ecea1d45fbd4127b8610693036232023e8ab3b0b44a25407f41c2ad99c"
+    },
+    {
+      "file": "141.webp",
+      "bytes": 8580,
+      "sha256": "1bff15cf6fa8f437505f6210408e97c04c9d7fc2d405b7a89f8c35e2769fa496"
+    },
+    {
+      "file": "142.webp",
+      "bytes": 8514,
+      "sha256": "394aa5ee51f2566e95e64025866d91b36ee6fc64c062b641dcab226492d6c10d"
+    },
+    {
+      "file": "143.webp",
+      "bytes": 8530,
+      "sha256": "0cef9512bb415da2c247bda2b0da30ab9bded0d5652cb71e1da7fb49a055a275"
+    },
+    {
+      "file": "144.webp",
+      "bytes": 8520,
+      "sha256": "1677a048da6367efa93b84baffcf542ef3bbd9457b2c1690a63d50c1b2e4c0c9"
+    }
+  ],
+  "encoding": {
+    "format": "WebP static images",
+    "quality": 85,
+    "method": 6,
+    "rasterRetouching": false
+  }
+}

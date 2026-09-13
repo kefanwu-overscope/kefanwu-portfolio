@@ -5,7 +5,7 @@
   const projectCards = [...document.querySelectorAll(".editorial .project-card[data-project]")];
   if (!projectCards.length) return;
   const script = document.currentScript;
-  const manifestURL = new URL(script?.dataset.manifest || "assets/exploded/manifest.json?v=functional-release-20260913", document.baseURI);
+  const manifestURL = new URL(script?.dataset.manifest || "assets/exploded/manifest.json?v=motion-refinement-20260913", document.baseURI);
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const states = new Map();
@@ -33,6 +33,10 @@
       description: "The grips stretch the specimen until it breaks. Reverse to restore it." },
     flow: { label: "Pressure & flow", hint: "Scroll through flow", progress: "through flow" },
     assembling: { label: "Guitar assembly", hint: "Scroll to assemble", progress: "assembled" },
+    retract_release: { label: "Retract & release", hint: "Scroll to launch", progress: "through launch cycle",
+      description: "Retract the cue and rack, hold, then release forward. Reverse to rewind." },
+    drive_sway: { label: "Wheel drive & steering", hint: "Scroll to drive", progress: "through drive cycle",
+      description: "The wheels roll as the robot steers left and right." },
   };
   const clamp = (value) => Math.max(0, Math.min(1, value));
   let active = null;

@@ -1,88 +1,42 @@
-# Functional animation release and local preview · 2026-09-13
+# Current release and local preview · 2026-09-13
 
-Local preview: **http://127.0.0.1:4176/**
+## Motion and cover refinement · 2026-09-13
 
-The user authorized publishing this functional animation release on September
-13. The previous production version is the cinematic release `b59c0e8`, whose
-59 checked online files matched that commit. The current cache label is
-`functional-release-20260913`.
+This release supersedes production `ce30134`. The exact new commit and actual
+online status are recorded in `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-motion-refinement/release-metadata.json` and
+`deployment-verification.json`. Preview: http://127.0.0.1:4176/#work.
+The homepage cache label is `motion-refinement-20260913`.
 
-This release includes 15 scroll-controlled animations; Telecaster remains a
-static card. It contains 1,863 WebPs: 121 frames per animation, with 145 each
-for vine and tensile test. All 48 approved cover files remain unchanged.
-`EXPLODED_VIEWS.md` records final asset totals, packing and verification evidence.
+- Vine, CFD and Education covers now come directly from their animation scenes:
+  an extended translucent vine, the solved pressure/flow field, and the assembled
+  teaching guitar. The tensile cover and animated specimen share orange #F27A2A.
+- Steering now reaches 90° from neutral, coupling both universal joints and rack.
+  Pool retracts its front cylinder, rack and latches, holds, then releases quickly;
+  pinion and drive sprockets rotate in step. LineFollower rolls both tires/hubs
+  and sways left/right by 10°, with corresponding differential wheel rotation.
+- AURA expands in eleven checked stages, with individually removed top fasteners
+  and separate cover/bearing rings. Its camera follows the expanding stack.
+  Carbon's ten plies share the original cover shader and fixed source coordinates.
 
-Hover an animated card and scroll to advance/reverse its function, or use the
-native keyboard/touch slider. Slower wheel progression and bounded interpolation
-keep intermediate poses visible. Outward scrolls at either endpoint continue
-moving the page. Only the active sequence loads; decoded images share a 160 MiB
-budget, with at most two cached sequences. Original clicks/galleries remain
-available, and reduced motion/offscreen behavior is preserved.
+Fifteen animations contain 1,911 static 640×427 WebP frames (23,864,252 bytes),
+48 Cycles samples each. Vine, tensile, AURA and Pool have 145 frames; others 121.
+Six revised sequences use `assets/exploded/refined-20260913/`; the remaining nine
+retain their previously verified `functional-20260913/` assets. Telecaster is static.
+Four covers use twelve new responsive images; the other 36 current variants
+and all 48 historical cover files remain unchanged. Original CAD, galleries,
+project content and the 3D studio are preserved.
 
-The modes now show steering linkage, vine eversion, four rotating propellers,
-scanner/Smelly gantry travel, tensile deformation and rupture, brake heating,
-seat unfolding and ten carbon plies. AURA/FTC retain checked extraction paths;
-Pool and LineFollower each expose six meaningful component groups. Education
-uses 23 strictly checked stages to assemble into its matched original V2 CAD
-layout, with explicit 2.319 mm neck-height and pickup-front display clearances.
-That is a rigid-fit assembly illustration, not a manufacturing tolerance claim.
-The seat retains the previous two render-only corner reliefs and all 44 holes.
-Original covers, source meshes and galleries remain preserved.
+Sliders, smooth reversible wheel input, endpoint page scrolling, reduced motion,
+modal reset and the 160 MiB decoded-image budget remain supported. The CFD uses
+the existing audited 400-iteration Fluent solve and the full-range, zero-centered
+asinh pressure colors; no new solve or altered pressure data is introduced.
+It remains a qualitative reconstruction with the limitations documented in
+`../.codex/functional-motion-20260913/cfd/rebuild-report.md`.
 
-CFD uses a real Fluent 24.1.0 reconstruction, completed for 400 iterations and
-accepted by `audit_final_solution.py` for qualitative animation. The final mesh
-has 377,141 tetrahedra and 47,450 wall triangles, with actual wall pressure and
-49 exported numerical paths. Very low orthogonal quality, no prism boundary
-layer/grid-independence study and first-order transport limit aerodynamic
-accuracy. See `../.codex/functional-motion-20260913/cfd/solution-audit.json` and
-`rebuild-report.md` there; this does not reproduce the missing original case.
-This release changes only the pressure display, using zero-centered asinh
-normalization with a 750 Pa scale, cool blue negative pressure and orange/red
-positive pressure. It retains the complete −10645.81 to +7817.95 Pa range without
-clipping or modifying solved data; the 400-iteration solve is reused. The legend
-identifies the asinh scale and marks −2k/0/+2k and both extremes.
-
-The release recovery entry is
-`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-functional-release/RESTORE.md`.
-The adjacent `release-metadata.json` identifies the exact release commit;
-`deployment-verification.json` records the actual production verification result.
-The earlier `functional-motion`, `motion-revision` and `pre-publish` backups
-remain historical snapshots.
-
-The homepage keeps the black, graphite, silver, and restrained blue visual style.
-The user's latest direction restores the original track photograph of Kefan in
-the race car, oversized typography, and a brief cinematic entrance. The complete
-16-project grid follows the hero immediately, with four desktop columns, search,
-and category filters. No flagship story or engineering walkthrough precedes it.
-Methods, leadership, the 3D studio, and contact follow the projects. The original
-outlined skills ticker is restored above the Mechanical Engineering / Olin ’28
-line. Small homepage typography is larger, and the extra project-section intro
-sentence has been removed. Current leadership copy states
-that Kefan leads 30 mechanical engineers, also reflected in the 3D resume data.
-All 16 cards open their existing modal galleries. The three deeper cases are
-optional links inside the corresponding project modals.
-
-Optional full case pages:
-
-- `case-study.html?project=steering`
-- `case-study.html?project=vineRobot`
-- `case-study.html?project=scanner`
-
-All three preserve the full original image archive and detailed engineering
-record. All 16 homepage projects now have studio-rendered covers. Existing local
-CAD is reused, with material splits checked against build photos and original
-CAD views. FTC and the single-column tensile tester are photo-based display
-reconstructions, documented in render provenance. Card badges were removed at
-the user's request. Javelin retains its original CAD
-airframe with photo-informed replacement propellers. The CFD cover presents the
-unchanged original solver image on a modeled display; no new result is implied.
-
-`tools/editorial-render/catalog-manifest.json` records all sources and hashes.
-The 480px variants total 146.2 KiB; 960px variants total 352.6 KiB. The browser
-selects an appropriate resolution and loads cards lazily. Full 1800px masters
-remain available without downloading GLBs or running WebGL on the homepage.
-Material values are photo/CAD interpretations, not calibrated measurements;
-Pool's finished-machine colors are supported by CAD rather than a full-build photo.
+See `EXPLODED_VIEWS.md` for current motion details and verification, and
+`tools/exploded-render/README.md` for reproduction. Current evidence and PNG
+masters are in `../.codex/motion-refinement-20260913/`. The previous
+`functional-release` backup remains a separate, verified historical release.
 
 Start the preview from the parent WEBSITE directory:
 

@@ -23,13 +23,15 @@ parser.add_argument('--frames',type=int,default=0,help='Override sequence length
 parser.add_argument('--samples',type=int,default=48)
 parser.add_argument('--width',type=int,default=640)
 parser.add_argument('--only',nargs='*',type=int)
-parser.add_argument('--output',type=Path,default=ROOT.parent/'.codex/functional-motion-20260913/generated')
+parser.add_argument('--cover-progress',type=float,help='Render one high-resolution cover from this exact animation progress.')
+parser.add_argument('--output',type=Path,default=ROOT.parent/'.codex/motion-refinement-20260913/generated')
 args=parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
+args.output=args.output.resolve()
 
 MODES={'brakeSim':'heat','carbonSeat':'layup','seat':'unfold','ftc':'reconstruction',
        'steering':'steering','vineRobot':'extension','javelin':'propellers',
        'scanner':'gantry','formlabs':'gantry','materialTest':'tensile',
-       'ansysCfd':'flow','education':'assembling'}
+       'ansysCfd':'flow','education':'assembling','pool':'retract_release','lineFollower':'drive_sway'}
 
 def restore_javelin_parts(objects):
     """Recover named, touching CAD parts lost in the merged aero bucket."""
@@ -329,14 +331,20 @@ def render(key):
         elif key in ('vineRobot','javelin','materialTest'):
             from functional_processes import build_functional
             motion=build_functional(key,parts,scene)
-        elif key in ('pool','lineFollower','education'):
+        elif key in ('pool','lineFollower'):
+            from drive_cycle_motion import build_drive_cycle
+            motion=build_drive_cycle(key,parts,scene)
+        elif key=='aura':
+            from aura_detailed_motion import build_motion as build_aura
+            motion=build_aura(parts,scene)
+        elif key=='education':
             from expanded_assembly import build_expanded
             motion=build_expanded(key,parts,scene)
         else:
             motion=build_motion(key,parts,scene)
     if motion.report.get('floorMinimum') is not None:
         ground.location.z=min(ground.location.z,float(motion.report['floorMinimum'])-.02)
-    frame_count=args.frames or {'vineRobot':145,'materialTest':145}.get(key,121)
+    frame_count=args.frames or {'vineRobot':145,'materialTest':145,'aura':145,'pool':145}.get(key,121)
     assert 2<=frame_count<=181,frame_count
     scene.render.resolution_x=args.width
     scene.render.resolution_y=round(args.width*2/3)
@@ -380,8 +388,8 @@ def render(key):
             projected=(world-camera_position)@projection
             minimum=np.minimum(minimum,projected.min(0));maximum=np.maximum(maximum,projected.max(0))
         offset=np.zeros(2)
-        if key=='seat':
-            # Follow the connected sheet as its upright back lowers to the floor.
+        if key in ('seat','aura'):
+            # Follow the unfolding sheet or the emerging stack of bearing layers.
             # Keep the source viewing direction and exact first-frame camera.
             blend=min(1,index/40);blend=blend*blend*(3-2*blend)
             offset=(minimum+maximum)*.5*blend
@@ -391,7 +399,7 @@ def render(key):
         scales.append(max(fit,scales[-1] if scales else base_scale))
     full_scale=max(scales)
     def framing(progress):
-        if MODES.get(key) in ('steering','gantry','propellers','flow','assembling'):
+        if MODES.get(key) in ('steering','gantry','propellers','flow','assembling','retract_release','drive_sway'):
             return full_scale
         # A gentle lead-in leaves room before a panel/part begins moving.
         position=min(120,progress*120+3)
@@ -400,16 +408,20 @@ def render(key):
         intro=min(1,progress*10)
         return max(scales[round(progress*120)],base_scale+(fitted-base_scale)*intro)
     records=[]
-    frames=args.only if args.only is not None else range(frame_count)
+    frames=[None] if args.cover_progress is not None else args.only if args.only is not None else range(frame_count)
     for index in frames:
-        assert 0<=index<frame_count,index
-        progress=index/(frame_count-1)
+        if index is None:
+            progress=args.cover_progress
+            assert 0<=progress<=1,progress
+        else:
+            assert 0<=index<frame_count,index
+            progress=index/(frame_count-1)
         motion.apply(progress)
         camera.data.ortho_scale=framing(progress)
         position=progress*120;low=int(position);high=min(120,low+1)
         offset=camera_offsets[low]+(camera_offsets[high]-camera_offsets[low])*(position-low)
         camera.location=camera_origin+right*offset[0]+up*offset[1]
-        scene.render.filepath=str(out/(f'{index:02d}.png'))
+        scene.render.filepath=str(out/('cover.png' if index is None else f'{index:02d}.png'))
         before=time.monotonic()
         bpy.ops.render.render(write_still=True)
         elapsed=time.monotonic()-before
@@ -420,15 +432,21 @@ def render(key):
         'cameraBaseScale':base_scale,'mode':MODES.get(key,'assembly'),
         'sourceLayout':('Numerical pressure surface and pathlines from rebuilt Fluent cruise case' if key=='ansysCfd' else
             'Original separated educational layout' if key=='education' else 'Original approved cover source pose'),
-        'motionRevision':'functional-motion-20260913','motion':motion.report,
+        'motionRevision':'motion-refinement-20260913','motion':motion.report,
         'cameraBoundsSamples':121,'cameraMaximumScale':full_scale,
         'cameraTracking':('Fixed front three-quarter view of the V2 guitar assembly' if key=='education' else
             'Fixed three-quarter numerical flow view' if key=='ansysCfd' else
-            'Projected sheet center during unfolding; fixed source view direction' if key=='seat' else 'Original source camera position and direction'),
+            'Projected sheet center during unfolding; fixed source view direction' if key=='seat' else
+            'Projected component bounds during disassembly; fixed source view direction' if key=='aura' else 'Original source camera position and direction'),
         'cameraLocation':list(scene.camera.location),'cameraRotation':list(scene.camera.rotation_euler),
         'sourceComponentNames':[p['name'] for p in parts],
         'timings':records,'totalSeconds':round(time.monotonic()-start,3)}
-    (out/'provenance.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+    if args.cover_progress is not None:
+        report['coverProgress']=args.cover_progress
+        report['frameCount']=1
+        report['sourceAnimationFrameCount']=frame_count
+        report['rendererSha256']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    (out/('cover-provenance.json' if args.cover_progress is not None else 'provenance.json')).write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     print('EXPLODED_COMPLETE',key,report['totalSeconds'],flush=True)
 
 for project in args.projects:render(project)

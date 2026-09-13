@@ -1,0 +1,1418 @@
+{
+  "project": "carbonSeat",
+  "width": 640,
+  "height": 427,
+  "frameCount": 121,
+  "samples": 48,
+  "cameraOrthoScale": 7.278338432312012,
+  "cameraBaseScale": 6.784670829772949,
+  "mode": "layup",
+  "sourceLayout": "Original approved cover source pose",
+  "motionRevision": "motion-refinement-20260913",
+  "motion": {
+    "process": "ten carbon cloth plies progressively draped onto the actual shell profile",
+    "mode": "layup",
+    "layerCount": 10,
+    "appearance": {
+      "sourceMaterial": "carbon",
+      "sharedMaterial": "Catalogue carbon weave \u2014 fixed source coordinates",
+      "shaderPolicy": "Copy the original catalogue material nodes and all their values. Replace only Generated input with an equivalent immutable source-coordinate point attribute; original shell and every ply share this same material datablock.",
+      "coordinateAttribute": "Carbon cover source Generated coordinates",
+      "coordinateFormula": "(source mesh-local vertex - source texspace_location) / (2 * source texspace_size) + 0.5",
+      "coordinateInterpolation": "POINT FLOAT_VECTOR, barycentrically interpolated on the same retained source triangles; never recomputed by apply(progress).",
+      "sourceTextureSpaces": [
+        {
+          "object": "mat_carbon",
+          "location": [
+            0.0,
+            0.0,
+            1.420034646987915
+          ],
+          "size": [
+            1.2723844051361084,
+            1.399999976158142,
+            1.3950345516204834
+          ],
+          "vertexCount": 12611
+        }
+      ],
+      "checkerScale": 240.0,
+      "checkerColorsLinear": [
+        [
+          0.009721217676997185,
+          0.010960093699395657,
+          0.012286487966775894,
+          1.0
+        ],
+        [
+          0.017641954123973846,
+          0.019382361322641373,
+          0.021219009533524513,
+          1.0
+        ]
+      ],
+      "roughness": 0.5,
+      "metallic": 0.0,
+      "specular": 0.25,
+      "coat": 0.11999999731779099,
+      "bumpStrength": 0.05000000074505806,
+      "bumpDistance": 0.00019999999494757503,
+      "additionalWeaveRotation": 0
+    },
+    "seatedNormals": "Original source corner normals carried onto corresponding retained skin triangles.",
+    "recommendedFrameCount": 61,
+    "sourceFaceCount": 20430,
+    "clothFacesPerPly": 9870,
+    "clothVerticesPerPly": 6478,
+    "excludedGrazingSkinTriangles": 1,
+    "skinClearanceValidationPoses": 121,
+    "geometryPolicy": "Intact supplied shell retained. Each ply derives only from unobstructed original skin triangles; no shell slicing or solid-seat duplicates.",
+    "layupPolicy": "One moving cloth ply at a time; a continuous contact front seats it from the pan toward the upper back. Earlier plies remain seated and future plies are hidden.",
+    "clearancePolicy": "All plies share a projection along one unobstructed pull direction. Positive, strictly ordered offsets keep each moving ply above the shell and all already laid plies.",
+    "pullDirection": [
+      0.0,
+      -0.8574929237365723,
+      0.5144957900047302
+    ],
+    "illustrativeClearance": 0.046,
+    "illustrativePlySpacing": 0.006,
+    "interpretation": "User-requested ten-layer process illustration. Display spacing and cloth motion are conceptual; no measured laminate thickness, ply orientation schedule, cure cycle or material performance is claimed."
+  },
+  "cameraBoundsSamples": 121,
+  "cameraMaximumScale": 7.278338245508595,
+  "cameraTracking": "Original source camera position and direction",
+  "cameraLocation": [
+    5.537104606628418,
+    -9.496232032775879,
+    6.220449924468994
+  ],
+  "cameraRotation": [
+    1.1596143245697021,
+    4.4814473909582375e-08,
+    0.5317239761352539
+  ],
+  "sourceComponentNames": [],
+  "timings": [
+    {
+      "index": 0,
+      "seconds": 0.578,
+      "bytes": 255535
+    },
+    {
+      "index": 1,
+      "seconds": 0.578,
+      "bytes": 251395
+    },
+    {
+      "index": 2,
+      "seconds": 0.578,
+      "bytes": 253690
+    },
+    {
+      "index": 3,
+      "seconds": 0.578,
+      "bytes": 253394
+    },
+    {
+      "index": 4,
+      "seconds": 0.578,
+      "bytes": 251793
+    },
+    {
+      "index": 5,
+      "seconds": 0.578,
+      "bytes": 253445
+    },
+    {
+      "index": 6,
+      "seconds": 0.594,
+      "bytes": 254719
+    },
+    {
+      "index": 7,
+      "seconds": 0.578,
+      "bytes": 259425
+    },
+    {
+      "index": 8,
+      "seconds": 0.593,
+      "bytes": 258911
+    },
+    {
+      "index": 9,
+      "seconds": 0.594,
+      "bytes": 256595
+    },
+    {
+      "index": 10,
+      "seconds": 0.594,
+      "bytes": 255607
+    },
+    {
+      "index": 11,
+      "seconds": 0.578,
+      "bytes": 254171
+    },
+    {
+      "index": 12,
+      "seconds": 0.578,
+      "bytes": 254168
+    },
+    {
+      "index": 13,
+      "seconds": 0.579,
+      "bytes": 252302
+    },
+    {
+      "index": 14,
+      "seconds": 0.578,
+      "bytes": 254570
+    },
+    {
+      "index": 15,
+      "seconds": 0.594,
+      "bytes": 253594
+    },
+    {
+      "index": 16,
+      "seconds": 0.594,
+      "bytes": 251907
+    },
+    {
+      "index": 17,
+      "seconds": 0.578,
+      "bytes": 254374
+    },
+    {
+      "index": 18,
+      "seconds": 0.594,
+      "bytes": 255388
+    },
+    {
+      "index": 19,
+      "seconds": 0.578,
+      "bytes": 259421
+    },
+    {
+      "index": 20,
+      "seconds": 0.594,
+      "bytes": 259382
+    },
+    {
+      "index": 21,
+      "seconds": 0.593,
+      "bytes": 256517
+    },
+    {
+      "index": 22,
+      "seconds": 0.578,
+      "bytes": 255422
+    },
+    {
+      "index": 23,
+      "seconds": 0.594,
+      "bytes": 254569
+    },
+    {
+      "index": 24,
+      "seconds": 0.578,
+      "bytes": 254712
+    },
+    {
+      "index": 25,
+      "seconds": 0.578,
+      "bytes": 252555
+    },
+    {
+      "index": 26,
+      "seconds": 0.594,
+      "bytes": 255447
+    },
+    {
+      "index": 27,
+      "seconds": 0.578,
+      "bytes": 253761
+    },
+    {
+      "index": 28,
+      "seconds": 0.594,
+      "bytes": 252567
+    },
+    {
+      "index": 29,
+      "seconds": 0.578,
+      "bytes": 254299
+    },
+    {
+      "index": 30,
+      "seconds": 0.594,
+      "bytes": 255969
+    },
+    {
+      "index": 31,
+      "seconds": 0.578,
+      "bytes": 259536
+    },
+    {
+      "index": 32,
+      "seconds": 0.578,
+      "bytes": 259638
+    },
+    {
+      "index": 33,
+      "seconds": 0.594,
+      "bytes": 257051
+    },
+    {
+      "index": 34,
+      "seconds": 0.578,
+      "bytes": 256168
+    },
+    {
+      "index": 35,
+      "seconds": 0.609,
+      "bytes": 255012
+    },
+    {
+      "index": 36,
+      "seconds": 0.594,
+      "bytes": 255096
+    },
+    {
+      "index": 37,
+      "seconds": 0.578,
+      "bytes": 252630
+    },
+    {
+      "index": 38,
+      "seconds": 0.578,
+      "bytes": 255135
+    },
+    {
+      "index": 39,
+      "seconds": 0.593,
+      "bytes": 253883
+    },
+    {
+      "index": 40,
+      "seconds": 0.594,
+      "bytes": 252394
+    },
+    {
+      "index": 41,
+      "seconds": 0.594,
+      "bytes": 254697
+    },
+    {
+      "index": 42,
+      "seconds": 0.578,
+      "bytes": 255931
+    },
+    {
+      "index": 43,
+      "seconds": 0.578,
+      "bytes": 260183
+    },
+    {
+      "index": 44,
+      "seconds": 0.594,
+      "bytes": 259994
+    },
+    {
+      "index": 45,
+      "seconds": 0.593,
+      "bytes": 257369
+    },
+    {
+      "index": 46,
+      "seconds": 0.578,
+      "bytes": 256173
+    },
+    {
+      "index": 47,
+      "seconds": 0.594,
+      "bytes": 254859
+    },
+    {
+      "index": 48,
+      "seconds": 0.594,
+      "bytes": 254914
+    },
+    {
+      "index": 49,
+      "seconds": 0.593,
+      "bytes": 252630
+    },
+    {
+      "index": 50,
+      "seconds": 0.594,
+      "bytes": 254526
+    },
+    {
+      "index": 51,
+      "seconds": 0.594,
+      "bytes": 254083
+    },
+    {
+      "index": 52,
+      "seconds": 0.594,
+      "bytes": 252380
+    },
+    {
+      "index": 53,
+      "seconds": 0.578,
+      "bytes": 254496
+    },
+    {
+      "index": 54,
+      "seconds": 0.593,
+      "bytes": 255730
+    },
+    {
+      "index": 55,
+      "seconds": 0.594,
+      "bytes": 260000
+    },
+    {
+      "index": 56,
+      "seconds": 0.578,
+      "bytes": 259860
+    },
+    {
+      "index": 57,
+      "seconds": 0.578,
+      "bytes": 257618
+    },
+    {
+      "index": 58,
+      "seconds": 0.594,
+      "bytes": 256438
+    },
+    {
+      "index": 59,
+      "seconds": 0.594,
+      "bytes": 255381
+    },
+    {
+      "index": 60,
+      "seconds": 0.594,
+      "bytes": 255518
+    },
+    {
+      "index": 61,
+      "seconds": 0.593,
+      "bytes": 253369
+    },
+    {
+      "index": 62,
+      "seconds": 0.61,
+      "bytes": 255685
+    },
+    {
+      "index": 63,
+      "seconds": 0.578,
+      "bytes": 254242
+    },
+    {
+      "index": 64,
+      "seconds": 0.594,
+      "bytes": 252647
+    },
+    {
+      "index": 65,
+      "seconds": 0.593,
+      "bytes": 254445
+    },
+    {
+      "index": 66,
+      "seconds": 0.594,
+      "bytes": 256499
+    },
+    {
+      "index": 67,
+      "seconds": 0.594,
+      "bytes": 260199
+    },
+    {
+      "index": 68,
+      "seconds": 0.609,
+      "bytes": 260087
+    },
+    {
+      "index": 69,
+      "seconds": 0.594,
+      "bytes": 257569
+    },
+    {
+      "index": 70,
+      "seconds": 0.594,
+      "bytes": 256062
+    },
+    {
+      "index": 71,
+      "seconds": 0.594,
+      "bytes": 255674
+    },
+    {
+      "index": 72,
+      "seconds": 0.594,
+      "bytes": 255493
+    },
+    {
+      "index": 73,
+      "seconds": 0.594,
+      "bytes": 252752
+    },
+    {
+      "index": 74,
+      "seconds": 0.594,
+      "bytes": 255180
+    },
+    {
+      "index": 75,
+      "seconds": 0.594,
+      "bytes": 254309
+    },
+    {
+      "index": 76,
+      "seconds": 0.578,
+      "bytes": 252121
+    },
+    {
+      "index": 77,
+      "seconds": 0.625,
+      "bytes": 254635
+    },
+    {
+      "index": 78,
+      "seconds": 0.594,
+      "bytes": 256093
+    },
+    {
+      "index": 79,
+      "seconds": 0.578,
+      "bytes": 260505
+    },
+    {
+      "index": 80,
+      "seconds": 0.594,
+      "bytes": 260063
+    },
+    {
+      "index": 81,
+      "seconds": 0.593,
+      "bytes": 257758
+    },
+    {
+      "index": 82,
+      "seconds": 0.579,
+      "bytes": 256434
+    },
+    {
+      "index": 83,
+      "seconds": 0.594,
+      "bytes": 256006
+    },
+    {
+      "index": 84,
+      "seconds": 0.594,
+      "bytes": 256023
+    },
+    {
+      "index": 85,
+      "seconds": 0.594,
+      "bytes": 253191
+    },
+    {
+      "index": 86,
+      "seconds": 0.594,
+      "bytes": 255295
+    },
+    {
+      "index": 87,
+      "seconds": 0.594,
+      "bytes": 255183
+    },
+    {
+      "index": 88,
+      "seconds": 0.593,
+      "bytes": 252712
+    },
+    {
+      "index": 89,
+      "seconds": 0.594,
+      "bytes": 254903
+    },
+    {
+      "index": 90,
+      "seconds": 0.609,
+      "bytes": 255686
+    },
+    {
+      "index": 91,
+      "seconds": 0.578,
+      "bytes": 260072
+    },
+    {
+      "index": 92,
+      "seconds": 0.594,
+      "bytes": 259787
+    },
+    {
+      "index": 93,
+      "seconds": 0.593,
+      "bytes": 257246
+    },
+    {
+      "index": 94,
+      "seconds": 0.61,
+      "bytes": 256734
+    },
+    {
+      "index": 95,
+      "seconds": 0.609,
+      "bytes": 255673
+    },
+    {
+      "index": 96,
+      "seconds": 0.594,
+      "bytes": 255849
+    },
+    {
+      "index": 97,
+      "seconds": 0.594,
+      "bytes": 253717
+    },
+    {
+      "index": 98,
+      "seconds": 0.594,
+      "bytes": 255821
+    },
+    {
+      "index": 99,
+      "seconds": 0.594,
+      "bytes": 254426
+    },
+    {
+      "index": 100,
+      "seconds": 0.593,
+      "bytes": 253089
+    },
+    {
+      "index": 101,
+      "seconds": 0.594,
+      "bytes": 254885
+    },
+    {
+      "index": 102,
+      "seconds": 0.594,
+      "bytes": 256031
+    },
+    {
+      "index": 103,
+      "seconds": 0.593,
+      "bytes": 260358
+    },
+    {
+      "index": 104,
+      "seconds": 0.61,
+      "bytes": 260234
+    },
+    {
+      "index": 105,
+      "seconds": 0.593,
+      "bytes": 257479
+    },
+    {
+      "index": 106,
+      "seconds": 0.594,
+      "bytes": 256248
+    },
+    {
+      "index": 107,
+      "seconds": 0.594,
+      "bytes": 255497
+    },
+    {
+      "index": 108,
+      "seconds": 0.593,
+      "bytes": 255440
+    },
+    {
+      "index": 109,
+      "seconds": 0.594,
+      "bytes": 253125
+    },
+    {
+      "index": 110,
+      "seconds": 0.593,
+      "bytes": 255520
+    },
+    {
+      "index": 111,
+      "seconds": 0.61,
+      "bytes": 254246
+    },
+    {
+      "index": 112,
+      "seconds": 0.594,
+      "bytes": 252363
+    },
+    {
+      "index": 113,
+      "seconds": 0.593,
+      "bytes": 254138
+    },
+    {
+      "index": 114,
+      "seconds": 0.61,
+      "bytes": 256173
+    },
+    {
+      "index": 115,
+      "seconds": 0.593,
+      "bytes": 260174
+    },
+    {
+      "index": 116,
+      "seconds": 0.61,
+      "bytes": 260074
+    },
+    {
+      "index": 117,
+      "seconds": 0.609,
+      "bytes": 257400
+    },
+    {
+      "index": 118,
+      "seconds": 0.61,
+      "bytes": 256499
+    },
+    {
+      "index": 119,
+      "seconds": 0.593,
+      "bytes": 255854
+    },
+    {
+      "index": 120,
+      "seconds": 0.609,
+      "bytes": 255729
+    }
+  ],
+  "totalSeconds": 73.297,
+  "baseCoverSource": {
+    "project": "carbonSeat",
+    "source": "models/real/seat.glb",
+    "sourceSha256": "923d4c76cd68962bec1bcae614bd02a5a6de7aa1cf7610cc1558e7498bcac006",
+    "renderer": "tools/editorial-render/render_catalog.py",
+    "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+    "builder": null,
+    "builderSha256": null,
+    "sourceMeshFaceCounts": {
+      "mat_carbon": 20430
+    },
+    "sourceDimensionsAfterRotation": [
+      552.1436157226562,
+      607.5216674804688,
+      605.366943359375
+    ],
+    "dimensions": [
+      1800,
+      1200
+    ],
+    "cameraDirectionBlenderZUp": [
+      0.4647594690322876,
+      -0.7900910973548889,
+      0.39969316124916077
+    ],
+    "angleIndex": 0,
+    "samples": 192,
+    "geometryPolicy": "Supplied CAD geometry: rotation, uniform scale, translation, and shading only. No replacement or decimation.",
+    "materialDefaults": {
+      "steel": {
+        "color": "BBC1C8",
+        "metallic": 0.9,
+        "roughness": 0.32
+      },
+      "printed": {
+        "color": "30363D",
+        "metallic": 0,
+        "roughness": 0.43,
+        "texture": "printed"
+      },
+      "dark": {
+        "color": "202328",
+        "metallic": 0.12,
+        "roughness": 0.4
+      },
+      "aero": {
+        "color": "E3E1DB",
+        "metallic": 0,
+        "roughness": 0.45
+      },
+      "rubber": {
+        "color": "181B1E",
+        "metallic": 0,
+        "roughness": 0.62
+      },
+      "brass": {
+        "color": "AD8954",
+        "metallic": 0.8,
+        "roughness": 0.34
+      },
+      "glass": {
+        "color": "E7EDF0",
+        "metallic": 0,
+        "roughness": 0.1,
+        "transmission": 1
+      },
+      "wood": {
+        "color": "BE9C68",
+        "metallic": 0,
+        "roughness": 0.43,
+        "texture": "wood"
+      },
+      "carbon": {
+        "color": "171A20",
+        "metallic": 0.05,
+        "roughness": 0.3,
+        "texture": "carbon",
+        "coat": 0.3
+      },
+      "pcb": {
+        "color": "166C79",
+        "metallic": 0,
+        "roughness": 0.44
+      }
+    },
+    "materialAssignments": {
+      "carbon": {
+        "color": "242628",
+        "metallic": 0.0,
+        "roughness": 0.5,
+        "coat": 0.12,
+        "specular": 0.25
+      }
+    },
+    "references": [
+      "assets/carbon-seat-trimmed-shell.webp",
+      "assets/carbon-seat-weave-close.webp"
+    ],
+    "notes": [
+      "Cured carbon/epoxy is a dielectric composite. Fine weave and resin finish follow the build photos; no geometry smoothing or invented upholstery."
+    ]
+  },
+  "encodedFrames": [
+    {
+      "file": "00.webp",
+      "bytes": 5542,
+      "sha256": "e139d5b0ff92e86f1c6ba79d29e8297a6bac93cddd9f80d2bcd782fe393f9efa"
+    },
+    {
+      "file": "01.webp",
+      "bytes": 5210,
+      "sha256": "3bbaa80b2ee9c2929cf77ee19b17c6d2ef8e066d86455a9a8570b36d2392ae2e"
+    },
+    {
+      "file": "02.webp",
+      "bytes": 5474,
+      "sha256": "48126e869eaafa55153f180f28184ffd698f95e8419bcc715e5d8865eaaf451a"
+    },
+    {
+      "file": "03.webp",
+      "bytes": 5280,
+      "sha256": "4d722d42cfd462fd2ea8f2bf00680b0ee7d5fc3dc70971ecdee30299c0694c02"
+    },
+    {
+      "file": "04.webp",
+      "bytes": 5414,
+      "sha256": "18d1879dda8baa363c6c98993b6df2618483d53e6579baf44340634d1879e7f9"
+    },
+    {
+      "file": "05.webp",
+      "bytes": 5576,
+      "sha256": "c351bfff7b2bd90c946e547c0655252d77c64e8fb414f4d6113601b414fbed0c"
+    },
+    {
+      "file": "06.webp",
+      "bytes": 5826,
+      "sha256": "f8bd772ee899bb2bdf54e83a3c49f504e4727067668a8b377e95e2c64755c666"
+    },
+    {
+      "file": "07.webp",
+      "bytes": 6012,
+      "sha256": "7918cac58f3462cc22fb604a85528e34147bf0d9ffd2306de65cf324f59c8e7a"
+    },
+    {
+      "file": "08.webp",
+      "bytes": 6016,
+      "sha256": "6459cd04b2e52c536f2a4ea3db7303db82ee6b73d2b1ac2794f9f962e4302e90"
+    },
+    {
+      "file": "09.webp",
+      "bytes": 5816,
+      "sha256": "b2faf0a5fc068908107ab99d4ed28a26ec61bc0ec67642b0143c2436720f0c20"
+    },
+    {
+      "file": "10.webp",
+      "bytes": 5634,
+      "sha256": "9306485b50e37ff5f022982f4641c76512f464fcd9665c71a634e492ad8433a3"
+    },
+    {
+      "file": "11.webp",
+      "bytes": 5414,
+      "sha256": "2d528c4c78690a95c6ef17a144ff7320841d0709509ca4ace8360edee7bf533f"
+    },
+    {
+      "file": "12.webp",
+      "bytes": 5408,
+      "sha256": "1a80fbf147523d4fc2937f8be39727090eea44507acc5745640b3f44519fc4cd"
+    },
+    {
+      "file": "13.webp",
+      "bytes": 5344,
+      "sha256": "6a6fc920f1d6312e4a8d68d33085fc165307f5a79bf2e942a12fc8ae58c6149d"
+    },
+    {
+      "file": "14.webp",
+      "bytes": 5546,
+      "sha256": "0cca2a3f015a25b16a02d930092baacec2373bb849ab3990f8e14871763344fb"
+    },
+    {
+      "file": "15.webp",
+      "bytes": 5390,
+      "sha256": "e95fb927b557c61af7661d429bc1eeb1d5aa898d3757259213a0e801bfc198c6"
+    },
+    {
+      "file": "16.webp",
+      "bytes": 5372,
+      "sha256": "25392e9a4969bc8fdbda8c19a9ce64251a0987050e3795bcd584affb7f2e4687"
+    },
+    {
+      "file": "17.webp",
+      "bytes": 5594,
+      "sha256": "185e9f0da772c861322b5f617879045427e05c35fa31036e2fc79e0b8fa8af39"
+    },
+    {
+      "file": "18.webp",
+      "bytes": 5776,
+      "sha256": "baf36e51f040dfd4049a0989e2a380229c78ea3a1ae1be66d06402a2e475c913"
+    },
+    {
+      "file": "19.webp",
+      "bytes": 6246,
+      "sha256": "82b18828fe6462f138099ef539fb02a9868789de0d32555069e3b64a26103e89"
+    },
+    {
+      "file": "20.webp",
+      "bytes": 6032,
+      "sha256": "765e46fc5bc8eff3527ba40160c2dccf922949a8a5d67aecbcbfdd0a4b14b4f0"
+    },
+    {
+      "file": "21.webp",
+      "bytes": 5748,
+      "sha256": "c4ccb182e9c84eea1332b9a132c44262eda525aa694946b360934a1cb4014af9"
+    },
+    {
+      "file": "22.webp",
+      "bytes": 5570,
+      "sha256": "5535be9efcd1f09192cde6294b17c92b196d096496e94762944027f2fe9d7377"
+    },
+    {
+      "file": "23.webp",
+      "bytes": 5472,
+      "sha256": "4c98296b06b426f2a6a52bee76b96e922cf742f222cb72710874d4654d03794d"
+    },
+    {
+      "file": "24.webp",
+      "bytes": 5442,
+      "sha256": "375bb41a5a05c472eca12b1c8f411557b11cad7076ca75dc1ddfdd75b6e7a0da"
+    },
+    {
+      "file": "25.webp",
+      "bytes": 5310,
+      "sha256": "cd24889afd5216dbd615fd4c9daa8640c504f2fdad7eea7de89d8a6ad657b3d5"
+    },
+    {
+      "file": "26.webp",
+      "bytes": 5590,
+      "sha256": "7095bdfff3acb20408c3bf61ee52927ff701f2868b6dbb84265b28a9df58fbb1"
+    },
+    {
+      "file": "27.webp",
+      "bytes": 5476,
+      "sha256": "fa49f75ea1001624f418c092a5d85e4b6880b51c72beda9c04bb62867b93ff5e"
+    },
+    {
+      "file": "28.webp",
+      "bytes": 5404,
+      "sha256": "65d637f98328134efff98c6a607a5b0e8ac52447efd50113e7ef656c9081dabb"
+    },
+    {
+      "file": "29.webp",
+      "bytes": 5580,
+      "sha256": "3cf4fbd47f61b6aa30d89085c0ab0454ecd066f7f088d618ad0a04d71ed6ba62"
+    },
+    {
+      "file": "30.webp",
+      "bytes": 5816,
+      "sha256": "2a5a0fc178af7264a014d01c5720c18f03188229db6bb83c91812a65277feb44"
+    },
+    {
+      "file": "31.webp",
+      "bytes": 6128,
+      "sha256": "5c94dceaa55536976e3c09dbce0400ef194856b6e8a454742d4acd4a8456841b"
+    },
+    {
+      "file": "32.webp",
+      "bytes": 6016,
+      "sha256": "7954ad5d1dbeca44ac1fbc209eba245ea650238231043efd142358a88910fe50"
+    },
+    {
+      "file": "33.webp",
+      "bytes": 5794,
+      "sha256": "f9b97155ad4fdb1f217ba51693c6d8568cd2daa1030b951be79ff1f0ed8f362b"
+    },
+    {
+      "file": "34.webp",
+      "bytes": 5696,
+      "sha256": "dd3d92711ba3cd747f9f70502e8a9f722af30ee62afa614c879a36ee5bc9dbec"
+    },
+    {
+      "file": "35.webp",
+      "bytes": 5484,
+      "sha256": "8a96bdb6611e9be01b4209110c489b750e593b9be3beb5b241579af7a1919f27"
+    },
+    {
+      "file": "36.webp",
+      "bytes": 5562,
+      "sha256": "952a32d19f2332a67fda143cd025a880d15a491ed1b5a44af6460d4cc2a7ef95"
+    },
+    {
+      "file": "37.webp",
+      "bytes": 5392,
+      "sha256": "31874c7b80b3a95235d9c375f5600f527cbffb03081b82f4d46e646113fba220"
+    },
+    {
+      "file": "38.webp",
+      "bytes": 5622,
+      "sha256": "50c9cb5fe2135eb8e5d07b0ed1c49bf0e8aa9f1b4df082b47ed4030280b42501"
+    },
+    {
+      "file": "39.webp",
+      "bytes": 5386,
+      "sha256": "29323dd956b690f426b1f3a2b7fa8149416b82caedff74294965cfc653d745a3"
+    },
+    {
+      "file": "40.webp",
+      "bytes": 5468,
+      "sha256": "f77fd2fa27be581a32a3440a32740601adc19c3cb781367ef45460c5d40260cf"
+    },
+    {
+      "file": "41.webp",
+      "bytes": 5560,
+      "sha256": "962292391509dd0b543b8aa30ce2e6248a6c13d0a6d1a0f7faf7f75a1bb3697d"
+    },
+    {
+      "file": "42.webp",
+      "bytes": 5910,
+      "sha256": "a0c2ee5a9ea963c4313fad6462ffa13c7cb183d869afdf0a991139fa6b0e2a43"
+    },
+    {
+      "file": "43.webp",
+      "bytes": 6256,
+      "sha256": "761c82377c5f72df1f8d5a386c5ac4d8ca6920eed0bdf9b35c0fee258ebb01dd"
+    },
+    {
+      "file": "44.webp",
+      "bytes": 6064,
+      "sha256": "16edd802b3ffab482b6964394f81061aa81333b60a36f61f8ddbb62e741128c2"
+    },
+    {
+      "file": "45.webp",
+      "bytes": 5906,
+      "sha256": "dd36d23e65d1abbbe6715fa46ecb6f8b83a91808495a1476ee007c0784619e80"
+    },
+    {
+      "file": "46.webp",
+      "bytes": 5718,
+      "sha256": "247a032341f6af26bb6d7e61a231527417136f7e0959a1587dfa4a050c2d4105"
+    },
+    {
+      "file": "47.webp",
+      "bytes": 5500,
+      "sha256": "8be899d0ef3de83a03064aeae9e51b11db2b0a6186767b55bc9a24323fae0110"
+    },
+    {
+      "file": "48.webp",
+      "bytes": 5506,
+      "sha256": "9b3ea033e4ec6856e5c715327bf9c90544540bb82dace551db0f9e0de101e12b"
+    },
+    {
+      "file": "49.webp",
+      "bytes": 5370,
+      "sha256": "a30268163b13cb8dea3ae4338c4e59be026949a0e420931f5ffd95f86eae8f5b"
+    },
+    {
+      "file": "50.webp",
+      "bytes": 5670,
+      "sha256": "3530a5ae9764fdebd63f465cdac6ef88cb22374c7e2643adf85efd6259d3f723"
+    },
+    {
+      "file": "51.webp",
+      "bytes": 5508,
+      "sha256": "de758380b0a408e3e5711969811c02a0555bd5f40fb3b7ebe17103fac58ba875"
+    },
+    {
+      "file": "52.webp",
+      "bytes": 5462,
+      "sha256": "7eb5157b3769d6a92272867be4b54a75617b158efd1e2126902865e2867e86b8"
+    },
+    {
+      "file": "53.webp",
+      "bytes": 5666,
+      "sha256": "27685b0f9f81e48a05356c790ae4d5c57455a41c8f583cd66a953b4ec64c8cf8"
+    },
+    {
+      "file": "54.webp",
+      "bytes": 5742,
+      "sha256": "8aa17dc5ecf04ce10a2f1b065f6e95185ef9003ad209157a36fde0cc3415e0c0"
+    },
+    {
+      "file": "55.webp",
+      "bytes": 6268,
+      "sha256": "b4307b2602d391b9bd4a6c5222780bb88d8545127421b588c167a35e7700f8ad"
+    },
+    {
+      "file": "56.webp",
+      "bytes": 6086,
+      "sha256": "3c035857ca1a7974364a0e8ea03a28c100e288407d94395d72b0c61fc1123858"
+    },
+    {
+      "file": "57.webp",
+      "bytes": 5968,
+      "sha256": "f0c743d15f5ddcdf77df5ce329fa04f42d8967a373a5789c993782adea88e240"
+    },
+    {
+      "file": "58.webp",
+      "bytes": 5762,
+      "sha256": "92413443eca6fbc40b4043c7a563141b8fce5d4ad77452d89cc12ff7fb940fd8"
+    },
+    {
+      "file": "59.webp",
+      "bytes": 5582,
+      "sha256": "e7620161967db974b29eb73cb08d4fcb164cf3139a46bd9c36566ceaa10fa77b"
+    },
+    {
+      "file": "60.webp",
+      "bytes": 5588,
+      "sha256": "6961a82507b4bdc7d75833f0f5781c0ccc1ebff5d5284d22f85673442e6fc670"
+    },
+    {
+      "file": "61.webp",
+      "bytes": 5450,
+      "sha256": "5754b1033b6a2ddff43b481b427aa7909d94cd72c721258b30a91ef59c56b52c"
+    },
+    {
+      "file": "62.webp",
+      "bytes": 5756,
+      "sha256": "1a01078e54f6e2cdc14a7844ec1669acdb5e138856e71a6e48b19508c81fa5ed"
+    },
+    {
+      "file": "63.webp",
+      "bytes": 5394,
+      "sha256": "ed6e53ede9973ab098efcfa097e960b35d2ebc5e9234ac230e234acc50f184bf"
+    },
+    {
+      "file": "64.webp",
+      "bytes": 5426,
+      "sha256": "37f00b778197a3301bc5e5d3da2bc311dc08208fa8fcdcf715e193cd48f8a0ae"
+    },
+    {
+      "file": "65.webp",
+      "bytes": 5700,
+      "sha256": "0a67800945118fc5d4e61fff8ba40060684d3f1e41bce6bdc1d2139e8411cde5"
+    },
+    {
+      "file": "66.webp",
+      "bytes": 5732,
+      "sha256": "414d1fa78aab76bd39b557ae604d84175d5839eab3e7c2a7e12e54d3f9db34c1"
+    },
+    {
+      "file": "67.webp",
+      "bytes": 6316,
+      "sha256": "c1a5216b5a898cf2291102b0209664aa310a080908cc18ea85e69de599c4a994"
+    },
+    {
+      "file": "68.webp",
+      "bytes": 6144,
+      "sha256": "cf5bff86d1180b4ecf83437e6ef66c85e1edaceccd82f399836f7857f09c7c07"
+    },
+    {
+      "file": "69.webp",
+      "bytes": 5956,
+      "sha256": "74571b1775d45b5399e79b7c7051804394793c639eeaaaa8be146a1a41962643"
+    },
+    {
+      "file": "70.webp",
+      "bytes": 5932,
+      "sha256": "f21452a95a29afe1785641ddb2d738199ed73af7d48a3f7ed0772964d3089240"
+    },
+    {
+      "file": "71.webp",
+      "bytes": 5754,
+      "sha256": "038da2cbae77b5e109fb270326722ee140a248b6c82b9265ebc1b5fb117df8c6"
+    },
+    {
+      "file": "72.webp",
+      "bytes": 5748,
+      "sha256": "34c2a9524be88f41a1f7edb4d8b0cb0bbc6fe1a20e3361aa3e24950c7eb3bddd"
+    },
+    {
+      "file": "73.webp",
+      "bytes": 5538,
+      "sha256": "9b7b4b8e96e359b11a3731f7204472d9d9da0c897670f408c4ab822a45955be2"
+    },
+    {
+      "file": "74.webp",
+      "bytes": 5718,
+      "sha256": "187ebd2db91c0b5b6bb8a3d5f26f45e3bffec615deb42f8069fc89a7f407775e"
+    },
+    {
+      "file": "75.webp",
+      "bytes": 5522,
+      "sha256": "65d6a935433931b8c44d274feb2f45c0747664e3c10626c8ea559fc7677655fd"
+    },
+    {
+      "file": "76.webp",
+      "bytes": 5454,
+      "sha256": "5c34aec674fa407bf675d0e059c9c6fa0cb7975d014dcbbb90d4b28af478f4b6"
+    },
+    {
+      "file": "77.webp",
+      "bytes": 5710,
+      "sha256": "f7810fb9f9298fb16ab932ea4b52dbf0766963455078f8ca2fbef488a1c876fa"
+    },
+    {
+      "file": "78.webp",
+      "bytes": 5720,
+      "sha256": "6e73a3155651a4cc57796ec1568528c1e2547db107383b110bce7ffed0603436"
+    },
+    {
+      "file": "79.webp",
+      "bytes": 6126,
+      "sha256": "bac8d263f1a42978741cde4aa5abf3dceb6d6ea595dde393765252ca7b85496c"
+    },
+    {
+      "file": "80.webp",
+      "bytes": 6110,
+      "sha256": "9bc8c01dfef3429d00efb74f16ff70407d3e2066d005399f1bd282420be63386"
+    },
+    {
+      "file": "81.webp",
+      "bytes": 6052,
+      "sha256": "015a861907997f7f6fc19f747094f381230dbab98d4aed8aa4fc0c81e973e14f"
+    },
+    {
+      "file": "82.webp",
+      "bytes": 5794,
+      "sha256": "3599848ec1a02650b7572fd8d88d2504ba888f537d5c3666a4afebee53e54220"
+    },
+    {
+      "file": "83.webp",
+      "bytes": 5636,
+      "sha256": "7bab4ad79cc8c1527f40e5acb357a082bacd855510e909c34eb866feb10ebe19"
+    },
+    {
+      "file": "84.webp",
+      "bytes": 5666,
+      "sha256": "d42f5a2e344013fa483de93ecd44260a7c03ab828651463bebe2cbc4abda602c"
+    },
+    {
+      "file": "85.webp",
+      "bytes": 5528,
+      "sha256": "a3e49d99b3cb41bcc2652b30451ec1f7c3a3dc0f8b47462637fb89a2e6f3adc2"
+    },
+    {
+      "file": "86.webp",
+      "bytes": 5718,
+      "sha256": "68dff15593ebadb456323fbdf2887b8d384bb82d0c2873b0b7a65d37d96bb51d"
+    },
+    {
+      "file": "87.webp",
+      "bytes": 5536,
+      "sha256": "2e563ab2b62993ef8248adfcdad8d01e0f22434b4198e543132eeb982047bb0c"
+    },
+    {
+      "file": "88.webp",
+      "bytes": 5468,
+      "sha256": "de80920d17b1b6f9a8405307a48c7af3dcf5f91741eab5376fa31273865e0921"
+    },
+    {
+      "file": "89.webp",
+      "bytes": 5680,
+      "sha256": "01d0e87a2e8cbf8897d83a3d5f36f32434b2b00ec1dd07c673a012bb8aeae898"
+    },
+    {
+      "file": "90.webp",
+      "bytes": 5704,
+      "sha256": "1385f0999d930446b3b04b98609073c79c58b339827325739a384a450d5b9d4a"
+    },
+    {
+      "file": "91.webp",
+      "bytes": 6134,
+      "sha256": "0aa21906b6eb9ea476fa15deec059b8bbca2906c3348d798f6a7f6de0241544f"
+    },
+    {
+      "file": "92.webp",
+      "bytes": 6068,
+      "sha256": "b421ec0ada557af988ebd355838d78407c1eda1aa8af9ea3bd2caaa2b1f27119"
+    },
+    {
+      "file": "93.webp",
+      "bytes": 6022,
+      "sha256": "f730d1397e5b31f04742621cddfcedaaf9e3c7f5687f27b9aba4564d828f6691"
+    },
+    {
+      "file": "94.webp",
+      "bytes": 5750,
+      "sha256": "d8590c2a208077b40317a8b367ec017cc165d8b4a6b55111f740b02e675c8e09"
+    },
+    {
+      "file": "95.webp",
+      "bytes": 5674,
+      "sha256": "f43a3d5a70975aa53b9c3c48994dd5ab5e1c4d5929350ae6ef1734ee2d31d203"
+    },
+    {
+      "file": "96.webp",
+      "bytes": 5572,
+      "sha256": "c0aaaba0b5d9a5aa9ea19a3aa147a68a585c5f94507555f50d746f9b213dfda9"
+    },
+    {
+      "file": "97.webp",
+      "bytes": 5502,
+      "sha256": "6c9c5e9ba57440f02b3b426541e4842372a9944d23cd800fa8fabecada8f5a86"
+    },
+    {
+      "file": "98.webp",
+      "bytes": 5738,
+      "sha256": "a6aab74fa41991cbb23bc3af0de5c99c13e0dd023381c07fd4031e44d31edc39"
+    },
+    {
+      "file": "99.webp",
+      "bytes": 5542,
+      "sha256": "884871a1b3a293f6a00537630789e3f9e18a5f0d9a1aca7660f06c805b087c57"
+    },
+    {
+      "file": "100.webp",
+      "bytes": 5438,
+      "sha256": "2071bc3b010cc267da497434ad0cdd6c849993e5d40aa6413e0d937b274c526b"
+    },
+    {
+      "file": "101.webp",
+      "bytes": 5698,
+      "sha256": "87909823c79c5993f23d5291e625f17dbb6a174e35b363f0e4a3d9af37132914"
+    },
+    {
+      "file": "102.webp",
+      "bytes": 5788,
+      "sha256": "50f0e0badb1940751ed5ed60aa01a42f1cb6527003c38a50e17c280c256aef58"
+    },
+    {
+      "file": "103.webp",
+      "bytes": 6052,
+      "sha256": "87b4e642896f072373c379a5b5621342b79ea56810dc095cb598bd84c8f4a10b"
+    },
+    {
+      "file": "104.webp",
+      "bytes": 6104,
+      "sha256": "437ae914c94331474d00bc84fe1d47254ec5cbecb8feb7f745c5c84490f27511"
+    },
+    {
+      "file": "105.webp",
+      "bytes": 6042,
+      "sha256": "de17cbd7442021619c1fdacbc4254f12fe5327f54a2c1ed40a9cd5732251acd1"
+    },
+    {
+      "file": "106.webp",
+      "bytes": 5798,
+      "sha256": "8c6fdbbd0866810913c8ab887371cc52c87b9986bbeba070524b0093b36819ab"
+    },
+    {
+      "file": "107.webp",
+      "bytes": 5632,
+      "sha256": "07d99bfcb68d3d20b660dadc15a530aa8d7b608b1d1b71bfc2226a5c49ed1402"
+    },
+    {
+      "file": "108.webp",
+      "bytes": 5652,
+      "sha256": "e2af8328761eb4f0cf8739fa9cab4d2422167efdb4322cfc0174acc51c19c657"
+    },
+    {
+      "file": "109.webp",
+      "bytes": 5360,
+      "sha256": "fb9fea0692977e7a90ce5558a592b13fbc86ea904a9e9e64496c223453b4754a"
+    },
+    {
+      "file": "110.webp",
+      "bytes": 5660,
+      "sha256": "41fedcf297d27e9d4b3e0b768031eb789a27604f1936003a9722e7367e6cc650"
+    },
+    {
+      "file": "111.webp",
+      "bytes": 5544,
+      "sha256": "481ef51146f6b72b5250d09a5ec7c28615e417111f414b10197eafa2745a08af"
+    },
+    {
+      "file": "112.webp",
+      "bytes": 5446,
+      "sha256": "4238c9f85b3946f50d37d87343943e9d1fd05c97e2ce4f2cf9e93fbe6c583d77"
+    },
+    {
+      "file": "113.webp",
+      "bytes": 5690,
+      "sha256": "d9fd0c614639ba703174bdca26a41f7b18119a42572610c9e2f5e8ff6c0c9947"
+    },
+    {
+      "file": "114.webp",
+      "bytes": 5744,
+      "sha256": "e6222f5182e3153c104a1b6bbb102e69637865848e4f14356c707624698bfe1a"
+    },
+    {
+      "file": "115.webp",
+      "bytes": 6056,
+      "sha256": "366829626d830457594f2791bc01f163f94315e7a7df6a7d2cd293e2a7edaca1"
+    },
+    {
+      "file": "116.webp",
+      "bytes": 6152,
+      "sha256": "a1aaf6467f998cb8a5a45e3d9079fc1c0f69f5cbbf0cd00624441d75001fe083"
+    },
+    {
+      "file": "117.webp",
+      "bytes": 5972,
+      "sha256": "6014305023f751e6c7c6fb6d984a844366f6510d7a9ed25eabb6c1989e70289d"
+    },
+    {
+      "file": "118.webp",
+      "bytes": 5786,
+      "sha256": "a121a9d3758b41f89528e451e44796275f7fb779fbaf33850f1fae082962c40f"
+    },
+    {
+      "file": "119.webp",
+      "bytes": 5660,
+      "sha256": "0f2f0ac912122de7f51d3d03f56417de2abeb18d024a92df58eedab800c8005a"
+    },
+    {
+      "file": "120.webp",
+      "bytes": 5580,
+      "sha256": "04c20462f8b1f067d218507d3c1309efbd025bcc41bd9fb1e84cd8540a072ad3"
+    }
+  ],
+  "encoding": {
+    "format": "WebP static images",
+    "quality": 85,
+    "method": 6,
+    "rasterRetouching": false
+  }
+}

@@ -59,62 +59,126 @@
   {
     "project": "vineRobot",
     "renderProvenance": {
-      "source": "models\\real\\vineRobot.glb",
-      "sourceBytes": 2209044,
-      "sourceSha256": "d5b552b2c95de5aef9665542ec2d30edde9c3321a664e32d45dc78831ac3bee7",
-      "sourceTriangles": 122814,
-      "sourceMeshNames": [
-        "mat_steel",
-        "mat_aero",
-        "mat_printed",
-        "mat_dark",
-        "mat_glass",
-        "mat_brass",
-        "mat_rubber"
-      ],
-      "cameraDirectionBlenderZUp": [
-        -0.786716639995575,
-        -0.50262451171875,
-        0.358393132686615
-      ],
-      "cameraAngleIndex": 0,
+      "coverFromAnimation": true,
+      "renderer": "tools/exploded-render/render_exploded.py",
+      "rendererSha256": "58bb54e16e3b0ef525fa1c2b11797c170a1ada6dd7d9447f1a72122ba97c5b50",
+      "samples": 192,
       "dimensions": [
         1800,
         1200
       ],
-      "samples": 192,
-      "geometryChanges": "Blender removes exactly the audited coincident duplicate source faces during import. Unique surface geometry is unchanged. Uniform scale/translation and shallow-edge shading normals only after import.",
-      "sourceDimensionsBlender": [
-        379.8729553222656,
-        298.4605407714844,
-        423.6509704589844
+      "sourceAnimationKey": "vineRobot",
+      "coverProgress": 0.75,
+      "motion": {
+        "mode": "growth",
+        "source": "Existing Bucketbot CAD side funnel and r52mm coupler; assets/vine-outlet-exploded.webp and source material mapping identify the outlet.",
+        "demonstration": "Added translucent double-wall tube everts from the actual side outlet. Growth, gentle sag, inner return and film thickness are qualitative display geometry; no pressure or measured travel claimed.",
+        "outletSourcePart": "mat_aero_part_5",
+        "outletCenter": [
+          -1.2473306818008423,
+          5.960464477539063e-08,
+          1.319929838180542
+        ],
+        "axis": [
+          -1,
+          0,
+          0
+        ],
+        "sourceBoreRadius": 0.31937244600901327,
+        "outerRadius": 0.29537244600901325,
+        "boreRadialClearance": 0.02250000000000002,
+        "growthRange": [
+          0.07,
+          1.79
+        ],
+        "thinWallThickness": 0.003,
+        "motionGroups": [
+          {
+            "name": "everted_vine",
+            "parts": [
+              "Functional vine \u2014 growing outer wall, rolling tip, inner retu"
+            ],
+            "axis": [
+              -1,
+              0,
+              0
+            ]
+          }
+        ],
+        "sourceHardwareFixed": true,
+        "arbitrarySeek": true
+      },
+      "motionRevision": "motion-refinement-20260913",
+      "cameraLocation": [
+        -9.355234146118164,
+        -6.165333271026611,
+        5.735403060913086
       ],
-      "importedTriangles": 122814,
-      "zeroAreaSourceTriangles": 0,
-      "repeatedIndexSourceTriangles": 0,
-      "duplicateSourceTriangles": 0
+      "cameraRotation": [
+        1.2042503356933594,
+        1.0519215720705688e-08,
+        -1.0022717714309692
+      ],
+      "cameraOrthoScale": 5.793547630310059,
+      "originalCoverProvenance": {
+        "source": "models\\real\\vineRobot.glb",
+        "sourceBytes": 2209044,
+        "sourceSha256": "d5b552b2c95de5aef9665542ec2d30edde9c3321a664e32d45dc78831ac3bee7",
+        "sourceTriangles": 122814,
+        "sourceMeshNames": [
+          "mat_steel",
+          "mat_aero",
+          "mat_printed",
+          "mat_dark",
+          "mat_glass",
+          "mat_brass",
+          "mat_rubber"
+        ],
+        "cameraDirectionBlenderZUp": [
+          -0.786716639995575,
+          -0.50262451171875,
+          0.358393132686615
+        ],
+        "cameraAngleIndex": 0,
+        "dimensions": [
+          1800,
+          1200
+        ],
+        "samples": 192,
+        "geometryChanges": "Blender removes exactly the audited coincident duplicate source faces during import. Unique surface geometry is unchanged. Uniform scale/translation and shallow-edge shading normals only after import.",
+        "sourceDimensionsBlender": [
+          379.8729553222656,
+          298.4605407714844,
+          423.6509704589844
+        ],
+        "importedTriangles": 122814,
+        "zeroAreaSourceTriangles": 0,
+        "repeatedIndexSourceTriangles": 0,
+        "duplicateSourceTriangles": 0
+      },
+      "masterSha256": "7d4bce44b518028c83537763ebac86ea31c9e37f96576ea11de0c3b9a44483d9"
     },
     "variants": [
       {
-        "src": "assets/editorial/vineRobot-wide-480.webp",
+        "src": "assets/editorial/motion-20260913/vineRobot-wide-480.webp",
         "width": 480,
         "height": 320,
-        "bytes": 10910,
-        "sha256": "fd2ca0ee3fd428cb358ca6d3eddd8b9fe35f4ac8a7b41b5c59a7786c02f59dfb"
+        "bytes": 11244,
+        "sha256": "dc6a67c849e9bbdeb70ef6f2bdf528555bacbf86fc7cedaffe59dad19019aa63"
       },
       {
-        "src": "assets/editorial/vineRobot-wide-960.webp",
+        "src": "assets/editorial/motion-20260913/vineRobot-wide-960.webp",
         "width": 960,
         "height": 640,
-        "bytes": 25426,
-        "sha256": "513753f6c71c49a9f2c3b39ebb4f46d1e47aaae9a0ff292ce5d1ffef11d87980"
+        "bytes": 25762,
+        "sha256": "78f59a7dcebca6f765dd36db828c5cd38b1ad201558bd2283ac392d69623c1f5"
       },
       {
-        "src": "assets/editorial/vineRobot-wide.webp",
+        "src": "assets/editorial/motion-20260913/vineRobot-wide-1800.webp",
         "width": 1800,
         "height": 1200,
-        "bytes": 65922,
-        "sha256": "8cf9a4865674716ce9034e7603f6c09c50a65552b3dec5e31c64fae64a11483f"
+        "bytes": 67970,
+        "sha256": "a57388157c1146caee1e3bdba177011803dfca23cbfb491cc2ea97bd3167a1d4"
       }
     ]
   },
@@ -869,410 +933,799 @@
   {
     "project": "materialTest",
     "renderProvenance": {
-      "project": "materialTest",
-      "source": null,
-      "sourceSha256": null,
-      "renderer": "tools/editorial-render/render_catalog.py",
-      "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
-      "builder": "tools/editorial-render/material-test/build_material_test.py",
-      "builderSha256": "06a60961b3000d08bcf96c16f912687fec104fca9f3b6d2da44f11c48a3e39cb",
-      "sourceMeshFaceCounts": {
-        "MaterialTest_sloped_base_shell": 122,
-        "MaterialTest_base_foot": 242,
-        "MaterialTest_base_foot.001": 242,
-        "MaterialTest_base_foot.002": 242,
-        "MaterialTest_base_foot.003": 242,
-        "MaterialTest_single_column_back_shell": 98,
-        "MaterialTest_column_face_border": 98,
-        "MaterialTest_column_face_border.001": 98,
-        "MaterialTest_column_top_cap": 98,
-        "MaterialTest_bellows_shadow_face": 98,
-        "MaterialTest_accordion_folded_front": 442,
-        "MaterialTest_side_scale_recess": 6,
-        "MaterialTest_yellow_travel_marker": 98,
-        "MaterialTest_travel_marker_knob": 242,
-        "MaterialTest_yellow_travel_marker.001": 98,
-        "MaterialTest_travel_marker_knob.001": 242,
-        "MaterialTest_black_crosshead": 98,
-        "MaterialTest_crosshead_fastener": 242,
-        "MaterialTest_crosshead_fastener.001": 242,
-        "MaterialTest_upper_load_cell": 242,
-        "MaterialTest_upper_load_cell_top": 242,
-        "MaterialTest_load_cell_socket": 242,
-        "MaterialTest_upper_coupling": 242,
-        "MaterialTest_upper_knurled_ring": 242,
-        "MaterialTest_upper_cross_pin": 242,
-        "MaterialTest_lower_mount_gasket": 98,
-        "MaterialTest_lower_machined_plate": 98,
-        "MaterialTest_mount_plate_bolt": 122,
-        "MaterialTest_mount_plate_bolt.001": 122,
-        "MaterialTest_mount_plate_bolt.002": 122,
-        "MaterialTest_mount_plate_bolt.003": 122,
-        "MaterialTest_lower_fixed_coupler": 242,
-        "MaterialTest_lower_coupler_lock_ring": 242,
-        "MaterialTest_lower_lock_pin": 242,
-        "MaterialTest_lower_grip_stem": 242,
-        "MaterialTest_collar_knurl": 80,
-        "MaterialTest_collar_knurl.001": 80,
-        "MaterialTest_collar_knurl.002": 80,
-        "MaterialTest_collar_knurl.003": 80,
-        "MaterialTest_collar_knurl.004": 80,
-        "MaterialTest_collar_knurl.005": 80,
-        "MaterialTest_collar_knurl.006": 80,
-        "MaterialTest_collar_knurl.007": 80,
-        "MaterialTest_collar_knurl.008": 80,
-        "MaterialTest_collar_knurl.009": 80,
-        "MaterialTest_collar_knurl.010": 80,
-        "MaterialTest_collar_knurl.011": 80,
-        "MaterialTest_collar_knurl.012": 80,
-        "MaterialTest_collar_knurl.013": 80,
-        "MaterialTest_collar_knurl.014": 80,
-        "MaterialTest_collar_knurl.015": 80,
-        "MaterialTest_collar_knurl.016": 80,
-        "MaterialTest_collar_knurl.017": 80,
-        "MaterialTest_collar_knurl.018": 80,
-        "MaterialTest_collar_knurl.019": 80,
-        "MaterialTest_collar_knurl.020": 80,
-        "MaterialTest_collar_knurl.021": 80,
-        "MaterialTest_collar_knurl.022": 80,
-        "MaterialTest_collar_knurl.023": 80,
-        "MaterialTest_collar_knurl.024": 80,
-        "MaterialTest_collar_knurl.025": 80,
-        "MaterialTest_collar_knurl.026": 80,
-        "MaterialTest_collar_knurl.027": 80,
-        "MaterialTest_collar_knurl.028": 80,
-        "MaterialTest_collar_knurl.029": 80,
-        "MaterialTest_collar_knurl.030": 80,
-        "MaterialTest_collar_knurl.031": 80,
-        "MaterialTest_collar_knurl.032": 80,
-        "MaterialTest_collar_knurl.033": 80,
-        "MaterialTest_collar_knurl.034": 80,
-        "MaterialTest_collar_knurl.035": 80,
-        "MaterialTest_collar_knurl.036": 80,
-        "MaterialTest_collar_knurl.037": 80,
-        "MaterialTest_collar_knurl.038": 80,
-        "MaterialTest_collar_knurl.039": 80,
-        "MaterialTest_collar_knurl.040": 80,
-        "MaterialTest_collar_knurl.041": 80,
-        "MaterialTest_collar_knurl.042": 80,
-        "MaterialTest_collar_knurl.043": 80,
-        "MaterialTest_collar_knurl.044": 80,
-        "MaterialTest_collar_knurl.045": 80,
-        "MaterialTest_collar_knurl.046": 80,
-        "MaterialTest_collar_knurl.047": 80,
-        "MaterialTest_collar_knurl.048": 80,
-        "MaterialTest_collar_knurl.049": 80,
-        "MaterialTest_collar_knurl.050": 80,
-        "MaterialTest_collar_knurl.051": 80,
-        "MaterialTest_collar_knurl.052": 80,
-        "MaterialTest_collar_knurl.053": 80,
-        "MaterialTest_collar_knurl.054": 80,
-        "MaterialTest_collar_knurl.055": 80,
-        "MaterialTest_collar_knurl.056": 80,
-        "MaterialTest_collar_knurl.057": 80,
-        "MaterialTest_collar_knurl.058": 80,
-        "MaterialTest_collar_knurl.059": 80,
-        "MaterialTest_collar_knurl.060": 80,
-        "MaterialTest_collar_knurl.061": 80,
-        "MaterialTest_collar_knurl.062": 80,
-        "MaterialTest_collar_knurl.063": 80,
-        "MaterialTest_collar_knurl.064": 80,
-        "MaterialTest_collar_knurl.065": 80,
-        "MaterialTest_collar_knurl.066": 80,
-        "MaterialTest_collar_knurl.067": 80,
-        "MaterialTest_collar_knurl.068": 80,
-        "MaterialTest_collar_knurl.069": 80,
-        "MaterialTest_collar_knurl.070": 80,
-        "MaterialTest_collar_knurl.071": 80,
-        "MaterialTest_collar_knurl.072": 80,
-        "MaterialTest_collar_knurl.073": 80,
-        "MaterialTest_collar_knurl.074": 80,
-        "MaterialTest_collar_knurl.075": 80,
-        "MaterialTest_collar_knurl.076": 80,
-        "MaterialTest_collar_knurl.077": 80,
-        "MaterialTest_collar_knurl.078": 80,
-        "MaterialTest_collar_knurl.079": 80,
-        "MaterialTest_collar_knurl.080": 80,
-        "MaterialTest_collar_knurl.081": 80,
-        "MaterialTest_collar_knurl.082": 80,
-        "MaterialTest_collar_knurl.083": 80,
-        "MaterialTest_collar_knurl.084": 80,
-        "MaterialTest_collar_knurl.085": 80,
-        "MaterialTest_collar_knurl.086": 80,
-        "MaterialTest_collar_knurl.087": 80,
-        "MaterialTest_collar_knurl.088": 80,
-        "MaterialTest_collar_knurl.089": 80,
-        "MaterialTest_collar_knurl.090": 80,
-        "MaterialTest_collar_knurl.091": 80,
-        "MaterialTest_collar_knurl.092": 80,
-        "MaterialTest_collar_knurl.093": 80,
-        "MaterialTest_collar_knurl.094": 80,
-        "MaterialTest_collar_knurl.095": 80,
-        "MaterialTest_collar_knurl.096": 80,
-        "MaterialTest_collar_knurl.097": 80,
-        "MaterialTest_collar_knurl.098": 80,
-        "MaterialTest_collar_knurl.099": 80,
-        "MaterialTest_curved_spring_grip_cheek": 174,
-        "MaterialTest_sliding_jaw_wedge": 98,
-        "MaterialTest_diagonal_jaw_return_spring": 1456,
-        "MaterialTest_jaw_spring_anchor": 122,
-        "MaterialTest_jaw_spring_anchor.001": 122,
-        "MaterialTest_jaw_spring_anchor.002": 122,
-        "MaterialTest_curved_spring_grip_cheek.001": 174,
-        "MaterialTest_sliding_jaw_wedge.001": 98,
-        "MaterialTest_diagonal_jaw_return_spring.001": 1456,
-        "MaterialTest_jaw_spring_anchor.003": 122,
-        "MaterialTest_jaw_spring_anchor.004": 122,
-        "MaterialTest_jaw_spring_anchor.005": 122,
-        "MaterialTest_grip_top_bridge": 98,
-        "MaterialTest_grip_bridge_fastener": 122,
-        "MaterialTest_grip_bridge_fastener.001": 122,
-        "MaterialTest_curved_spring_grip_cheek.002": 174,
-        "MaterialTest_sliding_jaw_wedge.002": 98,
-        "MaterialTest_diagonal_jaw_return_spring.002": 1456,
-        "MaterialTest_jaw_spring_anchor.006": 122,
-        "MaterialTest_jaw_spring_anchor.007": 122,
-        "MaterialTest_jaw_spring_anchor.008": 122,
-        "MaterialTest_curved_spring_grip_cheek.003": 174,
-        "MaterialTest_sliding_jaw_wedge.003": 98,
-        "MaterialTest_diagonal_jaw_return_spring.003": 1456,
-        "MaterialTest_jaw_spring_anchor.009": 122,
-        "MaterialTest_jaw_spring_anchor.010": 122,
-        "MaterialTest_jaw_spring_anchor.011": 122,
-        "MaterialTest_grip_top_bridge.001": 98,
-        "MaterialTest_grip_bridge_fastener.002": 122,
-        "MaterialTest_grip_bridge_fastener.003": 122,
-        "MaterialTest_black_fabric_tensile_specimen": 248,
-        "MaterialTest_sloped_operator_bezel": 98,
-        "MaterialTest_yellow_emergency_stop_field": 98,
-        "MaterialTest_emergency_stop_shank": 242,
-        "MaterialTest_red_emergency_stop_mushroom": 242,
-        "MaterialTest_black_jog_rocker": 98,
-        "MaterialTest_load_cell_signal_cable": 192
-      },
-      "sourceDimensionsAfterRotation": [
-        0.3499999940395355,
-        0.33901941776275635,
-        0.8529999852180481
-      ],
+      "coverFromAnimation": true,
+      "renderer": "tools/exploded-render/render_exploded.py",
+      "rendererSha256": "58bb54e16e3b0ef525fa1c2b11797c170a1ada6dd7d9447f1a72122ba97c5b50",
+      "samples": 192,
       "dimensions": [
         1800,
         1200
       ],
-      "cameraDirectionBlenderZUp": [
-        0.4647594690322876,
-        -0.7900910973548889,
-        0.39969316124916077
-      ],
-      "angleIndex": 0,
-      "samples": 192,
-      "geometryPolicy": "Photo-based reconstruction of the actual single-column tensile test equipment. Display geometry, not manufacturer CAD. The older MTS-style model is not the instrument used in this experiment.",
-      "materialDefaults": {
-        "steel": {
-          "color": "BBC1C8",
-          "metallic": 0.9,
-          "roughness": 0.32
-        },
-        "printed": {
-          "color": "30363D",
-          "metallic": 0,
-          "roughness": 0.43,
-          "texture": "printed"
-        },
-        "dark": {
-          "color": "202328",
-          "metallic": 0.12,
-          "roughness": 0.4
-        },
-        "aero": {
-          "color": "E3E1DB",
-          "metallic": 0,
-          "roughness": 0.45
-        },
-        "rubber": {
-          "color": "181B1E",
-          "metallic": 0,
-          "roughness": 0.62
-        },
-        "brass": {
-          "color": "AD8954",
-          "metallic": 0.8,
-          "roughness": 0.34
-        },
-        "glass": {
-          "color": "E7EDF0",
-          "metallic": 0,
-          "roughness": 0.1,
-          "transmission": 1
-        },
-        "wood": {
-          "color": "BE9C68",
-          "metallic": 0,
-          "roughness": 0.43,
-          "texture": "wood"
-        },
-        "carbon": {
-          "color": "171A20",
-          "metallic": 0.05,
-          "roughness": 0.3,
-          "texture": "carbon",
-          "coat": 0.3
-        },
-        "pcb": {
-          "color": "166C79",
-          "metallic": 0,
-          "roughness": 0.44
-        }
+      "sourceAnimationKey": "materialTest",
+      "coverProgress": 0.0,
+      "motion": {
+        "mode": "tensile",
+        "source": "Photo-based single-column instrument reconstruction in material-test/build_material_test.py; actual source strip and coaxial spring grips.",
+        "demonstration": "Qualitative extension, local necking and rupture of the displayed fabric strip. Not a measured stress-strain curve or fracture load; machine proportions are photo inferred.",
+        "axis": [
+          0,
+          0,
+          1
+        ],
+        "fixedLowerFixture": true,
+        "initialSpecimenSpan": 0.361080527305603,
+        "upperFixtureTravel": 0.235,
+        "fractureProgress": 0.74,
+        "retainedHalves": 2,
+        "specimenColorSRGB": "F27A2A",
+        "specimenAppearance": "Warm orange display sample for contrast against silver jaws and dark studio. Original fabric noise, bump and roughness retained; static start pose and both fracture halves share the material.",
+        "motionGroups": [
+          {
+            "name": "upper_crosshead_and_grip",
+            "parts": [
+              "MaterialTest_black_crosshead",
+              "MaterialTest_crosshead_fastener",
+              "MaterialTest_crosshead_fastener.001",
+              "MaterialTest_upper_load_cell",
+              "MaterialTest_upper_load_cell_top",
+              "MaterialTest_load_cell_socket",
+              "MaterialTest_upper_coupling",
+              "MaterialTest_upper_knurled_ring",
+              "MaterialTest_upper_cross_pin",
+              "MaterialTest_collar_knurl.050",
+              "MaterialTest_collar_knurl.051",
+              "MaterialTest_collar_knurl.052",
+              "MaterialTest_collar_knurl.053",
+              "MaterialTest_collar_knurl.054",
+              "MaterialTest_collar_knurl.055",
+              "MaterialTest_collar_knurl.056",
+              "MaterialTest_collar_knurl.057",
+              "MaterialTest_collar_knurl.058",
+              "MaterialTest_collar_knurl.059",
+              "MaterialTest_collar_knurl.060",
+              "MaterialTest_collar_knurl.061",
+              "MaterialTest_collar_knurl.062",
+              "MaterialTest_collar_knurl.063",
+              "MaterialTest_collar_knurl.064",
+              "MaterialTest_collar_knurl.065",
+              "MaterialTest_collar_knurl.066",
+              "MaterialTest_collar_knurl.067",
+              "MaterialTest_collar_knurl.068",
+              "MaterialTest_collar_knurl.069",
+              "MaterialTest_collar_knurl.070",
+              "MaterialTest_collar_knurl.071",
+              "MaterialTest_collar_knurl.072",
+              "MaterialTest_collar_knurl.073",
+              "MaterialTest_collar_knurl.074",
+              "MaterialTest_collar_knurl.075",
+              "MaterialTest_collar_knurl.076",
+              "MaterialTest_collar_knurl.077",
+              "MaterialTest_collar_knurl.078",
+              "MaterialTest_collar_knurl.079",
+              "MaterialTest_collar_knurl.080",
+              "MaterialTest_collar_knurl.081",
+              "MaterialTest_collar_knurl.082",
+              "MaterialTest_collar_knurl.083",
+              "MaterialTest_collar_knurl.084",
+              "MaterialTest_collar_knurl.085",
+              "MaterialTest_collar_knurl.086",
+              "MaterialTest_collar_knurl.087",
+              "MaterialTest_collar_knurl.088",
+              "MaterialTest_collar_knurl.089",
+              "MaterialTest_collar_knurl.090",
+              "MaterialTest_collar_knurl.091",
+              "MaterialTest_collar_knurl.092",
+              "MaterialTest_collar_knurl.093",
+              "MaterialTest_collar_knurl.094",
+              "MaterialTest_collar_knurl.095",
+              "MaterialTest_collar_knurl.096",
+              "MaterialTest_collar_knurl.097",
+              "MaterialTest_collar_knurl.098",
+              "MaterialTest_collar_knurl.099",
+              "MaterialTest_curved_spring_grip_cheek",
+              "MaterialTest_sliding_jaw_wedge",
+              "MaterialTest_diagonal_jaw_return_spring",
+              "MaterialTest_jaw_spring_anchor",
+              "MaterialTest_jaw_spring_anchor.001",
+              "MaterialTest_jaw_spring_anchor.002",
+              "MaterialTest_curved_spring_grip_cheek.001",
+              "MaterialTest_sliding_jaw_wedge.001",
+              "MaterialTest_diagonal_jaw_return_spring.001",
+              "MaterialTest_jaw_spring_anchor.003",
+              "MaterialTest_jaw_spring_anchor.004",
+              "MaterialTest_jaw_spring_anchor.005",
+              "MaterialTest_grip_top_bridge",
+              "MaterialTest_grip_bridge_fastener",
+              "MaterialTest_grip_bridge_fastener.001"
+            ],
+            "axis": [
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "name": "specimen_deformation",
+            "parts": [
+              "Functional tensile specimen \u2014 two retained fracture halves"
+            ]
+          }
+        ],
+        "specimenEndPlanes": [
+          1.2362533807754517,
+          1.5973339080810547
+        ],
+        "arbitrarySeek": true,
+        "sourceMatingContacts": "The source crosshead remains at its existing bellows/column guide interface while sliding vertically; gripped specimen ends remain within the source jaws."
       },
-      "materialAssignments": {},
-      "references": [
-        "assets/material-instron-frame.webp",
-        "assets/material-specimen-md.webp"
+      "motionRevision": "motion-refinement-20260913",
+      "cameraLocation": [
+        5.581137180328369,
+        -9.487800598144531,
+        6.190881252288818
       ],
-      "notes": []
+      "cameraRotation": [
+        1.1596143245697021,
+        4.4814473909582375e-08,
+        0.5317239761352539
+      ],
+      "cameraOrthoScale": 5.550699710845947,
+      "originalCoverProvenance": {
+        "project": "materialTest",
+        "source": null,
+        "sourceSha256": null,
+        "renderer": "tools/editorial-render/render_catalog.py",
+        "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+        "builder": "tools/editorial-render/material-test/build_material_test.py",
+        "builderSha256": "06a60961b3000d08bcf96c16f912687fec104fca9f3b6d2da44f11c48a3e39cb",
+        "sourceMeshFaceCounts": {
+          "MaterialTest_sloped_base_shell": 122,
+          "MaterialTest_base_foot": 242,
+          "MaterialTest_base_foot.001": 242,
+          "MaterialTest_base_foot.002": 242,
+          "MaterialTest_base_foot.003": 242,
+          "MaterialTest_single_column_back_shell": 98,
+          "MaterialTest_column_face_border": 98,
+          "MaterialTest_column_face_border.001": 98,
+          "MaterialTest_column_top_cap": 98,
+          "MaterialTest_bellows_shadow_face": 98,
+          "MaterialTest_accordion_folded_front": 442,
+          "MaterialTest_side_scale_recess": 6,
+          "MaterialTest_yellow_travel_marker": 98,
+          "MaterialTest_travel_marker_knob": 242,
+          "MaterialTest_yellow_travel_marker.001": 98,
+          "MaterialTest_travel_marker_knob.001": 242,
+          "MaterialTest_black_crosshead": 98,
+          "MaterialTest_crosshead_fastener": 242,
+          "MaterialTest_crosshead_fastener.001": 242,
+          "MaterialTest_upper_load_cell": 242,
+          "MaterialTest_upper_load_cell_top": 242,
+          "MaterialTest_load_cell_socket": 242,
+          "MaterialTest_upper_coupling": 242,
+          "MaterialTest_upper_knurled_ring": 242,
+          "MaterialTest_upper_cross_pin": 242,
+          "MaterialTest_lower_mount_gasket": 98,
+          "MaterialTest_lower_machined_plate": 98,
+          "MaterialTest_mount_plate_bolt": 122,
+          "MaterialTest_mount_plate_bolt.001": 122,
+          "MaterialTest_mount_plate_bolt.002": 122,
+          "MaterialTest_mount_plate_bolt.003": 122,
+          "MaterialTest_lower_fixed_coupler": 242,
+          "MaterialTest_lower_coupler_lock_ring": 242,
+          "MaterialTest_lower_lock_pin": 242,
+          "MaterialTest_lower_grip_stem": 242,
+          "MaterialTest_collar_knurl": 80,
+          "MaterialTest_collar_knurl.001": 80,
+          "MaterialTest_collar_knurl.002": 80,
+          "MaterialTest_collar_knurl.003": 80,
+          "MaterialTest_collar_knurl.004": 80,
+          "MaterialTest_collar_knurl.005": 80,
+          "MaterialTest_collar_knurl.006": 80,
+          "MaterialTest_collar_knurl.007": 80,
+          "MaterialTest_collar_knurl.008": 80,
+          "MaterialTest_collar_knurl.009": 80,
+          "MaterialTest_collar_knurl.010": 80,
+          "MaterialTest_collar_knurl.011": 80,
+          "MaterialTest_collar_knurl.012": 80,
+          "MaterialTest_collar_knurl.013": 80,
+          "MaterialTest_collar_knurl.014": 80,
+          "MaterialTest_collar_knurl.015": 80,
+          "MaterialTest_collar_knurl.016": 80,
+          "MaterialTest_collar_knurl.017": 80,
+          "MaterialTest_collar_knurl.018": 80,
+          "MaterialTest_collar_knurl.019": 80,
+          "MaterialTest_collar_knurl.020": 80,
+          "MaterialTest_collar_knurl.021": 80,
+          "MaterialTest_collar_knurl.022": 80,
+          "MaterialTest_collar_knurl.023": 80,
+          "MaterialTest_collar_knurl.024": 80,
+          "MaterialTest_collar_knurl.025": 80,
+          "MaterialTest_collar_knurl.026": 80,
+          "MaterialTest_collar_knurl.027": 80,
+          "MaterialTest_collar_knurl.028": 80,
+          "MaterialTest_collar_knurl.029": 80,
+          "MaterialTest_collar_knurl.030": 80,
+          "MaterialTest_collar_knurl.031": 80,
+          "MaterialTest_collar_knurl.032": 80,
+          "MaterialTest_collar_knurl.033": 80,
+          "MaterialTest_collar_knurl.034": 80,
+          "MaterialTest_collar_knurl.035": 80,
+          "MaterialTest_collar_knurl.036": 80,
+          "MaterialTest_collar_knurl.037": 80,
+          "MaterialTest_collar_knurl.038": 80,
+          "MaterialTest_collar_knurl.039": 80,
+          "MaterialTest_collar_knurl.040": 80,
+          "MaterialTest_collar_knurl.041": 80,
+          "MaterialTest_collar_knurl.042": 80,
+          "MaterialTest_collar_knurl.043": 80,
+          "MaterialTest_collar_knurl.044": 80,
+          "MaterialTest_collar_knurl.045": 80,
+          "MaterialTest_collar_knurl.046": 80,
+          "MaterialTest_collar_knurl.047": 80,
+          "MaterialTest_collar_knurl.048": 80,
+          "MaterialTest_collar_knurl.049": 80,
+          "MaterialTest_collar_knurl.050": 80,
+          "MaterialTest_collar_knurl.051": 80,
+          "MaterialTest_collar_knurl.052": 80,
+          "MaterialTest_collar_knurl.053": 80,
+          "MaterialTest_collar_knurl.054": 80,
+          "MaterialTest_collar_knurl.055": 80,
+          "MaterialTest_collar_knurl.056": 80,
+          "MaterialTest_collar_knurl.057": 80,
+          "MaterialTest_collar_knurl.058": 80,
+          "MaterialTest_collar_knurl.059": 80,
+          "MaterialTest_collar_knurl.060": 80,
+          "MaterialTest_collar_knurl.061": 80,
+          "MaterialTest_collar_knurl.062": 80,
+          "MaterialTest_collar_knurl.063": 80,
+          "MaterialTest_collar_knurl.064": 80,
+          "MaterialTest_collar_knurl.065": 80,
+          "MaterialTest_collar_knurl.066": 80,
+          "MaterialTest_collar_knurl.067": 80,
+          "MaterialTest_collar_knurl.068": 80,
+          "MaterialTest_collar_knurl.069": 80,
+          "MaterialTest_collar_knurl.070": 80,
+          "MaterialTest_collar_knurl.071": 80,
+          "MaterialTest_collar_knurl.072": 80,
+          "MaterialTest_collar_knurl.073": 80,
+          "MaterialTest_collar_knurl.074": 80,
+          "MaterialTest_collar_knurl.075": 80,
+          "MaterialTest_collar_knurl.076": 80,
+          "MaterialTest_collar_knurl.077": 80,
+          "MaterialTest_collar_knurl.078": 80,
+          "MaterialTest_collar_knurl.079": 80,
+          "MaterialTest_collar_knurl.080": 80,
+          "MaterialTest_collar_knurl.081": 80,
+          "MaterialTest_collar_knurl.082": 80,
+          "MaterialTest_collar_knurl.083": 80,
+          "MaterialTest_collar_knurl.084": 80,
+          "MaterialTest_collar_knurl.085": 80,
+          "MaterialTest_collar_knurl.086": 80,
+          "MaterialTest_collar_knurl.087": 80,
+          "MaterialTest_collar_knurl.088": 80,
+          "MaterialTest_collar_knurl.089": 80,
+          "MaterialTest_collar_knurl.090": 80,
+          "MaterialTest_collar_knurl.091": 80,
+          "MaterialTest_collar_knurl.092": 80,
+          "MaterialTest_collar_knurl.093": 80,
+          "MaterialTest_collar_knurl.094": 80,
+          "MaterialTest_collar_knurl.095": 80,
+          "MaterialTest_collar_knurl.096": 80,
+          "MaterialTest_collar_knurl.097": 80,
+          "MaterialTest_collar_knurl.098": 80,
+          "MaterialTest_collar_knurl.099": 80,
+          "MaterialTest_curved_spring_grip_cheek": 174,
+          "MaterialTest_sliding_jaw_wedge": 98,
+          "MaterialTest_diagonal_jaw_return_spring": 1456,
+          "MaterialTest_jaw_spring_anchor": 122,
+          "MaterialTest_jaw_spring_anchor.001": 122,
+          "MaterialTest_jaw_spring_anchor.002": 122,
+          "MaterialTest_curved_spring_grip_cheek.001": 174,
+          "MaterialTest_sliding_jaw_wedge.001": 98,
+          "MaterialTest_diagonal_jaw_return_spring.001": 1456,
+          "MaterialTest_jaw_spring_anchor.003": 122,
+          "MaterialTest_jaw_spring_anchor.004": 122,
+          "MaterialTest_jaw_spring_anchor.005": 122,
+          "MaterialTest_grip_top_bridge": 98,
+          "MaterialTest_grip_bridge_fastener": 122,
+          "MaterialTest_grip_bridge_fastener.001": 122,
+          "MaterialTest_curved_spring_grip_cheek.002": 174,
+          "MaterialTest_sliding_jaw_wedge.002": 98,
+          "MaterialTest_diagonal_jaw_return_spring.002": 1456,
+          "MaterialTest_jaw_spring_anchor.006": 122,
+          "MaterialTest_jaw_spring_anchor.007": 122,
+          "MaterialTest_jaw_spring_anchor.008": 122,
+          "MaterialTest_curved_spring_grip_cheek.003": 174,
+          "MaterialTest_sliding_jaw_wedge.003": 98,
+          "MaterialTest_diagonal_jaw_return_spring.003": 1456,
+          "MaterialTest_jaw_spring_anchor.009": 122,
+          "MaterialTest_jaw_spring_anchor.010": 122,
+          "MaterialTest_jaw_spring_anchor.011": 122,
+          "MaterialTest_grip_top_bridge.001": 98,
+          "MaterialTest_grip_bridge_fastener.002": 122,
+          "MaterialTest_grip_bridge_fastener.003": 122,
+          "MaterialTest_black_fabric_tensile_specimen": 248,
+          "MaterialTest_sloped_operator_bezel": 98,
+          "MaterialTest_yellow_emergency_stop_field": 98,
+          "MaterialTest_emergency_stop_shank": 242,
+          "MaterialTest_red_emergency_stop_mushroom": 242,
+          "MaterialTest_black_jog_rocker": 98,
+          "MaterialTest_load_cell_signal_cable": 192
+        },
+        "sourceDimensionsAfterRotation": [
+          0.3499999940395355,
+          0.33901941776275635,
+          0.8529999852180481
+        ],
+        "dimensions": [
+          1800,
+          1200
+        ],
+        "cameraDirectionBlenderZUp": [
+          0.4647594690322876,
+          -0.7900910973548889,
+          0.39969316124916077
+        ],
+        "angleIndex": 0,
+        "samples": 192,
+        "geometryPolicy": "Photo-based reconstruction of the actual single-column tensile test equipment. Display geometry, not manufacturer CAD. The older MTS-style model is not the instrument used in this experiment.",
+        "materialDefaults": {
+          "steel": {
+            "color": "BBC1C8",
+            "metallic": 0.9,
+            "roughness": 0.32
+          },
+          "printed": {
+            "color": "30363D",
+            "metallic": 0,
+            "roughness": 0.43,
+            "texture": "printed"
+          },
+          "dark": {
+            "color": "202328",
+            "metallic": 0.12,
+            "roughness": 0.4
+          },
+          "aero": {
+            "color": "E3E1DB",
+            "metallic": 0,
+            "roughness": 0.45
+          },
+          "rubber": {
+            "color": "181B1E",
+            "metallic": 0,
+            "roughness": 0.62
+          },
+          "brass": {
+            "color": "AD8954",
+            "metallic": 0.8,
+            "roughness": 0.34
+          },
+          "glass": {
+            "color": "E7EDF0",
+            "metallic": 0,
+            "roughness": 0.1,
+            "transmission": 1
+          },
+          "wood": {
+            "color": "BE9C68",
+            "metallic": 0,
+            "roughness": 0.43,
+            "texture": "wood"
+          },
+          "carbon": {
+            "color": "171A20",
+            "metallic": 0.05,
+            "roughness": 0.3,
+            "texture": "carbon",
+            "coat": 0.3
+          },
+          "pcb": {
+            "color": "166C79",
+            "metallic": 0,
+            "roughness": 0.44
+          }
+        },
+        "materialAssignments": {},
+        "references": [
+          "assets/material-instron-frame.webp",
+          "assets/material-specimen-md.webp"
+        ],
+        "notes": []
+      },
+      "masterSha256": "e02d2323cce8487d72cca9208f1beb5f415941a78e540cabacdecc420c5f753e"
     },
     "variants": [
       {
-        "src": "assets/editorial/materialTest-wide-480.webp",
+        "src": "assets/editorial/motion-20260913/materialTest-wide-480.webp",
         "width": 480,
         "height": 320,
-        "bytes": 5932,
-        "sha256": "134e35a96a2ea7b4b84d8809a22937d96ca927677f3ad3f8c46dc144e1f76936"
+        "bytes": 6050,
+        "sha256": "69a15ada08b2adc16c37a5cea915b37253e4d8a4dd98227491890dca38391375"
       },
       {
-        "src": "assets/editorial/materialTest-wide-960.webp",
+        "src": "assets/editorial/motion-20260913/materialTest-wide-960.webp",
         "width": 960,
         "height": 640,
-        "bytes": 14262,
-        "sha256": "381515a7334f4b3bf5e1c97a4dc22807e982bebfe72c591a81546d0f89bdfbef"
+        "bytes": 14264,
+        "sha256": "71cd1a73fe2cb66344a7dc5ae76dff03f3335a02b6a85244126732deed6a0cfb"
       },
       {
-        "src": "assets/editorial/materialTest-wide.webp",
+        "src": "assets/editorial/motion-20260913/materialTest-wide-1800.webp",
         "width": 1800,
         "height": 1200,
-        "bytes": 39008,
-        "sha256": "72cf8eac2c06f9adebbf22b095d44a6aabafad871a12d409830d27cae33adf4f"
+        "bytes": 39538,
+        "sha256": "55ff1e07aa8ea975fe499639998920e345146bbdbd4438f6216f84c58d9d670a"
       }
     ]
   },
   {
     "project": "ansysCfd",
     "renderProvenance": {
-      "project": "ansysCfd",
-      "source": null,
-      "sourceSha256": null,
-      "renderer": "tools/editorial-render/render_catalog.py",
-      "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
-      "builder": null,
-      "builderSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
-      "sourceMeshFaceCounts": {
-        "Display back enclosure": 6,
-        "Display front bezel": 6,
-        "Stand riser": 6,
-        "Stand foot": 6,
-        "Actual Ansys Fluent Cp result, unmodified texture": 1
-      },
-      "sourceDimensionsAfterRotation": [
-        2.799999952316284,
-        0.49000000953674316,
-        2.119999885559082
-      ],
+      "coverFromAnimation": true,
+      "renderer": "tools/exploded-render/render_exploded.py",
+      "rendererSha256": "58bb54e16e3b0ef525fa1c2b11797c170a1ada6dd7d9447f1a72122ba97c5b50",
+      "samples": 192,
       "dimensions": [
         1800,
         1200
       ],
-      "cameraDirectionBlenderZUp": [
-        0.36064252257347107,
-        -0.8909990787506104,
-        0.2757854163646698
-      ],
-      "angleIndex": 0,
-      "samples": 192,
-      "geometryPolicy": "Procedural presentation monitor; unchanged original Ansys Fluent Cp result mapped to its screen. Monitor is presentation furniture, not claimed project hardware.",
-      "materialDefaults": {
-        "steel": {
-          "color": "BBC1C8",
-          "metallic": 0.9,
-          "roughness": 0.32
+      "sourceAnimationKey": "ansysCfd",
+      "coverProgress": 0.5,
+      "motion": {
+        "mode": "flow",
+        "source": "Actual newly solved Fluent wall pressure and Fluent numerical pathline vertices.",
+        "scope": "New airframe-only visualization CFD on documented simplified shell. Lost original case/data are not reproduced. No rotor wake or new validated aerodynamic performance conclusion.",
+        "solver": "Ansys Fluent 24.1.0",
+        "dataSha256": "341b60893b2ac860e63b28e0a0931b60506912c411968cbbfc5b9092e966044b",
+        "dataPath": "C:\\Users\\oc\\Desktop\\WEBSITE\\.codex\\functional-motion-20260913\\cfd\\flow-data.npz",
+        "provenancePath": "C:\\Users\\oc\\Desktop\\WEBSITE\\.codex\\functional-motion-20260913\\cfd\\flow-provenance.json",
+        "pressureRangePa": [
+          -10645.810546875,
+          7817.95458984375
+        ],
+        "pressureColorLimitsPa": [
+          -10645.810546875,
+          7817.95458984375
+        ],
+        "pressureClipping": false,
+        "pressureColorDisplay": "Zero-centered blue-to-orange/red diverging colors with full-range asinh normalization. The wall and labeled nonlinear legend use the same unlit transfer; no pressure interpolation or clipping.",
+        "pressureColorNormalization": {
+          "method": "zero-centered asinh",
+          "scalePa": 750.0,
+          "separateNegativePositiveExtents": true,
+          "legendTicksPa": [
+            -10645.810546875,
+            -2000.0,
+            0.0,
+            2000.0,
+            7817.95458984375
+          ],
+          "positions": [
+            0.0,
+            0.3,
+            0.5,
+            0.72,
+            1.0
+          ],
+          "linearRgbAnchors": [
+            [
+              0.004,
+              0.018,
+              0.32
+            ],
+            [
+              0.005,
+              0.19,
+              0.6
+            ],
+            [
+              0.065,
+              0.105,
+              0.14
+            ],
+            [
+              1.0,
+              0.14,
+              0.002
+            ],
+            [
+              0.62,
+              0.002,
+              0.001
+            ]
+          ]
         },
-        "printed": {
-          "color": "30363D",
-          "metallic": 0,
-          "roughness": 0.43,
-          "texture": "printed"
-        },
-        "dark": {
-          "color": "202328",
-          "metallic": 0.12,
-          "roughness": 0.4
-        },
-        "aero": {
-          "color": "E3E1DB",
-          "metallic": 0,
-          "roughness": 0.45
-        },
-        "rubber": {
-          "color": "181B1E",
-          "metallic": 0,
-          "roughness": 0.62
-        },
-        "brass": {
-          "color": "AD8954",
-          "metallic": 0.8,
-          "roughness": 0.34
-        },
-        "glass": {
-          "color": "E7EDF0",
-          "metallic": 0,
-          "roughness": 0.1,
-          "transmission": 1
-        },
-        "wood": {
-          "color": "BE9C68",
-          "metallic": 0,
-          "roughness": 0.43,
-          "texture": "wood"
-        },
-        "carbon": {
-          "color": "171A20",
-          "metallic": 0.05,
-          "roughness": 0.3,
-          "texture": "carbon",
-          "coat": 0.3
-        },
-        "pcb": {
-          "color": "166C79",
-          "metallic": 0,
-          "roughness": 0.44
-        }
+        "surfaceTriangles": 47450,
+        "sourcePaths": 49,
+        "displayedPaths": 20,
+        "surfaceWindingReversedForOutwardDisplay": false,
+        "displayedPathRanges": [
+          {
+            "id": 24,
+            "vertexRange": [
+              9234,
+              10374
+            ]
+          },
+          {
+            "id": 42,
+            "vertexRange": [
+              17500,
+              17633
+            ]
+          },
+          {
+            "id": 0,
+            "vertexRange": [
+              0,
+              138
+            ]
+          },
+          {
+            "id": 48,
+            "vertexRange": [
+              19082,
+              19211
+            ]
+          },
+          {
+            "id": 6,
+            "vertexRange": [
+              1606,
+              1739
+            ]
+          },
+          {
+            "id": 21,
+            "vertexRange": [
+              7758,
+              7940
+            ]
+          },
+          {
+            "id": 45,
+            "vertexRange": [
+              18273,
+              18431
+            ]
+          },
+          {
+            "id": 3,
+            "vertexRange": [
+              795,
+              959
+            ]
+          },
+          {
+            "id": 27,
+            "vertexRange": [
+              11489,
+              11628
+            ]
+          },
+          {
+            "id": 36,
+            "vertexRange": [
+              15112,
+              15544
+            ]
+          },
+          {
+            "id": 8,
+            "vertexRange": [
+              2120,
+              2543
+            ]
+          },
+          {
+            "id": 39,
+            "vertexRange": [
+              16376,
+              16624
+            ]
+          },
+          {
+            "id": 18,
+            "vertexRange": [
+              6577,
+              7040
+            ]
+          },
+          {
+            "id": 16,
+            "vertexRange": [
+              5354,
+              5870
+            ]
+          },
+          {
+            "id": 30,
+            "vertexRange": [
+              12422,
+              12932
+            ]
+          },
+          {
+            "id": 12,
+            "vertexRange": [
+              3769,
+              4298
+            ]
+          },
+          {
+            "id": 33,
+            "vertexRange": [
+              14252,
+              14478
+            ]
+          },
+          {
+            "id": 4,
+            "vertexRange": [
+              1069,
+              1232
+            ]
+          },
+          {
+            "id": 47,
+            "vertexRange": [
+              18806,
+              18968
+            ]
+          },
+          {
+            "id": 22,
+            "vertexRange": [
+              8043,
+              8335
+            ]
+          }
+        ],
+        "excludedPathsWithSegmentWallCrossing": [],
+        "displayedPolylineSegmentWallCrossings": 0,
+        "markerRadiusPolicy": "Marker centers remain on numerical paths; marker radius shrinks near the actual wall to avoid visual penetration.",
+        "pathTimeMethods": [
+          "particle-time"
+        ],
+        "physicalPlaybackSeconds": 0.01466046767309308,
+        "particleInterpolation": "Piecewise linear between consecutive exported numerical path vertices, parameterized by actual exported/integrated physical travel time.",
+        "pressureAnimation": "Steady solved field held constant; only marker advection is animated.",
+        "floorMinimum": -0.30770919561386106,
+        "normalizationScale": 5.684528312703548,
+        "arbitrarySeek": true,
+        "originalMonitorHidden": true
       },
-      "materialAssignments": {},
-      "references": [
-        "assets/cover-ansys-cfd.webp"
+      "motionRevision": "motion-refinement-20260913",
+      "cameraLocation": [
+        -3.161327838897705,
+        -7.22268533706665,
+        5.092059135437012
       ],
-      "notes": []
+      "cameraRotation": [
+        1.1080970764160156,
+        -6.639848493250611e-08,
+        -0.46364766359329224
+      ],
+      "cameraOrthoScale": 5.879972457885742,
+      "originalCoverProvenance": {
+        "project": "ansysCfd",
+        "source": null,
+        "sourceSha256": null,
+        "renderer": "tools/editorial-render/render_catalog.py",
+        "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+        "builder": null,
+        "builderSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+        "sourceMeshFaceCounts": {
+          "Display back enclosure": 6,
+          "Display front bezel": 6,
+          "Stand riser": 6,
+          "Stand foot": 6,
+          "Actual Ansys Fluent Cp result, unmodified texture": 1
+        },
+        "sourceDimensionsAfterRotation": [
+          2.799999952316284,
+          0.49000000953674316,
+          2.119999885559082
+        ],
+        "dimensions": [
+          1800,
+          1200
+        ],
+        "cameraDirectionBlenderZUp": [
+          0.36064252257347107,
+          -0.8909990787506104,
+          0.2757854163646698
+        ],
+        "angleIndex": 0,
+        "samples": 192,
+        "geometryPolicy": "Procedural presentation monitor; unchanged original Ansys Fluent Cp result mapped to its screen. Monitor is presentation furniture, not claimed project hardware.",
+        "materialDefaults": {
+          "steel": {
+            "color": "BBC1C8",
+            "metallic": 0.9,
+            "roughness": 0.32
+          },
+          "printed": {
+            "color": "30363D",
+            "metallic": 0,
+            "roughness": 0.43,
+            "texture": "printed"
+          },
+          "dark": {
+            "color": "202328",
+            "metallic": 0.12,
+            "roughness": 0.4
+          },
+          "aero": {
+            "color": "E3E1DB",
+            "metallic": 0,
+            "roughness": 0.45
+          },
+          "rubber": {
+            "color": "181B1E",
+            "metallic": 0,
+            "roughness": 0.62
+          },
+          "brass": {
+            "color": "AD8954",
+            "metallic": 0.8,
+            "roughness": 0.34
+          },
+          "glass": {
+            "color": "E7EDF0",
+            "metallic": 0,
+            "roughness": 0.1,
+            "transmission": 1
+          },
+          "wood": {
+            "color": "BE9C68",
+            "metallic": 0,
+            "roughness": 0.43,
+            "texture": "wood"
+          },
+          "carbon": {
+            "color": "171A20",
+            "metallic": 0.05,
+            "roughness": 0.3,
+            "texture": "carbon",
+            "coat": 0.3
+          },
+          "pcb": {
+            "color": "166C79",
+            "metallic": 0,
+            "roughness": 0.44
+          }
+        },
+        "materialAssignments": {},
+        "references": [
+          "assets/cover-ansys-cfd.webp"
+        ],
+        "notes": []
+      },
+      "masterSha256": "81a9f47f82c332dddccafca9f15e4660b0245079acc3f8fddc6aa9e8ba70a4a9"
     },
     "variants": [
       {
-        "src": "assets/editorial/ansysCfd-wide-480.webp",
+        "src": "assets/editorial/motion-20260913/ansysCfd-wide-480.webp",
         "width": 480,
         "height": 320,
-        "bytes": 7580,
-        "sha256": "fb61b5c5c32064798d48105321e523649de0f5377a940e6519f38e2bbd813898"
+        "bytes": 17106,
+        "sha256": "793f45983f17cacedd16fc7320cfb940ccc4fca3e0e1551b43271d621dcc57a5"
       },
       {
-        "src": "assets/editorial/ansysCfd-wide-960.webp",
+        "src": "assets/editorial/motion-20260913/ansysCfd-wide-960.webp",
         "width": 960,
         "height": 640,
-        "bytes": 18544,
-        "sha256": "85447c417ebfd0c52bbbe7f5259453148121f21f6154f3d1fd8f35b90cf8dbb9"
+        "bytes": 50074,
+        "sha256": "102e0e805c8e6f781d7a5a9e4cdb03e022901edb3682b17f48a237bc0aef3bf6"
       },
       {
-        "src": "assets/editorial/ansysCfd-wide.webp",
+        "src": "assets/editorial/motion-20260913/ansysCfd-wide-1800.webp",
         "width": 1800,
         "height": 1200,
-        "bytes": 53768,
-        "sha256": "6afed94bb0da81f82ffa61a22e1d3cf22b362098457bf7316f39ceb28602ae07"
+        "bytes": 145696,
+        "sha256": "d03a544ef06f23b7c3aef33483da26763e8d6adb090171501f01615c6b43fe8d"
       }
     ]
   },
@@ -1926,159 +2379,3629 @@
   {
     "project": "education",
     "renderProvenance": {
-      "project": "education",
-      "source": "tools/editorial-render/sources/education.glb",
-      "sourceSha256": "c4373769dac0263b7a8a1447484abb0859f797e050c1da1c3fbbd407624d8e2d",
-      "renderer": "tools/editorial-render/render_catalog.py",
-      "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
-      "builder": null,
-      "builderSha256": null,
-      "sourceMeshFaceCounts": {
-        "mat_chrome": 516660,
-        "mat_fretboard": 7596,
-        "mat_maple": 5469,
-        "mat_pickguard_white": 3288,
-        "mat_plastic_black": 18909,
-        "mat_printed_navy": 5284
-      },
-      "sourceDimensionsAfterRotation": [
-        649.3324584960938,
-        67.9412841796875,
-        391.83258056640625
-      ],
+      "coverFromAnimation": true,
+      "renderer": "tools/exploded-render/render_exploded.py",
+      "rendererSha256": "58bb54e16e3b0ef525fa1c2b11797c170a1ada6dd7d9447f1a72122ba97c5b50",
+      "samples": 192,
       "dimensions": [
         1800,
         1200
       ],
-      "cameraDirectionBlenderZUp": [
-        0.4647594690322876,
-        -0.7900910973548889,
-        0.39969316124916077
-      ],
-      "angleIndex": 0,
-      "samples": 192,
-      "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
-      "materialDefaults": {
-        "steel": {
-          "color": "BBC1C8",
-          "metallic": 0.9,
-          "roughness": 0.32
+      "sourceAnimationKey": "education",
+      "coverProgress": 1.0,
+      "motion": {
+        "version": 1,
+        "project": "education",
+        "geometryDigest": "7ada17017d6ed6fb49a3d41194b7cce9d7173f547049b7047701da81da695aba",
+        "stages": [
+          {
+            "label": "Lift kit above the lowest assembled guard edge",
+            "movingGroups": [
+              "body",
+              "bridge",
+              "controls",
+              "neck",
+              "neck_pickup",
+              "pickguard",
+              "pickup_coil",
+              "pickup_front_plate"
+            ],
+            "transforms": {
+              "body": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              },
+              "bridge": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              },
+              "controls": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              },
+              "neck": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              },
+              "neck_pickup": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              },
+              "pickguard": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              },
+              "pickup_coil": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              },
+              "pickup_front_plate": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.01
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.01
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "passed": true,
+              "method": "Common upward rigid translation preserves all inter-part geometry and increases floor clearance.",
+              "translation": [
+                0,
+                0,
+                0.035
+              ]
+            },
+            "start": 0.0,
+            "end": 0.043478260869565216
+          },
+          {
+            "label": "Withdraw horizontal neck into clear foreground",
+            "movingGroups": [
+              "neck"
+            ],
+            "transforms": {
+              "neck": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.85
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 0,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 0,
+              "continuousCandidatePairs": 0,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 2.822532104515465,
+              "directionVerified": "forward approach"
+            },
+            "start": 0.043478260869565216,
+            "end": 0.08695652173913043
+          },
+          {
+            "label": "Turn neck upright in the clear foreground",
+            "movingGroups": [
+              "neck"
+            ],
+            "transforms": {
+              "neck": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.85
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    -1.0255555425300459e-10,
+                    -1.266505576872551e-07,
+                    -0.999999999999992,
+                    1.5453897078326801
+                  ],
+                  [
+                    1.8342584802444412e-08,
+                    0.9999999999999912,
+                    -1.2665055797490077e-07,
+                    -0.849999804275531
+                  ],
+                  [
+                    0.9999999999999997,
+                    -1.8342584587809645e-08,
+                    -1.025525987150012e-10,
+                    1.580389711432515
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "passed": true,
+              "method": "The full rotation lies in a disjoint front slab, including drift from its measured axis; a fixed-pivot 3D sphere bounds ground clearance continuously.",
+              "continuousSlabClearance": 0.6802437146749241,
+              "minimumRotationSphereZ": 0.17532204826865394,
+              "rotationAxis": [
+                5.415400039510132e-08,
+                -1.0000001192092896,
+                7.249659006447473e-08
+              ],
+              "maximumRotationYDrift": 2.5428869903106507e-07
+            },
+            "pivot": [
+              0.0,
+              -0.031773642636835575,
+              1.545389711856842
+            ],
+            "start": 0.08695652173913043,
+            "end": 0.13043478260869565
+          },
+          {
+            "label": "Align neck with original CAD mounting pocket",
+            "movingGroups": [
+              "neck"
+            ],
+            "transforms": {
+              "neck": {
+                "fromMatrix": [
+                  [
+                    -1.0255555425300459e-10,
+                    -1.266505576872551e-07,
+                    -0.999999999999992,
+                    1.5453897078326801
+                  ],
+                  [
+                    1.8342584802444412e-08,
+                    0.9999999999999912,
+                    -1.2665055797490077e-07,
+                    -0.849999804275531
+                  ],
+                  [
+                    0.9999999999999997,
+                    -1.8342584587809645e-08,
+                    -1.025525987150012e-10,
+                    1.580389711432515
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    -1.0255555425300459e-10,
+                    -1.266505576872551e-07,
+                    -0.999999999999992,
+                    1.5490655718463195
+                  ],
+                  [
+                    1.8342584802444412e-08,
+                    0.9999999999999912,
+                    -1.2665055797490077e-07,
+                    -0.8500197448267631
+                  ],
+                  [
+                    0.9999999999999997,
+                    -1.8342584587809645e-08,
+                    -1.025525987150012e-10,
+                    2.3912343309139863
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 0,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 0,
+              "continuousCandidatePairs": 0,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 2.822532124731184,
+              "directionVerified": "forward approach"
+            },
+            "start": 0.13043478260869565,
+            "end": 0.17391304347826086
+          },
+          {
+            "label": "Seat neck into its CAD joint",
+            "movingGroups": [
+              "neck"
+            ],
+            "transforms": {
+              "neck": {
+                "fromMatrix": [
+                  [
+                    -1.0255555425300459e-10,
+                    -1.266505576872551e-07,
+                    -0.999999999999992,
+                    1.5490655718463195
+                  ],
+                  [
+                    1.8342584802444412e-08,
+                    0.9999999999999912,
+                    -1.2665055797490077e-07,
+                    -0.8500197448267631
+                  ],
+                  [
+                    0.9999999999999997,
+                    -1.8342584587809645e-08,
+                    -1.025525987150012e-10,
+                    2.3912343309139863
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    -1.0255555425300459e-10,
+                    -1.266505576872551e-07,
+                    -0.999999999999992,
+                    1.5490655718463195
+                  ],
+                  [
+                    1.8342584802444412e-08,
+                    0.9999999999999912,
+                    -1.2665055797490077e-07,
+                    -1.9744826763098395e-05
+                  ],
+                  [
+                    0.9999999999999997,
+                    -1.8342584587809645e-08,
+                    -1.025525987150012e-10,
+                    2.3912343309139863
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 11,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 129,
+              "continuousCandidatePairs": 129,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 2.8225321094404316,
+              "directionVerified": "reverse withdrawal from CAD joint"
+            },
+            "start": 0.17391304347826086,
+            "end": 0.21739130434782608
+          },
+          {
+            "label": "Bring neck_pickup forward",
+            "movingGroups": [
+              "neck_pickup"
+            ],
+            "transforms": {
+              "neck_pickup": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.65
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 0,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 0,
+              "continuousCandidatePairs": 0,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 0.3616859942602001,
+              "directionVerified": "forward approach"
+            },
+            "start": 0.21739130434782608,
+            "end": 0.2608695652173913
+          },
+          {
+            "label": "Align neck_pickup with its body cavity",
+            "movingGroups": [
+              "neck_pickup"
+            ],
+            "transforms": {
+              "neck_pickup": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.65
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    0.9999999999999997,
+                    1.1857801353677938e-09,
+                    2.394062402621036e-09,
+                    0.6397838910424369
+                  ],
+                  [
+                    -1.1857804680941873e-09,
+                    1.0000000000000002,
+                    2.3579628176879515e-08,
+                    -0.6500000127919628
+                  ],
+                  [
+                    -2.3940623971115323e-09,
+                    -2.3579628302048353e-08,
+                    1.0000000000000004,
+                    -0.2560937522163166
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 0,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 0,
+              "continuousCandidatePairs": 0,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 0.3616859965538951,
+              "directionVerified": "forward approach"
+            },
+            "start": 0.2608695652173913,
+            "end": 0.30434782608695654
+          },
+          {
+            "label": "Seat neck_pickup",
+            "movingGroups": [
+              "neck_pickup"
+            ],
+            "transforms": {
+              "neck_pickup": {
+                "fromMatrix": [
+                  [
+                    0.9999999999999997,
+                    1.1857801353677938e-09,
+                    2.394062402621036e-09,
+                    0.6397838910424369
+                  ],
+                  [
+                    -1.1857804680941873e-09,
+                    1.0000000000000002,
+                    2.3579628176879515e-08,
+                    -0.6500000127919628
+                  ],
+                  [
+                    -2.3940623971115323e-09,
+                    -2.3579628302048353e-08,
+                    1.0000000000000004,
+                    -0.2560937522163166
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    0.9999999999999997,
+                    1.1857801353677938e-09,
+                    2.394062402621036e-09,
+                    0.6397838910424369
+                  ],
+                  [
+                    -1.1857804680941873e-09,
+                    1.0000000000000002,
+                    2.3579628176879515e-08,
+                    -1.2791962822333858e-08
+                  ],
+                  [
+                    -2.3940623971115323e-09,
+                    -2.3579628302048353e-08,
+                    1.0000000000000004,
+                    -0.2560937522163166
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 11,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 0,
+              "continuousCandidatePairs": 0,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 0.3616859942602001,
+              "directionVerified": "reverse withdrawal from CAD joint"
+            },
+            "start": 0.30434782608695654,
+            "end": 0.34782608695652173
+          },
+          {
+            "label": "Bring bridge to assembly work area",
+            "movingGroups": [
+              "bridge"
+            ],
+            "transforms": {
+              "bridge": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.95
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 0,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 0,
+              "continuousCandidatePairs": 0,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 0.511396787513274,
+              "directionVerified": "forward approach"
+            },
+            "start": 0.34782608695652173,
+            "end": 0.391304347826087
+          },
+          {
+            "label": "Align bridge in front of its mounting holes",
+            "movingGroups": [
+              "bridge"
+            ],
+            "transforms": {
+              "bridge": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.95
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    0.9999999999999996,
+                    -7.543747947299963e-09,
+                    6.838329949143552e-09,
+                    0.6433186509317128
+                  ],
+                  [
+                    7.543747922195428e-09,
+                    1.0000000000000016,
+                    6.132180638424915e-10,
+                    -0.9499999552209709
+                  ],
+                  [
+                    -6.838329884458716e-09,
+                    -6.132176848634999e-10,
+                    1.0000000000000002,
+                    0.07970444204896424
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 0,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 0,
+              "continuousCandidatePairs": 0,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 0.5113967938300432,
+              "directionVerified": "forward approach"
+            },
+            "start": 0.391304347826087,
+            "end": 0.43478260869565216
+          },
+          {
+            "label": "Bring pickup pieces to the assembly work area",
+            "movingGroups": [
+              "pickup_front_plate",
+              "pickup_coil"
+            ],
+            "transforms": {
+              "pickup_front_plate": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.01
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.66
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              },
+              "pickup_coil": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.65
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 0,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 0,
+              "continuousCandidatePairs": 0,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 0.37406908641522096,
+              "directionVerified": "forward approach"
+            },
+            "start": 0.43478260869565216,
+            "end": 0.4782608695652174
+          },
+          {
+            "label": "Separate the original pickup front plate",
+            "movingGroups": [
+              "pickup_front_plate"
+            ],
+            "transforms": {
+              "pickup_front_plate": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.66
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -1.3599999999999999
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 2,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 30576,
+              "continuousCandidatePairs": 30576,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 0.33765807655110985,
+              "directionVerified": "forward approach"
+            },
+            "start": 0.4782608695652174,
+            "end": 0.5217391304347826
+          },
+          {
+            "label": "Align coil with the rear bridge opening",
+            "movingGroups": [
+              "pickup_coil"
+            ],
+            "transforms": {
+              "pickup_coil": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.65
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    0.9999999999999996,
+                    6.346374933085363e-09,
+                    -1.6483810331151867e-09,
+                    0.6569085461187889
+                  ],
+                  [
+                    -6.346375103012911e-09,
+                    1.0000000000000002,
+                    -8.001108542747374e-09,
+                    -0.6499999839967352
+                  ],
+                  [
+                    1.6483803422267474e-09,
+                    8.001108519455331e-09,
+                    0.9999999999999989,
+                    -0.25609374881852465
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 0,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 0,
+              "continuousCandidatePairs": 0,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 0.3715942669440989,
+              "directionVerified": "forward approach"
+            },
+            "start": 0.5217391304347826,
+            "end": 0.5652173913043478
+          },
+          {
+            "label": "Insert coil from behind the bridge",
+            "movingGroups": [
+              "pickup_coil"
+            ],
+            "transforms": {
+              "pickup_coil": {
+                "fromMatrix": [
+                  [
+                    0.9999999999999996,
+                    6.346374933085363e-09,
+                    -1.6483810331151867e-09,
+                    0.6569085461187889
+                  ],
+                  [
+                    -6.346375103012911e-09,
+                    1.0000000000000002,
+                    -8.001108542747374e-09,
+                    -0.6499999839967352
+                  ],
+                  [
+                    1.6483803422267474e-09,
+                    8.001108519455331e-09,
+                    0.9999999999999989,
+                    -0.25609374881852465
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    0.9999999999999996,
+                    6.346374933085363e-09,
+                    -1.6483810331151867e-09,
+                    0.6569085461187889
+                  ],
+                  [
+                    -6.346375103012911e-09,
+                    1.0000000000000002,
+                    -8.001108542747374e-09,
+                    -0.9499999839967352
+                  ],
+                  [
+                    1.6483803422267474e-09,
+                    8.001108519455331e-09,
+                    0.9999999999999989,
+                    -0.25609374881852465
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 13,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 4635,
+              "continuousCandidatePairs": 4635,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 0.3715942827612753,
+              "directionVerified": "reverse withdrawal from CAD joint"
+            },
+            "start": 0.5652173913043478,
+            "end": 0.6086956521739131
+          },
+          {
+            "label": "Align pickup front plate ahead of the bridge",
+            "movingGroups": [
+              "pickup_front_plate"
+            ],
+            "transforms": {
+              "pickup_front_plate": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -1.3599999999999999
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    0.9999999999999996,
+                    6.346374933085363e-09,
+                    -1.6483810331151867e-09,
+                    0.6569085461187889
+                  ],
+                  [
+                    -6.346375103012911e-09,
+                    1.0000000000000002,
+                    -8.001108542747374e-09,
+                    -1.3599999839967354
+                  ],
+                  [
+                    1.6483803422267474e-09,
+                    8.001108519455331e-09,
+                    0.9999999999999989,
+                    -0.25609374881852465
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 0,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 0,
+              "continuousCandidatePairs": 0,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 0.3376580748747773,
+              "directionVerified": "forward approach"
+            },
+            "start": 0.6086956521739131,
+            "end": 0.6521739130434783
+          },
+          {
+            "label": "Seat pickup front plate from the opposite side",
+            "movingGroups": [
+              "pickup_front_plate"
+            ],
+            "transforms": {
+              "pickup_front_plate": {
+                "fromMatrix": [
+                  [
+                    0.9999999999999996,
+                    6.346374933085363e-09,
+                    -1.6483810331151867e-09,
+                    0.6569085461187889
+                  ],
+                  [
+                    -6.346375103012911e-09,
+                    1.0000000000000002,
+                    -8.001108542747374e-09,
+                    -1.3599999839967354
+                  ],
+                  [
+                    1.6483803422267474e-09,
+                    8.001108519455331e-09,
+                    0.9999999999999989,
+                    -0.25609374881852465
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    0.9999999999999996,
+                    6.346374933085363e-09,
+                    -1.6483810331151867e-09,
+                    0.6569085461187889
+                  ],
+                  [
+                    -6.346375103012911e-09,
+                    1.0000000000000002,
+                    -8.001108542747374e-09,
+                    -0.9599999839967351
+                  ],
+                  [
+                    1.6483803422267474e-09,
+                    8.001108519455331e-09,
+                    0.9999999999999989,
+                    -0.25609374881852465
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 14,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 30576,
+              "continuousCandidatePairs": 30576,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 0.3376580748747773,
+              "directionVerified": "reverse withdrawal from CAD joint"
+            },
+            "start": 0.6521739130434783,
+            "end": 0.6956521739130435
+          },
+          {
+            "label": "Mount complete bridge and pickup unit",
+            "movingGroups": [
+              "bridge",
+              "pickup_coil",
+              "pickup_front_plate"
+            ],
+            "transforms": {
+              "bridge": {
+                "fromMatrix": [
+                  [
+                    0.9999999999999996,
+                    -7.543747947299963e-09,
+                    6.838329949143552e-09,
+                    0.6433186509317128
+                  ],
+                  [
+                    7.543747922195428e-09,
+                    1.0000000000000016,
+                    6.132180638424915e-10,
+                    -0.9499999552209709
+                  ],
+                  [
+                    -6.838329884458716e-09,
+                    -6.132176848634999e-10,
+                    1.0000000000000002,
+                    0.07970444204896424
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    0.9999999999999996,
+                    -7.543747947299963e-09,
+                    6.838329949143552e-09,
+                    0.6433186509317128
+                  ],
+                  [
+                    7.543747922195428e-09,
+                    1.0000000000000016,
+                    6.132180638424915e-10,
+                    4.477902901256492e-08
+                  ],
+                  [
+                    -6.838329884458716e-09,
+                    -6.132176848634999e-10,
+                    1.0000000000000002,
+                    0.07970444204896424
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              },
+              "pickup_coil": {
+                "fromMatrix": [
+                  [
+                    0.9999999999999996,
+                    6.346374933085363e-09,
+                    -1.6483810331151867e-09,
+                    0.6569085461187889
+                  ],
+                  [
+                    -6.346375103012911e-09,
+                    1.0000000000000002,
+                    -8.001108542747374e-09,
+                    -0.9499999839967352
+                  ],
+                  [
+                    1.6483803422267474e-09,
+                    8.001108519455331e-09,
+                    0.9999999999999989,
+                    -0.25609374881852465
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    0.9999999999999996,
+                    6.346374933085363e-09,
+                    -1.6483810331151867e-09,
+                    0.6569085461187889
+                  ],
+                  [
+                    -6.346375103012911e-09,
+                    1.0000000000000002,
+                    -8.001108542747374e-09,
+                    1.600326476891567e-08
+                  ],
+                  [
+                    1.6483803422267474e-09,
+                    8.001108519455331e-09,
+                    0.9999999999999989,
+                    -0.25609374881852465
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              },
+              "pickup_front_plate": {
+                "fromMatrix": [
+                  [
+                    0.9999999999999996,
+                    6.346374933085363e-09,
+                    -1.6483810331151867e-09,
+                    0.6569085461187889
+                  ],
+                  [
+                    -6.346375103012911e-09,
+                    1.0000000000000002,
+                    -8.001108542747374e-09,
+                    -0.9599999839967351
+                  ],
+                  [
+                    1.6483803422267474e-09,
+                    8.001108519455331e-09,
+                    0.9999999999999989,
+                    -0.25609374881852465
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    0.9999999999999996,
+                    6.346374933085363e-09,
+                    -1.6483810331151867e-09,
+                    0.6569085461187889
+                  ],
+                  [
+                    -6.346375103012911e-09,
+                    1.0000000000000002,
+                    -8.001108542747374e-09,
+                    -0.009999983996735231
+                  ],
+                  [
+                    1.6483803422267474e-09,
+                    8.001108519455331e-09,
+                    0.9999999999999989,
+                    -0.25609374881852465
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 10,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 20176,
+              "continuousCandidatePairs": 20176,
+              "initialTriangleContactsWithdrawing": 3539,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 0.5243094875905897,
+              "directionVerified": "reverse withdrawal from CAD joint"
+            },
+            "start": 0.6956521739130435,
+            "end": 0.7391304347826086
+          },
+          {
+            "label": "Bring pickguard forward",
+            "movingGroups": [
+              "pickguard"
+            ],
+            "transforms": {
+              "pickguard": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.65
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 0,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 0,
+              "continuousCandidatePairs": 0,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 1.1299797623037222,
+              "directionVerified": "forward approach"
+            },
+            "start": 0.7391304347826086,
+            "end": 0.782608695652174
+          },
+          {
+            "label": "Align pickguard with final mounting points",
+            "movingGroups": [
+              "pickguard"
+            ],
+            "transforms": {
+              "pickguard": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.65
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    0.9999999999999999,
+                    3.4581670222768943e-09,
+                    -1.699524958369838e-09,
+                    -0.6150409441513801
+                  ],
+                  [
+                    -3.458167184834256e-09,
+                    1.0,
+                    1.9436954263544173e-10,
+                    -0.6500000534882071
+                  ],
+                  [
+                    1.6995248896987344e-09,
+                    -1.9436956834376518e-10,
+                    1.0,
+                    -0.2560935994953558
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 0,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 0,
+              "continuousCandidatePairs": 0,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 1.1299797625745405,
+              "directionVerified": "forward approach"
+            },
+            "start": 0.782608695652174,
+            "end": 0.8260869565217391
+          },
+          {
+            "label": "Seat pickguard",
+            "movingGroups": [
+              "pickguard"
+            ],
+            "transforms": {
+              "pickguard": {
+                "fromMatrix": [
+                  [
+                    0.9999999999999999,
+                    3.4581670222768943e-09,
+                    -1.699524958369838e-09,
+                    -0.6150409441513801
+                  ],
+                  [
+                    -3.458167184834256e-09,
+                    1.0,
+                    1.9436954263544173e-10,
+                    -0.6500000534882071
+                  ],
+                  [
+                    1.6995248896987344e-09,
+                    -1.9436956834376518e-10,
+                    1.0,
+                    -0.2560935994953558
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    0.9999999999999999,
+                    3.4581670222768943e-09,
+                    -1.699524958369838e-09,
+                    -0.6150409441513801
+                  ],
+                  [
+                    -3.458167184834256e-09,
+                    1.0,
+                    1.9436954263544173e-10,
+                    -5.3488207113483455e-08
+                  ],
+                  [
+                    1.6995248896987344e-09,
+                    -1.9436956834376518e-10,
+                    1.0,
+                    -0.2560935994953558
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 32,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 7963,
+              "continuousCandidatePairs": 7963,
+              "initialTriangleContactsWithdrawing": 2484,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 1.129979809883022,
+              "directionVerified": "reverse withdrawal from CAD joint"
+            },
+            "start": 0.8260869565217391,
+            "end": 0.8695652173913043
+          },
+          {
+            "label": "Bring controls forward",
+            "movingGroups": [
+              "controls"
+            ],
+            "transforms": {
+              "controls": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.65
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 0,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 0,
+              "continuousCandidatePairs": 0,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 0.7107563831260857,
+              "directionVerified": "forward approach"
+            },
+            "start": 0.8695652173913043,
+            "end": 0.9130434782608695
+          },
+          {
+            "label": "Align controls with final mounting points",
+            "movingGroups": [
+              "controls"
+            ],
+            "transforms": {
+              "controls": {
+                "fromMatrix": [
+                  [
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  [
+                    0.0,
+                    1.0,
+                    0.0,
+                    -0.65
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    1.0,
+                    0.035
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    0.9999999999999996,
+                    2.4523828103271554e-09,
+                    -6.573274430002729e-10,
+                    -0.8554017560662271
+                  ],
+                  [
+                    -2.452383247743519e-09,
+                    1.0000000000000002,
+                    5.224516826256036e-10,
+                    -0.6500000674653053
+                  ],
+                  [
+                    6.573274582262698e-10,
+                    -5.224516784062281e-10,
+                    1.0,
+                    -0.2560935691705787
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 0,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 0,
+              "continuousCandidatePairs": 0,
+              "initialTriangleContactsWithdrawing": 0,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 0.7107563825988792,
+              "directionVerified": "forward approach"
+            },
+            "start": 0.9130434782608695,
+            "end": 0.9565217391304348
+          },
+          {
+            "label": "Seat controls",
+            "movingGroups": [
+              "controls"
+            ],
+            "transforms": {
+              "controls": {
+                "fromMatrix": [
+                  [
+                    0.9999999999999996,
+                    2.4523828103271554e-09,
+                    -6.573274430002729e-10,
+                    -0.8554017560662271
+                  ],
+                  [
+                    -2.452383247743519e-09,
+                    1.0000000000000002,
+                    5.224516826256036e-10,
+                    -0.6500000674653053
+                  ],
+                  [
+                    6.573274582262698e-10,
+                    -5.224516784062281e-10,
+                    1.0,
+                    -0.2560935691705787
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ],
+                "toMatrix": [
+                  [
+                    0.9999999999999996,
+                    2.4523828103271554e-09,
+                    -6.573274430002729e-10,
+                    -0.8554017560662271
+                  ],
+                  [
+                    -2.452383247743519e-09,
+                    1.0000000000000002,
+                    5.224516826256036e-10,
+                    -6.746530517576232e-08
+                  ],
+                  [
+                    6.573274582262698e-10,
+                    -5.224516784062281e-10,
+                    1.0,
+                    -0.2560935691705787
+                  ],
+                  [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                  ]
+                ]
+              }
+            },
+            "verification": {
+              "positiveSamples": 100,
+              "triangleBVHPairTests": 5,
+              "newGroupSurfaceIntersections": 0,
+              "floorCrossings": 0,
+              "continuousTriangleTests": 5313,
+              "continuousCandidatePairs": 5313,
+              "initialTriangleContactsWithdrawing": 1962,
+              "newContinuousTriangleContacts": 0,
+              "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+              "initialSeamToleranceSourceUnits": 2e-06,
+              "initialSeamExtensionUsed": false,
+              "modelBoundsDiagonal": 0.7107564125827461,
+              "directionVerified": "reverse withdrawal from CAD joint"
+            },
+            "start": 0.9565217391304348,
+            "end": 1.0
+          }
+        ],
+        "partGroups": {
+          "mat_chrome_part_0": "bridge",
+          "mat_chrome_part_1": "bridge",
+          "mat_chrome_part_2": "bridge",
+          "mat_chrome_part_3": "bridge",
+          "mat_chrome_part_4": "bridge",
+          "mat_chrome_part_5": "bridge",
+          "mat_chrome_part_6": "bridge",
+          "mat_chrome_part_7": "bridge",
+          "mat_chrome_part_8": "bridge",
+          "mat_chrome_part_9": "bridge",
+          "mat_chrome_part_10": "bridge",
+          "mat_chrome_part_11": "bridge",
+          "mat_chrome_part_12": "controls",
+          "mat_chrome_part_13": "controls",
+          "mat_chrome_part_14": "controls",
+          "mat_chrome_part_15": "controls",
+          "mat_chrome_part_16": "controls",
+          "mat_chrome_part_17": "controls",
+          "mat_chrome_part_18": "controls",
+          "mat_chrome_part_19": "neck_pickup",
+          "mat_fretboard_part_0": "neck",
+          "mat_maple_part_0": "neck",
+          "mat_pickguard_white_part_0": "pickguard",
+          "mat_plastic_black_part_0": "pickup_front_plate",
+          "mat_plastic_black_part_1": "pickup_coil",
+          "mat_printed_navy_part_0": "body"
         },
-        "printed": {
-          "color": "30363D",
-          "metallic": 0,
-          "roughness": 0.43,
-          "texture": "printed"
+        "method": "Source meshes and materials retained. Rigid component transforms with independent full-path geometric verification.",
+        "checker": "Original assembly_motion VERSION15 continuous translation SAT plus 97-pose bidirectional closed-component containment checks.",
+        "inputDependencies": {
+          "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\tools\\exploded-render\\education_assembly_fit.py": "67e8418fbab1e51ec0d3714f40f4ec55ebad6da53ae02799c0c2c9fd423a6c64",
+          "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\tools\\exploded-render\\education_assembly_path.py": "d908fc973bac429043871cef453a5033e723985103ab0e43434147113d570ec2",
+          "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\tools\\exploded-render\\education_contact_check.py": "63998eb4cb7114fc54f58e8684adc65fd189a2c2dba46d05b7df7543339bf462",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Pick_Up-1.STL": "4996e5ae795ade41a69a59000c615b49b37f9ada4739774a7f4aaa733e52e667",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-0.step-1.STL": "de7f2fd27cf3a61ecd5e349d08ac782c81094afd4a2ea38de2aaf845b93e2bc5",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-1.step-1.STL": "52a6a509dab200b96a8e49f824dd47baf37d587c6d5dea4b0da740a57bdfd0d2",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-10.step-1.STL": "ad8b688c53d53d7d140d26873e080b629940dfb3383fd3b405c63553e7d72f3b",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-2.step-1.STL": "16e53822bc91c5ffd64eed2b5090061248cd43885efaee0ed0fbb6c7e31a834d",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-3.step-1.STL": "f4533e142d62ae3980c873621bb04680aa63569169d52a47369b8d14c11a04f8",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-4.step-1.STL": "5680d61824312b79af8731f9ef81b5d5207b0321b6ebd68859a3bce0e15bdc3e",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-5.step-1.STL": "61eedb1fc80b3eb05b644d9e08e7897e7d50d1e62a9fa9d03b954024c515fffb",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-6.step-1.STL": "53552518878aece7544aaee2a916a0aa70ed8caa09c4c2a51ec223c5488244b2",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-7.step-1.STL": "6f950a7429022c72c5c330a2e9932dc63e06b0607ed0cf587b7c72f795554758",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-8.step-1.STL": "de7d6f53f50925be3755084b500ee48db9f3eb06242a00047dc4910dadbdad71",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-9.step-1.STL": "efaa3239dbe8eba87c094fdd329a2dd44127d39fdf76be32ef2aaf2b1ebf998f",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly.step-1.STL": "62f400ca65e4ecb7cbefc91de921893ebdfb99008d5de7cfacf8920f017e6981",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Saddle Height Screws.step-1.STL": "c53515ed74524a0063775a81245e718d25bada3f93edd71a48403c154e746c57",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Control_Panel-1.STL": "99de3e83b556fafa2ba8ed1bdce3a92a2a994ffe7ec80c87009becf74f7cc8ab",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Finger_Board-1.STL": "d5f224b36624e4cddad41afa8404f52ccf4ebff87922b528c6751995ac50b914",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - HBtelecaster Body.step-1 Body.step-1.STL": "7afcc95c99f83998c2c9c1280b60649603cdbe4a2966c439ca90fbda09e9bfe0",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Pick_Up_1-1 Telecaster_Single-Coil_Neck_Pickup.step-1 Single-Coil_Neck_Pickup.step-1.STL": "2e3975bd1c623efe8fd9e2292cd8e75cbc7ceba200cb144fc6099936a00b8f9d",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Tele_Neck-1.STL": "bf0451f65c6ecef92ef9c2a0a5933447379122d1b84bdf58b7ccd79a78f9f546",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Pick_Up-1.STL": "b11de3597224d328460ac7a819085f7e5416f14b93484062b9ea7ac4f25cff46",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-0.step-1.STL": "d769f0aa3042d78c3476e2a7f91d0c8cf58ab9877ebc19baf5541b227ab719c6",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-1.step-1.STL": "28297d144bc79fd42c9c7ce77bade8f2c7dfc214ed9659b1e7a4176b11a8d6b4",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-10.step-1.STL": "bb08966e25e5261b25b471659f0490e0897f270f819656c8a5ef54b38f2bb7bb",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-2.step-1.STL": "bea8821c0b0fdb8ffd59c8a4532676ac2ae8868c43a0e1fc64bf131c08b49d6c",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-3.step-1.STL": "26d20f221eb6d46a0fcadad729324aaf1db0629a363bdcaf3a7fb4e3ae07ca1b",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-4.step-1.STL": "3d6ed2d8bfc987fcde5ea28e3bb0d21665ba608375c6b9b34772321fd99c2738",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-5.step-1.STL": "262a26cf7e37d52b332532c28e12c7c8a667b07ee4e91a5161f968ebc92c9ab0",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-6.step-1.STL": "a2ec7e5f1582bff8fa40c14d60021d1172137a49ed871dade9147864b8327d31",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-7.step-1.STL": "68244add9ba295bc13f04cb912bd19c3adfbfbd963f62d3bedb3755362370ff5",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-8.step-1.STL": "a4c126e16a085fcbd90eff5fda685a8043dd59238f2012a34ae566af6ce787d4",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-9.step-1.STL": "fa67c46cbbba6f2eb20f477a705dda8333028ef227b2e63cb5b5da623a271787",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly.step-1.STL": "5f749175c535d5a4e71060f5f828078fd4a0e4446cc9d60a67798d859e2f930c",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Saddle Height Screws.step-1.STL": "ef1706b025129b171bb316c48359af44765b1b11c015232f6dfac6e4daed05a4",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Control_Panel-1.STL": "dc5d914cc62ade49ae7d276bd4c17d53d91616de8f16c29a08d195c2776a957e",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Finger_Board-1.STL": "75b49005b51a79fbe78997eb20b67a2ef17dec64acd621a81bd91af7e825dd87",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - HBtelecaster Body.step-1 Body.step-1.STL": "b9eca667ca9fcee25d3cadd715bdab11aa04dcd02c6a796c82caa5d00900c322",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Pick_Up_1-1 Telecaster_Single-Coil_Neck_Pickup.step-1 Single-Coil_Neck_Pickup.step-1.STL": "998097dbde82e82dabec6a1c9f6d2b3a2df385d9940fe74f8679920630a01a42",
+          "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Tele_Neck-1.STL": "909dc1628cb4f1f73f6b7cecb68494cb138aeb3c74c38ad7a82696f45301fb46"
         },
-        "dark": {
-          "color": "202328",
-          "metallic": 0.12,
-          "roughness": 0.4
+        "passed": true,
+        "assemblyFit": {
+          "method": "Rigid fits between matching exploded and V2 source CAD triangle correspondences; existing approved meshes and material assignments are transformed, never replaced.",
+          "sourceFrameFitMaximumError": 1.075199485230461e-07,
+          "sourceToWorld": [
+            [
+              5.181296584828877e-10,
+              -0.004312120915285952,
+              2.3907294294773856e-10,
+              1.4140883723908673
+            ],
+            [
+              3.164268343421974e-10,
+              -2.3907290485786064e-10,
+              -0.0043121209152859755,
+              0.15170890642515375
+            ],
+            [
+              0.004312120915285946,
+              5.1812967693688e-10,
+              3.1642680469014e-10,
+              0.0136799555020638
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "partFits": {
+            "Bridge_Pick_Up-1.STL": {
+              "matrix": [
+                [
+                  0.999999999999999,
+                  -7.493132780922451e-10,
+                  -8.201394230411552e-09,
+                  -63.25173026862569
+                ],
+                [
+                  7.493139442260599e-10,
+                  0.9999999999999996,
+                  2.8903693397031027e-09,
+                  -378.93081246736597
+                ],
+                [
+                  8.201394230411552e-09,
+                  -2.8903693397031027e-09,
+                  1.0,
+                  1.912926634872747e-07
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 3.594374183660336e-05,
+              "explodedSha256": "4996e5ae795ade41a69a59000c615b49b37f9ada4739774a7f4aaa733e52e667",
+              "assembledSha256": "b11de3597224d328460ac7a819085f7e5416f14b93484062b9ea7ac4f25cff46"
+            },
+            "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-0.step-1.STL": {
+              "matrix": [
+                [
+                  1.0000000000000004,
+                  7.737396404139396e-09,
+                  4.1293315988788493e-10,
+                  14.621358760162085
+                ],
+                [
+                  -7.737396466589441e-09,
+                  0.9999999999999999,
+                  -1.099975313612056e-08,
+                  -375.7792456417445
+                ],
+                [
+                  -4.129336039770948e-10,
+                  1.0999753274898438e-08,
+                  1.000000000000001,
+                  -5.498150400740087e-06
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 1.8430193648426126e-05,
+              "explodedSha256": "de7f2fd27cf3a61ecd5e349d08ac782c81094afd4a2ea38de2aaf845b93e2bc5",
+              "assembledSha256": "d769f0aa3042d78c3476e2a7f91d0c8cf58ab9877ebc19baf5541b227ab719c6"
+            },
+            "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-1.step-1.STL": {
+              "matrix": [
+                [
+                  0.9999999999999997,
+                  -1.2442824992575652e-08,
+                  -5.0889714109381146e-09,
+                  14.621369180295318
+                ],
+                [
+                  1.2442824964820076e-08,
+                  0.9999999999999993,
+                  -1.2631580781352625e-09,
+                  -375.7792468307831
+                ],
+                [
+                  5.088971521960417e-09,
+                  1.263158036501899e-09,
+                  0.9999999999999994,
+                  -7.659896326117632e-07
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 1.990457104493173e-05,
+              "explodedSha256": "52a6a509dab200b96a8e49f824dd47baf37d587c6d5dea4b0da740a57bdfd0d2",
+              "assembledSha256": "28297d144bc79fd42c9c7ce77bade8f2c7dfc214ed9659b1e7a4176b11a8d6b4"
+            },
+            "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-10.step-1.STL": {
+              "matrix": [
+                [
+                  0.9999999999999989,
+                  1.1580129976457298e-08,
+                  3.5065229886388494e-09,
+                  14.62135706211076
+                ],
+                [
+                  -1.1580129806454398e-08,
+                  0.9999999999999996,
+                  -1.974299425832292e-08,
+                  -375.77924515843756
+                ],
+                [
+                  -3.5065233217057568e-09,
+                  1.9742994261358685e-08,
+                  0.9999999999999994,
+                  -9.071241237279537e-06
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 1.856252973465814e-05,
+              "explodedSha256": "ad8b688c53d53d7d140d26873e080b629940dfb3383fd3b405c63553e7d72f3b",
+              "assembledSha256": "bb08966e25e5261b25b471659f0490e0897f270f819656c8a5ef54b38f2bb7bb"
+            },
+            "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-2.step-1.STL": {
+              "matrix": [
+                [
+                  1.0000000000000002,
+                  1.7429001339386296e-08,
+                  -6.784495187872608e-10,
+                  14.621354347395304
+                ],
+                [
+                  -1.7429001047952752e-08,
+                  1.0000000000000004,
+                  2.4307835078118956e-08,
+                  -375.779247626043
+                ],
+                [
+                  6.78449574298412e-10,
+                  -2.430783663243119e-08,
+                  1.0000000000000009,
+                  1.162552138822548e-05
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 1.8784370460085326e-05,
+              "explodedSha256": "16e53822bc91c5ffd64eed2b5090061248cd43885efaee0ed0fbb6c7e31a834d",
+              "assembledSha256": "bea8821c0b0fdb8ffd59c8a4532676ac2ae8868c43a0e1fc64bf131c08b49d6c"
+            },
+            "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-3.step-1.STL": {
+              "matrix": [
+                [
+                  1.0000000000000002,
+                  -1.1730935457407443e-08,
+                  -1.2876760213664795e-09,
+                  14.6213683454876
+                ],
+                [
+                  1.1730935394957398e-08,
+                  0.9999999999999988,
+                  -4.7990814440457275e-08,
+                  -375.7792442150461
+                ],
+                [
+                  1.287676631989143e-09,
+                  4.799081443351838e-08,
+                  0.9999999999999987,
+                  -2.3000880474910446e-05
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 1.8556697745106633e-05,
+              "explodedSha256": "f4533e142d62ae3980c873621bb04680aa63569169d52a47369b8d14c11a04f8",
+              "assembledSha256": "26d20f221eb6d46a0fcadad729324aaf1db0629a363bdcaf3a7fb4e3ae07ca1b"
+            },
+            "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-4.step-1.STL": {
+              "matrix": [
+                [
+                  0.9999999999999997,
+                  6.0498213886456265e-09,
+                  8.276106577831399e-09,
+                  14.621359269534413
+                ],
+                [
+                  -6.049821311233591e-09,
+                  0.9999999999999999,
+                  7.425419907419739e-09,
+                  -375.77924648748234
+                ],
+                [
+                  -8.27610613374219e-09,
+                  -7.425420129464344e-09,
+                  0.9999999999999993,
+                  3.783419565195345e-06
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 1.817640104818234e-05,
+              "explodedSha256": "5680d61824312b79af8731f9ef81b5d5207b0321b6ebd68859a3bce0e15bdc3e",
+              "assembledSha256": "3d6ed2d8bfc987fcde5ea28e3bb0d21665ba608375c6b9b34772321fd99c2738"
+            },
+            "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-5.step-1.STL": {
+              "matrix": [
+                [
+                  0.9999999999999998,
+                  2.6031305413315442e-08,
+                  7.585929185163764e-10,
+                  14.62135071834507
+                ],
+                [
+                  -2.603130546709187e-08,
+                  0.9999999999999991,
+                  2.3318410827255498e-08,
+                  -375.77924710538286
+                ],
+                [
+                  -7.585923922446419e-10,
+                  -2.331841061908868e-08,
+                  1.0,
+                  1.0672976173964344e-05
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 1.8650240055002443e-05,
+              "explodedSha256": "61eedb1fc80b3eb05b644d9e08e7897e7d50d1e62a9fa9d03b954024c515fffb",
+              "assembledSha256": "262a26cf7e37d52b332532c28e12c7c8a667b07ee4e91a5161f968ebc92c9ab0"
+            },
+            "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-6.step-1.STL": {
+              "matrix": [
+                [
+                  1.0000000000000002,
+                  4.24732098103231e-09,
+                  2.082619160459487e-09,
+                  14.621360599530014
+                ],
+                [
+                  -4.247321050421249e-09,
+                  0.9999999999999992,
+                  4.214021115389599e-08,
+                  -375.7792485580584
+                ],
+                [
+                  -2.0826190494371843e-09,
+                  -4.214021120940714e-08,
+                  0.9999999999999993,
+                  1.9284062808822e-05
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 1.8403974531373933e-05,
+              "explodedSha256": "53552518878aece7544aaee2a916a0aa70ed8caa09c4c2a51ec223c5488244b2",
+              "assembledSha256": "a2ec7e5f1582bff8fa40c14d60021d1172137a49ed871dade9147864b8327d31"
+            },
+            "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-7.step-1.STL": {
+              "matrix": [
+                [
+                  0.9999999999999993,
+                  -1.0083813339889502e-08,
+                  -1.7141561434175223e-10,
+                  14.621367719346136
+                ],
+                [
+                  1.008381335376729e-08,
+                  0.9999999999999993,
+                  1.162943852328624e-08,
+                  -375.77924751008175
+                ],
+                [
+                  1.7141549291110891e-10,
+                  -1.1629438134708181e-08,
+                  0.9999999999999999,
+                  5.8177231210265745e-06
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 1.866829151002396e-05,
+              "explodedSha256": "6f950a7429022c72c5c330a2e9932dc63e06b0607ed0cf587b7c72f795554758",
+              "assembledSha256": "68244add9ba295bc13f04cb912bd19c3adfbfbd963f62d3bedb3755362370ff5"
+            },
+            "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-8.step-1.STL": {
+              "matrix": [
+                [
+                  0.9999999999999994,
+                  -3.690175748218699e-08,
+                  2.1966101715342745e-08,
+                  14.621378269924463
+                ],
+                [
+                  3.690175713264021e-08,
+                  0.9999999999999996,
+                  1.1794139054277508e-08,
+                  -375.77924837127983
+                ],
+                [
+                  -2.1966102180248637e-08,
+                  -1.1794138277121391e-08,
+                  1.0,
+                  6.0140828423982384e-06
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 1.8705110067195316e-05,
+              "explodedSha256": "de7d6f53f50925be3755084b500ee48db9f3eb06242a00047dc4910dadbdad71",
+              "assembledSha256": "a4c126e16a085fcbd90eff5fda685a8043dd59238f2012a34ae566af6ce787d4"
+            },
+            "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-9.step-1.STL": {
+              "matrix": [
+                [
+                  0.9999999999999962,
+                  8.313986332719736e-08,
+                  1.1220010587287277e-08,
+                  14.62132475776458
+                ],
+                [
+                  -8.31398626055524e-08,
+                  0.999999999999996,
+                  -2.0108207363089825e-08,
+                  -375.7792429740264
+                ],
+                [
+                  -1.1220012502421994e-08,
+                  2.0108206350011315e-08,
+                  0.9999999999999999,
+                  -8.700171335362938e-06
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 1.8519173938594322e-05,
+              "explodedSha256": "efaa3239dbe8eba87c094fdd329a2dd44127d39fdf76be32ef2aaf2b1ebf998f",
+              "assembledSha256": "fa67c46cbbba6f2eb20f477a705dda8333028ef227b2e63cb5b5da623a271787"
+            },
+            "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly.step-1.STL": {
+              "matrix": [
+                [
+                  0.9999999999999998,
+                  -7.0265994311257166e-09,
+                  -5.493172063053553e-11,
+                  14.621366024281393
+                ],
+                [
+                  7.026599437114981e-09,
+                  1.0000000000000002,
+                  4.0151268226006065e-10,
+                  -375.7792468922049
+                ],
+                [
+                  5.49317185705514e-11,
+                  -4.01512694403125e-10,
+                  1.0000000000000004,
+                  1.901076700505655e-07
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 3.5898305698053684e-05,
+              "explodedSha256": "62f400ca65e4ecb7cbefc91de921893ebdfb99008d5de7cfacf8920f017e6981",
+              "assembledSha256": "5f749175c535d5a4e71060f5f828078fd4a0e4446cc9d60a67798d859e2f930c"
+            },
+            "Control_Panel-1.STL": {
+              "matrix": [
+                [
+                  1.0,
+                  2.417397919481871e-10,
+                  3.221663768918241e-10,
+                  -63.25173105732037
+                ],
+                [
+                  -2.4173980325099473e-10,
+                  0.9999999999999996,
+                  -1.0036218392808771e-09,
+                  -28.219333714242087
+                ],
+                [
+                  -3.221664113290074e-10,
+                  1.0036215643272062e-09,
+                  0.9999999999999998,
+                  1.1905058272532187e-08
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 9.22536085282132e-06,
+              "explodedSha256": "99de3e83b556fafa2ba8ed1bdce3a92a2a994ffe7ec80c87009becf74f7cc8ab",
+              "assembledSha256": "dc5d914cc62ade49ae7d276bd4c17d53d91616de8f16c29a08d195c2776a957e"
+            },
+            "Finger_Board-1.STL": {
+              "matrix": [
+                [
+                  1.0000000000000002,
+                  -8.004575837072115e-10,
+                  -5.915795336372065e-12,
+                  -63.251731088955296
+                ],
+                [
+                  8.004576553690398e-10,
+                  1.0,
+                  2.1624100198582323e-12,
+                  -83.96007400775432
+                ],
+                [
+                  5.9157953329839336e-12,
+                  -2.1624100283285617e-12,
+                  0.9999999999999998,
+                  -8.334382073371671e-10
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 2.4121590971220356e-05,
+              "explodedSha256": "d5f224b36624e4cddad41afa8404f52ccf4ebff87922b528c6751995ac50b914",
+              "assembledSha256": "75b49005b51a79fbe78997eb20b67a2ef17dec64acd621a81bd91af7e825dd87"
+            },
+            "HBtelecaster Body.step-1 Body.step-1.STL": {
+              "matrix": [
+                [
+                  1.0,
+                  8.990670407596144e-10,
+                  -2.00285045492965e-10,
+                  4.254184489135056
+                ],
+                [
+                  -8.990670391333111e-10,
+                  1.0,
+                  -3.4560047601495114e-09,
+                  -226.59079355799798
+                ],
+                [
+                  2.0028501079849548e-10,
+                  3.456004923213518e-09,
+                  0.9999999999999998,
+                  -1.1564506685601827e-06
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 3.287430720673703e-05,
+              "explodedSha256": "7afcc95c99f83998c2c9c1280b60649603cdbe4a2966c439ca90fbda09e9bfe0",
+              "assembledSha256": "b9eca667ca9fcee25d3cadd715bdab11aa04dcd02c6a796c82caa5d00900c322"
+            },
+            "Pick_Up_1-1 Telecaster_Single-Coil_Neck_Pickup.step-1 Single-Coil_Neck_Pickup.step-1.STL": {
+              "matrix": [
+                [
+                  1.0000000000000004,
+                  3.293130832425755e-09,
+                  2.337934298241029e-08,
+                  -63.25173396691892
+                ],
+                [
+                  -3.293130754580039e-09,
+                  0.9999999999999999,
+                  -2.2702219884123158e-09,
+                  -374.95952869764295
+                ],
+                [
+                  -2.3379342899143563e-08,
+                  2.2702217980298024e-09,
+                  0.9999999999999998,
+                  4.870062916495499e-06
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 3.5359735429985165e-05,
+              "explodedSha256": "2e3975bd1c623efe8fd9e2292cd8e75cbc7ceba200cb144fc6099936a00b8f9d",
+              "assembledSha256": "998097dbde82e82dabec6a1c9f6d2b3a2df385d9940fe74f8679920630a01a42"
+            },
+            "Tele_Neck-1.STL": {
+              "matrix": [
+                [
+                  7.965089763288134e-10,
+                  -1.0,
+                  2.0359503666300682e-10,
+                  873.1172876091817
+                ],
+                [
+                  0.9999999999999997,
+                  7.965087636693335e-10,
+                  -1.2837027031642467e-09,
+                  -254.72005527445543
+                ],
+                [
+                  1.2837029529644273e-09,
+                  2.0359506615330591e-10,
+                  0.999999999999999,
+                  -5.514022376473804e-07
+                ],
+                [
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "maximumResidualMm": 4.242318870557463e-05,
+              "explodedSha256": "bf0451f65c6ecef92ef9c2a0a5933447379122d1b84bdf58b7ccd79a78f9f546",
+              "assembledSha256": "909dc1628cb4f1f73f6b7cecb68494cb138aeb3c74c38ad7a82696f45301fb46"
+            }
+          },
+          "groupSources": {
+            "body": "HBtelecaster Body.step-1 Body.step-1.STL",
+            "neck": "Tele_Neck-1.STL",
+            "pickguard": "Finger_Board-1.STL",
+            "bridge_pickup": "Bridge_Pick_Up-1.STL",
+            "neck_pickup": "Pick_Up_1-1 Telecaster_Single-Coil_Neck_Pickup.step-1 Single-Coil_Neck_Pickup.step-1.STL",
+            "controls": "Control_Panel-1.STL",
+            "bridge": "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-0.step-1.STL"
+          },
+          "groupTransforms": {
+            "body": [
+              [
+                0.9999999999999999,
+                6.617444900424222e-24,
+                6.647610941439873e-24,
+                2.220446049250313e-16
+              ],
+              [
+                -6.617444900424222e-24,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                -6.4327686182074564e-24,
+                1.3234889800848443e-23,
+                1.0,
+                -3.469446951953614e-18
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "neck": [
+              [
+                -1.0255555425300459e-10,
+                -1.266505576872551e-07,
+                -0.999999999999992,
+                1.5490655718463195
+              ],
+              [
+                1.8342584802444412e-08,
+                0.9999999999999912,
+                -1.2665055797490077e-07,
+                2.5517323690160687e-07
+              ],
+              [
+                0.9999999999999997,
+                -1.8342584587809645e-08,
+                -1.025525987150012e-10,
+                2.3462343309139864
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "pickguard": [
+              [
+                0.9999999999999999,
+                3.4581670222768943e-09,
+                -1.699524958369838e-09,
+                -0.6150409441513801
+              ],
+              [
+                -3.458167184834256e-09,
+                1.0,
+                1.9436954263544173e-10,
+                -5.3488207113483455e-08
+              ],
+              [
+                1.6995248896987344e-09,
+                -1.9436956834376518e-10,
+                1.0,
+                -0.2910935994953558
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "bridge_pickup": [
+              [
+                0.9999999999999996,
+                6.346374933085363e-09,
+                -1.6483810331151867e-09,
+                0.6569085461187889
+              ],
+              [
+                -6.346375103012911e-09,
+                1.0000000000000002,
+                -8.001108542747374e-09,
+                1.600326476891567e-08
+              ],
+              [
+                1.6483803422267474e-09,
+                8.001108519455331e-09,
+                0.9999999999999989,
+                -0.2910937488185246
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "neck_pickup": [
+              [
+                0.9999999999999997,
+                1.1857801353677938e-09,
+                2.394062402621036e-09,
+                0.6397838910424369
+              ],
+              [
+                -1.1857804680941873e-09,
+                1.0000000000000002,
+                2.3579628176879515e-08,
+                -1.2791962822333858e-08
+              ],
+              [
+                -2.3940623971115323e-09,
+                -2.3579628302048353e-08,
+                1.0000000000000004,
+                -0.2910937522163166
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "controls": [
+              [
+                0.9999999999999996,
+                2.4523828103271554e-09,
+                -6.573274430002729e-10,
+                -0.8554017560662271
+              ],
+              [
+                -2.452383247743519e-09,
+                1.0000000000000002,
+                5.224516826256036e-10,
+                -6.746530517576232e-08
+              ],
+              [
+                6.573274582262698e-10,
+                -5.224516784062281e-10,
+                1.0,
+                -0.29109356917057866
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "bridge": [
+              [
+                0.9999999999999996,
+                -7.543747947299963e-09,
+                6.838329949143552e-09,
+                0.6433186509317128
+              ],
+              [
+                7.543747922195428e-09,
+                1.0000000000000016,
+                6.132180638424915e-10,
+                4.477902901256492e-08
+              ],
+              [
+                -6.838329884458716e-09,
+                -6.132176848634999e-10,
+                1.0000000000000002,
+                0.04470444204896424
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
         },
-        "aero": {
-          "color": "E3E1DB",
-          "metallic": 0,
-          "roughness": 0.45
+        "sourceLayout": "Source separated layout with documented pickup-front seating gap at progress 0; V2-derived assembled pose with documented neck-seat and pickup-front clearances at progress 1.",
+        "jointPolicy": "Approach directions are checked as reverse withdrawals from original CAD joints; exact contact at the final joint is intentional.",
+        "floorLiftSourceUnits": 0.035,
+        "initialSeamToleranceSourceUnits": 2e-06,
+        "neckJointSeatingClearanceSourceUnits": 2e-05,
+        "neckHeelHeightAdjustmentSourceUnits": 0.01,
+        "pickupFrontPlateClearanceSourceUnits": 0.01,
+        "initialTransforms": {
+          "body": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "bridge": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "controls": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "neck": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "neck_pickup": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "pickguard": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "pickup_coil": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "pickup_front_plate": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              -0.01
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ]
         },
-        "rubber": {
-          "color": "181B1E",
-          "metallic": 0,
-          "roughness": 0.62
-        },
-        "brass": {
-          "color": "AD8954",
-          "metallic": 0.8,
-          "roughness": 0.34
-        },
-        "glass": {
-          "color": "E7EDF0",
-          "metallic": 0,
-          "roughness": 0.1,
-          "transmission": 1
-        },
-        "wood": {
-          "color": "BE9C68",
-          "metallic": 0,
-          "roughness": 0.43,
-          "texture": "wood"
-        },
-        "carbon": {
-          "color": "171A20",
-          "metallic": 0.05,
-          "roughness": 0.3,
-          "texture": "carbon",
-          "coat": 0.3
-        },
-        "pcb": {
-          "color": "166C79",
-          "metallic": 0,
-          "roughness": 0.44
-        }
+        "pickupConstruction": "The two independently connected source CAD solids enter from opposite sides of the bridge plate; no mesh is cut or substituted."
       },
-      "materialAssignments": {
-        "chrome": {
-          "color": "D2D5D7",
-          "metallic": 1,
-          "roughness": 0.2
-        },
-        "fretboard": {
-          "color": "503B32",
-          "metallic": 0,
-          "roughness": 0.48,
-          "texture": "wood"
-        },
-        "maple": {
-          "color": "BC9766",
-          "metallic": 0,
-          "roughness": 0.46,
-          "texture": "wood"
-        },
-        "pickguard_white": {
-          "color": "ECEBE5",
-          "metallic": 0,
-          "roughness": 0.35
-        },
-        "plastic_black": {
-          "color": "202329",
-          "metallic": 0,
-          "roughness": 0.48
-        },
-        "printed_navy": {
-          "color": "28334D",
-          "metallic": 0,
-          "roughness": 0.51,
-          "texture": "printed"
-        }
-      },
-      "references": [
-        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\education-kit.webp",
-        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\education-kit-render.webp",
-        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\education-kit-experiment.webp",
-        "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-guitar-education-cad.webp"
+      "motionRevision": "motion-refinement-20260913",
+      "cameraLocation": [
+        1.9235137701034546,
+        -10.079805374145508,
+        3.364858865737915
       ],
-      "notes": []
+      "cameraRotation": [
+        1.4247565269470215,
+        0.0,
+        0.19739560782909393
+      ],
+      "cameraOrthoScale": 6.532394886016846,
+      "originalCoverProvenance": {
+        "project": "education",
+        "source": "tools/editorial-render/sources/education.glb",
+        "sourceSha256": "c4373769dac0263b7a8a1447484abb0859f797e050c1da1c3fbbd407624d8e2d",
+        "renderer": "tools/editorial-render/render_catalog.py",
+        "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+        "builder": null,
+        "builderSha256": null,
+        "sourceMeshFaceCounts": {
+          "mat_chrome": 516660,
+          "mat_fretboard": 7596,
+          "mat_maple": 5469,
+          "mat_pickguard_white": 3288,
+          "mat_plastic_black": 18909,
+          "mat_printed_navy": 5284
+        },
+        "sourceDimensionsAfterRotation": [
+          649.3324584960938,
+          67.9412841796875,
+          391.83258056640625
+        ],
+        "dimensions": [
+          1800,
+          1200
+        ],
+        "cameraDirectionBlenderZUp": [
+          0.4647594690322876,
+          -0.7900910973548889,
+          0.39969316124916077
+        ],
+        "angleIndex": 0,
+        "samples": 192,
+        "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+        "materialDefaults": {
+          "steel": {
+            "color": "BBC1C8",
+            "metallic": 0.9,
+            "roughness": 0.32
+          },
+          "printed": {
+            "color": "30363D",
+            "metallic": 0,
+            "roughness": 0.43,
+            "texture": "printed"
+          },
+          "dark": {
+            "color": "202328",
+            "metallic": 0.12,
+            "roughness": 0.4
+          },
+          "aero": {
+            "color": "E3E1DB",
+            "metallic": 0,
+            "roughness": 0.45
+          },
+          "rubber": {
+            "color": "181B1E",
+            "metallic": 0,
+            "roughness": 0.62
+          },
+          "brass": {
+            "color": "AD8954",
+            "metallic": 0.8,
+            "roughness": 0.34
+          },
+          "glass": {
+            "color": "E7EDF0",
+            "metallic": 0,
+            "roughness": 0.1,
+            "transmission": 1
+          },
+          "wood": {
+            "color": "BE9C68",
+            "metallic": 0,
+            "roughness": 0.43,
+            "texture": "wood"
+          },
+          "carbon": {
+            "color": "171A20",
+            "metallic": 0.05,
+            "roughness": 0.3,
+            "texture": "carbon",
+            "coat": 0.3
+          },
+          "pcb": {
+            "color": "166C79",
+            "metallic": 0,
+            "roughness": 0.44
+          }
+        },
+        "materialAssignments": {
+          "chrome": {
+            "color": "D2D5D7",
+            "metallic": 1,
+            "roughness": 0.2
+          },
+          "fretboard": {
+            "color": "503B32",
+            "metallic": 0,
+            "roughness": 0.48,
+            "texture": "wood"
+          },
+          "maple": {
+            "color": "BC9766",
+            "metallic": 0,
+            "roughness": 0.46,
+            "texture": "wood"
+          },
+          "pickguard_white": {
+            "color": "ECEBE5",
+            "metallic": 0,
+            "roughness": 0.35
+          },
+          "plastic_black": {
+            "color": "202329",
+            "metallic": 0,
+            "roughness": 0.48
+          },
+          "printed_navy": {
+            "color": "28334D",
+            "metallic": 0,
+            "roughness": 0.51,
+            "texture": "printed"
+          }
+        },
+        "references": [
+          "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\education-kit.webp",
+          "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\education-kit-render.webp",
+          "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\education-kit-experiment.webp",
+          "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\cover-guitar-education-cad.webp"
+        ],
+        "notes": []
+      },
+      "masterSha256": "06c779c0379b63996c6c2742ca8e04e22b1f7e8fb9617aa74746cf8478c6e0e0"
     },
     "variants": [
       {
-        "src": "assets/editorial/education-wide-480.webp",
+        "src": "assets/editorial/motion-20260913/education-wide-480.webp",
         "width": 480,
         "height": 320,
-        "bytes": 8032,
-        "sha256": "57bc1818505a8d9cbfe72796c61b1d6270f95f850fd3cc91be275d48fe194e17"
+        "bytes": 3426,
+        "sha256": "2e78203cbe796632dc97699a8d770bf9caa63feecb74c1c332f172fb8b0ad8e9"
       },
       {
-        "src": "assets/editorial/education-wide-960.webp",
+        "src": "assets/editorial/motion-20260913/education-wide-960.webp",
         "width": 960,
         "height": 640,
-        "bytes": 19592,
-        "sha256": "ac2f611852b3fd3fa2c4a73373a4e97d19798ea1a4b8917fb55e3e7a3f91ab2a"
+        "bytes": 8682,
+        "sha256": "dbae6f89775daf5187f7f237d4e7c56fdcf45bde0311dea7aa17d45c1e1748b5"
       },
       {
-        "src": "assets/editorial/education-wide.webp",
+        "src": "assets/editorial/motion-20260913/education-wide-1800.webp",
         "width": 1800,
         "height": 1200,
-        "bytes": 57472,
-        "sha256": "f682a9c5f45f632fcbb61fd12ab76ebc08d99ee1422dc5af01a8efd129779312"
+        "bytes": 23470,
+        "sha256": "75668c2009fb04c0d626792bb741b5cfaa619e1f168579cd2b21cf3bbd1ac705"
       }
     ]
   },

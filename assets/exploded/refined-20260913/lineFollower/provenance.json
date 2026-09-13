@@ -1,0 +1,1885 @@
+{
+  "project": "lineFollower",
+  "width": 640,
+  "height": 427,
+  "frameCount": 121,
+  "samples": 48,
+  "cameraOrthoScale": 3.9685075283050537,
+  "cameraBaseScale": 3.7334141731262207,
+  "mode": "drive_sway",
+  "sourceLayout": "Original approved cover source pose",
+  "motionRevision": "motion-refinement-20260913",
+  "motion": {
+    "project": "lineFollower",
+    "mode": "drive_sway",
+    "periodic": true,
+    "sourcePartCount": 218,
+    "preservedTriangles": 230290,
+    "geometryPolicy": "Original connected CAD meshes and material slots; object matrices only. No hidden moving components or altered guide bores.",
+    "seekPolicy": "Absolute matrices from the source assembly; exact source matrices at both endpoints.",
+    "motion": "Both orange wheels and their metal hubs roll about their actual common X axle while the entire assembled chassis sways left and right about its axle midpoint.",
+    "source": "tools/editorial-render/sources/lineFollower.glb; original included CAD parts with separately shaded finish surfaces.",
+    "wheelAxes": [
+      {
+        "point": [
+          0.940685510635376,
+          1.0711692571640015,
+          0.27244842052459717
+        ],
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "radius": 0.24744997442138103
+      },
+      {
+        "point": [
+          -0.9406855702400208,
+          1.071169137954712,
+          0.27244842052459717
+        ],
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "radius": 0.24745007572655087
+      }
+    ],
+    "yawPivot": [
+      -2.9802322387695312e-08,
+      1.071169137954712,
+      0.27244842052459717
+    ],
+    "yawRangeDegrees": [
+      -10,
+      10
+    ],
+    "nominalWheelRevolutions": 2,
+    "differentialRelation": "theta_i = -4*pi*smoothstep(progress) - (x_i-x_axle_midpoint)*yaw/wheel_radius_i.",
+    "limitations": "An anchored operating illustration: common forward wheel rotation represents travel while the display suppresses chassis translation. The differential contribution matches the signed wheel-center motion induced by the left/right yaw. No measured line trajectory, controller response, tire slip or vehicle speed is claimed.",
+    "groups": {
+      "complete_chassis": [
+        "mat_battery_wrap_part_0",
+        "mat_pcb_green_part_0",
+        "mat_pcb_green_part_1",
+        "mat_pcb_teal_part_0",
+        "mat_plastic_black_part_0",
+        "mat_plastic_black_part_1",
+        "mat_plastic_black_part_10",
+        "mat_plastic_black_part_11",
+        "mat_plastic_black_part_12",
+        "mat_plastic_black_part_13",
+        "mat_plastic_black_part_14",
+        "mat_plastic_black_part_15",
+        "mat_plastic_black_part_16",
+        "mat_plastic_black_part_17",
+        "mat_plastic_black_part_18",
+        "mat_plastic_black_part_19",
+        "mat_plastic_black_part_2",
+        "mat_plastic_black_part_20",
+        "mat_plastic_black_part_21",
+        "mat_plastic_black_part_22",
+        "mat_plastic_black_part_23",
+        "mat_plastic_black_part_24",
+        "mat_plastic_black_part_25",
+        "mat_plastic_black_part_26",
+        "mat_plastic_black_part_27",
+        "mat_plastic_black_part_28",
+        "mat_plastic_black_part_29",
+        "mat_plastic_black_part_3",
+        "mat_plastic_black_part_30",
+        "mat_plastic_black_part_31",
+        "mat_plastic_black_part_32",
+        "mat_plastic_black_part_33",
+        "mat_plastic_black_part_34",
+        "mat_plastic_black_part_35",
+        "mat_plastic_black_part_36",
+        "mat_plastic_black_part_37",
+        "mat_plastic_black_part_38",
+        "mat_plastic_black_part_39",
+        "mat_plastic_black_part_4",
+        "mat_plastic_black_part_40",
+        "mat_plastic_black_part_41",
+        "mat_plastic_black_part_42",
+        "mat_plastic_black_part_43",
+        "mat_plastic_black_part_44",
+        "mat_plastic_black_part_45",
+        "mat_plastic_black_part_46",
+        "mat_plastic_black_part_47",
+        "mat_plastic_black_part_48",
+        "mat_plastic_black_part_49",
+        "mat_plastic_black_part_5",
+        "mat_plastic_black_part_50",
+        "mat_plastic_black_part_51",
+        "mat_plastic_black_part_52",
+        "mat_plastic_black_part_53",
+        "mat_plastic_black_part_54",
+        "mat_plastic_black_part_55",
+        "mat_plastic_black_part_56",
+        "mat_plastic_black_part_57",
+        "mat_plastic_black_part_58",
+        "mat_plastic_black_part_59",
+        "mat_plastic_black_part_6",
+        "mat_plastic_black_part_60",
+        "mat_plastic_black_part_61",
+        "mat_plastic_black_part_62",
+        "mat_plastic_black_part_63",
+        "mat_plastic_black_part_64",
+        "mat_plastic_black_part_65",
+        "mat_plastic_black_part_66",
+        "mat_plastic_black_part_67",
+        "mat_plastic_black_part_68",
+        "mat_plastic_black_part_69",
+        "mat_plastic_black_part_7",
+        "mat_plastic_black_part_70",
+        "mat_plastic_black_part_71",
+        "mat_plastic_black_part_72",
+        "mat_plastic_black_part_73",
+        "mat_plastic_black_part_74",
+        "mat_plastic_black_part_75",
+        "mat_plastic_black_part_76",
+        "mat_plastic_black_part_77",
+        "mat_plastic_black_part_78",
+        "mat_plastic_black_part_79",
+        "mat_plastic_black_part_8",
+        "mat_plastic_black_part_80",
+        "mat_plastic_black_part_81",
+        "mat_plastic_black_part_82",
+        "mat_plastic_black_part_83",
+        "mat_plastic_black_part_84",
+        "mat_plastic_black_part_85",
+        "mat_plastic_black_part_86",
+        "mat_plastic_black_part_87",
+        "mat_plastic_black_part_88",
+        "mat_plastic_black_part_89",
+        "mat_plastic_black_part_9",
+        "mat_plastic_black_part_90",
+        "mat_plastic_black_part_91",
+        "mat_plastic_black_part_92",
+        "mat_plastic_black_part_93",
+        "mat_plastic_black_part_94",
+        "mat_plastic_black_part_95",
+        "mat_plastic_black_part_96",
+        "mat_plastic_black_part_97",
+        "mat_printed_black_part_0",
+        "mat_printed_black_part_1",
+        "mat_printed_black_part_2",
+        "mat_printed_black_part_3",
+        "mat_printed_black_part_4",
+        "mat_solder_part_0",
+        "mat_solder_part_1",
+        "mat_solder_part_10",
+        "mat_solder_part_11",
+        "mat_solder_part_12",
+        "mat_solder_part_13",
+        "mat_solder_part_14",
+        "mat_solder_part_15",
+        "mat_solder_part_16",
+        "mat_solder_part_17",
+        "mat_solder_part_18",
+        "mat_solder_part_19",
+        "mat_solder_part_2",
+        "mat_solder_part_20",
+        "mat_solder_part_21",
+        "mat_solder_part_22",
+        "mat_solder_part_23",
+        "mat_solder_part_24",
+        "mat_solder_part_25",
+        "mat_solder_part_26",
+        "mat_solder_part_27",
+        "mat_solder_part_28",
+        "mat_solder_part_29",
+        "mat_solder_part_3",
+        "mat_solder_part_30",
+        "mat_solder_part_31",
+        "mat_solder_part_32",
+        "mat_solder_part_33",
+        "mat_solder_part_34",
+        "mat_solder_part_35",
+        "mat_solder_part_36",
+        "mat_solder_part_37",
+        "mat_solder_part_38",
+        "mat_solder_part_39",
+        "mat_solder_part_4",
+        "mat_solder_part_40",
+        "mat_solder_part_41",
+        "mat_solder_part_42",
+        "mat_solder_part_43",
+        "mat_solder_part_44",
+        "mat_solder_part_45",
+        "mat_solder_part_46",
+        "mat_solder_part_47",
+        "mat_solder_part_48",
+        "mat_solder_part_49",
+        "mat_solder_part_5",
+        "mat_solder_part_50",
+        "mat_solder_part_51",
+        "mat_solder_part_52",
+        "mat_solder_part_53",
+        "mat_solder_part_54",
+        "mat_solder_part_55",
+        "mat_solder_part_56",
+        "mat_solder_part_57",
+        "mat_solder_part_58",
+        "mat_solder_part_59",
+        "mat_solder_part_6",
+        "mat_solder_part_60",
+        "mat_solder_part_61",
+        "mat_solder_part_62",
+        "mat_solder_part_63",
+        "mat_solder_part_64",
+        "mat_solder_part_65",
+        "mat_solder_part_66",
+        "mat_solder_part_67",
+        "mat_solder_part_68",
+        "mat_solder_part_69",
+        "mat_solder_part_7",
+        "mat_solder_part_70",
+        "mat_solder_part_71",
+        "mat_solder_part_72",
+        "mat_solder_part_73",
+        "mat_solder_part_74",
+        "mat_solder_part_75",
+        "mat_solder_part_76",
+        "mat_solder_part_77",
+        "mat_solder_part_78",
+        "mat_solder_part_79",
+        "mat_solder_part_8",
+        "mat_solder_part_80",
+        "mat_solder_part_81",
+        "mat_solder_part_82",
+        "mat_solder_part_83",
+        "mat_solder_part_84",
+        "mat_solder_part_85",
+        "mat_solder_part_86",
+        "mat_solder_part_87",
+        "mat_solder_part_88",
+        "mat_solder_part_89",
+        "mat_solder_part_9",
+        "mat_solder_part_90",
+        "mat_solder_part_91",
+        "mat_solder_part_92",
+        "mat_solder_part_93",
+        "mat_solder_part_94",
+        "mat_solder_part_95",
+        "mat_solder_part_96",
+        "mat_solder_part_97",
+        "mat_solder_part_98",
+        "mat_steel_part_0",
+        "mat_steel_part_1",
+        "mat_steel_part_2",
+        "mat_steel_part_3",
+        "mat_steel_part_4",
+        "mat_steel_part_5",
+        "mat_steel_part_8",
+        "mat_steel_part_9"
+      ],
+      "left_wheel_and_hub": [
+        "mat_rubber_orange_part_1",
+        "mat_steel_part_7"
+      ],
+      "right_wheel_and_hub": [
+        "mat_rubber_orange_part_0",
+        "mat_steel_part_6"
+      ]
+    }
+  },
+  "cameraBoundsSamples": 121,
+  "cameraMaximumScale": 3.968507608146548,
+  "cameraTracking": "Original source camera position and direction",
+  "cameraLocation": [
+    5.612339973449707,
+    -9.456274032592773,
+    5.191827297210693
+  ],
+  "cameraRotation": [
+    1.1596143245697021,
+    4.4814473909582375e-08,
+    0.5317239761352539
+  ],
+  "sourceComponentNames": [
+    "mat_battery_wrap_part_0",
+    "mat_pcb_green_part_0",
+    "mat_pcb_green_part_1",
+    "mat_pcb_teal_part_0",
+    "mat_plastic_black_part_0",
+    "mat_plastic_black_part_1",
+    "mat_plastic_black_part_2",
+    "mat_plastic_black_part_3",
+    "mat_plastic_black_part_4",
+    "mat_plastic_black_part_5",
+    "mat_plastic_black_part_6",
+    "mat_plastic_black_part_7",
+    "mat_plastic_black_part_8",
+    "mat_plastic_black_part_9",
+    "mat_plastic_black_part_10",
+    "mat_plastic_black_part_11",
+    "mat_plastic_black_part_12",
+    "mat_plastic_black_part_13",
+    "mat_plastic_black_part_14",
+    "mat_plastic_black_part_15",
+    "mat_plastic_black_part_16",
+    "mat_plastic_black_part_17",
+    "mat_plastic_black_part_18",
+    "mat_plastic_black_part_19",
+    "mat_plastic_black_part_20",
+    "mat_plastic_black_part_21",
+    "mat_plastic_black_part_22",
+    "mat_plastic_black_part_23",
+    "mat_plastic_black_part_24",
+    "mat_plastic_black_part_25",
+    "mat_plastic_black_part_26",
+    "mat_plastic_black_part_27",
+    "mat_plastic_black_part_28",
+    "mat_plastic_black_part_29",
+    "mat_plastic_black_part_30",
+    "mat_plastic_black_part_31",
+    "mat_plastic_black_part_32",
+    "mat_plastic_black_part_33",
+    "mat_plastic_black_part_34",
+    "mat_plastic_black_part_35",
+    "mat_plastic_black_part_36",
+    "mat_plastic_black_part_37",
+    "mat_plastic_black_part_38",
+    "mat_plastic_black_part_39",
+    "mat_plastic_black_part_40",
+    "mat_plastic_black_part_41",
+    "mat_plastic_black_part_42",
+    "mat_plastic_black_part_43",
+    "mat_plastic_black_part_44",
+    "mat_plastic_black_part_45",
+    "mat_plastic_black_part_46",
+    "mat_plastic_black_part_47",
+    "mat_plastic_black_part_48",
+    "mat_plastic_black_part_49",
+    "mat_plastic_black_part_50",
+    "mat_plastic_black_part_51",
+    "mat_plastic_black_part_52",
+    "mat_plastic_black_part_53",
+    "mat_plastic_black_part_54",
+    "mat_plastic_black_part_55",
+    "mat_plastic_black_part_56",
+    "mat_plastic_black_part_57",
+    "mat_plastic_black_part_58",
+    "mat_plastic_black_part_59",
+    "mat_plastic_black_part_60",
+    "mat_plastic_black_part_61",
+    "mat_plastic_black_part_62",
+    "mat_plastic_black_part_63",
+    "mat_plastic_black_part_64",
+    "mat_plastic_black_part_65",
+    "mat_plastic_black_part_66",
+    "mat_plastic_black_part_67",
+    "mat_plastic_black_part_68",
+    "mat_plastic_black_part_69",
+    "mat_plastic_black_part_70",
+    "mat_plastic_black_part_71",
+    "mat_plastic_black_part_72",
+    "mat_plastic_black_part_73",
+    "mat_plastic_black_part_74",
+    "mat_plastic_black_part_75",
+    "mat_plastic_black_part_76",
+    "mat_plastic_black_part_77",
+    "mat_plastic_black_part_78",
+    "mat_plastic_black_part_79",
+    "mat_plastic_black_part_80",
+    "mat_plastic_black_part_81",
+    "mat_plastic_black_part_82",
+    "mat_plastic_black_part_83",
+    "mat_plastic_black_part_84",
+    "mat_plastic_black_part_85",
+    "mat_plastic_black_part_86",
+    "mat_plastic_black_part_87",
+    "mat_plastic_black_part_88",
+    "mat_plastic_black_part_89",
+    "mat_plastic_black_part_90",
+    "mat_plastic_black_part_91",
+    "mat_plastic_black_part_92",
+    "mat_plastic_black_part_93",
+    "mat_plastic_black_part_94",
+    "mat_plastic_black_part_95",
+    "mat_plastic_black_part_96",
+    "mat_plastic_black_part_97",
+    "mat_printed_black_part_0",
+    "mat_printed_black_part_1",
+    "mat_printed_black_part_2",
+    "mat_printed_black_part_3",
+    "mat_printed_black_part_4",
+    "mat_rubber_orange_part_0",
+    "mat_rubber_orange_part_1",
+    "mat_solder_part_0",
+    "mat_solder_part_1",
+    "mat_solder_part_2",
+    "mat_solder_part_3",
+    "mat_solder_part_4",
+    "mat_solder_part_5",
+    "mat_solder_part_6",
+    "mat_solder_part_7",
+    "mat_solder_part_8",
+    "mat_solder_part_9",
+    "mat_solder_part_10",
+    "mat_solder_part_11",
+    "mat_solder_part_12",
+    "mat_solder_part_13",
+    "mat_solder_part_14",
+    "mat_solder_part_15",
+    "mat_solder_part_16",
+    "mat_solder_part_17",
+    "mat_solder_part_18",
+    "mat_solder_part_19",
+    "mat_solder_part_20",
+    "mat_solder_part_21",
+    "mat_solder_part_22",
+    "mat_solder_part_23",
+    "mat_solder_part_24",
+    "mat_solder_part_25",
+    "mat_solder_part_26",
+    "mat_solder_part_27",
+    "mat_solder_part_28",
+    "mat_solder_part_29",
+    "mat_solder_part_30",
+    "mat_solder_part_31",
+    "mat_solder_part_32",
+    "mat_solder_part_33",
+    "mat_solder_part_34",
+    "mat_solder_part_35",
+    "mat_solder_part_36",
+    "mat_solder_part_37",
+    "mat_solder_part_38",
+    "mat_solder_part_39",
+    "mat_solder_part_40",
+    "mat_solder_part_41",
+    "mat_solder_part_42",
+    "mat_solder_part_43",
+    "mat_solder_part_44",
+    "mat_solder_part_45",
+    "mat_solder_part_46",
+    "mat_solder_part_47",
+    "mat_solder_part_48",
+    "mat_solder_part_49",
+    "mat_solder_part_50",
+    "mat_solder_part_51",
+    "mat_solder_part_52",
+    "mat_solder_part_53",
+    "mat_solder_part_54",
+    "mat_solder_part_55",
+    "mat_solder_part_56",
+    "mat_solder_part_57",
+    "mat_solder_part_58",
+    "mat_solder_part_59",
+    "mat_solder_part_60",
+    "mat_solder_part_61",
+    "mat_solder_part_62",
+    "mat_solder_part_63",
+    "mat_solder_part_64",
+    "mat_solder_part_65",
+    "mat_solder_part_66",
+    "mat_solder_part_67",
+    "mat_solder_part_68",
+    "mat_solder_part_69",
+    "mat_solder_part_70",
+    "mat_solder_part_71",
+    "mat_solder_part_72",
+    "mat_solder_part_73",
+    "mat_solder_part_74",
+    "mat_solder_part_75",
+    "mat_solder_part_76",
+    "mat_solder_part_77",
+    "mat_solder_part_78",
+    "mat_solder_part_79",
+    "mat_solder_part_80",
+    "mat_solder_part_81",
+    "mat_solder_part_82",
+    "mat_solder_part_83",
+    "mat_solder_part_84",
+    "mat_solder_part_85",
+    "mat_solder_part_86",
+    "mat_solder_part_87",
+    "mat_solder_part_88",
+    "mat_solder_part_89",
+    "mat_solder_part_90",
+    "mat_solder_part_91",
+    "mat_solder_part_92",
+    "mat_solder_part_93",
+    "mat_solder_part_94",
+    "mat_solder_part_95",
+    "mat_solder_part_96",
+    "mat_solder_part_97",
+    "mat_solder_part_98",
+    "mat_steel_part_0",
+    "mat_steel_part_1",
+    "mat_steel_part_2",
+    "mat_steel_part_3",
+    "mat_steel_part_4",
+    "mat_steel_part_5",
+    "mat_steel_part_6",
+    "mat_steel_part_7",
+    "mat_steel_part_8",
+    "mat_steel_part_9"
+  ],
+  "timings": [
+    {
+      "index": 0,
+      "seconds": 0.672,
+      "bytes": 293871
+    },
+    {
+      "index": 1,
+      "seconds": 0.687,
+      "bytes": 293831
+    },
+    {
+      "index": 2,
+      "seconds": 0.672,
+      "bytes": 293891
+    },
+    {
+      "index": 3,
+      "seconds": 0.688,
+      "bytes": 293582
+    },
+    {
+      "index": 4,
+      "seconds": 0.687,
+      "bytes": 293960
+    },
+    {
+      "index": 5,
+      "seconds": 0.672,
+      "bytes": 293484
+    },
+    {
+      "index": 6,
+      "seconds": 0.672,
+      "bytes": 293653
+    },
+    {
+      "index": 7,
+      "seconds": 0.687,
+      "bytes": 293985
+    },
+    {
+      "index": 8,
+      "seconds": 0.688,
+      "bytes": 293889
+    },
+    {
+      "index": 9,
+      "seconds": 0.687,
+      "bytes": 293490
+    },
+    {
+      "index": 10,
+      "seconds": 0.672,
+      "bytes": 293834
+    },
+    {
+      "index": 11,
+      "seconds": 0.688,
+      "bytes": 294325
+    },
+    {
+      "index": 12,
+      "seconds": 0.687,
+      "bytes": 294198
+    },
+    {
+      "index": 13,
+      "seconds": 0.672,
+      "bytes": 294379
+    },
+    {
+      "index": 14,
+      "seconds": 0.672,
+      "bytes": 294449
+    },
+    {
+      "index": 15,
+      "seconds": 0.687,
+      "bytes": 293833
+    },
+    {
+      "index": 16,
+      "seconds": 0.672,
+      "bytes": 293736
+    },
+    {
+      "index": 17,
+      "seconds": 0.719,
+      "bytes": 294349
+    },
+    {
+      "index": 18,
+      "seconds": 0.672,
+      "bytes": 293992
+    },
+    {
+      "index": 19,
+      "seconds": 0.672,
+      "bytes": 294609
+    },
+    {
+      "index": 20,
+      "seconds": 0.672,
+      "bytes": 294054
+    },
+    {
+      "index": 21,
+      "seconds": 0.672,
+      "bytes": 294062
+    },
+    {
+      "index": 22,
+      "seconds": 0.672,
+      "bytes": 293471
+    },
+    {
+      "index": 23,
+      "seconds": 0.687,
+      "bytes": 294040
+    },
+    {
+      "index": 24,
+      "seconds": 0.672,
+      "bytes": 294111
+    },
+    {
+      "index": 25,
+      "seconds": 0.672,
+      "bytes": 293861
+    },
+    {
+      "index": 26,
+      "seconds": 0.703,
+      "bytes": 293567
+    },
+    {
+      "index": 27,
+      "seconds": 0.672,
+      "bytes": 293451
+    },
+    {
+      "index": 28,
+      "seconds": 0.672,
+      "bytes": 293681
+    },
+    {
+      "index": 29,
+      "seconds": 0.687,
+      "bytes": 293145
+    },
+    {
+      "index": 30,
+      "seconds": 0.688,
+      "bytes": 293293
+    },
+    {
+      "index": 31,
+      "seconds": 0.687,
+      "bytes": 293436
+    },
+    {
+      "index": 32,
+      "seconds": 0.704,
+      "bytes": 293458
+    },
+    {
+      "index": 33,
+      "seconds": 0.687,
+      "bytes": 293604
+    },
+    {
+      "index": 34,
+      "seconds": 0.703,
+      "bytes": 293800
+    },
+    {
+      "index": 35,
+      "seconds": 0.672,
+      "bytes": 293782
+    },
+    {
+      "index": 36,
+      "seconds": 0.672,
+      "bytes": 294066
+    },
+    {
+      "index": 37,
+      "seconds": 0.687,
+      "bytes": 294059
+    },
+    {
+      "index": 38,
+      "seconds": 0.672,
+      "bytes": 294015
+    },
+    {
+      "index": 39,
+      "seconds": 0.688,
+      "bytes": 294353
+    },
+    {
+      "index": 40,
+      "seconds": 0.687,
+      "bytes": 294423
+    },
+    {
+      "index": 41,
+      "seconds": 0.672,
+      "bytes": 294326
+    },
+    {
+      "index": 42,
+      "seconds": 0.688,
+      "bytes": 294310
+    },
+    {
+      "index": 43,
+      "seconds": 0.687,
+      "bytes": 294357
+    },
+    {
+      "index": 44,
+      "seconds": 0.672,
+      "bytes": 293820
+    },
+    {
+      "index": 45,
+      "seconds": 0.688,
+      "bytes": 293754
+    },
+    {
+      "index": 46,
+      "seconds": 0.671,
+      "bytes": 294219
+    },
+    {
+      "index": 47,
+      "seconds": 0.672,
+      "bytes": 294101
+    },
+    {
+      "index": 48,
+      "seconds": 0.688,
+      "bytes": 294233
+    },
+    {
+      "index": 49,
+      "seconds": 0.672,
+      "bytes": 294302
+    },
+    {
+      "index": 50,
+      "seconds": 0.688,
+      "bytes": 293741
+    },
+    {
+      "index": 51,
+      "seconds": 0.672,
+      "bytes": 293960
+    },
+    {
+      "index": 52,
+      "seconds": 0.672,
+      "bytes": 294033
+    },
+    {
+      "index": 53,
+      "seconds": 0.671,
+      "bytes": 293617
+    },
+    {
+      "index": 54,
+      "seconds": 0.688,
+      "bytes": 293571
+    },
+    {
+      "index": 55,
+      "seconds": 0.687,
+      "bytes": 293747
+    },
+    {
+      "index": 56,
+      "seconds": 0.688,
+      "bytes": 293779
+    },
+    {
+      "index": 57,
+      "seconds": 0.672,
+      "bytes": 293932
+    },
+    {
+      "index": 58,
+      "seconds": 0.672,
+      "bytes": 293986
+    },
+    {
+      "index": 59,
+      "seconds": 0.657,
+      "bytes": 293690
+    },
+    {
+      "index": 60,
+      "seconds": 0.671,
+      "bytes": 293764
+    },
+    {
+      "index": 61,
+      "seconds": 0.688,
+      "bytes": 293680
+    },
+    {
+      "index": 62,
+      "seconds": 0.672,
+      "bytes": 293863
+    },
+    {
+      "index": 63,
+      "seconds": 0.672,
+      "bytes": 293662
+    },
+    {
+      "index": 64,
+      "seconds": 0.687,
+      "bytes": 293805
+    },
+    {
+      "index": 65,
+      "seconds": 0.672,
+      "bytes": 293603
+    },
+    {
+      "index": 66,
+      "seconds": 0.672,
+      "bytes": 293807
+    },
+    {
+      "index": 67,
+      "seconds": 0.687,
+      "bytes": 293667
+    },
+    {
+      "index": 68,
+      "seconds": 0.672,
+      "bytes": 294081
+    },
+    {
+      "index": 69,
+      "seconds": 0.672,
+      "bytes": 293714
+    },
+    {
+      "index": 70,
+      "seconds": 0.687,
+      "bytes": 293147
+    },
+    {
+      "index": 71,
+      "seconds": 0.672,
+      "bytes": 293999
+    },
+    {
+      "index": 72,
+      "seconds": 0.687,
+      "bytes": 293793
+    },
+    {
+      "index": 73,
+      "seconds": 0.672,
+      "bytes": 293256
+    },
+    {
+      "index": 74,
+      "seconds": 0.688,
+      "bytes": 293223
+    },
+    {
+      "index": 75,
+      "seconds": 0.672,
+      "bytes": 293072
+    },
+    {
+      "index": 76,
+      "seconds": 0.671,
+      "bytes": 293172
+    },
+    {
+      "index": 77,
+      "seconds": 0.672,
+      "bytes": 292895
+    },
+    {
+      "index": 78,
+      "seconds": 0.688,
+      "bytes": 292945
+    },
+    {
+      "index": 79,
+      "seconds": 0.672,
+      "bytes": 292621
+    },
+    {
+      "index": 80,
+      "seconds": 0.687,
+      "bytes": 292103
+    },
+    {
+      "index": 81,
+      "seconds": 0.672,
+      "bytes": 292367
+    },
+    {
+      "index": 82,
+      "seconds": 0.672,
+      "bytes": 291827
+    },
+    {
+      "index": 83,
+      "seconds": 0.687,
+      "bytes": 292131
+    },
+    {
+      "index": 84,
+      "seconds": 0.688,
+      "bytes": 292235
+    },
+    {
+      "index": 85,
+      "seconds": 0.672,
+      "bytes": 291668
+    },
+    {
+      "index": 86,
+      "seconds": 0.703,
+      "bytes": 291763
+    },
+    {
+      "index": 87,
+      "seconds": 0.672,
+      "bytes": 291991
+    },
+    {
+      "index": 88,
+      "seconds": 0.672,
+      "bytes": 291759
+    },
+    {
+      "index": 89,
+      "seconds": 0.688,
+      "bytes": 291291
+    },
+    {
+      "index": 90,
+      "seconds": 0.672,
+      "bytes": 291537
+    },
+    {
+      "index": 91,
+      "seconds": 0.672,
+      "bytes": 291315
+    },
+    {
+      "index": 92,
+      "seconds": 0.703,
+      "bytes": 291718
+    },
+    {
+      "index": 93,
+      "seconds": 0.687,
+      "bytes": 291837
+    },
+    {
+      "index": 94,
+      "seconds": 0.703,
+      "bytes": 291694
+    },
+    {
+      "index": 95,
+      "seconds": 0.688,
+      "bytes": 291676
+    },
+    {
+      "index": 96,
+      "seconds": 0.672,
+      "bytes": 292455
+    },
+    {
+      "index": 97,
+      "seconds": 0.688,
+      "bytes": 292551
+    },
+    {
+      "index": 98,
+      "seconds": 0.672,
+      "bytes": 291857
+    },
+    {
+      "index": 99,
+      "seconds": 0.687,
+      "bytes": 292194
+    },
+    {
+      "index": 100,
+      "seconds": 0.672,
+      "bytes": 292085
+    },
+    {
+      "index": 101,
+      "seconds": 0.688,
+      "bytes": 292721
+    },
+    {
+      "index": 102,
+      "seconds": 0.671,
+      "bytes": 292568
+    },
+    {
+      "index": 103,
+      "seconds": 0.672,
+      "bytes": 292882
+    },
+    {
+      "index": 104,
+      "seconds": 0.672,
+      "bytes": 293097
+    },
+    {
+      "index": 105,
+      "seconds": 0.672,
+      "bytes": 292966
+    },
+    {
+      "index": 106,
+      "seconds": 0.672,
+      "bytes": 293132
+    },
+    {
+      "index": 107,
+      "seconds": 0.687,
+      "bytes": 293458
+    },
+    {
+      "index": 108,
+      "seconds": 0.672,
+      "bytes": 293771
+    },
+    {
+      "index": 109,
+      "seconds": 0.657,
+      "bytes": 293529
+    },
+    {
+      "index": 110,
+      "seconds": 0.671,
+      "bytes": 293118
+    },
+    {
+      "index": 111,
+      "seconds": 0.688,
+      "bytes": 293627
+    },
+    {
+      "index": 112,
+      "seconds": 0.672,
+      "bytes": 293878
+    },
+    {
+      "index": 113,
+      "seconds": 0.672,
+      "bytes": 294169
+    },
+    {
+      "index": 114,
+      "seconds": 0.687,
+      "bytes": 293978
+    },
+    {
+      "index": 115,
+      "seconds": 0.688,
+      "bytes": 293754
+    },
+    {
+      "index": 116,
+      "seconds": 0.672,
+      "bytes": 293707
+    },
+    {
+      "index": 117,
+      "seconds": 0.687,
+      "bytes": 293689
+    },
+    {
+      "index": 118,
+      "seconds": 0.688,
+      "bytes": 293509
+    },
+    {
+      "index": 119,
+      "seconds": 0.687,
+      "bytes": 294026
+    },
+    {
+      "index": 120,
+      "seconds": 0.672,
+      "bytes": 293908
+    }
+  ],
+  "totalSeconds": 85.359,
+  "baseCoverSource": {
+    "project": "lineFollower",
+    "source": "tools/editorial-render/sources/lineFollower.glb",
+    "sourceSha256": "aa8c4253e0a38cc5c2e07bc1d161a44fe243e7a3c39e4c26e2e7e582ac1f29ad",
+    "renderer": "tools/editorial-render/render_catalog.py",
+    "rendererSha256": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+    "builder": null,
+    "builderSha256": null,
+    "sourceMeshFaceCounts": {
+      "mat_battery_wrap": 168,
+      "mat_pcb_green": 20254,
+      "mat_pcb_teal": 6594,
+      "mat_plastic_black": 56959,
+      "mat_printed_black": 20908,
+      "mat_rubber_orange": 25708,
+      "mat_solder": 4862,
+      "mat_steel": 94837
+    },
+    "sourceDimensionsAfterRotation": [
+      144.00001525878906,
+      191.98765563964844,
+      51.412803649902344
+    ],
+    "dimensions": [
+      1800,
+      1200
+    ],
+    "cameraDirectionBlenderZUp": [
+      0.4647594690322876,
+      -0.7900910973548889,
+      0.39969316124916077
+    ],
+    "angleIndex": 0,
+    "samples": 192,
+    "geometryPolicy": "Original included part faces and coordinates retained; material labels only. Common threaded fasteners and motor internals omitted per documented source policy.",
+    "materialDefaults": {
+      "steel": {
+        "color": "BBC1C8",
+        "metallic": 0.9,
+        "roughness": 0.32
+      },
+      "printed": {
+        "color": "30363D",
+        "metallic": 0,
+        "roughness": 0.43,
+        "texture": "printed"
+      },
+      "dark": {
+        "color": "202328",
+        "metallic": 0.12,
+        "roughness": 0.4
+      },
+      "aero": {
+        "color": "E3E1DB",
+        "metallic": 0,
+        "roughness": 0.45
+      },
+      "rubber": {
+        "color": "181B1E",
+        "metallic": 0,
+        "roughness": 0.62
+      },
+      "brass": {
+        "color": "AD8954",
+        "metallic": 0.8,
+        "roughness": 0.34
+      },
+      "glass": {
+        "color": "E7EDF0",
+        "metallic": 0,
+        "roughness": 0.1,
+        "transmission": 1
+      },
+      "wood": {
+        "color": "BE9C68",
+        "metallic": 0,
+        "roughness": 0.43,
+        "texture": "wood"
+      },
+      "carbon": {
+        "color": "171A20",
+        "metallic": 0.05,
+        "roughness": 0.3,
+        "texture": "carbon",
+        "coat": 0.3
+      },
+      "pcb": {
+        "color": "166C79",
+        "metallic": 0,
+        "roughness": 0.44
+      }
+    },
+    "materialAssignments": {
+      "battery_wrap": {
+        "color": "D4D7D6",
+        "metallic": 0,
+        "roughness": 0.38
+      },
+      "pcb_green": {
+        "color": "237153",
+        "metallic": 0,
+        "roughness": 0.47
+      },
+      "pcb_teal": {
+        "color": "17616B",
+        "metallic": 0,
+        "roughness": 0.46
+      },
+      "plastic_black": {
+        "color": "202329",
+        "metallic": 0,
+        "roughness": 0.48
+      },
+      "printed_black": {
+        "color": "292D34",
+        "metallic": 0,
+        "roughness": 0.56,
+        "texture": "printed"
+      },
+      "rubber_orange": {
+        "color": "E78B32",
+        "metallic": 0,
+        "roughness": 0.62
+      },
+      "solder": {
+        "color": "BAC1C4",
+        "metallic": 1,
+        "roughness": 0.34
+      },
+      "steel": {
+        "color": "ABB2BA",
+        "metallic": 1,
+        "roughness": 0.35
+      }
+    },
+    "references": [
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\line-follower-cover.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\line-follower-wiring.webp",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\assets\\line-follower-built.webp"
+    ],
+    "notes": []
+  },
+  "encodedFrames": [
+    {
+      "file": "00.webp",
+      "bytes": 15066,
+      "sha256": "ad8738f1579c5a43b0c0bc2b8fa1e8f1a9ff246a939ee11a4dea66adc1181ff1"
+    },
+    {
+      "file": "01.webp",
+      "bytes": 14992,
+      "sha256": "401d2dc5c2ff65eab61e691edb449f95b9e89b0115206d84c7beb3bdc21be2e1"
+    },
+    {
+      "file": "02.webp",
+      "bytes": 14912,
+      "sha256": "1170f86e2585e0be0a4e40d0a600ad38b1b6c2c766c51da4432ffd282896d9d1"
+    },
+    {
+      "file": "03.webp",
+      "bytes": 14958,
+      "sha256": "115677fd6c24fad473d0a797887f171ef3457460779ec7e63c9e97cdf14f135b"
+    },
+    {
+      "file": "04.webp",
+      "bytes": 14882,
+      "sha256": "5a2d9dc2ce1e6846da2c6a9ce6b4b351701cd33533e379aad5ee9db31e44894e"
+    },
+    {
+      "file": "05.webp",
+      "bytes": 15080,
+      "sha256": "80c0bae6815b5506cf048f7971ab5e5a8140b462b6b00322f0d25e9546bf25f6"
+    },
+    {
+      "file": "06.webp",
+      "bytes": 14982,
+      "sha256": "74207e8d6d3d958705f52f8ceb45f89ad844b2528d74fe7fbe9e3dd2f7366178"
+    },
+    {
+      "file": "07.webp",
+      "bytes": 15058,
+      "sha256": "b0764e3723016131cae2bf7f45d98509a2b0b70acb84df5b1cd253025aaf1c4b"
+    },
+    {
+      "file": "08.webp",
+      "bytes": 15096,
+      "sha256": "73936f454f544a5f80c229e93cd01e4d6366b9a02383f969fc2e384d75492148"
+    },
+    {
+      "file": "09.webp",
+      "bytes": 15068,
+      "sha256": "345fa91ed4ae5f9434613eca3b151e444ddb69886011bf6ecc2b7faf63ed2b33"
+    },
+    {
+      "file": "10.webp",
+      "bytes": 14848,
+      "sha256": "0d85e6555241eaf8c56f657d98ad004d8fe50e1aed161de1cc0e3ddc7475d603"
+    },
+    {
+      "file": "11.webp",
+      "bytes": 15110,
+      "sha256": "05727941d25e7571d6180ae17bdc4b20d9448062a0233161cf89d971ce26d777"
+    },
+    {
+      "file": "12.webp",
+      "bytes": 14958,
+      "sha256": "970cf56c525cc3859f0cf366b6156825713de712d9c7546221b1deec416b631a"
+    },
+    {
+      "file": "13.webp",
+      "bytes": 14984,
+      "sha256": "e54baa635cacd3d4c5df49599a1aeed53f770aa7a8f2a152e6b8ee881434cfdb"
+    },
+    {
+      "file": "14.webp",
+      "bytes": 15078,
+      "sha256": "ddcbf1898578253e8fc73dba9a77dc44a35392bbf9e82e590f97b92c6d4af583"
+    },
+    {
+      "file": "15.webp",
+      "bytes": 14800,
+      "sha256": "df5e98beeebd8e598c7f8e7ca2e7f8e6f0ad49e6bb32c0c277a1a0c4418f902d"
+    },
+    {
+      "file": "16.webp",
+      "bytes": 14756,
+      "sha256": "5858c1c01ee32a0ffc632efb45f9b8f82632f3d855d8ba0bff0d0305c9c89b09"
+    },
+    {
+      "file": "17.webp",
+      "bytes": 14718,
+      "sha256": "727d8845ba6ccd08ae6dbfebc7e0500c416f4126b53bc7b19adaf9f6ba1f0c92"
+    },
+    {
+      "file": "18.webp",
+      "bytes": 14740,
+      "sha256": "7a81dc75a1da0060044943ac23d8591b98dc3d7bdbecec52803ba68599f5db5b"
+    },
+    {
+      "file": "19.webp",
+      "bytes": 14742,
+      "sha256": "050551f67d35bbef27e41c833fd6056e7c018126c0dea8726913998349fb9a31"
+    },
+    {
+      "file": "20.webp",
+      "bytes": 14558,
+      "sha256": "c21f545bf0f963bd36c965b08f20f2274def41aa3389d0fd6cd971a7c5653f5f"
+    },
+    {
+      "file": "21.webp",
+      "bytes": 14428,
+      "sha256": "0b05c143d1fc1652abf7b229ebaecbb4c2eca6def22c0324b57171b91bdfd0d7"
+    },
+    {
+      "file": "22.webp",
+      "bytes": 14448,
+      "sha256": "65a12adc9370fd620ae6c6edf603b46d21a76a9359fea5e4d60847ea1af66a39"
+    },
+    {
+      "file": "23.webp",
+      "bytes": 14566,
+      "sha256": "a01e3eacfea49efc0285c017dfce5ccf2d6a1f37cafe53c82caa59b1b4d8caca"
+    },
+    {
+      "file": "24.webp",
+      "bytes": 14814,
+      "sha256": "db0d4d17a5f062581e7a8983fac6898ac1bf7224fc7b5fb4e3258c69b182352d"
+    },
+    {
+      "file": "25.webp",
+      "bytes": 14462,
+      "sha256": "b80efbfae6ba433ead17353224b5b2de15e644ce24acdfca9de487168f686319"
+    },
+    {
+      "file": "26.webp",
+      "bytes": 14402,
+      "sha256": "3bda1338542a9634614aef903030e3e2fe39619bdf669dd5677e05de2f669663"
+    },
+    {
+      "file": "27.webp",
+      "bytes": 14344,
+      "sha256": "3daee0d8afcb9204b9b9e1d1c82690496f881c1cad543c573802fa9ebe9e78da"
+    },
+    {
+      "file": "28.webp",
+      "bytes": 14356,
+      "sha256": "b3b75e60a13fb2935cd5349c3c155cb874caec64ffa2fde23599c555045270ee"
+    },
+    {
+      "file": "29.webp",
+      "bytes": 14392,
+      "sha256": "444790dbc59fa6ac540712b83787d63d0ab598d3690db7f5813b65fc4d9c8c7f"
+    },
+    {
+      "file": "30.webp",
+      "bytes": 14404,
+      "sha256": "f19a223e3fcf384f29d126eb2b968e527b899e098a3553f5032183566615c498"
+    },
+    {
+      "file": "31.webp",
+      "bytes": 14434,
+      "sha256": "397c4312d89cbb299c505f5fe13ac8fcbd3fdd654170d9f77900944ea39940f0"
+    },
+    {
+      "file": "32.webp",
+      "bytes": 14350,
+      "sha256": "5948b722f913b783bf0beee4c0bce63209aaeb7d13a5159f92ac3c8004d3852c"
+    },
+    {
+      "file": "33.webp",
+      "bytes": 14296,
+      "sha256": "ab17854dc55e969d479fc9a12ba89dbbdf246b7fc48ee52e1bcbbf248537228d"
+    },
+    {
+      "file": "34.webp",
+      "bytes": 14420,
+      "sha256": "b48079c07a39a891d4c7b5b437d7d781e62aecf6a3e405ca85b5b2dc2b1a3640"
+    },
+    {
+      "file": "35.webp",
+      "bytes": 14484,
+      "sha256": "5049dbb4ffcf225247de44e6d22842563fbf21dd67fec88be743fe58f299e4d5"
+    },
+    {
+      "file": "36.webp",
+      "bytes": 14440,
+      "sha256": "22201b09d0b4092d622e499f7df32ebe5b9685bdeb89858566fe82e4c6a0122c"
+    },
+    {
+      "file": "37.webp",
+      "bytes": 14534,
+      "sha256": "809479c358b8d85df6b867815d42500a05841ab494918ede0d5100354eb00019"
+    },
+    {
+      "file": "38.webp",
+      "bytes": 14368,
+      "sha256": "0050b3a6678f44f8c634804725f5ea04cbbd45b13e275d6ee8eead490b043f68"
+    },
+    {
+      "file": "39.webp",
+      "bytes": 14632,
+      "sha256": "ce19082c9143e2566d0f9e329841bb4917c41ae1ce2183daf636e719c94c7c3c"
+    },
+    {
+      "file": "40.webp",
+      "bytes": 14506,
+      "sha256": "bccbfd42dcf2fdd668f4cdba731c9e03a8f3836d99d718e423f930ef8e247c61"
+    },
+    {
+      "file": "41.webp",
+      "bytes": 14678,
+      "sha256": "75b29fe515bda19a8e34cf55048ee42d6e33f50ad16402e12e3ed1af99706f04"
+    },
+    {
+      "file": "42.webp",
+      "bytes": 14684,
+      "sha256": "0bd76f2f36677f857042b30767c4e56d6fd8326e5a98132bed1adeba4c8a9d27"
+    },
+    {
+      "file": "43.webp",
+      "bytes": 14778,
+      "sha256": "47c89e207fd0f020548055573e2f8d66d377f3e3fa0dc83a9ae82ada7956aa50"
+    },
+    {
+      "file": "44.webp",
+      "bytes": 14716,
+      "sha256": "f677860248986c9626ac57d6dcf97275a5b5160962b5b385c23a16795169e797"
+    },
+    {
+      "file": "45.webp",
+      "bytes": 14898,
+      "sha256": "7d6062f133116e9e153d5cf0a98f19171de1adb6f8ce2db47666d17c50e8bcfa"
+    },
+    {
+      "file": "46.webp",
+      "bytes": 15116,
+      "sha256": "20ec2b0e01bb1b7d947a146831e0fcc18491e728fd1d01d4d202c680d9206978"
+    },
+    {
+      "file": "47.webp",
+      "bytes": 14950,
+      "sha256": "22f70ea5f709aac85120c2da1a67897286ae6c6d9e117cda1877ecadd6633ee0"
+    },
+    {
+      "file": "48.webp",
+      "bytes": 15022,
+      "sha256": "90170a288433c6434a33f9e20cb110ce09a7d07f5ee52326bb45f105d0fdf1a2"
+    },
+    {
+      "file": "49.webp",
+      "bytes": 15024,
+      "sha256": "003cb952201ce22283e7c3c09a3ee529e322fcc575a291bf76332bf256c178c1"
+    },
+    {
+      "file": "50.webp",
+      "bytes": 15032,
+      "sha256": "801c2cece6fd45d88817e96cf45edb53b8cff8218cabe78b76f3d4328da2381a"
+    },
+    {
+      "file": "51.webp",
+      "bytes": 15096,
+      "sha256": "b77197f375c29a8aac7389024f8f4b8f49a441ff8c725c1eff49b33946bfa428"
+    },
+    {
+      "file": "52.webp",
+      "bytes": 15070,
+      "sha256": "1b78aa2e3cc3177cc24023ed1392f1bcef1c8653f0d8eb2a6a4a2295e3a80f20"
+    },
+    {
+      "file": "53.webp",
+      "bytes": 15084,
+      "sha256": "62ba99a5e0633c545ed9eeba6f6819fb3ea8c820e4f4bbe0b14a7c1aecf53c7d"
+    },
+    {
+      "file": "54.webp",
+      "bytes": 15064,
+      "sha256": "df18a2c0afb97589f4b5713b6a32dc21259df48ef68de0d345244d3a2dce3595"
+    },
+    {
+      "file": "55.webp",
+      "bytes": 14982,
+      "sha256": "f0eec22b7723b0eabe79d07c0911a50a70a2f4ac1d111820d471d1345cee1a36"
+    },
+    {
+      "file": "56.webp",
+      "bytes": 14880,
+      "sha256": "c1071587788d4bcee29acf35eb6d51ed83c081857636dfde1a1dbbd6cbde93e6"
+    },
+    {
+      "file": "57.webp",
+      "bytes": 15042,
+      "sha256": "1df45bd9f69bc92dee34383b2045e8902a80d0325c45e933aed36455015d3692"
+    },
+    {
+      "file": "58.webp",
+      "bytes": 14964,
+      "sha256": "6b740e0812f70e45f99dd481cd6e292f4e33b220ff8b3b25984af3173ddc9888"
+    },
+    {
+      "file": "59.webp",
+      "bytes": 15002,
+      "sha256": "7aa4f6af27a8e1f0986301f602bab2c149afaaa55ff7f236f9f856c7beaaaec6"
+    },
+    {
+      "file": "60.webp",
+      "bytes": 15066,
+      "sha256": "ad8738f1579c5a43b0c0bc2b8fa1e8f1a9ff246a939ee11a4dea66adc1181ff1"
+    },
+    {
+      "file": "61.webp",
+      "bytes": 15092,
+      "sha256": "51982515c440679dc76b176c0ef0df5e3816d7a57fd2b4f7f29cac0628f84899"
+    },
+    {
+      "file": "62.webp",
+      "bytes": 15044,
+      "sha256": "7f8dc30bcdf8264ba0972e2b955d36b045c6e15c857121ffdceb93c1b799c5a4"
+    },
+    {
+      "file": "63.webp",
+      "bytes": 14870,
+      "sha256": "ec6b2804c4474dd33b2ae935a0808677f6342dfd6723a04d87e7dd16da9f0102"
+    },
+    {
+      "file": "64.webp",
+      "bytes": 14992,
+      "sha256": "1c7190cde4677f23815392503b3e218111da1dc6f6dec5f6abf8d81b8b8c9184"
+    },
+    {
+      "file": "65.webp",
+      "bytes": 14906,
+      "sha256": "bb6423d19aa0e0cfde76bde5771dd7c3404b3771566d0ad2b55cddea9642534a"
+    },
+    {
+      "file": "66.webp",
+      "bytes": 14926,
+      "sha256": "efce145d4a4bac9be58bbc4fa2ebbd96d8aac1d14dc2d763e815be5f1b7ea2c2"
+    },
+    {
+      "file": "67.webp",
+      "bytes": 15054,
+      "sha256": "734e843dc9bd097579f77910d3ada8cd15d98638f83fc0e1d9eb2383f4cbf346"
+    },
+    {
+      "file": "68.webp",
+      "bytes": 15040,
+      "sha256": "62cba307eaacc1e2d78a28cd41e5430a00b169ad3cc5a59f99aa0e2eed0e0b3a"
+    },
+    {
+      "file": "69.webp",
+      "bytes": 15014,
+      "sha256": "44885ec0cf48a9541aada12d96edab1525a15deba8c9515e8cf4da75c5d8f670"
+    },
+    {
+      "file": "70.webp",
+      "bytes": 15096,
+      "sha256": "a7286b9ac3d7e4528bc368e91d874933478bbb6d4168f950990796d1beb32b00"
+    },
+    {
+      "file": "71.webp",
+      "bytes": 15042,
+      "sha256": "d928118fe936cd1904585a34e7f0c912d3f2ab97571d927cf0bdddaefd105eb5"
+    },
+    {
+      "file": "72.webp",
+      "bytes": 14894,
+      "sha256": "f76ad8eed2d8eb0246b652a8601db81094715a92feda11261d1ad3890adf6fa4"
+    },
+    {
+      "file": "73.webp",
+      "bytes": 14998,
+      "sha256": "b274a44273e190f339467fb8459ca6a6c6b8473cdb37300aea004d65a470a409"
+    },
+    {
+      "file": "74.webp",
+      "bytes": 14852,
+      "sha256": "d561a3e34d0fddebcf5b4f5fb588bbb23ba73ff8649c999666eda78a14d96ff4"
+    },
+    {
+      "file": "75.webp",
+      "bytes": 15266,
+      "sha256": "9f40d2ad57692dabdca69754cbffd725a21ebfecf4b369e858e946b00fb446f4"
+    },
+    {
+      "file": "76.webp",
+      "bytes": 15006,
+      "sha256": "263e59af8447c3a6489dc19c9de675c21bebf590f7b9d182eef271890d9d8ca5"
+    },
+    {
+      "file": "77.webp",
+      "bytes": 14960,
+      "sha256": "c1ff07dc117b9f3b93988a56cd1fb6fea3bfb10b13e8bf56f4de82837dbb240f"
+    },
+    {
+      "file": "78.webp",
+      "bytes": 14900,
+      "sha256": "e26c0fbe81f22e47534de1de52535e2a9c57668a2d9d54b025525cf885f955a8"
+    },
+    {
+      "file": "79.webp",
+      "bytes": 14868,
+      "sha256": "b5382d016787d731ad59933a896c5ce61dc10a52335ea3eb5537363f6a70c7d7"
+    },
+    {
+      "file": "80.webp",
+      "bytes": 14644,
+      "sha256": "095072ac9459f448de3bfdef3dda98be52d2a2182e49baf80d3135a6aabe1e27"
+    },
+    {
+      "file": "81.webp",
+      "bytes": 14730,
+      "sha256": "e9255de9d1b6fc30c606783727db0fc0e087a135addfc69caa957112d79cbc3f"
+    },
+    {
+      "file": "82.webp",
+      "bytes": 14756,
+      "sha256": "ee9743ab22d674474861419ec617909a4a249444d866479343b44e3b377fb878"
+    },
+    {
+      "file": "83.webp",
+      "bytes": 14722,
+      "sha256": "abb477264187fecb26823bf75e88f2873e84a8896575c9d1ad92af38ddcd3d14"
+    },
+    {
+      "file": "84.webp",
+      "bytes": 14568,
+      "sha256": "5482dec8db447a09d817604b791dd121aaa7c8c172706c7421ef8dc92852a5e4"
+    },
+    {
+      "file": "85.webp",
+      "bytes": 14706,
+      "sha256": "3c69253f64f520e9bb277bb8c065a61610a31e09cc2bcb65822101c6c9d0aa52"
+    },
+    {
+      "file": "86.webp",
+      "bytes": 14688,
+      "sha256": "c907fcbc796c8394aa48de084273e28fd5ca2130c11c3a9e82a31c83fa4f87b7"
+    },
+    {
+      "file": "87.webp",
+      "bytes": 14708,
+      "sha256": "c98ba8b9b47074ba8d6710f0a9776a1a6fa0988adec6e5548ed0d207eb47c5be"
+    },
+    {
+      "file": "88.webp",
+      "bytes": 14640,
+      "sha256": "695bfb59e0eb3a669356719efb623dda535371be08b9786891ef5ad7d73ccb87"
+    },
+    {
+      "file": "89.webp",
+      "bytes": 14744,
+      "sha256": "8bd85a3368590afb99e2eec813e2cf81ab1d0c4e17e6729df910a8177245d137"
+    },
+    {
+      "file": "90.webp",
+      "bytes": 14934,
+      "sha256": "851b2bc4d19eda3d70220457b58d94fc4497344393b5335d9b59bf85608f1df6"
+    },
+    {
+      "file": "91.webp",
+      "bytes": 14706,
+      "sha256": "be95adcb5529e64c9333554ef2e1791dd4a4be56e470dc232edc3742052f954d"
+    },
+    {
+      "file": "92.webp",
+      "bytes": 14574,
+      "sha256": "3e572ea8672b2fab83dc7e45ac9a1e71d445d05b62106ea599b30b646f4f24a1"
+    },
+    {
+      "file": "93.webp",
+      "bytes": 14726,
+      "sha256": "f0dc8cdd9e3cd7a4ec7d8827ff3580dc89fce041db1843ba4e4265748cf466bc"
+    },
+    {
+      "file": "94.webp",
+      "bytes": 14718,
+      "sha256": "baca09d6779a245f154463e9f52bda0d91a00cdef7b645abe696398a50f5f5ba"
+    },
+    {
+      "file": "95.webp",
+      "bytes": 14720,
+      "sha256": "472b1a1a0ad9e3ff866fc7c7440744b0c386a07f57a7a35b29d7f27266640d3a"
+    },
+    {
+      "file": "96.webp",
+      "bytes": 14514,
+      "sha256": "21c9c4e6cfc2867d4dad110085ff520395b42790148f07e19dc15036f54d9e65"
+    },
+    {
+      "file": "97.webp",
+      "bytes": 14758,
+      "sha256": "c40076fb0a76eec0fa44426afac1cbd43a53fca61759e41eef4e7446f0578791"
+    },
+    {
+      "file": "98.webp",
+      "bytes": 14790,
+      "sha256": "8ef966d68846ac1891c985e73e1fab0fa87aec64d8a29a27d793b758eb8ccd2d"
+    },
+    {
+      "file": "99.webp",
+      "bytes": 14788,
+      "sha256": "28dc422677a542f7b0d44a04646d59c98432d36bcb60712daeed0640cd490809"
+    },
+    {
+      "file": "100.webp",
+      "bytes": 14656,
+      "sha256": "5f076983a922c0eec8ca191303098da2cc5e138d74a38954d6d8c9f31b12b56e"
+    },
+    {
+      "file": "101.webp",
+      "bytes": 14864,
+      "sha256": "0f8f5bc4b3264999fd3eab2a427e79dd42b86b3b7022767652833530cc5baa11"
+    },
+    {
+      "file": "102.webp",
+      "bytes": 14948,
+      "sha256": "15864dc213976a61aa7d7a4efdef707d822c3877e195e251eb2df74e24e1bb73"
+    },
+    {
+      "file": "103.webp",
+      "bytes": 14914,
+      "sha256": "116f2a8c8222d1ab246d50c7c8aad7a5ac2c838ecb1585fe8f69691779ac283b"
+    },
+    {
+      "file": "104.webp",
+      "bytes": 15044,
+      "sha256": "b4b4e32d2b150a158fc28025d3cdc3a2e138d8a8036531e81a8a47ac08321b64"
+    },
+    {
+      "file": "105.webp",
+      "bytes": 15170,
+      "sha256": "a8b1e35db8cd8d1be6fa45f2ff1253e8f30b0691dec129721cfc3e911061a86d"
+    },
+    {
+      "file": "106.webp",
+      "bytes": 14948,
+      "sha256": "29d2c12ff1d9e7d325c7bc10aa5c330583dca1183c269f7dbbf10c2868edb57e"
+    },
+    {
+      "file": "107.webp",
+      "bytes": 15044,
+      "sha256": "6c8b00fe5a2abaa9b47f8aba26ff0d4ec40700893f2bb2e8277f92fee0e26000"
+    },
+    {
+      "file": "108.webp",
+      "bytes": 15046,
+      "sha256": "af04095f98b91129b7ec9f210f85a858b6b2159bb573dfd39ffc6c0f9cf5c4d4"
+    },
+    {
+      "file": "109.webp",
+      "bytes": 14978,
+      "sha256": "0f48d181bc1fecce8360ad325f27abdf3c5e6279f790dc177d9bed2f3fd91e86"
+    },
+    {
+      "file": "110.webp",
+      "bytes": 14898,
+      "sha256": "b306659d28505235f0bf519d35767a2802c177155eab44678fd8cc3eb3488edc"
+    },
+    {
+      "file": "111.webp",
+      "bytes": 14926,
+      "sha256": "b1cb13662b2cf6a7d9d78c25e8b9f4df5c6b088fb8be80a822e6968bb0692538"
+    },
+    {
+      "file": "112.webp",
+      "bytes": 15054,
+      "sha256": "2191c032917046a498273c2c619da7fc48dcddfc479ae6d36b1750df77a68b72"
+    },
+    {
+      "file": "113.webp",
+      "bytes": 15138,
+      "sha256": "b1a5bbe3b30eca97b59d9eb27bf20b97354d2090cc1399412ab7561649a00714"
+    },
+    {
+      "file": "114.webp",
+      "bytes": 15048,
+      "sha256": "5dfdd6697fc1fe9d90d7692ec1437a7963a3c01a1a201c3ba18f2b52e18b7f29"
+    },
+    {
+      "file": "115.webp",
+      "bytes": 14982,
+      "sha256": "f64db199f199e8deb3ac78bba65ecf0e4c39e6447766d3803897b54cd6771acf"
+    },
+    {
+      "file": "116.webp",
+      "bytes": 14882,
+      "sha256": "ef204594ec4f8102944f26d0978f2b50bcc613a3c4abf2ac756254414eb22793"
+    },
+    {
+      "file": "117.webp",
+      "bytes": 14900,
+      "sha256": "4daf66752dd13103c771a56922748b67f5149beff42efeb68246cf2566e06730"
+    },
+    {
+      "file": "118.webp",
+      "bytes": 14944,
+      "sha256": "2b1ff2b303dc06dbc7d265b183b454306b928bfd5a989bbcc16394a56a4e921e"
+    },
+    {
+      "file": "119.webp",
+      "bytes": 15012,
+      "sha256": "2f71e8965c81c49db68795fe73ee486ea27b4fdc9610a19d5da8ff309584aea6"
+    },
+    {
+      "file": "120.webp",
+      "bytes": 15048,
+      "sha256": "fcf505c098b3dfe939907fdd66c8788cf4bddfa348eed750b349b64e6038bd30"
+    }
+  ],
+  "encoding": {
+    "format": "WebP static images",
+    "quality": 85,
+    "method": 6,
+    "rasterRetouching": false
+  }
+}

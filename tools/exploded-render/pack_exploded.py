@@ -8,8 +8,8 @@ from PIL import Image,ImageDraw,ImageFont
 
 TASK_DIR=Path(__file__).resolve().parent
 ROOT=TASK_DIR.parents[1] if (TASK_DIR.parents[1]/'project-data.js').exists() else TASK_DIR.parents[1]/'portfolio-site'
-DEFAULT_GENERATED=ROOT.parent/'.codex/functional-motion-20260913/generated'
-ASSET_REVISION='functional-20260913'
+DEFAULT_GENERATED=ROOT.parent/'.codex/motion-refinement-20260913/generated'
+ASSET_REVISION='refined-20260913'
 ORDER=['steering','vineRobot','javelin','brakeSim','aura','scanner','carbonSeat','seat','materialTest','ansysCfd','pool','lineFollower','formlabs','education','ftc']
 parser=argparse.ArgumentParser()
 parser.add_argument('--proof-only',action='store_true')
@@ -47,7 +47,8 @@ for key in (args.projects or ORDER):
         label={'heat':'Brake heating','unfold':'Sheet metal unfold','layup':'Carbon layup · 10 plies',
           'steering':'Steering linkage','extension':'Vine extension','propellers':'Propeller rotation',
           'gantry':'Gantry motion','tensile':'Tensile test','flow':'Pressure & flow','assembling':'Guitar assembly',
-          'reconstruction':'Assembly view','visualization':'Display layers'}.get(mode,'Exploded assembly')
+          'reconstruction':'Assembly view','visualization':'Display layers',
+          'retract_release':'Retract & release','drive_sway':'Wheel drive & steering'}.get(mode,'Exploded assembly')
         urls=[f'assets/exploded/{ASSET_REVISION}/{key}/{f.name}?v={record["sha256"][:12]}' for f,record in zip(frames,doc['encodedFrames'])]
         manifest['projects'][key]={'mode':mode,'label':label,'width':doc['width'],'height':doc['height'],
           'poster':urls[0],'frames':urls,
@@ -63,7 +64,7 @@ for key in (args.projects or ORDER):
 if not args.proof_only:(args.input/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 if args.copy_to_site:
     destination=ROOT/'assets/exploded/manifest.json'
-    if args.projects and destination.exists():
+    if destination.exists():
         previous=json.loads(destination.read_text())
         previous['projects'].update(manifest['projects'])
         manifest=previous
@@ -77,10 +78,13 @@ for page in range(2):
     try:font=ImageFont.truetype('C:/Windows/Fonts/arial.ttf',17)
     except OSError:font=ImageFont.load_default()
     for row,key in enumerate(keys):
-        provenance=args.input/key/'provenance.json'
+        proof_folder=args.input/key
+        if not (proof_folder/'provenance.json').exists():
+            proof_folder=ROOT.parent/'.codex/functional-motion-20260913/generated'/key
+        provenance=proof_folder/'provenance.json'
         count=json.loads(provenance.read_text())['frameCount'] if provenance.exists() else 49
         for col,frame in enumerate((0,(count-1)//2,count-1)):
-            path=args.input/key/f'{frame:02d}.png'
+            path=proof_folder/f'{frame:02d}.png'
             if path.exists():
                 im=Image.open(path).convert('RGB');im.thumbnail((tilew,tileh))
                 proof.paste(im,(col*tilew,row*(tileh+labelh)))
