@@ -28,7 +28,26 @@
   const editorial = editorials[key];
   const gallery = project.gallery || [];
   const images = gallery;
+  const media = window.caseStudyMedia || {};
+  const sourceIdentity = (image) => new URL(image.src, document.baseURI).pathname;
+  const usedSources = new Set();
+  // Keep the original gallery indexes for zoom navigation, but publish each
+  // source only once in the story and the remaining-image archive.
+  const chapters = editorial.chapters.map((chapter) => {
+    const image = Number.isInteger(chapter.image) && gallery[chapter.image];
+    const identity = image && sourceIdentity(image);
+    const imageIndex = image && !usedSources.has(identity) ? chapter.image : null;
+    if (imageIndex !== null) usedSources.add(identity);
+    return { ...chapter, image: imageIndex };
+  });
+  const archive = gallery.map((image, index) => ({ image, index })).filter(({ image }) => {
+    const identity = sourceIdentity(image);
+    if (usedSources.has(identity)) return false;
+    usedSources.add(identity);
+    return true;
+  });
   const number = (value) => String(value).padStart(2, '0');
+  const imageCount = (count) => `${count} image${count === 1 ? '' : 's'}`;
   const nextKey = has(editorials, editorial.next) && has(projects, editorial.next) ? editorial.next
     : availableKeys[(availableKeys.indexOf(key) + 1) % availableKeys.length];
   const next = editorials[nextKey];
@@ -53,12 +72,25 @@
   }
   const cover = await resolveCover();
 
+  function presentation(image) {
+    const entry = media[image.src] || {};
+    const kind = ['photo', 'cad', 'plot', 'diagram', 'document'].includes(entry.kind) ? entry.kind : 'photo';
+    const width = Number.isInteger(entry.width) && entry.width > 0 ? entry.width : null;
+    const height = Number.isInteger(entry.height) && entry.height > 0 ? entry.height : null;
+    return { ...entry, kind, width, height, src: entry.src || image.src, alt: entry.alt || image.alt };
+  }
+
+  function mediaClass(image) {
+    const view = presentation(image);
+    return `media-${view.kind}${view.kind === 'photo' && view.width && view.width < view.height ? ' media-portrait' : ''}${view.surface === 'dark' ? ' media-dark' : view.surface === 'light' ? ' media-light' : ''}`;
+  }
+
   function imageButton(image, index) {
     if (!image) return '';
-    // Honor shared thumbnails when provided; the lightbox always uses originals.
-    const source = image.thumbnail || image.src;
-    return `<button type="button" class="image-open${image.surface === 'light' ? ' surface-light' : ''}" data-image="${index}" aria-label="Open image: ${escape(image.caption || image.alt)}">
-      <img src="${escape(source)}" alt="${escape(image.alt)}" loading="lazy" decoding="async">
+    const view = presentation(image);
+    const source = view.src !== image.src ? view.src : image.thumbnail || image.src;
+    return `<button type="button" class="image-open ${mediaClass(image)}" data-image="${index}" aria-label="Open image: ${escape(image.caption || image.alt)}">
+      <img src="${escape(source)}" alt="${escape(view.alt)}"${view.width && view.height ? ` width="${view.width}" height="${view.height}"` : ''} loading="lazy" decoding="async">
       <span class="image-affordance" aria-hidden="true">+</span>
     </button>`;
   }
@@ -105,13 +137,13 @@
       <a href="#motion">Motion</a>${editorial.chapters.map((chapter, index) => `<a href="#${escape(chapter.id)}"><span class="mono">${number(index + 1)}</span>${escape(chapter.label)}</a>`).join('')}
       <a href="#evidence">Image archive</a><a href="#record">Technical record</a>
     </div></nav>
-    <div class="wrap">${editorial.chapters.map((chapter, index) => `<section class="chapter${gallery[chapter.image] ? '' : ' chapter-text-only'}" id="${escape(chapter.id)}" aria-labelledby="${escape(chapter.id)}-title">
+    <div class="wrap">${chapters.map((chapter, index) => `<section class="chapter${chapter.image !== null ? '' : ' chapter-text-only'}" id="${escape(chapter.id)}" aria-labelledby="${escape(chapter.id)}-title">
       <div class="chapter-copy"><p class="eyebrow">${number(index + 1)} / ${escape(chapter.label)}</p><h2 id="${escape(chapter.id)}-title">${escape(chapter.title)}</h2>${chapter.paragraphs.map((text) => `<p>${escape(text)}</p>`).join('')}</div>
-      ${gallery[chapter.image] ? `<figure class="chapter-figure">${imageButton(gallery[chapter.image], chapter.image)}<figcaption><span class="evidence-type">${escape(chapter.evidence)}</span>${escape(chapter.note)}</figcaption></figure>` : ''}
+      ${chapter.image !== null ? `<figure class="chapter-figure ${mediaClass(gallery[chapter.image])}">${imageButton(gallery[chapter.image], chapter.image)}<figcaption><span class="evidence-type">${escape(chapter.evidence)}</span>${escape(chapter.note)}</figcaption></figure>` : ''}
     </section>`).join('')}</div>
     <section class="evidence-section wrap" id="evidence" aria-labelledby="evidence-title">
-      <div class="section-heading"><div><p class="eyebrow">The original project images</p><h2 id="evidence-title">A closer look.</h2></div><p>${gallery.length} images. Open any image to inspect the original.</p></div>
-      <div class="gallery-grid">${gallery.map((image, index) => `<figure class="gallery-item">${imageButton(image, index)}<figcaption><span class="mono">${number(index + 1)}</span><span>${escape(image.caption || image.alt)}</span></figcaption></figure>`).join('')}</div>
+      <div class="section-heading"><div><p class="eyebrow">The project images</p><h2 id="evidence-title">A closer look.</h2></div><p>${archive.length ? `${archive.length} more image${archive.length === 1 ? '' : 's'}. Open any to browse all ${gallery.length}.` : `${gallery.length === 1 ? 'The project image appears' : `All ${gallery.length} project images appear`} in the chapters above. Open any to browse the complete set.`}</p></div>
+      ${archive.length ? `<div class="gallery-grid">${archive.map(({ image, index }) => `<figure class="gallery-item ${mediaClass(image)}">${imageButton(image, index)}<figcaption><span class="mono">${number(index + 1)}</span><span>${escape(image.caption || image.alt)}</span></figcaption></figure>`).join('')}</div>` : gallery.length ? `<button type="button" class="text-link gallery-browse" data-image="0">Browse ${gallery.length === 1 ? 'the image' : `all ${imageCount(gallery.length)}`} <span aria-hidden="true">↗</span></button>` : ''}
     </section>
     <section class="record-section wrap" id="record" aria-labelledby="record-title">
       <div class="section-heading"><div><p class="eyebrow">For the technical conversation</p><h2 id="record-title">The engineering record.</h2></div></div>
@@ -146,8 +178,9 @@
   function showImage(index) {
     imageIndex = (index + images.length) % images.length;
     const item = images[imageIndex];
+    const view = presentation(item);
     const img = new Image();
-    img.alt = item.alt;
+    img.alt = view.alt;
     img.decoding = 'async';
     // Replacing the element prevents a late load from a previous selection
     // painting the wrong source under the new caption during rapid navigation.
@@ -158,11 +191,15 @@
       text.textContent = 'This image could not load. Try the original link below.';
       img.replaceWith(text);
     });
+    stage.dataset.mediaKind = view.kind;
+    stage.dataset.mediaSurface = view.surface || (view.kind === 'photo' ? 'dark' : 'light');
     stage.replaceChildren(img);
-    img.src = item.src;
+    img.src = view.src;
     document.getElementById('lightbox-title').textContent = item.caption || item.alt;
     document.getElementById('lightbox-counter').textContent = `${number(imageIndex + 1)} / ${number(images.length)}`;
-    document.getElementById('lightbox-original').href = item.src;
+    const original = document.getElementById('lightbox-original');
+    original.href = item.src;
+    original.innerHTML = `${escape(view.originalLabel || 'Original')} <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span>`;
   }
 
   root.addEventListener('click', (event) => {
@@ -171,7 +208,7 @@
     const index = Number(trigger.dataset.image);
     if (!images[index]) return;
     if (typeof dialog.showModal !== 'function') {
-      location.href = images[index].src;
+      location.href = presentation(images[index]).src;
       return;
     }
     opener = trigger;

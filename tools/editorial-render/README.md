@@ -1,6 +1,27 @@
 # Real CAD editorial stills
 
-## Current matching initial covers · 2026-09-13
+## Current media presentation delivery · 2026-09-13
+
+Prepared against production `a67a49ad080364590494793ce5641066dc399ffc`;
+page cache revision `media-polish-20260913`. Evidence belongs in
+`../../../.codex/media-polish-20260913/`; `acceptance.json` and `browser-local.json`
+must report `status: passed` before release. Acceptance and publication remain
+pending. The planned backup is
+`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-media-polish`;
+its release metadata and deployment verification establish the final commit and online status.
+
+This round preserves the 16 initial-cover sets and runtime cover catalogue;
+no new rendering or packing is required. Case-page CSS distinguishes photographs
+from padded, complete CAD/chart views. `case-study-media.js` records media types
+and intrinsic dimensions for all 93 originals. Unique chapter media and the
+remaining gallery preserve access to all original source references through zoom.
+
+The Seat CAD presentation reuses `assets/editorial/seat-wide.webp`, already
+rendered from the exact original `models/real/driverseat.glb` (9,526 faces).
+The cropped `assets/seat-cad.webp` source remains accessible through its Original
+CAD capture link. Do not regenerate or overwrite either asset for this layout change.
+
+## Preserved matching initial covers · 2026-09-13
 
 Prepared against production `9608b5d`; revision `case-pages-20260913`.
 The planned backup is `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-case-pages`. Its

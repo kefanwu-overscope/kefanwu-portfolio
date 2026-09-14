@@ -1,6 +1,26 @@
 # Render project-card and case-page previews
 
-## Current case-page covers and retained motion · 2026-09-13
+## Current media presentation delivery · 2026-09-13
+
+Prepared against production `a67a49ad080364590494793ce5641066dc399ffc`;
+page cache revision `media-polish-20260913`. Evidence belongs in
+`../../../.codex/media-polish-20260913/`; `acceptance.json` and `browser-local.json`
+must report `status: passed` before release. Acceptance and publication remain
+pending. The planned backup is
+`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-media-polish`;
+its release metadata and deployment verification establish the final commit and online status.
+
+This round changes browser presentation only. Keep all existing frame, chunk,
+cover, geometry and controller files. No Blender render or packing command is
+needed. The commands below reproduce the preserved case-pages covers, not a new
+media-polish asset set.
+
+The source poster remains opaque while the decoded stage fades in over the
+existing 160 ms interval, gated by the frame actually drawn. The 2,032 frames,
+159 chunks, three-request cap and 160 MiB decoded budget remain unchanged.
+Current acceptance is separate from the preserved initial-cover proof reports.
+
+## Preserved case-page covers and motion · 2026-09-13
 
 Prepared against production `9608b5d`; revision `case-pages-20260913`.
 The planned backup is `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-case-pages`. Its

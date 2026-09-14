@@ -1,6 +1,39 @@
 # Agent Handoff - Kefan Wu Portfolio
 
-## Current case-page delivery · 2026-09-13
+## Current media presentation delivery · 2026-09-13
+
+Prepared against production `a67a49ad080364590494793ce5641066dc399ffc`;
+page cache revision `media-polish-20260913`. Evidence belongs in
+`../.codex/media-polish-20260913/`; `acceptance.json` and `browser-local.json`
+must report `status: passed` before release. Acceptance and publication remain
+pending. The planned backup is
+`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-media-polish`;
+its release metadata and deployment verification establish the final commit and online status.
+
+- Homepage order: hero, all 16 projects, studio portal, approach, contact. Keep
+  the primary/nav 3D Studio actions. “Make & integrate” now features steering.
+- Shared animation startup retains an opaque source poster beneath the stage's
+  existing 160 ms fade. Reveal only after a decoded frame has actually drawn;
+  keep reset, reverse input and missing-frame behavior intact.
+- Case-page photos preserve source aspect ratios; CAD, charts and diagrams use
+  padded contain-fit presentation. Chapter sources are unique; repeated images
+  yield text-only chapters. The remaining gallery lists only unused sources. All 93 original references remain reachable in zoom.
+- Seat reuses the complete existing `assets/editorial/seat-wide.webp`, sourced
+  from the original `models/real/driverseat.glb` with 9,526 faces. The cropped
+  original remains accessible through the Original CAD capture link.
+- No rendering or asset replacement is required. All 2,032 frames, 159 chunks,
+  24,347,588 animation image bytes and 16 matching cover sets remain. The loader
+  retains three concurrent requests, four-frame bootstrap and 160 MiB budget.
+- `case-study-media.js` holds type and intrinsic dimensions for all 93 originals
+  plus the Seat presentation override; source project records remain unchanged.
+  Read the final page script references for actual cache keys: unchanged runtime
+  cover/animation catalog URLs may retain `case-pages-20260913`.
+
+The snapshots below record earlier deliveries. This section governs current
+placement, media layout and startup behavior; historical passing checks do not
+establish acceptance for this round. Root `CODEX_HANDOFF.md` is maintained separately.
+
+## Historical case-page delivery · 2026-09-13
 
 Prepared against production `9608b5d`; revision `case-pages-20260913`.
 The planned backup is `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-case-pages`. Its

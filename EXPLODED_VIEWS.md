@@ -1,6 +1,31 @@
 # Project animations, starting covers and progressive loading · 2026-09-13
 
-## Current native-page integration · 2026-09-13
+## Current media presentation delivery · 2026-09-13
+
+Prepared against production `a67a49ad080364590494793ce5641066dc399ffc`;
+page cache revision `media-polish-20260913`. Evidence belongs in
+`../.codex/media-polish-20260913/`; `acceptance.json` and `browser-local.json`
+must report `status: passed` before release. Acceptance and publication remain
+pending. The planned backup is
+`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-media-polish`;
+its release metadata and deployment verification establish the final commit and online status.
+
+The shared homepage/case-page loader keeps the source poster fully opaque beneath
+the decoded stage during its existing 160 ms fade. Stage visibility depends on
+the actual drawn frame index, so a requested or numerically advanced pose cannot
+reveal an undrawn stage. Reset and reduced-motion behavior retain the source cover.
+
+The original 2,032 frames, 159 chunks, 24,347,588 image bytes and all matching
+initial covers remain. The three-request limit, four-frame bootstrap, fallback,
+160 MiB decoded-memory budget, motion timing and source geometry are unchanged.
+No render or repack is required for this presentation correction.
+
+The large studio portal now follows the full project grid and precedes approach;
+primary/nav studio links remain. Case pages use distinct chapter media and an
+unused-images gallery, while all 93 original references remain available in zoom.
+Photographs have less white space; CAD and plots retain complete contain-fit views.
+
+## Preserved native-page integration · 2026-09-13
 
 Prepared against production `9608b5d`; revision `case-pages-20260913`.
 The planned backup is `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-case-pages`. Its
@@ -11,7 +36,7 @@ The homepage and all 16 native case pages share the existing animation loader.
 Case pages add 64 chapters, source records, downloads and image zoom; homepage
 project cards navigate directly instead of opening a project modal. Detail
 previews are capped at 640 CSS pixels. The homepage also has prominent 3D Studio
-actions and a workshop preview between hero and work.
+actions and a workshop preview after the project grid and before approach.
 
 All 16 covers now derive from progress 0 with the delivered camera and normalized
 projection. Forty-eight responsive files use
@@ -126,14 +151,16 @@ the new files, and all 66 prior cover images remain preserved.
 
 ## Verification and recovery
 
-Current evidence is in `../.codex/case-pages-20260913/`.
+Current media-polish acceptance belongs in `../.codex/media-polish-20260913/`
+as `acceptance.json` and `browser-local.json`, each with `status: passed`.
+Preserved cover and case-page evidence is in `../.codex/case-pages-20260913/`.
 `content/editorial-validation.json` checks all 16 stories, 64 chapters, valid
 gallery references, source preservation, the CFD download and next-project cycle.
 `initial-cover-validation.json` records frame-zero scene/camera/projection checks,
 new variants and preservation against `9608b5d`. Runtime and browser reports
 cover native navigation, previews, fallback, original-image zoom and responsive
-layouts. Cover and browser acceptance must be read from the completed current
-reports; earlier release tests do not establish this revision's acceptance.
+layouts for that preserved delivery. Those reports do not establish acceptance
+for the current media-polish revision.
 
 Retained motion evidence remains in `../.codex/motion-loading-20260913/`,
 `../.codex/motion-refinement-20260913/` and the earlier functional/CFD folders.
@@ -142,7 +169,7 @@ image-byte overhead. The quoted loader benchmark is the prior deterministic
 simulation; it is not a new production timing measurement.
 
 The planned backup is
-`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-case-pages`.
+`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-media-polish`.
 Recovery requires current/previous Git releases, working-copy source and bundle,
 new/old cover masters, animation PNG masters, source CAD, Fluent case/data and
 the required earlier controller caches. Release metadata and deployment checks

@@ -1,5 +1,30 @@
 # Kefan Wu Portfolio Site
 
+## Current media presentation delivery · 2026-09-13
+
+Prepared against production `a67a49ad080364590494793ce5641066dc399ffc`;
+page cache revision `media-polish-20260913`. Evidence belongs in
+`../.codex/media-polish-20260913/`; `acceptance.json` and `browser-local.json`
+must report `status: passed` before release. Acceptance and publication remain
+pending. The planned backup is
+`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-media-polish`;
+its release metadata and deployment verification establish the final commit and online status.
+
+The large 3D Studio portal follows all 16 projects and precedes the approach
+section. The primary hero action and highlighted studio navigation remain.
+“Make & integrate” now uses the steering project as its fabrication example.
+
+The original cover stays opaque while the decoded animation stage fades in over
+160 ms. Presentation waits for the frame actually drawn. The 2,032 frames, 159
+chunks, matching covers, three-request limit and 160 MiB budget are unchanged.
+
+Case pages preserve photograph aspect ratios with less white space and keep complete
+CAD views and plot labels with contain-fit padding. Chapter images are unique;
+the remaining gallery shows only images not already used in chapters. All 93
+original references remain available through image zoom. The full Seat CAD view
+reuses `assets/editorial/seat-wide.webp`, with the cropped source retained by an
+Original CAD capture link. No new render or asset replacement is part of this delivery.
+
 Static portfolio for **[www.kefanwu.com](https://www.kefanwu.com)**, served without
 a framework or build step. GitHub `main` deploys to Vercel.
 
@@ -7,9 +32,9 @@ a framework or build step. GitHub `main` deploys to Vercel.
 
 - **`index.html`** introduces the work through the race-car hero, a primary
   3D Studio action, highlighted studio navigation, and a large workshop preview
-  between the hero and the searchable 16-project grid.
+  after the searchable 16-project grid and before the approach section.
 - **`case-study.html?project=<key>`** opens a native page for every project.
-  All 16 stories have four chapters, the original image archive, technical
+  All 16 stories have four chapters, a gallery of remaining source images, technical
   records, and a next-project link. Homepage cards use ordinary links; they no
   longer open a project modal. Image zoom remains available in each case page.
 - **`experience.html`** is the existing interactive 3D studio. Its 15 project
@@ -21,7 +46,7 @@ a framework or build step. GitHub `main` deploys to Vercel.
 Steering, Vine and Scanner stories retain their text; navigation now covers all
 16 projects in homepage order.
 
-## Current case-page delivery · 2026-09-13
+## Historical case-page delivery · 2026-09-13
 
 Prepared against production `9608b5d`; revision `case-pages-20260913`.
 The planned backup is `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-case-pages`. Its

@@ -4,7 +4,7 @@
 
   const hostSelector = ".editorial .project-card[data-project], .case-animation-host[data-project]";
   const script = document.currentScript;
-  const manifestURL = new URL(script?.dataset.manifest || "assets/exploded/manifest.json?v=case-pages-20260913", document.baseURI);
+  const manifestURL = new URL(script?.dataset.manifest || "assets/exploded/manifest.json?v=media-polish-20260913", document.baseURI);
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const states = new Map();
@@ -89,7 +89,9 @@
     state.card.classList.add("is-explode-ready");
     state.card.classList.remove("is-explode-loading");
     state.range.removeAttribute("aria-busy");
-    state.card.classList.toggle("is-explode-playing", state.progress > 0.001);
+    // Tiny wheel/range changes can still round to frame zero. Keep the sharper
+    // matching cover until a decoded frame actually shows a different pose.
+    state.card.classList.toggle("is-explode-playing", index > 0);
     if (state.config.mode === "layup") {
       state.badge.textContent = `Carbon layup · ${placedPlies(state, state.progress)}/10`;
     }

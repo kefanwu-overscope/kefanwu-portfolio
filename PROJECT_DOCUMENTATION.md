@@ -1,6 +1,36 @@
 # Portfolio Website Project Documentation
 
-## Current case-page delivery · 2026-09-13
+## Current media presentation delivery · 2026-09-13
+
+Prepared against production `a67a49ad080364590494793ce5641066dc399ffc`;
+page cache revision `media-polish-20260913`. Evidence belongs in
+`../.codex/media-polish-20260913/`; `acceptance.json` and `browser-local.json`
+must report `status: passed` before release. Acceptance and publication remain
+pending. The planned backup is
+`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-media-polish`;
+its release metadata and deployment verification establish the final commit and online status.
+
+The homepage order is hero → all 16 projects → 3D Studio portal → approach →
+contact. The first hero action and highlighted navigation still open the studio.
+“Make & integrate” uses the fabricated steering assembly as its example.
+
+Animation startup keeps the original poster opaque behind the decoded stage's
+160 ms fade and checks the frame index actually drawn before revealing it.
+Existing frame/camera data, covers, concurrency and decoded-memory limits remain.
+
+Photographs keep their source aspect ratio; CAD, charts and diagrams preserve
+complete content with contain-fit padding. Chapters use distinct images; a
+repeated chapter image becomes text-only, and the remaining gallery contains
+only unused sources. Keep all 93 original source references reachable in the
+lightbox. `case-study-media.js` records media type and intrinsic dimensions for
+all 93 originals without changing `project-data.js` or replacing original files.
+
+The Seat CAD presentation uses the existing complete `assets/editorial/seat-wide.webp`,
+from the original `models/real/driverseat.glb` (9,526 faces). Retain the cropped
+`seat-cad.webp` source through the Original CAD capture link. No CAD, cover,
+gallery or animation asset is generated or replaced by this round.
+
+## Historical case-page delivery · 2026-09-13
 
 Prepared against production `9608b5d`; revision `case-pages-20260913`.
 The planned backup is `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-case-pages`. Its
@@ -93,6 +123,7 @@ The intended feel is closer to a professional engineering product page than a pe
 - `editorial.css` and `styles.css` provide the homepage layout, responsive styling, filters and motion states.
 - `script.js` handles homepage interactions; source records remain in `project-data.js`.
 - `case-study-data.js` contains the 16 editorial stories; `case-study.html`, `case-study.js` and `case-study.css` render the pages, chapters, downloads and gallery lightbox.
+- `case-study-media.js` records source media types/dimensions and the existing complete Seat CAD presentation.
 - `exploded.js` and `exploded.css` supply the shared reversible animation preview.
 - `assets/editorial/animation-covers.json` selects matching initial-pose covers.
 - `assets/` contains optimized image assets used by the deployable site.
@@ -187,19 +218,22 @@ Before deployment, verify:
 - There are no deployable movie files in `assets/`.
 - The homepage text is English.
 - All 16 project cards open the correct native case page, including keyboard and modified-click navigation.
-- Case-page chapters, source records, downloads and image-zoom galleries work.
+- Case-page chapters use distinct images; the remaining gallery excludes those images, and zoom still reaches all original sources. Records and downloads work.
+- Photographs fit their media area; CAD and chart labels remain fully visible, including the complete Seat CAD view and its Original link.
 - Initial covers match the animation's progress-zero pose, camera and projection.
 - Detail previews stay within 640 CSS pixels and support forward/reverse wheel, touch and keyboard input.
 - Filters work for each category.
 - Mobile layout has no horizontal overflow.
 - Case numbers and next links follow all 16 projects in homepage order.
-- The hero action, highlighted navigation and workshop preview open the 3D Studio.
+- The hero action, highlighted navigation and workshop preview open the 3D Studio; the large preview follows all projects and precedes approach.
+- Animation startup retains an opaque source poster until a decoded frame is drawn; the stage keeps its 160 ms fade.
 - Contact links are correct.
 
 ## Maintenance Notes
 
 > Source facts and galleries live in **`project-data.js`**. Editorial structure
-> lives in **`case-study-data.js`**. Native pages combine both without replacing
+> lives in **`case-study-data.js`**; media types and dimensions live in
+> **`case-study-media.js`**. Native pages combine these without replacing
 > the original records. The studio still has 15 project exhibits; Education
 > routes to the general studio. See `AGENT_HANDOFF.md` for integration details.
 
@@ -210,7 +244,7 @@ To add or revise a project:
 1. Add optimized images to `assets/`.
 2. Add or update the matching project card in `index.html`.
 3. Update source facts in `project-data.js` only when the source record changes.
-4. Update the matching `case-study-data.js` story, valid gallery indexes, numbering and cyclic next links; bump changed runtime cache strings.
+4. Update the matching `case-study-data.js` story, distinct valid chapter image indexes, numbering and cyclic next links; keep all originals reachable and bump changed runtime cache strings.
 5. Re-run the QA checklist.
 
 To revise homepage positioning:

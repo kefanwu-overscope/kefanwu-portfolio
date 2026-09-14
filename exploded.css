@@ -7,8 +7,10 @@
   object-fit: cover;
 }
 :is(.editorial .project-card, .case-animation-host) .card-explode-poster {
+  /* Keep a fully opaque backing during the stage fade. Fading both layers
+     exposes the dark card background halfway through their overlap. */
   opacity: 1;
-  transition: opacity 160ms ease;
+  transition: none;
 }
 :is(.editorial .project-card, .case-animation-host) .card-explode-stage {
   position: absolute;
@@ -16,7 +18,7 @@
   pointer-events: none;
   opacity: 0;
   transition: opacity 160ms ease;
-  background: #090c10;
+  background: transparent;
 }
 :is(.editorial .project-grid .project-card, .case-animation-host) .card-media .card-explode-frame {
   position: absolute;
@@ -27,7 +29,6 @@
   transition: none;
 }
 :is(.editorial .project-card, .case-animation-host).is-explode-playing .card-explode-stage { opacity: 1; }
-:is(.editorial .project-card, .case-animation-host).is-explode-playing .card-explode-poster { opacity: 0; }
 :is(.editorial, .case-animation-host) .card-explode-ui {
   position: absolute;
   inset: 0;
