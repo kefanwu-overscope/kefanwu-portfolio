@@ -5,11 +5,12 @@
   const projectCards = [...document.querySelectorAll(".editorial .project-card[data-project]")];
   if (!projectCards.length) return;
   const script = document.currentScript;
-  const manifestURL = new URL(script?.dataset.manifest || "assets/exploded/manifest.json?v=motion-refinement-20260913", document.baseURI);
+  const manifestURL = new URL(script?.dataset.manifest || "assets/exploded/manifest.json?v=motion-loading-20260913", document.baseURI);
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const states = new Map();
   const cache = new Map();
+  const loadingEntries = new Set();
   const LOAD_CONCURRENCY = 3;
   const CACHE_LIMIT = 2;
   const DECODED_MEMORY_LIMIT = 160 * 1024 * 1024;
@@ -28,6 +29,10 @@
       description: "Turn the steering wheel and follow the universal joints and rack." },
     extension: { label: "Vine extension", hint: "Scroll to extend", progress: "extended" },
     propellers: { label: "Propeller rotation", hint: "Scroll to spin", progress: "through rotation" },
+    flight: { label: "Javelin flight", hint: "Scroll to fly", progress: "through flight",
+      description: "Follow the aircraft in flight with all four propellers turning. Reverse to rewind." },
+    turntable: { label: "360° view", hint: "Scroll to rotate", progress: "through rotation",
+      description: "Rotate the guitar through a full 360 degrees. Reverse to turn it back." },
     gantry: { label: "Gantry motion", hint: "Scroll to move", progress: "through travel" },
     tensile: { label: "Tensile test", hint: "Scroll to pull", progress: "through tensile test",
       description: "The grips stretch the specimen until it breaks. Reverse to restore it." },
@@ -72,12 +77,17 @@
 
   function draw(state) {
     const entry = cache.get(state.key);
-    if (!entry || entry.status !== "ready" || !allowed(state)) return;
+    if (!entry || entry.cancelled || !allowed(state)) return;
     const index = Math.round(state.progress * (entry.frames.length - 1));
+    // Never substitute a nearby pose: a seek can leave holes while chunks arrive.
+    if (!entry.frames[index]?.ready) return;
     if (index !== state.index || !state.stage.firstChild) {
       state.stage.replaceChildren(entry.frames[index].image);
       state.index = index;
     }
+    state.card.classList.add("is-explode-ready");
+    state.card.classList.remove("is-explode-loading");
+    state.range.removeAttribute("aria-busy");
     state.card.classList.toggle("is-explode-playing", state.progress > 0.001);
     if (state.config.mode === "layup") {
       state.badge.textContent = `Carbon layup · ${placedPlies(state, state.progress)}/10`;
@@ -96,8 +106,23 @@
     const change = (state.target - state.progress) * (1 - Math.exp(-elapsed / 100));
     // Bound large wheel jumps so intermediate mechanism poses remain visible.
     const maximumStep = elapsed / 1800;
-    state.progress += Math.max(-maximumStep, Math.min(maximumStep, change));
-    if (Math.abs(state.target - state.progress) < 0.001) state.progress = state.target;
+    let next = state.progress + Math.max(-maximumStep, Math.min(maximumStep, change));
+    if (Math.abs(state.target - next) < 0.001) next = state.target;
+    const index = Math.round(next * (state.config.frames.length - 1));
+    const currentIndex = Math.round(state.progress * (state.config.frames.length - 1));
+    const direction = Math.sign(index - currentIndex);
+    let needed = direction ? currentIndex + direction : index;
+    const frames = cache.get(state.key)?.frames;
+    while (needed !== index && frames?.[needed]?.ready) needed += direction;
+    if (!frames?.[needed]?.ready) {
+      // Resume from this pose when it is decoded instead of skipping over it or
+      // spending animation frames polling the network.
+      state.waitingIndex = needed;
+      lastTime = 0;
+      return;
+    }
+    state.waitingIndex = null;
+    state.progress = next;
     draw(state);
     if (state.progress !== state.target) animationFrame = requestAnimationFrame(animate);
     else lastTime = 0;
@@ -105,11 +130,15 @@
 
   function setProgress(state, progress, direct = false) {
     state.target = clamp(progress);
+    state.waitingIndex = null;
     reflectProgress(state);
-    if (cache.get(state.key)?.status !== "ready") return;
     if (direct || reducedMotion.matches) {
       stopAnimation();
       state.progress = state.target;
+      if (!cache.get(state.key)?.frames[Math.round(state.progress * (state.config.frames.length - 1))]?.ready) {
+        state.card.classList.add("is-explode-loading");
+        state.range.setAttribute("aria-busy", "true");
+      }
       draw(state);
     } else if (!animationFrame) {
       animationFrame = requestAnimationFrame(animate);
@@ -128,6 +157,7 @@
     }
     state.target = 0;
     state.progress = 0;
+    state.waitingIndex = null;
     state.owner = null;
     state.dragging = false;
     state.card.classList.remove("is-explode-playing", "is-explode-active");
@@ -173,6 +203,7 @@
     let entry = cache.get(state.key);
     if (entry?.status === "ready") {
       touchCache(entry);
+      draw(state);
       return entry;
     }
     if (entry && !entry.controller.signal.aborted) return entry.promise;
@@ -183,12 +214,12 @@
     if (active !== state || !allowed(state)) return null;
 
     // Only the active project can download. Ready projects remain in a two-item LRU.
-    for (const other of [...cache.values()]) {
-      if (other.status === "loading") {
-        other.cancelled = true;
-        other.controller.abort();
-        await other.promise;
-      }
+    // Keep in-flight jobs separate from the cache: pagehide can release cached
+    // images before aborts settle, including during a BFCache restoration.
+    for (const other of [...loadingEntries]) {
+      other.cancelled = true;
+      other.controller.abort();
+      await other.promise;
     }
     if (active !== state || !allowed(state)) return null;
     const decodedBytes = state.config.width * state.config.height * 4 * state.config.frames.length;
@@ -196,35 +227,94 @@
     while (cache.size && (cache.size >= CACHE_LIMIT || retainedBytes() + decodedBytes > DECODED_MEMORY_LIMIT)) {
       release(cache.values().next().value);
     }
-    entry = { key: state.key, decodedBytes, status: "loading", controller: new AbortController(), frames: [], promise: null, cancelled: false };
+    entry = { key: state.key, decodedBytes, status: "loading", controller: new AbortController(),
+      frames: Array(state.config.frames.length), promise: null, cancelled: false };
     cache.set(state.key, entry);
     state.card.classList.add("is-explode-loading");
     state.range.setAttribute("aria-busy", "true");
     const { signal } = entry.controller;
-    let nextIndex = 0;
+    // Each task owns disjoint frame indexes. Failed chunks fall back to their
+    // original WebPs; neither transport changes the image bytes or dimensions.
+    const tasks = state.config.chunks
+      ? state.config.chunks.map((chunk) => ({ ...chunk, chunk: true }))
+      : state.config.frames.map((url, index) => ({ url, frames: [{ index }] }));
+
+    function nearest(items, score) {
+      let best = 0;
+      for (let i = 1; i < items.length; i++) if (score(items[i]) < score(items[best])) best = i;
+      return items.splice(best, 1)[0];
+    }
+
+    function distance(frame) {
+      const index = state.waitingIndex ?? Math.round(state.progress * (state.config.frames.length - 1));
+      return Math.abs(frame.index - index);
+    }
+
+    async function fetchBlob(url) {
+      const response = await fetch(url, { signal, cache: "force-cache" });
+      if (!response.ok) throw new Error(`Preview asset HTTP ${response.status}`);
+      const blob = await response.blob();
+      if (signal.aborted) throw new DOMException("Preview cancelled", "AbortError");
+      return blob;
+    }
+
+    async function decodeFrame(index, blob) {
+      const url = URL.createObjectURL(blob);
+      const image = new Image();
+      image.className = "card-explode-frame";
+      image.alt = "";
+      image.width = state.config.width;
+      image.height = state.config.height;
+      image.draggable = false;
+      image.decoding = "async";
+      const frame = { image, url, ready: false };
+      entry.frames[index] = frame;
+      image.src = url;
+      try {
+        await image.decode();
+        if (image.naturalWidth !== state.config.width || image.naturalHeight !== state.config.height) throw new Error("Invalid preview dimensions");
+        if (signal.aborted) throw new DOMException("Preview cancelled", "AbortError");
+        frame.ready = true;
+        if (active === state && allowed(state)) {
+          draw(state);
+          if (state.progress !== state.target && !animationFrame
+            && (state.waitingIndex === null || entry.frames[state.waitingIndex]?.ready)) {
+            animationFrame = requestAnimationFrame(animate);
+          }
+        }
+      } catch (error) {
+        image.removeAttribute("src");
+        URL.revokeObjectURL(url);
+        if (entry.frames[index] === frame) entry.frames[index] = undefined;
+        throw error;
+      }
+    }
 
     async function worker() {
       try {
-        while (!signal.aborted) {
-          const index = nextIndex++;
-          if (index >= state.config.frames.length) return;
-          const response = await fetch(state.config.frames[index], { signal, cache: "force-cache" });
-          if (!response.ok) throw new Error(`Preview frame HTTP ${response.status}`);
-          const blob = await response.blob();
-          if (signal.aborted) throw new DOMException("Preview cancelled", "AbortError");
-          const url = URL.createObjectURL(blob);
-          const image = new Image();
-          image.className = "card-explode-frame";
-          image.alt = "";
-          image.width = state.config.width;
-          image.height = state.config.height;
-          image.draggable = false;
-          image.decoding = "async";
-          entry.frames[index] = { image, url };
-          image.src = url;
-          await image.decode();
-          if (!image.naturalWidth || !image.naturalHeight) throw new Error("Empty preview frame");
-          if (signal.aborted) throw new DOMException("Preview cancelled", "AbortError");
+        while (!signal.aborted && tasks.length) {
+          // Re-evaluate after every completed task: slider seeks and reversals
+          // take priority over filling the rest of the sequence in order.
+          const task = nearest(tasks, (item) => Math.min(...item.frames.map(distance)));
+          if (!task.chunk) {
+            await decodeFrame(task.frames[0].index, await fetchBlob(task.url));
+            continue;
+          }
+          try {
+            const blob = await fetchBlob(task.url);
+            if (blob.size !== task.bytes) throw new Error("Incomplete preview chunk");
+            const remaining = [...task.frames];
+            while (remaining.length) {
+              const frame = nearest(remaining, distance);
+              await decodeFrame(frame.index, blob.slice(frame.offset, frame.offset + frame.length, "image/webp"));
+            }
+          } catch (error) {
+            if (signal.aborted) throw error;
+            // A stale CDN response or unsupported chunk transport must not
+            // disable a preview whose original individual frames still work.
+            tasks.push(...task.frames.filter(({ index }) => !entry.frames[index]?.ready)
+              .map(({ index }) => ({ url: state.config.frames[index], frames: [{ index }] })));
+          }
         }
       } catch (error) {
         entry.controller.abort();
@@ -232,7 +322,8 @@
       }
     }
 
-    entry.promise = Promise.allSettled(Array.from({ length: Math.min(LOAD_CONCURRENCY, state.config.frames.length) }, worker))
+    loadingEntries.add(entry);
+    entry.promise = Promise.allSettled(Array.from({ length: Math.min(LOAD_CONCURRENCY, tasks.length) }, worker))
       .then((results) => {
         const failure = !entry.cancelled && results.find((result) => result.status === "rejected" && result.reason?.name !== "AbortError");
         if (signal.aborted || failure || active !== state || !allowed(state)) {
@@ -249,10 +340,9 @@
         state.card.classList.remove("is-explode-loading");
         state.card.classList.add("is-explode-ready");
         state.range.removeAttribute("aria-busy");
-        state.progress = state.target;
         draw(state);
         return entry;
-      });
+      }).finally(() => loadingEntries.delete(entry));
     return entry.promise;
   }
 
@@ -300,7 +390,7 @@
       || !event.cancelable || isIndependentControl(event.target)
       || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
     if (active !== state) activate(state, "wheel");
-    if (cache.get(state.key)?.status !== "ready") return;
+    if (!cache.get(state.key)?.frames[Math.round(state.progress * (state.config.frames.length - 1))]?.ready) return;
     const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? state.media.clientHeight : 1;
     const next = clamp(state.target + event.deltaY * unit / WHEEL_DISTANCE);
     if (next === state.target) return;
@@ -322,11 +412,33 @@
     });
   }, { threshold: 0 });
 
-  function frameURL(value) {
+  function assetURL(value, extension) {
     if (typeof value !== "string") throw new Error("Invalid preview URL");
     const url = new URL(value, value.startsWith("assets/") ? document.baseURI : manifestURL);
-    if (url.origin !== location.origin || !url.pathname.endsWith(".webp")) throw new Error("Invalid preview asset");
+    if (url.origin !== location.origin || !url.pathname.endsWith(extension)) throw new Error("Invalid preview asset");
     return url.href;
+  }
+
+  function normalizeChunks(chunks, frameCount) {
+    if (!Array.isArray(chunks) || !chunks.length || chunks.length > frameCount) return null;
+    const indexes = new Set();
+    try {
+      const normalized = chunks.map((chunk) => {
+        if (!Number.isSafeInteger(chunk.bytes) || chunk.bytes <= 0 || chunk.bytes > 16 * 1024 * 1024
+          || !Array.isArray(chunk.frames) || !chunk.frames.length || chunk.frames.length > 32) throw new Error("Invalid preview chunk");
+        let end = 0;
+        const frames = chunk.frames.map(({ index, offset, length }) => {
+          if (!Number.isSafeInteger(index) || index < 0 || index >= frameCount || indexes.has(index)
+            || offset !== end || !Number.isSafeInteger(length) || length <= 0) throw new Error("Invalid preview chunk frame");
+          indexes.add(index);
+          end += length;
+          return { index, offset, length };
+        });
+        if (end !== chunk.bytes) throw new Error("Invalid preview chunk length");
+        return { url: assetURL(chunk.url, ".bin"), bytes: chunk.bytes, frames };
+      });
+      return indexes.size === frameCount ? normalized : null;
+    } catch { return null; }
   }
 
   function normalizeConfig(config) {
@@ -335,7 +447,8 @@
       || config.width <= 0 || config.height <= 0 || config.width > 1920 || config.height > 1280
       || config.width * config.height * 4 * config.frames.length > DECODED_MEMORY_LIMIT) return null;
     const mode = Object.hasOwn(MODES, config.mode) ? config.mode : "assembly";
-    return { mode, width: config.width, height: config.height, frames: config.frames.map(frameURL) };
+    return { mode, width: config.width, height: config.height,
+      frames: config.frames.map((url) => assetURL(url, ".webp")), chunks: normalizeChunks(config.chunks, config.frames.length) };
   }
 
   function setupCard(card, config) {
@@ -374,7 +487,8 @@
     card.dataset.explodeMode = config.mode;
     const rect = card.getBoundingClientRect();
     const state = { key, config, card, media, poster, stage, ui, range, badge, target: 0, progress: 0, index: -1,
-      visible: rect.bottom > 0 && rect.top < innerHeight, owner: null, pointerInside: false, dragging: false, failed: false, loadJob: null };
+      visible: rect.bottom > 0 && rect.top < innerHeight, owner: null, pointerInside: false, dragging: false,
+      failed: false, loadJob: null, waitingIndex: null };
     states.set(key, state);
     reflectProgress(state);
     visibilityObserver.observe(card);

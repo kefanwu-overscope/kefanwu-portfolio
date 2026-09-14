@@ -61,14 +61,14 @@
     "renderProvenance": {
       "coverFromAnimation": true,
       "renderer": "tools/exploded-render/render_exploded.py",
-      "rendererSha256": "58bb54e16e3b0ef525fa1c2b11797c170a1ada6dd7d9447f1a72122ba97c5b50",
+      "rendererSha256": "f2867efacef82fee605747035230b1ad12225e4eb6c47ecbbd655ba4633a27b9",
       "samples": 192,
       "dimensions": [
         1800,
         1200
       ],
       "sourceAnimationKey": "vineRobot",
-      "coverProgress": 0.75,
+      "coverProgress": 0.0,
       "motion": {
         "mode": "growth",
         "source": "Existing Bucketbot CAD side funnel and r52mm coupler; assets/vine-outlet-exploded.webp and source material mapping identify the outlet.",
@@ -108,7 +108,7 @@
         "sourceHardwareFixed": true,
         "arbitrarySeek": true
       },
-      "motionRevision": "motion-refinement-20260913",
+      "motionRevision": "motion-loading-20260913",
       "cameraLocation": [
         -9.355234146118164,
         -6.165333271026611,
@@ -156,29 +156,31 @@
         "repeatedIndexSourceTriangles": 0,
         "duplicateSourceTriangles": 0
       },
-      "masterSha256": "7d4bce44b518028c83537763ebac86ea31c9e37f96576ea11de0c3b9a44483d9"
+      "firstAnimationFrame": "assets/exploded/functional-20260913/vineRobot/00.webp?v=a9263ba89452",
+      "firstAnimationFrameSha256": "a9263ba89452aace4e0ef028aa320f9ed3e354cad618cf5f6853de7e8189e8c6",
+      "masterSha256": "a78ce8ed8143d19071006abf8d6bbc5d4d94c02d7b56137387baa9e50c1edde0"
     },
     "variants": [
       {
-        "src": "assets/editorial/motion-20260913/vineRobot-wide-480.webp",
+        "src": "assets/editorial/start-20260913/vineRobot-wide-480.webp",
         "width": 480,
         "height": 320,
-        "bytes": 11244,
-        "sha256": "dc6a67c849e9bbdeb70ef6f2bdf528555bacbf86fc7cedaffe59dad19019aa63"
+        "bytes": 10846,
+        "sha256": "a3a42518ab0f713c3ea98b438fce18fbe214edf096e463408c0dee2d2a414118"
       },
       {
-        "src": "assets/editorial/motion-20260913/vineRobot-wide-960.webp",
+        "src": "assets/editorial/start-20260913/vineRobot-wide-960.webp",
         "width": 960,
         "height": 640,
-        "bytes": 25762,
-        "sha256": "78f59a7dcebca6f765dd36db828c5cd38b1ad201558bd2283ac392d69623c1f5"
+        "bytes": 25070,
+        "sha256": "803e41ca73be1cb656a90b7baf8737f90a1e32fcc60125ac7b1de31cde1d9f4e"
       },
       {
-        "src": "assets/editorial/motion-20260913/vineRobot-wide-1800.webp",
+        "src": "assets/editorial/start-20260913/vineRobot-wide-1800.webp",
         "width": 1800,
         "height": 1200,
-        "bytes": 67970,
-        "sha256": "a57388157c1146caee1e3bdba177011803dfca23cbfb491cc2ea97bd3167a1d4"
+        "bytes": 65772,
+        "sha256": "8d96ebfc162a8dc4d9911672592abab999a9a54bc5dd6745e142d1ae6dfb9211"
       }
     ]
   },
@@ -2381,14 +2383,14 @@
     "renderProvenance": {
       "coverFromAnimation": true,
       "renderer": "tools/exploded-render/render_exploded.py",
-      "rendererSha256": "58bb54e16e3b0ef525fa1c2b11797c170a1ada6dd7d9447f1a72122ba97c5b50",
+      "rendererSha256": "f2867efacef82fee605747035230b1ad12225e4eb6c47ecbbd655ba4633a27b9",
       "samples": 192,
       "dimensions": [
         1800,
         1200
       ],
       "sourceAnimationKey": "education",
-      "coverProgress": 1.0,
+      "coverProgress": 0.0,
       "motion": {
         "version": 1,
         "project": "education",
@@ -5834,7 +5836,7 @@
         },
         "pickupConstruction": "The two independently connected source CAD solids enter from opposite sides of the bridge plate; no mesh is cut or substituted."
       },
-      "motionRevision": "motion-refinement-20260913",
+      "motionRevision": "motion-loading-20260913",
       "cameraLocation": [
         1.9235137701034546,
         -10.079805374145508,
@@ -5979,29 +5981,31 @@
         ],
         "notes": []
       },
-      "masterSha256": "06c779c0379b63996c6c2742ca8e04e22b1f7e8fb9617aa74746cf8478c6e0e0"
+      "firstAnimationFrame": "assets/exploded/functional-20260913/education/00.webp?v=8762b0c92edd",
+      "firstAnimationFrameSha256": "8762b0c92edd245bb87e6e0a828d9a85e76012f76215b5da3fdc190e7b1ab23d",
+      "masterSha256": "9a451e0f6dda42a8270ccc18ac58adf93f72e75d467f767991a010560befbddd"
     },
     "variants": [
       {
-        "src": "assets/editorial/motion-20260913/education-wide-480.webp",
+        "src": "assets/editorial/start-20260913/education-wide-480.webp",
         "width": 480,
         "height": 320,
-        "bytes": 3426,
-        "sha256": "2e78203cbe796632dc97699a8d770bf9caa63feecb74c1c332f172fb8b0ad8e9"
+        "bytes": 4468,
+        "sha256": "bcd53209dc0db6c745008c45f4e1a0e0105e437dd1f7ce7fa6d574835878bdb6"
       },
       {
-        "src": "assets/editorial/motion-20260913/education-wide-960.webp",
+        "src": "assets/editorial/start-20260913/education-wide-960.webp",
         "width": 960,
         "height": 640,
-        "bytes": 8682,
-        "sha256": "dbae6f89775daf5187f7f237d4e7c56fdcf45bde0311dea7aa17d45c1e1748b5"
+        "bytes": 10668,
+        "sha256": "a8a5765185da7354c33281068d20fcb228a40a2fa46e35d53f6c7614c2524f8c"
       },
       {
-        "src": "assets/editorial/motion-20260913/education-wide-1800.webp",
+        "src": "assets/editorial/start-20260913/education-wide-1800.webp",
         "width": 1800,
         "height": 1200,
-        "bytes": 23470,
-        "sha256": "75668c2009fb04c0d626792bb741b5cfaa619e1f168579cd2b21cf3bbd1ac705"
+        "bytes": 30324,
+        "sha256": "60ef7e0299b7e75978880bb7168e39f5fb547a4c023c321b5220c499ca1a61dc"
       }
     ]
   },

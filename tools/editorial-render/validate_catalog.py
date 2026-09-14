@@ -10,9 +10,9 @@ from PIL import Image
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
-EVIDENCE = ROOT.parent / '.codex/motion-refinement-20260913'
-BASELINE_COMMIT = 'ce30134754a3e8871bd79dfe6ddd3f2b7e2c9a54'
-ANIMATION_PROGRESS = {'vineRobot': .75, 'ansysCfd': .5, 'education': 1., 'materialTest': 0.}
+EVIDENCE = ROOT.parent / '.codex/motion-loading-20260913'
+BASELINE_COMMIT = 'bca21757c49da6eb5b9d78226d1811f5435343fd'
+ANIMATION_PROGRESS = {'vineRobot': 0., 'education': 0.}
 ANIMATION_RENDERER = 'tools/exploded-render/render_exploded.py'
 DIMENSIONS = [(480, 320), (960, 640), (1800, 1200)]
 
@@ -127,11 +127,12 @@ def validate():
     assert len(cards) == len(manifest) == len(baseline) == 16
     assert {record['project'] for record in manifest} == set(baseline)
     animated = {record['project'] for record in manifest if record['renderProvenance'].get('coverFromAnimation')}
-    assert animated == set(ANIMATION_PROGRESS), 'Expected all four packed animation covers: ' + repr(sorted(animated))
+    assert animated == {'vineRobot', 'education', 'ansysCfd', 'materialTest'}, repr(sorted(animated))
 
-    original_assets = [variant for record in baseline_records for variant in record['variants']]
-    assert len(original_assets) == len({variant['src'] for variant in original_assets}) == 48
-    for variant in original_assets:
+    older = json.loads(git_bytes('show', 'ce30134754a3e8871bd79dfe6ddd3f2b7e2c9a54:tools/editorial-render/catalog-manifest.json'))
+    original_assets = {variant['src']: variant for record in older + baseline_records for variant in record['variants']}
+    assert len(original_assets) == 60
+    for variant in original_assets.values():
         check_variant(variant)
 
     animation_checks = []
@@ -139,15 +140,15 @@ def validate():
     for record in manifest:
         key = record['project']
         provenance = record['renderProvenance']
-        if key in animated:
+        if key in ANIMATION_PROGRESS:
             assert provenance['coverFromAnimation'] is True, key
             assert provenance['renderer'] == ANIMATION_RENDERER, key
             assert provenance['rendererSha256'] == hashof(ROOT / ANIMATION_RENDERER), key
             assert provenance['samples'] == 192 and provenance['dimensions'] == [1800, 1200], key
             assert provenance['sourceAnimationKey'] == key, key
             assert provenance['coverProgress'] == ANIMATION_PROGRESS[key], key
-            assert provenance['motionRevision'] == 'motion-refinement-20260913', key
-            assert provenance['originalCoverProvenance'] == baseline[key]['renderProvenance'], key
+            assert provenance['motionRevision'] == 'motion-loading-20260913', key
+            assert provenance['originalCoverProvenance'] == baseline[key]['renderProvenance']['originalCoverProvenance'], key
             check_original_provenance(key, provenance['originalCoverProvenance'], catalog)
             master = EVIDENCE / 'covers' / key / 'cover.png'
             assert hashof(master) == provenance['masterSha256'], key
@@ -160,14 +161,26 @@ def validate():
                           'cameraLocation', 'cameraRotation', 'cameraOrthoScale'):
                 assert source_record[field] == provenance[field], (key, field)
             assert source_record['sourceAnimationFrameCount'] == (145 if key in ('vineRobot', 'materialTest') else 121), key
-            expected_folder = 'assets/editorial/motion-20260913/'
+            animation = read_json(ROOT / 'assets/exploded/manifest.json')['projects'][key]
+            animation_source = read_json(ROOT / animation['provenance'])
+            assert provenance['firstAnimationFrame'] == animation['frames'][0], key
+            first_frame = ROOT / animation['frames'][0].split('?')[0]
+            assert hashof(first_frame) == provenance['firstAnimationFrameSha256'] == animation_source['encodedFrames'][0]['sha256'], key
+            assert provenance['motion'] == animation_source['motion'], (key, 'cover/controller mismatch')
+            expected_folder = 'assets/editorial/start-20260913/'
             assert all(variant['src'].startswith(expected_folder + key + '-wide-') for variant in record['variants']), key
             assert not {v['src'] for v in record['variants']} & {v['src'] for v in baseline[key]['variants']}, key
             animation_checks.append({'project': key, 'progress': provenance['coverProgress'],
                                      'masterSha256': provenance['masterSha256'], 'rendererSha256': provenance['rendererSha256']})
         else:
             assert record == baseline[key], 'Unexpected change to an original cover: ' + key
-            check_original_provenance(key, provenance, catalog)
+            if key in animated:
+                check_original_provenance(key, provenance['originalCoverProvenance'], catalog)
+                assert provenance['rendererSha256'] == hashlib.sha256(git_bytes('show', BASELINE_COMMIT + ':' + ANIMATION_RENDERER)).hexdigest(), key
+                old_master = ROOT.parent / '.codex/motion-refinement-20260913/covers' / key / 'cover.png'
+                assert hashof(old_master) == provenance['masterSha256'], key
+            else:
+                check_original_provenance(key, provenance, catalog)
             unchanged += len(record['variants'])
 
         matching_cards = [card for card in cards if f'data-project="{key}"' in card]
@@ -181,11 +194,11 @@ def validate():
             assert variant['src'] in card, (key, variant['src'])
         assert record['variants'][1]['bytes'] < 100000, key
 
-    assert unchanged == 36 and len(animation_checks) * 3 == 12
+    assert unchanged == 42 and len(animation_checks) * 3 == 6
     protection = check_original_models_and_galleries()
     return {'passed': True, 'projects': 16, 'responsiveAssets': 48, 'samples': 192,
-            'unchangedCurrentResponsiveAssets': unchanged, 'updatedCurrentResponsiveAssets': 12,
-            'preservedOriginalCoverFiles': 48, 'allOriginalCoverHashesMatch': True,
+            'unchangedCurrentResponsiveAssets': unchanged, 'updatedCurrentResponsiveAssets': 6,
+            'preservedOriginalCoverFiles': 60, 'allOriginalCoverHashesMatch': True,
             'allSourceAndOutputHashesMatch': True, 'originalModelsAndPhotosUnchanged': True,
             'animationCovers': animation_checks, 'originalPreservation': protection,
             'photoBasedModels': ['materialTest', 'ftc'],

@@ -1,42 +1,41 @@
 # Portfolio Website Project Documentation
 
-## Motion and cover refinement · 2026-09-13
+## Current motion and loading delivery · 2026-09-13
 
-This release supersedes production `ce30134`. The exact new commit and actual
-online status are recorded in `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-motion-refinement/release-metadata.json` and
-`deployment-verification.json`. Preview: http://127.0.0.1:4176/#work.
-The homepage cache label is `motion-refinement-20260913`.
+This delivery is prepared against production `bca2175`. The homepage cache label
+is `motion-loading-20260913`; preview: http://127.0.0.1:4176/#work.
+The planned backup is
+`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-motion-loading`.
+Its `release-metadata.json` and `deployment-verification.json` will record exact
+commits and verified online status when publication completes.
 
-- Vine, CFD and Education covers now come directly from their animation scenes:
-  an extended translucent vine, the solved pressure/flow field, and the assembled
-  teaching guitar. The tensile cover and animated specimen share orange #F27A2A.
-- Steering now reaches 90° from neutral, coupling both universal joints and rack.
-  Pool retracts its front cylinder, rack and latches, holds, then releases quickly;
-  pinion and drive sprockets rotate in step. LineFollower rolls both tires/hubs
-  and sways left/right by 10°, with corresponding differential wheel rotation.
-- AURA expands in eleven checked stages, with individually removed top fasteners
-  and separate cover/bearing rings. Its camera follows the expanding stack.
-  Carbon's ten plies share the original cover shader and fixed source coordinates.
+- Vine and Education covers show their exact animation start at progress 0:
+  the retracted vine and the separated guitar kit. Their animation paths remain unchanged.
+- Javelin combines flight sway with four rotating propellers. Telecaster now has
+  a complete 360° turntable animation, bringing the homepage to 16 animated cards.
+- Frames become usable progressively. Each sequence starts with a four-frame
+  chunk, followed by chunks of up to 16 frames and 256 KiB. Original individual
+  frame URLs remain fallback; loading uses at most three concurrent requests.
 
-Fifteen animations contain 1,911 static 640×427 WebP frames (23,864,252 bytes),
-48 Cycles samples each. Vine, tensile, AURA and Pool have 145 frames; others 121.
-Six revised sequences use `assets/exploded/refined-20260913/`; the remaining nine
-retain their previously verified `functional-20260913/` assets. Telecaster is static.
-Four covers use twelve new responsive images; the other 36 current variants
-and all 48 historical cover files remain unchanged. Original CAD, galleries,
-project content and the 3D studio are preserved.
+The 16 sequences contain 2,032 static 640×427 WebP frames, rendered at 48 Cycles
+samples, totaling 24,347,588 image bytes. Vine, tensile, AURA and Pool retain 145
+frames each; the other twelve have 121. The two new sequences use
+`assets/exploded/flight-20260913/`; fourteen retain their exact prior frame files
+and metadata across `refined-20260913/` and `functional-20260913/`.
+The 159 files in `assets/exploded/chunks-20260913/` concatenate the original WebP
+bytes without recompression, changed dimensions, dropped frames or changed timing.
+Transport metadata adds a small manifest cost; image-byte overhead is exactly zero.
 
-Sliders, smooth reversible wheel input, endpoint page scrolling, reduced motion,
-modal reset and the 160 MiB decoded-image budget remain supported. The CFD uses
-the existing audited 400-iteration Fluent solve and the full-range, zero-centered
-asinh pressure colors; no new solve or altered pressure data is introduced.
-It remains a qualitative reconstruction with the limitations documented in
-`../.codex/functional-motion-20260913/cfd/rebuild-report.md`.
+Six new responsive cover files use `assets/editorial/start-20260913/`; the other
+42 current variants and all 60 historical cover files are preserved. Original
+CAD, galleries, content and the 3D studio remain unchanged. Reversible sliders,
+wheel endpoints, reduced motion, modal reset and the 160 MiB decoded-image budget
+remain supported. Existing CFD accuracy, Pool source-tooth overlap and Education
+display-fit limitations still apply; see `EXPLODED_VIEWS.md`.
 
-See `EXPLODED_VIEWS.md` for current motion details and verification, and
-`tools/exploded-render/README.md` for reproduction. Current evidence and PNG
-masters are in `../.codex/motion-refinement-20260913/`. The previous
-`functional-release` backup remains a separate, verified historical release.
+Current evidence and PNG masters are in `../.codex/motion-loading-20260913/`,
+including `poses/`, `loader/` and `transport/`. Earlier motion and CFD evidence
+remain required for the fourteen retained sequences and complete recovery.
 
 ## Project Overview
 

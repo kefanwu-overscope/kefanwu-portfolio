@@ -19,17 +19,17 @@ ROOT=TASK_DIR.parents[1] if (TASK_DIR.parents[1]/'project-data.js').exists() els
 HERE=ROOT/'tools/editorial-render'
 parser=argparse.ArgumentParser()
 parser.add_argument('--projects',nargs='+',default=['steering'])
-parser.add_argument('--frames',type=int,default=0,help='Override sequence length; default 121 (145 for vine and tensile test).')
+parser.add_argument('--frames',type=int,default=0,help='Override sequence length; default 121 (145 for vine, tensile, AURA and Pool).')
 parser.add_argument('--samples',type=int,default=48)
 parser.add_argument('--width',type=int,default=640)
 parser.add_argument('--only',nargs='*',type=int)
 parser.add_argument('--cover-progress',type=float,help='Render one high-resolution cover from this exact animation progress.')
-parser.add_argument('--output',type=Path,default=ROOT.parent/'.codex/motion-refinement-20260913/generated')
+parser.add_argument('--output',type=Path,default=ROOT.parent/'.codex/motion-loading-20260913/generated')
 args=parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
 args.output=args.output.resolve()
 
 MODES={'brakeSim':'heat','carbonSeat':'layup','seat':'unfold','ftc':'reconstruction',
-       'steering':'steering','vineRobot':'extension','javelin':'propellers',
+       'steering':'steering','vineRobot':'extension','javelin':'flight','telecaster':'turntable',
        'scanner':'gantry','formlabs':'gantry','materialTest':'tensile',
        'ansysCfd':'flow','education':'assembling','pool':'retract_release','lineFollower':'drive_sway'}
 
@@ -301,8 +301,6 @@ def reunite_finish_surfaces(key,parts):
             part['group']=anchor['group'];part['offset']=anchor['offset'].copy()
 
 def render(key):
-    if key=='telecaster':
-        raise ValueError('Telecaster uses its original static cover; no animation is rendered.')
     start=time.monotonic()
     out=args.output/key
     out.mkdir(parents=True,exist_ok=True)
@@ -328,7 +326,10 @@ def render(key):
         if key in ('steering','scanner','formlabs'):
             from mechanism_motion import build_mechanism
             motion=build_mechanism(key,parts,scene)
-        elif key in ('vineRobot','javelin','materialTest'):
+        elif key in ('javelin','telecaster'):
+            from display_motion import build_display_motion
+            motion=build_display_motion(key,parts,scene)
+        elif key in ('vineRobot','materialTest'):
             from functional_processes import build_functional
             motion=build_functional(key,parts,scene)
         elif key in ('pool','lineFollower'):
@@ -344,6 +345,9 @@ def render(key):
             motion=build_motion(key,parts,scene)
     if motion.report.get('floorMinimum') is not None:
         ground.location.z=min(ground.location.z,float(motion.report['floorMinimum'])-.02)
+    if motion.report.get('presentation',{}).get('groundZMaximum') is not None:
+        # Lower the photographic sweep to give the flying airframe clearance.
+        ground.location.z=min(ground.location.z,float(motion.report['presentation']['groundZMaximum']))
     frame_count=args.frames or {'vineRobot':145,'materialTest':145,'aura':145,'pool':145}.get(key,121)
     assert 2<=frame_count<=181,frame_count
     scene.render.resolution_x=args.width
@@ -399,7 +403,7 @@ def render(key):
         scales.append(max(fit,scales[-1] if scales else base_scale))
     full_scale=max(scales)
     def framing(progress):
-        if MODES.get(key) in ('steering','gantry','propellers','flow','assembling','retract_release','drive_sway'):
+        if MODES.get(key) in ('steering','gantry','propellers','flow','assembling','retract_release','drive_sway','flight','turntable'):
             return full_scale
         # A gentle lead-in leaves room before a panel/part begins moving.
         position=min(120,progress*120+3)
@@ -429,10 +433,10 @@ def render(key):
         print('EXPLODED_FRAME',key,index,round(elapsed,3),flush=True)
     report={'project':key,'width':scene.render.resolution_x,'height':scene.render.resolution_y,
         'frameCount':frame_count,'samples':args.samples,'cameraOrthoScale':scene.camera.data.ortho_scale,
-        'cameraBaseScale':base_scale,'mode':MODES.get(key,'assembly'),
+        'cameraBaseScale':base_scale,'groundZ':float(ground.location.z),'mode':MODES.get(key,'assembly'),
         'sourceLayout':('Numerical pressure surface and pathlines from rebuilt Fluent cruise case' if key=='ansysCfd' else
             'Original separated educational layout' if key=='education' else 'Original approved cover source pose'),
-        'motionRevision':'motion-refinement-20260913','motion':motion.report,
+        'motionRevision':'motion-loading-20260913','motion':motion.report,
         'cameraBoundsSamples':121,'cameraMaximumScale':full_scale,
         'cameraTracking':('Fixed front three-quarter view of the V2 guitar assembly' if key=='education' else
             'Fixed three-quarter numerical flow view' if key=='ansysCfd' else

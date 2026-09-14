@@ -7,7 +7,7 @@ from html import escape
 ROOT=Path(__file__).resolve().parents[2]
 DESCRIPTIONS={
  'steering':'CAD render of the Mk.8 steering wheel, column, U-joints, bearing mounts, and rack.',
- 'vineRobot':'Vine robot pressure vessel with the translucent everting tube extended from its outlet.',
+ 'vineRobot':'Vine robot pressure vessel and retracted translucent tube in the exact starting pose of its extension animation.',
  'javelin':'Javelin CAD airframe with photo-reconstructed propellers and corrected dark polymer and motor materials.',
  'scanner':'CAD render of the LiDAR scanner with blue printed mounts, metal guide rods, and a pale plywood base.',
  'brakeSim':'CAD render of the perforated cast iron brake rotor, with a neutral machined finish.',
@@ -20,7 +20,7 @@ DESCRIPTIONS={
  'lineFollower':'CAD render of the line-following robot with orange wheels, a teal circuit board, and separately shaded electronics.',
  'formlabs':'CAD render of the Smelly perfume mixer with white printed structure and steel guide rods.',
  'telecaster':'CAD render of the finished Telecaster-style guitar with photo-matched body, neck, pickguard, and hardware materials.',
- 'education':'Assembled blue guitar education kit, with upright neck, pickguard, bridge and controls in the animation layout.',
+ 'education':'Separated guitar education kit in the exact starting layout of its assembly animation.',
  'ftc':'Studio render of the FTC robot, with an aluminum lift, red panels, dark supports, and mecanum wheels.',
 }
 SIZES='(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px'

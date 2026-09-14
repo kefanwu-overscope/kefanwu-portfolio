@@ -1,76 +1,96 @@
 # Render project-card function and assembly previews
 
-## Motion and cover refinement · 2026-09-13
+## Current motion and loading delivery · 2026-09-13
 
-This release supersedes production `ce30134`. The exact new commit and actual
-online status are recorded in `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-motion-refinement/release-metadata.json` and
-`deployment-verification.json`. Preview: http://127.0.0.1:4176/#work.
-The homepage cache label is `motion-refinement-20260913`.
+This delivery is prepared against production `bca2175`. The homepage cache label
+is `motion-loading-20260913`; preview: http://127.0.0.1:4176/#work.
+The planned backup is
+`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-motion-loading`.
+Its `release-metadata.json` and `deployment-verification.json` will record exact
+commits and verified online status when publication completes.
 
-- Vine, CFD and Education covers now come directly from their animation scenes:
-  an extended translucent vine, the solved pressure/flow field, and the assembled
-  teaching guitar. The tensile cover and animated specimen share orange #F27A2A.
-- Steering now reaches 90° from neutral, coupling both universal joints and rack.
-  Pool retracts its front cylinder, rack and latches, holds, then releases quickly;
-  pinion and drive sprockets rotate in step. LineFollower rolls both tires/hubs
-  and sways left/right by 10°, with corresponding differential wheel rotation.
-- AURA expands in eleven checked stages, with individually removed top fasteners
-  and separate cover/bearing rings. Its camera follows the expanding stack.
-  Carbon's ten plies share the original cover shader and fixed source coordinates.
+- Vine and Education covers show their exact animation start at progress 0:
+  the retracted vine and the separated guitar kit. Their animation paths remain unchanged.
+- Javelin combines flight sway with four rotating propellers. Telecaster now has
+  a complete 360° turntable animation, bringing the homepage to 16 animated cards.
+- Frames become usable progressively. Each sequence starts with a four-frame
+  chunk, followed by chunks of up to 16 frames and 256 KiB. Original individual
+  frame URLs remain fallback; loading uses at most three concurrent requests.
 
-Fifteen animations contain 1,911 static 640×427 WebP frames (23,864,252 bytes),
-48 Cycles samples each. Vine, tensile, AURA and Pool have 145 frames; others 121.
-Six revised sequences use `assets/exploded/refined-20260913/`; the remaining nine
-retain their previously verified `functional-20260913/` assets. Telecaster is static.
-Four covers use twelve new responsive images; the other 36 current variants
-and all 48 historical cover files remain unchanged. Original CAD, galleries,
-project content and the 3D studio are preserved.
+The 16 sequences contain 2,032 static 640×427 WebP frames, rendered at 48 Cycles
+samples, totaling 24,347,588 image bytes. Vine, tensile, AURA and Pool retain 145
+frames each; the other twelve have 121. The two new sequences use
+`assets/exploded/flight-20260913/`; fourteen retain their exact prior frame files
+and metadata across `refined-20260913/` and `functional-20260913/`.
+The 159 files in `assets/exploded/chunks-20260913/` concatenate the original WebP
+bytes without recompression, changed dimensions, dropped frames or changed timing.
+Transport metadata adds a small manifest cost; image-byte overhead is exactly zero.
 
-Sliders, smooth reversible wheel input, endpoint page scrolling, reduced motion,
-modal reset and the 160 MiB decoded-image budget remain supported. The CFD uses
-the existing audited 400-iteration Fluent solve and the full-range, zero-centered
-asinh pressure colors; no new solve or altered pressure data is introduced.
-It remains a qualitative reconstruction with the limitations documented in
-`../.codex/functional-motion-20260913/cfd/rebuild-report.md`.
+Six new responsive cover files use `assets/editorial/start-20260913/`; the other
+42 current variants and all 60 historical cover files are preserved. Original
+CAD, galleries, content and the 3D studio remain unchanged. Reversible sliders,
+wheel endpoints, reduced motion, modal reset and the 160 MiB decoded-image budget
+remain supported. Existing CFD accuracy, Pool source-tooth overlap and Education
+display-fit limitations still apply; see `../../EXPLODED_VIEWS.md`.
 
-See `../../EXPLODED_VIEWS.md` for current motion details and verification, and
-`tools/exploded-render/README.md` for reproduction. Current evidence and PNG
-masters are in `../.codex/motion-refinement-20260913/`. The previous
-`functional-release` backup remains a separate, verified historical release.
+Current evidence and PNG masters are in `../../../.codex/motion-loading-20260913/`,
+including `poses/`, `loader/` and `transport/`. Earlier motion and CFD evidence
+remain required for the fourteen retained sequences and complete recovery.
 
 ## Reproduce this revision
 
-Run in `portfolio-site` with the bundled Python (Pillow) and Blender 4.5.9:
+Run in `portfolio-site` using Blender 4.5.9 and the bundled Python with Pillow.
+Render only the two changed sequences, then the two exact-start covers:
 
 ```powershell
-& 'C:/Users/oc/.cache/blender/blender-4.5.9-windows-x64/blender.exe' --background --factory-startup --python-exit-code 1 --python tools/exploded-render/render_exploded.py -- --projects steering aura carbonSeat materialTest pool lineFollower --samples 48
-& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/exploded-render/pack_exploded.py --copy-to-site --projects steering aura carbonSeat materialTest pool lineFollower
+& 'C:/Users/oc/.cache/blender/blender-4.5.9-windows-x64/blender.exe' --background --factory-startup --python-exit-code 1 --python tools/exploded-render/render_exploded.py -- --projects javelin telecaster --samples 48
+& 'C:/Users/oc/.cache/blender/blender-4.5.9-windows-x64/blender.exe' --background --factory-startup --python-exit-code 1 --python tools/exploded-render/render_exploded.py -- --projects vineRobot education --cover-progress 0 --width 1800 --samples 192 --output C:/Users/oc/Desktop/WEBSITE/.codex/motion-loading-20260913/covers
+& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/exploded-render/pack_exploded.py --copy-to-site --projects javelin telecaster
+& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/exploded-render/pack_motion_covers.py
+& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/exploded-render/pack_frame_chunks.py --write-manifest --report ../.codex/motion-loading-20260913/transport/final-validation.json
+& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/exploded-render/validate_exploded.py
+& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/editorial-render/validate_catalog.py
 ```
 
-Default PNG output is `../../../.codex/motion-refinement-20260913/generated/`.
-Use `--output`/`--input` for other locations. Partial pose proofs (`--only`) must
-not be packed as full sequences. Existing nine sequences are merged unchanged.
-The release validator intentionally checks this six-new/nine-retained manifest.
-Future revisions must deliberately update that baseline rather than silently
-mix provenance from a full rerender into an old validation contract.
+Default PNG output is `../../../.codex/motion-loading-20260913/generated/`.
+`--output`/`--input` select other locations. Partial pose proofs (`--only`) must
+not be packed as full sequences. Preserve the baseline animation manifest and
+catalogue in the evidence folder before packing: validators deliberately require
+the other fourteen sequences and 42 current cover variants to remain unchanged.
+`pack_motion_covers.py` only changes Vine and Education, both at progress 0.
+Freeze the renderer/controller sources before final rendering and retain their
+source inventories, pose checks and PNG provenance in the recovery backup.
 
-For each revised cover, use the renderer with `--cover-progress`, `--width 1800`,
-`--samples 192` and an absolute `--output` pointing to the evidence `covers/`.
-Progress values are vineRobot 0.75, ansysCfd 0.5, education 1, materialTest 0.
-Freeze controller/renderer code before final rendering. Then run
-`pack_motion_covers.py`, `validate_catalog.py` in the editorial tool directory,
-and `validate_exploded.py`. Cover packing updates only the four selected cards.
+`display_motion.py` supplies Javelin flight/propeller and Telecaster turntable
+controllers. `pack_frame_chunks.py` copies existing compressed WebP bytes into
+headerless `.bin` files with content-hash URLs and zero-based offset/length tables.
+The default first chunk has four frames; remaining chunks have at most 16 frames
+and 256 KiB. The CLI rejects limits above the loader's 32-frame / 16 MiB ceiling.
+`--projects` limits packing; omission handles every current project. Normal runs
+write a candidate manifest; `--output-root` stages files elsewhere, while
+`--write-manifest` updates the live source manifest only after verification.
+Keep original `frames` URLs as fallback. Original encoding, resolution, sequence
+length and timing are preserved. Browser requests remain capped at three, and
+progressive decoding stays within the existing 160 MiB budget.
 
-`drive_cycle_motion.py` supplies Pool/LineFollower kinematics;
-`aura_detailed_motion.py` uses the unchanged strict assembly path checker;
-`shared_material_carbon.py` supplies source-space carbon texture coordinates.
-The original expanded assembly controller remains for Education and historical
-reproduction. Main source files and matching reports are included in the backup.
-Offline inputs include staging GLBs, copied STL sources/Fluent fields in
-`../../../.codex/functional-motion-20260913/`, plus the existing assembly cache in
+Current source/frame/cover validation and byte-range reconstruction have passed.
+Loader regressions and the deterministic benchmark are in
+`../../../.codex/motion-loading-20260913/loader/`; the benchmark models 100 ms RTT,
+10 Mbps and 2 ms decoding and reports median first usable pose 5,678 → 206 ms.
+These are simulated timings, with production verification recorded separately.
+
+`drive_cycle_motion.py`, `aura_detailed_motion.py`, `shared_material_carbon.py`
+and the existing Education assembly controller retain their prior behavior.
+Offline inputs include staging GLBs, copied STL sources and Fluent fields in
+`../../../.codex/functional-motion-20260913/`, retained refinement evidence in
+`../../../.codex/motion-refinement-20260913/`, and assembly caches in
 `../../../.codex/exploded-revision-20260913/motion-plans/`.
 
 ## Preserved source limitations
+
+Pool retains its documented source rack/pinion tooth overlap; its display motion
+is not a claim of exact tooth contact. Source mesh/axis geometry and the earlier
+stroke-clearance evidence remain unchanged; see `../../EXPLODED_VIEWS.md`.
 
 Education is an assembly illustration with explicit rigid fit adjustments:
 the neck heel is raised 0.01 scene units (2.319 mm in the source CAD), its seating

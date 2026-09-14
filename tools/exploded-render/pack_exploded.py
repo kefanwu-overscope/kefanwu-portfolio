@@ -8,9 +8,9 @@ from PIL import Image,ImageDraw,ImageFont
 
 TASK_DIR=Path(__file__).resolve().parent
 ROOT=TASK_DIR.parents[1] if (TASK_DIR.parents[1]/'project-data.js').exists() else TASK_DIR.parents[1]/'portfolio-site'
-DEFAULT_GENERATED=ROOT.parent/'.codex/motion-refinement-20260913/generated'
-ASSET_REVISION='refined-20260913'
-ORDER=['steering','vineRobot','javelin','brakeSim','aura','scanner','carbonSeat','seat','materialTest','ansysCfd','pool','lineFollower','formlabs','education','ftc']
+DEFAULT_GENERATED=ROOT.parent/'.codex/motion-loading-20260913/generated'
+ASSET_REVISION='flight-20260913'
+ORDER=['steering','vineRobot','javelin','brakeSim','aura','scanner','carbonSeat','seat','materialTest','ansysCfd','pool','lineFollower','formlabs','telecaster','education','ftc']
 parser=argparse.ArgumentParser()
 parser.add_argument('--proof-only',action='store_true')
 parser.add_argument('--projects',nargs='+')
@@ -48,7 +48,8 @@ for key in (args.projects or ORDER):
           'steering':'Steering linkage','extension':'Vine extension','propellers':'Propeller rotation',
           'gantry':'Gantry motion','tensile':'Tensile test','flow':'Pressure & flow','assembling':'Guitar assembly',
           'reconstruction':'Assembly view','visualization':'Display layers',
-          'retract_release':'Retract & release','drive_sway':'Wheel drive & steering'}.get(mode,'Exploded assembly')
+          'retract_release':'Retract & release','drive_sway':'Wheel drive & steering',
+          'flight':'Flight & propellers','turntable':'360° rotation'}.get(mode,'Exploded assembly')
         urls=[f'assets/exploded/{ASSET_REVISION}/{key}/{f.name}?v={record["sha256"][:12]}' for f,record in zip(frames,doc['encodedFrames'])]
         manifest['projects'][key]={'mode':mode,'label':label,'width':doc['width'],'height':doc['height'],
           'poster':urls[0],'frames':urls,
@@ -68,7 +69,6 @@ if args.copy_to_site:
         previous=json.loads(destination.read_text())
         previous['projects'].update(manifest['projects'])
         manifest=previous
-    manifest['projects'].pop('telecaster',None)
     destination.write_text(json.dumps(manifest,indent=2)+'\n')
 for page in range(2):
     keys=ORDER[page*8:page*8+8]
@@ -79,6 +79,8 @@ for page in range(2):
     except OSError:font=ImageFont.load_default()
     for row,key in enumerate(keys):
         proof_folder=args.input/key
+        if not (proof_folder/'provenance.json').exists():
+            proof_folder=ROOT.parent/'.codex/motion-refinement-20260913/generated'/key
         if not (proof_folder/'provenance.json').exists():
             proof_folder=ROOT.parent/'.codex/functional-motion-20260913/generated'/key
         provenance=proof_folder/'provenance.json'

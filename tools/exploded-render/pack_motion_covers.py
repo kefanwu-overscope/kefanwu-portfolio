@@ -4,24 +4,29 @@ from html import escape
 from pathlib import Path
 from PIL import Image
 ROOT=Path(__file__).resolve().parents[2]
-EVIDENCE=ROOT.parent/'.codex/motion-refinement-20260913'
+EVIDENCE=ROOT.parent/'.codex/motion-loading-20260913'
 CATALOG=ROOT/'tools/editorial-render/catalog-manifest.json'
 DESCRIPTIONS={
- 'vineRobot':'Vine robot pressure vessel with the translucent everting tube extended from its outlet.',
- 'ansysCfd':'Rebuilt Fluent pressure field and numerical flow paths, with blue low-pressure and orange-red high-pressure regions.',
- 'education':'Assembled blue guitar education kit, with upright neck, pickguard, bridge and controls in the animation layout.',
- 'materialTest':'Tensile tester with silver grips holding a clearly visible orange fabric specimen.'}
-PROGRESS={'vineRobot':.75,'ansysCfd':.5,'education':1.,'materialTest':0.}
+ 'vineRobot':'Vine robot pressure vessel and retracted translucent tube in the exact starting pose of its extension animation.',
+ 'education':'Separated guitar education kit in the exact starting layout of its assembly animation.'}
+PROGRESS={'vineRobot':0.,'education':0.}
 catalog=json.loads(CATALOG.read_text())
 baseline={r['project']:r for r in json.loads((EVIDENCE/'baseline-catalog.json').read_text(encoding='utf-8-sig'))}
 html=(ROOT/'index.html').read_text()
-destination=ROOT/'assets/editorial/motion-20260913';destination.mkdir(parents=True,exist_ok=True)
+animation=json.loads((EVIDENCE/'baseline-animation-manifest.json').read_text())
+destination=ROOT/'assets/editorial/start-20260913';destination.mkdir(parents=True,exist_ok=True)
 checks=[]
 for key,description in DESCRIPTIONS.items():
     folder=EVIDENCE/'covers'/key;source=folder/'cover.png'
     provenance=json.loads((folder/'cover-provenance.json').read_text())
     assert provenance['coverProgress']==PROGRESS[key] and provenance['samples']==192
     assert [provenance['width'],provenance['height']]==[1800,1200]
+    original_animation=animation['projects'][key]
+    animation_provenance=json.loads((ROOT/original_animation['provenance']).read_text())
+    assert provenance['motion']==animation_provenance['motion'],(key,'animation controller changed')
+    first_frame=ROOT/original_animation['frames'][0].split('?')[0]
+    first_frame_sha=hashlib.sha256(first_frame.read_bytes()).hexdigest()
+    assert first_frame_sha==animation_provenance['encodedFrames'][0]['sha256']
     record=next(r for r in catalog if r['project']==key)
     with Image.open(source) as image:
         assert image.size==(1800,1200) and image.mode=='RGB'
@@ -38,7 +43,9 @@ for key,description in DESCRIPTIONS.items():
         'sourceAnimationKey':key,'coverProgress':PROGRESS[key],'motion':provenance['motion'],
         'motionRevision':provenance['motionRevision'],'cameraLocation':provenance['cameraLocation'],
         'cameraRotation':provenance['cameraRotation'],'cameraOrthoScale':provenance['cameraOrthoScale'],
-        'originalCoverProvenance':baseline[key]['renderProvenance'],
+        'originalCoverProvenance':baseline[key]['renderProvenance'].get('originalCoverProvenance',baseline[key]['renderProvenance']),
+        'firstAnimationFrame':original_animation['frames'][0],
+        'firstAnimationFrameSha256':first_frame_sha,
         'masterSha256':hashlib.sha256(source.read_bytes()).hexdigest()}
     def replace(match):
         card=match.group()
@@ -55,5 +62,5 @@ for key,description in DESCRIPTIONS.items():
     checks.append({'project':key,'progress':PROGRESS[key],'variants':variants})
 CATALOG.write_text(json.dumps(catalog,indent=2)+'\n')
 (ROOT/'index.html').write_text(html,encoding='utf-8',newline='\n')
-(EVIDENCE/'cover-pack.json').write_text(json.dumps({'projects':checks,'updatedCovers':4,'responsiveAssets':12},indent=2)+'\n')
-print(json.dumps({'updatedCovers':4,'responsiveAssets':12,'coverBytes':sum(v['bytes'] for c in checks for v in c['variants'])}))
+(EVIDENCE/'cover-pack.json').write_text(json.dumps({'projects':checks,'updatedCovers':2,'responsiveAssets':6},indent=2)+'\n')
+print(json.dumps({'updatedCovers':2,'responsiveAssets':6,'coverBytes':sum(v['bytes'] for c in checks for v in c['variants'])}))

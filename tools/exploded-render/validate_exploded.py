@@ -8,18 +8,19 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[2]
 REVISION = ROOT.parent / '.codex/motion-refinement-20260913'
+CURRENT = ROOT.parent / '.codex/motion-loading-20260913'
 PREVIOUS = ROOT.parent / '.codex/functional-motion-20260913'
-CHANGED = {'steering', 'aura', 'carbonSeat', 'materialTest', 'pool', 'lineFollower'}
-CHANGED_COVERS = {'vineRobot', 'ansysCfd', 'education', 'materialTest'}
+CHANGED = {'javelin', 'telecaster'}
+CHANGED_COVERS = {'vineRobot', 'education'}
 EXPECTED_MODES = {
-    'steering': 'steering', 'vineRobot': 'extension', 'javelin': 'propellers',
+    'steering': 'steering', 'vineRobot': 'extension', 'javelin': 'flight', 'telecaster': 'turntable',
     'brakeSim': 'heat', 'aura': 'assembly', 'scanner': 'gantry',
     'carbonSeat': 'layup', 'seat': 'unfold', 'materialTest': 'tensile',
     'ansysCfd': 'flow', 'pool': 'retract_release', 'lineFollower': 'drive_sway',
     'formlabs': 'gantry', 'education': 'assembling', 'ftc': 'reconstruction',
 }
 LONG_SEQUENCES = {'vineRobot', 'materialTest', 'aura', 'pool'}
-PERIODIC = {'steering', 'scanner', 'formlabs', 'ansysCfd', 'pool', 'lineFollower'}
+PERIODIC = {'steering', 'scanner', 'formlabs', 'ansysCfd', 'pool', 'lineFollower', 'telecaster'}
 
 
 def read_json(path):
@@ -133,8 +134,27 @@ def validate_motion(key, project, provenance, frame_count):
                 assert not checks.get('initialSeamExtensionUsed', False)
             else:
                 assert checks['passed'] is True
-    elif key == 'javelin':
-        assert motion['rotorCount'] == 4 and motion['sourceMotorBasesFixed']
+    elif key in ('javelin', 'telecaster'):
+        audit = read_json(CURRENT / 'poses' / f'{key}-motion-verification.json')
+        assert audit['controllerSha256'] == sha256(ROOT / 'tools/exploded-render/display_motion.py')
+        assert motion == audit['controller'], (key, 'rendered controller differs from audited controller')
+        assert audit['geometryAndMaterialsUnchanged'] and audit['sourcePoseMatrixError'] == 0
+        assert audit['poseCount'] == frame_count == 121 and audit['seekEvaluations'] >= 363
+        assert audit['forwardReverseRandomMatrixDrift'] == 0
+        assert audit['fixedRelativePlacementMaximumError'] < 1e-6
+        assert near(provenance['cameraMaximumScale'], audit['recommendedFixedScale'])
+        assert provenance['groundZ'] <= audit['sampledMotionBounds'][0][2]
+        if key == 'javelin':
+            assert motion['rotorCount'] == 4 and motion['sourceMotorBasesFixedInAirframe']
+            assert motion['periodicAirframe'] and motion['mode'] == 'flight'
+            assert audit['rotorRelativeAxisMaximumError'] < 1e-6
+            assert audit['rotorRelativeHubCenterMaximumError'] < 1e-6
+            assert provenance['groundZ'] <= motion['presentation']['groundZMaximum'] + 1e-6
+        else:
+            assert motion['mode'] == 'turntable' and motion['axis'] == [0, 0, 1]
+            assert motion['assembledRigidBody'] and motion['partRelativeTransformsPreserved']
+            assert motion['turns'] == 1 and audit['angleDegrees'] == 360
+            assert audit['endpointSourceMatrixError'] == 0
     elif key == 'vineRobot':
         assert motion['sourceHardwareFixed'] and motion['thinWallThickness'] > 0
     elif key == 'materialTest':
@@ -177,7 +197,7 @@ def cover_asset(variant):
 
 def validate_covers():
     current = read_json(ROOT / 'tools/editorial-render/catalog-manifest.json')
-    baseline = read_json(REVISION / 'baseline-catalog.json')
+    baseline = read_json(CURRENT / 'baseline-catalog.json')
     old = {p['project']: p for p in baseline}
     assert len(current) == len(baseline) == 16
     assert {p['project'] for p in current} == set(old) == set(EXPECTED_MODES) | {'telecaster'}
@@ -208,28 +228,29 @@ def validate_covers():
             mappings.append({'project': key, 'width': variant['width'], 'height': variant['height'],
                              'previous': previous['src'], 'current': variant['src'],
                              'status': 'replaced_reference_original_preserved' if key in CHANGED_COVERS else 'unchanged_reference'})
-    assert current_count == len(current_paths) == 48 and unchanged == 36 and replaced == 12
+    assert current_count == len(current_paths) == 48 and unchanged == 42 and replaced == 6
     return {'currentCoverFilesVerified': 48, 'baselineCoverFilesPreserved': 48,
-            'currentCoverReferencesUnchanged': 36, 'currentCoverReferencesReplaced': 12,
+            'currentCoverReferencesUnchanged': 42, 'currentCoverReferencesReplaced': 6,
             'changedCoverProjects': sorted(CHANGED_COVERS), 'coverMappings': mappings}
 
 
 def main():
     manifest = read_json(ROOT / 'assets/exploded/manifest.json')
-    baseline = read_json(REVISION / 'baseline-animation-manifest.json')
+    baseline = read_json(CURRENT / 'baseline-animation-manifest.json')
     assert manifest['version'] == 1 and set(manifest['projects']) == set(EXPECTED_MODES)
+    from pack_frame_chunks import TRANSPORT_FIELDS, verify_project, transport_metadata
     records = []
     for key, project in manifest['projects'].items():
         frame_count = 145 if key in LONG_SEQUENCES else 121
         changed = key in CHANGED
-        asset_revision = 'refined-20260913' if changed else 'functional-20260913'
-        motion_revision = 'motion-refinement-20260913' if changed else 'functional-motion-20260913'
+        asset_revision = 'flight-20260913' if changed else Path(baseline['projects'][key]['provenance']).parts[-3]
+        motion_revision = 'motion-loading-20260913' if changed else 'motion-refinement-20260913' if asset_revision == 'refined-20260913' else 'functional-motion-20260913'
         assert len(project['frames']) == frame_count, (key, len(project['frames']))
         assert project['mode'] == EXPECTED_MODES[key], (key, 'wrong functional mode')
         assert project['poster'] == project['frames'][0], key
         assert project['width'] * project['height'] * 4 * frame_count <= 160 * 1024 * 1024, (key, 'decoded memory budget')
         if not changed:
-            assert project == baseline['projects'][key], (key, 'previous animation manifest entry changed')
+            assert {k: v for k, v in project.items() if k not in TRANSPORT_FIELDS} == baseline['projects'][key], (key, 'previous animation metadata changed')
         asset_root = ROOT / 'assets/exploded' / asset_revision / key
         assert project['provenance'] == (asset_root / 'provenance.json').relative_to(ROOT).as_posix()
         provenance = read_json(asset_root / 'provenance.json')
@@ -268,14 +289,19 @@ def main():
         assert provenance['samples'] == 48 and provenance['motionRevision'] == motion_revision
         assert not any(field in provenance for field in ('parts', 'groups', 'geometryComponents')), (key, 'obsolete heuristic offsets')
         validate_motion(key, project, provenance, frame_count)
+        chunk_check = verify_project(key, project, project, ROOT, ROOT / 'assets/exploded/manifest.json', ROOT)
+        assert chunk_check['allSlicesEqualOriginalBytes'] and chunk_check['contentByteOverhead'] == 0
         records.append({'project': key, 'frames': frame_count, 'bytes': size, 'mode': project['mode'],
+                        'chunks': chunk_check['chunkCount'], 'maxChunkBytes': chunk_check['maxChunkBytes'],
                         'distinctStates': len(hashes), 'assetRevision': asset_revision, 'motionRevision': motion_revision})
+    assert manifest['chunkTransport'] == transport_metadata(manifest)
     covers = validate_covers()
     result = {'projects': records, 'totalFrames': sum(p['frames'] for p in records),
-              'totalFrameBytes': sum(p['bytes'] for p in records), 'refinedAnimationProjects': sorted(CHANGED),
+              'totalFrameBytes': sum(p['bytes'] for p in records), 'newAnimationProjects': sorted(CHANGED),
+              'totalChunks': sum(p['chunks'] for p in records), 'chunkImageBytesUnchanged': True,
               'previousAnimationEntriesPreserved': len(EXPECTED_MODES) - len(CHANGED), **covers, 'result': 'pass'}
-    REVISION.mkdir(parents=True, exist_ok=True)
-    (REVISION / 'asset-validation.json').write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
+    CURRENT.mkdir(parents=True, exist_ok=True)
+    (CURRENT / 'asset-validation.json').write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(result, indent=2))
 
 

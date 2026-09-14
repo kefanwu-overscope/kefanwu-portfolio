@@ -1,24 +1,45 @@
 # Real CAD editorial stills
 
-## Current animation-derived covers · 2026-09-13
+## Current exact-start covers · 2026-09-13
 
-Vine, CFD, Education and Material Test now use matched motion-scene stills from
-`../exploded-render/pack_motion_covers.py`. Progress values are 0.75, 0.5, 1 and 0
-respectively; masters use 1800×1200 and 192 samples. Twelve new variants live in
-`assets/editorial/motion-20260913/`. The other 36 current variants are unchanged,
-and all 48 previous cover files remain present with their original hashes.
-Carbon retains its original cover; its ten animated plies now use the identical
-source shader and fixed source coordinates. `apply_covers.py` reads current
-catalogue paths so it will retain these selections. `validate_catalog.py` checks
-both animation-derived and original provenance, plus original model/gallery
-preservation against ce30134. The reproduction notes below describe the earlier
-source covers; do not overwrite current catalogue entries with those old scenes.
-Current evidence: `../../../.codex/motion-refinement-20260913/`.
+Vine and Education now use their unchanged animation controllers at progress 0:
+the retracted vine and separated guitar kit. Masters are 1800×1200 at 192 samples;
+480/960/1800px WebP variants are in `assets/editorial/start-20260913/`. The six new
+files replace current selections while preserving all 42 other current variants
+and all 60 historical cover files. The existing CFD cover stays at progress 0.5
+and tensile at 0 in `assets/editorial/motion-20260913/`; carbon retains its original
+cover and source-coordinate shader. Original models and galleries are unchanged.
 
-Current full catalogue: `/tools/editorial-render/catalog-proof.html` on the local
-portfolio server at `http://127.0.0.1:4176/`. All 16 homepage cards use these stills.
+`../exploded-render/pack_motion_covers.py` records the source first-frame hash,
+controller/camera provenance and current master/variant hashes. `apply_covers.py`
+reads the current catalogue and retains these selections. `validate_catalog.py`
+checks exact starts, all variants and preservation against production `bca2175`.
+The homepage now has 16 animated cards: Javelin adds flight sway to four rotating
+propellers and Telecaster has a full 360° turntable. Their two new sequences and
+lossless progressive chunk transport are documented in
+`../exploded-render/README.md` and `../../EXPLODED_VIEWS.md`.
 
-## Complete catalogue — 2026-09-13
+Run from `portfolio-site` after preserving the baseline catalogue and animation
+manifest in `../.codex/motion-loading-20260913/`:
+
+```powershell
+& 'C:/Users/oc/.cache/blender/blender-4.5.9-windows-x64/blender.exe' --background --factory-startup --python-exit-code 1 --python tools/exploded-render/render_exploded.py -- --projects vineRobot education --cover-progress 0 --width 1800 --samples 192 --output C:/Users/oc/Desktop/WEBSITE/.codex/motion-loading-20260913/covers
+& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/exploded-render/pack_motion_covers.py
+& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/editorial-render/validate_catalog.py
+```
+
+Current cover validation has passed; evidence is in
+`../../../.codex/motion-loading-20260913/`. Cache: `motion-loading-20260913`.
+The planned release backup is
+`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-motion-loading`;
+its release/deployment metadata will establish exact commit and online status
+when publication completes.
+
+Current catalogue proof: `/tools/editorial-render/catalog-proof.html` on the local
+portfolio server at `http://127.0.0.1:4176/`. The source-render records below are
+historical; do not use their older scenes or commands to overwrite current covers.
+
+## Historical source catalogue — 2026-09-13
 
 `catalog.json` defines the 13 additional covers. Mechanical and robotics material
 audits are in `material-audit-mechanical.json` and `material-audit-robotics.json`.
@@ -71,7 +92,7 @@ Original three-cover proof: `/tools/editorial-render/index.html`.
 
 These stills are rendered directly from `models/real/{steering,vineRobot,scanner}.glb` using Blender 4.5.9 Cycles / OPTIX (RTX 5080). There are no AI-generated components and no geometry simplification, reconstruction, or exploded-part offsets. Shared scene normalization scales and translates every source vertex equally. Shading smooths shallow existing edges. Blender's importer removes coincident duplicate faces: exactly 220 in steering and 45 in scanner, independently checked against raw GLB triangle indices; Vine has no duplicates. Every unique source surface remains. The source SHA256, original/imported triangle counts, camera direction, dimensions, and asset byte counts are recorded in `manifest.json`.
 
-## Files for the homepage
+## Historical original homepage files
 
 - `assets/editorial/steering-wide.webp` — 1800 × 1200, desktop hero / steering story.
 - `assets/editorial/steering-portrait.webp` — 1200 × 1500, separately framed mobile image.
