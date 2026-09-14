@@ -1,90 +1,73 @@
-# Render project-card function and assembly previews
+# Render project-card and case-page previews
 
-## Current motion and loading delivery · 2026-09-13
+## Current case-page covers and retained motion · 2026-09-13
 
-This delivery is prepared against production `bca2175`. The homepage cache label
-is `motion-loading-20260913`; preview: http://127.0.0.1:4176/#work.
-The planned backup is
-`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-motion-loading`.
-Its `release-metadata.json` and `deployment-verification.json` will record exact
-commits and verified online status when publication completes.
+Prepared against production `9608b5d`; revision `case-pages-20260913`.
+The planned backup is `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-case-pages`. Its
+`release-metadata.json` and `deployment-verification.json` establish exact commit
+and online status when publication completes.
 
-- Vine and Education covers show their exact animation start at progress 0:
-  the retracted vine and the separated guitar kit. Their animation paths remain unchanged.
-- Javelin combines flight sway with four rotating propellers. Telecaster now has
-  a complete 360° turntable animation, bringing the homepage to 16 animated cards.
-- Frames become usable progressively. Each sequence starts with a four-frame
-  chunk, followed by chunks of up to 16 frames and 256 KiB. Original individual
-  frame URLs remain fallback; loading uses at most three concurrent requests.
+All 16 homepage and case-page covers use animation progress 0 with matching
+camera framing and normalized projection. The existing 2,032 frames, 159 chunks
+and 24,347,588 image bytes remain untouched. Native pages reuse `exploded.js` at
+a maximum 640 CSS-pixel preview width with reversible wheel input and touch/
+keyboard sliders. Source CAD, motion controllers and documented limits remain.
 
-The 16 sequences contain 2,032 static 640×427 WebP frames, rendered at 48 Cycles
-samples, totaling 24,347,588 image bytes. Vine, tensile, AURA and Pool retain 145
-frames each; the other twelve have 121. The two new sequences use
-`assets/exploded/flight-20260913/`; fourteen retain their exact prior frame files
-and metadata across `refined-20260913/` and `functional-20260913/`.
-The 159 files in `assets/exploded/chunks-20260913/` concatenate the original WebP
-bytes without recompression, changed dimensions, dropped frames or changed timing.
-Transport metadata adds a small manifest cost; image-byte overhead is exactly zero.
+## Reproduce initial covers
 
-Six new responsive cover files use `assets/editorial/start-20260913/`; the other
-42 current variants and all 60 historical cover files are preserved. Original
-CAD, galleries, content and the 3D studio remain unchanged. Reversible sliders,
-wheel endpoints, reduced motion, modal reset and the 160 MiB decoded-image budget
-remain supported. Existing CFD accuracy, Pool source-tooth overlap and Education
-display-fit limitations still apply; see `../../EXPLODED_VIEWS.md`.
-
-Current evidence and PNG masters are in `../../../.codex/motion-loading-20260913/`,
-including `poses/`, `loader/` and `transport/`. Earlier motion and CFD evidence
-remain required for the fourteen retained sequences and complete recovery.
-
-## Reproduce this revision
-
-Run in `portfolio-site` using Blender 4.5.9 and the bundled Python with Pillow.
-Render only the two changed sequences, then the two exact-start covers:
+Run from `portfolio-site` using Blender 4.5.9 and the bundled Python with Pillow.
+Preserve the `9608b5d` baseline records in `../.codex/case-pages-20260913/` first.
 
 ```powershell
-& 'C:/Users/oc/.cache/blender/blender-4.5.9-windows-x64/blender.exe' --background --factory-startup --python-exit-code 1 --python tools/exploded-render/render_exploded.py -- --projects javelin telecaster --samples 48
-& 'C:/Users/oc/.cache/blender/blender-4.5.9-windows-x64/blender.exe' --background --factory-startup --python-exit-code 1 --python tools/exploded-render/render_exploded.py -- --projects vineRobot education --cover-progress 0 --width 1800 --samples 192 --output C:/Users/oc/Desktop/WEBSITE/.codex/motion-loading-20260913/covers
-& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/exploded-render/pack_exploded.py --copy-to-site --projects javelin telecaster
-& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/exploded-render/pack_motion_covers.py
-& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/exploded-render/pack_frame_chunks.py --write-manifest --report ../.codex/motion-loading-20260913/transport/final-validation.json
-& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/exploded-render/validate_exploded.py
-& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/editorial-render/validate_catalog.py
+& 'C:/Users/oc/.cache/blender/blender-4.5.9-windows-x64/blender.exe' --background --factory-startup --python-exit-code 1 --python tools/exploded-render/render_initial_covers.py -- --output C:/Users/oc/Desktop/WEBSITE/.codex/case-pages-20260913/covers
+& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/exploded-render/pack_initial_covers.py
+& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/exploded-render/validate_initial_covers.py
 ```
 
-Default PNG output is `../../../.codex/motion-loading-20260913/generated/`.
-`--output`/`--input` select other locations. Partial pose proofs (`--only`) must
-not be packed as full sequences. Preserve the baseline animation manifest and
-catalogue in the evidence folder before packing: validators deliberately require
-the other fourteen sequences and 42 current cover variants to remain unchanged.
-`pack_motion_covers.py` only changes Vine and Education, both at progress 0.
-Freeze the renderer/controller sources before final rendering and retain their
-source inventories, pose checks and PNG provenance in the recovery backup.
+The renderer defaults to all 16 projects; `--projects` selects a subset.
+The packer's `--input` defaults to the evidence `covers/` directory. It writes
+48 WebP variants at 480/960/1800 pixels and per-project provenance in
+`assets/editorial/animation-start-20260913/`, plus
+`assets/editorial/animation-covers.json`. Keep homepage and editorial fallback
+cover sources synchronized with that runtime catalogue.
 
-`display_motion.py` supplies Javelin flight/propeller and Telecaster turntable
-controllers. `pack_frame_chunks.py` copies existing compressed WebP bytes into
-headerless `.bin` files with content-hash URLs and zero-based offset/length tables.
-The default first chunk has four frames; remaining chunks have at most 16 frames
-and 256 KiB. The CLI rejects limits above the loader's 32-frame / 16 MiB ceiling.
-`--projects` limits packing; omission handles every current project. Normal runs
-write a candidate manifest; `--output-root` stages files elsewhere, while
-`--write-manifest` updates the live source manifest only after verification.
-Keep original `frames` URLs as fallback. Original encoding, resolution, sequence
-length and timing are preserved. Browser requests remain capped at three, and
-progressive decoding stays within the existing 160 MiB budget.
+`render_initial_covers.py` uses the established motion renderer to compute frame 0
+at 640×427, then renders a 48-sample proof and 1800×1200/192-sample master.
+The scene and camera remain fixed. Pixel aspect 1:1.00078125 preserves normalized
+projection despite rounded animation dimensions. Rendering sources are archived
+by SHA in the evidence; a documented Smelly calibration-text exception leaves
+numeric settings, groups and axes unchanged. The wrapper does not write animation
+frames or edit the shared animation renderer.
 
-Current source/frame/cover validation and byte-range reconstruction have passed.
-Loader regressions and the deterministic benchmark are in
-`../../../.codex/motion-loading-20260913/loader/`; the benchmark models 100 ms RTT,
-10 Mbps and 2 ms decoding and reports median first usable pose 5,678 → 206 ms.
-These are simulated timings, with production verification recorded separately.
+`../.codex/case-pages-20260913/initial-cover-validation.json` is the current cover
+acceptance record. Browser and runtime acceptance is recorded separately; do
+not substitute a previous release's passing report.
 
-`drive_cycle_motion.py`, `aura_detailed_motion.py`, `shared_material_carbon.py`
-and the existing Education assembly controller retain their prior behavior.
-Offline inputs include staging GLBs, copied STL sources and Fluent fields in
-`../../../.codex/functional-motion-20260913/`, retained refinement evidence in
-`../../../.codex/motion-refinement-20260913/`, and assembly caches in
-`../../../.codex/exploded-revision-20260913/motion-plans/`.
+## Retained animation transport
+
+`display_motion.py` supplies the existing Javelin flight/propeller and Telecaster
+turntable controllers. The remaining controllers and sequence files are unchanged.
+`pack_frame_chunks.py` concatenates original compressed WebP bytes into hashed
+`.bin` files with zero-based offset/length tables. Default bootstrap size is four
+frames, followed by at most 16 frames / 256 KiB per chunk. Original frame URLs
+remain fallback, with at most three active requests and a 160 MiB decoded budget.
+
+No re-render or re-pack is needed for this case-page integration. For recovery or
+a later deliberate frame revision, pack the complete final frames first, then:
+
+```powershell
+& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/exploded-render/pack_frame_chunks.py --write-manifest --report ../.codex/motion-loading-20260913/transport/final-validation.json
+```
+
+The chunk CLI accepts at most 32 frames / 16 MiB to match the browser loader.
+Without `--write-manifest` it writes a candidate manifest; `--output-root` stages
+chunks elsewhere. It verifies all ranges and source hashes before publication.
+Earlier full-frame rendering/packing belongs to the `9608b5d` release source and
+`../../../.codex/motion-loading-20260913/` evidence.
+
+Keep the retained refinement, functional/CFD, and assembly-cache inputs described
+in `../../EXPLODED_VIEWS.md`. The earlier modeled 5,678 → 206 ms first-pose result
+is a deterministic network/decode simulation, not production latency.
 
 ## Preserved source limitations
 

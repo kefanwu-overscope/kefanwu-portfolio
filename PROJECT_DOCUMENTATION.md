@@ -1,41 +1,26 @@
 # Portfolio Website Project Documentation
 
-## Current motion and loading delivery · 2026-09-13
+## Current case-page delivery · 2026-09-13
 
-This delivery is prepared against production `bca2175`. The homepage cache label
-is `motion-loading-20260913`; preview: http://127.0.0.1:4176/#work.
-The planned backup is
-`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-motion-loading`.
-Its `release-metadata.json` and `deployment-verification.json` will record exact
-commits and verified online status when publication completes.
+Prepared against production `9608b5d`; revision `case-pages-20260913`.
+The planned backup is `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-case-pages`. Its
+`release-metadata.json` and `deployment-verification.json` establish exact commit
+and online status when publication completes.
 
-- Vine and Education covers show their exact animation start at progress 0:
-  the retracted vine and the separated guitar kit. Their animation paths remain unchanged.
-- Javelin combines flight sway with four rotating propellers. Telecaster now has
-  a complete 360° turntable animation, bringing the homepage to 16 animated cards.
-- Frames become usable progressively. Each sequence starts with a four-frame
-  chunk, followed by chunks of up to 16 frames and 256 KiB. Original individual
-  frame URLs remain fallback; loading uses at most three concurrent requests.
+All 16 project cards link to native case pages, with 16 editorial stories and 64
+chapters. Each page retains the source gallery, image zoom, technical records and
+cyclic next-project navigation. The homepage project modal is removed.
 
-The 16 sequences contain 2,032 static 640×427 WebP frames, rendered at 48 Cycles
-samples, totaling 24,347,588 image bytes. Vine, tensile, AURA and Pool retain 145
-frames each; the other twelve have 121. The two new sequences use
-`assets/exploded/flight-20260913/`; fourteen retain their exact prior frame files
-and metadata across `refined-20260913/` and `functional-20260913/`.
-The 159 files in `assets/exploded/chunks-20260913/` concatenate the original WebP
-bytes without recompression, changed dimensions, dropped frames or changed timing.
-Transport metadata adds a small manifest cost; image-byte overhead is exactly zero.
+The first hero action and highlighted navigation lead to the 3D Studio. A large
+workshop preview sits between the hero and project grid. Detail pages share the
+existing reversible image animation, constrained to a 640-pixel-wide preview.
+All 16 covers use progress 0 with matching camera/projection; 48 responsive files
+are selected through `assets/editorial/animation-covers.json`.
 
-Six new responsive cover files use `assets/editorial/start-20260913/`; the other
-42 current variants and all 60 historical cover files are preserved. Original
-CAD, galleries, content and the 3D studio remain unchanged. Reversible sliders,
-wheel endpoints, reduced motion, modal reset and the 160 MiB decoded-image budget
-remain supported. Existing CFD accuracy, Pool source-tooth overlap and Education
-display-fit limitations still apply; see `EXPLODED_VIEWS.md`.
-
-Current evidence and PNG masters are in `../.codex/motion-loading-20260913/`,
-including `poses/`, `loader/` and `transport/`. Earlier motion and CFD evidence
-remain required for the fourteen retained sequences and complete recovery.
+Source project records, 93 gallery images, CAD and the existing 2,032 animation
+frames remain unchanged. Quality, transport and physical interpretation limits
+are documented in `EXPLODED_VIEWS.md`. Content checks passed; cover and browser
+acceptance is recorded separately in `../.codex/case-pages-20260913/`.
 
 ## Project Overview
 
@@ -97,16 +82,19 @@ The visual direction is dark, high-contrast, quiet, and precise:
 - Compact recruiter-friendly project cards.
 - Thin borders, restrained surfaces, and small-radius UI.
 - Liquid Glass-inspired controls and cards: translucent functional layers, soft edge highlights, backdrop blur, and hover or focus sheen animation.
-- Project details inside focused modal case studies.
+- Project details inside native case pages with chapters, source records and image zoom.
 - No marketing-style hero cards or decorative gradient blobs.
 
 The intended feel is closer to a professional engineering product page than a personal blog.
 
 ## Site Structure
 
-- `index.html` contains the page structure, navigation, project grid, leadership sections, and modal shell.
-- `styles.css` contains the full visual system, responsive layout, modal styling, filters, and motion states.
-- `script.js` contains project data, modal rendering, gallery behavior, filtering, navigation interactions, counters, and canvas background.
+- `index.html` contains homepage navigation, studio entry, the linked project grid and leadership sections.
+- `editorial.css` and `styles.css` provide the homepage layout, responsive styling, filters and motion states.
+- `script.js` handles homepage interactions; source records remain in `project-data.js`.
+- `case-study-data.js` contains the 16 editorial stories; `case-study.html`, `case-study.js` and `case-study.css` render the pages, chapters, downloads and gallery lightbox.
+- `exploded.js` and `exploded.css` supply the shared reversible animation preview.
+- `assets/editorial/animation-covers.json` selects matching initial-pose covers.
 - `assets/` contains optimized image assets used by the deployable site.
 - `README.md` contains local preview and deployment instructions.
 - `AGENT_HANDOFF.md` contains implementation notes for future agents.
@@ -121,12 +109,10 @@ The top skill ticker should run full-viewport from left to right above the `Kefa
 
 ### Selected Work
 
-The selected work grid is the primary hiring surface. The first four cards should remain Formula SAE-focused:
-
-- Mk.8 steering system.
-- Driver seat and harness.
-- Carbon fiber seat support.
-- Brake temperature simulation.
+The selected work grid links to all 16 native case pages. Preserve homepage order
+in case numbering and next-project navigation: Steering, Vine, Javelin, Scanner,
+Brake Sim, AURA, Carbon Seat, Driver Seat, Material Testing, CFD, Pool Sniper,
+LineFollower, Smelly, Telecaster, Education, and FTC.
 
 ### Flagship Program
 
@@ -156,7 +142,7 @@ The contact section should keep actions simple: email, LinkedIn, and resume or p
 - Preserve the promotion narrative from `Cockpit Lead` to `Mechanical Lead`.
 - Frame fabrication-heavy projects as engineering work, not personal-interest content.
 - Keep project-card covers simple, image-first, and technically legible.
-- Preserve Liquid Glass hover or focus animation for primary buttons, filters, modal controls, gallery controls, and project cards.
+- Preserve clear hover and focus states for primary actions, filters, case navigation, gallery controls, and project links.
 
 ## Local Preview
 
@@ -200,21 +186,22 @@ Before deployment, verify:
 - All referenced `assets/...` files exist.
 - There are no deployable movie files in `assets/`.
 - The homepage text is English.
-- Project cards open the correct modal.
-- Modal image galleries work.
+- All 16 project cards open the correct native case page, including keyboard and modified-click navigation.
+- Case-page chapters, source records, downloads and image-zoom galleries work.
+- Initial covers match the animation's progress-zero pose, camera and projection.
+- Detail previews stay within 640 CSS pixels and support forward/reverse wheel, touch and keyboard input.
 - Filters work for each category.
 - Mobile layout has no horizontal overflow.
-- The first four project cards remain the Formula SAE split.
+- Case numbers and next links follow all 16 projects in homepage order.
+- The hero action, highlighted navigation and workshop preview open the 3D Studio.
 - Contact links are correct.
 
 ## Maintenance Notes
 
-> Note: case-study content now lives in **`project-data.js`** (the shared
-> `projectData` object), NOT in `script.js`. It is loaded by both `index.html`
-> (before `script.js`) and `experience.html` (before `experience.js`). The site
-> also has a second surface — the interactive 3D studio at `experience.html`,
-> where 15 of the 16 projects are clickable exhibits. See `AGENT_HANDOFF.md` for the
-> full current reference (file map, IDs, cache versions, 3D internals).
+> Source facts and galleries live in **`project-data.js`**. Editorial structure
+> lives in **`case-study-data.js`**. Native pages combine both without replacing
+> the original records. The studio still has 15 project exhibits; Education
+> routes to the general studio. See `AGENT_HANDOFF.md` for integration details.
 
 Most content updates should happen in `project-data.js` inside the `projectData` object.
 
@@ -222,8 +209,9 @@ To add or revise a project:
 
 1. Add optimized images to `assets/`.
 2. Add or update the matching project card in `index.html`.
-3. Add or update the case-study data in `project-data.js` (bump its cache string).
-4. Re-run the QA checklist.
+3. Update source facts in `project-data.js` only when the source record changes.
+4. Update the matching `case-study-data.js` story, valid gallery indexes, numbering and cyclic next links; bump changed runtime cache strings.
+5. Re-run the QA checklist.
 
 To revise homepage positioning:
 
@@ -234,10 +222,10 @@ To revise homepage positioning:
 
 To revise a project cover:
 
-1. Use a real project image or a cleaned crop derived from a real project image.
-2. Keep the cover horizontal, uncluttered, and readable at card size.
-3. Prefer a dedicated `assets/cover-*.webp` file when the source image needs a simpler crop.
-4. Update both the project card in `index.html` and the matching `image` field in `script.js`.
+1. Render animation progress 0 through `tools/exploded-render/render_initial_covers.py`.
+2. Preserve the delivered frame's scene, camera and normalized projection.
+3. Pack responsive variants and the runtime catalogue with `pack_initial_covers.py`.
+4. Keep homepage and case-page fallback sources synchronized with the catalogue, then run `validate_initial_covers.py`. Original gallery images remain unchanged.
 5. For full-bleed section backgrounds, use source photos without baked-in page text and control composition with CSS crop and scale.
 
 ## Current Portfolio Emphasis

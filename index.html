@@ -23,8 +23,8 @@
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/InterTight-600.woff2" crossorigin />
     <link rel="stylesheet" href="fonts.css?v=studio-polish-20260907" />
     <link rel="stylesheet" href="styles.css?v=studio-polish-20260907" />
-    <link rel="stylesheet" href="editorial.css?v=readability-20260913" />
-    <link rel="stylesheet" href="exploded.css?v=motion-loading-20260913" />
+    <link rel="stylesheet" href="editorial.css?v=case-pages-20260913" />
+    <link rel="stylesheet" href="exploded.css?v=case-pages-20260913" />
     <script>document.documentElement.classList.add("js");</script>
   </head>
   <body class="editorial">
@@ -36,7 +36,7 @@
       <nav id="site-nav" class="site-nav" aria-label="Primary navigation">
         <a href="#work">Projects</a><a href="#approach">Approach</a><a href="#contact">Contact</a>
         <a href="assets/kefan-wu-resume.pdf" target="_blank" rel="noopener">Resume</a>
-        <a href="experience.html" class="nav-experience">3D Studio <span aria-hidden="true">↗</span></a>
+        <a href="experience.html" class="nav-experience">Enter 3D Studio <span aria-hidden="true">↗</span></a>
       </nav>
     </header>
     <main id="top">
@@ -59,7 +59,7 @@
           <p class="eyebrow"><span class="hero-rule" aria-hidden="true"></span>MECHANICAL ENGINEERING / OLIN ’28</p>
           <h1 id="hero-title"><span>Kefan</span><span>Wu<span class="hero-period">.</span></span></h1>
           <p class="hero-copy">Race-car systems. Robotics. Real hardware.<br>Designed, built, and tested.</p>
-          <div class="hero-actions"><a class="button primary" href="#work">View all 16 projects <span aria-hidden="true">↓</span></a><a class="text-link" href="experience.html">Explore in 3D <span aria-hidden="true">↗</span></a></div>
+          <div class="hero-actions"><a class="button primary studio-primary" href="experience.html">Enter the 3D Studio <span aria-hidden="true">↗</span></a><a class="text-link" href="#work">View all 16 projects <span aria-hidden="true">↓</span></a></div>
         </div>
         <div class="hero-baseline section-shell">
           <div class="hero-role"><strong>Leading 30 mechanical engineers</strong><span>Mechanical Lead · Olin Electric Motorsports</span></div>
@@ -68,91 +68,108 @@
         </div>
       </section>
 
+      <section id="studio" class="studio-entry section-shell" aria-labelledby="studio-entry-title">
+        <a class="studio-entry-link" href="experience.html">
+          <div class="studio-entry-copy">
+            <p class="section-kicker">THE INTERACTIVE PORTFOLIO</p>
+            <h2 id="studio-entry-title">Step inside<br>my workshop.</h2>
+            <p>Explore the space. Pick up a project. Look at the engineering from every angle.</p>
+            <span class="studio-entry-cta">Enter the 3D Studio <span aria-hidden="true">↗</span></span>
+            <span class="studio-entry-note">Move through the room · Rotate and inspect the models</span>
+          </div>
+          <div class="studio-entry-preview">
+            <img src="assets/studio-teaser.webp" alt="Preview of the 3D workshop, with engineering projects on illuminated shelves" width="1600" height="900" loading="lazy" decoding="async">
+            <span class="studio-entry-caption"><span class="studio-entry-dot" aria-hidden="true"></span>EXPLORE IN 3D</span>
+            <span class="studio-entry-arrow" aria-hidden="true">↗</span>
+          </div>
+        </a>
+      </section>
+
       <section id="work" class="work-archive section-shell" aria-labelledby="work-title">
-        <div class="section-head compact"><div><p class="section-kicker">01 / SELECTED WORK</p><h2 id="work-title">Built to work.</h2></div></div>
+        <div class="section-head compact"><div><p class="section-kicker">01 / SELECTED WORK</p><h2 id="work-title">Built to work.</h2></div><p class="section-note">Scroll a project to see it move.<br>Open it for the full engineering story.</p></div>
         <div class="archive-tools"><div class="filter-bar" role="group" aria-label="Filter projects"><button class="filter active" type="button" data-filter="all" aria-pressed="true">All</button><button class="filter" type="button" data-filter="motorsport" aria-pressed="false">Motorsport</button><button class="filter" type="button" data-filter="robotics" aria-pressed="false">Robotics</button><button class="filter" type="button" data-filter="product" aria-pressed="false">Product</button><button class="filter" type="button" data-filter="analysis" aria-pressed="false">Analysis</button><button class="filter" type="button" data-filter="fabrication" aria-pressed="false">Fabrication</button></div><label class="project-search"><span class="sr-only">Search projects</span><input id="project-search" type="search" placeholder="Search projects" autocomplete="off"></label></div>
         <p class="project-count" aria-live="polite" id="filter-status">Showing 16 of 16 projects</p>
         <div id="project-cards" class="project-grid">
         <article class="project-card" data-category="motorsport analysis fabrication" data-project="steering">
-          <div class="card-media card-media--contain card-media--render"><img src="assets/editorial/steering-wide-960.webp" srcset="assets/editorial/steering-wide-480.webp 480w, assets/editorial/steering-wide-960.webp 960w, assets/editorial/steering-wide.webp 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="CAD render of the Mk.8 steering wheel, column, U-joints, bearing mounts, and rack." loading="lazy" decoding="async" /></div>
-          <div class="project-body"><p class="project-meta">Motorsport</p><h3><button type="button" class="card-open">Mk.8 steering system</button></h3><p class="project-sub">Designed, machined, and welded into Mk.8.</p></div>
+          <div class="card-media card-media--contain card-media--render"><img src="assets/editorial/animation-start-20260913/steering-wide-960.webp?v=9309aad28424" srcset="assets/editorial/animation-start-20260913/steering-wide-480.webp?v=029d82ebf7ef 480w, assets/editorial/animation-start-20260913/steering-wide-960.webp?v=9309aad28424 960w, assets/editorial/animation-start-20260913/steering-wide-1800.webp?v=703f3e188422 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Steering wheel, column, universal joints and rack in their neutral position." loading="lazy" decoding="async" /></div>
+          <div class="project-body"><p class="project-meta">Motorsport</p><h3><a class="card-open" href="case-study.html?project=steering">Mk.8 steering system</a></h3><p class="project-sub">Designed, machined, and welded into Mk.8.</p></div>
         </article>
         <article class="project-card" data-category="robotics analysis fabrication" data-project="vineRobot">
-          <div class="card-media card-media--contain card-media--render"><img src="assets/editorial/start-20260913/vineRobot-wide-960.webp?v=803e41ca73be" srcset="assets/editorial/start-20260913/vineRobot-wide-480.webp?v=a3a42518ab0f 480w, assets/editorial/start-20260913/vineRobot-wide-960.webp?v=803e41ca73be 960w, assets/editorial/start-20260913/vineRobot-wide-1800.webp?v=8d96ebfc162a 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Vine robot pressure vessel and retracted translucent tube in the exact starting pose of its extension animation." loading="lazy" decoding="async" /></div>
-          <div class="project-body"><p class="project-meta">Research</p><h3><button type="button" class="card-open">Vine everting robot</button></h3><p class="project-sub">A reinforced pressure vessel for soft-robot research.</p></div>
+          <div class="card-media card-media--contain card-media--render"><img src="assets/editorial/animation-start-20260913/vineRobot-wide-960.webp?v=c5c0b88ca117" srcset="assets/editorial/animation-start-20260913/vineRobot-wide-480.webp?v=14efea96c9ef 480w, assets/editorial/animation-start-20260913/vineRobot-wide-960.webp?v=c5c0b88ca117 960w, assets/editorial/animation-start-20260913/vineRobot-wide-1800.webp?v=67b6707786d5 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Vine robot pressure vessel with its translucent tube retracted." loading="lazy" decoding="async" /></div>
+          <div class="project-body"><p class="project-meta">Research</p><h3><a class="card-open" href="case-study.html?project=vineRobot">Vine everting robot</a></h3><p class="project-sub">A reinforced pressure vessel for soft-robot research.</p></div>
         </article>
         <article class="project-card" data-category="robotics analysis fabrication" data-project="javelin">
               <div class="card-media card-media--contain card-media--render">
-                <img src="assets/editorial/javelin-wide-960.webp" srcset="assets/editorial/javelin-wide-480.webp 480w, assets/editorial/javelin-wide-960.webp 960w, assets/editorial/javelin-wide.webp 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Javelin CAD airframe with photo-reconstructed propellers and corrected dark polymer and motor materials." loading="lazy" decoding="async" />
+                <img src="assets/editorial/animation-start-20260913/javelin-wide-960.webp?v=5b2dcec64850" srcset="assets/editorial/animation-start-20260913/javelin-wide-480.webp?v=db45904bbee0 480w, assets/editorial/animation-start-20260913/javelin-wide-960.webp?v=5b2dcec64850 960w, assets/editorial/animation-start-20260913/javelin-wide-1800.webp?v=e1d8086f8ff4 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Javelin airframe suspended above the studio floor with four propellers." loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
                 <p class="project-meta">Robotics</p>
-                <h3><button type="button" class="card-open">Javelin VTOL drone</button></h3>
+                <h3><a class="card-open" href="case-study.html?project=javelin">Javelin VTOL drone</a></h3>
                 <p class="project-sub">A 300 km/h design target. Flight controlled by differential thrust.</p>
               </div>
             </article>
         <article class="project-card" data-category="robotics product fabrication" data-project="scanner">
-          <div class="card-media card-media--contain card-media--render"><img src="assets/editorial/scanner-wide-960.webp" srcset="assets/editorial/scanner-wide-480.webp 480w, assets/editorial/scanner-wide-960.webp 960w, assets/editorial/scanner-wide.webp 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="CAD render of the LiDAR scanner with blue printed mounts, metal guide rods, and a pale plywood base." loading="lazy" decoding="async" /></div>
-          <div class="project-body"><p class="project-meta">Robotics</p><h3><button type="button" class="card-open">LiDAR scanner</button></h3><p class="project-sub">2,206 readings. From gantry motion to point cloud.</p></div>
+          <div class="card-media card-media--contain card-media--render"><img src="assets/editorial/animation-start-20260913/scanner-wide-960.webp?v=029010cbc8c0" srcset="assets/editorial/animation-start-20260913/scanner-wide-480.webp?v=745b117370b1 480w, assets/editorial/animation-start-20260913/scanner-wide-960.webp?v=029010cbc8c0 960w, assets/editorial/animation-start-20260913/scanner-wide-1800.webp?v=81c8b13c8e74 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="LiDAR scanner with blue printed mounts, guide rods and a plywood base." loading="lazy" decoding="async" /></div>
+          <div class="project-body"><p class="project-meta">Robotics</p><h3><a class="card-open" href="case-study.html?project=scanner">LiDAR scanner</a></h3><p class="project-sub">2,206 readings. From gantry motion to point cloud.</p></div>
         </article>
         <article class="project-card" data-category="motorsport analysis" data-project="brakeSim">
               <div class="card-media card-media--contain card-media--render">
-                <img src="assets/editorial/brakeSim-wide-960.webp" srcset="assets/editorial/brakeSim-wide-480.webp 480w, assets/editorial/brakeSim-wide-960.webp 960w, assets/editorial/brakeSim-wide.webp 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="CAD render of the perforated cast iron brake rotor, with a neutral machined finish." loading="lazy" decoding="async" />
+                <img src="assets/editorial/animation-start-20260913/brakeSim-wide-960.webp?v=6f4f3c1e9704" srcset="assets/editorial/animation-start-20260913/brakeSim-wide-480.webp?v=7f8140ac58d4 480w, assets/editorial/animation-start-20260913/brakeSim-wide-960.webp?v=6f4f3c1e9704 960w, assets/editorial/animation-start-20260913/brakeSim-wide-1800.webp?v=3a64d74549f9 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Perforated cast-iron brake rotor before heating." loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
                 <p class="project-meta">Motorsport</p>
-                <h3><button type="button" class="card-open">FSAE Brake Sim</button></h3>
+                <h3><a class="card-open" href="case-study.html?project=brakeSim">FSAE Brake Sim</a></h3>
                 <p class="project-sub">A 22-lap model supporting a 25% rotor mass-reduction target.</p>
               </div>
             </article>
         <article class="project-card" data-category="robotics product fabrication" data-project="aura">
               <div class="card-media card-media--contain card-media--render">
-                <img src="assets/editorial/aura-wide-960.webp" srcset="assets/editorial/aura-wide-480.webp 480w, assets/editorial/aura-wide-960.webp 960w, assets/editorial/aura-wide.webp 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="CAD render of the AURA swerve assembly, metal structure, rubber wheel, and drive motors." loading="lazy" decoding="async" />
+                <img src="assets/editorial/animation-start-20260913/aura-wide-960.webp?v=14eafcd84535" srcset="assets/editorial/animation-start-20260913/aura-wide-480.webp?v=f721eee5c5f7 480w, assets/editorial/animation-start-20260913/aura-wide-960.webp?v=14eafcd84535 960w, assets/editorial/animation-start-20260913/aura-wide-1800.webp?v=c836c58c0436 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Assembled AURA swerve module with its wheel, motors and metal structure." loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
                 <p class="project-meta">Robotics</p>
-                <h3><button type="button" class="card-open">AURA swerve drive</button></h3>
+                <h3><a class="card-open" href="case-study.html?project=aura">AURA swerve drive</a></h3>
                 <p class="project-sub">Independent swerve modules designed around a 300 lb payload.</p>
               </div>
             </article>
         <article class="project-card" data-category="motorsport product fabrication" data-project="carbonSeat">
               <div class="card-media card-media--contain card-media--render">
-                <img src="assets/editorial/carbonSeat-wide-960.webp" srcset="assets/editorial/carbonSeat-wide-480.webp 480w, assets/editorial/carbonSeat-wide-960.webp 960w, assets/editorial/carbonSeat-wide.webp 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="CAD render of the carbon fiber and epoxy seat shell with a fine woven finish." loading="lazy" decoding="async" />
+                <img src="assets/editorial/animation-start-20260913/carbonSeat-wide-960.webp?v=4ce57e1ee13b" srcset="assets/editorial/animation-start-20260913/carbonSeat-wide-480.webp?v=b4d0ed782e04 480w, assets/editorial/animation-start-20260913/carbonSeat-wide-960.webp?v=4ce57e1ee13b 960w, assets/editorial/animation-start-20260913/carbonSeat-wide-1800.webp?v=e55168f5b204 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Carbon-fiber seat layup at the beginning of the fabrication sequence." loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
                 <p class="project-meta">Motorsport</p>
-                <h3><button type="button" class="card-open">Carbon fiber seat</button></h3>
+                <h3><a class="card-open" href="case-study.html?project=carbonSeat">Carbon fiber seat</a></h3>
                 <p class="project-sub">A composite support shell built around driver loads.</p>
               </div>
             </article>
         <article class="project-card" data-category="motorsport product fabrication" data-project="seat">
               <div class="card-media card-media--contain card-media--render">
-                <img src="assets/editorial/seat-wide-960.webp" srcset="assets/editorial/seat-wide-480.webp 480w, assets/editorial/seat-wide-960.webp 960w, assets/editorial/seat-wide.webp 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="CAD render of the folded, perforated aluminum driver seat." loading="lazy" decoding="async" />
+                <img src="assets/editorial/animation-start-20260913/seat-wide-960.webp?v=4ad9afc13786" srcset="assets/editorial/animation-start-20260913/seat-wide-480.webp?v=51a70042cd0e 480w, assets/editorial/animation-start-20260913/seat-wide-960.webp?v=4ad9afc13786 960w, assets/editorial/animation-start-20260913/seat-wide-1800.webp?v=b7141b451e94 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Folded and perforated aluminum driver seat." loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
                 <p class="project-meta">Motorsport</p>
-                <h3><button type="button" class="card-open">Driver seat and harness</button></h3>
+                <h3><a class="card-open" href="case-study.html?project=seat">Driver seat and harness</a></h3>
                 <p class="project-sub">Validated with ~20 drivers. A dedicated six-point harness mount.</p>
               </div>
             </article>
         <article class="project-card" data-category="analysis" data-project="materialTest">
               <div class="card-media card-media--contain card-media--render">
-                <img src="assets/editorial/motion-20260913/materialTest-wide-960.webp?v=71cd1a73fe2c" srcset="assets/editorial/motion-20260913/materialTest-wide-480.webp?v=69a15ada08b2 480w, assets/editorial/motion-20260913/materialTest-wide-960.webp?v=71cd1a73fe2c 960w, assets/editorial/motion-20260913/materialTest-wide-1800.webp?v=55ff1e07aa8e 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Tensile tester with silver grips holding a clearly visible orange fabric specimen." loading="lazy" decoding="async" />
+                <img src="assets/editorial/animation-start-20260913/materialTest-wide-960.webp?v=ddf2eb275716" srcset="assets/editorial/animation-start-20260913/materialTest-wide-480.webp?v=fc175327fb3d 480w, assets/editorial/animation-start-20260913/materialTest-wide-960.webp?v=ddf2eb275716 960w, assets/editorial/animation-start-20260913/materialTest-wide-1800.webp?v=ae3f78031cc9 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Orange tensile specimen held between silver grips before stretching." loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
                 <p class="project-meta">Research</p>
-                <h3><button type="button" class="card-open">Material property testing</button></h3>
+                <h3><a class="card-open" href="case-study.html?project=materialTest">Material property testing</a></h3>
                 <p class="project-sub">30 specimens and 11 bending tests for a calibrated material model.</p>
               </div>
             </article>
         <article class="project-card" data-category="analysis software" data-project="ansysCfd">
               <div class="card-media card-media--contain card-media--render">
-                <img src="assets/editorial/motion-20260913/ansysCfd-wide-960.webp?v=102e0e805c8e" srcset="assets/editorial/motion-20260913/ansysCfd-wide-480.webp?v=793f45983f17 480w, assets/editorial/motion-20260913/ansysCfd-wide-960.webp?v=102e0e805c8e 960w, assets/editorial/motion-20260913/ansysCfd-wide-1800.webp?v=d03a544ef06f 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Rebuilt Fluent pressure field and numerical flow paths, with blue low-pressure and orange-red high-pressure regions." loading="lazy" decoding="async" />
+                <img src="assets/editorial/animation-start-20260913/ansysCfd-wide-960.webp?v=d40a994e3edf" srcset="assets/editorial/animation-start-20260913/ansysCfd-wide-480.webp?v=c1cb16c29c38 480w, assets/editorial/animation-start-20260913/ansysCfd-wide-960.webp?v=d40a994e3edf 960w, assets/editorial/animation-start-20260913/ansysCfd-wide-1800.webp?v=79560302c1eb 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Javelin pressure field and numerical flow paths at the beginning of the flow sequence." loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
                 <p class="project-meta">Analysis</p>
                 <div class="title-row">
-                <h3><button type="button" class="card-open">Agent-based CFD</button></h3>
+                <h3><a class="card-open" href="case-study.html?project=ansysCfd">Agent-based CFD</a></h3>
                 <a class="project-download project-download--icon" href="assets/claude_ansys_cfd.zip" download aria-label="Download claude_ansys_cfd package" title="Download package"></a>
                 </div>
                 <p class="project-sub">Headless Ansys Fluent, with 11 documented failure modes.</p>
@@ -160,74 +177,74 @@
             </article>
         <article class="project-card" data-category="robotics product fabrication" data-project="pool">
               <div class="card-media card-media--contain card-media--render">
-                <img src="assets/editorial/pool-wide-960.webp" srcset="assets/editorial/pool-wide-480.webp 480w, assets/editorial/pool-wide-960.webp 960w, assets/editorial/pool-wide.webp 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="CAD render of the Pool Sniper launcher with blue printed parts, clear acrylic sides, and metal hardware." loading="lazy" decoding="async" />
+                <img src="assets/editorial/animation-start-20260913/pool-wide-960.webp?v=d14d1960a595" srcset="assets/editorial/animation-start-20260913/pool-wide-480.webp?v=21df1f6ee5c4 480w, assets/editorial/animation-start-20260913/pool-wide-960.webp?v=d14d1960a595 960w, assets/editorial/animation-start-20260913/pool-wide-1800.webp?v=9e21238a7a7a 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Pool Sniper launcher with its cue extended before retraction." loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
                 <p class="project-meta">Robotics</p>
-                <h3><button type="button" class="card-open">Pool Sniper</button></h3>
+                <h3><a class="card-open" href="case-study.html?project=pool">Pool Sniper</a></h3>
                 <p class="project-sub">A laser-aimed cue launcher with adjustable pullback.</p>
               </div>
             </article>
         <article class="project-card" data-category="robotics product fabrication" data-project="lineFollower">
               <div class="card-media card-media--contain card-media--render">
-                <img src="assets/editorial/lineFollower-wide-960.webp" srcset="assets/editorial/lineFollower-wide-480.webp 480w, assets/editorial/lineFollower-wide-960.webp 960w, assets/editorial/lineFollower-wide.webp 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="CAD render of the line-following robot with orange wheels, a teal circuit board, and separately shaded electronics." loading="lazy" decoding="async" />
+                <img src="assets/editorial/animation-start-20260913/lineFollower-wide-960.webp?v=f3d10acdf1f9" srcset="assets/editorial/animation-start-20260913/lineFollower-wide-480.webp?v=9ecb1d9656e5 480w, assets/editorial/animation-start-20260913/lineFollower-wide-960.webp?v=f3d10acdf1f9 960w, assets/editorial/animation-start-20260913/lineFollower-wide-1800.webp?v=a854f61a252d 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Line-following robot with orange wheels and a teal circuit board." loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
                 <p class="project-meta">Robotics</p>
-                <h3><button type="button" class="card-open">LineFollower robot</button></h3>
+                <h3><a class="card-open" href="case-study.html?project=lineFollower">LineFollower robot</a></h3>
                 <p class="project-sub">Sensors, controls, and power on a palm-size chassis.</p>
               </div>
             </article>
         <article class="project-card" data-category="robotics product" data-project="formlabs">
               <div class="card-media card-media--contain card-media--render">
-                <img src="assets/editorial/formlabs-wide-960.webp" srcset="assets/editorial/formlabs-wide-480.webp 480w, assets/editorial/formlabs-wide-960.webp 960w, assets/editorial/formlabs-wide.webp 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="CAD render of the Smelly perfume mixer with white printed structure and steel guide rods." loading="lazy" decoding="async" />
+                <img src="assets/editorial/animation-start-20260913/formlabs-wide-960.webp?v=867ce147dd15" srcset="assets/editorial/animation-start-20260913/formlabs-wide-480.webp?v=2078d7cb0a6b 480w, assets/editorial/animation-start-20260913/formlabs-wide-960.webp?v=867ce147dd15 960w, assets/editorial/animation-start-20260913/formlabs-wide-1800.webp?v=641ab2c47949 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Smelly perfume mixer with its white structure and steel guide rods." loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
                 <p class="project-meta">Robotics</p>
-                <h3><button type="button" class="card-open">Smelly</button></h3>
+                <h3><a class="card-open" href="case-study.html?project=formlabs">Smelly</a></h3>
                 <p class="project-sub">A perfume-mixing machine, built and debugged in 2.5 days.</p>
               </div>
             </article>
         <article class="project-card" data-category="fabrication product" data-project="telecaster">
               <div class="card-media card-media--contain card-media--render">
-                <img src="assets/editorial/telecaster-wide-960.webp" srcset="assets/editorial/telecaster-wide-480.webp 480w, assets/editorial/telecaster-wide-960.webp 960w, assets/editorial/telecaster-wide.webp 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="CAD render of the finished Telecaster-style guitar with photo-matched body, neck, pickguard, and hardware materials." loading="lazy" decoding="async" />
+                <img src="assets/editorial/animation-start-20260913/telecaster-wide-960.webp?v=06a4a7e77290" srcset="assets/editorial/animation-start-20260913/telecaster-wide-480.webp?v=6387951b4ea8 480w, assets/editorial/animation-start-20260913/telecaster-wide-960.webp?v=06a4a7e77290 960w, assets/editorial/animation-start-20260913/telecaster-wide-1800.webp?v=8070d2fb8672 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Finished Telecaster-style guitar at the start of its full rotation." loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
                 <p class="project-meta">Fabrication</p>
-                <h3><button type="button" class="card-open">Telecaster guitar</button></h3>
+                <h3><a class="card-open" href="case-study.html?project=telecaster">Telecaster guitar</a></h3>
                 <p class="project-sub">Walnut, maple, CNC machining, and working electronics.</p>
               </div>
             </article>
         <article class="project-card" data-category="product fabrication" data-project="education">
               <div class="card-media card-media--contain card-media--render">
-                <img src="assets/editorial/start-20260913/education-wide-960.webp?v=a8a5765185da" srcset="assets/editorial/start-20260913/education-wide-480.webp?v=bcd53209dc0d 480w, assets/editorial/start-20260913/education-wide-960.webp?v=a8a5765185da 960w, assets/editorial/start-20260913/education-wide-1800.webp?v=60ef7e0299b7 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Separated guitar education kit in the exact starting layout of its assembly animation." loading="lazy" decoding="async" />
+                <img src="assets/editorial/animation-start-20260913/education-wide-960.webp?v=affcd431789c" srcset="assets/editorial/animation-start-20260913/education-wide-480.webp?v=f32330d208b2 480w, assets/editorial/animation-start-20260913/education-wide-960.webp?v=affcd431789c 960w, assets/editorial/animation-start-20260913/education-wide-1800.webp?v=12f75ab07d1d 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Separated guitar education kit before assembly." loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
                 <p class="project-meta">Product</p>
-                <h3><button type="button" class="card-open">Guitar education kit</button></h3>
+                <h3><a class="card-open" href="case-study.html?project=education">Guitar education kit</a></h3>
                 <p class="project-sub">A ~$100 kit. A playable guitar in about 45 minutes.</p>
               </div>
             </article>
         <article class="project-card" data-category="robotics fabrication" data-project="ftc">
               <div class="card-media card-media--contain card-media--render">
-                <img src="assets/editorial/ftc-wide-960.webp" srcset="assets/editorial/ftc-wide-480.webp 480w, assets/editorial/ftc-wide-960.webp 960w, assets/editorial/ftc-wide.webp 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Studio render of the FTC robot, with an aluminum lift, red panels, dark supports, and mecanum wheels." loading="lazy" decoding="async" />
+                <img src="assets/editorial/animation-start-20260913/ftc-wide-960.webp?v=0fd0dafb6f46" srcset="assets/editorial/animation-start-20260913/ftc-wide-480.webp?v=8c09a3b5c72e 480w, assets/editorial/animation-start-20260913/ftc-wide-960.webp?v=0fd0dafb6f46 960w, assets/editorial/animation-start-20260913/ftc-wide-1800.webp?v=5871c5896c13 1800w" sizes="(max-width: 370px) calc(100vw - 40px), (max-width: 720px) calc((100vw - 56px) / 2), (max-width: 1199px) calc((100vw - 120px) / 3), (max-width: 1552px) calc((100vw - 184px) / 4), 342px" width="1800" height="1200" alt="Assembled FTC robot with an aluminum lift, red panels and mecanum wheels." loading="lazy" decoding="async" />
               </div>
               <div class="project-body">
                 <p class="project-meta">Robotics</p>
-                <h3><button type="button" class="card-open">FTC robot</button></h3>
+                <h3><a class="card-open" href="case-study.html?project=ftc">FTC robot</a></h3>
                 <p class="project-sub">Intake, lift, and mecanum drive for a championship robot.</p>
               </div>
             </article>
         </div>
-        <p class="cover-note">Studio renders for a closer look. Open a project for original build photos and technical results.</p>
+        <p class="cover-note">Every project has its own story: interactive motion, original build photos, and technical results.</p>
         <p class="search-empty" hidden>No matching projects. Try another search or category.</p>
       </section>
 
       <section id="approach" class="approach section-shell" aria-labelledby="approach-title">
         <div class="section-head compact" data-reveal><div><p class="section-kicker">02 / HOW I WORK</p><h2 id="approach-title">Own the whole loop.</h2></div><p class="section-note">Design decisions belong in the shop.<br>Test results belong in the next design.</p></div>
         <div class="method-grid" id="capabilities">
-          <article data-reveal><span class="method-number">01</span><h3>Define &amp; model.</h3><p>Turn constraints into load cases, kinematics, and buildable assemblies.</p><p class="method-tools">SolidWorks · MATLAB · FEA · CFD</p><a class="text-link" href="#work" data-open-project="brakeSim">Thermal &amp; structural modeling <span aria-hidden="true">↗</span></a></article>
-          <article data-reveal><span class="method-number">02</span><h3>Make &amp; integrate.</h3><p>Carry tolerances, tooling, and assembly access from CAD to the finished part.</p><p class="method-tools">CNC · Lathe · TIG · Composites</p><a class="text-link" href="#work" data-open-project="telecaster">From blank to finished build <span aria-hidden="true">↗</span></a></article>
+          <article data-reveal><span class="method-number">01</span><h3>Define &amp; model.</h3><p>Turn constraints into load cases, kinematics, and buildable assemblies.</p><p class="method-tools">SolidWorks · MATLAB · FEA · CFD</p><a class="text-link" href="case-study.html?project=brakeSim">Thermal &amp; structural modeling <span aria-hidden="true">↗</span></a></article>
+          <article data-reveal><span class="method-number">02</span><h3>Make &amp; integrate.</h3><p>Carry tolerances, tooling, and assembly access from CAD to the finished part.</p><p class="method-tools">CNC · Lathe · TIG · Composites</p><a class="text-link" href="case-study.html?project=telecaster">From blank to finished build <span aria-hidden="true">↗</span></a></article>
           <article data-reveal><span class="method-number">03</span><h3>Measure &amp; refine.</h3><p>Use calibrated sensors and physical tests to challenge the model.</p><p class="method-tools">Python · Arduino · Sensors · Testing</p><a class="text-link" href="case-study.html?project=scanner">Calibration in practice <span aria-hidden="true">↗</span></a></article>
         </div>
         <div class="leadership" id="motorsport" data-reveal>
@@ -236,51 +253,11 @@
         </div>
       </section>
 
-      <aside class="studio-invitation section-shell" aria-label="Explore the 3D studio"><a href="experience.html"><img src="assets/studio-teaser.webp" alt="Interactive engineering studio with projects displayed on shelves" width="1280" height="800" loading="lazy" decoding="async"><div><p class="section-kicker">ANOTHER PERSPECTIVE</p><h2>Step inside<br>the studio.</h2><span class="text-link">Explore the interactive 3D space <span aria-hidden="true">↗</span></span></div></a></aside>
       <section id="contact" class="contact" aria-labelledby="contact-title"><div class="section-shell contact-grid"><div data-reveal><p class="section-kicker">03 / LET’S BUILD SOMETHING</p><h2 id="contact-title">What’s next<br>starts here.</h2><p>Seeking a Summer 2027 internship in<br>vehicle systems, robotics, or manufacturing.</p></div><div class="contact-actions" data-reveal><a class="contact-email" href="mailto:kwu@olin.edu">kwu@olin.edu <span aria-hidden="true">↗</span></a><div><a class="button primary" href="assets/kefan-wu-resume.pdf" target="_blank" rel="noopener">View resume (PDF)</a><a class="text-link" href="https://www.linkedin.com/in/kefan-wu-olin/" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a></div></div></div></section>
     </main>
     <footer class="site-footer"><div class="section-shell footer-grid"><span>© 2026 Kefan Wu</span><span>Olin College of Engineering · Needham, MA</span><a href="#top">Back to top ↑</a></div></footer>
-    <div class="modal" id="project-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <div class="modal-backdrop" data-close-modal></div>
-      <article class="modal-panel">
-        <button class="modal-close" type="button" data-close-modal aria-label="Close case study">Close</button>
-        <div class="modal-media">
-          <div class="modal-stage">
-            <img id="modal-image" alt="" />
-            <img id="modal-scrub-img" class="modal-scrub-img" alt="Exploded view" hidden />
-            <span class="modal-scrub-hint" aria-hidden="true">Scroll to explode</span>
-          </div>
-          <div class="modal-fig" aria-hidden="true">
-            <span class="modal-fig__label">Fig.01 · Exploded assembly</span>
-            <span class="modal-fig__track"><i id="modal-scrub-bar"></i></span>
-          </div>
-          <div class="modal-spec" id="modal-spec" hidden></div>
-        </div>
-        <div class="modal-content">
-          <p id="modal-kicker" class="section-kicker"></p>
-          <h2 id="modal-title"></h2>
-          <p id="modal-summary"></p>
-          <a id="modal-case-link" class="modal-studio-link modal-case-link" hidden>Read full case study <span aria-hidden="true">↗</span></a>
-          <a id="modal-studio-link" class="modal-studio-link" href="experience.html">Explore this project in 3D <span aria-hidden="true">&rarr;</span></a>
-          <div id="modal-gallery" class="modal-gallery" aria-label="Project image gallery"></div>
-          <div class="modal-columns">
-            <div>
-              <h3>Key results</h3>
-              <ul id="modal-highlights"></ul>
-            </div>
-            <div id="modal-tools-block">
-              <h3>Tools and methods</h3>
-              <ul id="modal-tools"></ul>
-            </div>
-          </div>
-          <div id="modal-details" class="modal-details" aria-label="Case study details"></div>
-        </div>
-      </article>
-    </div>
-
-    <script src="project-data.js?v=editorial-preview-20260913"></script>
-    <script src="script.js?v=exploded-20260913"></script>
-    <script src="exploded.js?v=motion-loading-20260913"></script>
+    <script src="script.js?v=case-pages-20260913"></script>
+    <script src="exploded.js?v=case-pages-20260913"></script>
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Kefan Wu","url":"https://www.kefanwu.com/","jobTitle":"Mechanical Lead, Olin Electric Motorsports","email":"mailto:kwu@olin.edu","sameAs":["https://www.linkedin.com/in/kefan-wu-olin/"]}</script>
   </body>
 </html>

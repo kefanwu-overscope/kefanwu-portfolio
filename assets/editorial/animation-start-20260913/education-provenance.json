@@ -1,0 +1,115 @@
+{
+  "project": "education",
+  "baselineCommit": "9608b5d12fb059cac15083861bf17dd3eda3fcfb",
+  "coverProgress": 0.0,
+  "sourceFrame": "assets/exploded/functional-20260913/education/00.webp?v=8762b0c92edd",
+  "sourceFrameSha256": "8762b0c92edd245bb87e6e0a828d9a85e76012f76215b5da3fdc190e7b1ab23d",
+  "sourceAnimationProvenance": "assets/exploded/functional-20260913/education/provenance.json",
+  "sourceAnimationProvenanceSha256": "f02b5f81e15b04cf2b8d2c2e237bd93d84bf67cb79b9b8367afcca4037f0f480",
+  "sourceAnimationRevision": "functional-motion-20260913",
+  "sourceFrameCount": 121,
+  "sourceDimensions": [
+    640,
+    427
+  ],
+  "sourceSamples": 48,
+  "sourcePNGSha256": "1f737b7e8ad59e1926e97f7d1a002fc0023b54c216b5bdc36162052b71349302",
+  "proofPNGSha256": "d3f6458433527abd8a9b89c06f85406472aa2a39996f8f970a72e405448dd424",
+  "masterSha256": "bfe3ac2f0849199a8e20aed57ab06899ce4fe142db6c68b30d9cc81e07cff668",
+  "dimensions": [
+    1800,
+    1200
+  ],
+  "samples": 192,
+  "pixelAspect": [
+    1.0,
+    1.0007812976837158
+  ],
+  "camera": {
+    "location": [
+      1.9235137701034546,
+      -10.079805374145508,
+      3.364858865737915
+    ],
+    "rotation": [
+      1.4247565269470215,
+      0.0,
+      0.19739560782909393
+    ],
+    "matrixWorld": [
+      [
+        0.9805806875228882,
+        -0.02853906899690628,
+        0.1940285563468933,
+        1.9235137701034546
+      ],
+      [
+        0.19611617922782898,
+        0.14269530773162842,
+        -0.9701424837112427,
+        -10.079805374145508
+      ],
+      [
+        0.0,
+        0.9893551468849182,
+        0.14552123844623566,
+        3.364858865737915
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "type": "ORTHO",
+    "orthoScale": 6.5272955894470215,
+    "sensorFit": "HORIZONTAL",
+    "shiftX": 0.0,
+    "shiftY": 0.0
+  },
+  "groundZ": -0.019999999552965164,
+  "sceneSha256BeforeResolutionChange": "d958646e9b3cb9928d42b177b9e48212d7ca91e6d01aae7005935e3b03b99b74",
+  "sceneSha256AfterResolutionChange": "d958646e9b3cb9928d42b177b9e48212d7ca91e6d01aae7005935e3b03b99b74",
+  "cameraFrameMaximumError": 0.0,
+  "motionReportUnchanged": true,
+  "motionKinematicsUnchanged": true,
+  "documentaryDifferences": [],
+  "renderer": "tools/exploded-render/render_initial_covers.py",
+  "rendererSha256": "14e8dd2e10fe088f6957583b2272a23ded4bfc4c2c8693fbf9c9e61fc8f87f37",
+  "animationRenderer": "tools/exploded-render/render_exploded.py",
+  "animationRendererSha256": "f2867efacef82fee605747035230b1ad12225e4eb6c47ecbbd655ba4633a27b9",
+  "projectionPolicy": "Stage at delivered animation resolution; preserve the exact frame-zero camera and compensate output pixel aspect for the rounded 640x427 source.",
+  "proofPixelAudit": {
+    "maximumChannelDifference": 1,
+    "meanChannelDifference": 1.4637002341920375e-05,
+    "changedPixelCount": 12,
+    "totalPixels": 273280,
+    "sourcePixelsSha256": "ba1429ec3683cfd17cba72bde66300759b9f600e99a1bdb935b6dd0e0f619eaa",
+    "proofPixelsSha256": "a9f0fd1f97feb72d1c19a63479f68dce4e4672b9372667082d2b4c3b1a9962cc"
+  },
+  "offlineRendererSource": "case-pages-20260913/cover-renderer-sources/14e8dd2e10fe088f6957583b2272a23ded4bfc4c2c8693fbf9c9e61fc8f87f37.py",
+  "variants": [
+    {
+      "src": "assets/editorial/animation-start-20260913/education-wide-480.webp",
+      "width": 480,
+      "height": 320,
+      "bytes": 4436,
+      "sha256": "f32330d208b27027f90b192e8f022eaabe4729f74a4bb04b9aa4455bbaeb1a61"
+    },
+    {
+      "src": "assets/editorial/animation-start-20260913/education-wide-960.webp",
+      "width": 960,
+      "height": 640,
+      "bytes": 10734,
+      "sha256": "affcd431789c793f3acaa138df3013e639bce98ad250184d1cd20c3679d7ef8d"
+    },
+    {
+      "src": "assets/editorial/animation-start-20260913/education-wide-1800.webp",
+      "width": 1800,
+      "height": 1200,
+      "bytes": 30130,
+      "sha256": "12f75ab07d1d7f2e64cd9af0b744d8e8932695fed9fcda9778e7aa64d09685a5"
+    }
+  ]
+}

@@ -1,41 +1,22 @@
 # Current release and local preview · 2026-09-13
 
-## Current motion and loading delivery · 2026-09-13
+## Case-page preview · 2026-09-13
 
-This delivery is prepared against production `bca2175`. The homepage cache label
-is `motion-loading-20260913`; preview: http://127.0.0.1:4176/#work.
-The planned backup is
-`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-motion-loading`.
-Its `release-metadata.json` and `deployment-verification.json` will record exact
-commits and verified online status when publication completes.
+Prepared against production `9608b5d`; revision `case-pages-20260913`.
+The planned backup is `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-case-pages`. Its
+`release-metadata.json` and `deployment-verification.json` establish exact commit
+and online status when publication completes.
 
-- Vine and Education covers show their exact animation start at progress 0:
-  the retracted vine and the separated guitar kit. Their animation paths remain unchanged.
-- Javelin combines flight sway with four rotating propellers. Telecaster now has
-  a complete 360° turntable animation, bringing the homepage to 16 animated cards.
-- Frames become usable progressively. Each sequence starts with a four-frame
-  chunk, followed by chunks of up to 16 frames and 256 KiB. Original individual
-  frame URLs remain fallback; loading uses at most three concurrent requests.
+Open `http://127.0.0.1:4176/#work` for the 16 linked project cards, or
+`http://127.0.0.1:4176/case-study.html?project=scanner` for the reference layout.
+Every project key has the same native page structure with four chapters, source
+images, zoom and technical records. The homepage uses a primary 3D action,
+highlighted navigation and a large workshop preview before the project grid.
 
-The 16 sequences contain 2,032 static 640×427 WebP frames, rendered at 48 Cycles
-samples, totaling 24,347,588 image bytes. Vine, tensile, AURA and Pool retain 145
-frames each; the other twelve have 121. The two new sequences use
-`assets/exploded/flight-20260913/`; fourteen retain their exact prior frame files
-and metadata across `refined-20260913/` and `functional-20260913/`.
-The 159 files in `assets/exploded/chunks-20260913/` concatenate the original WebP
-bytes without recompression, changed dimensions, dropped frames or changed timing.
-Transport metadata adds a small manifest cost; image-byte overhead is exactly zero.
-
-Six new responsive cover files use `assets/editorial/start-20260913/`; the other
-42 current variants and all 60 historical cover files are preserved. Original
-CAD, galleries, content and the 3D studio remain unchanged. Reversible sliders,
-wheel endpoints, reduced motion, modal reset and the 160 MiB decoded-image budget
-remain supported. Existing CFD accuracy, Pool source-tooth overlap and Education
-display-fit limitations still apply; see `EXPLODED_VIEWS.md`.
-
-Current evidence and PNG masters are in `../.codex/motion-loading-20260913/`,
-including `poses/`, `loader/` and `transport/`. Earlier motion and CFD evidence
-remain required for the fourteen retained sequences and complete recovery.
+Detail previews share the existing animation at a maximum 640 CSS-pixel width;
+check hover/scroll, reversal, endpoint page scrolling and touch/keyboard sliders.
+Covers come from progress 0 through `assets/editorial/animation-covers.json`.
+The 2,032 frames, 159 chunks and 24,347,588 bytes retain their original quality.
 
 Start the preview from the parent WEBSITE directory:
 
@@ -46,7 +27,9 @@ Start the preview from the parent WEBSITE directory:
 The server uses only 127.0.0.1. It supports the existing 3D site and PDF/assets.
 No application build or dependency installation is required.
 
-Current motion browser QA passed; see `../.codex/motion-loading-20260913/browser-local.json`.
+Current content checks are in `../.codex/case-pages-20260913/content/`.
+New cover and browser acceptance belongs in `../.codex/case-pages-20260913/`;
+prior motion-loading browser captures are historical.
 Earlier typography/layout screenshots live in `../.codex/readability-20260913/`.
 Angle/skills/team screenshots live in `../.codex/cover-refinement-20260913/`.
 Catalogue validation and earlier screenshots live in `../.codex/rendered-covers-20260913/`.

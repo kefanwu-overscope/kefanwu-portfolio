@@ -1,0 +1,113 @@
+{
+  "project": "vineRobot",
+  "baselineCommit": "9608b5d12fb059cac15083861bf17dd3eda3fcfb",
+  "coverProgress": 0.0,
+  "sourceFrame": "assets/exploded/functional-20260913/vineRobot/00.webp?v=a9263ba89452",
+  "sourceFrameSha256": "a9263ba89452aace4e0ef028aa320f9ed3e354cad618cf5f6853de7e8189e8c6",
+  "sourceAnimationProvenance": "assets/exploded/functional-20260913/vineRobot/provenance.json",
+  "sourceAnimationProvenanceSha256": "8d35bddc4d35675854d906b23a7e684bd8ccc075d37b56f474e4da81e2fcc390",
+  "sourceAnimationRevision": "functional-motion-20260913",
+  "sourceFrameCount": 145,
+  "sourceDimensions": [
+    640,
+    427
+  ],
+  "sourceSamples": 48,
+  "sourcePNGSha256": "f83fd69843f56d46c72ef9fc0a82bb10cf1b759ec5aa033f81540872026b5047",
+  "proofPNGSha256": "f197460659c464f02eba033b7494c333380c720c7ba70f58e3e9ec41a3580f21",
+  "masterSha256": "8316bf77f6af15ff5995b201352eb89b5d877c302db06eb47b4cfd17ed5c45b2",
+  "dimensions": [
+    1800,
+    1200
+  ],
+  "samples": 192,
+  "pixelAspect": [
+    1.0,
+    1.0007812976837158
+  ],
+  "camera": {
+    "location": [
+      -9.355234146118164,
+      -6.165333271026611,
+      5.735403060913086
+    ],
+    "rotation": [
+      1.2042503356933594,
+      1.0519215720705688e-08,
+      -1.0022717714309692
+    ],
+    "matrixWorld": [
+      [
+        0.538389265537262,
+        0.3020164668560028,
+        -0.786716639995575,
+        -9.355234146118164
+      ],
+      [
+        -0.8426962494850159,
+        0.19295494258403778,
+        -0.50262451171875,
+        -6.165333271026611
+      ],
+      [
+        -1.0519215720705688e-08,
+        0.9335708022117615,
+        0.35839301347732544,
+        5.735403060913086
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "type": "ORTHO",
+    "orthoScale": 5.793547630310059,
+    "sensorFit": "HORIZONTAL",
+    "shiftX": 0.0,
+    "shiftY": 0.0
+  },
+  "groundZ": -0.019999999552965164,
+  "sceneSha256BeforeResolutionChange": "666a39f5daa9bf5af1284a0eb8a89ad0b6ea89607b66c3c923746461547900c7",
+  "sceneSha256AfterResolutionChange": "666a39f5daa9bf5af1284a0eb8a89ad0b6ea89607b66c3c923746461547900c7",
+  "cameraFrameMaximumError": 0.0,
+  "motionReportUnchanged": true,
+  "renderer": "tools/exploded-render/render_initial_covers.py",
+  "rendererSha256": "1deb1376875131bb10e74b50950cc3c39bc2484145b0269fe52937efd1ab07dd",
+  "animationRenderer": "tools/exploded-render/render_exploded.py",
+  "animationRendererSha256": "f2867efacef82fee605747035230b1ad12225e4eb6c47ecbbd655ba4633a27b9",
+  "projectionPolicy": "Stage at delivered animation resolution; preserve the exact frame-zero camera and compensate output pixel aspect for the rounded 640x427 source.",
+  "proofPixelAudit": {
+    "maximumChannelDifference": 1,
+    "meanChannelDifference": 3.049375487900078e-05,
+    "changedPixelCount": 25,
+    "totalPixels": 273280,
+    "sourcePixelsSha256": "520d496735c109bcacb03b9e7b62a8cfdbd7326948dec91cd93f13c17841381a",
+    "proofPixelsSha256": "65483d5055e4cb4b58048f5b8518f2a3b946c734fd5517036f1479de1749a824"
+  },
+  "offlineRendererSource": "case-pages-20260913/cover-renderer-sources/1deb1376875131bb10e74b50950cc3c39bc2484145b0269fe52937efd1ab07dd.py",
+  "variants": [
+    {
+      "src": "assets/editorial/animation-start-20260913/vineRobot-wide-480.webp",
+      "width": 480,
+      "height": 320,
+      "bytes": 10816,
+      "sha256": "14efea96c9efa1215305a1efd1ce066f8c6449e77b033692fe832a7572c7a200"
+    },
+    {
+      "src": "assets/editorial/animation-start-20260913/vineRobot-wide-960.webp",
+      "width": 960,
+      "height": 640,
+      "bytes": 24960,
+      "sha256": "c5c0b88ca11748fcaaf31454bee3ab081ee4975049265baae54b7e26b1fcb788"
+    },
+    {
+      "src": "assets/editorial/animation-start-20260913/vineRobot-wide-1800.webp",
+      "width": 1800,
+      "height": 1200,
+      "bytes": 65542,
+      "sha256": "67b6707786d5bf8e45559036a3b19124e9277e723d8fbb0949f17d1b15e22598"
+    }
+  ]
+}

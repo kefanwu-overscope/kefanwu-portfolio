@@ -1,0 +1,113 @@
+{
+  "project": "carbonSeat",
+  "baselineCommit": "9608b5d12fb059cac15083861bf17dd3eda3fcfb",
+  "coverProgress": 0.0,
+  "sourceFrame": "assets/exploded/refined-20260913/carbonSeat/00.webp?v=e139d5b0ff92",
+  "sourceFrameSha256": "e139d5b0ff92e86f1c6ba79d29e8297a6bac93cddd9f80d2bcd782fe393f9efa",
+  "sourceAnimationProvenance": "assets/exploded/refined-20260913/carbonSeat/provenance.json",
+  "sourceAnimationProvenanceSha256": "0c28980f7e5e9db417417ce50a11f5f8759a06f0e8ccfdf0f8f2c83d6f0a77d3",
+  "sourceAnimationRevision": "motion-refinement-20260913",
+  "sourceFrameCount": 121,
+  "sourceDimensions": [
+    640,
+    427
+  ],
+  "sourceSamples": 48,
+  "sourcePNGSha256": "90c928e8acb7847db548454875e7deb39b71772132c0aa1b0ff1710c6d59219a",
+  "proofPNGSha256": "ac72481c5c53a1f0a926b630137da92a5a3dbd57f81210efa10d535170cb03a8",
+  "masterSha256": "1781d2427f82a8e229fbc7e94b79f1120e68ca143ea960122efdc6099d187c50",
+  "dimensions": [
+    1800,
+    1200
+  ],
+  "samples": 192,
+  "pixelAspect": [
+    1.0,
+    1.0007812976837158
+  ],
+  "camera": {
+    "location": [
+      5.537104606628418,
+      -9.496232032775879,
+      6.220449924468994
+    ],
+    "rotation": [
+      1.1596143245697021,
+      4.4814473909582375e-08,
+      0.5317239761352539
+    ],
+    "matrixWorld": [
+      [
+        0.861934244632721,
+        -0.20265237987041473,
+        0.4647594392299652,
+        5.537104606628418
+      ],
+      [
+        0.5070200562477112,
+        0.34450918436050415,
+        -0.7900912165641785,
+        -9.496232032775879
+      ],
+      [
+        -4.4814473909582375e-08,
+        0.9166490435600281,
+        0.399693101644516,
+        6.220449924468994
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "type": "ORTHO",
+    "orthoScale": 6.784670829772949,
+    "sensorFit": "HORIZONTAL",
+    "shiftX": 0.0,
+    "shiftY": 0.0
+  },
+  "groundZ": -0.019999999552965164,
+  "sceneSha256BeforeResolutionChange": "534bd8c4856406787fabf82bd5ffec4cbfd20db0a6b1aa28bab1148f60672616",
+  "sceneSha256AfterResolutionChange": "534bd8c4856406787fabf82bd5ffec4cbfd20db0a6b1aa28bab1148f60672616",
+  "cameraFrameMaximumError": 0.0,
+  "motionReportUnchanged": true,
+  "renderer": "tools/exploded-render/render_initial_covers.py",
+  "rendererSha256": "1deb1376875131bb10e74b50950cc3c39bc2484145b0269fe52937efd1ab07dd",
+  "animationRenderer": "tools/exploded-render/render_exploded.py",
+  "animationRendererSha256": "f2867efacef82fee605747035230b1ad12225e4eb6c47ecbbd655ba4633a27b9",
+  "projectionPolicy": "Stage at delivered animation resolution; preserve the exact frame-zero camera and compensate output pixel aspect for the rounded 640x427 source.",
+  "proofPixelAudit": {
+    "maximumChannelDifference": 1,
+    "meanChannelDifference": 3.293325526932084e-05,
+    "changedPixelCount": 27,
+    "totalPixels": 273280,
+    "sourcePixelsSha256": "370c55f37497fe1c47bbfee3f5fd7683690a32b959b2058543da748dbbc7be85",
+    "proofPixelsSha256": "47b783046275b9254fa8fb4f365873d9731d7b97028da88610132614fcbafd9a"
+  },
+  "offlineRendererSource": "case-pages-20260913/cover-renderer-sources/1deb1376875131bb10e74b50950cc3c39bc2484145b0269fe52937efd1ab07dd.py",
+  "variants": [
+    {
+      "src": "assets/editorial/animation-start-20260913/carbonSeat-wide-480.webp",
+      "width": 480,
+      "height": 320,
+      "bytes": 4490,
+      "sha256": "b4d0ed782e0422636e748d19a93462813a578f00ed16686f55de8498d73e1604"
+    },
+    {
+      "src": "assets/editorial/animation-start-20260913/carbonSeat-wide-960.webp",
+      "width": 960,
+      "height": 640,
+      "bytes": 13216,
+      "sha256": "4ce57e1ee13b1bd146b886495fb535a38ded323927e22cb5ae27a02749b0b40e"
+    },
+    {
+      "src": "assets/editorial/animation-start-20260913/carbonSeat-wide-1800.webp",
+      "width": 1800,
+      "height": 1200,
+      "bytes": 68180,
+      "sha256": "e55168f5b204f8d9b2696c6bf585bb26905237a1fc78c0e88b35d39e6ce6631f"
+    }
+  ]
+}

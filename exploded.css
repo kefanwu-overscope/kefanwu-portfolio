@@ -1,16 +1,16 @@
 /* Project-card frame previews. All image work begins on interaction. */
-.editorial .project-grid .project-card.has-explode .card-media > .card-explode-poster,
-.editorial .project-grid .project-card .card-media .card-explode-frame {
+:is(.editorial .project-grid .project-card, .case-animation-host).has-explode .card-media > .card-explode-poster,
+:is(.editorial .project-grid .project-card, .case-animation-host) .card-media .card-explode-frame {
   transform: none !important;
   filter: none;
   padding: 0;
   object-fit: cover;
 }
-.editorial .project-card .card-explode-poster {
+:is(.editorial .project-card, .case-animation-host) .card-explode-poster {
   opacity: 1;
   transition: opacity 160ms ease;
 }
-.editorial .project-card .card-explode-stage {
+:is(.editorial .project-card, .case-animation-host) .card-explode-stage {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -18,7 +18,7 @@
   transition: opacity 160ms ease;
   background: #090c10;
 }
-.editorial .project-grid .project-card .card-media .card-explode-frame {
+:is(.editorial .project-grid .project-card, .case-animation-host) .card-media .card-explode-frame {
   position: absolute;
   inset: 0;
   display: block;
@@ -26,9 +26,9 @@
   height: 100%;
   transition: none;
 }
-.editorial .project-card.is-explode-playing .card-explode-stage { opacity: 1; }
-.editorial .project-card.is-explode-playing .card-explode-poster { opacity: 0; }
-.editorial .card-explode-ui {
+:is(.editorial .project-card, .case-animation-host).is-explode-playing .card-explode-stage { opacity: 1; }
+:is(.editorial .project-card, .case-animation-host).is-explode-playing .card-explode-poster { opacity: 0; }
+:is(.editorial, .case-animation-host) .card-explode-ui {
   position: absolute;
   inset: 0;
   z-index: 4;
@@ -36,9 +36,9 @@
   opacity: 0;
   transition: opacity 140ms ease;
 }
-.editorial .card-explode-ui[hidden] { display: none; }
-.editorial .project-card:is(:hover, :focus-within, .is-explode-active) .card-explode-ui { opacity: 1; }
-.editorial .card-explode-label {
+:is(.editorial, .case-animation-host) .card-explode-ui[hidden] { display: none; }
+:is(.editorial .project-card, .case-animation-host):is(:hover, :focus-within, .is-explode-active) .card-explode-ui { opacity: 1; }
+:is(.editorial, .case-animation-host) .card-explode-label {
   position: absolute;
   top: 9px;
   left: 10px;
@@ -49,7 +49,7 @@
   font: 10px/1.35 var(--font-mono);
   letter-spacing: .015em;
 }
-.editorial .card-explode-controls {
+:is(.editorial, .case-animation-host) .card-explode-controls {
   position: absolute;
   right: 10px;
   bottom: 0;
@@ -60,7 +60,7 @@
   min-height: 36px;
   pointer-events: auto;
 }
-.editorial .card-explode-controls::before {
+:is(.editorial, .case-animation-host) .card-explode-controls::before {
   content: attr(data-hint);
   flex: 0 0 auto;
   color: #ccd5df;
@@ -68,7 +68,7 @@
   text-shadow: 0 1px 3px #000, 0 0 8px #000;
   pointer-events: none;
 }
-.editorial .card-explode-controls input {
+:is(.editorial, .case-animation-host) .card-explode-controls input {
   appearance: auto;
   width: 100%;
   min-width: 0;
@@ -82,12 +82,12 @@
   cursor: ew-resize;
   touch-action: pan-y;
 }
-.editorial .card-explode-controls input:focus-visible {
+:is(.editorial, .case-animation-host) .card-explode-controls input:focus-visible {
   outline: 2px solid #aacbff;
   outline-offset: 2px;
   border-radius: 3px;
 }
-.editorial .is-explode-loading .card-explode-controls::before { content: "Loading preview"; }
+:is(.editorial .is-explode-loading, .case-animation-host.is-explode-loading) .card-explode-controls::before { content: "Loading preview"; }
 .editorial .project-card:is([data-explode-mode="assembling"], [data-explode-mode="flow"]) .card-explode-controls {
   left: auto;
   width: 36%;
@@ -95,14 +95,14 @@
 }
 .editorial .project-card:is([data-explode-mode="assembling"], [data-explode-mode="flow"]) .card-explode-controls::before { display: none; }
 @media (hover: none), (pointer: coarse) {
-  .editorial .card-explode-ui { opacity: 1; }
-  .editorial .card-explode-label { top: 6px; left: 6px; font-size: 9px; }
-  .editorial .card-explode-controls { left: 8px; right: 8px; min-height: 44px; }
-  .editorial .card-explode-controls input { min-height: 44px; }
-  .editorial .card-explode-controls::before { display: none; }
+  :is(.editorial, .case-animation-host) .card-explode-ui { opacity: 1; }
+  :is(.editorial, .case-animation-host) .card-explode-label { top: 6px; left: 6px; font-size: 9px; }
+  :is(.editorial, .case-animation-host) .card-explode-controls { left: 8px; right: 8px; min-height: 44px; }
+  :is(.editorial, .case-animation-host) .card-explode-controls input { min-height: 44px; }
+  :is(.editorial, .case-animation-host) .card-explode-controls::before { display: none; }
 }
 @media (max-width: 1000px) {
-  .editorial .card-explode-controls::before { display: none; }
+  :is(.editorial, .case-animation-host) .card-explode-controls::before { display: none; }
 }
 @media (max-width: 600px) {
   .editorial .project-card:is([data-explode-mode="assembling"], [data-explode-mode="flow"]) .card-explode-controls {
@@ -110,11 +110,11 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .editorial .project-card .card-explode-poster,
-  .editorial .project-card .card-explode-stage,
-  .editorial .card-explode-ui { transition: none; }
+  :is(.editorial .project-card, .case-animation-host) .card-explode-poster,
+  :is(.editorial .project-card, .case-animation-host) .card-explode-stage,
+  :is(.editorial, .case-animation-host) .card-explode-ui { transition: none; }
 }
 @media print {
-  .editorial .card-explode-ui, .editorial .card-explode-stage { display: none; }
-  .editorial .project-card .card-explode-poster { opacity: 1; }
+  :is(.editorial, .case-animation-host) .card-explode-ui, :is(.editorial, .case-animation-host) .card-explode-stage { display: none; }
+  :is(.editorial .project-card, .case-animation-host) .card-explode-poster { opacity: 1; }
 }

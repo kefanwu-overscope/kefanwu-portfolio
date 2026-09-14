@@ -1,0 +1,113 @@
+{
+  "project": "brakeSim",
+  "baselineCommit": "9608b5d12fb059cac15083861bf17dd3eda3fcfb",
+  "coverProgress": 0.0,
+  "sourceFrame": "assets/exploded/functional-20260913/brakeSim/00.webp?v=7a1c2e5f7cdf",
+  "sourceFrameSha256": "7a1c2e5f7cdfbfd008cdbe0c269eed3b6595e45386a0a4aeb6af19535d86adb5",
+  "sourceAnimationProvenance": "assets/exploded/functional-20260913/brakeSim/provenance.json",
+  "sourceAnimationProvenanceSha256": "487433a7f563fcd2f11797706f32e3a8679da87d150b104f40c81277c226db91",
+  "sourceAnimationRevision": "functional-motion-20260913",
+  "sourceFrameCount": 121,
+  "sourceDimensions": [
+    640,
+    427
+  ],
+  "sourceSamples": 48,
+  "sourcePNGSha256": "a0b5f66177c207787fda556e33e0aca4f9d74e67afacbfe383c3c5696debe521",
+  "proofPNGSha256": "3ddcbeecdba92a5a6af227d89cf3ac77054b7d7e81c07179a9e294dfd6c76073",
+  "masterSha256": "fd8938bdc9a7aff35be56bec1fc85a85d81b9fc3d2d09c9cd57dc04bc9867549",
+  "dimensions": [
+    1800,
+    1200
+  ],
+  "samples": 192,
+  "pixelAspect": [
+    1.0,
+    1.0007812976837158
+  ],
+  "camera": {
+    "location": [
+      11.02041244506836,
+      -3.1486892700195312,
+      4.966976165771484
+    ],
+    "rotation": [
+      1.2710474729537964,
+      7.601601481610487e-08,
+      1.2924968004226685
+    ],
+    "matrixWorld": [
+      [
+        0.2747209966182709,
+        -0.2839190363883972,
+        0.9186502695083618,
+        11.02041244506836
+      ],
+      [
+        0.9615240097045898,
+        0.08111976087093353,
+        -0.26247134804725647,
+        -3.1486892700195312
+      ],
+      [
+        -7.601601481610487e-08,
+        0.9554106593132019,
+        0.2952802777290344,
+        4.966976165771484
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "type": "ORTHO",
+    "orthoScale": 4.944589138031006,
+    "sensorFit": "HORIZONTAL",
+    "shiftX": 0.0,
+    "shiftY": 0.0
+  },
+  "groundZ": -0.019999999552965164,
+  "sceneSha256BeforeResolutionChange": "fa180f69ef2d1f96dfbdee6733d1fee22cba675c96f8d36e52c066d25ab162b0",
+  "sceneSha256AfterResolutionChange": "fa180f69ef2d1f96dfbdee6733d1fee22cba675c96f8d36e52c066d25ab162b0",
+  "cameraFrameMaximumError": 0.0,
+  "motionReportUnchanged": true,
+  "renderer": "tools/exploded-render/render_initial_covers.py",
+  "rendererSha256": "1deb1376875131bb10e74b50950cc3c39bc2484145b0269fe52937efd1ab07dd",
+  "animationRenderer": "tools/exploded-render/render_exploded.py",
+  "animationRendererSha256": "f2867efacef82fee605747035230b1ad12225e4eb6c47ecbbd655ba4633a27b9",
+  "projectionPolicy": "Stage at delivered animation resolution; preserve the exact frame-zero camera and compensate output pixel aspect for the rounded 640x427 source.",
+  "proofPixelAudit": {
+    "maximumChannelDifference": 1,
+    "meanChannelDifference": 3.9032006245121e-05,
+    "changedPixelCount": 32,
+    "totalPixels": 273280,
+    "sourcePixelsSha256": "37dad98c4d790a79b253abb5395fca0a470af6563e6d578a6c5b0a1da28f55dd",
+    "proofPixelsSha256": "c0e04ce8ea159d71cb96be6e83055bcfad649d81cf1bb570441ba25206f36634"
+  },
+  "offlineRendererSource": "case-pages-20260913/cover-renderer-sources/1deb1376875131bb10e74b50950cc3c39bc2484145b0269fe52937efd1ab07dd.py",
+  "variants": [
+    {
+      "src": "assets/editorial/animation-start-20260913/brakeSim-wide-480.webp",
+      "width": 480,
+      "height": 320,
+      "bytes": 20438,
+      "sha256": "7f8140ac58d467e5aeb78cc838b15248cb5d6e7b3511aada960a4110d37b979f"
+    },
+    {
+      "src": "assets/editorial/animation-start-20260913/brakeSim-wide-960.webp",
+      "width": 960,
+      "height": 640,
+      "bytes": 47746,
+      "sha256": "6f4f3c1e9704c299b2a52c8c1ff37534255259c734ee1118b4a07898f98eb6d1"
+    },
+    {
+      "src": "assets/editorial/animation-start-20260913/brakeSim-wide-1800.webp",
+      "width": 1800,
+      "height": 1200,
+      "bytes": 114738,
+      "sha256": "3a64d74549f918571cb9205480df5a35e0a3d60fe85c361fd5e1fe98a24eb1d5"
+    }
+  ]
+}

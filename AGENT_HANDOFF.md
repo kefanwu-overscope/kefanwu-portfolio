@@ -1,6 +1,40 @@
 # Agent Handoff - Kefan Wu Portfolio
 
-## Current motion and loading delivery · 2026-09-13
+## Current case-page delivery · 2026-09-13
+
+Prepared against production `9608b5d`; revision `case-pages-20260913`.
+The planned backup is `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-case-pages`. Its
+`release-metadata.json` and `deployment-verification.json` establish exact commit
+and online status when publication completes.
+
+- All 16 homepage cards use ordinary case-page links. `case-study-data.js` has
+  16 stories, 64 chapters, valid source-gallery indexes and cyclic next links.
+  The original three stories retain their prose; source `project-data.js` and
+  all 93 gallery images are unchanged. The CFD package remains downloadable.
+- `case-study.js/html/css` provide the shared page, chapters, technical record,
+  image-only lightbox and a maximum 640 CSS-pixel animation preview. Hover/wheel
+  input is reversible; sliders support touch and keyboard. The homepage project
+  modal is removed. Education's studio link opens the general room.
+- Homepage hero/nav actions emphasize the 3D Studio. A large workshop preview
+  sits between hero and work. Existing studio exhibits and source CAD remain.
+- Every cover uses progress 0 and matching camera/projection. `render_initial_covers.py`,
+  `pack_initial_covers.py` and `validate_initial_covers.py` own the new 48-file set
+  in `assets/editorial/animation-start-20260913/` and runtime
+  `assets/editorial/animation-covers.json`. Synchronize static fallback sources.
+- Existing 2,032 frames, 159 chunks and 24,347,588 image bytes retain their content
+  and quality. Shared loading keeps the four-frame bootstrap, three-request cap,
+  individual-frame fallback and 160 MiB decoded-image budget.
+
+Current evidence is `../.codex/case-pages-20260913/`: `content/editorial-validation.json`,
+`runtime/` and cover/projection records. Content checks passed; new cover and
+browser acceptance is established by their current reports when complete.
+Existing CFD accuracy, Pool source overlap and Education display-fit limitations
+remain; see `EXPLODED_VIEWS.md`. Reproduction is in the two rendering READMEs.
+
+The sections below are historical snapshots. Current navigation, covers, counts
+and runtime references are governed by this section.
+
+## Historical delivery · motion and loading · 2026-09-13
 
 This delivery is prepared against production `bca2175`. The homepage cache label
 is `motion-loading-20260913`; preview: http://127.0.0.1:4176/#work.

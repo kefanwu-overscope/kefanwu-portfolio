@@ -1,0 +1,113 @@
+{
+  "project": "materialTest",
+  "baselineCommit": "9608b5d12fb059cac15083861bf17dd3eda3fcfb",
+  "coverProgress": 0.0,
+  "sourceFrame": "assets/exploded/refined-20260913/materialTest/00.webp?v=f066fae29ae1",
+  "sourceFrameSha256": "f066fae29ae10bb8c2cbb7a432d427e45a1c9e3a52c62e74f553e15cd92adb5c",
+  "sourceAnimationProvenance": "assets/exploded/refined-20260913/materialTest/provenance.json",
+  "sourceAnimationProvenanceSha256": "a0cc31afecc019239188081bdfb4cd74ea062ec383511027bc8246cd132d3d79",
+  "sourceAnimationRevision": "motion-refinement-20260913",
+  "sourceFrameCount": 145,
+  "sourceDimensions": [
+    640,
+    427
+  ],
+  "sourceSamples": 48,
+  "sourcePNGSha256": "7c8d90736f8e7214fe1abfd853545ab626cd8356852b64f306ba5f112947acaa",
+  "proofPNGSha256": "76dcfaf5e3303b854bb8acf4b22531fb560ff41e819f54bd9b9d1410d562092a",
+  "masterSha256": "5a62920fff71833204682934b655f3a83a31f00959408ed6b85d572d463ed356",
+  "dimensions": [
+    1800,
+    1200
+  ],
+  "samples": 192,
+  "pixelAspect": [
+    1.0,
+    1.0007812976837158
+  ],
+  "camera": {
+    "location": [
+      5.581137180328369,
+      -9.487800598144531,
+      6.190881252288818
+    ],
+    "rotation": [
+      1.1596143245697021,
+      4.4814473909582375e-08,
+      0.5317239761352539
+    ],
+    "matrixWorld": [
+      [
+        0.861934244632721,
+        -0.20265237987041473,
+        0.4647594392299652,
+        5.581137180328369
+      ],
+      [
+        0.5070200562477112,
+        0.34450918436050415,
+        -0.7900912165641785,
+        -9.487800598144531
+      ],
+      [
+        -4.4814473909582375e-08,
+        0.9166490435600281,
+        0.399693101644516,
+        6.190881252288818
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "type": "ORTHO",
+    "orthoScale": 5.550699710845947,
+    "sensorFit": "HORIZONTAL",
+    "shiftX": 0.0,
+    "shiftY": 0.0
+  },
+  "groundZ": -0.019999999552965164,
+  "sceneSha256BeforeResolutionChange": "da9e432fb37695bb70fbf38a686b5620040d63d8d413b7e636d8165e283ba87d",
+  "sceneSha256AfterResolutionChange": "da9e432fb37695bb70fbf38a686b5620040d63d8d413b7e636d8165e283ba87d",
+  "cameraFrameMaximumError": 0.0,
+  "motionReportUnchanged": true,
+  "renderer": "tools/exploded-render/render_initial_covers.py",
+  "rendererSha256": "1deb1376875131bb10e74b50950cc3c39bc2484145b0269fe52937efd1ab07dd",
+  "animationRenderer": "tools/exploded-render/render_exploded.py",
+  "animationRendererSha256": "f2867efacef82fee605747035230b1ad12225e4eb6c47ecbbd655ba4633a27b9",
+  "projectionPolicy": "Stage at delivered animation resolution; preserve the exact frame-zero camera and compensate output pixel aspect for the rounded 640x427 source.",
+  "proofPixelAudit": {
+    "maximumChannelDifference": 1,
+    "meanChannelDifference": 2.1955503512880562e-05,
+    "changedPixelCount": 18,
+    "totalPixels": 273280,
+    "sourcePixelsSha256": "3b61ca4a689b5af510efecc6a3a3c570e585323abf8af70501a197785f26ef71",
+    "proofPixelsSha256": "8e91295651aa4acbe6e22cdef58cab66050cc341ed423042cd6f6a90bfc4d7e5"
+  },
+  "offlineRendererSource": "case-pages-20260913/cover-renderer-sources/1deb1376875131bb10e74b50950cc3c39bc2484145b0269fe52937efd1ab07dd.py",
+  "variants": [
+    {
+      "src": "assets/editorial/animation-start-20260913/materialTest-wide-480.webp",
+      "width": 480,
+      "height": 320,
+      "bytes": 6058,
+      "sha256": "fc175327fb3d7ee236182e56edab39108ea8696a51a19185f3d1816ff23f28a5"
+    },
+    {
+      "src": "assets/editorial/animation-start-20260913/materialTest-wide-960.webp",
+      "width": 960,
+      "height": 640,
+      "bytes": 14366,
+      "sha256": "ddf2eb2757161ade9647ccbf7ad8fda68bf80fa28bf036e6ba9d20bfd82dd711"
+    },
+    {
+      "src": "assets/editorial/animation-start-20260913/materialTest-wide-1800.webp",
+      "width": 1800,
+      "height": 1200,
+      "bytes": 38556,
+      "sha256": "ae3f78031cc95c6b8012e922fc008e3c67a8d52330f286a3accaae3a3c6c97b6"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 /* Standalone case pages: ordinary URLs and links preserve native navigation.
    No homepage or studio state is mutated. */
-(() => {
+(async () => {
   'use strict';
 
   const root = document.getElementById('case-main');
@@ -11,33 +11,54 @@
   const escape = (text) => String(text ?? '').replace(/[&<>"']/g, (char) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   })[char]);
+  const availableKeys = Object.keys(editorials || {}).filter((name) => has(projects, name));
 
   if (!has(editorials, key) || !has(projects, key)) {
     document.title = 'Choose a case study — Kefan Wu';
     document.getElementById('loading-message').textContent =
       has(editorials, key) ? 'This case study could not load. Please reload or browse selected work.' :
-        'Choose a flagship case study below.';
+        'Choose a project below.';
+    const options = root.querySelector('.case-options');
+    if (options && availableKeys.length) options.innerHTML = availableKeys.map((name) =>
+      `<a href="case-study.html?project=${encodeURIComponent(name)}">${escape(projects[name].title)} →</a>`).join('');
     return;
   }
 
   const project = projects[key];
   const editorial = editorials[key];
   const gallery = project.gallery || [];
-  const images = [editorial.cover, ...gallery];
+  const images = gallery;
   const number = (value) => String(value).padStart(2, '0');
-  const next = editorials[editorial.next];
+  const nextKey = has(editorials, editorial.next) && has(projects, editorial.next) ? editorial.next
+    : availableKeys[(availableKeys.indexOf(key) + 1) % availableKeys.length];
+  const next = editorials[nextKey];
+  const studioURL = project.noStudio ? 'experience.html' : `experience.html#${encodeURIComponent(key)}`;
   document.title = `${project.title} — Kefan Wu`;
   document.querySelector('meta[name="description"]').content =
     `${editorial.deck} ${editorial.summary.map((item) => item[1]).join(' ')}`;
   document.body.dataset.project = key;
 
-  function imageButton(image, index, { cover = false } = {}) {
-    // Existing WebP originals are already small (14–117 KB for these galleries).
-    // Honor shared thumbnails when provided; full sources only enter the lightbox.
-    const source = cover ? image.src : (image.thumbnail || image.src);
-    const img = `<img src="${escape(source)}" alt="${escape(image.alt)}" loading="${cover ? 'eager' : 'lazy'}" decoding="async"${cover ? ' fetchpriority="high"' : ''}>`;
-    return `<button type="button" class="image-open${cover ? ' cover-button' : ''}${image.surface === 'light' ? ' surface-light' : ''}" data-image="${index}" aria-label="Open image: ${escape(image.caption || image.alt)}">
-      ${cover && image.portrait ? `<picture><source media="(max-width: 700px)" srcset="${escape(image.portrait)}">${img}</picture>` : img}
+  async function resolveCover() {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3000);
+    try {
+      const response = await fetch('assets/editorial/animation-covers.json?v=case-pages-20260913', { signal: controller.signal, cache: 'force-cache' });
+      if (!response.ok) throw new Error('Cover catalog unavailable');
+      const catalog = await response.json();
+      const cover = catalog.version === 1 && catalog.projects?.[key];
+      if (!cover || !cover.src || new URL(cover.src, document.baseURI).origin !== location.origin) throw new Error('Invalid cover');
+      return { ...editorial.cover, ...cover };
+    } catch { return editorial.cover; }
+    finally { clearTimeout(timeout); }
+  }
+  const cover = await resolveCover();
+
+  function imageButton(image, index) {
+    if (!image) return '';
+    // Honor shared thumbnails when provided; the lightbox always uses originals.
+    const source = image.thumbnail || image.src;
+    return `<button type="button" class="image-open${image.surface === 'light' ? ' surface-light' : ''}" data-image="${index}" aria-label="Open image: ${escape(image.caption || image.alt)}">
+      <img src="${escape(source)}" alt="${escape(image.alt)}" loading="lazy" decoding="async">
       <span class="image-affordance" aria-hidden="true">+</span>
     </button>`;
   }
@@ -56,46 +77,60 @@
     return `<dl class="source-spec">${[...meta, ...stats].map(([label, value]) => `<div><dt>${escape(label)}</dt><dd>${escape(value)}</dd></div>`).join('')}</dl>`;
   }
 
+  function downloadLinks() {
+    const downloads = [...(project.downloads || []), ...(editorial.downloads || [])];
+    return downloads.length ? `<div class="project-downloads"><h3>Project files</h3>${downloads.map((download) =>
+      `<a class="text-link" href="${escape(download.href)}" download>${escape(download.label)} <span aria-hidden="true">↓</span></a>`).join('')}</div>` : '';
+  }
+
   root.innerHTML = `<article>
     <section class="case-hero wrap" aria-labelledby="case-title">
-      <p class="hero-kicker eyebrow"><span class="case-number">Case ${editorial.number} / 03</span><span>${escape(editorial.label)}</span></p>
+      <p class="hero-kicker eyebrow"><span class="case-number">Case ${escape(editorial.number)} / ${number(availableKeys.length)}</span><span>${escape(editorial.label)}</span></p>
       <div class="hero-heading">
         <h1 id="case-title">${escape(editorial.title)}</h1>
         <div class="hero-deck"><h2>${escape(editorial.deck)}</h2><p>${escape(editorial.description)}</p></div>
       </div>
       <dl class="case-summary" aria-label="Case study in 30 seconds">${editorial.summary.map(([label, text]) => `<div><dt>${escape(label)}</dt><dd>${escape(text)}</dd></div>`).join('')}</dl>
-      <figure>${imageButton(editorial.cover, 0, { cover: true })}
-        <figcaption class="cover-caption"><span>${escape(editorial.cover.caption)}</span><span class="eyebrow">${escape(editorial.cover.kind)}</span></figcaption>
-      </figure>
+      <div class="case-preview-layout" id="motion">
+        <figure class="case-preview-figure">
+          <div class="case-animation-host" data-project="${escape(key)}" data-preview-title="${escape(project.title)}" data-preview-instructions="preview-instructions" role="group" aria-labelledby="preview-title">
+            <div class="card-media"><img src="${escape(cover.src)}"${cover.srcset ? ` srcset="${escape(cover.srcset)}" sizes="(max-width: 700px) calc(100vw - 44px), (max-width: 1000px) calc(100vw - 112px), 640px"` : ''} alt="${escape(cover.alt || project.title)}" width="${cover.width || 1800}" height="${cover.height || 1200}" loading="eager" decoding="async" fetchpriority="high"></div>
+          </div>
+          <figcaption class="cover-caption"><span>${escape(cover.caption || 'Explore the project model and its motion.')}</span><span class="eyebrow">Interactive project model</span></figcaption>
+        </figure>
+        <div class="preview-introduction"><p class="eyebrow">Explore the motion</p><h2 id="preview-title">Take a closer look.</h2><p id="preview-instructions">Scroll over the model to move through the animation. Scroll back to reverse. On a touch screen, drag the slider; with a keyboard, focus it and use the arrow keys.</p><div class="preview-links"><a class="text-link" href="${studioURL}">${project.noStudio ? 'Explore the' : 'View in'} 3D Studio <span aria-hidden="true">↗</span></a><a class="text-link" href="#evidence">Project images <span aria-hidden="true">↓</span></a></div></div>
+      </div>
     </section>
     <nav class="chapter-nav" aria-label="Case study sections"><div class="chapter-nav-inner wrap">
-      ${editorial.chapters.map((chapter, index) => `<a href="#${chapter.id}"><span class="mono">${number(index + 1)}</span>${escape(chapter.label)}</a>`).join('')}
+      <a href="#motion">Motion</a>${editorial.chapters.map((chapter, index) => `<a href="#${escape(chapter.id)}"><span class="mono">${number(index + 1)}</span>${escape(chapter.label)}</a>`).join('')}
       <a href="#evidence">Image archive</a><a href="#record">Technical record</a>
     </div></nav>
-    <div class="wrap">${editorial.chapters.map((chapter, index) => `<section class="chapter" id="${chapter.id}" aria-labelledby="${chapter.id}-title">
-      <div class="chapter-copy"><p class="eyebrow">${number(index + 1)} / ${escape(chapter.label)}</p><h2 id="${chapter.id}-title">${escape(chapter.title)}</h2>${chapter.paragraphs.map((text) => `<p>${escape(text)}</p>`).join('')}</div>
-      <figure class="chapter-figure">${imageButton(gallery[chapter.image], chapter.image + 1)}<figcaption><span class="evidence-type">${escape(chapter.evidence)}</span>${escape(chapter.note)}</figcaption></figure>
+    <div class="wrap">${editorial.chapters.map((chapter, index) => `<section class="chapter${gallery[chapter.image] ? '' : ' chapter-text-only'}" id="${escape(chapter.id)}" aria-labelledby="${escape(chapter.id)}-title">
+      <div class="chapter-copy"><p class="eyebrow">${number(index + 1)} / ${escape(chapter.label)}</p><h2 id="${escape(chapter.id)}-title">${escape(chapter.title)}</h2>${chapter.paragraphs.map((text) => `<p>${escape(text)}</p>`).join('')}</div>
+      ${gallery[chapter.image] ? `<figure class="chapter-figure">${imageButton(gallery[chapter.image], chapter.image)}<figcaption><span class="evidence-type">${escape(chapter.evidence)}</span>${escape(chapter.note)}</figcaption></figure>` : ''}
     </section>`).join('')}</div>
     <section class="evidence-section wrap" id="evidence" aria-labelledby="evidence-title">
       <div class="section-heading"><div><p class="eyebrow">The original project images</p><h2 id="evidence-title">A closer look.</h2></div><p>${gallery.length} images. Open any image to inspect the original.</p></div>
-      <div class="gallery-grid">${gallery.map((image, index) => `<figure class="gallery-item">${imageButton(image, index + 1)}<figcaption><span class="mono">${number(index + 1)}</span><span>${escape(image.caption || image.alt)}</span></figcaption></figure>`).join('')}</div>
+      <div class="gallery-grid">${gallery.map((image, index) => `<figure class="gallery-item">${imageButton(image, index)}<figcaption><span class="mono">${number(index + 1)}</span><span>${escape(image.caption || image.alt)}</span></figcaption></figure>`).join('')}</div>
     </section>
     <section class="record-section wrap" id="record" aria-labelledby="record-title">
       <div class="section-heading"><div><p class="eyebrow">For the technical conversation</p><h2 id="record-title">The engineering record.</h2></div></div>
       <p class="record-intro">Original project notes, methods, and results.${editorial.recordNote ? ` ${escape(editorial.recordNote)}` : ''}</p>
-      <div class="record-layout"><aside aria-label="Project tools and context"><h3>Tools & methods</h3><ul class="tool-list">${(project.tools || []).map((tool) => `<li>${escape(tool)}</li>`).join('')}</ul>${sourceSpec()}</aside>
+      <div class="record-layout"><aside aria-label="Project tools and context"><h3>Tools & methods</h3><ul class="tool-list">${(project.tools || []).map((tool) => `<li>${escape(tool)}</li>`).join('')}</ul>${sourceSpec()}${downloadLinks()}</aside>
         <div class="source-details"><details><summary>Project overview & highlights</summary><div class="source-detail-body"><p>${escape(project.summary)}</p><ul>${(project.highlights || []).map((item) => `<li>${escape(item)}</li>`).join('')}</ul></div></details>${originalDetails()}</div>
       </div>
     </section>
     <section class="next-section" aria-label="Continue exploring"><div class="next-inner wrap">
-      <a class="next-link" href="case-study.html?project=${editorial.next}"><span class="eyebrow">Next case / ${next.number}</span><span class="next-title">${escape(next.title)}<span aria-hidden="true">↗</span></span></a>
-      <div class="studio-invitation"><h3>Explore the hardware.</h3><p>Find this project in the interactive engineering studio.</p><a class="text-link" href="experience.html#${key}">View in 3D Studio <span aria-hidden="true">↗</span></a></div>
+      <a class="next-link" href="case-study.html?project=${encodeURIComponent(nextKey)}"><span class="eyebrow">Next case / ${escape(next.number)}</span><span class="next-title">${escape(next.title)}<span aria-hidden="true">↗</span></span></a>
+      <div class="studio-invitation"><h3>Explore the hardware.</h3><p>${project.noStudio ? 'Browse more projects in the interactive engineering studio.' : 'Find this project in the interactive engineering studio.'}</p><a class="text-link" href="${studioURL}">${project.noStudio ? 'Explore the' : 'View in'} 3D Studio <span aria-hidden="true">↗</span></a></div>
     </div></section>
   </article>`;
+  window.dispatchEvent(new Event('project-previews-ready'));
 
   // Failed assets retain a readable caption and a working original-image link.
   root.addEventListener('error', (event) => {
     if (!(event.target instanceof HTMLImageElement)) return;
+    if (event.target.closest('.case-animation-host')) return;
     const fallback = document.createElement('span');
     fallback.className = 'image-unavailable';
     fallback.textContent = 'Image preview unavailable. Open original.';
@@ -141,8 +176,9 @@
     }
     opener = trigger;
     showImage(index);
-    dialog.showModal();
     document.body.classList.add('lightbox-open');
+    window.cardExplosions?.resetAll(true);
+    dialog.showModal();
     closeButton.focus({ preventScroll: true });
   });
 

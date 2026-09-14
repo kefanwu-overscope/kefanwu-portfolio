@@ -2,10 +2,9 @@
 (() => {
   "use strict";
 
-  const projectCards = [...document.querySelectorAll(".editorial .project-card[data-project]")];
-  if (!projectCards.length) return;
+  const hostSelector = ".editorial .project-card[data-project], .case-animation-host[data-project]";
   const script = document.currentScript;
-  const manifestURL = new URL(script?.dataset.manifest || "assets/exploded/manifest.json?v=motion-loading-20260913", document.baseURI);
+  const manifestURL = new URL(script?.dataset.manifest || "assets/exploded/manifest.json?v=case-pages-20260913", document.baseURI);
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const states = new Map();
@@ -47,9 +46,11 @@
   let active = null;
   let animationFrame = 0;
   let lastTime = 0;
+  let previewProjects = null;
 
   const allowed = (state) => state.visible && !state.card.classList.contains("is-hidden")
-    && !document.hidden && !document.body.classList.contains("modal-open") && !state.failed;
+    && !document.hidden && !document.body.classList.contains("modal-open")
+    && !document.body.classList.contains("lightbox-open") && !state.failed;
 
   function stopAnimation() {
     if (animationFrame) cancelAnimationFrame(animationFrame);
@@ -382,7 +383,7 @@
   // A .card-open pseudo-element may stretch across the card. It is intentionally
   // allowed here; actual sliders, downloads and other independent controls are not.
   function isIndependentControl(target) {
-    return Boolean(target.closest("[data-explode-control], a, input, select, textarea, button:not(.card-open)"));
+    return Boolean(target.closest("[data-explode-control], a:not(.card-open), input, select, textarea, button:not(.card-open)"));
   }
 
   function onWheel(state, event) {
@@ -456,7 +457,7 @@
     const poster = media?.querySelector("img");
     if (!media || !poster) return;
     const key = card.dataset.project;
-    const title = card.querySelector("h3")?.textContent.trim() || key;
+    const title = card.dataset.previewTitle || card.querySelector("h3")?.textContent.trim() || key;
     const { label, hint, description } = MODES[config.mode];
     const stage = document.createElement("div");
     stage.className = "card-explode-stage";
@@ -478,6 +479,7 @@
     range.step = "0.1";
     range.value = "0";
     range.setAttribute("aria-label", `${title}: ${label.toLowerCase()} progress`);
+    if (card.dataset.previewInstructions) range.setAttribute("aria-describedby", card.dataset.previewInstructions);
     if (description) range.setAttribute("aria-description", description);
     controls.append(range);
     ui.append(badge, controls);
@@ -548,16 +550,26 @@
     },
   };
 
+  function setupAvailableHosts() {
+    if (!previewProjects) return;
+    document.querySelectorAll(hostSelector).forEach((card) => {
+      if (states.has(card.dataset.project)) return;
+      try {
+        const config = normalizeConfig(previewProjects[card.dataset.project]);
+        if (config) setupCard(card, config);
+      } catch { /* An invalid project keeps its original working cover. */ }
+    });
+  }
+
+  // Case pages render after the responsive-cover catalog arrives. Either order
+  // (host first or manifest first) joins this same lazy-loading engine.
+  addEventListener("project-previews-ready", setupAvailableHosts);
   fetch(manifestURL, { cache: "no-cache" })
     .then((response) => { if (!response.ok) throw new Error("Preview manifest unavailable"); return response.json(); })
     .then((manifest) => {
       if (manifest.version !== 1 || !manifest.projects) return;
-      projectCards.forEach((card) => {
-        try {
-          const config = normalizeConfig(manifest.projects[card.dataset.project]);
-          if (config) setupCard(card, config);
-        } catch { /* An invalid project keeps its original working cover. */ }
-      });
+      previewProjects = manifest.projects;
+      setupAvailableHosts();
     })
     .catch(() => { /* The original portfolio remains fully usable offline or on failure. */ });
 })();

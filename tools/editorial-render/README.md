@@ -1,43 +1,43 @@
 # Real CAD editorial stills
 
-## Current exact-start covers · 2026-09-13
+## Current matching initial covers · 2026-09-13
 
-Vine and Education now use their unchanged animation controllers at progress 0:
-the retracted vine and separated guitar kit. Masters are 1800×1200 at 192 samples;
-480/960/1800px WebP variants are in `assets/editorial/start-20260913/`. The six new
-files replace current selections while preserving all 42 other current variants
-and all 60 historical cover files. The existing CFD cover stays at progress 0.5
-and tensile at 0 in `assets/editorial/motion-20260913/`; carbon retains its original
-cover and source-coordinate shader. Original models and galleries are unchanged.
+Prepared against production `9608b5d`; revision `case-pages-20260913`.
+The planned backup is `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-case-pages`. Its
+`release-metadata.json` and `deployment-verification.json` establish exact commit
+and online status when publication completes.
 
-`../exploded-render/pack_motion_covers.py` records the source first-frame hash,
-controller/camera provenance and current master/variant hashes. `apply_covers.py`
-reads the current catalogue and retains these selections. `validate_catalog.py`
-checks exact starts, all variants and preservation against production `bca2175`.
-The homepage now has 16 animated cards: Javelin adds flight sway to four rotating
-propellers and Telecaster has a full 360° turntable. Their two new sequences and
-lossless progressive chunk transport are documented in
-`../exploded-render/README.md` and `../../EXPLODED_VIEWS.md`.
+Every homepage card and native case page uses animation progress 0 with the
+delivered camera framing and normalized projection. The 48 responsive variants
+are in `assets/editorial/animation-start-20260913/`; per-project provenance sits
+beside them. `assets/editorial/animation-covers.json` is the shared runtime
+catalogue. Static homepage and editorial fallback sources must match its records.
 
-Run from `portfolio-site` after preserving the baseline catalogue and animation
-manifest in `../.codex/motion-loading-20260913/`:
+The cover wrapper preserves scene geometry, materials, lighting, ground and
+camera. It stages the delivered 640×427 frame, renders a 48-sample proof, then an
+1800×1200/192-sample master. Pixel aspect 1:1.00078125 preserves projection while
+converting the rounded animation aspect to the cover raster. This applies to all
+16 covers, including the initial CFD markers, retracted Vine and separated
+Education kit. Existing animation bytes, gallery originals and older cover files
+are preserved.
+
+Run from `portfolio-site`:
 
 ```powershell
-& 'C:/Users/oc/.cache/blender/blender-4.5.9-windows-x64/blender.exe' --background --factory-startup --python-exit-code 1 --python tools/exploded-render/render_exploded.py -- --projects vineRobot education --cover-progress 0 --width 1800 --samples 192 --output C:/Users/oc/Desktop/WEBSITE/.codex/motion-loading-20260913/covers
-& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/exploded-render/pack_motion_covers.py
-& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/editorial-render/validate_catalog.py
+& 'C:/Users/oc/.cache/blender/blender-4.5.9-windows-x64/blender.exe' --background --factory-startup --python-exit-code 1 --python tools/exploded-render/render_initial_covers.py -- --output C:/Users/oc/Desktop/WEBSITE/.codex/case-pages-20260913/covers
+& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/exploded-render/pack_initial_covers.py
+& 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -X utf8 tools/exploded-render/validate_initial_covers.py
 ```
 
-Current cover validation has passed; evidence is in
-`../../../.codex/motion-loading-20260913/`. Cache: `motion-loading-20260913`.
-The planned release backup is
-`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-motion-loading`;
-its release/deployment metadata will establish exact commit and online status
-when publication completes.
+The renderer defaults to all 16 projects. `--projects` narrows rendering; the
+packer supports `--input` for a different master directory. Current evidence is
+`../../../.codex/case-pages-20260913/`, with cover acceptance recorded in
+`initial-cover-validation.json`. New cover and browser acceptance must be read
+from current completed reports. See `../exploded-render/README.md` for source
+archiving, projection details and retained frame transport.
 
-Current catalogue proof: `/tools/editorial-render/catalog-proof.html` on the local
-portfolio server at `http://127.0.0.1:4176/`. The source-render records below are
-historical; do not use their older scenes or commands to overwrite current covers.
+The older source-render records below are historical. Do not use their previous
+view settings or packing commands to overwrite the current initial-pose covers.
 
 ## Historical source catalogue — 2026-09-13
 

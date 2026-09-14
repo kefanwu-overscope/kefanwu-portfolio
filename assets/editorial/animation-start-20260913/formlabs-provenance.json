@@ -1,0 +1,121 @@
+{
+  "project": "formlabs",
+  "baselineCommit": "9608b5d12fb059cac15083861bf17dd3eda3fcfb",
+  "coverProgress": 0.0,
+  "sourceFrame": "assets/exploded/functional-20260913/formlabs/00.webp?v=85651d469b0a",
+  "sourceFrameSha256": "85651d469b0a6a5dc9ed408f26d2476581cf356036463937cb9e23c7ad7348e7",
+  "sourceAnimationProvenance": "assets/exploded/functional-20260913/formlabs/provenance.json",
+  "sourceAnimationProvenanceSha256": "3347c77c7ba077269fa7716d014318fb7f30fa92773719c896958455e60e31f9",
+  "sourceAnimationRevision": "functional-motion-20260913",
+  "sourceFrameCount": 121,
+  "sourceDimensions": [
+    640,
+    427
+  ],
+  "sourceSamples": 48,
+  "sourcePNGSha256": "27dc35419312b7221342995320cc6552336cc584025ca044dca74c5f28dc163b",
+  "proofPNGSha256": "85fc64d5c6ce4e81f8abb6593c6204c301fd2800f364f54b4a042d93a6391eff",
+  "masterSha256": "6877a282894549e6346d291ab65071beefff9ceb12ad6ee84b20f1cd412531e7",
+  "dimensions": [
+    1800,
+    1200
+  ],
+  "samples": 192,
+  "pixelAspect": [
+    1.0,
+    1.0007812976837158
+  ],
+  "camera": {
+    "location": [
+      5.618419170379639,
+      -9.513915061950684,
+      5.6005635261535645
+    ],
+    "rotation": [
+      1.1596143245697021,
+      4.4814473909582375e-08,
+      0.5317239761352539
+    ],
+    "matrixWorld": [
+      [
+        0.861934244632721,
+        -0.20265237987041473,
+        0.4647594392299652,
+        5.618419170379639
+      ],
+      [
+        0.5070200562477112,
+        0.34450918436050415,
+        -0.7900912165641785,
+        -9.513915061950684
+      ],
+      [
+        -4.4814473909582375e-08,
+        0.9166490435600281,
+        0.399693101644516,
+        5.6005635261535645
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "type": "ORTHO",
+    "orthoScale": 4.582230091094971,
+    "sensorFit": "HORIZONTAL",
+    "shiftX": 0.0,
+    "shiftY": 0.0
+  },
+  "groundZ": -0.019999999552965164,
+  "sceneSha256BeforeResolutionChange": "d4822b129c63b3a1ea0d88959df094af533620a99bbb23eb047739dd7c3fe16c",
+  "sceneSha256AfterResolutionChange": "d4822b129c63b3a1ea0d88959df094af533620a99bbb23eb047739dd7c3fe16c",
+  "cameraFrameMaximumError": 0.0,
+  "motionReportUnchanged": false,
+  "motionKinematicsUnchanged": true,
+  "documentaryDifferences": [
+    {
+      "path": "leadscrew.calibration",
+      "previous": "Four-start helical periodicity recovered from source screw surface; 8 mm lead at the source 530 mm overall width.",
+      "current": "Four-start helical periodicity and axial pitch recovered from the staged source screw surface; normalized scene distances."
+    }
+  ],
+  "renderer": "tools/exploded-render/render_initial_covers.py",
+  "rendererSha256": "14e8dd2e10fe088f6957583b2272a23ded4bfc4c2c8693fbf9c9e61fc8f87f37",
+  "animationRenderer": "tools/exploded-render/render_exploded.py",
+  "animationRendererSha256": "f2867efacef82fee605747035230b1ad12225e4eb6c47ecbbd655ba4633a27b9",
+  "projectionPolicy": "Stage at delivered animation resolution; preserve the exact frame-zero camera and compensate output pixel aspect for the rounded 640x427 source.",
+  "proofPixelAudit": {
+    "maximumChannelDifference": 1,
+    "meanChannelDifference": 3.781225604996097e-05,
+    "changedPixelCount": 31,
+    "totalPixels": 273280,
+    "sourcePixelsSha256": "ae2b390d86ac8c433eb74d555a739e2ab76fc611205854ba0b4b2b0c4658d6ab",
+    "proofPixelsSha256": "b816ee24f0ebdbccf32dd0bafff2b0dbf5a1bef004f2bddfd04f87b60cff2499"
+  },
+  "offlineRendererSource": "case-pages-20260913/cover-renderer-sources/14e8dd2e10fe088f6957583b2272a23ded4bfc4c2c8693fbf9c9e61fc8f87f37.py",
+  "variants": [
+    {
+      "src": "assets/editorial/animation-start-20260913/formlabs-wide-480.webp",
+      "width": 480,
+      "height": 320,
+      "bytes": 10870,
+      "sha256": "2078d7cb0a6b15387eee55dbc5040bc121efdf3b3a1c2bfeff478a30be5fd986"
+    },
+    {
+      "src": "assets/editorial/animation-start-20260913/formlabs-wide-960.webp",
+      "width": 960,
+      "height": 640,
+      "bytes": 25776,
+      "sha256": "867ce147dd158f3c9e61de95621170ba163d74655fa16990088135511198f725"
+    },
+    {
+      "src": "assets/editorial/animation-start-20260913/formlabs-wide-1800.webp",
+      "width": 1800,
+      "height": 1200,
+      "bytes": 71184,
+      "sha256": "641ab2c47949a0832423af610123949ed82339843463ba4a0768c53114467296"
+    }
+  ]
+}

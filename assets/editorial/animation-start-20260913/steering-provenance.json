@@ -1,0 +1,113 @@
+{
+  "project": "steering",
+  "baselineCommit": "9608b5d12fb059cac15083861bf17dd3eda3fcfb",
+  "coverProgress": 0.0,
+  "sourceFrame": "assets/exploded/refined-20260913/steering/00.webp?v=2df2bfba4ced",
+  "sourceFrameSha256": "2df2bfba4ced5b051b8ae2b1309f0139d7be18fce40cdaa4c226e2b43163d85f",
+  "sourceAnimationProvenance": "assets/exploded/refined-20260913/steering/provenance.json",
+  "sourceAnimationProvenanceSha256": "5d8c891a1d50a86943454f0424dadb0b8fc32cb345fdb24210117c44e625f6d8",
+  "sourceAnimationRevision": "motion-refinement-20260913",
+  "sourceFrameCount": 121,
+  "sourceDimensions": [
+    640,
+    427
+  ],
+  "sourceSamples": 48,
+  "sourcePNGSha256": "e7d42e50cfafdf5103500c149061701cc5a8332724c6077e953cd05ce1cbc8be",
+  "proofPNGSha256": "e65d01c9b648a91c5a646caa57a9014139931224d857ab83aa8483286959ad6b",
+  "masterSha256": "04523b7b39a7038705896936a70faca840b759fc275a3ed7eac5cd8ba242a77b",
+  "dimensions": [
+    1800,
+    1200
+  ],
+  "samples": 192,
+  "pixelAspect": [
+    1.0,
+    1.0007812976837158
+  ],
+  "camera": {
+    "location": [
+      5.688638687133789,
+      -9.365671157836914,
+      6.24458122253418
+    ],
+    "rotation": [
+      1.1395100355148315,
+      5.5959603173505457e-08,
+      0.5667292475700378
+    ],
+    "matrixWorld": [
+      [
+        0.8436614871025085,
+        -0.2244352102279663,
+        0.48771318793296814,
+        5.688638687133789
+      ],
+      [
+        0.5368755459785461,
+        0.352683961391449,
+        -0.7664063572883606,
+        -9.365671157836914
+      ],
+      [
+        -5.5959603173505457e-08,
+        0.9084287881851196,
+        0.4180396497249603,
+        6.24458122253418
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "type": "ORTHO",
+    "orthoScale": 7.100279808044434,
+    "sensorFit": "HORIZONTAL",
+    "shiftX": 0.0,
+    "shiftY": 0.0
+  },
+  "groundZ": -0.019999999552965164,
+  "sceneSha256BeforeResolutionChange": "d451334a7b1cc7962642c92c11ca1ee17805520774d6ee59c6aeb1eab006513c",
+  "sceneSha256AfterResolutionChange": "d451334a7b1cc7962642c92c11ca1ee17805520774d6ee59c6aeb1eab006513c",
+  "cameraFrameMaximumError": 0.0,
+  "motionReportUnchanged": true,
+  "renderer": "tools/exploded-render/render_initial_covers.py",
+  "rendererSha256": "1deb1376875131bb10e74b50950cc3c39bc2484145b0269fe52937efd1ab07dd",
+  "animationRenderer": "tools/exploded-render/render_exploded.py",
+  "animationRendererSha256": "f2867efacef82fee605747035230b1ad12225e4eb6c47ecbbd655ba4633a27b9",
+  "projectionPolicy": "Stage at delivered animation resolution; preserve the exact frame-zero camera and compensate output pixel aspect for the rounded 640x427 source.",
+  "proofPixelAudit": {
+    "maximumChannelDifference": 1,
+    "meanChannelDifference": 3.171350507416081e-05,
+    "changedPixelCount": 26,
+    "totalPixels": 273280,
+    "sourcePixelsSha256": "0b30ee316d180c37a2059c04dbf5f87f5e69fce7a60483550de1ed4e48e6b3b6",
+    "proofPixelsSha256": "1e430b03eb2cb226b733f2e2a571f20bf82a0e97b509cba38a5b48a2837a138d"
+  },
+  "offlineRendererSource": "case-pages-20260913/cover-renderer-sources/1deb1376875131bb10e74b50950cc3c39bc2484145b0269fe52937efd1ab07dd.py",
+  "variants": [
+    {
+      "src": "assets/editorial/animation-start-20260913/steering-wide-480.webp",
+      "width": 480,
+      "height": 320,
+      "bytes": 5316,
+      "sha256": "029d82ebf7ef86172d8dac6ba46b5439ceb883598aeeea2b5978b0010471f156"
+    },
+    {
+      "src": "assets/editorial/animation-start-20260913/steering-wide-960.webp",
+      "width": 960,
+      "height": 640,
+      "bytes": 13208,
+      "sha256": "9309aad28424e70e0d92f2ca59cc49b7dcf20f894b5b1f2ddfee7f2a84fe23a3"
+    },
+    {
+      "src": "assets/editorial/animation-start-20260913/steering-wide-1800.webp",
+      "width": 1800,
+      "height": 1200,
+      "bytes": 36408,
+      "sha256": "703f3e188422b2b47ce231ded964f48f4b030078ef44f5615e210a978e90559b"
+    }
+  ]
+}

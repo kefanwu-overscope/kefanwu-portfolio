@@ -1,74 +1,58 @@
 # Kefan Wu Portfolio Site
 
-Static portfolio for **[www.kefanwu.com](https://www.kefanwu.com)** — no
-framework, no build step, no package install. Auto-deploys to Vercel from the
-`main` branch of `github.com/kefanwu-overscope/kefanwu-portfolio`.
+Static portfolio for **[www.kefanwu.com](https://www.kefanwu.com)**, served without
+a framework or build step. GitHub `main` deploys to Vercel.
 
-## Two surfaces
+## Homepage, case studies and studio
 
-- **`index.html`** — the canonical, crawlable homepage. The cinematic
-  design uses the race-car photo and hero, immediately followed
-  by all 16 searchable projects, then methods/leadership, contact, and a resume
-  PDF. Three full case pages are optional links in their project modals.
-  `editorial.css` provides the layout; `styles.css` and `script.js` preserve
-  modal behavior. The earlier homepage story script is no longer loaded.
-- **`experience.html`** — an interactive 3D "studio" (three.js r0.185, buildless
-  via a jsDelivr import map): a night-lit engineering room where the resume sits
-  on the desk and 15 of the 16 projects are clickable exhibits. Styled by
-  `experience.css`, driven by the `experience.js` module. Deep-linkable:
-  `experience.html#steering` flies straight to that exhibit.
+- **`index.html`** introduces the work through the race-car hero, a primary
+  3D Studio action, highlighted studio navigation, and a large workshop preview
+  between the hero and the searchable 16-project grid.
+- **`case-study.html?project=<key>`** opens a native page for every project.
+  All 16 stories have four chapters, the original image archive, technical
+  records, and a next-project link. Homepage cards use ordinary links; they no
+  longer open a project modal. Image zoom remains available in each case page.
+- **`experience.html`** is the existing interactive 3D studio. Its 15 project
+  exhibits remain available; the Education case links to the general studio
+  because that kit has no current exhibit.
 
-`project-data.js` is the single source of truth for case-study content, shared
-by both pages.
+`project-data.js` preserves the shared source records and 93 gallery images.
+`case-study-data.js` adds editorial structure for the 16 pages. The original
+Steering, Vine and Scanner stories retain their text; navigation now covers all
+16 projects in homepage order.
 
-## Current motion and loading delivery · 2026-09-13
+## Current case-page delivery · 2026-09-13
 
-This delivery is prepared against production `bca2175`. The homepage cache label
-is `motion-loading-20260913`; preview: http://127.0.0.1:4176/#work.
-The planned backup is
-`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-motion-loading`.
-Its `release-metadata.json` and `deployment-verification.json` will record exact
-commits and verified online status when publication completes.
+Prepared against production `9608b5d`; revision `case-pages-20260913`.
+The planned backup is `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-case-pages`. Its
+`release-metadata.json` and `deployment-verification.json` establish exact commit
+and online status when publication completes.
 
-- Vine and Education covers show their exact animation start at progress 0:
-  the retracted vine and the separated guitar kit. Their animation paths remain unchanged.
-- Javelin combines flight sway with four rotating propellers. Telecaster now has
-  a complete 360° turntable animation, bringing the homepage to 16 animated cards.
-- Frames become usable progressively. Each sequence starts with a four-frame
-  chunk, followed by chunks of up to 16 frames and 256 KiB. Original individual
-  frame URLs remain fallback; loading uses at most three concurrent requests.
+All 16 covers come from animation progress 0 with matching camera framing and
+normalized projection. The 48 responsive files use
+`assets/editorial/animation-start-20260913/`; shared runtime selection comes from
+`assets/editorial/animation-covers.json`. Previous cover files are retained.
 
-The 16 sequences contain 2,032 static 640×427 WebP frames, rendered at 48 Cycles
-samples, totaling 24,347,588 image bytes. Vine, tensile, AURA and Pool retain 145
-frames each; the other twelve have 121. The two new sequences use
-`assets/exploded/flight-20260913/`; fourteen retain their exact prior frame files
-and metadata across `refined-20260913/` and `functional-20260913/`.
-The 159 files in `assets/exploded/chunks-20260913/` concatenate the original WebP
-bytes without recompression, changed dimensions, dropped frames or changed timing.
-Transport metadata adds a small manifest cost; image-byte overhead is exactly zero.
+Home and detail pages share the existing motion sequences. Detail-page previews
+are capped at 640 CSS pixels and support hover/scroll progression, reverse
+scrolling, and touch/keyboard sliders. All 2,032 frames, 159 chunks and 24,347,588
+image bytes are retained without recompression or reduced quality. The four-frame
+bootstrap, three-request limit, frame fallback and 160 MiB budget remain.
 
-Six new responsive cover files use `assets/editorial/start-20260913/`; the other
-42 current variants and all 60 historical cover files are preserved. Original
-CAD, galleries, content and the 3D studio remain unchanged. Reversible sliders,
-wheel endpoints, reduced motion, modal reset and the 160 MiB decoded-image budget
-remain supported. Existing CFD accuracy, Pool source-tooth overlap and Education
-display-fit limitations still apply; see `EXPLODED_VIEWS.md`.
+Content checks cover all 64 chapters, gallery references and cyclic navigation.
+Current cover and browser acceptance belongs in `../.codex/case-pages-20260913/`;
+earlier release checks do not establish acceptance for this revision.
+Original CAD, CFD results, galleries and documented source limitations remain.
 
-Current evidence and PNG masters are in `../.codex/motion-loading-20260913/`,
-including `poses/`, `loader/` and `transport/`. Earlier motion and CFD evidence
-remain required for the fourteen retained sequences and complete recovery.
+## Working references
 
-## Docs
+- `AGENT_HANDOFF.md` — current integration notes and clearly labeled history.
+- `PROJECT_DOCUMENTATION.md` — content rules, structure and QA.
+- `LOCAL_PREVIEW.md` — local URLs and server command.
+- `EXPLODED_VIEWS.md` — motion behavior, source limitations and preservation.
+- `tools/exploded-render/README.md` — initial-cover reproduction and frame transport.
+- `tools/editorial-render/README.md` — runtime cover catalogue and source renders.
+- `ATTRIBUTIONS.txt` — third-party asset credits.
 
-- **`AGENT_HANDOFF.md`** — the working reference: file map, DOM/ID map, current
-  cache-version strings, recent changes, the 3D-studio internals, and the
-  bake/tooling pipelines. Read this first.
-- **`PROJECT_DOCUMENTATION.md`** — the original project brief, content strategy,
-  positioning, and QA checklist.
-- **`ATTRIBUTIONS.txt`** — third-party asset credits.
-
-## Deploy
-
-Push to `main` → Vercel builds and serves the static folder at
-`www.kefanwu.com`. Every code change bumps a `?v=<label>-<date>` cache string on
-the edited file (see the cache-versions list in `AGENT_HANDOFF.md`).
+Pushes to `main` trigger deployment. Bump the matching `?v=` references when
+changing a runtime file, and use release metadata to verify publication.

@@ -1,0 +1,115 @@
+{
+  "project": "telecaster",
+  "baselineCommit": "9608b5d12fb059cac15083861bf17dd3eda3fcfb",
+  "coverProgress": 0.0,
+  "sourceFrame": "assets/exploded/flight-20260913/telecaster/00.webp?v=2f326de66073",
+  "sourceFrameSha256": "2f326de660732ee82bdb3b48199789e3bef99f83012aa55807120797eadc379f",
+  "sourceAnimationProvenance": "assets/exploded/flight-20260913/telecaster/provenance.json",
+  "sourceAnimationProvenanceSha256": "6ee5bb7f2bf56825457eae2985664a333d43363a1d37a2ff0eaeee7dc32eba85",
+  "sourceAnimationRevision": "motion-loading-20260913",
+  "sourceFrameCount": 121,
+  "sourceDimensions": [
+    640,
+    427
+  ],
+  "sourceSamples": 48,
+  "sourcePNGSha256": "66bcd7ca25f4a4f5e3fa5df11b2bb003e3b598013ac0ba6fcb41adb2282d0a33",
+  "proofPNGSha256": "34710f684059ff91f9c70502e5f468b45faadd20e81bbd06e8af0d1b33dd8959",
+  "masterSha256": "7d25c48288e1f7843d1135c04ef5f88838313119417c53cb99e4ae152a6e3217",
+  "dimensions": [
+    1800,
+    1200
+  ],
+  "samples": 192,
+  "pixelAspect": [
+    1.0,
+    1.0007812976837158
+  ],
+  "camera": {
+    "location": [
+      5.587418079376221,
+      -9.477091789245605,
+      6.204746723175049
+    ],
+    "rotation": [
+      1.1596143245697021,
+      4.4814473909582375e-08,
+      0.5317239761352539
+    ],
+    "matrixWorld": [
+      [
+        0.861934244632721,
+        -0.20265237987041473,
+        0.4647594392299652,
+        5.587418079376221
+      ],
+      [
+        0.5070200562477112,
+        0.34450918436050415,
+        -0.7900912165641785,
+        -9.477091789245605
+      ],
+      [
+        -4.4814473909582375e-08,
+        0.9166490435600281,
+        0.399693101644516,
+        6.204746723175049
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "type": "ORTHO",
+    "orthoScale": 4.7764081954956055,
+    "sensorFit": "HORIZONTAL",
+    "shiftX": 0.0,
+    "shiftY": 0.0
+  },
+  "groundZ": -0.019999999552965164,
+  "sceneSha256BeforeResolutionChange": "74f123efa5e46175a976682a1761b7710bd2cf8c35612c8d114543516a6a5c69",
+  "sceneSha256AfterResolutionChange": "74f123efa5e46175a976682a1761b7710bd2cf8c35612c8d114543516a6a5c69",
+  "cameraFrameMaximumError": 0.0,
+  "motionReportUnchanged": true,
+  "motionKinematicsUnchanged": true,
+  "documentaryDifferences": [],
+  "renderer": "tools/exploded-render/render_initial_covers.py",
+  "rendererSha256": "14e8dd2e10fe088f6957583b2272a23ded4bfc4c2c8693fbf9c9e61fc8f87f37",
+  "animationRenderer": "tools/exploded-render/render_exploded.py",
+  "animationRendererSha256": "f2867efacef82fee605747035230b1ad12225e4eb6c47ecbbd655ba4633a27b9",
+  "projectionPolicy": "Stage at delivered animation resolution; preserve the exact frame-zero camera and compensate output pixel aspect for the rounded 640x427 source.",
+  "proofPixelAudit": {
+    "maximumChannelDifference": 1,
+    "meanChannelDifference": 2.1955503512880562e-05,
+    "changedPixelCount": 18,
+    "totalPixels": 273280,
+    "sourcePixelsSha256": "236121f2da0ab9f944b6b704133d30a90e648211c8c69b1e4347d12ec887ba67",
+    "proofPixelsSha256": "a345b3d97bbd48347132c732c7e3f42f3fbde557c17cbb9bdd07251d8c3a0e77"
+  },
+  "offlineRendererSource": "case-pages-20260913/cover-renderer-sources/14e8dd2e10fe088f6957583b2272a23ded4bfc4c2c8693fbf9c9e61fc8f87f37.py",
+  "variants": [
+    {
+      "src": "assets/editorial/animation-start-20260913/telecaster-wide-480.webp",
+      "width": 480,
+      "height": 320,
+      "bytes": 4828,
+      "sha256": "6387951b4ea8fee0572e266e92af850dccaabe212a377a2062a6d8b01d2ec510"
+    },
+    {
+      "src": "assets/editorial/animation-start-20260913/telecaster-wide-960.webp",
+      "width": 960,
+      "height": 640,
+      "bytes": 12396,
+      "sha256": "06a4a7e7729096240758b19d308dd000c9a3ea7fcc55c39c33c110bf53caf2a5"
+    },
+    {
+      "src": "assets/editorial/animation-start-20260913/telecaster-wide-1800.webp",
+      "width": 1800,
+      "height": 1200,
+      "bytes": 36448,
+      "sha256": "8070d2fb867209b1156d72ba33d1b28f60045213b914cfdce8cfa28f325c84fd"
+    }
+  ]
+}

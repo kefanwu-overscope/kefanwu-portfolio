@@ -1,4 +1,12 @@
 """Validate the mixed animation revision and current/preserved cover assets."""
+if __name__ == '__main__':
+    import subprocess as _subprocess
+    import sys as _sys
+    from pathlib import Path as _Path
+    _site = _Path(__file__).resolve().parents[2]
+    if (_site / 'assets/editorial/animation-covers.json').is_file():
+        raise SystemExit(_subprocess.call([_sys.executable, '-X', 'utf8', str(_site / 'tools/exploded-render/validate_initial_covers.py')]))
+
 import hashlib
 import json
 import math
