@@ -44,7 +44,7 @@ for key in (args.projects or ORDER):
         doc['encoding']={'format':'WebP static images','quality':85,'method':6,'rasterRetouching':False}
         (folder/'provenance.json').write_text(json.dumps(doc,indent=2)+'\n')
         mode=doc['mode']
-        label={'heat':'Brake heating','unfold':'Sheet metal unfold','layup':'Carbon layup · 10 plies',
+        label={'heat':'Brake heating','unfold':'Sheet metal unfold','layup':'Carbon layup',
           'steering':'Steering linkage','extension':'Vine extension','propellers':'Propeller rotation',
           'gantry':'Gantry motion','tensile':'Tensile test','flow':'Pressure & flow','assembling':'Guitar assembly',
           'reconstruction':'Assembly view','visualization':'Display layers',

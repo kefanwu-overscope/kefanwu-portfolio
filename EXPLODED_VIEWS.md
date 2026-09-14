@@ -1,5 +1,13 @@
 # Project animations, starting covers and progressive loading · 2026-09-13
 
+## Confirmed carbon build record · 2026-09-13
+
+The actual build uses Easy Composites EL2, 20 main plies of 3K 200 g/m² twill
+and 5–10 local patch plies. Existing rendered layers are a visual illustration,
+not a physical-ply count. Runtime and manifest labels show layup progress only.
+Historical provenance keeps the true generator layerCount (10); no render,
+cover, texture or chunk bytes are changed in this documentation release.
+
 ## Current media presentation delivery · 2026-09-13
 
 Prepared against production `a67a49ad080364590494793ce5641066dc399ffc`;

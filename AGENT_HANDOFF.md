@@ -1,6 +1,38 @@
 # Agent Handoff - Kefan Wu Portfolio
 
-## Current media presentation delivery · 2026-09-13
+## Confirmed documentation release · 2026-09-13
+
+The user has reviewed the additions, corrected the actual build facts, and explicitly
+authorized publication. This supersedes the earlier local-review hold. Baseline:
+`e2a894555f8f40b4405cd799540505cc759e09d0`; cache revision `confirmed-build-20260914`.
+Exact release SHA, backup checks and online status are recorded in
+`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-documentation-release/release-metadata.json`.
+
+- 79 supplemental fields across 15 projects, 35 original Javelin procurement rows,
+  and the original LineFollower 8 mm sensor comparison photo. All 93 original
+  gallery indexes remain, giving 94 images. Full itemized sources: `../网站补充审核.md`
+  and `../.codex/documentation-release-20260914/review-manifest.json`.
+- Mk.7 driver-seat fabrication replaces misattributed Mk.8 design/fit claims;
+  three wrongly sourced supplemental Mk.8 seat details are withdrawn.
+- Carbon: Easy Composites EL2, 20 main plies of 3K 200 g/m² twill plus 5–10 local
+  patch plies. The scroll sequence is illustrative; remove physical-ply counts
+  from its label/ARIA. Preserve original render provenance, all 2,032 frames,
+  159 chunks, weave, matching initial covers and startup poster behavior.
+- Walnut Telecaster body / Fender Deluxe Drive pickups; final steering M4,
+  NARRco 17.4 in eye-to-eye and 4.0 in/rev; final brake diameter 7.4 in;
+  AURA target 200 lb / tested 300 lb / MY1016Z; bamboo 5.79–6.33 mm diameter.
+- Javelin props serve low-speed testing, routine operation and top-speed attempts.
+  `Prop_Analysis.mlx` was found locally. Its 10-candidate RPM/pitch-speed/tip-Mach
+  screening assumes 8S and 10% slip; keep it distinct from parallel-4S build records
+  and measured performance. No unsupported per-SKU use mapping is claimed.
+- Chapter and archive figures respect native aspect ratio and viewport height;
+  complete CAD and plots retain padding. Raw Drive/MATLAB evidence stays local.
+- The public resume PDF has a localized two-line AURA correction in its original
+  font and layout; pixel comparison outside that rectangle is unchanged.
+- Bamboo E is a historical calculation awaiting the confirmed diameter convention;
+  the unqualified old modulus was withdrawn, while measured stiffness and EI remain.
+
+## Previous media presentation delivery · 2026-09-13
 
 Prepared against production `a67a49ad080364590494793ce5641066dc399ffc`;
 page cache revision `media-polish-20260913`. Evidence belongs in

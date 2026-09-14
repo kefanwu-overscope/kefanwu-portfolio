@@ -26,14 +26,18 @@
 
   const project = projects[key];
   const editorial = editorials[key];
-  const gallery = project.gallery || [];
+  const supplement = window.caseStudySupplements?.[key] || {};
+  const gallery = [...(project.gallery || []), ...(supplement.gallery || [])];
   const images = gallery;
   const media = window.caseStudyMedia || {};
   const sourceIdentity = (image) => new URL(image.src, document.baseURI).pathname;
   const usedSources = new Set();
   // Keep the original gallery indexes for zoom navigation, but publish each
   // source only once in the story and the remaining-image archive.
-  const chapters = editorial.chapters.map((chapter) => {
+  const chapters = editorial.chapters.map((originalChapter) => {
+    const replacement = supplement.chapterImages?.[originalChapter.id];
+    const addedIndex = replacement ? gallery.findIndex((image) => image.src === replacement.src) : -1;
+    const chapter = addedIndex >= 0 ? { ...originalChapter, ...replacement, image: addedIndex } : originalChapter;
     const image = Number.isInteger(chapter.image) && gallery[chapter.image];
     const identity = image && sourceIdentity(image);
     const imageIndex = image && !usedSources.has(identity) ? chapter.image : null;
@@ -73,7 +77,7 @@
   const cover = await resolveCover();
 
   function presentation(image) {
-    const entry = media[image.src] || {};
+    const entry = supplement.media?.[image.src] || media[image.src] || {};
     const kind = ['photo', 'cad', 'plot', 'diagram', 'document'].includes(entry.kind) ? entry.kind : 'photo';
     const width = Number.isInteger(entry.width) && entry.width > 0 ? entry.width : null;
     const height = Number.isInteger(entry.height) && entry.height > 0 ? entry.height : null;
@@ -93,6 +97,11 @@
       <img src="${escape(source)}" alt="${escape(view.alt)}"${view.width && view.height ? ` width="${view.width}" height="${view.height}"` : ''} loading="lazy" decoding="async">
       <span class="image-affordance" aria-hidden="true">+</span>
     </button>`;
+  }
+
+  function mediaStyle(image) {
+    const { width, height } = presentation(image);
+    return width && height ? ` style="--media-ratio:${width / height}"` : '';
   }
 
   function originalDetails() {
@@ -115,6 +124,29 @@
       `<a class="text-link" href="${escape(download.href)}" download>${escape(download.label)} <span aria-hidden="true">↓</span></a>`).join('')}</div>` : '';
   }
 
+  function documentedDetails() {
+    return (supplement.sections || []).map((section) => `<details class="documented-detail" id="${escape(section.id)}">
+      <summary>${escape(section.title)}</summary>
+      <div class="source-detail-body"><dl class="documented-specs">${section.items.map((item) =>
+        `<div><dt>${escape(item.label)}</dt><dd>${escape(item.value)}</dd></div>`).join('')}</dl></div>
+    </details>`).join('');
+  }
+
+  function billOfMaterials() {
+    const bom = supplement.bom;
+    if (!bom?.rows?.length) return '';
+    return `<section class="bom-section wrap" id="bom" aria-labelledby="bom-title">
+      <div class="section-heading"><div><p class="eyebrow">Components & procurement</p><h2 id="bom-title">Bill of materials.</h2></div><p>${escape(bom.dateLabel)}</p></div>
+      <p class="record-intro">${escape(bom.description)}</p>
+      <details class="bom-details"><summary>View all ${bom.rows.length} line items <span aria-hidden="true">+</span></summary>
+        <div class="bom-table-wrap" role="region" aria-label="Javelin bill of materials" tabindex="0"><table class="bom-table">
+          <caption>${escape(bom.caption)}</caption><thead><tr><th scope="col">Item</th><th scope="col">Component / specification</th><th scope="col">Qty.</th><th scope="col">Order record</th></tr></thead>
+          <tbody>${bom.rows.map((row, index) => `<tr><th scope="row">${number(index + 1)}</th><td><strong>${escape(row.component)}</strong>${row.note ? `<span>${escape(row.note)}</span>` : ''}</td><td>${escape(row.quantity)}</td><td>${escape(row.status)}</td></tr>`).join('')}</tbody>
+        </table></div>
+      </details>
+    </section>`;
+  }
+
   root.innerHTML = `<article>
     <section class="case-hero wrap" aria-labelledby="case-title">
       <p class="hero-kicker eyebrow"><span class="case-number">Case ${escape(editorial.number)} / ${number(availableKeys.length)}</span><span>${escape(editorial.label)}</span></p>
@@ -135,21 +167,22 @@
     </section>
     <nav class="chapter-nav" aria-label="Case study sections"><div class="chapter-nav-inner wrap">
       <a href="#motion">Motion</a>${editorial.chapters.map((chapter, index) => `<a href="#${escape(chapter.id)}"><span class="mono">${number(index + 1)}</span>${escape(chapter.label)}</a>`).join('')}
-      <a href="#evidence">Image archive</a><a href="#record">Technical record</a>
+      <a href="#evidence">Image archive</a>${supplement.bom ? '<a href="#bom">BOM</a>' : ''}<a href="#record">Technical record</a>
     </div></nav>
     <div class="wrap">${chapters.map((chapter, index) => `<section class="chapter${chapter.image !== null ? '' : ' chapter-text-only'}" id="${escape(chapter.id)}" aria-labelledby="${escape(chapter.id)}-title">
       <div class="chapter-copy"><p class="eyebrow">${number(index + 1)} / ${escape(chapter.label)}</p><h2 id="${escape(chapter.id)}-title">${escape(chapter.title)}</h2>${chapter.paragraphs.map((text) => `<p>${escape(text)}</p>`).join('')}</div>
-      ${chapter.image !== null ? `<figure class="chapter-figure ${mediaClass(gallery[chapter.image])}">${imageButton(gallery[chapter.image], chapter.image)}<figcaption><span class="evidence-type">${escape(chapter.evidence)}</span>${escape(chapter.note)}</figcaption></figure>` : ''}
+      ${chapter.image !== null ? `<figure class="chapter-figure ${mediaClass(gallery[chapter.image])}"${mediaStyle(gallery[chapter.image])}>${imageButton(gallery[chapter.image], chapter.image)}<figcaption><span class="evidence-type">${escape(chapter.evidence)}</span>${escape(chapter.note)}</figcaption></figure>` : ''}
     </section>`).join('')}</div>
     <section class="evidence-section wrap" id="evidence" aria-labelledby="evidence-title">
       <div class="section-heading"><div><p class="eyebrow">The project images</p><h2 id="evidence-title">A closer look.</h2></div><p>${archive.length ? `${archive.length} more image${archive.length === 1 ? '' : 's'}. Open any to browse all ${gallery.length}.` : `${gallery.length === 1 ? 'The project image appears' : `All ${gallery.length} project images appear`} in the chapters above. Open any to browse the complete set.`}</p></div>
-      ${archive.length ? `<div class="gallery-grid">${archive.map(({ image, index }) => `<figure class="gallery-item ${mediaClass(image)}">${imageButton(image, index)}<figcaption><span class="mono">${number(index + 1)}</span><span>${escape(image.caption || image.alt)}</span></figcaption></figure>`).join('')}</div>` : gallery.length ? `<button type="button" class="text-link gallery-browse" data-image="0">Browse ${gallery.length === 1 ? 'the image' : `all ${imageCount(gallery.length)}`} <span aria-hidden="true">↗</span></button>` : ''}
+      ${archive.length ? `<div class="gallery-grid">${archive.map(({ image, index }) => `<figure class="gallery-item ${mediaClass(image)}"${mediaStyle(image)}>${imageButton(image, index)}<figcaption><span class="mono">${number(index + 1)}</span><span>${escape(image.caption || image.alt)}</span></figcaption></figure>`).join('')}</div>` : gallery.length ? `<button type="button" class="text-link gallery-browse" data-image="0">Browse ${gallery.length === 1 ? 'the image' : `all ${imageCount(gallery.length)}`} <span aria-hidden="true">↗</span></button>` : ''}
     </section>
+    ${billOfMaterials()}
     <section class="record-section wrap" id="record" aria-labelledby="record-title">
       <div class="section-heading"><div><p class="eyebrow">For the technical conversation</p><h2 id="record-title">The engineering record.</h2></div></div>
       <p class="record-intro">Original project notes, methods, and results.${editorial.recordNote ? ` ${escape(editorial.recordNote)}` : ''}</p>
       <div class="record-layout"><aside aria-label="Project tools and context"><h3>Tools & methods</h3><ul class="tool-list">${(project.tools || []).map((tool) => `<li>${escape(tool)}</li>`).join('')}</ul>${sourceSpec()}${downloadLinks()}</aside>
-        <div class="source-details"><details><summary>Project overview & highlights</summary><div class="source-detail-body"><p>${escape(project.summary)}</p><ul>${(project.highlights || []).map((item) => `<li>${escape(item)}</li>`).join('')}</ul></div></details>${originalDetails()}</div>
+        <div class="source-details">${documentedDetails()}<details><summary>Project overview & highlights</summary><div class="source-detail-body"><p>${escape(project.summary)}</p><ul>${(project.highlights || []).map((item) => `<li>${escape(item)}</li>`).join('')}</ul></div></details>${originalDetails()}</div>
       </div>
     </section>
     <section class="next-section" aria-label="Continue exploring"><div class="next-inner wrap">

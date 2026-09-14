@@ -160,7 +160,7 @@ window.caseStudyData = {
         "title": "Trade control surfaces\nfor motor mixing.",
         "paragraphs": [
           "Javelin takes off vertically, then tips into forward flight. Four motors provide yaw, pitch, and roll without flaps, ailerons, rudders, or servos.",
-          "Removing those mechanisms shifts the control problem into differential-thrust mixing and autopilot tuning. A roughly 24-item requirements matrix guided the design."
+          "Removing those mechanisms shifts the control problem into differential-thrust mixing and autopilot tuning. A 26-item requirements matrix guided the design."
         ],
         "image": 1,
         "evidence": "Airframe documentation",
@@ -184,7 +184,8 @@ window.caseStudyData = {
         "title": "Package power,\nsensing, and control.",
         "paragraphs": [
           "Four T-Motor F90 motors use tractor propellers. Parallel 4S packs retain 14.8 V, while XT90-S connectors manage connection inrush.",
-          "A Matek H743-WING runs ArduPlane. The airspeed sensor, GPS/compass, radio, and FPV system share the airframe with separated high- and low-voltage cable routes."
+          "A Matek H743-WING runs ArduPlane. The airspeed sensor, GPS/compass, radio, and FPV system share the airframe with separated high- and low-voltage cable routes.",
+          "Three propeller types cover low-speed testing, everyday operation and top-speed attempts. A MATLAB study compares 10 candidates against motor RPM, pitch speed and tip-Mach limits."
         ],
         "image": 3,
         "evidence": "Propulsion hardware",
@@ -368,8 +369,8 @@ window.caseStudyData = {
         "Mechanical lead for the front-wheel swerve system; the broader autonomy stack was outside my scope."
       ],
       [
-        "Design load",
-        "A 300 lb-payload luggage robot with independent front-wheel steering."
+        "Target → tested",
+        "200 lb initial payload target → 300 lb carried in testing."
       ],
       [
         "Evidence",
@@ -383,7 +384,7 @@ window.caseStudyData = {
         "title": "Fit both motions\naround the wheel.",
         "paragraphs": [
           "Each front module combines driving and steering. Motors, chains, sprockets, shafts, bearings, and mounts all compete for the same space.",
-          "The mechanical design centers on moving and steering a 300 lb-payload robot while keeping those interfaces accessible and clear of steering motion."
+          "The original payload target was 200 lb. The finished robot carried 300 lb in testing, exceeding that target."
         ],
         "image": 0,
         "evidence": "Built swerve hardware",
@@ -395,7 +396,7 @@ window.caseStudyData = {
         "title": "Trade steering speed\nfor torque.",
         "paragraphs": [
           "Independent wheel angles approach Ackermann behavior to reduce scrub. Each NEMA 23 stepper uses an 18:80 sprocket reduction.",
-          "Moving the steering motors toward the robot center increased sprocket spacing and helped reduce chain skipping. Drive motors use a separate 9:16 ratio."
+          "Moving the steering motors toward the robot center increased sprocket spacing and helped reduce chain skipping. MY1016Z drive motors use a separate 9:16 ratio."
         ],
         "image": 1,
         "evidence": "Steering-chain hardware",
@@ -419,7 +420,7 @@ window.caseStudyData = {
         "title": "Close the loop\nat the shaft.",
         "paragraphs": [
           "LPD3806 encoders on the 3/8-inch front wheel shafts provide speed and displacement feedback. The assemblies combine solid rubber wheels, steel shafts, and eight bearings.",
-          "The system record connects that mechanical hardware to the robot's electronics. Its acceleration figure is a design target; no quantified loaded-drive test is stated here."
+          "The robot carried 300 lb in testing against a 200 lb initial target. The acceleration figure in the drivetrain record remains a design target."
         ],
         "image": 5,
         "evidence": "Encoder integration",
@@ -487,8 +488,8 @@ window.caseStudyData = {
         "label": "Build",
         "title": "Place the cloth.\nPreserve the finish.",
         "paragraphs": [
-          "The gallery documents cloth laid over the mold and the resulting weave. Layup planning also covered epoxy handling and repeatability.",
-          "The shell was cured, demolded, and trimmed for the cockpit package."
+          "I used Easy Composites EL2 resin with 3K, 200 g/m² twill carbon cloth. The main shell has 20 plies, with another 5–10 plies of small patches for local reinforcement.",
+          "The photographs preserve the original weave and layup process. The shell was cured, demolded, and trimmed for the cockpit package."
         ],
         "image": 2,
         "evidence": "Composite fabrication",
@@ -507,19 +508,19 @@ window.caseStudyData = {
         "note": "The trimmed support shell after curing."
       }
     ],
-    "recordNote": "The record documents fabrication and design intent; it does not report laminate coupon testing or a measured stiffness-to-weight improvement. The animated ply sequence is a display of the layup process.",
+    "recordNote": "The scroll animation illustrates cloth placement; its visible layers do not count the actual laminate. The build uses 20 main plies plus 5–10 plies of local reinforcement patches. The record documents fabrication and design intent, without laminate coupon-test results.",
     "next": "seat"
   },
   seat: {
     "number": "08",
-    "title": "Driver seat & harness.",
-    "label": "Formula SAE / Cockpit packaging",
-    "deck": "One cockpit. A range of drivers.",
-    "description": "Seat geometry, restraint routing, and chassis interfaces developed together around real driver fit.",
+    "title": "Mk.7 driver seat.",
+    "label": "Formula SAE / Mk.7 seat fabrication",
+    "deck": "From sheet geometry to the cockpit.",
+    "description": "Making the aluminum driver seat for the Mk.7 Formula SAE car.",
     "cover": {
       "src": "assets/editorial/animation-start-20260913/seat-wide-1800.webp?v=b7141b451e94",
       "alt": "Folded and perforated aluminum driver seat.",
-      "caption": "The driver-seat geometry and cockpit support package.",
+      "caption": "The Mk.7 driver-seat geometry.",
       "kind": "Project CAD render",
       "srcset": "assets/editorial/animation-start-20260913/seat-wide-480.webp?v=51a70042cd0e 480w, assets/editorial/animation-start-20260913/seat-wide-960.webp?v=4ad9afc13786 960w, assets/editorial/animation-start-20260913/seat-wide-1800.webp?v=b7141b451e94 1800w",
       "width": 1800,
@@ -528,65 +529,65 @@ window.caseStudyData = {
     "summary": [
       [
         "My role",
-        "Seat and harness design through the Mk.7/Mk.8 transition."
+        "Responsible for fabrication of the Mk.7 driver seat."
       ],
       [
-        "Result",
-        "Fit checks across roughly 20 drivers using CAD body positioning and physical studies."
+        "Project",
+        "The aluminum seat for the Mk.7 Formula SAE car."
       ],
       [
         "Evidence",
-        "Cockpit packaging, seat CAD, support analysis, and the documented six-point harness layout."
+        "Seat CAD, a supporting analysis image, and Mk.7 cockpit and vehicle photographs."
       ]
     ],
     "chapters": [
       {
         "id": "constraint",
         "label": "Constraint",
-        "title": "Start inside\nthe cockpit envelope.",
+        "title": "Start with\nthe seat geometry.",
         "paragraphs": [
-          "The seat had to support the driver while preserving steering reach, pedal access, harness geometry, and cockpit exit space.",
-          "The package was developed alongside the cockpit template, frame tubes, pedal tray, and bodywork."
+          "The seat CAD shows the perforated pan, back, and folded side panels. This is the geometry behind the Mk.7 seat fabrication project.",
+          "My responsibility was making the seat for the car."
         ],
         "image": 0,
         "evidence": "Seat CAD",
-        "note": "Seat geometry considered within the complete cockpit."
+        "note": "The complete seat geometry, shown without cropping its edges."
       },
       {
         "id": "fit",
-        "label": "Fit",
-        "title": "Make adjustment\npart of the design.",
+        "label": "Fabrication",
+        "title": "Make the seat\nfor the car.",
         "paragraphs": [
-          "CAD body models and physical checks covered drivers of different heights. Booster or cushion options accommodated smaller drivers while taller drivers stayed within the envelope.",
-          "The documented fit study includes roughly 20 drivers, balancing comfort, lateral support, access, and restraint routing."
+          "The fabrication work turned the seat geometry into a cockpit component for Mk.7.",
+          "The cockpit photograph places the seat in its vehicle context, alongside the frame and surrounding controls."
         ],
         "image": 2,
-        "evidence": "Vehicle packaging",
-        "note": "Cockpit context for the driver fit and interface decisions."
+        "evidence": "Mk.7 cockpit",
+        "note": "The Mk.7 cockpit surrounding the seat."
       },
       {
         "id": "interfaces",
         "label": "Interfaces",
-        "title": "Give the restraints\ntheir own load path.",
+        "title": "Keep the surrounding\nstructure in view.",
         "paragraphs": [
-          "A six-point harness adds an anti-submarine strap attached to a dedicated chassis bar.",
-          "Welded chassis tabs and multiple seat hard points retain the seat. Those mounts also need to leave access for inspection and service."
+          "The seat sits within the chassis and shares space with the steering and other cockpit hardware.",
+          "The vehicle photographs provide context for those interfaces around the fabricated part."
         ],
-        "image": 0,
-        "evidence": "Interface design",
-        "note": "The seat design is part of a package with separate chassis and harness interfaces."
+        "image": 3,
+        "evidence": "Mk.7 vehicle",
+        "note": "The car in its broader build context."
       },
       {
         "id": "validation",
-        "label": "Validation",
-        "title": "Check the package\nat several scales.",
+        "label": "Record",
+        "title": "Keep the supporting\nrecord together.",
         "paragraphs": [
-          "The source record combines seat-support analysis with CAD and physical fit checks. The full package fits the FSAE cockpit template alongside the steering column and pedal tray.",
-          "The gallery preserves the analysis and vehicle context; no numerical result is supplied for the seat FEA."
+          "The original project gallery includes a seat-support analysis image alongside the CAD and vehicle photographs.",
+          "The image is retained as supporting project context; this page attributes the seat fabrication to me."
         ],
         "image": 1,
         "evidence": "Support FEA",
-        "note": "The original seat-support analysis image."
+        "note": "Original supporting analysis image; no numerical result is reported."
       }
     ],
     "next": "materialTest"
@@ -663,14 +664,15 @@ window.caseStudyData = {
         "title": "Use EI as\nthe model input.",
         "paragraphs": [
           "Eleven rods selected for straightness were tested over a 73.37 mm span. Initial force–deflection fits were converted to bending stiffness using the central-load beam relation.",
-          "The primary result is EI = 0.672 ± 0.063 N·m². Every rod fit exceeded R² 0.999; the derived material modulus is reported for comparison."
+          "The primary result is EI = 0.672 ± 0.063 N·m². Every rod fit exceeded R² 0.999; the derived material modulus is reported for comparison.",
+          "The measured bamboo-rod diameter range is 5.79–6.33 mm."
         ],
         "image": 12,
         "evidence": "Measured bending curves",
         "note": "Force–deflection data for all eleven tested bamboo rods."
       }
     ],
-    "recordNote": "The tensile gauge length was adapted to the available grips. No bending standard covered the 0.25-inch wood rods, so the source record describes the repeatable fixture and fitting procedure. The animated specimen deformation is illustrative; the original plots carry the measured results.",
+    "recordNote": "The tensile gauge length was adapted to the available grips; the rod tests use a documented repeatable fixture and fitting procedure. The animated deformation is illustrative. The original per-rod EI / E plot is retained as a historical calculation: with 5.79–6.33 mm confirmed as diameter, its E conversion requires review. No corrected modulus is reported; force–deflection stiffness and EI remain the direct bending-test results.",
     "next": "ansysCfd"
   },
   ansysCfd: {
@@ -1040,7 +1042,7 @@ window.caseStudyData = {
         "label": "Material",
         "title": "Start with a blank\nyou can afford.",
         "paragraphs": [
-          "Smaller walnut pieces were glued into a cost-effective blank for the walnut/maple body.",
+          "Smaller walnut pieces were glued into a cost-effective blank for the walnut body.",
           "Titebond III and overnight clamping prepared the material for CNC work. The project began with raw materials rather than a kit."
         ],
         "image": 4,
@@ -1065,7 +1067,8 @@ window.caseStudyData = {
         "title": "Control the holes\nthat come after CNC.",
         "paragraphs": [
           "Laser-cut templates checked drilling locations and reduced hand-drilling errors.",
-          "The jig carried the planned geometry into the post-CNC operations before sanding and finishing."
+          "The jig carried the planned geometry into the post-CNC operations before sanding and finishing.",
+          "Fender Deluxe Drive pickups complete the electronics in the walnut-body guitar."
         ],
         "image": 6,
         "evidence": "Drilling fixture",

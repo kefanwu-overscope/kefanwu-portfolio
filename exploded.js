@@ -4,7 +4,7 @@
 
   const hostSelector = ".editorial .project-card[data-project], .case-animation-host[data-project]";
   const script = document.currentScript;
-  const manifestURL = new URL(script?.dataset.manifest || "assets/exploded/manifest.json?v=media-polish-20260913", document.baseURI);
+  const manifestURL = new URL(script?.dataset.manifest || "assets/exploded/manifest.json?v=confirmed-build-20260914", document.baseURI);
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const states = new Map();
@@ -22,8 +22,8 @@
       description: "Scroll forward to heat the metal to red; reverse to cool it." },
     unfold: { label: "Sheet metal unfold", hint: "Scroll to unfold", progress: "unfolded",
       description: "Scroll forward to unfold the seat panels; reverse to fold them." },
-    layup: { label: "Carbon layup · 10 plies", hint: "Scroll to lay up", progress: "laid up",
-      description: "Ten carbon cloth layers are placed one at a time. Reverse to remove them." },
+    layup: { label: "Carbon layup", hint: "Scroll to lay up", progress: "laid up",
+      description: "An illustration of cloth placement. Reverse to rewind the layup." },
     steering: { label: "Steering linkage", hint: "Scroll to steer", progress: "through steering cycle",
       description: "Turn the steering wheel and follow the universal joints and rack." },
     extension: { label: "Vine extension", hint: "Scroll to extend", progress: "extended" },
@@ -58,21 +58,14 @@
     lastTime = 0;
   }
 
-  function placedPlies(state, progress) {
-    const last = state.config.frames.length - 1;
-    return Math.floor(Math.round(progress * last) / last * 10 + 0.000001);
-  }
-
   function reflectProgress(state) {
     const percent = Math.round(state.target * 100);
     state.range.value = String(Math.round(state.target * 1000) / 10);
     const action = MODES[state.config.mode];
-    state.range.setAttribute("aria-valuetext", state.config.mode === "layup"
-      ? `${percent}% laid up, ${placedPlies(state, state.target)} of 10 plies placed`
-      : `${percent}% ${action.progress}`);
+    state.range.setAttribute("aria-valuetext", `${percent}% ${action.progress}`);
     state.card.style.setProperty("--explode-progress", `${percent}%`);
     if (state.config.mode === "layup") {
-      state.badge.textContent = `Carbon layup · ${placedPlies(state, state.progress)}/10`;
+      state.badge.textContent = `Carbon layup · ${Math.round(state.progress * 100)}%`;
     }
   }
 
@@ -93,7 +86,7 @@
     // matching cover until a decoded frame actually shows a different pose.
     state.card.classList.toggle("is-explode-playing", index > 0);
     if (state.config.mode === "layup") {
-      state.badge.textContent = `Carbon layup · ${placedPlies(state, state.progress)}/10`;
+      state.badge.textContent = `Carbon layup · ${Math.round(state.progress * 100)}%`;
     }
   }
 
