@@ -1,0 +1,5798 @@
+{
+  "project": "education",
+  "width": 1280,
+  "height": 854,
+  "frameCount": 121,
+  "samples": 48,
+  "cameraOrthoScale": 6.5272955894470215,
+  "cameraBaseScale": 6.382242679595947,
+  "groundZ": -0.019999999552965164,
+  "mode": "assembling",
+  "sourceLayout": "Original separated educational layout",
+  "motionRevision": "detail-resolution-20260914",
+  "motion": {
+    "version": 1,
+    "project": "education",
+    "geometryDigest": "7ada17017d6ed6fb49a3d41194b7cce9d7173f547049b7047701da81da695aba",
+    "stages": [
+      {
+        "label": "Lift kit above the lowest assembled guard edge",
+        "movingGroups": [
+          "body",
+          "bridge",
+          "controls",
+          "neck",
+          "neck_pickup",
+          "pickguard",
+          "pickup_coil",
+          "pickup_front_plate"
+        ],
+        "transforms": {
+          "body": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "bridge": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "controls": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "neck": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "neck_pickup": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "pickguard": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "pickup_coil": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "pickup_front_plate": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.01
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.01
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "passed": true,
+          "method": "Common upward rigid translation preserves all inter-part geometry and increases floor clearance.",
+          "translation": [
+            0,
+            0,
+            0.035
+          ]
+        },
+        "start": 0.0,
+        "end": 0.043478260869565216
+      },
+      {
+        "label": "Withdraw horizontal neck into clear foreground",
+        "movingGroups": [
+          "neck"
+        ],
+        "transforms": {
+          "neck": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.85
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 0,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 2.822532104515465,
+          "directionVerified": "forward approach"
+        },
+        "start": 0.043478260869565216,
+        "end": 0.08695652173913043
+      },
+      {
+        "label": "Turn neck upright in the clear foreground",
+        "movingGroups": [
+          "neck"
+        ],
+        "transforms": {
+          "neck": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.85
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                -1.0255555425300459e-10,
+                -1.266505576872551e-07,
+                -0.999999999999992,
+                1.5453897078326801
+              ],
+              [
+                1.8342584802444412e-08,
+                0.9999999999999912,
+                -1.2665055797490077e-07,
+                -0.849999804275531
+              ],
+              [
+                0.9999999999999997,
+                -1.8342584587809645e-08,
+                -1.025525987150012e-10,
+                1.580389711432515
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "passed": true,
+          "method": "The full rotation lies in a disjoint front slab, including drift from its measured axis; a fixed-pivot 3D sphere bounds ground clearance continuously.",
+          "continuousSlabClearance": 0.6802437146749241,
+          "minimumRotationSphereZ": 0.17532204826865394,
+          "rotationAxis": [
+            5.415400039510132e-08,
+            -1.0000001192092896,
+            7.249659006447473e-08
+          ],
+          "maximumRotationYDrift": 2.5428869903106507e-07
+        },
+        "pivot": [
+          0.0,
+          -0.031773642636835575,
+          1.545389711856842
+        ],
+        "start": 0.08695652173913043,
+        "end": 0.13043478260869565
+      },
+      {
+        "label": "Align neck with original CAD mounting pocket",
+        "movingGroups": [
+          "neck"
+        ],
+        "transforms": {
+          "neck": {
+            "fromMatrix": [
+              [
+                -1.0255555425300459e-10,
+                -1.266505576872551e-07,
+                -0.999999999999992,
+                1.5453897078326801
+              ],
+              [
+                1.8342584802444412e-08,
+                0.9999999999999912,
+                -1.2665055797490077e-07,
+                -0.849999804275531
+              ],
+              [
+                0.9999999999999997,
+                -1.8342584587809645e-08,
+                -1.025525987150012e-10,
+                1.580389711432515
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                -1.0255555425300459e-10,
+                -1.266505576872551e-07,
+                -0.999999999999992,
+                1.5490655718463195
+              ],
+              [
+                1.8342584802444412e-08,
+                0.9999999999999912,
+                -1.2665055797490077e-07,
+                -0.8500197448267631
+              ],
+              [
+                0.9999999999999997,
+                -1.8342584587809645e-08,
+                -1.025525987150012e-10,
+                2.3912343309139863
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 0,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 2.822532124731184,
+          "directionVerified": "forward approach"
+        },
+        "start": 0.13043478260869565,
+        "end": 0.17391304347826086
+      },
+      {
+        "label": "Seat neck into its CAD joint",
+        "movingGroups": [
+          "neck"
+        ],
+        "transforms": {
+          "neck": {
+            "fromMatrix": [
+              [
+                -1.0255555425300459e-10,
+                -1.266505576872551e-07,
+                -0.999999999999992,
+                1.5490655718463195
+              ],
+              [
+                1.8342584802444412e-08,
+                0.9999999999999912,
+                -1.2665055797490077e-07,
+                -0.8500197448267631
+              ],
+              [
+                0.9999999999999997,
+                -1.8342584587809645e-08,
+                -1.025525987150012e-10,
+                2.3912343309139863
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                -1.0255555425300459e-10,
+                -1.266505576872551e-07,
+                -0.999999999999992,
+                1.5490655718463195
+              ],
+              [
+                1.8342584802444412e-08,
+                0.9999999999999912,
+                -1.2665055797490077e-07,
+                -1.9744826763098395e-05
+              ],
+              [
+                0.9999999999999997,
+                -1.8342584587809645e-08,
+                -1.025525987150012e-10,
+                2.3912343309139863
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 11,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 129,
+          "continuousCandidatePairs": 129,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 2.8225321094404316,
+          "directionVerified": "reverse withdrawal from CAD joint"
+        },
+        "start": 0.17391304347826086,
+        "end": 0.21739130434782608
+      },
+      {
+        "label": "Bring neck_pickup forward",
+        "movingGroups": [
+          "neck_pickup"
+        ],
+        "transforms": {
+          "neck_pickup": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.65
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 0,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 0.3616859942602001,
+          "directionVerified": "forward approach"
+        },
+        "start": 0.21739130434782608,
+        "end": 0.2608695652173913
+      },
+      {
+        "label": "Align neck_pickup with its body cavity",
+        "movingGroups": [
+          "neck_pickup"
+        ],
+        "transforms": {
+          "neck_pickup": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.65
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                0.9999999999999997,
+                1.1857801353677938e-09,
+                2.394062402621036e-09,
+                0.6397838910424369
+              ],
+              [
+                -1.1857804680941873e-09,
+                1.0000000000000002,
+                2.3579628176879515e-08,
+                -0.6500000127919628
+              ],
+              [
+                -2.3940623971115323e-09,
+                -2.3579628302048353e-08,
+                1.0000000000000004,
+                -0.2560937522163166
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 0,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 0.3616859965538951,
+          "directionVerified": "forward approach"
+        },
+        "start": 0.2608695652173913,
+        "end": 0.30434782608695654
+      },
+      {
+        "label": "Seat neck_pickup",
+        "movingGroups": [
+          "neck_pickup"
+        ],
+        "transforms": {
+          "neck_pickup": {
+            "fromMatrix": [
+              [
+                0.9999999999999997,
+                1.1857801353677938e-09,
+                2.394062402621036e-09,
+                0.6397838910424369
+              ],
+              [
+                -1.1857804680941873e-09,
+                1.0000000000000002,
+                2.3579628176879515e-08,
+                -0.6500000127919628
+              ],
+              [
+                -2.3940623971115323e-09,
+                -2.3579628302048353e-08,
+                1.0000000000000004,
+                -0.2560937522163166
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                0.9999999999999997,
+                1.1857801353677938e-09,
+                2.394062402621036e-09,
+                0.6397838910424369
+              ],
+              [
+                -1.1857804680941873e-09,
+                1.0000000000000002,
+                2.3579628176879515e-08,
+                -1.2791962822333858e-08
+              ],
+              [
+                -2.3940623971115323e-09,
+                -2.3579628302048353e-08,
+                1.0000000000000004,
+                -0.2560937522163166
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 11,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 0.3616859942602001,
+          "directionVerified": "reverse withdrawal from CAD joint"
+        },
+        "start": 0.30434782608695654,
+        "end": 0.34782608695652173
+      },
+      {
+        "label": "Bring bridge to assembly work area",
+        "movingGroups": [
+          "bridge"
+        ],
+        "transforms": {
+          "bridge": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.95
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 0,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 0.511396787513274,
+          "directionVerified": "forward approach"
+        },
+        "start": 0.34782608695652173,
+        "end": 0.391304347826087
+      },
+      {
+        "label": "Align bridge in front of its mounting holes",
+        "movingGroups": [
+          "bridge"
+        ],
+        "transforms": {
+          "bridge": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.95
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                0.9999999999999996,
+                -7.543747947299963e-09,
+                6.838329949143552e-09,
+                0.6433186509317128
+              ],
+              [
+                7.543747922195428e-09,
+                1.0000000000000016,
+                6.132180638424915e-10,
+                -0.9499999552209709
+              ],
+              [
+                -6.838329884458716e-09,
+                -6.132176848634999e-10,
+                1.0000000000000002,
+                0.07970444204896424
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 0,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 0.5113967938300432,
+          "directionVerified": "forward approach"
+        },
+        "start": 0.391304347826087,
+        "end": 0.43478260869565216
+      },
+      {
+        "label": "Bring pickup pieces to the assembly work area",
+        "movingGroups": [
+          "pickup_front_plate",
+          "pickup_coil"
+        ],
+        "transforms": {
+          "pickup_front_plate": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.01
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.66
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "pickup_coil": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.65
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 0,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 0.37406908641522096,
+          "directionVerified": "forward approach"
+        },
+        "start": 0.43478260869565216,
+        "end": 0.4782608695652174
+      },
+      {
+        "label": "Separate the original pickup front plate",
+        "movingGroups": [
+          "pickup_front_plate"
+        ],
+        "transforms": {
+          "pickup_front_plate": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.66
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -1.3599999999999999
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 2,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 30576,
+          "continuousCandidatePairs": 30576,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 0.33765807655110985,
+          "directionVerified": "forward approach"
+        },
+        "start": 0.4782608695652174,
+        "end": 0.5217391304347826
+      },
+      {
+        "label": "Align coil with the rear bridge opening",
+        "movingGroups": [
+          "pickup_coil"
+        ],
+        "transforms": {
+          "pickup_coil": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.65
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                0.9999999999999996,
+                6.346374933085363e-09,
+                -1.6483810331151867e-09,
+                0.6569085461187889
+              ],
+              [
+                -6.346375103012911e-09,
+                1.0000000000000002,
+                -8.001108542747374e-09,
+                -0.6499999839967352
+              ],
+              [
+                1.6483803422267474e-09,
+                8.001108519455331e-09,
+                0.9999999999999989,
+                -0.25609374881852465
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 0,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 0.3715942669440989,
+          "directionVerified": "forward approach"
+        },
+        "start": 0.5217391304347826,
+        "end": 0.5652173913043478
+      },
+      {
+        "label": "Insert coil from behind the bridge",
+        "movingGroups": [
+          "pickup_coil"
+        ],
+        "transforms": {
+          "pickup_coil": {
+            "fromMatrix": [
+              [
+                0.9999999999999996,
+                6.346374933085363e-09,
+                -1.6483810331151867e-09,
+                0.6569085461187889
+              ],
+              [
+                -6.346375103012911e-09,
+                1.0000000000000002,
+                -8.001108542747374e-09,
+                -0.6499999839967352
+              ],
+              [
+                1.6483803422267474e-09,
+                8.001108519455331e-09,
+                0.9999999999999989,
+                -0.25609374881852465
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                0.9999999999999996,
+                6.346374933085363e-09,
+                -1.6483810331151867e-09,
+                0.6569085461187889
+              ],
+              [
+                -6.346375103012911e-09,
+                1.0000000000000002,
+                -8.001108542747374e-09,
+                -0.9499999839967352
+              ],
+              [
+                1.6483803422267474e-09,
+                8.001108519455331e-09,
+                0.9999999999999989,
+                -0.25609374881852465
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 13,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 4635,
+          "continuousCandidatePairs": 4635,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 0.3715942827612753,
+          "directionVerified": "reverse withdrawal from CAD joint"
+        },
+        "start": 0.5652173913043478,
+        "end": 0.6086956521739131
+      },
+      {
+        "label": "Align pickup front plate ahead of the bridge",
+        "movingGroups": [
+          "pickup_front_plate"
+        ],
+        "transforms": {
+          "pickup_front_plate": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -1.3599999999999999
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                0.9999999999999996,
+                6.346374933085363e-09,
+                -1.6483810331151867e-09,
+                0.6569085461187889
+              ],
+              [
+                -6.346375103012911e-09,
+                1.0000000000000002,
+                -8.001108542747374e-09,
+                -1.3599999839967354
+              ],
+              [
+                1.6483803422267474e-09,
+                8.001108519455331e-09,
+                0.9999999999999989,
+                -0.25609374881852465
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 0,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 0.3376580748747773,
+          "directionVerified": "forward approach"
+        },
+        "start": 0.6086956521739131,
+        "end": 0.6521739130434783
+      },
+      {
+        "label": "Seat pickup front plate from the opposite side",
+        "movingGroups": [
+          "pickup_front_plate"
+        ],
+        "transforms": {
+          "pickup_front_plate": {
+            "fromMatrix": [
+              [
+                0.9999999999999996,
+                6.346374933085363e-09,
+                -1.6483810331151867e-09,
+                0.6569085461187889
+              ],
+              [
+                -6.346375103012911e-09,
+                1.0000000000000002,
+                -8.001108542747374e-09,
+                -1.3599999839967354
+              ],
+              [
+                1.6483803422267474e-09,
+                8.001108519455331e-09,
+                0.9999999999999989,
+                -0.25609374881852465
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                0.9999999999999996,
+                6.346374933085363e-09,
+                -1.6483810331151867e-09,
+                0.6569085461187889
+              ],
+              [
+                -6.346375103012911e-09,
+                1.0000000000000002,
+                -8.001108542747374e-09,
+                -0.9599999839967351
+              ],
+              [
+                1.6483803422267474e-09,
+                8.001108519455331e-09,
+                0.9999999999999989,
+                -0.25609374881852465
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 14,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 30576,
+          "continuousCandidatePairs": 30576,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 0.3376580748747773,
+          "directionVerified": "reverse withdrawal from CAD joint"
+        },
+        "start": 0.6521739130434783,
+        "end": 0.6956521739130435
+      },
+      {
+        "label": "Mount complete bridge and pickup unit",
+        "movingGroups": [
+          "bridge",
+          "pickup_coil",
+          "pickup_front_plate"
+        ],
+        "transforms": {
+          "bridge": {
+            "fromMatrix": [
+              [
+                0.9999999999999996,
+                -7.543747947299963e-09,
+                6.838329949143552e-09,
+                0.6433186509317128
+              ],
+              [
+                7.543747922195428e-09,
+                1.0000000000000016,
+                6.132180638424915e-10,
+                -0.9499999552209709
+              ],
+              [
+                -6.838329884458716e-09,
+                -6.132176848634999e-10,
+                1.0000000000000002,
+                0.07970444204896424
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                0.9999999999999996,
+                -7.543747947299963e-09,
+                6.838329949143552e-09,
+                0.6433186509317128
+              ],
+              [
+                7.543747922195428e-09,
+                1.0000000000000016,
+                6.132180638424915e-10,
+                4.477902901256492e-08
+              ],
+              [
+                -6.838329884458716e-09,
+                -6.132176848634999e-10,
+                1.0000000000000002,
+                0.07970444204896424
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "pickup_coil": {
+            "fromMatrix": [
+              [
+                0.9999999999999996,
+                6.346374933085363e-09,
+                -1.6483810331151867e-09,
+                0.6569085461187889
+              ],
+              [
+                -6.346375103012911e-09,
+                1.0000000000000002,
+                -8.001108542747374e-09,
+                -0.9499999839967352
+              ],
+              [
+                1.6483803422267474e-09,
+                8.001108519455331e-09,
+                0.9999999999999989,
+                -0.25609374881852465
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                0.9999999999999996,
+                6.346374933085363e-09,
+                -1.6483810331151867e-09,
+                0.6569085461187889
+              ],
+              [
+                -6.346375103012911e-09,
+                1.0000000000000002,
+                -8.001108542747374e-09,
+                1.600326476891567e-08
+              ],
+              [
+                1.6483803422267474e-09,
+                8.001108519455331e-09,
+                0.9999999999999989,
+                -0.25609374881852465
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "pickup_front_plate": {
+            "fromMatrix": [
+              [
+                0.9999999999999996,
+                6.346374933085363e-09,
+                -1.6483810331151867e-09,
+                0.6569085461187889
+              ],
+              [
+                -6.346375103012911e-09,
+                1.0000000000000002,
+                -8.001108542747374e-09,
+                -0.9599999839967351
+              ],
+              [
+                1.6483803422267474e-09,
+                8.001108519455331e-09,
+                0.9999999999999989,
+                -0.25609374881852465
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                0.9999999999999996,
+                6.346374933085363e-09,
+                -1.6483810331151867e-09,
+                0.6569085461187889
+              ],
+              [
+                -6.346375103012911e-09,
+                1.0000000000000002,
+                -8.001108542747374e-09,
+                -0.009999983996735231
+              ],
+              [
+                1.6483803422267474e-09,
+                8.001108519455331e-09,
+                0.9999999999999989,
+                -0.25609374881852465
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 10,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 20176,
+          "continuousCandidatePairs": 20176,
+          "initialTriangleContactsWithdrawing": 3539,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 0.5243094875905897,
+          "directionVerified": "reverse withdrawal from CAD joint"
+        },
+        "start": 0.6956521739130435,
+        "end": 0.7391304347826086
+      },
+      {
+        "label": "Bring pickguard forward",
+        "movingGroups": [
+          "pickguard"
+        ],
+        "transforms": {
+          "pickguard": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.65
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 0,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 1.1299797623037222,
+          "directionVerified": "forward approach"
+        },
+        "start": 0.7391304347826086,
+        "end": 0.782608695652174
+      },
+      {
+        "label": "Align pickguard with final mounting points",
+        "movingGroups": [
+          "pickguard"
+        ],
+        "transforms": {
+          "pickguard": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.65
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                0.9999999999999999,
+                3.4581670222768943e-09,
+                -1.699524958369838e-09,
+                -0.6150409441513801
+              ],
+              [
+                -3.458167184834256e-09,
+                1.0,
+                1.9436954263544173e-10,
+                -0.6500000534882071
+              ],
+              [
+                1.6995248896987344e-09,
+                -1.9436956834376518e-10,
+                1.0,
+                -0.2560935994953558
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 0,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 1.1299797625745405,
+          "directionVerified": "forward approach"
+        },
+        "start": 0.782608695652174,
+        "end": 0.8260869565217391
+      },
+      {
+        "label": "Seat pickguard",
+        "movingGroups": [
+          "pickguard"
+        ],
+        "transforms": {
+          "pickguard": {
+            "fromMatrix": [
+              [
+                0.9999999999999999,
+                3.4581670222768943e-09,
+                -1.699524958369838e-09,
+                -0.6150409441513801
+              ],
+              [
+                -3.458167184834256e-09,
+                1.0,
+                1.9436954263544173e-10,
+                -0.6500000534882071
+              ],
+              [
+                1.6995248896987344e-09,
+                -1.9436956834376518e-10,
+                1.0,
+                -0.2560935994953558
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                0.9999999999999999,
+                3.4581670222768943e-09,
+                -1.699524958369838e-09,
+                -0.6150409441513801
+              ],
+              [
+                -3.458167184834256e-09,
+                1.0,
+                1.9436954263544173e-10,
+                -5.3488207113483455e-08
+              ],
+              [
+                1.6995248896987344e-09,
+                -1.9436956834376518e-10,
+                1.0,
+                -0.2560935994953558
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 32,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 7963,
+          "continuousCandidatePairs": 7963,
+          "initialTriangleContactsWithdrawing": 2484,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 1.129979809883022,
+          "directionVerified": "reverse withdrawal from CAD joint"
+        },
+        "start": 0.8260869565217391,
+        "end": 0.8695652173913043
+      },
+      {
+        "label": "Bring controls forward",
+        "movingGroups": [
+          "controls"
+        ],
+        "transforms": {
+          "controls": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.65
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 0,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 0.7107563831260857,
+          "directionVerified": "forward approach"
+        },
+        "start": 0.8695652173913043,
+        "end": 0.9130434782608695
+      },
+      {
+        "label": "Align controls with final mounting points",
+        "movingGroups": [
+          "controls"
+        ],
+        "transforms": {
+          "controls": {
+            "fromMatrix": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0,
+                -0.65
+              ],
+              [
+                0.0,
+                0.0,
+                1.0,
+                0.035
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                0.9999999999999996,
+                2.4523828103271554e-09,
+                -6.573274430002729e-10,
+                -0.8554017560662271
+              ],
+              [
+                -2.452383247743519e-09,
+                1.0000000000000002,
+                5.224516826256036e-10,
+                -0.6500000674653053
+              ],
+              [
+                6.573274582262698e-10,
+                -5.224516784062281e-10,
+                1.0,
+                -0.2560935691705787
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 0,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 0,
+          "continuousCandidatePairs": 0,
+          "initialTriangleContactsWithdrawing": 0,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 0.7107563825988792,
+          "directionVerified": "forward approach"
+        },
+        "start": 0.9130434782608695,
+        "end": 0.9565217391304348
+      },
+      {
+        "label": "Seat controls",
+        "movingGroups": [
+          "controls"
+        ],
+        "transforms": {
+          "controls": {
+            "fromMatrix": [
+              [
+                0.9999999999999996,
+                2.4523828103271554e-09,
+                -6.573274430002729e-10,
+                -0.8554017560662271
+              ],
+              [
+                -2.452383247743519e-09,
+                1.0000000000000002,
+                5.224516826256036e-10,
+                -0.6500000674653053
+              ],
+              [
+                6.573274582262698e-10,
+                -5.224516784062281e-10,
+                1.0,
+                -0.2560935691705787
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ],
+            "toMatrix": [
+              [
+                0.9999999999999996,
+                2.4523828103271554e-09,
+                -6.573274430002729e-10,
+                -0.8554017560662271
+              ],
+              [
+                -2.452383247743519e-09,
+                1.0000000000000002,
+                5.224516826256036e-10,
+                -6.746530517576232e-08
+              ],
+              [
+                6.573274582262698e-10,
+                -5.224516784062281e-10,
+                1.0,
+                -0.2560935691705787
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        },
+        "verification": {
+          "positiveSamples": 100,
+          "triangleBVHPairTests": 5,
+          "newGroupSurfaceIntersections": 0,
+          "floorCrossings": 0,
+          "continuousTriangleTests": 5313,
+          "continuousCandidatePairs": 5313,
+          "initialTriangleContactsWithdrawing": 1962,
+          "newContinuousTriangleContacts": 0,
+          "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units.",
+          "initialSeamToleranceSourceUnits": 2e-06,
+          "initialSeamExtensionUsed": false,
+          "modelBoundsDiagonal": 0.7107564125827461,
+          "directionVerified": "reverse withdrawal from CAD joint"
+        },
+        "start": 0.9565217391304348,
+        "end": 1.0
+      }
+    ],
+    "partGroups": {
+      "mat_chrome_part_0": "bridge",
+      "mat_chrome_part_1": "bridge",
+      "mat_chrome_part_2": "bridge",
+      "mat_chrome_part_3": "bridge",
+      "mat_chrome_part_4": "bridge",
+      "mat_chrome_part_5": "bridge",
+      "mat_chrome_part_6": "bridge",
+      "mat_chrome_part_7": "bridge",
+      "mat_chrome_part_8": "bridge",
+      "mat_chrome_part_9": "bridge",
+      "mat_chrome_part_10": "bridge",
+      "mat_chrome_part_11": "bridge",
+      "mat_chrome_part_12": "controls",
+      "mat_chrome_part_13": "controls",
+      "mat_chrome_part_14": "controls",
+      "mat_chrome_part_15": "controls",
+      "mat_chrome_part_16": "controls",
+      "mat_chrome_part_17": "controls",
+      "mat_chrome_part_18": "controls",
+      "mat_chrome_part_19": "neck_pickup",
+      "mat_fretboard_part_0": "neck",
+      "mat_maple_part_0": "neck",
+      "mat_pickguard_white_part_0": "pickguard",
+      "mat_plastic_black_part_0": "pickup_front_plate",
+      "mat_plastic_black_part_1": "pickup_coil",
+      "mat_printed_navy_part_0": "body"
+    },
+    "method": "Source meshes and materials retained. Rigid component transforms with independent full-path geometric verification.",
+    "checker": "Original assembly_motion VERSION15 continuous translation SAT plus 97-pose bidirectional closed-component containment checks.",
+    "inputDependencies": {
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\tools\\exploded-render\\education_assembly_fit.py": "67e8418fbab1e51ec0d3714f40f4ec55ebad6da53ae02799c0c2c9fd423a6c64",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\tools\\exploded-render\\education_assembly_path.py": "d908fc973bac429043871cef453a5033e723985103ab0e43434147113d570ec2",
+      "C:\\Users\\oc\\Desktop\\WEBSITE\\portfolio-site\\tools\\exploded-render\\education_contact_check.py": "63998eb4cb7114fc54f58e8684adc65fd189a2c2dba46d05b7df7543339bf462",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Pick_Up-1.STL": "4996e5ae795ade41a69a59000c615b49b37f9ada4739774a7f4aaa733e52e667",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-0.step-1.STL": "de7f2fd27cf3a61ecd5e349d08ac782c81094afd4a2ea38de2aaf845b93e2bc5",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-1.step-1.STL": "52a6a509dab200b96a8e49f824dd47baf37d587c6d5dea4b0da740a57bdfd0d2",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-10.step-1.STL": "ad8b688c53d53d7d140d26873e080b629940dfb3383fd3b405c63553e7d72f3b",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-2.step-1.STL": "16e53822bc91c5ffd64eed2b5090061248cd43885efaee0ed0fbb6c7e31a834d",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-3.step-1.STL": "f4533e142d62ae3980c873621bb04680aa63569169d52a47369b8d14c11a04f8",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-4.step-1.STL": "5680d61824312b79af8731f9ef81b5d5207b0321b6ebd68859a3bce0e15bdc3e",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-5.step-1.STL": "61eedb1fc80b3eb05b644d9e08e7897e7d50d1e62a9fa9d03b954024c515fffb",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-6.step-1.STL": "53552518878aece7544aaee2a916a0aa70ed8caa09c4c2a51ec223c5488244b2",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-7.step-1.STL": "6f950a7429022c72c5c330a2e9932dc63e06b0607ed0cf587b7c72f795554758",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-8.step-1.STL": "de7d6f53f50925be3755084b500ee48db9f3eb06242a00047dc4910dadbdad71",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-9.step-1.STL": "efaa3239dbe8eba87c094fdd329a2dd44127d39fdf76be32ef2aaf2b1ebf998f",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly.step-1.STL": "62f400ca65e4ecb7cbefc91de921893ebdfb99008d5de7cfacf8920f017e6981",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Bridge_Saddle-1 Telecaster Bridge.step-1 Saddle Height Screws.step-1.STL": "c53515ed74524a0063775a81245e718d25bada3f93edd71a48403c154e746c57",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Control_Panel-1.STL": "99de3e83b556fafa2ba8ed1bdce3a92a2a994ffe7ec80c87009becf74f7cc8ab",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Finger_Board-1.STL": "d5f224b36624e4cddad41afa8404f52ccf4ebff87922b528c6751995ac50b914",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - HBtelecaster Body.step-1 Body.step-1.STL": "7afcc95c99f83998c2c9c1280b60649603cdbe4a2966c439ca90fbda09e9bfe0",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Pick_Up_1-1 Telecaster_Single-Coil_Neck_Pickup.step-1 Single-Coil_Neck_Pickup.step-1.STL": "2e3975bd1c623efe8fd9e2292cd8e75cbc7ceba200cb144fc6099936a00b8f9d",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\exploded - Tele_Neck-1.STL": "bf0451f65c6ecef92ef9c2a0a5933447379122d1b84bdf58b7ccd79a78f9f546",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Pick_Up-1.STL": "b11de3597224d328460ac7a819085f7e5416f14b93484062b9ea7ac4f25cff46",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-0.step-1.STL": "d769f0aa3042d78c3476e2a7f91d0c8cf58ab9877ebc19baf5541b227ab719c6",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-1.step-1.STL": "28297d144bc79fd42c9c7ce77bade8f2c7dfc214ed9659b1e7a4176b11a8d6b4",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-10.step-1.STL": "bb08966e25e5261b25b471659f0490e0897f270f819656c8a5ef54b38f2bb7bb",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-2.step-1.STL": "bea8821c0b0fdb8ffd59c8a4532676ac2ae8868c43a0e1fc64bf131c08b49d6c",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-3.step-1.STL": "26d20f221eb6d46a0fcadad729324aaf1db0629a363bdcaf3a7fb4e3ae07ca1b",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-4.step-1.STL": "3d6ed2d8bfc987fcde5ea28e3bb0d21665ba608375c6b9b34772321fd99c2738",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-5.step-1.STL": "262a26cf7e37d52b332532c28e12c7c8a667b07ee4e91a5161f968ebc92c9ab0",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-6.step-1.STL": "a2ec7e5f1582bff8fa40c14d60021d1172137a49ed871dade9147864b8327d31",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-7.step-1.STL": "68244add9ba295bc13f04cb912bd19c3adfbfbd963f62d3bedb3755362370ff5",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-8.step-1.STL": "a4c126e16a085fcbd90eff5fda685a8043dd59238f2012a34ae566af6ce787d4",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-9.step-1.STL": "fa67c46cbbba6f2eb20f477a705dda8333028ef227b2e63cb5b5da623a271787",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly.step-1.STL": "5f749175c535d5a4e71060f5f828078fd4a0e4446cc9d60a67798d859e2f930c",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Bridge_Saddle-1 Telecaster Bridge.step-1 Saddle Height Screws.step-1.STL": "ef1706b025129b171bb316c48359af44765b1b11c015232f6dfac6e4daed05a4",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Control_Panel-1.STL": "dc5d914cc62ade49ae7d276bd4c17d53d91616de8f16c29a08d195c2776a957e",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Finger_Board-1.STL": "75b49005b51a79fbe78997eb20b67a2ef17dec64acd621a81bd91af7e825dd87",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - HBtelecaster Body.step-1 Body.step-1.STL": "b9eca667ca9fcee25d3cadd715bdab11aa04dcd02c6a796c82caa5d00900c322",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Pick_Up_1-1 Telecaster_Single-Coil_Neck_Pickup.step-1 Single-Coil_Neck_Pickup.step-1.STL": "998097dbde82e82dabec6a1c9f6d2b3a2df385d9940fe74f8679920630a01a42",
+      "C:\\Users\\oc\\Desktop\\STL\\Guitar Education\\V2 - Tele_Neck-1.STL": "909dc1628cb4f1f73f6b7cecb68494cb138aeb3c74c38ad7a82696f45301fb46"
+    },
+    "passed": true,
+    "assemblyFit": {
+      "method": "Rigid fits between matching exploded and V2 source CAD triangle correspondences; existing approved meshes and material assignments are transformed, never replaced.",
+      "sourceFrameFitMaximumError": 1.075199485230461e-07,
+      "sourceToWorld": [
+        [
+          5.181296584828877e-10,
+          -0.004312120915285952,
+          2.3907294294773856e-10,
+          1.4140883723908673
+        ],
+        [
+          3.164268343421974e-10,
+          -2.3907290485786064e-10,
+          -0.0043121209152859755,
+          0.15170890642515375
+        ],
+        [
+          0.004312120915285946,
+          5.1812967693688e-10,
+          3.1642680469014e-10,
+          0.0136799555020638
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "partFits": {
+        "Bridge_Pick_Up-1.STL": {
+          "matrix": [
+            [
+              0.999999999999999,
+              -7.493132780922451e-10,
+              -8.201394230411552e-09,
+              -63.25173026862569
+            ],
+            [
+              7.493139442260599e-10,
+              0.9999999999999996,
+              2.8903693397031027e-09,
+              -378.93081246736597
+            ],
+            [
+              8.201394230411552e-09,
+              -2.8903693397031027e-09,
+              1.0,
+              1.912926634872747e-07
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 3.594374183660336e-05,
+          "explodedSha256": "4996e5ae795ade41a69a59000c615b49b37f9ada4739774a7f4aaa733e52e667",
+          "assembledSha256": "b11de3597224d328460ac7a819085f7e5416f14b93484062b9ea7ac4f25cff46"
+        },
+        "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-0.step-1.STL": {
+          "matrix": [
+            [
+              1.0000000000000004,
+              7.737396404139396e-09,
+              4.1293315988788493e-10,
+              14.621358760162085
+            ],
+            [
+              -7.737396466589441e-09,
+              0.9999999999999999,
+              -1.099975313612056e-08,
+              -375.7792456417445
+            ],
+            [
+              -4.129336039770948e-10,
+              1.0999753274898438e-08,
+              1.000000000000001,
+              -5.498150400740087e-06
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 1.8430193648426126e-05,
+          "explodedSha256": "de7f2fd27cf3a61ecd5e349d08ac782c81094afd4a2ea38de2aaf845b93e2bc5",
+          "assembledSha256": "d769f0aa3042d78c3476e2a7f91d0c8cf58ab9877ebc19baf5541b227ab719c6"
+        },
+        "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-1.step-1.STL": {
+          "matrix": [
+            [
+              0.9999999999999997,
+              -1.2442824992575652e-08,
+              -5.0889714109381146e-09,
+              14.621369180295318
+            ],
+            [
+              1.2442824964820076e-08,
+              0.9999999999999993,
+              -1.2631580781352625e-09,
+              -375.7792468307831
+            ],
+            [
+              5.088971521960417e-09,
+              1.263158036501899e-09,
+              0.9999999999999994,
+              -7.659896326117632e-07
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 1.990457104493173e-05,
+          "explodedSha256": "52a6a509dab200b96a8e49f824dd47baf37d587c6d5dea4b0da740a57bdfd0d2",
+          "assembledSha256": "28297d144bc79fd42c9c7ce77bade8f2c7dfc214ed9659b1e7a4176b11a8d6b4"
+        },
+        "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-10.step-1.STL": {
+          "matrix": [
+            [
+              0.9999999999999989,
+              1.1580129976457298e-08,
+              3.5065229886388494e-09,
+              14.62135706211076
+            ],
+            [
+              -1.1580129806454398e-08,
+              0.9999999999999996,
+              -1.974299425832292e-08,
+              -375.77924515843756
+            ],
+            [
+              -3.5065233217057568e-09,
+              1.9742994261358685e-08,
+              0.9999999999999994,
+              -9.071241237279537e-06
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 1.856252973465814e-05,
+          "explodedSha256": "ad8b688c53d53d7d140d26873e080b629940dfb3383fd3b405c63553e7d72f3b",
+          "assembledSha256": "bb08966e25e5261b25b471659f0490e0897f270f819656c8a5ef54b38f2bb7bb"
+        },
+        "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-2.step-1.STL": {
+          "matrix": [
+            [
+              1.0000000000000002,
+              1.7429001339386296e-08,
+              -6.784495187872608e-10,
+              14.621354347395304
+            ],
+            [
+              -1.7429001047952752e-08,
+              1.0000000000000004,
+              2.4307835078118956e-08,
+              -375.779247626043
+            ],
+            [
+              6.78449574298412e-10,
+              -2.430783663243119e-08,
+              1.0000000000000009,
+              1.162552138822548e-05
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 1.8784370460085326e-05,
+          "explodedSha256": "16e53822bc91c5ffd64eed2b5090061248cd43885efaee0ed0fbb6c7e31a834d",
+          "assembledSha256": "bea8821c0b0fdb8ffd59c8a4532676ac2ae8868c43a0e1fc64bf131c08b49d6c"
+        },
+        "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-3.step-1.STL": {
+          "matrix": [
+            [
+              1.0000000000000002,
+              -1.1730935457407443e-08,
+              -1.2876760213664795e-09,
+              14.6213683454876
+            ],
+            [
+              1.1730935394957398e-08,
+              0.9999999999999988,
+              -4.7990814440457275e-08,
+              -375.7792442150461
+            ],
+            [
+              1.287676631989143e-09,
+              4.799081443351838e-08,
+              0.9999999999999987,
+              -2.3000880474910446e-05
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 1.8556697745106633e-05,
+          "explodedSha256": "f4533e142d62ae3980c873621bb04680aa63569169d52a47369b8d14c11a04f8",
+          "assembledSha256": "26d20f221eb6d46a0fcadad729324aaf1db0629a363bdcaf3a7fb4e3ae07ca1b"
+        },
+        "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-4.step-1.STL": {
+          "matrix": [
+            [
+              0.9999999999999997,
+              6.0498213886456265e-09,
+              8.276106577831399e-09,
+              14.621359269534413
+            ],
+            [
+              -6.049821311233591e-09,
+              0.9999999999999999,
+              7.425419907419739e-09,
+              -375.77924648748234
+            ],
+            [
+              -8.27610613374219e-09,
+              -7.425420129464344e-09,
+              0.9999999999999993,
+              3.783419565195345e-06
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 1.817640104818234e-05,
+          "explodedSha256": "5680d61824312b79af8731f9ef81b5d5207b0321b6ebd68859a3bce0e15bdc3e",
+          "assembledSha256": "3d6ed2d8bfc987fcde5ea28e3bb0d21665ba608375c6b9b34772321fd99c2738"
+        },
+        "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-5.step-1.STL": {
+          "matrix": [
+            [
+              0.9999999999999998,
+              2.6031305413315442e-08,
+              7.585929185163764e-10,
+              14.62135071834507
+            ],
+            [
+              -2.603130546709187e-08,
+              0.9999999999999991,
+              2.3318410827255498e-08,
+              -375.77924710538286
+            ],
+            [
+              -7.585923922446419e-10,
+              -2.331841061908868e-08,
+              1.0,
+              1.0672976173964344e-05
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 1.8650240055002443e-05,
+          "explodedSha256": "61eedb1fc80b3eb05b644d9e08e7897e7d50d1e62a9fa9d03b954024c515fffb",
+          "assembledSha256": "262a26cf7e37d52b332532c28e12c7c8a667b07ee4e91a5161f968ebc92c9ab0"
+        },
+        "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-6.step-1.STL": {
+          "matrix": [
+            [
+              1.0000000000000002,
+              4.24732098103231e-09,
+              2.082619160459487e-09,
+              14.621360599530014
+            ],
+            [
+              -4.247321050421249e-09,
+              0.9999999999999992,
+              4.214021115389599e-08,
+              -375.7792485580584
+            ],
+            [
+              -2.0826190494371843e-09,
+              -4.214021120940714e-08,
+              0.9999999999999993,
+              1.9284062808822e-05
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 1.8403974531373933e-05,
+          "explodedSha256": "53552518878aece7544aaee2a916a0aa70ed8caa09c4c2a51ec223c5488244b2",
+          "assembledSha256": "a2ec7e5f1582bff8fa40c14d60021d1172137a49ed871dade9147864b8327d31"
+        },
+        "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-7.step-1.STL": {
+          "matrix": [
+            [
+              0.9999999999999993,
+              -1.0083813339889502e-08,
+              -1.7141561434175223e-10,
+              14.621367719346136
+            ],
+            [
+              1.008381335376729e-08,
+              0.9999999999999993,
+              1.162943852328624e-08,
+              -375.77924751008175
+            ],
+            [
+              1.7141549291110891e-10,
+              -1.1629438134708181e-08,
+              0.9999999999999999,
+              5.8177231210265745e-06
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 1.866829151002396e-05,
+          "explodedSha256": "6f950a7429022c72c5c330a2e9932dc63e06b0607ed0cf587b7c72f795554758",
+          "assembledSha256": "68244add9ba295bc13f04cb912bd19c3adfbfbd963f62d3bedb3755362370ff5"
+        },
+        "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-8.step-1.STL": {
+          "matrix": [
+            [
+              0.9999999999999994,
+              -3.690175748218699e-08,
+              2.1966101715342745e-08,
+              14.621378269924463
+            ],
+            [
+              3.690175713264021e-08,
+              0.9999999999999996,
+              1.1794139054277508e-08,
+              -375.77924837127983
+            ],
+            [
+              -2.1966102180248637e-08,
+              -1.1794138277121391e-08,
+              1.0,
+              6.0140828423982384e-06
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 1.8705110067195316e-05,
+          "explodedSha256": "de7d6f53f50925be3755084b500ee48db9f3eb06242a00047dc4910dadbdad71",
+          "assembledSha256": "a4c126e16a085fcbd90eff5fda685a8043dd59238f2012a34ae566af6ce787d4"
+        },
+        "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-9.step-1.STL": {
+          "matrix": [
+            [
+              0.9999999999999962,
+              8.313986332719736e-08,
+              1.1220010587287277e-08,
+              14.62132475776458
+            ],
+            [
+              -8.31398626055524e-08,
+              0.999999999999996,
+              -2.0108207363089825e-08,
+              -375.7792429740264
+            ],
+            [
+              -1.1220012502421994e-08,
+              2.0108206350011315e-08,
+              0.9999999999999999,
+              -8.700171335362938e-06
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 1.8519173938594322e-05,
+          "explodedSha256": "efaa3239dbe8eba87c094fdd329a2dd44127d39fdf76be32ef2aaf2b1ebf998f",
+          "assembledSha256": "fa67c46cbbba6f2eb20f477a705dda8333028ef227b2e63cb5b5da623a271787"
+        },
+        "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly.step-1.STL": {
+          "matrix": [
+            [
+              0.9999999999999998,
+              -7.0265994311257166e-09,
+              -5.493172063053553e-11,
+              14.621366024281393
+            ],
+            [
+              7.026599437114981e-09,
+              1.0000000000000002,
+              4.0151268226006065e-10,
+              -375.7792468922049
+            ],
+            [
+              5.49317185705514e-11,
+              -4.01512694403125e-10,
+              1.0000000000000004,
+              1.901076700505655e-07
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 3.5898305698053684e-05,
+          "explodedSha256": "62f400ca65e4ecb7cbefc91de921893ebdfb99008d5de7cfacf8920f017e6981",
+          "assembledSha256": "5f749175c535d5a4e71060f5f828078fd4a0e4446cc9d60a67798d859e2f930c"
+        },
+        "Control_Panel-1.STL": {
+          "matrix": [
+            [
+              1.0,
+              2.417397919481871e-10,
+              3.221663768918241e-10,
+              -63.25173105732037
+            ],
+            [
+              -2.4173980325099473e-10,
+              0.9999999999999996,
+              -1.0036218392808771e-09,
+              -28.219333714242087
+            ],
+            [
+              -3.221664113290074e-10,
+              1.0036215643272062e-09,
+              0.9999999999999998,
+              1.1905058272532187e-08
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 9.22536085282132e-06,
+          "explodedSha256": "99de3e83b556fafa2ba8ed1bdce3a92a2a994ffe7ec80c87009becf74f7cc8ab",
+          "assembledSha256": "dc5d914cc62ade49ae7d276bd4c17d53d91616de8f16c29a08d195c2776a957e"
+        },
+        "Finger_Board-1.STL": {
+          "matrix": [
+            [
+              1.0000000000000002,
+              -8.004575837072115e-10,
+              -5.915795336372065e-12,
+              -63.251731088955296
+            ],
+            [
+              8.004576553690398e-10,
+              1.0,
+              2.1624100198582323e-12,
+              -83.96007400775432
+            ],
+            [
+              5.9157953329839336e-12,
+              -2.1624100283285617e-12,
+              0.9999999999999998,
+              -8.334382073371671e-10
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 2.4121590971220356e-05,
+          "explodedSha256": "d5f224b36624e4cddad41afa8404f52ccf4ebff87922b528c6751995ac50b914",
+          "assembledSha256": "75b49005b51a79fbe78997eb20b67a2ef17dec64acd621a81bd91af7e825dd87"
+        },
+        "HBtelecaster Body.step-1 Body.step-1.STL": {
+          "matrix": [
+            [
+              1.0,
+              8.990670407596144e-10,
+              -2.00285045492965e-10,
+              4.254184489135056
+            ],
+            [
+              -8.990670391333111e-10,
+              1.0,
+              -3.4560047601495114e-09,
+              -226.59079355799798
+            ],
+            [
+              2.0028501079849548e-10,
+              3.456004923213518e-09,
+              0.9999999999999998,
+              -1.1564506685601827e-06
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 3.287430720673703e-05,
+          "explodedSha256": "7afcc95c99f83998c2c9c1280b60649603cdbe4a2966c439ca90fbda09e9bfe0",
+          "assembledSha256": "b9eca667ca9fcee25d3cadd715bdab11aa04dcd02c6a796c82caa5d00900c322"
+        },
+        "Pick_Up_1-1 Telecaster_Single-Coil_Neck_Pickup.step-1 Single-Coil_Neck_Pickup.step-1.STL": {
+          "matrix": [
+            [
+              1.0000000000000004,
+              3.293130832425755e-09,
+              2.337934298241029e-08,
+              -63.25173396691892
+            ],
+            [
+              -3.293130754580039e-09,
+              0.9999999999999999,
+              -2.2702219884123158e-09,
+              -374.95952869764295
+            ],
+            [
+              -2.3379342899143563e-08,
+              2.2702217980298024e-09,
+              0.9999999999999998,
+              4.870062916495499e-06
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 3.5359735429985165e-05,
+          "explodedSha256": "2e3975bd1c623efe8fd9e2292cd8e75cbc7ceba200cb144fc6099936a00b8f9d",
+          "assembledSha256": "998097dbde82e82dabec6a1c9f6d2b3a2df385d9940fe74f8679920630a01a42"
+        },
+        "Tele_Neck-1.STL": {
+          "matrix": [
+            [
+              7.965089763288134e-10,
+              -1.0,
+              2.0359503666300682e-10,
+              873.1172876091817
+            ],
+            [
+              0.9999999999999997,
+              7.965087636693335e-10,
+              -1.2837027031642467e-09,
+              -254.72005527445543
+            ],
+            [
+              1.2837029529644273e-09,
+              2.0359506615330591e-10,
+              0.999999999999999,
+              -5.514022376473804e-07
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "maximumResidualMm": 4.242318870557463e-05,
+          "explodedSha256": "bf0451f65c6ecef92ef9c2a0a5933447379122d1b84bdf58b7ccd79a78f9f546",
+          "assembledSha256": "909dc1628cb4f1f73f6b7cecb68494cb138aeb3c74c38ad7a82696f45301fb46"
+        }
+      },
+      "groupSources": {
+        "body": "HBtelecaster Body.step-1 Body.step-1.STL",
+        "neck": "Tele_Neck-1.STL",
+        "pickguard": "Finger_Board-1.STL",
+        "bridge_pickup": "Bridge_Pick_Up-1.STL",
+        "neck_pickup": "Pick_Up_1-1 Telecaster_Single-Coil_Neck_Pickup.step-1 Single-Coil_Neck_Pickup.step-1.STL",
+        "controls": "Control_Panel-1.STL",
+        "bridge": "Bridge_Saddle-1 Telecaster Bridge.step-1 Bridge Assembly-0.step-1.STL"
+      },
+      "groupTransforms": {
+        "body": [
+          [
+            0.9999999999999999,
+            6.617444900424222e-24,
+            6.647610941439873e-24,
+            2.220446049250313e-16
+          ],
+          [
+            -6.617444900424222e-24,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            -6.4327686182074564e-24,
+            1.3234889800848443e-23,
+            1.0,
+            -3.469446951953614e-18
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "neck": [
+          [
+            -1.0255555425300459e-10,
+            -1.266505576872551e-07,
+            -0.999999999999992,
+            1.5490655718463195
+          ],
+          [
+            1.8342584802444412e-08,
+            0.9999999999999912,
+            -1.2665055797490077e-07,
+            2.5517323690160687e-07
+          ],
+          [
+            0.9999999999999997,
+            -1.8342584587809645e-08,
+            -1.025525987150012e-10,
+            2.3462343309139864
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "pickguard": [
+          [
+            0.9999999999999999,
+            3.4581670222768943e-09,
+            -1.699524958369838e-09,
+            -0.6150409441513801
+          ],
+          [
+            -3.458167184834256e-09,
+            1.0,
+            1.9436954263544173e-10,
+            -5.3488207113483455e-08
+          ],
+          [
+            1.6995248896987344e-09,
+            -1.9436956834376518e-10,
+            1.0,
+            -0.2910935994953558
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "bridge_pickup": [
+          [
+            0.9999999999999996,
+            6.346374933085363e-09,
+            -1.6483810331151867e-09,
+            0.6569085461187889
+          ],
+          [
+            -6.346375103012911e-09,
+            1.0000000000000002,
+            -8.001108542747374e-09,
+            1.600326476891567e-08
+          ],
+          [
+            1.6483803422267474e-09,
+            8.001108519455331e-09,
+            0.9999999999999989,
+            -0.2910937488185246
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "neck_pickup": [
+          [
+            0.9999999999999997,
+            1.1857801353677938e-09,
+            2.394062402621036e-09,
+            0.6397838910424369
+          ],
+          [
+            -1.1857804680941873e-09,
+            1.0000000000000002,
+            2.3579628176879515e-08,
+            -1.2791962822333858e-08
+          ],
+          [
+            -2.3940623971115323e-09,
+            -2.3579628302048353e-08,
+            1.0000000000000004,
+            -0.2910937522163166
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "controls": [
+          [
+            0.9999999999999996,
+            2.4523828103271554e-09,
+            -6.573274430002729e-10,
+            -0.8554017560662271
+          ],
+          [
+            -2.452383247743519e-09,
+            1.0000000000000002,
+            5.224516826256036e-10,
+            -6.746530517576232e-08
+          ],
+          [
+            6.573274582262698e-10,
+            -5.224516784062281e-10,
+            1.0,
+            -0.29109356917057866
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "bridge": [
+          [
+            0.9999999999999996,
+            -7.543747947299963e-09,
+            6.838329949143552e-09,
+            0.6433186509317128
+          ],
+          [
+            7.543747922195428e-09,
+            1.0000000000000016,
+            6.132180638424915e-10,
+            4.477902901256492e-08
+          ],
+          [
+            -6.838329884458716e-09,
+            -6.132176848634999e-10,
+            1.0000000000000002,
+            0.04470444204896424
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    },
+    "sourceLayout": "Source separated layout with documented pickup-front seating gap at progress 0; V2-derived assembled pose with documented neck-seat and pickup-front clearances at progress 1.",
+    "jointPolicy": "Approach directions are checked as reverse withdrawals from original CAD joints; exact contact at the final joint is intentional.",
+    "floorLiftSourceUnits": 0.035,
+    "initialSeamToleranceSourceUnits": 2e-06,
+    "neckJointSeatingClearanceSourceUnits": 2e-05,
+    "neckHeelHeightAdjustmentSourceUnits": 0.01,
+    "pickupFrontPlateClearanceSourceUnits": 0.01,
+    "initialTransforms": {
+      "body": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "bridge": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "controls": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "neck": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "neck_pickup": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "pickguard": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "pickup_coil": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "pickup_front_plate": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.01
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    "pickupConstruction": "The two independently connected source CAD solids enter from opposite sides of the bridge plate; no mesh is cut or substituted."
+  },
+  "cameraBoundsSamples": 121,
+  "cameraMaximumScale": 6.527295650600713,
+  "cameraTracking": "Fixed front three-quarter view of the V2 guitar assembly",
+  "cameraLocation": [
+    1.9235137701034546,
+    -10.079805374145508,
+    3.364858865737915
+  ],
+  "cameraRotation": [
+    1.4247565269470215,
+    0.0,
+    0.19739560782909393
+  ],
+  "sourceComponentNames": [
+    "mat_chrome_part_0",
+    "mat_chrome_part_1",
+    "mat_chrome_part_2",
+    "mat_chrome_part_3",
+    "mat_chrome_part_4",
+    "mat_chrome_part_5",
+    "mat_chrome_part_6",
+    "mat_chrome_part_7",
+    "mat_chrome_part_8",
+    "mat_chrome_part_9",
+    "mat_chrome_part_10",
+    "mat_chrome_part_11",
+    "mat_chrome_part_12",
+    "mat_chrome_part_13",
+    "mat_chrome_part_14",
+    "mat_chrome_part_15",
+    "mat_chrome_part_16",
+    "mat_chrome_part_17",
+    "mat_chrome_part_18",
+    "mat_chrome_part_19",
+    "mat_fretboard_part_0",
+    "mat_maple_part_0",
+    "mat_pickguard_white_part_0",
+    "mat_plastic_black_part_0",
+    "mat_plastic_black_part_1",
+    "mat_printed_navy_part_0"
+  ],
+  "timings": [
+    {
+      "index": 0,
+      "seconds": 8.281,
+      "bytes": 914381
+    },
+    {
+      "index": 1,
+      "seconds": 2.344,
+      "bytes": 914862
+    },
+    {
+      "index": 2,
+      "seconds": 2.359,
+      "bytes": 914141
+    },
+    {
+      "index": 3,
+      "seconds": 2.406,
+      "bytes": 915082
+    },
+    {
+      "index": 4,
+      "seconds": 2.36,
+      "bytes": 914670
+    },
+    {
+      "index": 5,
+      "seconds": 2.343,
+      "bytes": 915128
+    },
+    {
+      "index": 6,
+      "seconds": 2.25,
+      "bytes": 914932
+    },
+    {
+      "index": 7,
+      "seconds": 2.312,
+      "bytes": 914591
+    },
+    {
+      "index": 8,
+      "seconds": 2.313,
+      "bytes": 913996
+    },
+    {
+      "index": 9,
+      "seconds": 2.312,
+      "bytes": 914350
+    },
+    {
+      "index": 10,
+      "seconds": 2.235,
+      "bytes": 914539
+    },
+    {
+      "index": 11,
+      "seconds": 2.344,
+      "bytes": 913387
+    },
+    {
+      "index": 12,
+      "seconds": 2.328,
+      "bytes": 923568
+    },
+    {
+      "index": 13,
+      "seconds": 2.359,
+      "bytes": 923688
+    },
+    {
+      "index": 14,
+      "seconds": 2.406,
+      "bytes": 925377
+    },
+    {
+      "index": 15,
+      "seconds": 2.344,
+      "bytes": 920900
+    },
+    {
+      "index": 16,
+      "seconds": 2.328,
+      "bytes": 917716
+    },
+    {
+      "index": 17,
+      "seconds": 2.266,
+      "bytes": 918064
+    },
+    {
+      "index": 18,
+      "seconds": 2.328,
+      "bytes": 919865
+    },
+    {
+      "index": 19,
+      "seconds": 2.344,
+      "bytes": 921000
+    },
+    {
+      "index": 20,
+      "seconds": 2.328,
+      "bytes": 922802
+    },
+    {
+      "index": 21,
+      "seconds": 2.265,
+      "bytes": 922990
+    },
+    {
+      "index": 22,
+      "seconds": 2.329,
+      "bytes": 923366
+    },
+    {
+      "index": 23,
+      "seconds": 2.296,
+      "bytes": 923134
+    },
+    {
+      "index": 24,
+      "seconds": 2.297,
+      "bytes": 924307
+    },
+    {
+      "index": 25,
+      "seconds": 2.328,
+      "bytes": 924375
+    },
+    {
+      "index": 26,
+      "seconds": 2.079,
+      "bytes": 923867
+    },
+    {
+      "index": 27,
+      "seconds": 2.25,
+      "bytes": 923267
+    },
+    {
+      "index": 28,
+      "seconds": 2.281,
+      "bytes": 923416
+    },
+    {
+      "index": 29,
+      "seconds": 2.312,
+      "bytes": 923239
+    },
+    {
+      "index": 30,
+      "seconds": 2.297,
+      "bytes": 923665
+    },
+    {
+      "index": 31,
+      "seconds": 2.235,
+      "bytes": 923453
+    },
+    {
+      "index": 32,
+      "seconds": 2.593,
+      "bytes": 923045
+    },
+    {
+      "index": 33,
+      "seconds": 2.25,
+      "bytes": 923623
+    },
+    {
+      "index": 34,
+      "seconds": 2.313,
+      "bytes": 923198
+    },
+    {
+      "index": 35,
+      "seconds": 2.219,
+      "bytes": 923218
+    },
+    {
+      "index": 36,
+      "seconds": 2.312,
+      "bytes": 923253
+    },
+    {
+      "index": 37,
+      "seconds": 2.313,
+      "bytes": 923168
+    },
+    {
+      "index": 38,
+      "seconds": 2.343,
+      "bytes": 923733
+    },
+    {
+      "index": 39,
+      "seconds": 2.235,
+      "bytes": 923468
+    },
+    {
+      "index": 40,
+      "seconds": 2.312,
+      "bytes": 923467
+    },
+    {
+      "index": 41,
+      "seconds": 2.281,
+      "bytes": 923349
+    },
+    {
+      "index": 42,
+      "seconds": 2.266,
+      "bytes": 923420
+    },
+    {
+      "index": 43,
+      "seconds": 2.547,
+      "bytes": 923387
+    },
+    {
+      "index": 44,
+      "seconds": 2.312,
+      "bytes": 924485
+    },
+    {
+      "index": 45,
+      "seconds": 2.313,
+      "bytes": 925442
+    },
+    {
+      "index": 46,
+      "seconds": 2.187,
+      "bytes": 925992
+    },
+    {
+      "index": 47,
+      "seconds": 2.281,
+      "bytes": 926124
+    },
+    {
+      "index": 48,
+      "seconds": 2.313,
+      "bytes": 925830
+    },
+    {
+      "index": 49,
+      "seconds": 2.359,
+      "bytes": 925840
+    },
+    {
+      "index": 50,
+      "seconds": 2.281,
+      "bytes": 926141
+    },
+    {
+      "index": 51,
+      "seconds": 2.329,
+      "bytes": 925954
+    },
+    {
+      "index": 52,
+      "seconds": 2.313,
+      "bytes": 925517
+    },
+    {
+      "index": 53,
+      "seconds": 2.234,
+      "bytes": 925625
+    },
+    {
+      "index": 54,
+      "seconds": 2.422,
+      "bytes": 925891
+    },
+    {
+      "index": 55,
+      "seconds": 2.312,
+      "bytes": 925870
+    },
+    {
+      "index": 56,
+      "seconds": 2.329,
+      "bytes": 925878
+    },
+    {
+      "index": 57,
+      "seconds": 2.218,
+      "bytes": 925643
+    },
+    {
+      "index": 58,
+      "seconds": 2.297,
+      "bytes": 925808
+    },
+    {
+      "index": 59,
+      "seconds": 2.25,
+      "bytes": 925686
+    },
+    {
+      "index": 60,
+      "seconds": 2.281,
+      "bytes": 926378
+    },
+    {
+      "index": 61,
+      "seconds": 2.282,
+      "bytes": 927147
+    },
+    {
+      "index": 62,
+      "seconds": 2.297,
+      "bytes": 927033
+    },
+    {
+      "index": 63,
+      "seconds": 2.312,
+      "bytes": 927139
+    },
+    {
+      "index": 64,
+      "seconds": 2.313,
+      "bytes": 926881
+    },
+    {
+      "index": 65,
+      "seconds": 2.39,
+      "bytes": 926455
+    },
+    {
+      "index": 66,
+      "seconds": 2.313,
+      "bytes": 925529
+    },
+    {
+      "index": 67,
+      "seconds": 2.265,
+      "bytes": 925236
+    },
+    {
+      "index": 68,
+      "seconds": 2.266,
+      "bytes": 925463
+    },
+    {
+      "index": 69,
+      "seconds": 2.578,
+      "bytes": 925163
+    },
+    {
+      "index": 70,
+      "seconds": 2.313,
+      "bytes": 925258
+    },
+    {
+      "index": 71,
+      "seconds": 2.296,
+      "bytes": 924801
+    },
+    {
+      "index": 72,
+      "seconds": 2.219,
+      "bytes": 924826
+    },
+    {
+      "index": 73,
+      "seconds": 2.313,
+      "bytes": 924991
+    },
+    {
+      "index": 74,
+      "seconds": 2.312,
+      "bytes": 925018
+    },
+    {
+      "index": 75,
+      "seconds": 2.328,
+      "bytes": 924841
+    },
+    {
+      "index": 76,
+      "seconds": 2.25,
+      "bytes": 924627
+    },
+    {
+      "index": 77,
+      "seconds": 2.297,
+      "bytes": 923965
+    },
+    {
+      "index": 78,
+      "seconds": 2.313,
+      "bytes": 924273
+    },
+    {
+      "index": 79,
+      "seconds": 2.312,
+      "bytes": 923873
+    },
+    {
+      "index": 80,
+      "seconds": 2.61,
+      "bytes": 923649
+    },
+    {
+      "index": 81,
+      "seconds": 2.343,
+      "bytes": 923614
+    },
+    {
+      "index": 82,
+      "seconds": 2.328,
+      "bytes": 922775
+    },
+    {
+      "index": 83,
+      "seconds": 2.219,
+      "bytes": 922905
+    },
+    {
+      "index": 84,
+      "seconds": 2.313,
+      "bytes": 923384
+    },
+    {
+      "index": 85,
+      "seconds": 2.328,
+      "bytes": 922387
+    },
+    {
+      "index": 86,
+      "seconds": 2.328,
+      "bytes": 921486
+    },
+    {
+      "index": 87,
+      "seconds": 2.406,
+      "bytes": 921020
+    },
+    {
+      "index": 88,
+      "seconds": 2.281,
+      "bytes": 920481
+    },
+    {
+      "index": 89,
+      "seconds": 2.313,
+      "bytes": 920559
+    },
+    {
+      "index": 90,
+      "seconds": 2.234,
+      "bytes": 920002
+    },
+    {
+      "index": 91,
+      "seconds": 2.297,
+      "bytes": 920203
+    },
+    {
+      "index": 92,
+      "seconds": 2.313,
+      "bytes": 919982
+    },
+    {
+      "index": 93,
+      "seconds": 2.281,
+      "bytes": 920209
+    },
+    {
+      "index": 94,
+      "seconds": 2.219,
+      "bytes": 920081
+    },
+    {
+      "index": 95,
+      "seconds": 2.312,
+      "bytes": 919630
+    },
+    {
+      "index": 96,
+      "seconds": 2.328,
+      "bytes": 917478
+    },
+    {
+      "index": 97,
+      "seconds": 2.328,
+      "bytes": 916207
+    },
+    {
+      "index": 98,
+      "seconds": 2.579,
+      "bytes": 916479
+    },
+    {
+      "index": 99,
+      "seconds": 2.296,
+      "bytes": 915776
+    },
+    {
+      "index": 100,
+      "seconds": 2.297,
+      "bytes": 916184
+    },
+    {
+      "index": 101,
+      "seconds": 2.219,
+      "bytes": 915701
+    },
+    {
+      "index": 102,
+      "seconds": 2.297,
+      "bytes": 915975
+    },
+    {
+      "index": 103,
+      "seconds": 2.328,
+      "bytes": 915251
+    },
+    {
+      "index": 104,
+      "seconds": 2.297,
+      "bytes": 914362
+    },
+    {
+      "index": 105,
+      "seconds": 2.312,
+      "bytes": 914701
+    },
+    {
+      "index": 106,
+      "seconds": 2.297,
+      "bytes": 914184
+    },
+    {
+      "index": 107,
+      "seconds": 2.312,
+      "bytes": 914126
+    },
+    {
+      "index": 108,
+      "seconds": 2.234,
+      "bytes": 913122
+    },
+    {
+      "index": 109,
+      "seconds": 2.329,
+      "bytes": 913182
+    },
+    {
+      "index": 110,
+      "seconds": 2.328,
+      "bytes": 913492
+    },
+    {
+      "index": 111,
+      "seconds": 2.343,
+      "bytes": 912831
+    },
+    {
+      "index": 112,
+      "seconds": 2.25,
+      "bytes": 912940
+    },
+    {
+      "index": 113,
+      "seconds": 2.297,
+      "bytes": 911674
+    },
+    {
+      "index": 114,
+      "seconds": 2.313,
+      "bytes": 910549
+    },
+    {
+      "index": 115,
+      "seconds": 2.312,
+      "bytes": 910640
+    },
+    {
+      "index": 116,
+      "seconds": 2.188,
+      "bytes": 910678
+    },
+    {
+      "index": 117,
+      "seconds": 2.156,
+      "bytes": 910262
+    },
+    {
+      "index": 118,
+      "seconds": 2.188,
+      "bytes": 910632
+    },
+    {
+      "index": 119,
+      "seconds": 2.171,
+      "bytes": 910949
+    },
+    {
+      "index": 120,
+      "seconds": 2.172,
+      "bytes": 911362
+    }
+  ],
+  "totalSeconds": 293.359,
+  "sourceAnimationProvenance": "assets/exploded/functional-20260913/education/provenance.json",
+  "sourceAnimationProvenanceSha256": "f02b5f81e15b04cf2b8d2c2e237bd93d84bf67cb79b9b8367afcca4037f0f480",
+  "projectionPolicy": "Compute all framing at the original 640x427 resolution, then render at exactly 1280x854 with identical camera frame.",
+  "cameraFrameMaximumError": 0.0,
+  "sourcePreservation": {
+    "status": "passed",
+    "originalAnimationProvenance": "assets/exploded/functional-20260913/education/provenance.json",
+    "originalAnimationProvenanceSha256": "f02b5f81e15b04cf2b8d2c2e237bd93d84bf67cb79b9b8367afcca4037f0f480",
+    "sourceGLBSha256": "c4373769dac0263b7a8a1447484abb0859f797e050c1da1c3fbbd407624d8e2d",
+    "sourceCamera": {
+      "cameraLocation": [
+        1.9235137701034546,
+        -10.079805374145508,
+        3.364858865737915
+      ],
+      "cameraRotation": [
+        1.4247565269470215,
+        0.0,
+        0.19739560782909393
+      ],
+      "cameraOrthoScale": 6.5272955894470215
+    },
+    "frameCount": 121,
+    "samples": 48,
+    "stagingRevision": "detail-resolution-20260914",
+    "studio": {
+      "revision": "detail-resolution-20260914",
+      "variant": "aligned-sweep",
+      "policy": "Reposition the unchanged four-light recipe relative to the actual education camera; photographic staging only. Source CAD meshes/materials, camera and assembly path remain unchanged.",
+      "lights": [
+        {
+          "name": "Large silver key",
+          "before": {
+            "location": [
+              -1.5671014785766602,
+              -3.2528510093688965,
+              5.00618839263916
+            ],
+            "rotation": [
+              0.7161471843719482,
+              -1.6985264750246643e-08,
+              -0.44895145297050476
+            ]
+          },
+          "after": {
+            "location": [
+              -2.348259210586548,
+              -3.5557608604431152,
+              4.334704399108887
+            ],
+            "rotation": [
+              0.8863388895988464,
+              1.4786784241493933e-08,
+              -0.5836584568023682
+            ]
+          },
+          "energy": 650.0,
+          "color": [
+            1.0,
+            0.9700000286102295,
+            0.9399999976158142
+          ],
+          "size": 4.0,
+          "sizeY": 3.0
+        },
+        {
+          "name": "Long overhead reflection",
+          "before": {
+            "location": [
+              -1.0429892539978027,
+              1.7730824947357178,
+              4.324064254760742
+            ],
+            "rotation": [
+              0.53553706407547,
+              2.2359884610523295e-08,
+              -2.6098687648773193
+            ]
+          },
+          "after": {
+            "location": [
+              -0.21117062866687775,
+              1.0558528900146484,
+              4.741974830627441
+            ],
+            "rotation": [
+              0.27039477229118347,
+              2.547461619428759e-08,
+              -2.944197177886963
+            ]
+          },
+          "energy": 700.0,
+          "color": [
+            0.9200000166893005,
+            0.9599999785423279,
+            1.0
+          ],
+          "size": 4.5,
+          "sizeY": 0.800000011920929
+        },
+        {
+          "name": "Neutral front fill",
+          "before": {
+            "location": [
+              4.444840431213379,
+              -1.6393041610717773,
+              2.456087112426758
+            ],
+            "rotation": [
+              1.2453259229660034,
+              8.844167176391693e-09,
+              1.2174631357192993
+            ]
+          },
+          "after": {
+            "location": [
+              3.7178561687469482,
+              -3.2922215461730957,
+              1.4393998384475708
+            ],
+            "rotation": [
+              1.4541146755218506,
+              3.906581724777425e-08,
+              0.846041202545166
+            ]
+          },
+          "energy": 280.0,
+          "color": [
+            0.8999999761581421,
+            0.9399999976158142,
+            1.0
+          ],
+          "size": 3.0,
+          "sizeY": 4.0
+        },
+        {
+          "name": "Restrained cold rim",
+          "before": {
+            "location": [
+              0.8148793578147888,
+              3.348245143890381,
+              1.524566650390625
+            ],
+            "rotation": [
+              1.3795312643051147,
+              -8.523004169092019e-08,
+              2.9028589725494385
+            ]
+          },
+          "after": {
+            "location": [
+              1.9196741580963135,
+              2.6392765045166016,
+              2.149240493774414
+            ],
+            "rotation": [
+              1.1938624382019043,
+              -7.393464329652488e-08,
+              2.512746810913086
+            ]
+          },
+          "energy": 180.0,
+          "color": [
+            0.3499999940395355,
+            0.5799999833106995,
+            1.0
+          ],
+          "size": 0.5,
+          "sizeY": 4.0
+        }
+      ],
+      "sweep": {
+        "profile": [
+          [
+            -80.0,
+            0.0
+          ],
+          [
+            2.5,
+            0.0
+          ],
+          [
+            2.565438165643552,
+            0.001070825047268631
+          ],
+          [
+            2.6308062584602863,
+            0.004282153522793042
+          ],
+          [
+            2.6960342806591213,
+            0.009630546655606143
+          ],
+          [
+            2.761052384440103,
+            0.017110277252379236
+          ],
+          [
+            2.8257909467891773,
+            0.026713335830242046
+          ],
+          [
+            2.8901806440322564,
+            0.03842943919353914
+          ],
+          [
+            2.9541525260687465,
+            0.052246041445332736
+          ],
+          [
+            3.0176380902050415,
+            0.06814834742186338
+          ],
+          [
+            3.0805693545089246,
+            0.08611932853558235
+          ],
+          [
+            3.142878930606323,
+            0.10613974100978862
+          ],
+          [
+            3.2045000958424668,
+            0.1281881464853485
+          ],
+          [
+            3.2653668647301797,
+            0.15224093497742652
+          ],
+          [
+            3.3254140596087893,
+            0.17827235015764842
+          ],
+          [
+            3.3845773804380026,
+            0.20625451693462327
+          ],
+          [
+            3.442793473651995,
+            0.2361574713032899
+          ],
+          [
+            3.5,
+            0.2679491924311226
+          ],
+          [
+            3.556135701300736,
+            0.3015956369468422
+          ],
+          [
+            3.6111404660392044,
+            0.33706077539490953
+          ],
+          [
+            3.664955393735604,
+            0.3743066308167695
+          ],
+          [
+            3.7175228580174413,
+            0.41329331941752967
+          ],
+          [
+            3.768786568327291,
+            0.453979093274526
+          ],
+          [
+            3.8186916302001377,
+            0.49632038504204523
+          ],
+          [
+            3.8671846040457423,
+            0.5402718546043286
+          ],
+          [
+            3.914213562373095,
+            0.5857864376269049
+          ],
+          [
+            3.9597281453956716,
+            0.6328153959542575
+          ],
+          [
+            4.003679614957955,
+            0.6813083697998623
+          ],
+          [
+            4.046020906725474,
+            0.731213431672709
+          ],
+          [
+            4.08670668058247,
+            0.7824771419825587
+          ],
+          [
+            4.125693369183231,
+            0.8350446062643957
+          ],
+          [
+            4.16293922460509,
+            0.8888595339607952
+          ],
+          [
+            4.198404363053157,
+            0.9438642986992638
+          ],
+          [
+            4.232050807568877,
+            0.9999999999999998
+          ],
+          [
+            4.26384252869671,
+            1.0572065263480048
+          ],
+          [
+            4.2937454830653765,
+            1.1154226195619974
+          ],
+          [
+            4.321727649842352,
+            1.1745859403912107
+          ],
+          [
+            4.347759065022574,
+            1.2346331352698203
+          ],
+          [
+            4.371811853514651,
+            1.2954999041575328
+          ],
+          [
+            4.393860258990211,
+            1.3571210693936766
+          ],
+          [
+            4.413880671464417,
+            1.419430645491075
+          ],
+          [
+            4.431851652578136,
+            1.4823619097949585
+          ],
+          [
+            4.447753958554667,
+            1.545847473931253
+          ],
+          [
+            4.461570560806461,
+            1.6098193559677434
+          ],
+          [
+            4.473286664169758,
+            1.6742090532108223
+          ],
+          [
+            4.482889722747621,
+            1.7389476155598966
+          ],
+          [
+            4.490369453344394,
+            1.803965719340879
+          ],
+          [
+            4.495717846477207,
+            1.8691937415397135
+          ],
+          [
+            4.498929174952732,
+            1.9345618343564477
+          ],
+          [
+            4.5,
+            1.9999999999999998
+          ],
+          [
+            4.5,
+            20.0
+          ]
+        ],
+        "radius": 2.0,
+        "width": 160.0,
+        "groundZ": -0.019999999552965164,
+        "material": "Graphite sweep"
+      }
+    },
+    "motionReportUnchanged": true,
+    "stageCount": 23,
+    "sourceGeometryAndMaterials": {
+      "sha256": "890e079802e719a991c212c40c11fc1a39ad85f764ec29aeec206a0abccbd989",
+      "objects": [
+        {
+          "name": "mat_chrome_part_0",
+          "vertices": 13982,
+          "faces": 27960
+        },
+        {
+          "name": "mat_chrome_part_1",
+          "vertices": 985,
+          "faces": 1978
+        },
+        {
+          "name": "mat_chrome_part_10",
+          "vertices": 6415,
+          "faces": 12826
+        },
+        {
+          "name": "mat_chrome_part_11",
+          "vertices": 3742,
+          "faces": 7548
+        },
+        {
+          "name": "mat_chrome_part_12",
+          "vertices": 7046,
+          "faces": 14088
+        },
+        {
+          "name": "mat_chrome_part_13",
+          "vertices": 80,
+          "faces": 156
+        },
+        {
+          "name": "mat_chrome_part_14",
+          "vertices": 8955,
+          "faces": 17906
+        },
+        {
+          "name": "mat_chrome_part_15",
+          "vertices": 7045,
+          "faces": 14086
+        },
+        {
+          "name": "mat_chrome_part_16",
+          "vertices": 5961,
+          "faces": 11918
+        },
+        {
+          "name": "mat_chrome_part_17",
+          "vertices": 5918,
+          "faces": 11832
+        },
+        {
+          "name": "mat_chrome_part_18",
+          "vertices": 1325,
+          "faces": 2674
+        },
+        {
+          "name": "mat_chrome_part_19",
+          "vertices": 11311,
+          "faces": 23128
+        },
+        {
+          "name": "mat_chrome_part_2",
+          "vertices": 5612,
+          "faces": 11220
+        },
+        {
+          "name": "mat_chrome_part_3",
+          "vertices": 13915,
+          "faces": 27826
+        },
+        {
+          "name": "mat_chrome_part_4",
+          "vertices": 54467,
+          "faces": 108930
+        },
+        {
+          "name": "mat_chrome_part_5",
+          "vertices": 1011,
+          "faces": 2030
+        },
+        {
+          "name": "mat_chrome_part_6",
+          "vertices": 13951,
+          "faces": 27898
+        },
+        {
+          "name": "mat_chrome_part_7",
+          "vertices": 45537,
+          "faces": 91070
+        },
+        {
+          "name": "mat_chrome_part_8",
+          "vertices": 49813,
+          "faces": 99622
+        },
+        {
+          "name": "mat_chrome_part_9",
+          "vertices": 978,
+          "faces": 1964
+        },
+        {
+          "name": "mat_fretboard_part_0",
+          "vertices": 3918,
+          "faces": 7596
+        },
+        {
+          "name": "mat_maple_part_0",
+          "vertices": 2842,
+          "faces": 5469
+        },
+        {
+          "name": "mat_pickguard_white_part_0",
+          "vertices": 1618,
+          "faces": 3288
+        },
+        {
+          "name": "mat_plastic_black_part_0",
+          "vertices": 650,
+          "faces": 1324
+        },
+        {
+          "name": "mat_plastic_black_part_1",
+          "vertices": 10506,
+          "faces": 17585
+        },
+        {
+          "name": "mat_printed_navy_part_0",
+          "vertices": 2632,
+          "faces": 5284
+        }
+      ],
+      "faces": 557206
+    },
+    "sourceGeometryAndMaterialsUnchanged": true,
+    "sourcePoseMaximumMatrixError": 0.0,
+    "seekChecks": 302,
+    "seekMaximumMatrixError": 0.0,
+    "sourceCameraUnchanged": true,
+    "camera": {
+      "location": [
+        1.9235137701034546,
+        -10.079805374145508,
+        3.364858865737915
+      ],
+      "rotation": [
+        1.4247565269470215,
+        0.0,
+        0.19739560782909393
+      ],
+      "matrixWorld": [
+        [
+          0.9805806875228882,
+          -0.02853906899690628,
+          0.1940285563468933,
+          1.9235137701034546
+        ],
+        [
+          0.19611617922782898,
+          0.14269530773162842,
+          -0.9701424837112427,
+          -10.079805374145508
+        ],
+        [
+          0.0,
+          0.9893551468849182,
+          0.14552123844623566,
+          3.364858865737915
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "type": "ORTHO",
+      "orthoScale": 6.5272955894470215,
+      "sensorFit": "HORIZONTAL",
+      "shiftX": 0.0,
+      "shiftY": 0.0
+    }
+  },
+  "renderer": "tools/exploded-render/render_education_studio.py",
+  "rendererSha256": "b68dba856765a32326825532753ebd62b0b4fb04763754e1599367e0aeb7cb09",
+  "studioHelper": "tools/exploded-render/education_studio.py",
+  "studioHelperSha256": "e97e439d100f0bb5f411d2075cf3fbec3485c16531d9e198d924c14aaaabfdb2",
+  "animationRenderer": "tools/exploded-render/render_exploded.py",
+  "animationRendererSha256": "f2867efacef82fee605747035230b1ad12225e4eb6c47ecbbd655ba4633a27b9",
+  "encodedFrames": [
+    {
+      "file": "00.webp",
+      "bytes": 14596,
+      "sha256": "7e2550408956b8992c497606a1d25f1051deff9c1acd0e0eceecfdad8f788ed2"
+    },
+    {
+      "file": "01.webp",
+      "bytes": 14680,
+      "sha256": "6b8a27458a95d8b3edefc502df022f69a13657ca6dc10a2d46052faf01956c40"
+    },
+    {
+      "file": "02.webp",
+      "bytes": 14552,
+      "sha256": "8ea13d6a7e41eeba8e6a9236d179a751bc4f1c2adeb1f97e64a37fe231c1ac74"
+    },
+    {
+      "file": "03.webp",
+      "bytes": 14812,
+      "sha256": "1716ddca7790d260decb38c656024badbb49bc38851be1dc8dfa2bb876781217"
+    },
+    {
+      "file": "04.webp",
+      "bytes": 14558,
+      "sha256": "27bf6697a62d449cafb0aae548a221de2dd4351ebb90da5ab66b0154412ca966"
+    },
+    {
+      "file": "05.webp",
+      "bytes": 14668,
+      "sha256": "ee5349690f89de2f2442cd16eeeaf77bd81f2c3529a9b1956803217b27fee3c8"
+    },
+    {
+      "file": "06.webp",
+      "bytes": 14658,
+      "sha256": "02290f2cce36cf82b1c5509ed691e88eeb976b7900e68f681604f59db067248f"
+    },
+    {
+      "file": "07.webp",
+      "bytes": 14630,
+      "sha256": "598a2ab3a645780bf90c31e5ec9cd825418ce882475d017a4c6697ed636ab3f6"
+    },
+    {
+      "file": "08.webp",
+      "bytes": 14560,
+      "sha256": "f502f8488ee6d55cab323655a5c28e973ae6f58b4a1f1b2d5ae218f607dc33b3"
+    },
+    {
+      "file": "09.webp",
+      "bytes": 14404,
+      "sha256": "d09bb3b04c73762ef5771c05fabdcf44461ab7e5f5b708f0f29b182adeb3c4cf"
+    },
+    {
+      "file": "10.webp",
+      "bytes": 14386,
+      "sha256": "b6728bb5318cfe7ec1fb8e00c6c66fde48b9df2664957e95d0b4b8504857facf"
+    },
+    {
+      "file": "11.webp",
+      "bytes": 14630,
+      "sha256": "924614854aa2f0b6e63a172c792d5ab483ce594ff51d23109c36793846b8e06c"
+    },
+    {
+      "file": "12.webp",
+      "bytes": 15846,
+      "sha256": "520ebfe348fddafa5c30ed5f2a64ac9413512babe7c70a67b32407818169de0f"
+    },
+    {
+      "file": "13.webp",
+      "bytes": 15852,
+      "sha256": "28963cbc402fadbe102e9426f6b22b5e3dcb86f75429ccff879f46b9c5ea9600"
+    },
+    {
+      "file": "14.webp",
+      "bytes": 15292,
+      "sha256": "59ce87f877f41fdf0ca5f0f9744ba310c8540a98ca5d24530a3e9584fcfd50e0"
+    },
+    {
+      "file": "15.webp",
+      "bytes": 14598,
+      "sha256": "56c99104ba9c5503f43d9e4c7c09896e000e9f375c7eaa7d48369db0612a500c"
+    },
+    {
+      "file": "16.webp",
+      "bytes": 13964,
+      "sha256": "9ff567ec7af3a8afaf8460c4b1165f170bfa939221cd5428c4fe7218d3f6fc36"
+    },
+    {
+      "file": "17.webp",
+      "bytes": 14164,
+      "sha256": "0cbd216bbab466af3df4c71d7f6b7aae806f9387d5663d3b20f640c029f5b03c"
+    },
+    {
+      "file": "18.webp",
+      "bytes": 14208,
+      "sha256": "b0770ff46e4e8942f1a1c211129b91ec3a7f9de01eb1f1c2798d608358cacff1"
+    },
+    {
+      "file": "19.webp",
+      "bytes": 14240,
+      "sha256": "05343b49e4a35c913d73fb2124e11ad72fd2395dba19ff0849b03f3c98048427"
+    },
+    {
+      "file": "20.webp",
+      "bytes": 14280,
+      "sha256": "91a457fb76b643809eb3e802a8f87cf2db8d38240d368177016037ee4e06950b"
+    },
+    {
+      "file": "21.webp",
+      "bytes": 14280,
+      "sha256": "27d088b300f18798cb074a56e6cd8d334d7e253b2e29c71c3aef0f48c184009a"
+    },
+    {
+      "file": "22.webp",
+      "bytes": 14322,
+      "sha256": "d14b359833ed29c911940bd8f03336012d309ee789646958981ea3dc5b8b166f"
+    },
+    {
+      "file": "23.webp",
+      "bytes": 14224,
+      "sha256": "f9ae43e350b79b643ef7b5360ae622cc08d24cb89f7d4477333a1fb22d8feb3a"
+    },
+    {
+      "file": "24.webp",
+      "bytes": 14286,
+      "sha256": "b86d3a1facb17a66cd6badba59087affe1f86ea2cfb4cfb8aca4789816fad8ae"
+    },
+    {
+      "file": "25.webp",
+      "bytes": 14340,
+      "sha256": "ce812fdccb6da5c66ed07527be5e5d3fd996393a0d02f04e3ef92ae83b3731a3"
+    },
+    {
+      "file": "26.webp",
+      "bytes": 14310,
+      "sha256": "ae89d33222f8ea2ec84e4a12501903d04b51e4178ccd91c19b2b91e440f9642d"
+    },
+    {
+      "file": "27.webp",
+      "bytes": 14254,
+      "sha256": "8326e13fab862bbf92dd6a70815959451a1b6b46b3ca597ba47f2a5c2cbabee7"
+    },
+    {
+      "file": "28.webp",
+      "bytes": 14270,
+      "sha256": "5a2a88400e4818d670946f8c4d93f3a4037f843af1c4f7412af93aa619401021"
+    },
+    {
+      "file": "29.webp",
+      "bytes": 14332,
+      "sha256": "6203e36797ec2d2908f0a79666fe6419c9a43c113ffcd639b97f81471a97729d"
+    },
+    {
+      "file": "30.webp",
+      "bytes": 14278,
+      "sha256": "6ffa60b520b80127f217e7782c251d2ab1d255fa95457f2c13c287fee4c1478a"
+    },
+    {
+      "file": "31.webp",
+      "bytes": 14258,
+      "sha256": "3fa39b973f030a608cfae244e4290b9b036bb222ecf5d1e767ea5a5303802e98"
+    },
+    {
+      "file": "32.webp",
+      "bytes": 14276,
+      "sha256": "2355b30c5292bc7733e626c495b364154ef60ec1392b09ccda265f3c1692ca6c"
+    },
+    {
+      "file": "33.webp",
+      "bytes": 14254,
+      "sha256": "e48361ae6dc3fd02ff42854307fb592ad503c9ec365d73d84f7eae827b877695"
+    },
+    {
+      "file": "34.webp",
+      "bytes": 14214,
+      "sha256": "f185d2e849dd2705655324b69f9de9afb4b125bc5b2d35a88d7b078c3a116b1b"
+    },
+    {
+      "file": "35.webp",
+      "bytes": 14316,
+      "sha256": "585a5ed20d04c44bb56713eeb1ada9ed01a76c05c55879be02e9c4fb2328a0d2"
+    },
+    {
+      "file": "36.webp",
+      "bytes": 14268,
+      "sha256": "489902b0f4db964946b8315dd1f6880f5bab8053021d147f8c5920f326ad59d0"
+    },
+    {
+      "file": "37.webp",
+      "bytes": 14356,
+      "sha256": "8fe9d178d95d3cc7bc5b0ac122b5d1afaa614a291804fe65f329bb9b42be0aed"
+    },
+    {
+      "file": "38.webp",
+      "bytes": 14344,
+      "sha256": "bc0d1dbe9617eae54323abba336d3aac94ce14238b9f2c3b541e1be8481d60a2"
+    },
+    {
+      "file": "39.webp",
+      "bytes": 14250,
+      "sha256": "ffd1439bee508f6dcae02d9cc18713a90f5cbdaca10c513b6be78b8ac1e2f79f"
+    },
+    {
+      "file": "40.webp",
+      "bytes": 14326,
+      "sha256": "f6c6036d6d111b930e3610181e17e67e5d337dfd8a46f9c15a79ca37c3e81a6e"
+    },
+    {
+      "file": "41.webp",
+      "bytes": 14220,
+      "sha256": "dfce9f1005de243a71125d0eedf2493b77011ede32049fcb6bb630bb5478b21c"
+    },
+    {
+      "file": "42.webp",
+      "bytes": 14224,
+      "sha256": "a4bf91e15cca0e5ecf3bad3fca7119a0d3b6ab452c4fcab890af28a531df9ee6"
+    },
+    {
+      "file": "43.webp",
+      "bytes": 14102,
+      "sha256": "1f483586b2f28768d479888582f833d14fc6a1e82284f7b3b644875382df29cc"
+    },
+    {
+      "file": "44.webp",
+      "bytes": 14122,
+      "sha256": "d5484e1026abff26b37e1d7535039fec1b361cd8535def42cdbe6ea10b088d68"
+    },
+    {
+      "file": "45.webp",
+      "bytes": 13936,
+      "sha256": "db21d4c7cdb342fe932962590dbb4f8df49f3d6d5e90dc8e7ced68ad3ea76e2d"
+    },
+    {
+      "file": "46.webp",
+      "bytes": 14160,
+      "sha256": "68cbc36c8f6907a208a2274b05cd45ff1fcb04faf191cb68edfd52359ed05115"
+    },
+    {
+      "file": "47.webp",
+      "bytes": 13998,
+      "sha256": "f103ddcca07a939456406b0e3d083694a4625740d9d118bd14c9f8515a553f1c"
+    },
+    {
+      "file": "48.webp",
+      "bytes": 14252,
+      "sha256": "4e0736ad33b40d423b73c7c6b5800d94888970098375b3370af008da1d163f7b"
+    },
+    {
+      "file": "49.webp",
+      "bytes": 14112,
+      "sha256": "3482768cc8e496aa5d82fbb9d7897c2db41892e4f5af91efd064dd80ced09d77"
+    },
+    {
+      "file": "50.webp",
+      "bytes": 14512,
+      "sha256": "f07250bfc2a66ad4237d44457852ad32fe462ae646aa241049048a85450c241a"
+    },
+    {
+      "file": "51.webp",
+      "bytes": 14378,
+      "sha256": "37f2761a4701023ecbaf9134466fc7952ef9f29737302d4c7a8233bf53a75614"
+    },
+    {
+      "file": "52.webp",
+      "bytes": 14442,
+      "sha256": "15e1078d1d2f11a4b04f33791d487ac8d9b55207db1220499783619ebba73f8e"
+    },
+    {
+      "file": "53.webp",
+      "bytes": 14298,
+      "sha256": "9ebd69509530bbc34c528aed4372b19a78b6788b9b086b9641eef0f4ed476f74"
+    },
+    {
+      "file": "54.webp",
+      "bytes": 14250,
+      "sha256": "b99bc67acb21d8e9d4b44b7a10a9d839208be2efae1a068e1048888eb79997b1"
+    },
+    {
+      "file": "55.webp",
+      "bytes": 14228,
+      "sha256": "08e465be43f875e5e23e6a74b31d2338f89396a64e2c18fb698dce00d99ac176"
+    },
+    {
+      "file": "56.webp",
+      "bytes": 14300,
+      "sha256": "4738ae01dfab0b53c39f61bd14bc2b8ddbad06fe32def7bde6bd748053942b1f"
+    },
+    {
+      "file": "57.webp",
+      "bytes": 14348,
+      "sha256": "ae43788e8527a0ee790dd0be83ceda44ef268a880891fc29905bd1340b4102f1"
+    },
+    {
+      "file": "58.webp",
+      "bytes": 14282,
+      "sha256": "09ff3b13d24df8eda00721761b2816e5cdf4054cc79260b9a77534af710c4992"
+    },
+    {
+      "file": "59.webp",
+      "bytes": 14222,
+      "sha256": "b83b9e5ac04e0426820b7a0e0324b9e0441e48bddac2879a86c490077ac5f2e4"
+    },
+    {
+      "file": "60.webp",
+      "bytes": 14516,
+      "sha256": "9145a145341ae27e910262a8b91d6eca056418659b04dc1b5c3756e20997924c"
+    },
+    {
+      "file": "61.webp",
+      "bytes": 14568,
+      "sha256": "ab1cea95584af0f6eb602772df56f48ccab5d041b4ce4c1c041ffeed5bb68410"
+    },
+    {
+      "file": "62.webp",
+      "bytes": 14468,
+      "sha256": "ef1fec39273b8e62b5e3b6507168e54e77197fd7722c7b6713866be0624beb9a"
+    },
+    {
+      "file": "63.webp",
+      "bytes": 14444,
+      "sha256": "53f4da7f5ff55cc3dc0bba88e8035b127292f083c0b3962cf016d6d910bb73df"
+    },
+    {
+      "file": "64.webp",
+      "bytes": 14388,
+      "sha256": "6ea11cf79d3fdee08470391d9e9f989ed1a12887402746dcab01f81976fe2453"
+    },
+    {
+      "file": "65.webp",
+      "bytes": 14370,
+      "sha256": "8036b0bc3f2965b3532b15ceda2528da1d4d35d26f4ac4085d58614d6901addd"
+    },
+    {
+      "file": "66.webp",
+      "bytes": 14346,
+      "sha256": "2de23e882496f7b43ac219bede1018ca08f8f467a87c216983b9c36cb559e3b8"
+    },
+    {
+      "file": "67.webp",
+      "bytes": 14362,
+      "sha256": "830abda6c77998896775105d0c48f9d59636021d06a2d0af1a7e82bb0971e403"
+    },
+    {
+      "file": "68.webp",
+      "bytes": 14424,
+      "sha256": "2581a0b0e005afdcaac6a183b2c096ce3385278a337775c3ce7ef954dc2a5b83"
+    },
+    {
+      "file": "69.webp",
+      "bytes": 14280,
+      "sha256": "67ff7890ade18bea40457bb8c22f668e00fe3c6be0ea4018433df7506961971b"
+    },
+    {
+      "file": "70.webp",
+      "bytes": 14232,
+      "sha256": "08e157dba6049a76293e8e5f6383be7176e9a7eb9824637582cb64cf24ed5c49"
+    },
+    {
+      "file": "71.webp",
+      "bytes": 14106,
+      "sha256": "23230fed1a2360f280e6bab39df4169e9b9e7e0cc8202df0eb2a840feed992a7"
+    },
+    {
+      "file": "72.webp",
+      "bytes": 14114,
+      "sha256": "032a57549764ee1e9c2b162dcff07c0ae68e00f259689bc6e5613bc7a5821994"
+    },
+    {
+      "file": "73.webp",
+      "bytes": 14316,
+      "sha256": "1aed88cf1c70432441dd7957290f95b7b8e7588b8ccd4d990affa689f9938cfb"
+    },
+    {
+      "file": "74.webp",
+      "bytes": 14274,
+      "sha256": "e90cd31ed478ac03d7b005e58ec8129d5e15ec0c057ab5e30fee224e327d9bd4"
+    },
+    {
+      "file": "75.webp",
+      "bytes": 14306,
+      "sha256": "db5721c7cfec556430d56418aa40808b7167a22caf26f86998c05eabca9760d4"
+    },
+    {
+      "file": "76.webp",
+      "bytes": 14262,
+      "sha256": "48b054795f425aa3837cc3a8ec35dd233b42f1ab0afa1b619131bece57449ecc"
+    },
+    {
+      "file": "77.webp",
+      "bytes": 14168,
+      "sha256": "b7a564374889a5e408753d4911e10c892deeba7809702f23b7f32ee259e51e4f"
+    },
+    {
+      "file": "78.webp",
+      "bytes": 14218,
+      "sha256": "72be4d520627e207ece3fc2a342d81ba955086bb811868f3e192a2ff98e3ccff"
+    },
+    {
+      "file": "79.webp",
+      "bytes": 14128,
+      "sha256": "de30655bf9cdd4d72f5e31f087a16bdc76b2c8754c17be4ae40a58d2be91f078"
+    },
+    {
+      "file": "80.webp",
+      "bytes": 14124,
+      "sha256": "baf3a8d300f25d13f549f7c7170d29655d53c4628ede99d7af6c94117e46ad4c"
+    },
+    {
+      "file": "81.webp",
+      "bytes": 14010,
+      "sha256": "1150b1f89178273a2c92c2b1102f3ffe1daec4945cccbe64359e5921c0d11a7d"
+    },
+    {
+      "file": "82.webp",
+      "bytes": 13910,
+      "sha256": "fdaa2c35b74ff1b0f8361009529a8f49f9e26d5136142df26c72a2b7a6bba1fb"
+    },
+    {
+      "file": "83.webp",
+      "bytes": 14130,
+      "sha256": "bbccfe591f14acd5f03b7b69d9f1288b241b7bd638ee5e94128fdf217ac6141a"
+    },
+    {
+      "file": "84.webp",
+      "bytes": 14020,
+      "sha256": "b2d367a0f8b19b899455df6bff3e28462a673154486dbe36b0abc1dfee1b3d40"
+    },
+    {
+      "file": "85.webp",
+      "bytes": 13826,
+      "sha256": "3e4a84da4c1588b2343808135e5435e8589a1cd71cd35a922c6a239d55c67dff"
+    },
+    {
+      "file": "86.webp",
+      "bytes": 13980,
+      "sha256": "a0f7220b4350d5012ce8439cfc443914b5dcc4cabe207b8ba5b9769bde06dd4f"
+    },
+    {
+      "file": "87.webp",
+      "bytes": 13984,
+      "sha256": "b954e338b3646b99e6e874b768ad4c0ff6dc40ac149fd33368d83231643b9214"
+    },
+    {
+      "file": "88.webp",
+      "bytes": 13786,
+      "sha256": "1f33648d1d85d48e4a851ba9346703429ad43dc6c494da3edae9e29b793dadb2"
+    },
+    {
+      "file": "89.webp",
+      "bytes": 13908,
+      "sha256": "74f20a0adbb5dc9ec3a965daae8e4fadab07665ebe6a197b2432031c0ad59d29"
+    },
+    {
+      "file": "90.webp",
+      "bytes": 13738,
+      "sha256": "8d21439498c3b744be33c4d2040fda4c61e934c14f0871bac7e59207272b4e09"
+    },
+    {
+      "file": "91.webp",
+      "bytes": 13772,
+      "sha256": "945cf82470f49b9d8a7e9a4a1c6a3ec4dfd10ea7c87a6f3c4c6fa789ef827391"
+    },
+    {
+      "file": "92.webp",
+      "bytes": 13768,
+      "sha256": "35d43797205ba20f2c2ad6334db0da4f6a2d01f0eaef6e17d97b3d93e34ab83c"
+    },
+    {
+      "file": "93.webp",
+      "bytes": 13660,
+      "sha256": "5ab20c0bd175688e6f5a9612c8ead0020b885a427da6d145046039797e89de6e"
+    },
+    {
+      "file": "94.webp",
+      "bytes": 13724,
+      "sha256": "81c832aa6af68e2bf1dd4d75340c479d442c83704461db952ce520d669c612c9"
+    },
+    {
+      "file": "95.webp",
+      "bytes": 13496,
+      "sha256": "36812c26eae6c953c755b0187cda33a4a6b11a2d3a2bed381f509aabe3e1c60f"
+    },
+    {
+      "file": "96.webp",
+      "bytes": 13390,
+      "sha256": "21eb59a89606bdad7577a084523bb12820f616eb16f5adb510a136d3bf2299fc"
+    },
+    {
+      "file": "97.webp",
+      "bytes": 13094,
+      "sha256": "139ba74c0122a5f7d3568f410d98c3a9456547166e2094862eb0c23ebb7b1769"
+    },
+    {
+      "file": "98.webp",
+      "bytes": 12904,
+      "sha256": "f6b85163d9ee1f1049672e633e9fac5170db51100325847588636d709f47640c"
+    },
+    {
+      "file": "99.webp",
+      "bytes": 12868,
+      "sha256": "bea2a557e244e4779fef8b3d7b24050b5bba594192a2bb81ee0a8c64d1bc9c57"
+    },
+    {
+      "file": "100.webp",
+      "bytes": 12886,
+      "sha256": "c75e83786054769b822f830f8a76a81c98c730768edc1059e901d682c919b66c"
+    },
+    {
+      "file": "101.webp",
+      "bytes": 12926,
+      "sha256": "87b53f84b2513789d461dad537929241aa877828bb075ee86d7e69b24347687d"
+    },
+    {
+      "file": "102.webp",
+      "bytes": 12788,
+      "sha256": "caaf36c7a0f27835a4a3ea920d3ae638904994ae94fd27fedd881f90dcddce7a"
+    },
+    {
+      "file": "103.webp",
+      "bytes": 12792,
+      "sha256": "5b852ac4c42e2d5448967db9a70cc291076ae2720fd0bcce599d04201fcf4e38"
+    },
+    {
+      "file": "104.webp",
+      "bytes": 12712,
+      "sha256": "2ac7fbcd29e0d00ae618e70225c08d2fb82a1a3d5ac8644cc73834b47be57288"
+    },
+    {
+      "file": "105.webp",
+      "bytes": 12712,
+      "sha256": "1f156190c43d2098b4169b9c9aed0e0cc5784f1597a22e180fb45f2fad893ba4"
+    },
+    {
+      "file": "106.webp",
+      "bytes": 12774,
+      "sha256": "f183e8db523590d58ad8dd2909e82828ab70ecacc816c11e6ad8aaa17ff48e73"
+    },
+    {
+      "file": "107.webp",
+      "bytes": 12854,
+      "sha256": "3cfd685230a57743d98f1069a76c7c54fcf720e3e4e56225e4089e78c464dabc"
+    },
+    {
+      "file": "108.webp",
+      "bytes": 12814,
+      "sha256": "566d28f70dc0d34aefa1f0740456919a97dfedac6bd1f2209bc6268fe188f67f"
+    },
+    {
+      "file": "109.webp",
+      "bytes": 12740,
+      "sha256": "cdddafba3ba1fcf7f434c47ff445798ade1c0b753c1a2987a958a5852c1b1b93"
+    },
+    {
+      "file": "110.webp",
+      "bytes": 12728,
+      "sha256": "4258c188b9f8632d654bcaf9ac6811b0435e30ae22cf44a1d8717eb1dff44bfa"
+    },
+    {
+      "file": "111.webp",
+      "bytes": 12746,
+      "sha256": "c0abe6b7744d76a51079a02867fae96cace655f8bac3767642d94d2814158dcf"
+    },
+    {
+      "file": "112.webp",
+      "bytes": 12800,
+      "sha256": "beec8d26608af4528271994946fb6f9b2583c2a11210420473457d1371b1dcd3"
+    },
+    {
+      "file": "113.webp",
+      "bytes": 12662,
+      "sha256": "08f9d3bcd9ca7a02b5fe3b7bec7264fda01fca812f36c554b8ad721fd223f1e6"
+    },
+    {
+      "file": "114.webp",
+      "bytes": 12504,
+      "sha256": "d1c8db79e1b03ccf35dc2c8b314cc6cae878bc2c400f319a788c2ad6380fcf42"
+    },
+    {
+      "file": "115.webp",
+      "bytes": 12380,
+      "sha256": "70d653ce44c56d97d0af240cf2f0e8363878ddb216c74c5ad5a39629110e421e"
+    },
+    {
+      "file": "116.webp",
+      "bytes": 12434,
+      "sha256": "d3140f022f00a2d777af47ab12bd43b49d146b5bbaf3cae86582485bceae543a"
+    },
+    {
+      "file": "117.webp",
+      "bytes": 12502,
+      "sha256": "2ff80552c3766145c2ba985240d3d05db447b26d60ac1f50e062af2560209b32"
+    },
+    {
+      "file": "118.webp",
+      "bytes": 12408,
+      "sha256": "c3f46b4e73cae9858dd0d5f6f3496ba3915a89b5525584b9285a6002f60e0109"
+    },
+    {
+      "file": "119.webp",
+      "bytes": 12338,
+      "sha256": "de005e162c6d73f29f5a86991d9bb45d5276417f3177a1370c6214ab6a773f83"
+    },
+    {
+      "file": "120.webp",
+      "bytes": 12368,
+      "sha256": "5bd6c642f42c573d85e498c0a720b26216d4269609b9d0dae2d1b6da0cee36d8"
+    }
+  ],
+  "sourcePNGFrames": [
+    {
+      "index": 0,
+      "sha256": "481ef01186e2edfacb54c59d5172feab908b4699d623cf7fb40ac7752c43a469"
+    },
+    {
+      "index": 1,
+      "sha256": "16079d37a62b1685f382747ef477cd8f2a0ef9c0bcd0128961e4e6d461cd94df"
+    },
+    {
+      "index": 2,
+      "sha256": "70eb4ed9134439a9d7e01a06143d77a73da48fa82da428bd06f11393ea2894bf"
+    },
+    {
+      "index": 3,
+      "sha256": "ba13f0d96ac2ca8f73b8f690fb775e3bc09b5b0cd18dff2be996de12b0511d66"
+    },
+    {
+      "index": 4,
+      "sha256": "546723e049c701b0a9651438c2f125885b99210599bf0c319fb02c10b53ebec8"
+    },
+    {
+      "index": 5,
+      "sha256": "aabf775368ae9e7ad3a51f94ed35279fe2186ec6063dba67c8888d9123493c1e"
+    },
+    {
+      "index": 6,
+      "sha256": "e7e0ebb03f0958e0757fde2428921b80758c86de81ad4932117c36198b97ad06"
+    },
+    {
+      "index": 7,
+      "sha256": "a8b8f1a0ceda37822c5b731ba3abae4d1a17bff9f527aacd6de72816323e352b"
+    },
+    {
+      "index": 8,
+      "sha256": "ddb839afa8d1b93248f944e1688a3257d0960b7feb8807900bb198f0dc29c36e"
+    },
+    {
+      "index": 9,
+      "sha256": "2f9afe743ae3bb3d4cb8974e430354266459fa84f82579fba4e7fe90c671234f"
+    },
+    {
+      "index": 10,
+      "sha256": "396ecd866a7bce776df01c670a80136e9475736e620980dae28411f56c45783b"
+    },
+    {
+      "index": 11,
+      "sha256": "2979bfcf8b5177739a57a54e5e9dbfc1bb4d3b002277219f506d44703b6c69f7"
+    },
+    {
+      "index": 12,
+      "sha256": "dd93cbcf7fa5a4764d3c9f6baf2e1b370ac1e0aadb14484e708c33f0d5182535"
+    },
+    {
+      "index": 13,
+      "sha256": "2f77d7c3ff0d06505e474f6031b08566150d6e216fed3d162fcc58e4c66642cf"
+    },
+    {
+      "index": 14,
+      "sha256": "aaea03f03a93e0c06e3bd0640df019bb7f1ed94fcb7035043ed3759f64f2569b"
+    },
+    {
+      "index": 15,
+      "sha256": "afe97ec0f22ef89aa7aab84ef2224148bd75e494c80350172da2369b49312285"
+    },
+    {
+      "index": 16,
+      "sha256": "4af1b145cb2a85a0b8c93bc6e18b71a9814a43e530c01a5527032500ceeefe80"
+    },
+    {
+      "index": 17,
+      "sha256": "a29e7dac949bcd2d3ac511b4be06fb7bbe9a8efd8795db98750ae1fa053ccb5b"
+    },
+    {
+      "index": 18,
+      "sha256": "83e7439c0e4cec68199f7c65bdbb78bd57aa75f6c71c9cd3c874b87964f7b46e"
+    },
+    {
+      "index": 19,
+      "sha256": "91dc993a81b87b672e42d27d114b151e367d1b561643c0336423f3f5c504434a"
+    },
+    {
+      "index": 20,
+      "sha256": "31376cc692c94b5396931190265140bfa4d70186fc4b503acf1eac0c2071a8d1"
+    },
+    {
+      "index": 21,
+      "sha256": "931c42fb2fd78dbf87cb5979d2394cb202fe56263c7f960cf6d45afa07ecfe40"
+    },
+    {
+      "index": 22,
+      "sha256": "41d24606aac32405dae8069f639077d86d5adfb2b8a4106d180152ebde6af120"
+    },
+    {
+      "index": 23,
+      "sha256": "99aebc747d7960f52939e9f9f576f505e3e5c864750a68ff9ef3a1441db7d2ac"
+    },
+    {
+      "index": 24,
+      "sha256": "89beda004ffbbc6e4e5b631d666bbca0dd106d06a396c2ea1b07682417caf34f"
+    },
+    {
+      "index": 25,
+      "sha256": "c3a098e460eb6a9dccedc86b036844d69b73ea32ca3d7711d1e05b49b2abc790"
+    },
+    {
+      "index": 26,
+      "sha256": "558715d73e5902d139734e9ce5a05902229fe6a2d7121efc1d7f2551170c684c"
+    },
+    {
+      "index": 27,
+      "sha256": "2a980cd2a0ce64ff49b8d65dd5497129e9e815f1b3f7cd98ab38cc90cac79ee0"
+    },
+    {
+      "index": 28,
+      "sha256": "2ba32de15d043f41a5b2a3de71f2f893989cbcd657271b72d772630b58c7a524"
+    },
+    {
+      "index": 29,
+      "sha256": "943e566d070bdae42003dad97928c1707d4434e100dd9aa0cb4feada3fa09cef"
+    },
+    {
+      "index": 30,
+      "sha256": "7b76ef34768bcb524b3f296b9dd8ffe42b12a74e486db8c3a69a5970198942c3"
+    },
+    {
+      "index": 31,
+      "sha256": "c74c2024c062a4adeb2a560c8c2561bb0d023551d5e15bf84722ce02add78f72"
+    },
+    {
+      "index": 32,
+      "sha256": "f9a2b7eb0e8fd27b50306a75b75fe5c03c08a276ed71c0536eb24a303873f84c"
+    },
+    {
+      "index": 33,
+      "sha256": "7c31ebe00718c375259556a276b5c9b289d17092c6b649b336c0f84ed06625d4"
+    },
+    {
+      "index": 34,
+      "sha256": "29375ab5987dd3b24c4c78e59988d9a43f2df160d4ee5931fabc8d2ee8050880"
+    },
+    {
+      "index": 35,
+      "sha256": "6abdf72b16a9b269d316403081b8d30a96c77562877eae6a17ff0d61e141cfd0"
+    },
+    {
+      "index": 36,
+      "sha256": "9122f2715671cb151ac8b5974e78948bc4caa52e3f2e628757216c3213735a6a"
+    },
+    {
+      "index": 37,
+      "sha256": "5cb766b7d4654233c28774e3322df3e758373dc03b6cafa61a19587c3a70ec40"
+    },
+    {
+      "index": 38,
+      "sha256": "99618fb6ae9de8864dfceebc3f5cd913bdbc2e8545a989634147573593b61898"
+    },
+    {
+      "index": 39,
+      "sha256": "5f4bb1354787cb9f91e28cb4d69d52084cc3c2d3e413198598e3e31387b89132"
+    },
+    {
+      "index": 40,
+      "sha256": "9545bb20e3efbe4c987f26c04dd1b6eec0b16630fc10fbddafe43360c31cf7cc"
+    },
+    {
+      "index": 41,
+      "sha256": "eacc109be5a69f96bffddea04e1f3853eef17ca4d8ff1d3c27ed0ab3378c4546"
+    },
+    {
+      "index": 42,
+      "sha256": "8c80d1ce5fd117068d185d0871a317063eaac06787cac716d978c397e8ef5c11"
+    },
+    {
+      "index": 43,
+      "sha256": "3e0f313d4e03f2aa84af1c0f18db0b78b8bf8ca5d050519be3f586c2708dd67e"
+    },
+    {
+      "index": 44,
+      "sha256": "47a1baca57c9ab968c18f9a27fabf2c502170458500950f01f9e02b628a2e341"
+    },
+    {
+      "index": 45,
+      "sha256": "eaf9d3b4c30f005f382b55f6277c898545f6bf1a8e402ef39695519193ce7d14"
+    },
+    {
+      "index": 46,
+      "sha256": "51da49ff2f8505a1b742a5993493cde0b081ade912b3cf44acc776ff13e72e20"
+    },
+    {
+      "index": 47,
+      "sha256": "e51c1182f5840e262166646484e7797e6f15004c96c82a38cb89cec597049ef0"
+    },
+    {
+      "index": 48,
+      "sha256": "e55b913b272a45db67ed3b54c8a47adb596332f8c8d456362c15dec4e61b486d"
+    },
+    {
+      "index": 49,
+      "sha256": "ec17444a42f404b9775186508104c6507b9b805633fd24d19ce48b8d8e3d5445"
+    },
+    {
+      "index": 50,
+      "sha256": "a6f8bbde3cbdd7350e627223f800b39746ed6b125c72f6aa35f8ed51137bb4c4"
+    },
+    {
+      "index": 51,
+      "sha256": "34f95912ce3e338897b0ae0fe9ee0ac52628e9134dfff4f67300b8fea64966dd"
+    },
+    {
+      "index": 52,
+      "sha256": "bb2c8afaca8843b1c53a5efb87652ac84278d96cfe75d7c964885b3c2865f5dc"
+    },
+    {
+      "index": 53,
+      "sha256": "63ef02582a3016d69d5c9f19ff764424e3dd651a6f014d947b849b365e9258e5"
+    },
+    {
+      "index": 54,
+      "sha256": "1fa3e2bdc4ed034758595ca2445c69a203a6902ad88d5052558fb73dae28cdb7"
+    },
+    {
+      "index": 55,
+      "sha256": "bc4d34d1ce794b26e8484de9eac0d3551df4292d0b51ba98a13edc14c32d11d9"
+    },
+    {
+      "index": 56,
+      "sha256": "0de6eb2ffcd365e70fbe98c9077ebc14a41596192b50055bb7b69c0559ca906c"
+    },
+    {
+      "index": 57,
+      "sha256": "d3a6173566faddb830c4ecb690393305fdc00ffce7323933b35050ab20e574a0"
+    },
+    {
+      "index": 58,
+      "sha256": "89a19078f4df2b18cdf5a230f351de9f1dc97309080710e5676630b63ba49db0"
+    },
+    {
+      "index": 59,
+      "sha256": "c6439e8354777ac9e0721346ca310e83dd9d4b0a76a7c48b1482bfed2359df4d"
+    },
+    {
+      "index": 60,
+      "sha256": "ea4c630fbe74c8d9b6fe23ec10f48a7f6bf27e01875084b019c02b9a76214c2f"
+    },
+    {
+      "index": 61,
+      "sha256": "12b349c72b3f228b9f3949971109a46e6d6145b115bd19e7941b283d1043fa55"
+    },
+    {
+      "index": 62,
+      "sha256": "4beaa9e55119f83201555df9671aff39183941c687eb04800033ac7376a90055"
+    },
+    {
+      "index": 63,
+      "sha256": "da3db50eac90aebf7e572d4d9366e2126bce22804ae4998b0f09b3f664908f7f"
+    },
+    {
+      "index": 64,
+      "sha256": "43900aa7287c672b49fee337e01f5ec8a2b862e76f0956243eb01b82fb8f064e"
+    },
+    {
+      "index": 65,
+      "sha256": "e33897b079098050d38529e312e1f72f37e2404e28829aebf019c744672a173b"
+    },
+    {
+      "index": 66,
+      "sha256": "9e0d82d242dfeb0d0b45274e73500dd0996a0df61c033451b210a3c8e94a8f33"
+    },
+    {
+      "index": 67,
+      "sha256": "ee92d6cd4cbbaa6fb85f2ce78f2bb1d65d82f047b95293135918fcb6ba41c8de"
+    },
+    {
+      "index": 68,
+      "sha256": "a981fce8d8ee4ec6e98d7c0edeb853233cb06b7e6836afe83bc64ba9b6924a29"
+    },
+    {
+      "index": 69,
+      "sha256": "961df10a119e4953982d3065c82cef457419ca2f276ead8fc797709411b60ad5"
+    },
+    {
+      "index": 70,
+      "sha256": "f4257366a080d60cf2cea6b4635a1227f129344fcc0acf19abdc7f792bd1f467"
+    },
+    {
+      "index": 71,
+      "sha256": "56c527b17579ce4cce4b99955701f0384474d903d830cbfe73ab772fec317907"
+    },
+    {
+      "index": 72,
+      "sha256": "02e9a83ed3b55646ea016eb7d77c67ffdb7c8538cbf0de025b319400da00c535"
+    },
+    {
+      "index": 73,
+      "sha256": "afdc2c56b15d878deb24437e97b2ab0d5d37118ed1d6fd4c7e839b88c5e1294a"
+    },
+    {
+      "index": 74,
+      "sha256": "d047d5835573956bf7707eb3660a24c50820e25fae6db1a20cf2b0e43f85c774"
+    },
+    {
+      "index": 75,
+      "sha256": "68875ed2532754840f3838904ef7a44acf4bac7285a32ce8572f1b5b4e4df185"
+    },
+    {
+      "index": 76,
+      "sha256": "75aee6846aec87f773ab373559451853dba9b34d9bb64d2d59c38cf27564a23d"
+    },
+    {
+      "index": 77,
+      "sha256": "b86c2177e827002f0259d6a8c29e894438caca9512d679421d8b8108de661284"
+    },
+    {
+      "index": 78,
+      "sha256": "a65bbd9cc826b49b2b9b6b7f6b2e6e7dca44fcc64df46bd321cd1787d1955087"
+    },
+    {
+      "index": 79,
+      "sha256": "7a7d01b2d7d1c91b7f7473e2e8b8c0d99d8c4dbdeaaef4bf2369ea6531d82434"
+    },
+    {
+      "index": 80,
+      "sha256": "b0f123ec4051f9572769ef39bd5951e626c8e788b173f628baee5165c0ebf29e"
+    },
+    {
+      "index": 81,
+      "sha256": "e71fcd05ab7d743fda9b9c7bb9f9cc219088b6b726e9d6eda65bba8a13e2b5cb"
+    },
+    {
+      "index": 82,
+      "sha256": "bc058fa0fa0430226d07c11a68d4879530a06c5fe4db92e52a1a2bd403ae956a"
+    },
+    {
+      "index": 83,
+      "sha256": "3fa85b4cdd15467ce9e4f07040b9cfeac2d99e33aaad5715e619aa784e720189"
+    },
+    {
+      "index": 84,
+      "sha256": "27936639c8fb1de4c19d6a11de091350b27658eba7050b52184f18ed50413e6a"
+    },
+    {
+      "index": 85,
+      "sha256": "33159c6bcb8cd362b57e66ddd1ffce0d0683ae5a4d60d90b6d344a4e9166f501"
+    },
+    {
+      "index": 86,
+      "sha256": "8edee0895a3e6dd6ff2b5fee0d2bba772c423355b55ce8e562df75bcd7f08194"
+    },
+    {
+      "index": 87,
+      "sha256": "1b28d74579d2570a6e07706e2c3b8e970362a5b4f7b26f2710510e2962699698"
+    },
+    {
+      "index": 88,
+      "sha256": "b400833ee191f8d3194d9b43f7fb493e654e984faf906e5277812a216b0dc1b4"
+    },
+    {
+      "index": 89,
+      "sha256": "c6310f2f91002dd0024bf9a7c8324c32b0260af88fde040ad1e81bfc2ff33746"
+    },
+    {
+      "index": 90,
+      "sha256": "3e11bd0284b4f42c34ae6d1f6aacbac4e37c344aec53af1e0c841be42547d165"
+    },
+    {
+      "index": 91,
+      "sha256": "35cb2ebca3271690b6e4ff8ea9848d2291be1ddb5a894b9c4c33dba9b7b6dbe1"
+    },
+    {
+      "index": 92,
+      "sha256": "a16cded5dbf74e4f16a9e176693c621f34700d25c499a0f54c066aeb25c99a43"
+    },
+    {
+      "index": 93,
+      "sha256": "5fb2c6fbec98113ee664086aef88073e4000851c519a636b6834feee40b292db"
+    },
+    {
+      "index": 94,
+      "sha256": "8986ff0aaf53b07b4c542c97958db8a29b7483c5428a72465b05fca2c16679a8"
+    },
+    {
+      "index": 95,
+      "sha256": "def1d6bf287dcc6fed0ce0b1d89ad051e6cdc16bb821caa957aa97dee2e9ae9e"
+    },
+    {
+      "index": 96,
+      "sha256": "585f188a43c5ed8b60d9be469667674545731d7e25301167c10be39efb717824"
+    },
+    {
+      "index": 97,
+      "sha256": "a778bdee98f7a03615155732d337e603317753aa70c34701a338d899c81535c6"
+    },
+    {
+      "index": 98,
+      "sha256": "64ff876913287cd102dca53b30d8d1bf501aa052ede88eced68c2147a056e93c"
+    },
+    {
+      "index": 99,
+      "sha256": "a4e025d24d06367e411835fbe53311141434c8d7ed5961836041bf563a8c8fef"
+    },
+    {
+      "index": 100,
+      "sha256": "46a164fc30b6daea0877eefdd07b138cb24b7b48fb5b27e7f94d5712a2cadd94"
+    },
+    {
+      "index": 101,
+      "sha256": "2acfe5f0fc7b1084be1055a8b7feaa2bac892db8492574773c7e31220aa7d6ea"
+    },
+    {
+      "index": 102,
+      "sha256": "a9c5f4e943ae03839665eaa4c8af5caac59b28e4ce2ebede2dcb9b189e9f6fcf"
+    },
+    {
+      "index": 103,
+      "sha256": "cd00bdc78fb7f398a6dfe115e0c5ca3b44afa49ccc339ceb7e31f4c15b9a2d72"
+    },
+    {
+      "index": 104,
+      "sha256": "71a56281bf6189de59ccf94e28671fe5c6d43047a208f2bdc99b3bbe3b5c7b71"
+    },
+    {
+      "index": 105,
+      "sha256": "363334a9f1c428703d134b52d1e385f8d39eb6284e383bdc79df6c1550f29e74"
+    },
+    {
+      "index": 106,
+      "sha256": "4e4836a2dd9bba2be82e1a416a05887796651c8f885ba3cd1c40c2e302b98797"
+    },
+    {
+      "index": 107,
+      "sha256": "5637300a19599b0f6ee5ebc48340ee3e21e335779b2ee6fffe250b9e388c3ff3"
+    },
+    {
+      "index": 108,
+      "sha256": "7f50c9c5f877798a9aca94ae6c8428d4f2e4e3a545097588c60b808a3d10252f"
+    },
+    {
+      "index": 109,
+      "sha256": "22fef53f1e244c04146159bb949dbff8a8d353031082348e64049f1ed7176ad9"
+    },
+    {
+      "index": 110,
+      "sha256": "2a82447119176c86128aafb6ffd03c76bf1b41b0d9360c3fcac21418d30cc0a5"
+    },
+    {
+      "index": 111,
+      "sha256": "9abd1f48232bddf43a96ac99cc4804fabcea6ce2c7e3c45b4283bf39d01bb8cc"
+    },
+    {
+      "index": 112,
+      "sha256": "961ac21712a2b259b2fae49580a6f0c5430a952228ce0a3ba47e1477b95f3820"
+    },
+    {
+      "index": 113,
+      "sha256": "97f4a4c8be7b388c03eb66b1ddb1fd31b1f9315f1463b2725cfe5894d1400b3d"
+    },
+    {
+      "index": 114,
+      "sha256": "e47ead451e5d04ae3afb74c5696e653938acf2a4a2fe4836873bfaf2738cfa17"
+    },
+    {
+      "index": 115,
+      "sha256": "48872fe143a72fbc04df8fe30f9c82cb5fe2ce53c3ae8c29bdce0f62dc589759"
+    },
+    {
+      "index": 116,
+      "sha256": "a8c4de7ca3a797ee476a805c1db8b952a742aeb6660b418c24280a47ebd4a5f4"
+    },
+    {
+      "index": 117,
+      "sha256": "0d8288c356ef9410de3dea299cb4ea7ab13fcc47924906d2ea85a2ebbbd3bb12"
+    },
+    {
+      "index": 118,
+      "sha256": "d6b09b625931e42ee3acee2f5446d580eb185300cd8b0b0991cb25e5319c82e3"
+    },
+    {
+      "index": 119,
+      "sha256": "0b0b98ab33aa680a8bd83d9efe8b45da3079c3f41cd39c8775b5df2afaa3c118"
+    },
+    {
+      "index": 120,
+      "sha256": "b08eb2c94425666b746e7850d269c8571a8b957e1593f44bb6967ca6bd51684b"
+    }
+  ],
+  "encoding": {
+    "format": "WebP static images",
+    "quality": 88,
+    "method": 6,
+    "nativeResolution": true,
+    "rasterRetouching": false
+  },
+  "sampleEncodingQuality": [
+    {
+      "index": 0,
+      "rgbPsnrDb": 47.37086977273847
+    },
+    {
+      "index": 60,
+      "rgbPsnrDb": 47.45410505364754
+    },
+    {
+      "index": 120,
+      "rgbPsnrDb": 47.84192113217947
+    }
+  ]
+}

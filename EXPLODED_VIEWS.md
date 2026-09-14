@@ -1,5 +1,39 @@
 # Project animations, starting covers and progressive loading · 2026-09-13
 
+## Native detail animations and consistent Education studio · 2026-09-13
+
+The current presentation revision is `detail-resolution-20260914`, based on
+published commit `31f85d9abfc89325a4caf627d55ed4f67b46702c`. This section supersedes
+older animation-size and current-asset counts below. The exact release commit,
+backup integrity and publication status are recorded in
+`C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-detail-resolution/release-metadata.json`.
+
+- All 16 detail pages use `assets/exploded/manifest-detail.json`: 2,032 native
+  1280×854 frames. Stage the original scene at 640×427 before the exact 2× output
+  change to preserve projection. Detail models retain their existing 640 CSS-pixel
+  maximum; increased pixel density does not enlarge the page layout.
+- Homepage cards use `assets/exploded/manifest.json` at 640×427. Fifteen existing
+  sequences and matching cover sets remain byte-for-byte unchanged. Education
+  receives new continuous graphite staging in its responsive cover and both
+  animation resolutions; its source camera, 26 components, materials and complete
+  23-stage assembly path are preserved. Original assets remain in the repository.
+- `exploded.js` enables HD only with `streaming: true`. A global 32-ready-frame
+  window, three workers and a 160 MiB managed RGBA budget include pending native
+  decodes; retained compressed records have a separate 16 MiB cap. This does not
+  cap total browser/GPU memory. The opaque poster, decoded-frame reveal gate,
+  target prioritization, fallback, reset and BFCache protections remain.
+- The loader passed 58 deterministic scenarios and 280 randomized actions.
+  Native asset/chunk integrity and desktop/mobile browser checks are recorded in
+  `../.codex/detail-resolution-20260914/`. Publication requires their final pass
+  records and canonical production hashes, recorded in the backup above.
+- All previously confirmed technical facts, 79 supplemental fields, 35 Javelin
+  BOM rows and 94 gallery references remain unchanged. Continue to honor the
+  confirmed physical carbon layup separately from the illustrative animation.
+
+See [DETAIL_RENDERING.md](DETAIL_RENDERING.md) for render commands, preservation
+checks, cache behavior and evidence. Education uses its dedicated studio renderer;
+the older generic cover entry would recreate its previous background.
+
 ## Confirmed carbon build record · 2026-09-13
 
 The actual build uses Easy Composites EL2, 20 main plies of 3K 200 g/m² twill

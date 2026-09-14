@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "revision": "case-pages-20260913",
+  "revision": "detail-resolution-20260914",
   "projects": {
     "steering": {
       "src": "assets/editorial/animation-start-20260913/steering-wide-1800.webp?v=703f3e188422",
@@ -445,38 +445,38 @@
       "provenance": "assets/editorial/animation-start-20260913/formlabs-provenance.json?v=4f680aa6c51f"
     },
     "education": {
-      "src": "assets/editorial/animation-start-20260913/education-wide-1800.webp?v=12f75ab07d1d",
-      "srcset": "assets/editorial/animation-start-20260913/education-wide-480.webp?v=f32330d208b2 480w, assets/editorial/animation-start-20260913/education-wide-960.webp?v=affcd431789c 960w, assets/editorial/animation-start-20260913/education-wide-1800.webp?v=12f75ab07d1d 1800w",
+      "src": "assets/editorial/education-studio-20260914/education-wide-1800.webp?v=76cc945f8d76",
+      "srcset": "assets/editorial/education-studio-20260914/education-wide-480.webp?v=8088a519b0e6 480w, assets/editorial/education-studio-20260914/education-wide-960.webp?v=4ed350740b13 960w, assets/editorial/education-studio-20260914/education-wide-1800.webp?v=76cc945f8d76 1800w",
       "alt": "Separated guitar education kit before assembly.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/animation-start-20260913/education-wide-480.webp",
+          "src": "assets/editorial/education-studio-20260914/education-wide-480.webp",
           "width": 480,
           "height": 320,
-          "bytes": 4436,
-          "sha256": "f32330d208b27027f90b192e8f022eaabe4729f74a4bb04b9aa4455bbaeb1a61"
+          "bytes": 4192,
+          "sha256": "8088a519b0e6c2bbfbbd924a71e8dc84d401cebe976e58943e5e857692728268"
         },
         {
-          "src": "assets/editorial/animation-start-20260913/education-wide-960.webp",
+          "src": "assets/editorial/education-studio-20260914/education-wide-960.webp",
           "width": 960,
           "height": 640,
-          "bytes": 10734,
-          "sha256": "affcd431789c793f3acaa138df3013e639bce98ad250184d1cd20c3679d7ef8d"
+          "bytes": 10078,
+          "sha256": "4ed350740b13cfccf48cc68ba43890eb187f8ce88390c69ed3a1a76b5fb0c2ad"
         },
         {
-          "src": "assets/editorial/animation-start-20260913/education-wide-1800.webp",
+          "src": "assets/editorial/education-studio-20260914/education-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "bytes": 30130,
-          "sha256": "12f75ab07d1d7f2e64cd9af0b744d8e8932695fed9fcda9778e7aa64d09685a5"
+          "bytes": 27996,
+          "sha256": "76cc945f8d7678ab7e77991e6b005fb92d86db1e4d65e5faa682548cbdf6b754"
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/functional-20260913/education/00.webp?v=8762b0c92edd",
-      "sourceFrameSha256": "8762b0c92edd245bb87e6e0a828d9a85e76012f76215b5da3fdc190e7b1ab23d",
-      "provenance": "assets/editorial/animation-start-20260913/education-provenance.json?v=65783fc38a14"
+      "sourceFrame": "assets/exploded/education-studio-20260914/education/00.webp?v=22a033bdc40f",
+      "sourceFrameSha256": "22a033bdc40f649a71da3f04f2e5f00a71cbac8fd173e1fc016461ce75dc2bbe",
+      "provenance": "assets/editorial/education-studio-20260914/education-provenance.json?v=1f804cc795c3"
     },
     "ftc": {
       "src": "assets/editorial/animation-start-20260913/ftc-wide-1800.webp?v=5871c5896c13",

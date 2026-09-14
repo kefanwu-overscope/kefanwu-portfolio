@@ -1096,11 +1096,11 @@ window.caseStudyData = {
     "deck": "Make the build part of the lesson.",
     "description": "A guitar kit shaped by assembly experiments with students, parents, teachers, and community educators.",
     "cover": {
-      "src": "assets/editorial/animation-start-20260913/education-wide-1800.webp?v=12f75ab07d1d",
+      "src": "assets/editorial/education-studio-20260914/education-wide-1800.webp?v=76cc945f8d76",
       "alt": "Separated guitar education kit before assembly.",
       "caption": "The guitar education kit in its separated starting layout.",
       "kind": "Project CAD render",
-      "srcset": "assets/editorial/animation-start-20260913/education-wide-480.webp?v=f32330d208b2 480w, assets/editorial/animation-start-20260913/education-wide-960.webp?v=affcd431789c 960w, assets/editorial/animation-start-20260913/education-wide-1800.webp?v=12f75ab07d1d 1800w",
+      "srcset": "assets/editorial/education-studio-20260914/education-wide-480.webp?v=8088a519b0e6 480w, assets/editorial/education-studio-20260914/education-wide-960.webp?v=4ed350740b13 960w, assets/editorial/education-studio-20260914/education-wide-1800.webp?v=76cc945f8d76 1800w",
       "width": 1800,
       "height": 1200
     },

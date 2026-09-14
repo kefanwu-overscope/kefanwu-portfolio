@@ -11007,794 +11007,794 @@
       "label": "Guitar assembly",
       "width": 640,
       "height": 427,
-      "poster": "assets/exploded/functional-20260913/education/00.webp?v=8762b0c92edd",
+      "poster": "assets/exploded/education-studio-20260914/education/00.webp?v=22a033bdc40f",
       "frames": [
-        "assets/exploded/functional-20260913/education/00.webp?v=8762b0c92edd",
-        "assets/exploded/functional-20260913/education/01.webp?v=6f3df8a17ead",
-        "assets/exploded/functional-20260913/education/02.webp?v=b68fa07ea9b0",
-        "assets/exploded/functional-20260913/education/03.webp?v=c69814d4da4e",
-        "assets/exploded/functional-20260913/education/04.webp?v=5d91a4403a71",
-        "assets/exploded/functional-20260913/education/05.webp?v=1c48d939bdcf",
-        "assets/exploded/functional-20260913/education/06.webp?v=7b27205b6183",
-        "assets/exploded/functional-20260913/education/07.webp?v=b1a2128104d1",
-        "assets/exploded/functional-20260913/education/08.webp?v=247c4802f0e4",
-        "assets/exploded/functional-20260913/education/09.webp?v=e24c2cdec210",
-        "assets/exploded/functional-20260913/education/10.webp?v=70730b427b62",
-        "assets/exploded/functional-20260913/education/11.webp?v=0064553299cb",
-        "assets/exploded/functional-20260913/education/12.webp?v=32e12e04c921",
-        "assets/exploded/functional-20260913/education/13.webp?v=4467c55e3863",
-        "assets/exploded/functional-20260913/education/14.webp?v=7248f284ff2c",
-        "assets/exploded/functional-20260913/education/15.webp?v=2f2753d20214",
-        "assets/exploded/functional-20260913/education/16.webp?v=b12117e9e541",
-        "assets/exploded/functional-20260913/education/17.webp?v=5b3f6c75b6d9",
-        "assets/exploded/functional-20260913/education/18.webp?v=16999dd9664f",
-        "assets/exploded/functional-20260913/education/19.webp?v=7af156ec033f",
-        "assets/exploded/functional-20260913/education/20.webp?v=6349d5191ce5",
-        "assets/exploded/functional-20260913/education/21.webp?v=34e76416cb54",
-        "assets/exploded/functional-20260913/education/22.webp?v=a4a54dfa8b95",
-        "assets/exploded/functional-20260913/education/23.webp?v=b1ac85e1a41b",
-        "assets/exploded/functional-20260913/education/24.webp?v=86c1bf3e1c8d",
-        "assets/exploded/functional-20260913/education/25.webp?v=c73d4c1825ef",
-        "assets/exploded/functional-20260913/education/26.webp?v=98915e272b23",
-        "assets/exploded/functional-20260913/education/27.webp?v=aabf092ab966",
-        "assets/exploded/functional-20260913/education/28.webp?v=b07795a494df",
-        "assets/exploded/functional-20260913/education/29.webp?v=74f4212d2a31",
-        "assets/exploded/functional-20260913/education/30.webp?v=f10a5bc7fc9e",
-        "assets/exploded/functional-20260913/education/31.webp?v=bdbe7a39b70c",
-        "assets/exploded/functional-20260913/education/32.webp?v=6bb838b5e096",
-        "assets/exploded/functional-20260913/education/33.webp?v=9eb5d97caf46",
-        "assets/exploded/functional-20260913/education/34.webp?v=dbe6b4f5bd23",
-        "assets/exploded/functional-20260913/education/35.webp?v=91e8f5cfbfca",
-        "assets/exploded/functional-20260913/education/36.webp?v=1d5cffc6947e",
-        "assets/exploded/functional-20260913/education/37.webp?v=93f5c2a69a19",
-        "assets/exploded/functional-20260913/education/38.webp?v=8355035e72ca",
-        "assets/exploded/functional-20260913/education/39.webp?v=e65160f8f85a",
-        "assets/exploded/functional-20260913/education/40.webp?v=932f1fe6d418",
-        "assets/exploded/functional-20260913/education/41.webp?v=a351bd9e63b7",
-        "assets/exploded/functional-20260913/education/42.webp?v=f20b5093d7bb",
-        "assets/exploded/functional-20260913/education/43.webp?v=1719d792f808",
-        "assets/exploded/functional-20260913/education/44.webp?v=26eb15016434",
-        "assets/exploded/functional-20260913/education/45.webp?v=a44b2e1ca272",
-        "assets/exploded/functional-20260913/education/46.webp?v=97f24f675670",
-        "assets/exploded/functional-20260913/education/47.webp?v=eb4db5d4413c",
-        "assets/exploded/functional-20260913/education/48.webp?v=099db8df9d0d",
-        "assets/exploded/functional-20260913/education/49.webp?v=e357d5ab840b",
-        "assets/exploded/functional-20260913/education/50.webp?v=9cd4cbe38c8d",
-        "assets/exploded/functional-20260913/education/51.webp?v=6926f2cd8e92",
-        "assets/exploded/functional-20260913/education/52.webp?v=2a880fcae97d",
-        "assets/exploded/functional-20260913/education/53.webp?v=1d748fe4ef0a",
-        "assets/exploded/functional-20260913/education/54.webp?v=18be7f0ace04",
-        "assets/exploded/functional-20260913/education/55.webp?v=b4550c0dfc72",
-        "assets/exploded/functional-20260913/education/56.webp?v=5e5db48e7d71",
-        "assets/exploded/functional-20260913/education/57.webp?v=7dc6c1a59dbe",
-        "assets/exploded/functional-20260913/education/58.webp?v=54cc3e26ca13",
-        "assets/exploded/functional-20260913/education/59.webp?v=4c9f94c35312",
-        "assets/exploded/functional-20260913/education/60.webp?v=a5a4ac58d0a0",
-        "assets/exploded/functional-20260913/education/61.webp?v=9eb46fc583c2",
-        "assets/exploded/functional-20260913/education/62.webp?v=44b0ba3fd2e5",
-        "assets/exploded/functional-20260913/education/63.webp?v=0b62bbf97db0",
-        "assets/exploded/functional-20260913/education/64.webp?v=5476487f260f",
-        "assets/exploded/functional-20260913/education/65.webp?v=0b289cb17282",
-        "assets/exploded/functional-20260913/education/66.webp?v=d22148d2c699",
-        "assets/exploded/functional-20260913/education/67.webp?v=792eaa638363",
-        "assets/exploded/functional-20260913/education/68.webp?v=3bbd6fa82a7f",
-        "assets/exploded/functional-20260913/education/69.webp?v=30b6bfa28ab9",
-        "assets/exploded/functional-20260913/education/70.webp?v=00aa541509a6",
-        "assets/exploded/functional-20260913/education/71.webp?v=4d9a36574557",
-        "assets/exploded/functional-20260913/education/72.webp?v=38942627345b",
-        "assets/exploded/functional-20260913/education/73.webp?v=d2fe29c3d4d8",
-        "assets/exploded/functional-20260913/education/74.webp?v=888f581b2245",
-        "assets/exploded/functional-20260913/education/75.webp?v=278866adb548",
-        "assets/exploded/functional-20260913/education/76.webp?v=5efefe233bc2",
-        "assets/exploded/functional-20260913/education/77.webp?v=9ebaf078cf89",
-        "assets/exploded/functional-20260913/education/78.webp?v=4079b1ab44e4",
-        "assets/exploded/functional-20260913/education/79.webp?v=646572b76482",
-        "assets/exploded/functional-20260913/education/80.webp?v=5998cac1faaf",
-        "assets/exploded/functional-20260913/education/81.webp?v=2fd6277fd6c7",
-        "assets/exploded/functional-20260913/education/82.webp?v=b1612276cc85",
-        "assets/exploded/functional-20260913/education/83.webp?v=d4e5182f997f",
-        "assets/exploded/functional-20260913/education/84.webp?v=86b35ea16560",
-        "assets/exploded/functional-20260913/education/85.webp?v=8938efc7a427",
-        "assets/exploded/functional-20260913/education/86.webp?v=feb111c197e2",
-        "assets/exploded/functional-20260913/education/87.webp?v=f448a975fb6e",
-        "assets/exploded/functional-20260913/education/88.webp?v=a3a29e16af13",
-        "assets/exploded/functional-20260913/education/89.webp?v=90a6a677f64a",
-        "assets/exploded/functional-20260913/education/90.webp?v=297d387388ef",
-        "assets/exploded/functional-20260913/education/91.webp?v=7934795dd199",
-        "assets/exploded/functional-20260913/education/92.webp?v=456deb0058e4",
-        "assets/exploded/functional-20260913/education/93.webp?v=6e21c7fad2c3",
-        "assets/exploded/functional-20260913/education/94.webp?v=988fcc9618a8",
-        "assets/exploded/functional-20260913/education/95.webp?v=ca3526b7408e",
-        "assets/exploded/functional-20260913/education/96.webp?v=afb02e605c30",
-        "assets/exploded/functional-20260913/education/97.webp?v=9ba44bb8c9cd",
-        "assets/exploded/functional-20260913/education/98.webp?v=0761c4f3bdd6",
-        "assets/exploded/functional-20260913/education/99.webp?v=bbf4b41298b8",
-        "assets/exploded/functional-20260913/education/100.webp?v=9d8f334cf06d",
-        "assets/exploded/functional-20260913/education/101.webp?v=823703b98d3a",
-        "assets/exploded/functional-20260913/education/102.webp?v=04bc56387d19",
-        "assets/exploded/functional-20260913/education/103.webp?v=2b23efdf59d9",
-        "assets/exploded/functional-20260913/education/104.webp?v=c15e9426d982",
-        "assets/exploded/functional-20260913/education/105.webp?v=f374d2fbce54",
-        "assets/exploded/functional-20260913/education/106.webp?v=cc27d1e99092",
-        "assets/exploded/functional-20260913/education/107.webp?v=c43eb18d99dd",
-        "assets/exploded/functional-20260913/education/108.webp?v=b9fb9619699f",
-        "assets/exploded/functional-20260913/education/109.webp?v=dddddd5db894",
-        "assets/exploded/functional-20260913/education/110.webp?v=d62358d78e6f",
-        "assets/exploded/functional-20260913/education/111.webp?v=5ee66572dc08",
-        "assets/exploded/functional-20260913/education/112.webp?v=0cfe5f6c11d5",
-        "assets/exploded/functional-20260913/education/113.webp?v=dccb0c94dc75",
-        "assets/exploded/functional-20260913/education/114.webp?v=729d346bcbb3",
-        "assets/exploded/functional-20260913/education/115.webp?v=1fb9e53cfb3f",
-        "assets/exploded/functional-20260913/education/116.webp?v=d51c97f288ae",
-        "assets/exploded/functional-20260913/education/117.webp?v=79e8d484ffb2",
-        "assets/exploded/functional-20260913/education/118.webp?v=53240b1e3dd8",
-        "assets/exploded/functional-20260913/education/119.webp?v=2da3cfb6b61d",
-        "assets/exploded/functional-20260913/education/120.webp?v=2b437cbcad24"
+        "assets/exploded/education-studio-20260914/education/00.webp?v=22a033bdc40f",
+        "assets/exploded/education-studio-20260914/education/01.webp?v=3cf45f1abeac",
+        "assets/exploded/education-studio-20260914/education/02.webp?v=3e83227bf460",
+        "assets/exploded/education-studio-20260914/education/03.webp?v=d713af10247e",
+        "assets/exploded/education-studio-20260914/education/04.webp?v=fc6b40c2ce11",
+        "assets/exploded/education-studio-20260914/education/05.webp?v=5d86d0046664",
+        "assets/exploded/education-studio-20260914/education/06.webp?v=232c9dd9578a",
+        "assets/exploded/education-studio-20260914/education/07.webp?v=a6e5326539cc",
+        "assets/exploded/education-studio-20260914/education/08.webp?v=856afcbcd1b8",
+        "assets/exploded/education-studio-20260914/education/09.webp?v=44759551eb58",
+        "assets/exploded/education-studio-20260914/education/10.webp?v=d61a98d54ff4",
+        "assets/exploded/education-studio-20260914/education/11.webp?v=5abf0b8bd935",
+        "assets/exploded/education-studio-20260914/education/12.webp?v=4501b37bbac3",
+        "assets/exploded/education-studio-20260914/education/13.webp?v=91af39143b86",
+        "assets/exploded/education-studio-20260914/education/14.webp?v=9fc6c1dfacec",
+        "assets/exploded/education-studio-20260914/education/15.webp?v=469389c6db34",
+        "assets/exploded/education-studio-20260914/education/16.webp?v=8b03dd8ad0fd",
+        "assets/exploded/education-studio-20260914/education/17.webp?v=01b96b407956",
+        "assets/exploded/education-studio-20260914/education/18.webp?v=8a748f9a1d37",
+        "assets/exploded/education-studio-20260914/education/19.webp?v=11f896352a2c",
+        "assets/exploded/education-studio-20260914/education/20.webp?v=e160c7d60b98",
+        "assets/exploded/education-studio-20260914/education/21.webp?v=6be8d34108ee",
+        "assets/exploded/education-studio-20260914/education/22.webp?v=fccfde874c46",
+        "assets/exploded/education-studio-20260914/education/23.webp?v=c0a14e4c89ef",
+        "assets/exploded/education-studio-20260914/education/24.webp?v=d7d35c7022e0",
+        "assets/exploded/education-studio-20260914/education/25.webp?v=b943a6cb3eab",
+        "assets/exploded/education-studio-20260914/education/26.webp?v=97d2e34c2ef9",
+        "assets/exploded/education-studio-20260914/education/27.webp?v=33db797d2571",
+        "assets/exploded/education-studio-20260914/education/28.webp?v=67f763c0d007",
+        "assets/exploded/education-studio-20260914/education/29.webp?v=c716594bbaf1",
+        "assets/exploded/education-studio-20260914/education/30.webp?v=4c08bf4c0629",
+        "assets/exploded/education-studio-20260914/education/31.webp?v=f66548cf630d",
+        "assets/exploded/education-studio-20260914/education/32.webp?v=b7cfafc565a5",
+        "assets/exploded/education-studio-20260914/education/33.webp?v=04d7e9f6cac2",
+        "assets/exploded/education-studio-20260914/education/34.webp?v=06fea306819c",
+        "assets/exploded/education-studio-20260914/education/35.webp?v=32cf0c0aecce",
+        "assets/exploded/education-studio-20260914/education/36.webp?v=b4797f08716e",
+        "assets/exploded/education-studio-20260914/education/37.webp?v=052ff3e1c299",
+        "assets/exploded/education-studio-20260914/education/38.webp?v=0b62cef56726",
+        "assets/exploded/education-studio-20260914/education/39.webp?v=d8013d28b737",
+        "assets/exploded/education-studio-20260914/education/40.webp?v=629fd695bbec",
+        "assets/exploded/education-studio-20260914/education/41.webp?v=7de92bdab917",
+        "assets/exploded/education-studio-20260914/education/42.webp?v=5b38eb5c8750",
+        "assets/exploded/education-studio-20260914/education/43.webp?v=fdfb2b64539f",
+        "assets/exploded/education-studio-20260914/education/44.webp?v=58f90b1b521f",
+        "assets/exploded/education-studio-20260914/education/45.webp?v=4e6e8ff2342f",
+        "assets/exploded/education-studio-20260914/education/46.webp?v=7ef4a6c04f53",
+        "assets/exploded/education-studio-20260914/education/47.webp?v=d4aef7cae037",
+        "assets/exploded/education-studio-20260914/education/48.webp?v=1d29ae57fbf9",
+        "assets/exploded/education-studio-20260914/education/49.webp?v=4acc790f7371",
+        "assets/exploded/education-studio-20260914/education/50.webp?v=37e83e54fddd",
+        "assets/exploded/education-studio-20260914/education/51.webp?v=56bc55923135",
+        "assets/exploded/education-studio-20260914/education/52.webp?v=ba616e1febbc",
+        "assets/exploded/education-studio-20260914/education/53.webp?v=753c3e46975c",
+        "assets/exploded/education-studio-20260914/education/54.webp?v=1b97246d9fb7",
+        "assets/exploded/education-studio-20260914/education/55.webp?v=0125060012d1",
+        "assets/exploded/education-studio-20260914/education/56.webp?v=51fe56afb8ca",
+        "assets/exploded/education-studio-20260914/education/57.webp?v=05353af69893",
+        "assets/exploded/education-studio-20260914/education/58.webp?v=c1cd44dfb9fe",
+        "assets/exploded/education-studio-20260914/education/59.webp?v=1f8231cc83ba",
+        "assets/exploded/education-studio-20260914/education/60.webp?v=128b67849f99",
+        "assets/exploded/education-studio-20260914/education/61.webp?v=31fab0e99313",
+        "assets/exploded/education-studio-20260914/education/62.webp?v=2f45393bfd87",
+        "assets/exploded/education-studio-20260914/education/63.webp?v=5e296dfe19dc",
+        "assets/exploded/education-studio-20260914/education/64.webp?v=0844b2b94a02",
+        "assets/exploded/education-studio-20260914/education/65.webp?v=c31fc2afd4ac",
+        "assets/exploded/education-studio-20260914/education/66.webp?v=9b4997880bbd",
+        "assets/exploded/education-studio-20260914/education/67.webp?v=2212cdd1e2b0",
+        "assets/exploded/education-studio-20260914/education/68.webp?v=f6760b1a5f85",
+        "assets/exploded/education-studio-20260914/education/69.webp?v=81870cdad85c",
+        "assets/exploded/education-studio-20260914/education/70.webp?v=6437f2c5bf8b",
+        "assets/exploded/education-studio-20260914/education/71.webp?v=d1950ba420ac",
+        "assets/exploded/education-studio-20260914/education/72.webp?v=f1b8d8ccad53",
+        "assets/exploded/education-studio-20260914/education/73.webp?v=ed092bcf0614",
+        "assets/exploded/education-studio-20260914/education/74.webp?v=3cf1c0958df6",
+        "assets/exploded/education-studio-20260914/education/75.webp?v=10e278a62895",
+        "assets/exploded/education-studio-20260914/education/76.webp?v=9f95fda5bf8c",
+        "assets/exploded/education-studio-20260914/education/77.webp?v=db63d170de38",
+        "assets/exploded/education-studio-20260914/education/78.webp?v=82268840719e",
+        "assets/exploded/education-studio-20260914/education/79.webp?v=18cee1ed5feb",
+        "assets/exploded/education-studio-20260914/education/80.webp?v=9efa0c522ca0",
+        "assets/exploded/education-studio-20260914/education/81.webp?v=82b799c5e2f4",
+        "assets/exploded/education-studio-20260914/education/82.webp?v=97a35b45eea1",
+        "assets/exploded/education-studio-20260914/education/83.webp?v=9d1ea6388bb6",
+        "assets/exploded/education-studio-20260914/education/84.webp?v=2a5c8fafdb66",
+        "assets/exploded/education-studio-20260914/education/85.webp?v=1ded523bb0b8",
+        "assets/exploded/education-studio-20260914/education/86.webp?v=72e299563593",
+        "assets/exploded/education-studio-20260914/education/87.webp?v=965c79c77988",
+        "assets/exploded/education-studio-20260914/education/88.webp?v=51ea49df045e",
+        "assets/exploded/education-studio-20260914/education/89.webp?v=2bb3051c8a75",
+        "assets/exploded/education-studio-20260914/education/90.webp?v=951ee382f721",
+        "assets/exploded/education-studio-20260914/education/91.webp?v=470056fc08e0",
+        "assets/exploded/education-studio-20260914/education/92.webp?v=311b06ffc5c9",
+        "assets/exploded/education-studio-20260914/education/93.webp?v=042329551a9f",
+        "assets/exploded/education-studio-20260914/education/94.webp?v=4a9f10e3b076",
+        "assets/exploded/education-studio-20260914/education/95.webp?v=1e0ba4d4c5de",
+        "assets/exploded/education-studio-20260914/education/96.webp?v=f6732a3d2253",
+        "assets/exploded/education-studio-20260914/education/97.webp?v=93046897b89e",
+        "assets/exploded/education-studio-20260914/education/98.webp?v=a3eacbc8ab84",
+        "assets/exploded/education-studio-20260914/education/99.webp?v=3db39867f561",
+        "assets/exploded/education-studio-20260914/education/100.webp?v=4f1112f1e193",
+        "assets/exploded/education-studio-20260914/education/101.webp?v=bd586011c39d",
+        "assets/exploded/education-studio-20260914/education/102.webp?v=df8b4a60e59b",
+        "assets/exploded/education-studio-20260914/education/103.webp?v=a3a652f7069b",
+        "assets/exploded/education-studio-20260914/education/104.webp?v=89c5e7e1361f",
+        "assets/exploded/education-studio-20260914/education/105.webp?v=4b14a61de64b",
+        "assets/exploded/education-studio-20260914/education/106.webp?v=b5bcf9a6f1ac",
+        "assets/exploded/education-studio-20260914/education/107.webp?v=4c57813c0c4f",
+        "assets/exploded/education-studio-20260914/education/108.webp?v=4adc0d1d4f15",
+        "assets/exploded/education-studio-20260914/education/109.webp?v=8a030155065c",
+        "assets/exploded/education-studio-20260914/education/110.webp?v=84d6ec0beb5a",
+        "assets/exploded/education-studio-20260914/education/111.webp?v=8b0b82cab457",
+        "assets/exploded/education-studio-20260914/education/112.webp?v=e5373d6d9ca3",
+        "assets/exploded/education-studio-20260914/education/113.webp?v=6b993bcf5ced",
+        "assets/exploded/education-studio-20260914/education/114.webp?v=d8eee55f521f",
+        "assets/exploded/education-studio-20260914/education/115.webp?v=b7a3717059c9",
+        "assets/exploded/education-studio-20260914/education/116.webp?v=4d972d6acc96",
+        "assets/exploded/education-studio-20260914/education/117.webp?v=21b5d81e5e4f",
+        "assets/exploded/education-studio-20260914/education/118.webp?v=9e2a99bdf2e3",
+        "assets/exploded/education-studio-20260914/education/119.webp?v=53eec9ac343b",
+        "assets/exploded/education-studio-20260914/education/120.webp?v=8b516919e72a"
       ],
-      "provenance": "assets/exploded/functional-20260913/education/provenance.json",
-      "bytes": 614686,
+      "provenance": "assets/exploded/education-studio-20260914/education/provenance.json",
+      "bytes": 632788,
       "chunks": [
         {
-          "url": "assets/exploded/chunks-20260913/education/000.bin?v=9975e887e23b",
-          "bytes": 21534,
+          "url": "assets/exploded/education-studio-20260914/chunks/education/000.bin?v=08f24fc8e4ce",
+          "bytes": 21504,
           "frames": [
             {
               "index": 0,
               "offset": 0,
-              "length": 5300
+              "length": 5436
             },
             {
               "index": 1,
-              "offset": 5300,
-              "length": 5422
+              "offset": 5436,
+              "length": 5344
             },
             {
               "index": 2,
-              "offset": 10722,
-              "length": 5426
+              "offset": 10780,
+              "length": 5370
             },
             {
               "index": 3,
-              "offset": 16148,
-              "length": 5386
+              "offset": 16150,
+              "length": 5354
             }
           ]
         },
         {
-          "url": "assets/exploded/chunks-20260913/education/001.bin?v=957360dab571",
-          "bytes": 85418,
+          "url": "assets/exploded/education-studio-20260914/chunks/education/001.bin?v=9054401752a9",
+          "bytes": 87518,
           "frames": [
             {
               "index": 4,
               "offset": 0,
-              "length": 5340
+              "length": 5394
             },
             {
               "index": 5,
-              "offset": 5340,
-              "length": 5382
+              "offset": 5394,
+              "length": 5544
             },
             {
               "index": 6,
-              "offset": 10722,
-              "length": 5442
+              "offset": 10938,
+              "length": 5552
             },
             {
               "index": 7,
-              "offset": 16164,
-              "length": 5316
+              "offset": 16490,
+              "length": 5532
             },
             {
               "index": 8,
-              "offset": 21480,
-              "length": 5352
+              "offset": 22022,
+              "length": 5540
             },
             {
               "index": 9,
-              "offset": 26832,
-              "length": 5436
+              "offset": 27562,
+              "length": 5430
             },
             {
               "index": 10,
-              "offset": 32268,
-              "length": 5400
+              "offset": 32992,
+              "length": 5460
             },
             {
               "index": 11,
-              "offset": 37668,
-              "length": 5362
+              "offset": 38452,
+              "length": 5508
             },
             {
               "index": 12,
-              "offset": 43030,
-              "length": 5588
+              "offset": 43960,
+              "length": 5870
             },
             {
               "index": 13,
-              "offset": 48618,
-              "length": 5682
+              "offset": 49830,
+              "length": 5748
             },
             {
               "index": 14,
-              "offset": 54300,
-              "length": 5542
+              "offset": 55578,
+              "length": 5478
             },
             {
               "index": 15,
-              "offset": 59842,
-              "length": 5174
+              "offset": 61056,
+              "length": 5350
             },
             {
               "index": 16,
-              "offset": 65016,
-              "length": 5022
+              "offset": 66406,
+              "length": 5224
             },
             {
               "index": 17,
-              "offset": 70038,
-              "length": 5108
+              "offset": 71630,
+              "length": 5260
             },
             {
               "index": 18,
-              "offset": 75146,
-              "length": 5092
+              "offset": 76890,
+              "length": 5296
             },
             {
               "index": 19,
-              "offset": 80238,
-              "length": 5180
+              "offset": 82186,
+              "length": 5332
             }
           ]
         },
         {
-          "url": "assets/exploded/chunks-20260913/education/002.bin?v=3902cf24a8d5",
-          "bytes": 82682,
+          "url": "assets/exploded/education-studio-20260914/chunks/education/002.bin?v=87fca4843aa6",
+          "bytes": 86094,
           "frames": [
             {
               "index": 20,
               "offset": 0,
-              "length": 5144
+              "length": 5388
             },
             {
               "index": 21,
-              "offset": 5144,
-              "length": 5188
+              "offset": 5388,
+              "length": 5376
             },
             {
               "index": 22,
-              "offset": 10332,
-              "length": 5210
+              "offset": 10764,
+              "length": 5404
             },
             {
               "index": 23,
-              "offset": 15542,
-              "length": 5256
+              "offset": 16168,
+              "length": 5382
             },
             {
               "index": 24,
-              "offset": 20798,
-              "length": 5220
+              "offset": 21550,
+              "length": 5394
             },
             {
               "index": 25,
-              "offset": 26018,
-              "length": 5150
+              "offset": 26944,
+              "length": 5346
             },
             {
               "index": 26,
-              "offset": 31168,
-              "length": 5150
+              "offset": 32290,
+              "length": 5404
             },
             {
               "index": 27,
-              "offset": 36318,
-              "length": 5176
+              "offset": 37694,
+              "length": 5404
             },
             {
               "index": 28,
-              "offset": 41494,
-              "length": 5106
+              "offset": 43098,
+              "length": 5340
             },
             {
               "index": 29,
-              "offset": 46600,
-              "length": 5202
+              "offset": 48438,
+              "length": 5406
             },
             {
               "index": 30,
-              "offset": 51802,
-              "length": 5174
+              "offset": 53844,
+              "length": 5394
             },
             {
               "index": 31,
-              "offset": 56976,
-              "length": 5118
+              "offset": 59238,
+              "length": 5388
             },
             {
               "index": 32,
-              "offset": 62094,
-              "length": 5130
+              "offset": 64626,
+              "length": 5420
             },
             {
               "index": 33,
-              "offset": 67224,
-              "length": 5138
+              "offset": 70046,
+              "length": 5386
             },
             {
               "index": 34,
-              "offset": 72362,
-              "length": 5144
+              "offset": 75432,
+              "length": 5366
             },
             {
               "index": 35,
-              "offset": 77506,
-              "length": 5176
+              "offset": 80798,
+              "length": 5296
             }
           ]
         },
         {
-          "url": "assets/exploded/chunks-20260913/education/003.bin?v=b3c6a899129f",
-          "bytes": 83130,
+          "url": "assets/exploded/education-studio-20260914/chunks/education/003.bin?v=65b13a71e498",
+          "bytes": 85706,
           "frames": [
             {
               "index": 36,
               "offset": 0,
-              "length": 5180
+              "length": 5376
             },
             {
               "index": 37,
-              "offset": 5180,
-              "length": 5172
+              "offset": 5376,
+              "length": 5444
             },
             {
               "index": 38,
-              "offset": 10352,
-              "length": 5166
+              "offset": 10820,
+              "length": 5390
             },
             {
               "index": 39,
-              "offset": 15518,
-              "length": 5126
+              "offset": 16210,
+              "length": 5374
             },
             {
               "index": 40,
-              "offset": 20644,
-              "length": 5122
+              "offset": 21584,
+              "length": 5360
             },
             {
               "index": 41,
-              "offset": 25766,
-              "length": 5090
+              "offset": 26944,
+              "length": 5326
             },
             {
               "index": 42,
-              "offset": 30856,
-              "length": 5090
+              "offset": 32270,
+              "length": 5318
             },
             {
               "index": 43,
-              "offset": 35946,
-              "length": 5094
+              "offset": 37588,
+              "length": 5238
             },
             {
               "index": 44,
-              "offset": 41040,
-              "length": 5078
+              "offset": 42826,
+              "length": 5236
             },
             {
               "index": 45,
-              "offset": 46118,
-              "length": 5116
+              "offset": 48062,
+              "length": 5182
             },
             {
               "index": 46,
-              "offset": 51234,
-              "length": 5200
+              "offset": 53244,
+              "length": 5392
             },
             {
               "index": 47,
-              "offset": 56434,
-              "length": 5316
+              "offset": 58636,
+              "length": 5532
             },
             {
               "index": 48,
-              "offset": 61750,
-              "length": 5200
+              "offset": 64168,
+              "length": 5378
             },
             {
               "index": 49,
-              "offset": 66950,
-              "length": 5486
+              "offset": 69546,
+              "length": 5402
             },
             {
               "index": 50,
-              "offset": 72436,
-              "length": 5298
+              "offset": 74948,
+              "length": 5368
             },
             {
               "index": 51,
-              "offset": 77734,
-              "length": 5396
+              "offset": 80316,
+              "length": 5390
             }
           ]
         },
         {
-          "url": "assets/exploded/chunks-20260913/education/004.bin?v=97278dca4e59",
-          "bytes": 82400,
+          "url": "assets/exploded/education-studio-20260914/chunks/education/004.bin?v=5f0ce0efb5db",
+          "bytes": 85888,
           "frames": [
             {
               "index": 52,
               "offset": 0,
-              "length": 5318
+              "length": 5364
             },
             {
               "index": 53,
-              "offset": 5318,
-              "length": 5118
+              "offset": 5364,
+              "length": 5336
             },
             {
               "index": 54,
-              "offset": 10436,
-              "length": 5146
+              "offset": 10700,
+              "length": 5346
             },
             {
               "index": 55,
-              "offset": 15582,
-              "length": 5156
+              "offset": 16046,
+              "length": 5320
             },
             {
               "index": 56,
-              "offset": 20738,
-              "length": 5114
+              "offset": 21366,
+              "length": 5350
             },
             {
               "index": 57,
-              "offset": 25852,
-              "length": 5122
+              "offset": 26716,
+              "length": 5348
             },
             {
               "index": 58,
-              "offset": 30974,
-              "length": 5124
+              "offset": 32064,
+              "length": 5382
             },
             {
               "index": 59,
-              "offset": 36098,
-              "length": 5140
+              "offset": 37446,
+              "length": 5318
             },
             {
               "index": 60,
-              "offset": 41238,
-              "length": 5148
+              "offset": 42764,
+              "length": 5346
             },
             {
               "index": 61,
-              "offset": 46386,
-              "length": 5182
+              "offset": 48110,
+              "length": 5408
             },
             {
               "index": 62,
-              "offset": 51568,
-              "length": 5176
+              "offset": 53518,
+              "length": 5432
             },
             {
               "index": 63,
-              "offset": 56744,
-              "length": 5202
+              "offset": 58950,
+              "length": 5460
             },
             {
               "index": 64,
-              "offset": 61946,
-              "length": 5194
+              "offset": 64410,
+              "length": 5386
             },
             {
               "index": 65,
-              "offset": 67140,
-              "length": 5146
+              "offset": 69796,
+              "length": 5400
             },
             {
               "index": 66,
-              "offset": 72286,
-              "length": 5092
+              "offset": 75196,
+              "length": 5374
             },
             {
               "index": 67,
-              "offset": 77378,
-              "length": 5022
+              "offset": 80570,
+              "length": 5318
             }
           ]
         },
         {
-          "url": "assets/exploded/chunks-20260913/education/005.bin?v=5ca2e56bd8e9",
-          "bytes": 80238,
+          "url": "assets/exploded/education-studio-20260914/chunks/education/005.bin?v=6c1bd0c05b67",
+          "bytes": 83846,
           "frames": [
             {
               "index": 68,
               "offset": 0,
-              "length": 5050
+              "length": 5320
             },
             {
               "index": 69,
-              "offset": 5050,
-              "length": 5026
+              "offset": 5320,
+              "length": 5298
             },
             {
               "index": 70,
-              "offset": 10076,
-              "length": 5002
+              "offset": 10618,
+              "length": 5310
             },
             {
               "index": 71,
-              "offset": 15078,
-              "length": 5040
+              "offset": 15928,
+              "length": 5252
             },
             {
               "index": 72,
-              "offset": 20118,
-              "length": 4980
+              "offset": 21180,
+              "length": 5240
             },
             {
               "index": 73,
-              "offset": 25098,
-              "length": 5060
+              "offset": 26420,
+              "length": 5234
             },
             {
               "index": 74,
-              "offset": 30158,
-              "length": 5060
+              "offset": 31654,
+              "length": 5240
             },
             {
               "index": 75,
-              "offset": 35218,
-              "length": 5010
+              "offset": 36894,
+              "length": 5262
             },
             {
               "index": 76,
-              "offset": 40228,
-              "length": 5066
+              "offset": 42156,
+              "length": 5268
             },
             {
               "index": 77,
-              "offset": 45294,
-              "length": 5006
+              "offset": 47424,
+              "length": 5234
             },
             {
               "index": 78,
-              "offset": 50300,
-              "length": 5076
+              "offset": 52658,
+              "length": 5212
             },
             {
               "index": 79,
-              "offset": 55376,
-              "length": 4988
+              "offset": 57870,
+              "length": 5230
             },
             {
               "index": 80,
-              "offset": 60364,
-              "length": 4988
+              "offset": 63100,
+              "length": 5180
             },
             {
               "index": 81,
-              "offset": 65352,
-              "length": 4996
+              "offset": 68280,
+              "length": 5236
             },
             {
               "index": 82,
-              "offset": 70348,
-              "length": 4896
+              "offset": 73516,
+              "length": 5144
             },
             {
               "index": 83,
-              "offset": 75244,
-              "length": 4994
+              "offset": 78660,
+              "length": 5186
             }
           ]
         },
         {
-          "url": "assets/exploded/chunks-20260913/education/006.bin?v=ed56d1cc2da2",
-          "bytes": 80204,
+          "url": "assets/exploded/education-studio-20260914/chunks/education/006.bin?v=77806d0f337f",
+          "bytes": 82286,
           "frames": [
             {
               "index": 84,
               "offset": 0,
-              "length": 4998
+              "length": 5134
             },
             {
               "index": 85,
-              "offset": 4998,
-              "length": 4972
+              "offset": 5134,
+              "length": 5080
             },
             {
               "index": 86,
-              "offset": 9970,
-              "length": 4918
+              "offset": 10214,
+              "length": 5030
             },
             {
               "index": 87,
-              "offset": 14888,
-              "length": 4930
+              "offset": 15244,
+              "length": 5038
             },
             {
               "index": 88,
-              "offset": 19818,
-              "length": 4896
+              "offset": 20282,
+              "length": 5144
             },
             {
               "index": 89,
-              "offset": 24714,
-              "length": 5162
+              "offset": 25426,
+              "length": 5260
             },
             {
               "index": 90,
-              "offset": 29876,
-              "length": 5108
+              "offset": 30686,
+              "length": 5304
             },
             {
               "index": 91,
-              "offset": 34984,
-              "length": 5160
+              "offset": 35990,
+              "length": 5324
             },
             {
               "index": 92,
-              "offset": 40144,
-              "length": 5092
+              "offset": 41314,
+              "length": 5264
             },
             {
               "index": 93,
-              "offset": 45236,
-              "length": 5106
+              "offset": 46578,
+              "length": 5318
             },
             {
               "index": 94,
-              "offset": 50342,
-              "length": 5168
+              "offset": 51896,
+              "length": 5286
             },
             {
               "index": 95,
-              "offset": 55510,
-              "length": 5052
+              "offset": 57182,
+              "length": 5216
             },
             {
               "index": 96,
-              "offset": 60562,
-              "length": 5064
+              "offset": 62398,
+              "length": 5128
             },
             {
               "index": 97,
-              "offset": 65626,
-              "length": 4858
+              "offset": 67526,
+              "length": 4964
             },
             {
               "index": 98,
-              "offset": 70484,
-              "length": 4872
+              "offset": 72490,
+              "length": 4878
             },
             {
               "index": 99,
-              "offset": 75356,
-              "length": 4848
+              "offset": 77368,
+              "length": 4918
             }
           ]
         },
         {
-          "url": "assets/exploded/chunks-20260913/education/007.bin?v=c415a0bb273a",
-          "bytes": 75788,
+          "url": "assets/exploded/education-studio-20260914/chunks/education/007.bin?v=4efc32e17c05",
+          "bytes": 76926,
           "frames": [
             {
               "index": 100,
               "offset": 0,
-              "length": 4788
+              "length": 4852
             },
             {
               "index": 101,
-              "offset": 4788,
-              "length": 4742
+              "offset": 4852,
+              "length": 4840
             },
             {
               "index": 102,
-              "offset": 9530,
-              "length": 4776
+              "offset": 9692,
+              "length": 4856
             },
             {
               "index": 103,
-              "offset": 14306,
-              "length": 4674
+              "offset": 14548,
+              "length": 4840
             },
             {
               "index": 104,
-              "offset": 18980,
-              "length": 4760
+              "offset": 19388,
+              "length": 4820
             },
             {
               "index": 105,
-              "offset": 23740,
-              "length": 4770
+              "offset": 24208,
+              "length": 4832
             },
             {
               "index": 106,
-              "offset": 28510,
-              "length": 4744
+              "offset": 29040,
+              "length": 4766
             },
             {
               "index": 107,
-              "offset": 33254,
-              "length": 4744
+              "offset": 33806,
+              "length": 4868
             },
             {
               "index": 108,
-              "offset": 37998,
-              "length": 4724
+              "offset": 38674,
+              "length": 4858
             },
             {
               "index": 109,
-              "offset": 42722,
-              "length": 4788
+              "offset": 43532,
+              "length": 4866
             },
             {
               "index": 110,
-              "offset": 47510,
-              "length": 4750
+              "offset": 48398,
+              "length": 4816
             },
             {
               "index": 111,
-              "offset": 52260,
-              "length": 4780
+              "offset": 53214,
+              "length": 4824
             },
             {
               "index": 112,
-              "offset": 57040,
-              "length": 4838
+              "offset": 58038,
+              "length": 4836
             },
             {
               "index": 113,
-              "offset": 61878,
-              "length": 4718
+              "offset": 62874,
+              "length": 4790
             },
             {
               "index": 114,
-              "offset": 66596,
-              "length": 4652
+              "offset": 67664,
+              "length": 4690
             },
             {
               "index": 115,
-              "offset": 71248,
-              "length": 4540
+              "offset": 72354,
+              "length": 4572
             }
           ]
         },
         {
-          "url": "assets/exploded/chunks-20260913/education/008.bin?v=47c4c8e2d1b2",
-          "bytes": 23292,
+          "url": "assets/exploded/education-studio-20260914/chunks/education/008.bin?v=13e50ed96ca6",
+          "bytes": 23020,
           "frames": [
             {
               "index": 116,
               "offset": 0,
-              "length": 4622
+              "length": 4696
             },
             {
               "index": 117,
-              "offset": 4622,
-              "length": 4690
+              "offset": 4696,
+              "length": 4518
             },
             {
               "index": 118,
-              "offset": 9312,
-              "length": 4688
+              "offset": 9214,
+              "length": 4550
             },
             {
               "index": 119,
-              "offset": 14000,
-              "length": 4634
+              "offset": 13764,
+              "length": 4614
             },
             {
               "index": 120,
-              "offset": 18634,
-              "length": 4658
+              "offset": 18378,
+              "length": 4642
             }
           ]
         }
       ],
-      "chunkBytes": 614686,
+      "chunkBytes": 632788,
       "chunkVersion": 1
     },
     "ftc": {
@@ -13396,7 +13396,7 @@
     "projectCount": 16,
     "frameCount": 2032,
     "chunkCount": 159,
-    "bytes": 24347588,
+    "bytes": 24365690,
     "contentByteOverhead": 0
   }
 }
