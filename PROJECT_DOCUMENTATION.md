@@ -1,5 +1,30 @@
 # Portfolio Website Project Documentation
 
+## Shared neutral backgrounds and conforming carbon layup · 2026-09-15
+
+The current presentation revision is `neutral-20260915`, based on published
+`c8afec3956948f93ea1a9d3c1620f881c448c660`. This section supersedes historical
+instructions to use the Education-only studio and retain 15 older homepage packs.
+All 16 cover sets and both animation catalogs now use one neutral #191919
+background, white studio lighting and native alpha composition. Actual model
+colors are retained; blue background spotlights are removed.
+
+Carbon cloth settles into the fixed source shell instead of accumulating offset
+shells. Completed stages and the final pose preserve its original geometry.
+The animation remains illustrative: confirmed fabrication is EL2 resin, 20 main
+plies of 3K 200 g/m² twill and 5–10 local reinforcing plies.
+
+The home catalog remains 640×427 and the detail catalog native 1280×854, with
+2,032 frame positions in each. Cover variants remain 480/960/1800 pixels. Initial
+cover/animation poses match. The existing streaming loader, layout and memory
+budgets are unchanged. All confirmed engineering facts, 79 supplemental fields,
+35 Javelin BOM rows and 94 gallery references are preserved.
+
+Use [NEUTRAL_STUDIO.md](NEUTRAL_STUDIO.md) and the new neutral render/pack tools
+for current assets. Old renderers remain historical reproduction tools. Evidence:
+`../.codex/neutral-studio-20260915/`. Exact release, checked backup and online
+status: `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-15-neutral-studio/release-metadata.json`.
+
 ## Native detail animations and consistent Education studio · 2026-09-13
 
 The current presentation revision is `detail-resolution-20260914`, based on

@@ -6,6 +6,8 @@ if __name__ == '__main__':
     from pathlib import Path as _Path
     _site = _Path(__file__).resolve().parents[2]
     _detail = _site / 'assets/exploded/manifest-detail.json'
+    if _detail.is_file() and _json.loads(_detail.read_text(encoding='utf-8')).get('revision') == 'neutral-20260915':
+        raise SystemExit(_subprocess.call([_sys.executable, '-X', 'utf8', str(_site / 'tools/exploded-render/validate_neutral.py'), *_sys.argv[1:]]))
     if _detail.is_file() and _json.loads(_detail.read_text(encoding='utf-8')).get('revision') == 'detail-resolution-20260914':
         raise SystemExit(_subprocess.call([_sys.executable, '-X', 'utf8', str(_site / 'tools/exploded-render/validate_detail.py'), *_sys.argv[1:]]))
     if (_site / 'assets/editorial/animation-covers.json').is_file():

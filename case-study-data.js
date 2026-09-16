@@ -10,11 +10,11 @@ window.caseStudyData = {
     deck: 'From kinematics to installed hardware.',
     description: 'A closer wheel. A lighter column. A steering path designed around the driver—and built by hand.',
     "cover": {
-      "src": "assets/editorial/animation-start-20260913/steering-wide-1800.webp?v=703f3e188422",
+      "src": "assets/editorial/neutral-20260915/steering-wide-1800.webp?v=1dc33b0efc43",
       "alt": "Steering wheel, column, universal joints and rack in their neutral position.",
       "caption": "The steering assembly, from rack to wheel.",
       "kind": "Project CAD render",
-      "srcset": "assets/editorial/animation-start-20260913/steering-wide-480.webp?v=029d82ebf7ef 480w, assets/editorial/animation-start-20260913/steering-wide-960.webp?v=9309aad28424 960w, assets/editorial/animation-start-20260913/steering-wide-1800.webp?v=703f3e188422 1800w",
+      "srcset": "assets/editorial/neutral-20260915/steering-wide-480.webp?v=6db6807f9bf0 480w, assets/editorial/neutral-20260915/steering-wide-960.webp?v=14b1d151b82a 960w, assets/editorial/neutral-20260915/steering-wide-1800.webp?v=1dc33b0efc43 1800w",
       "width": 1800,
       "height": 1200
     },
@@ -71,11 +71,11 @@ window.caseStudyData = {
     deck: 'Build. Test. Reinforce.',
     description: 'An eversion platform that turns soft-robot geometry into repeatable experiments.',
     "cover": {
-      "src": "assets/editorial/animation-start-20260913/vineRobot-wide-1800.webp?v=67b6707786d5",
+      "src": "assets/editorial/neutral-20260915/vineRobot-wide-1800.webp?v=883f0f7423bf",
       "alt": "Vine robot pressure vessel with its translucent tube retracted.",
       "caption": "The eversion platform and its reinforcement.",
       "kind": "Project CAD render",
-      "srcset": "assets/editorial/animation-start-20260913/vineRobot-wide-480.webp?v=14efea96c9ef 480w, assets/editorial/animation-start-20260913/vineRobot-wide-960.webp?v=c5c0b88ca117 960w, assets/editorial/animation-start-20260913/vineRobot-wide-1800.webp?v=67b6707786d5 1800w",
+      "srcset": "assets/editorial/neutral-20260915/vineRobot-wide-480.webp?v=6e95ec264865 480w, assets/editorial/neutral-20260915/vineRobot-wide-960.webp?v=ad5c38b9ce84 960w, assets/editorial/neutral-20260915/vineRobot-wide-1800.webp?v=883f0f7423bf 1800w",
       "width": 1800,
       "height": 1200
     },
@@ -131,11 +131,11 @@ window.caseStudyData = {
     "deck": "A fast-airframe target. A harder control problem.",
     "description": "A four-motor tail-sitter designed around a 300 km/h target, with attitude control assigned entirely to differential thrust.",
     "cover": {
-      "src": "assets/editorial/animation-start-20260913/javelin-wide-1800.webp?v=e1d8086f8ff4",
+      "src": "assets/editorial/neutral-20260915/javelin-wide-1800.webp?v=0a01908c1725",
       "alt": "Javelin airframe suspended above the studio floor with four propellers.",
       "caption": "The Javelin airframe, four motors, and high-speed packaging.",
       "kind": "Project CAD render",
-      "srcset": "assets/editorial/animation-start-20260913/javelin-wide-480.webp?v=db45904bbee0 480w, assets/editorial/animation-start-20260913/javelin-wide-960.webp?v=5b2dcec64850 960w, assets/editorial/animation-start-20260913/javelin-wide-1800.webp?v=e1d8086f8ff4 1800w",
+      "srcset": "assets/editorial/neutral-20260915/javelin-wide-480.webp?v=115fac6ef051 480w, assets/editorial/neutral-20260915/javelin-wide-960.webp?v=5e4ed14637b7 960w, assets/editorial/neutral-20260915/javelin-wide-1800.webp?v=0a01908c1725 1800w",
       "width": 1800,
       "height": 1200
     },
@@ -213,11 +213,11 @@ window.caseStudyData = {
     deck: 'Turn motion into measured geometry.',
     description: 'A one-week build connecting repeatable gantry motion with calibrated distance data.',
     "cover": {
-      "src": "assets/editorial/animation-start-20260913/scanner-wide-1800.webp?v=81c8b13c8e74",
+      "src": "assets/editorial/neutral-20260915/scanner-wide-1800.webp?v=ffd3ab3e99cd",
       "alt": "LiDAR scanner with blue printed mounts, guide rods and a plywood base.",
       "caption": "A Cartesian gantry for repeatable sensor positioning.",
       "kind": "Project CAD render",
-      "srcset": "assets/editorial/animation-start-20260913/scanner-wide-480.webp?v=745b117370b1 480w, assets/editorial/animation-start-20260913/scanner-wide-960.webp?v=029010cbc8c0 960w, assets/editorial/animation-start-20260913/scanner-wide-1800.webp?v=81c8b13c8e74 1800w",
+      "srcset": "assets/editorial/neutral-20260915/scanner-wide-480.webp?v=0ac2fcfffca5 480w, assets/editorial/neutral-20260915/scanner-wide-960.webp?v=d6ba17ad1cb8 960w, assets/editorial/neutral-20260915/scanner-wide-1800.webp?v=ffd3ab3e99cd 1800w",
       "width": 1800,
       "height": 1200
     },
@@ -273,11 +273,11 @@ window.caseStudyData = {
     "deck": "Remove mass without ignoring heat soak.",
     "description": "A track-based sizing study that connects endurance braking, rotor cooling, and structural checks.",
     "cover": {
-      "src": "assets/editorial/animation-start-20260913/brakeSim-wide-1800.webp?v=3a64d74549f9",
+      "src": "assets/editorial/neutral-20260915/brakeSim-wide-1800.webp?v=261a7772793d",
       "alt": "Perforated cast-iron brake rotor before heating.",
       "caption": "The brake rotor represented in the thermal and structural study.",
       "kind": "Project CAD render",
-      "srcset": "assets/editorial/animation-start-20260913/brakeSim-wide-480.webp?v=7f8140ac58d4 480w, assets/editorial/animation-start-20260913/brakeSim-wide-960.webp?v=6f4f3c1e9704 960w, assets/editorial/animation-start-20260913/brakeSim-wide-1800.webp?v=3a64d74549f9 1800w",
+      "srcset": "assets/editorial/neutral-20260915/brakeSim-wide-480.webp?v=e231b920e798 480w, assets/editorial/neutral-20260915/brakeSim-wide-960.webp?v=ea2678e77ff1 960w, assets/editorial/neutral-20260915/brakeSim-wide-1800.webp?v=261a7772793d 1800w",
       "width": 1800,
       "height": 1200
     },
@@ -355,11 +355,11 @@ window.caseStudyData = {
     "deck": "Drive and steer through the same wheel.",
     "description": "Two front modules that package steering torque, drive reduction, bearings, and fabricated mounts around a heavy payload.",
     "cover": {
-      "src": "assets/editorial/animation-start-20260913/aura-wide-1800.webp?v=c836c58c0436",
+      "src": "assets/editorial/neutral-20260915/aura-wide-1800.webp?v=6033855dcc5f",
       "alt": "Assembled AURA swerve module with its wheel, motors and metal structure.",
       "caption": "The AURA front-wheel swerve assembly and its drive and steering hardware.",
       "kind": "Project CAD render",
-      "srcset": "assets/editorial/animation-start-20260913/aura-wide-480.webp?v=f721eee5c5f7 480w, assets/editorial/animation-start-20260913/aura-wide-960.webp?v=14eafcd84535 960w, assets/editorial/animation-start-20260913/aura-wide-1800.webp?v=c836c58c0436 1800w",
+      "srcset": "assets/editorial/neutral-20260915/aura-wide-480.webp?v=e0be22136f68 480w, assets/editorial/neutral-20260915/aura-wide-960.webp?v=18b57246c239 960w, assets/editorial/neutral-20260915/aura-wide-1800.webp?v=6033855dcc5f 1800w",
       "width": 1800,
       "height": 1200
     },
@@ -436,11 +436,11 @@ window.caseStudyData = {
     "deck": "Support the driver. Leave room to repair.",
     "description": "A laid-up cockpit shell shaped around lateral support, practical manufacturing, and race-weekend access.",
     "cover": {
-      "src": "assets/editorial/animation-start-20260913/carbonSeat-wide-1800.webp?v=e55168f5b204",
+      "src": "assets/editorial/neutral-20260915/carbonSeat-wide-1800.webp?v=9947d45e1ef7",
       "alt": "Carbon-fiber seat layup at the beginning of the fabrication sequence.",
       "caption": "The carbon-fiber shoulder and hip-support shell.",
       "kind": "Project CAD render",
-      "srcset": "assets/editorial/animation-start-20260913/carbonSeat-wide-480.webp?v=b4d0ed782e04 480w, assets/editorial/animation-start-20260913/carbonSeat-wide-960.webp?v=4ce57e1ee13b 960w, assets/editorial/animation-start-20260913/carbonSeat-wide-1800.webp?v=e55168f5b204 1800w",
+      "srcset": "assets/editorial/neutral-20260915/carbonSeat-wide-480.webp?v=79b769fb52aa 480w, assets/editorial/neutral-20260915/carbonSeat-wide-960.webp?v=0326964b222e 960w, assets/editorial/neutral-20260915/carbonSeat-wide-1800.webp?v=9947d45e1ef7 1800w",
       "width": 1800,
       "height": 1200
     },
@@ -518,11 +518,11 @@ window.caseStudyData = {
     "deck": "From sheet geometry to the cockpit.",
     "description": "Making the aluminum driver seat for the Mk.7 Formula SAE car.",
     "cover": {
-      "src": "assets/editorial/animation-start-20260913/seat-wide-1800.webp?v=b7141b451e94",
+      "src": "assets/editorial/neutral-20260915/seat-wide-1800.webp?v=ad9330bcc20e",
       "alt": "Folded and perforated aluminum driver seat.",
       "caption": "The Mk.7 driver-seat geometry.",
       "kind": "Project CAD render",
-      "srcset": "assets/editorial/animation-start-20260913/seat-wide-480.webp?v=51a70042cd0e 480w, assets/editorial/animation-start-20260913/seat-wide-960.webp?v=4ad9afc13786 960w, assets/editorial/animation-start-20260913/seat-wide-1800.webp?v=b7141b451e94 1800w",
+      "srcset": "assets/editorial/neutral-20260915/seat-wide-480.webp?v=d59c63530faf 480w, assets/editorial/neutral-20260915/seat-wide-960.webp?v=808ba2b7e914 960w, assets/editorial/neutral-20260915/seat-wide-1800.webp?v=ad9330bcc20e 1800w",
       "width": 1800,
       "height": 1200
     },
@@ -599,11 +599,11 @@ window.caseStudyData = {
     "deck": "Measure the inputs the model depends on.",
     "description": "Tension and bending experiments connecting vine materials to an orthotropic membrane model and rod stiffness.",
     "cover": {
-      "src": "assets/editorial/animation-start-20260913/materialTest-wide-1800.webp?v=ae3f78031cc9",
+      "src": "assets/editorial/neutral-20260915/materialTest-wide-1800.webp?v=068925b08a8d",
       "alt": "Orange tensile specimen held between silver grips before stretching.",
       "caption": "The tensile-testing apparatus used to illustrate specimen loading.",
       "kind": "Display reconstruction",
-      "srcset": "assets/editorial/animation-start-20260913/materialTest-wide-480.webp?v=fc175327fb3d 480w, assets/editorial/animation-start-20260913/materialTest-wide-960.webp?v=ddf2eb275716 960w, assets/editorial/animation-start-20260913/materialTest-wide-1800.webp?v=ae3f78031cc9 1800w",
+      "srcset": "assets/editorial/neutral-20260915/materialTest-wide-480.webp?v=4f1b6bd5723c 480w, assets/editorial/neutral-20260915/materialTest-wide-960.webp?v=19302d4e4b56 960w, assets/editorial/neutral-20260915/materialTest-wide-1800.webp?v=068925b08a8d 1800w",
       "width": 1800,
       "height": 1200
     },
@@ -682,11 +682,11 @@ window.caseStudyData = {
     "deck": "Make a simulation workflow reviewable.",
     "description": "A teaching package built from an agent-run cruise case, including the failures, recovery steps, and credibility gates.",
     "cover": {
-      "src": "assets/editorial/animation-start-20260913/ansysCfd-wide-1800.webp?v=79560302c1eb",
+      "src": "assets/editorial/neutral-20260915/ansysCfd-wide-1800.webp?v=4939c9fb3c04",
       "alt": "Javelin pressure field and numerical flow paths at the beginning of the flow sequence.",
       "caption": "Qualitative pressure and flow visualization around the Javelin airframe.",
       "kind": "Numerical field visualization",
-      "srcset": "assets/editorial/animation-start-20260913/ansysCfd-wide-480.webp?v=c1cb16c29c38 480w, assets/editorial/animation-start-20260913/ansysCfd-wide-960.webp?v=d40a994e3edf 960w, assets/editorial/animation-start-20260913/ansysCfd-wide-1800.webp?v=79560302c1eb 1800w",
+      "srcset": "assets/editorial/neutral-20260915/ansysCfd-wide-480.webp?v=f4355c0a3fd6 480w, assets/editorial/neutral-20260915/ansysCfd-wide-960.webp?v=d8e7f9aab982 960w, assets/editorial/neutral-20260915/ansysCfd-wide-1800.webp?v=4939c9fb3c04 1800w",
       "width": 1800,
       "height": 1200
     },
@@ -770,11 +770,11 @@ window.caseStudyData = {
     "deck": "Give the user control of aim and force.",
     "description": "A cue launcher combining laser alignment, stored elastic energy, and adjustable mechanical release.",
     "cover": {
-      "src": "assets/editorial/animation-start-20260913/pool-wide-1800.webp?v=9e21238a7a7a",
+      "src": "assets/editorial/neutral-20260915/pool-wide-1800.webp?v=0e639426ec12",
       "alt": "Pool Sniper launcher with its cue extended before retraction.",
       "caption": "The Pool Sniper cue launcher and pullback mechanism.",
       "kind": "Project CAD render",
-      "srcset": "assets/editorial/animation-start-20260913/pool-wide-480.webp?v=21df1f6ee5c4 480w, assets/editorial/animation-start-20260913/pool-wide-960.webp?v=d14d1960a595 960w, assets/editorial/animation-start-20260913/pool-wide-1800.webp?v=9e21238a7a7a 1800w",
+      "srcset": "assets/editorial/neutral-20260915/pool-wide-480.webp?v=600b76931736 480w, assets/editorial/neutral-20260915/pool-wide-960.webp?v=59971dff9b28 960w, assets/editorial/neutral-20260915/pool-wide-1800.webp?v=0e639426ec12 1800w",
       "width": 1800,
       "height": 1200
     },
@@ -852,11 +852,11 @@ window.caseStudyData = {
     "deck": "Make a small package easy to debug.",
     "description": "A two-week robot build combining sensing, differential drive, and dense but accessible wiring.",
     "cover": {
-      "src": "assets/editorial/animation-start-20260913/lineFollower-wide-1800.webp?v=a854f61a252d",
+      "src": "assets/editorial/neutral-20260915/lineFollower-wide-1800.webp?v=245156d8b639",
       "alt": "Line-following robot with orange wheels and a teal circuit board.",
       "caption": "The compact two-wheel LineFollower with its controller and front sensing.",
       "kind": "Project CAD render",
-      "srcset": "assets/editorial/animation-start-20260913/lineFollower-wide-480.webp?v=9ecb1d9656e5 480w, assets/editorial/animation-start-20260913/lineFollower-wide-960.webp?v=f3d10acdf1f9 960w, assets/editorial/animation-start-20260913/lineFollower-wide-1800.webp?v=a854f61a252d 1800w",
+      "srcset": "assets/editorial/neutral-20260915/lineFollower-wide-480.webp?v=e22c538f6809 480w, assets/editorial/neutral-20260915/lineFollower-wide-960.webp?v=ca5b7d605a88 960w, assets/editorial/neutral-20260915/lineFollower-wide-1800.webp?v=245156d8b639 1800w",
       "width": 1800,
       "height": 1200
     },
@@ -933,11 +933,11 @@ window.caseStudyData = {
     "deck": "Build the motion in two and a half days.",
     "description": "Gantry and dispensing actuators for a perfume-mixing prototype built around six fragrance bases.",
     "cover": {
-      "src": "assets/editorial/animation-start-20260913/formlabs-wide-1800.webp?v=641ab2c47949",
+      "src": "assets/editorial/neutral-20260915/formlabs-wide-1800.webp?v=8ee38bc86fde",
       "alt": "Smelly perfume mixer with its white structure and steel guide rods.",
       "caption": "The Smelly gantry and dispensing hardware.",
       "kind": "Project CAD render",
-      "srcset": "assets/editorial/animation-start-20260913/formlabs-wide-480.webp?v=2078d7cb0a6b 480w, assets/editorial/animation-start-20260913/formlabs-wide-960.webp?v=867ce147dd15 960w, assets/editorial/animation-start-20260913/formlabs-wide-1800.webp?v=641ab2c47949 1800w",
+      "srcset": "assets/editorial/neutral-20260915/formlabs-wide-480.webp?v=1e2e276204d5 480w, assets/editorial/neutral-20260915/formlabs-wide-960.webp?v=e0b45afb0739 960w, assets/editorial/neutral-20260915/formlabs-wide-1800.webp?v=8ee38bc86fde 1800w",
       "width": 1800,
       "height": 1200
     },
@@ -1014,11 +1014,11 @@ window.caseStudyData = {
     "deck": "Take the body from blank to playable.",
     "description": "Material preparation, CNC routing, drilling fixtures, finishing, and electronics connected in one instrument build.",
     "cover": {
-      "src": "assets/editorial/animation-start-20260913/telecaster-wide-1800.webp?v=8070d2fb8672",
+      "src": "assets/editorial/neutral-20260915/telecaster-wide-1800.webp?v=878b56f5406b",
       "alt": "Finished Telecaster-style guitar at the start of its full rotation.",
       "caption": "The finished Telecaster-style guitar and its body hardware.",
       "kind": "Project CAD render",
-      "srcset": "assets/editorial/animation-start-20260913/telecaster-wide-480.webp?v=6387951b4ea8 480w, assets/editorial/animation-start-20260913/telecaster-wide-960.webp?v=06a4a7e77290 960w, assets/editorial/animation-start-20260913/telecaster-wide-1800.webp?v=8070d2fb8672 1800w",
+      "srcset": "assets/editorial/neutral-20260915/telecaster-wide-480.webp?v=f3f6071661ee 480w, assets/editorial/neutral-20260915/telecaster-wide-960.webp?v=9b8c76bead9c 960w, assets/editorial/neutral-20260915/telecaster-wide-1800.webp?v=878b56f5406b 1800w",
       "width": 1800,
       "height": 1200
     },
@@ -1096,11 +1096,11 @@ window.caseStudyData = {
     "deck": "Make the build part of the lesson.",
     "description": "A guitar kit shaped by assembly experiments with students, parents, teachers, and community educators.",
     "cover": {
-      "src": "assets/editorial/education-studio-20260914/education-wide-1800.webp?v=76cc945f8d76",
+      "src": "assets/editorial/neutral-20260915/education-wide-1800.webp?v=b73dd2720c2e",
       "alt": "Separated guitar education kit before assembly.",
       "caption": "The guitar education kit in its separated starting layout.",
       "kind": "Project CAD render",
-      "srcset": "assets/editorial/education-studio-20260914/education-wide-480.webp?v=8088a519b0e6 480w, assets/editorial/education-studio-20260914/education-wide-960.webp?v=4ed350740b13 960w, assets/editorial/education-studio-20260914/education-wide-1800.webp?v=76cc945f8d76 1800w",
+      "srcset": "assets/editorial/neutral-20260915/education-wide-480.webp?v=da4195e24743 480w, assets/editorial/neutral-20260915/education-wide-960.webp?v=750b95301d9b 960w, assets/editorial/neutral-20260915/education-wide-1800.webp?v=b73dd2720c2e 1800w",
       "width": 1800,
       "height": 1200
     },
@@ -1178,11 +1178,11 @@ window.caseStudyData = {
     "deck": "Make the whole scoring cycle repeatable.",
     "description": "Intake, transfer, lift, deposit, and field movement integrated for the 2022–2023 cone game.",
     "cover": {
-      "src": "assets/editorial/animation-start-20260913/ftc-wide-1800.webp?v=5871c5896c13",
+      "src": "assets/editorial/neutral-20260915/ftc-wide-1800.webp?v=131cc1ffd5e2",
       "alt": "Assembled FTC robot with an aluminum lift, red panels and mecanum wheels.",
       "caption": "The FTC robot's drivetrain and cone-handling mechanism.",
       "kind": "Display reconstruction",
-      "srcset": "assets/editorial/animation-start-20260913/ftc-wide-480.webp?v=8c09a3b5c72e 480w, assets/editorial/animation-start-20260913/ftc-wide-960.webp?v=0fd0dafb6f46 960w, assets/editorial/animation-start-20260913/ftc-wide-1800.webp?v=5871c5896c13 1800w",
+      "srcset": "assets/editorial/neutral-20260915/ftc-wide-480.webp?v=b9fae292b6aa 480w, assets/editorial/neutral-20260915/ftc-wide-960.webp?v=e864f3f2bbd7 960w, assets/editorial/neutral-20260915/ftc-wide-1800.webp?v=131cc1ffd5e2 1800w",
       "width": 1800,
       "height": 1200
     },

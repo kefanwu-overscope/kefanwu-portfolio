@@ -1,0 +1,636 @@
+{
+  "project": "pool",
+  "coverProgress": 0.0,
+  "dimensions": [
+    1800,
+    1200
+  ],
+  "samples": 192,
+  "pixelAspect": [
+    1.0,
+    1.0007812976837158
+  ],
+  "camera": {
+    "location": [
+      5.836684703826904,
+      -9.32570743560791,
+      5.153820037841797
+    ],
+    "rotation": [
+      1.1596143245697021,
+      4.4814473909582375e-08,
+      0.5317239761352539
+    ],
+    "matrixWorld": [
+      [
+        0.861934244632721,
+        -0.20265237987041473,
+        0.4647594392299652,
+        5.836684703826904
+      ],
+      [
+        0.5070200562477112,
+        0.34450918436050415,
+        -0.7900912165641785,
+        -9.32570743560791
+      ],
+      [
+        -4.4814473909582375e-08,
+        0.9166490435600281,
+        0.399693101644516,
+        5.153820037841797
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "type": "ORTHO",
+    "orthoScale": 2.7771472930908203,
+    "sensorFit": "HORIZONTAL",
+    "shiftX": 0.0,
+    "shiftY": 0.0
+  },
+  "cameraFrameMaximumError": 0.0,
+  "masterSha256": "22d52ef928fa661799e3cbe94f768488389836b4be45bae8ad296b315e4497a2",
+  "sourceHDFramePNGSha256": "e3e437fec83ed9985fec63fc55c05beda0ed6c84930a623b0b54fe30ca95ce35",
+  "studioHelperSha256": "f270d82756d566147089c171550cfbbc440d3e612b0948137f23a7d4fb8b4bfb",
+  "renderWrapperSha256": "f79694b3e983cda58fffbe7be068c48797dea7253a79e5f7d5e79271dd0f3687",
+  "sourceContractSha256": "2214643e3c2d09a8d7f856d9c2acc9b809d3fbf5fd2d06ef229dfd976b9e8527",
+  "sourcePreservation": {
+    "status": "passed",
+    "project": "pool",
+    "studio": {
+      "revision": "neutral-20260915",
+      "variant": "flat",
+      "backgroundLinearRGB": [
+        0.019,
+        0.019,
+        0.019
+      ],
+      "backgroundDisplayRGB": [
+        25,
+        25,
+        25
+      ],
+      "backgroundMethod": "native-transparent-film-alpha-over",
+      "worldLightingLinearRGB": [
+        0.105,
+        0.105,
+        0.105
+      ],
+      "worldStrength": 0.35,
+      "cameraBackgroundPolicy": "Native antialiased object alpha over constant scene-linear neutral color after denoising.",
+      "contactDistance": 0.0,
+      "contactMaximumDarkening": 0.0,
+      "lightingTarget": [
+        1.4901161193847656e-08,
+        0.0,
+        0.3646699786186218
+      ],
+      "lights": [
+        {
+          "name": "Neutral broad key",
+          "energy": 650.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "size": 4.0,
+          "sizeY": 3.0,
+          "location": [
+            -1.5671014785766602,
+            -3.252851963043213,
+            4.513543128967285
+          ],
+          "rotation": [
+            0.7161473035812378,
+            1.5850174506226722e-09,
+            -0.44895127415657043
+          ]
+        },
+        {
+          "name": "Neutral overhead reflection",
+          "energy": 700.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "size": 4.5,
+          "sizeY": 0.8,
+          "location": [
+            -1.0429892539978027,
+            1.7730826139450073,
+            3.8314197063446045
+          ],
+          "rotation": [
+            0.5355372428894043,
+            1.9885414204168228e-08,
+            -2.6098687648773193
+          ]
+        },
+        {
+          "name": "Neutral front fill",
+          "energy": 280.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "size": 3.0,
+          "sizeY": 4.0,
+          "location": [
+            4.444840431213379,
+            -1.6393046379089355,
+            1.963442087173462
+          ],
+          "rotation": [
+            1.2453259229660034,
+            7.278509883690276e-08,
+            1.2174627780914307
+          ]
+        },
+        {
+          "name": "Neutral edge reflection",
+          "energy": 180.0,
+          "color": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "size": 0.5,
+          "sizeY": 4.0,
+          "location": [
+            0.8148793578147888,
+            3.348245143890381,
+            1.0319221019744873
+          ],
+          "rotation": [
+            1.3795312643051147,
+            -7.619642872214172e-08,
+            2.9028589725494385
+          ]
+        }
+      ],
+      "colorManagement": {
+        "view": "AgX",
+        "look": "AgX - Medium High Contrast",
+        "exposure": 0.20000000298023224
+      }
+    },
+    "modelGeometryMaterialsUnchangedByStudio": true,
+    "modelPoseMaximumMatrixError": 0.0,
+    "sourceGeometryAndMaterials": {
+      "sha256": "d0386271a2b6545fd8173ab19569a5fb573588c27be1a55d05c14ac0276d1ac2",
+      "objects": [
+        {
+          "name": "mat_aero_part_0",
+          "vertices": 144,
+          "faces": 288
+        },
+        {
+          "name": "mat_aero_part_1",
+          "vertices": 225,
+          "faces": 450
+        },
+        {
+          "name": "mat_aero_part_10",
+          "vertices": 1096,
+          "faces": 2240
+        },
+        {
+          "name": "mat_aero_part_2",
+          "vertices": 225,
+          "faces": 450
+        },
+        {
+          "name": "mat_aero_part_3",
+          "vertices": 1976,
+          "faces": 4008
+        },
+        {
+          "name": "mat_aero_part_4",
+          "vertices": 282,
+          "faces": 572
+        },
+        {
+          "name": "mat_aero_part_5",
+          "vertices": 8,
+          "faces": 12
+        },
+        {
+          "name": "mat_aero_part_6",
+          "vertices": 594,
+          "faces": 1204
+        },
+        {
+          "name": "mat_aero_part_7",
+          "vertices": 292,
+          "faces": 592
+        },
+        {
+          "name": "mat_aero_part_8",
+          "vertices": 180,
+          "faces": 360
+        },
+        {
+          "name": "mat_aero_part_9",
+          "vertices": 180,
+          "faces": 360
+        },
+        {
+          "name": "mat_dark_part_0",
+          "vertices": 234,
+          "faces": 464
+        },
+        {
+          "name": "mat_glass_part_0",
+          "vertices": 2430,
+          "faces": 4948
+        },
+        {
+          "name": "mat_glass_part_1",
+          "vertices": 2430,
+          "faces": 4948
+        },
+        {
+          "name": "mat_printed_part_0",
+          "vertices": 632,
+          "faces": 1292
+        },
+        {
+          "name": "mat_printed_part_1",
+          "vertices": 715,
+          "faces": 1434
+        },
+        {
+          "name": "mat_printed_part_2",
+          "vertices": 356,
+          "faces": 716
+        },
+        {
+          "name": "mat_printed_part_3",
+          "vertices": 1218,
+          "faces": 2468
+        },
+        {
+          "name": "mat_printed_part_4",
+          "vertices": 689,
+          "faces": 1378
+        },
+        {
+          "name": "mat_printed_part_5",
+          "vertices": 508,
+          "faces": 1032
+        },
+        {
+          "name": "mat_printed_part_6",
+          "vertices": 508,
+          "faces": 1032
+        },
+        {
+          "name": "mat_steel_part_0",
+          "vertices": 172,
+          "faces": 344
+        },
+        {
+          "name": "mat_steel_part_1",
+          "vertices": 172,
+          "faces": 344
+        },
+        {
+          "name": "mat_steel_part_10",
+          "vertices": 196,
+          "faces": 392
+        },
+        {
+          "name": "mat_steel_part_11",
+          "vertices": 78,
+          "faces": 152
+        },
+        {
+          "name": "mat_steel_part_12",
+          "vertices": 462,
+          "faces": 940
+        },
+        {
+          "name": "mat_steel_part_13",
+          "vertices": 148,
+          "faces": 296
+        },
+        {
+          "name": "mat_steel_part_14",
+          "vertices": 148,
+          "faces": 296
+        },
+        {
+          "name": "mat_steel_part_15",
+          "vertices": 148,
+          "faces": 296
+        },
+        {
+          "name": "mat_steel_part_16",
+          "vertices": 218,
+          "faces": 432
+        },
+        {
+          "name": "mat_steel_part_17",
+          "vertices": 218,
+          "faces": 432
+        },
+        {
+          "name": "mat_steel_part_18",
+          "vertices": 218,
+          "faces": 432
+        },
+        {
+          "name": "mat_steel_part_2",
+          "vertices": 172,
+          "faces": 344
+        },
+        {
+          "name": "mat_steel_part_3",
+          "vertices": 172,
+          "faces": 344
+        },
+        {
+          "name": "mat_steel_part_4",
+          "vertices": 12977,
+          "faces": 25986
+        },
+        {
+          "name": "mat_steel_part_5",
+          "vertices": 3450,
+          "faces": 6896
+        },
+        {
+          "name": "mat_steel_part_6",
+          "vertices": 3448,
+          "faces": 6892
+        },
+        {
+          "name": "mat_steel_part_7",
+          "vertices": 12750,
+          "faces": 25533
+        },
+        {
+          "name": "mat_steel_part_8",
+          "vertices": 4414,
+          "faces": 8872
+        },
+        {
+          "name": "mat_steel_part_9",
+          "vertices": 122,
+          "faces": 240
+        },
+        {
+          "name": "mat_wood_part_0",
+          "vertices": 146,
+          "faces": 288
+        }
+      ],
+      "faces": 109999
+    },
+    "sourceMotionReportUnchanged": true,
+    "carbonMotionRevisionAuthorized": false,
+    "documentaryDifferences": [],
+    "p0PreviousCoverCameraMaximumError": 0.0,
+    "sourceAnimationProvenance": "assets/exploded/refined-20260913/pool/provenance.json",
+    "sourceAnimationProvenanceSha256": "15e2ff03216fd4f778262946f18162bea24d17aab5466407fe4416e56ac25d38",
+    "previousHDAnimationProvenance": "assets/exploded/detail-20260914/pool/provenance.json",
+    "previousHDAnimationProvenanceSha256": "3b203aff84364f9d5872474643f9dbd3753f413478c3f224290f2046fc44aea4",
+    "previousCoverProvenance": "assets/editorial/animation-start-20260913/pool-provenance.json",
+    "previousCoverProvenanceSha256": "24beb9f60737ac9a13f54f1afdb2df1067fd746311cd00efcc49c6e1ade17ed4",
+    "sourceFiles": {
+      "tools/exploded-render/assembly_motion.py": "b7f4f4e2930fd98e16e929c8eec6b6f61062bd84febeaf2f7f52054e2e93c8dd",
+      "tools/exploded-render/aura_detailed_motion.py": "4866b1edf7acadb337b3803ad21facd115d5a02a616dd5fb707e3e312f9d1900",
+      "tools/exploded-render/cfd_flow.py": "ba4e03312eceef01305dc8d3cdc6074e5a19b15e8b24c37895d2608d0a0fec70",
+      "tools/exploded-render/check_assembly_motion.py": "856c9d5cd29eee66d67b6032830a9b8d5547cc24ab4e46a7401e73d91221aadf",
+      "tools/exploded-render/display_motion.py": "332fe4192432153cf9aa06dd95b5203448feefce73926d24825b24bcc71e37e5",
+      "tools/exploded-render/drive_cycle_motion.py": "26c3304d592ce8742adb713061080d41af74c2ebfd85cfb68b64d796a0e0af2c",
+      "tools/exploded-render/education_assembly_fit.py": "67e8418fbab1e51ec0d3714f40f4ec55ebad6da53ae02799c0c2c9fd423a6c64",
+      "tools/exploded-render/education_assembly_path.py": "d908fc973bac429043871cef453a5033e723985103ab0e43434147113d570ec2",
+      "tools/exploded-render/education_contact_check.py": "63998eb4cb7114fc54f58e8684adc65fd189a2c2dba46d05b7df7543339bf462",
+      "tools/exploded-render/education_studio.py": "e97e439d100f0bb5f411d2075cf3fbec3485c16531d9e198d924c14aaaabfdb2",
+      "tools/exploded-render/expanded_assembly.py": "67e90ca08d686b86dec6bcfee6cac2011b506dd7af7907355c1d1a051719751e",
+      "tools/exploded-render/expanded_collision.py": "f27574d7c7765f8b3d4a4c31a125d26fcc890ab6282f4fd8ff699811cf09d749",
+      "tools/exploded-render/functional_processes.py": "aa40af10425dc75b05eabe6e56885cf6589914df3768ff9100578570452f6809",
+      "tools/exploded-render/inspect_motion.py": "8c80e2ce3266bb407979151f809d7e62d6e4434e1ddab8772d10a30294253737",
+      "tools/exploded-render/material_processes.py": "1a7786dba190463220dcf252d7829ef774a2c9cf37105b843786b834514f7609",
+      "tools/exploded-render/material_test_motion_groups.py": "ebb236f27612fce3f290c0864893ea0196161f25eb5eb946815685244d611c60",
+      "tools/exploded-render/mechanism_motion.py": "3f2cb7939bcbadbaa7f8157f46a97476a1df6107002a7198b766844681474041",
+      "tools/exploded-render/neutral_studio.py": "f270d82756d566147089c171550cfbbc440d3e612b0948137f23a7d4fb8b4bfb",
+      "tools/exploded-render/pack_detail.py": "14fcaa678ddf9bfb87ee6f8b7cc88cae22b80354dbedbac1890a44796b8c90f3",
+      "tools/exploded-render/pack_education_studio.py": "041a70dfa7feb6e9bed0f8f4b2bb53372dbc3dadafb785b96be88bbd6828e597",
+      "tools/exploded-render/pack_exploded.py": "02962fe32157e26f43bcf1862bbaf9a1583afbc6aae827f5be3cfd67f3f56461",
+      "tools/exploded-render/pack_frame_chunks.py": "a884a97f690204950a1f294b085adba4d1b21b7683e6d6f987bd8ca8149be106",
+      "tools/exploded-render/pack_initial_covers.py": "16e52d8b52cd3d7b02cb173f6fde6efe8b8bbc79df2a33bc6389e60170e4a840",
+      "tools/exploded-render/pack_motion_covers.py": "be14c84d0474b2aea40732000631b5872fb904df355e2bbc10d08ea2cfe04c47",
+      "tools/exploded-render/pack_neutral_studio.py": "fce5c412efa23505f9cd5b58ce1b7770872c5005c77176abdfab475b0384ce34",
+      "tools/exploded-render/probe_education_components.py": "02befe95e2fd2d5cfdb65838a611e5ed1b51d417422f667ffd89da25f7bad491",
+      "tools/exploded-render/probe_education_joint.py": "9700554caa1f33f900f59641571620410e7b22742306cda1354c25771c95fe71",
+      "tools/exploded-render/probe_line_motion.py": "3e3da0f34257e95f10c12c175ba5245e3649d33fa21117ad1cb27f6157ab97ca",
+      "tools/exploded-render/render_detail.py": "62dc3cb1d00d28a91ef456b0f93fd5e1c9aa48618ea730be107befdf555e91e3",
+      "tools/exploded-render/render_education_studio.py": "b68dba856765a32326825532753ebd62b0b4fb04763754e1599367e0aeb7cb09",
+      "tools/exploded-render/render_exploded.py": "f2867efacef82fee605747035230b1ad12225e4eb6c47ecbbd655ba4633a27b9",
+      "tools/exploded-render/render_initial_covers.py": "14e8dd2e10fe088f6957583b2272a23ded4bfc4c2c8693fbf9c9e61fc8f87f37",
+      "tools/exploded-render/render_neutral_studio.py": "f79694b3e983cda58fffbe7be068c48797dea7253a79e5f7d5e79271dd0f3687",
+      "tools/exploded-render/review_assembly_motion.py": "ffa0e6224e661c1987459aec9e5efbdc54c8713d66a9e6548e3aeff4240322df",
+      "tools/exploded-render/seat_unfold.py": "78880c81f809f69e3a654876710e0ab21c2444f54b8a794050a18d1a2c977f08",
+      "tools/exploded-render/shared_material_carbon.py": "3cae6cd973d6d9d36bd72b40d02d401a3251d51885b3f240b7bb5228b2f46531",
+      "tools/exploded-render/study_expanded_assembly.py": "09e762807e7d6e4550522c36a9940c75a585e9c66ef909475b4a7887590cca66",
+      "tools/exploded-render/telecaster_motion_groups.py": "e2bac97cf15e80da3e818c9ef5ef34265af269e9f68dfe8f4c4348ae5cc69b26",
+      "tools/exploded-render/test_education_contact.py": "f7e0076d2fbbd99963cd73b81177a31acc233a2891d959b2a9aa87691e7f1448",
+      "tools/exploded-render/translation_collision.py": "e5e1d97d4f9c87c28c2383624723dcecf2181ceda1bddf324a0b88189fdebf76",
+      "tools/exploded-render/validate_detail.py": "99ab2fd1c4711fd72a7410f299c77a3ba0003fa26cd5cd5b9e017b1cf80dd772",
+      "tools/exploded-render/validate_exploded.py": "b8c98f59931af2b248d61c3235aa89dd5a3fe4bdd1fa7899cfa3d232a9be0d7e",
+      "tools/exploded-render/validate_initial_covers.py": "341ac7df9fe7559802908c503add69f07d59b08e6131068a2f7626e9428091da",
+      "tools/exploded-render/validate_neutral.py": "c8af4119231d94612d857d972be8705bd228dcba26971f4cfdcedd7c8a7d3d41",
+      "tools/exploded-render/verify_expanded_assembly.py": "091b5712995fe59bdb8cc6dd87e4083eda117b13c96a4d575971916e37f49f31",
+      "tools/exploded-render/vine_motion_groups.py": "308b124adf049748ea503f86f4b45a9cd04c3e0c1db223a389bbb25e9f66bce7",
+      "tools/editorial-render/apply_covers.py": "d093de3e57588401d02dc086268635da8c55f59d04bd96897c52afc84ef743f8",
+      "tools/editorial-render/build_proof.py": "bedd601efb3fea0b7d29910b947a39fa769ca1e34de6089c8323762a471fd07f",
+      "tools/editorial-render/inspect_components.py": "13de4ff3c3d2a0176ab83f30f044d52cc5f91fb5040edce103e9987cd20380b9",
+      "tools/editorial-render/inspect_source.py": "edf7d4464e5b153125259f539604ea035a5cca55d53dfeaaff67af5cd705a620",
+      "tools/editorial-render/mechanical_sources.py": "1a7d03ec94e19db79ec55ef846ef3d9577cab2db61ac723a92a37a501c9ee5f2",
+      "tools/editorial-render/pack.py": "c863187dfa20767d6c8190c94d25ebd1ce55a89d4b8c033da533dcbc30346f30",
+      "tools/editorial-render/pack_catalog.py": "0a31b500c3e72b2a2435d4bd64bdb58664a8e84434f81b747704faf9217a8a5f",
+      "tools/editorial-render/render.py": "0dec65d162a8d2721f85916b08dd3d6ca82c7b68144a5ad1613139fabcea700a",
+      "tools/editorial-render/render_catalog.py": "adbf7516c75d975952c0485106bae825b0835a72d5faf9865e171516820b45f7",
+      "tools/editorial-render/robotics_sources.py": "ccf5a6e40c315bb60ec8f3d89deae7c9c70c8dbb98a654993b7f91d67ac185b8",
+      "tools/editorial-render/validate_catalog.py": "6f0cbb0d7332cee0389dbb5dca079f344c73ae1368ed93ee038816a91e12cd8d"
+    },
+    "studioHelperSha256": "f270d82756d566147089c171550cfbbc440d3e612b0948137f23a7d4fb8b4bfb",
+    "renderWrapperSha256": "f79694b3e983cda58fffbe7be068c48797dea7253a79e5f7d5e79271dd0f3687",
+    "sourceContractSha256": "2214643e3c2d09a8d7f856d9c2acc9b809d3fbf5fd2d06ef229dfd976b9e8527"
+  },
+  "renderSeconds": 1.7189999999973224,
+  "variants": [
+    {
+      "src": "assets/editorial/neutral-20260915/pool-wide-480.webp",
+      "width": 480,
+      "height": 320,
+      "sha256": "600b76931736392a4ceb3d9068615c58e2e0ceff4a22296cdd8edf75984aec15",
+      "bytes": 9222
+    },
+    {
+      "src": "assets/editorial/neutral-20260915/pool-wide-960.webp",
+      "width": 960,
+      "height": 640,
+      "sha256": "59971dff9b2882c4b5525677b496404cfdc90b7596e05995fc46afe2c882dde7",
+      "bytes": 21072
+    },
+    {
+      "src": "assets/editorial/neutral-20260915/pool-wide-1800.webp",
+      "width": 1800,
+      "height": 1200,
+      "sha256": "0e639426ec12e0865183879d9658247c7fc774cc6c16d9da5855fbdf5c54ea35",
+      "bytes": 53606
+    }
+  ],
+  "sourceFrame": "assets/exploded/neutral-20260915/sd/pool/00.webp?v=613da4f89557",
+  "sourceFrameSha256": "613da4f895574fdb56e348301ed67820dc60928f40c39a8e509cf1a09a1021d1",
+  "sourceAnimationProvenance": "assets/exploded/neutral-20260915/sd/pool/provenance.json",
+  "sourceAnimationProvenanceSha256": "0f91176645f1efc00d689d07132d10f8f33ee27b29d1a9d2aabca004af3a2df0",
+  "sourceAnimationRevision": "neutral-20260915",
+  "sourceFrameCount": 145,
+  "sourceDimensions": [
+    640,
+    427
+  ],
+  "sourceMasterDimensions": [
+    1280,
+    854
+  ],
+  "studio": {
+    "revision": "neutral-20260915",
+    "variant": "flat",
+    "backgroundLinearRGB": [
+      0.019,
+      0.019,
+      0.019
+    ],
+    "backgroundDisplayRGB": [
+      25,
+      25,
+      25
+    ],
+    "backgroundMethod": "native-transparent-film-alpha-over",
+    "worldLightingLinearRGB": [
+      0.105,
+      0.105,
+      0.105
+    ],
+    "worldStrength": 0.35,
+    "cameraBackgroundPolicy": "Native antialiased object alpha over constant scene-linear neutral color after denoising.",
+    "contactDistance": 0.0,
+    "contactMaximumDarkening": 0.0,
+    "lightingTarget": [
+      1.4901161193847656e-08,
+      0.0,
+      0.3646699786186218
+    ],
+    "lights": [
+      {
+        "name": "Neutral broad key",
+        "energy": 650.0,
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "size": 4.0,
+        "sizeY": 3.0,
+        "location": [
+          -1.5671014785766602,
+          -3.252851963043213,
+          4.513543128967285
+        ],
+        "rotation": [
+          0.7161473035812378,
+          1.5850174506226722e-09,
+          -0.44895127415657043
+        ]
+      },
+      {
+        "name": "Neutral overhead reflection",
+        "energy": 700.0,
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "size": 4.5,
+        "sizeY": 0.8,
+        "location": [
+          -1.0429892539978027,
+          1.7730826139450073,
+          3.8314197063446045
+        ],
+        "rotation": [
+          0.5355372428894043,
+          1.9885414204168228e-08,
+          -2.6098687648773193
+        ]
+      },
+      {
+        "name": "Neutral front fill",
+        "energy": 280.0,
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "size": 3.0,
+        "sizeY": 4.0,
+        "location": [
+          4.444840431213379,
+          -1.6393046379089355,
+          1.963442087173462
+        ],
+        "rotation": [
+          1.2453259229660034,
+          7.278509883690276e-08,
+          1.2174627780914307
+        ]
+      },
+      {
+        "name": "Neutral edge reflection",
+        "energy": 180.0,
+        "color": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "size": 0.5,
+        "sizeY": 4.0,
+        "location": [
+          0.8148793578147888,
+          3.348245143890381,
+          1.0319221019744873
+        ],
+        "rotation": [
+          1.3795312643051147,
+          -7.619642872214172e-08,
+          2.9028589725494385
+        ]
+      }
+    ],
+    "colorManagement": {
+      "view": "AgX",
+      "look": "AgX - Medium High Contrast",
+      "exposure": 0.20000000298023224
+    }
+  },
+  "geometryAndMaterialsSha256": "d0386271a2b6545fd8173ab19569a5fb573588c27be1a55d05c14ac0276d1ac2",
+  "encoding": {
+    "qualityMaster": 91,
+    "qualityResponsive": 87,
+    "method": 6,
+    "rasterRetouching": false
+  }
+}

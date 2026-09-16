@@ -65,7 +65,7 @@
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 3000);
     try {
-      const response = await fetch('assets/editorial/animation-covers.json?v=detail-resolution-20260914', { signal: controller.signal, cache: 'force-cache' });
+      const response = await fetch('assets/editorial/animation-covers.json?v=neutral-20260915', { signal: controller.signal, cache: 'force-cache' });
       if (!response.ok) throw new Error('Cover catalog unavailable');
       const catalog = await response.json();
       const cover = catalog.version === 1 && catalog.projects?.[key];

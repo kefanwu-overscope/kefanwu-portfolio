@@ -1,550 +1,550 @@
 {
   "version": 1,
-  "revision": "detail-resolution-20260914",
+  "revision": "neutral-20260915",
   "projects": {
     "steering": {
-      "src": "assets/editorial/animation-start-20260913/steering-wide-1800.webp?v=703f3e188422",
-      "srcset": "assets/editorial/animation-start-20260913/steering-wide-480.webp?v=029d82ebf7ef 480w, assets/editorial/animation-start-20260913/steering-wide-960.webp?v=9309aad28424 960w, assets/editorial/animation-start-20260913/steering-wide-1800.webp?v=703f3e188422 1800w",
+      "src": "assets/editorial/neutral-20260915/steering-wide-1800.webp?v=1dc33b0efc43",
+      "srcset": "assets/editorial/neutral-20260915/steering-wide-480.webp?v=6db6807f9bf0 480w, assets/editorial/neutral-20260915/steering-wide-960.webp?v=14b1d151b82a 960w, assets/editorial/neutral-20260915/steering-wide-1800.webp?v=1dc33b0efc43 1800w",
       "alt": "Steering wheel, column, universal joints and rack in their neutral position.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/animation-start-20260913/steering-wide-480.webp",
+          "src": "assets/editorial/neutral-20260915/steering-wide-480.webp",
           "width": 480,
           "height": 320,
-          "bytes": 5316,
-          "sha256": "029d82ebf7ef86172d8dac6ba46b5439ceb883598aeeea2b5978b0010471f156"
+          "sha256": "6db6807f9bf087f4575389201c55e14ca88fcd644b9b5c126ed78f57818888f5",
+          "bytes": 3964
         },
         {
-          "src": "assets/editorial/animation-start-20260913/steering-wide-960.webp",
+          "src": "assets/editorial/neutral-20260915/steering-wide-960.webp",
           "width": 960,
           "height": 640,
-          "bytes": 13208,
-          "sha256": "9309aad28424e70e0d92f2ca59cc49b7dcf20f894b5b1f2ddfee7f2a84fe23a3"
+          "sha256": "14b1d151b82af49ce41f295d812b896be174fa061e947bf3df3d77d7e195cd6e",
+          "bytes": 9512
         },
         {
-          "src": "assets/editorial/animation-start-20260913/steering-wide-1800.webp",
+          "src": "assets/editorial/neutral-20260915/steering-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "bytes": 36408,
-          "sha256": "703f3e188422b2b47ce231ded964f48f4b030078ef44f5615e210a978e90559b"
+          "sha256": "1dc33b0efc4308eaef3907b42218e4ddaca6ad9e1a643ab006130179a5c7b7f2",
+          "bytes": 24808
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/refined-20260913/steering/00.webp?v=2df2bfba4ced",
-      "sourceFrameSha256": "2df2bfba4ced5b051b8ae2b1309f0139d7be18fce40cdaa4c226e2b43163d85f",
-      "provenance": "assets/editorial/animation-start-20260913/steering-provenance.json?v=070d0c01949e"
+      "sourceFrame": "assets/exploded/neutral-20260915/sd/steering/00.webp?v=a1d833ecd027",
+      "sourceFrameSha256": "a1d833ecd0276820bf0f9b4fa89a62150e74bd659d8b656d744afec763e3ac9f",
+      "provenance": "assets/editorial/neutral-20260915/steering-provenance.json?v=6cc2753a29aa"
     },
     "vineRobot": {
-      "src": "assets/editorial/animation-start-20260913/vineRobot-wide-1800.webp?v=67b6707786d5",
-      "srcset": "assets/editorial/animation-start-20260913/vineRobot-wide-480.webp?v=14efea96c9ef 480w, assets/editorial/animation-start-20260913/vineRobot-wide-960.webp?v=c5c0b88ca117 960w, assets/editorial/animation-start-20260913/vineRobot-wide-1800.webp?v=67b6707786d5 1800w",
+      "src": "assets/editorial/neutral-20260915/vineRobot-wide-1800.webp?v=883f0f7423bf",
+      "srcset": "assets/editorial/neutral-20260915/vineRobot-wide-480.webp?v=6e95ec264865 480w, assets/editorial/neutral-20260915/vineRobot-wide-960.webp?v=ad5c38b9ce84 960w, assets/editorial/neutral-20260915/vineRobot-wide-1800.webp?v=883f0f7423bf 1800w",
       "alt": "Vine robot pressure vessel with its translucent tube retracted.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/animation-start-20260913/vineRobot-wide-480.webp",
+          "src": "assets/editorial/neutral-20260915/vineRobot-wide-480.webp",
           "width": 480,
           "height": 320,
-          "bytes": 10816,
-          "sha256": "14efea96c9efa1215305a1efd1ce066f8c6449e77b033692fe832a7572c7a200"
+          "sha256": "6e95ec264865685e67bcbd0c796925403e5089208e94cf5f0d36cd41f7dda3c6",
+          "bytes": 9908
         },
         {
-          "src": "assets/editorial/animation-start-20260913/vineRobot-wide-960.webp",
+          "src": "assets/editorial/neutral-20260915/vineRobot-wide-960.webp",
           "width": 960,
           "height": 640,
-          "bytes": 24960,
-          "sha256": "c5c0b88ca11748fcaaf31454bee3ab081ee4975049265baae54b7e26b1fcb788"
+          "sha256": "ad5c38b9ce848c3d9e0138e904600bbcf134f6db4bc4031a59db29368fcde7c4",
+          "bytes": 22570
         },
         {
-          "src": "assets/editorial/animation-start-20260913/vineRobot-wide-1800.webp",
+          "src": "assets/editorial/neutral-20260915/vineRobot-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "bytes": 65542,
-          "sha256": "67b6707786d5bf8e45559036a3b19124e9277e723d8fbb0949f17d1b15e22598"
+          "sha256": "883f0f7423bf1861af7d97183f62b83b292ec3aecfb604dce987c32b325962be",
+          "bytes": 58648
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/functional-20260913/vineRobot/00.webp?v=a9263ba89452",
-      "sourceFrameSha256": "a9263ba89452aace4e0ef028aa320f9ed3e354cad618cf5f6853de7e8189e8c6",
-      "provenance": "assets/editorial/animation-start-20260913/vineRobot-provenance.json?v=99c0ad5ddb02"
+      "sourceFrame": "assets/exploded/neutral-20260915/sd/vineRobot/00.webp?v=6704d2b0aa23",
+      "sourceFrameSha256": "6704d2b0aa234ff04bc6585afe7daca7f104a643a7750643e73f720ad529a2c9",
+      "provenance": "assets/editorial/neutral-20260915/vineRobot-provenance.json?v=204ccc5c91fa"
     },
     "javelin": {
-      "src": "assets/editorial/animation-start-20260913/javelin-wide-1800.webp?v=e1d8086f8ff4",
-      "srcset": "assets/editorial/animation-start-20260913/javelin-wide-480.webp?v=db45904bbee0 480w, assets/editorial/animation-start-20260913/javelin-wide-960.webp?v=5b2dcec64850 960w, assets/editorial/animation-start-20260913/javelin-wide-1800.webp?v=e1d8086f8ff4 1800w",
+      "src": "assets/editorial/neutral-20260915/javelin-wide-1800.webp?v=0a01908c1725",
+      "srcset": "assets/editorial/neutral-20260915/javelin-wide-480.webp?v=115fac6ef051 480w, assets/editorial/neutral-20260915/javelin-wide-960.webp?v=5e4ed14637b7 960w, assets/editorial/neutral-20260915/javelin-wide-1800.webp?v=0a01908c1725 1800w",
       "alt": "Javelin airframe suspended above the studio floor with four propellers.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/animation-start-20260913/javelin-wide-480.webp",
+          "src": "assets/editorial/neutral-20260915/javelin-wide-480.webp",
           "width": 480,
           "height": 320,
-          "bytes": 4616,
-          "sha256": "db45904bbee00bba56129bdf6bc5a2a11d37ac741760bd113857efca1cc245a8"
+          "sha256": "115fac6ef05109eede6941dfc6f5e4c3d182344c6628888e0532cf328913e6f8",
+          "bytes": 3706
         },
         {
-          "src": "assets/editorial/animation-start-20260913/javelin-wide-960.webp",
+          "src": "assets/editorial/neutral-20260915/javelin-wide-960.webp",
           "width": 960,
           "height": 640,
-          "bytes": 10916,
-          "sha256": "5b2dcec64850542e6f851f86683d423b6f71b12f112fb1521066b27c1383bb56"
+          "sha256": "5e4ed14637b7e7aaad6704d6e302e99531a75f12a019047a88a47670d6f88937",
+          "bytes": 8792
         },
         {
-          "src": "assets/editorial/animation-start-20260913/javelin-wide-1800.webp",
+          "src": "assets/editorial/neutral-20260915/javelin-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "bytes": 30756,
-          "sha256": "e1d8086f8ff4484010464515c23cb7c6ae91b0c0c2b33173cf332937ef07a751"
+          "sha256": "0a01908c172548414bab0f2a5f695062e1727280b0a8968d0d6c2f9dd285668c",
+          "bytes": 24110
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/flight-20260913/javelin/00.webp?v=da798080f6bc",
-      "sourceFrameSha256": "da798080f6bc3abfbd65c44ce14b41758ce0712e5b210db0a8e67094285adb40",
-      "provenance": "assets/editorial/animation-start-20260913/javelin-provenance.json?v=122ac1520e7c"
+      "sourceFrame": "assets/exploded/neutral-20260915/sd/javelin/00.webp?v=4de2d8bbc2a0",
+      "sourceFrameSha256": "4de2d8bbc2a02ac0226422f7426b83774190df662f4d50a0a5b4dde8cb877dd8",
+      "provenance": "assets/editorial/neutral-20260915/javelin-provenance.json?v=dc54a382d1b6"
     },
     "brakeSim": {
-      "src": "assets/editorial/animation-start-20260913/brakeSim-wide-1800.webp?v=3a64d74549f9",
-      "srcset": "assets/editorial/animation-start-20260913/brakeSim-wide-480.webp?v=7f8140ac58d4 480w, assets/editorial/animation-start-20260913/brakeSim-wide-960.webp?v=6f4f3c1e9704 960w, assets/editorial/animation-start-20260913/brakeSim-wide-1800.webp?v=3a64d74549f9 1800w",
+      "src": "assets/editorial/neutral-20260915/brakeSim-wide-1800.webp?v=261a7772793d",
+      "srcset": "assets/editorial/neutral-20260915/brakeSim-wide-480.webp?v=e231b920e798 480w, assets/editorial/neutral-20260915/brakeSim-wide-960.webp?v=ea2678e77ff1 960w, assets/editorial/neutral-20260915/brakeSim-wide-1800.webp?v=261a7772793d 1800w",
       "alt": "Perforated cast-iron brake rotor before heating.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/animation-start-20260913/brakeSim-wide-480.webp",
+          "src": "assets/editorial/neutral-20260915/brakeSim-wide-480.webp",
           "width": 480,
           "height": 320,
-          "bytes": 20438,
-          "sha256": "7f8140ac58d467e5aeb78cc838b15248cb5d6e7b3511aada960a4110d37b979f"
+          "sha256": "e231b920e7980f1573d5d135c8fd170453eda4111de302d9ec6e738abc190171",
+          "bytes": 19360
         },
         {
-          "src": "assets/editorial/animation-start-20260913/brakeSim-wide-960.webp",
+          "src": "assets/editorial/neutral-20260915/brakeSim-wide-960.webp",
           "width": 960,
           "height": 640,
-          "bytes": 47746,
-          "sha256": "6f4f3c1e9704c299b2a52c8c1ff37534255259c734ee1118b4a07898f98eb6d1"
+          "sha256": "ea2678e77ff18afcbe3708092042f0fc9f52e8a58ce144b5dba740d9a9fb32e4",
+          "bytes": 44580
         },
         {
-          "src": "assets/editorial/animation-start-20260913/brakeSim-wide-1800.webp",
+          "src": "assets/editorial/neutral-20260915/brakeSim-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "bytes": 114738,
-          "sha256": "3a64d74549f918571cb9205480df5a35e0a3d60fe85c361fd5e1fe98a24eb1d5"
+          "sha256": "261a7772793d39e431a1498719276e9397fb6c899d55d752bcf55d4cb46f1b21",
+          "bytes": 103344
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/functional-20260913/brakeSim/00.webp?v=7a1c2e5f7cdf",
-      "sourceFrameSha256": "7a1c2e5f7cdfbfd008cdbe0c269eed3b6595e45386a0a4aeb6af19535d86adb5",
-      "provenance": "assets/editorial/animation-start-20260913/brakeSim-provenance.json?v=1084b6884756"
+      "sourceFrame": "assets/exploded/neutral-20260915/sd/brakeSim/00.webp?v=d0a8cbbb6d14",
+      "sourceFrameSha256": "d0a8cbbb6d146c54f673aa0449fc70e635f73a7264a7208ab263497aba2bca2e",
+      "provenance": "assets/editorial/neutral-20260915/brakeSim-provenance.json?v=52d319287150"
     },
     "aura": {
-      "src": "assets/editorial/animation-start-20260913/aura-wide-1800.webp?v=c836c58c0436",
-      "srcset": "assets/editorial/animation-start-20260913/aura-wide-480.webp?v=f721eee5c5f7 480w, assets/editorial/animation-start-20260913/aura-wide-960.webp?v=14eafcd84535 960w, assets/editorial/animation-start-20260913/aura-wide-1800.webp?v=c836c58c0436 1800w",
+      "src": "assets/editorial/neutral-20260915/aura-wide-1800.webp?v=6033855dcc5f",
+      "srcset": "assets/editorial/neutral-20260915/aura-wide-480.webp?v=e0be22136f68 480w, assets/editorial/neutral-20260915/aura-wide-960.webp?v=18b57246c239 960w, assets/editorial/neutral-20260915/aura-wide-1800.webp?v=6033855dcc5f 1800w",
       "alt": "Assembled AURA swerve module with its wheel, motors and metal structure.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/animation-start-20260913/aura-wide-480.webp",
+          "src": "assets/editorial/neutral-20260915/aura-wide-480.webp",
           "width": 480,
           "height": 320,
-          "bytes": 6806,
-          "sha256": "f721eee5c5f7f0e592ee582a8dd79fa9b197cfcd8c533ef2545985ea87e98375"
+          "sha256": "e0be22136f6814290bd478453edbcdf5d9be046f5f0c81c9908274787a0fb2e9",
+          "bytes": 5646
         },
         {
-          "src": "assets/editorial/animation-start-20260913/aura-wide-960.webp",
+          "src": "assets/editorial/neutral-20260915/aura-wide-960.webp",
           "width": 960,
           "height": 640,
-          "bytes": 15452,
-          "sha256": "14eafcd84535ea22aa1360622ae1d74c2d22fd37e4dac55f87e5b62a57438034"
+          "sha256": "18b57246c239bdeb39f1485d0f7e14a21d409b92e6118600d619dfa07474c111",
+          "bytes": 12764
         },
         {
-          "src": "assets/editorial/animation-start-20260913/aura-wide-1800.webp",
+          "src": "assets/editorial/neutral-20260915/aura-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "bytes": 41806,
-          "sha256": "c836c58c04363fd6b3f415a8614056ad627653b601cb4b50f6fbe819fafc7d49"
+          "sha256": "6033855dcc5f9f5e621c596df7d455870cdb5183228d22b92f0a871e1fa2a9f1",
+          "bytes": 32728
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/refined-20260913/aura/00.webp?v=6dbd92b86a0a",
-      "sourceFrameSha256": "6dbd92b86a0ac6bcb783a9dead0b3a0cd5f9def03ec46daefbf644d46bdbcf3f",
-      "provenance": "assets/editorial/animation-start-20260913/aura-provenance.json?v=7450c95a5679"
+      "sourceFrame": "assets/exploded/neutral-20260915/sd/aura/00.webp?v=f6bfbe40382b",
+      "sourceFrameSha256": "f6bfbe40382bbccb74e4f921188678d10b02c62b09cf34dd4dacb4c3a34ddab0",
+      "provenance": "assets/editorial/neutral-20260915/aura-provenance.json?v=8101769f2344"
     },
     "scanner": {
-      "src": "assets/editorial/animation-start-20260913/scanner-wide-1800.webp?v=81c8b13c8e74",
-      "srcset": "assets/editorial/animation-start-20260913/scanner-wide-480.webp?v=745b117370b1 480w, assets/editorial/animation-start-20260913/scanner-wide-960.webp?v=029010cbc8c0 960w, assets/editorial/animation-start-20260913/scanner-wide-1800.webp?v=81c8b13c8e74 1800w",
+      "src": "assets/editorial/neutral-20260915/scanner-wide-1800.webp?v=ffd3ab3e99cd",
+      "srcset": "assets/editorial/neutral-20260915/scanner-wide-480.webp?v=0ac2fcfffca5 480w, assets/editorial/neutral-20260915/scanner-wide-960.webp?v=d6ba17ad1cb8 960w, assets/editorial/neutral-20260915/scanner-wide-1800.webp?v=ffd3ab3e99cd 1800w",
       "alt": "LiDAR scanner with blue printed mounts, guide rods and a plywood base.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/animation-start-20260913/scanner-wide-480.webp",
+          "src": "assets/editorial/neutral-20260915/scanner-wide-480.webp",
           "width": 480,
           "height": 320,
-          "bytes": 15148,
-          "sha256": "745b117370b184762873fab05e14a1da260b0d0f53c9e1e7c3673d4b5641546c"
+          "sha256": "0ac2fcfffca54982dbd9abad02da6f078ed38a10d658bc00bd8693226fd2b2c9",
+          "bytes": 13970
         },
         {
-          "src": "assets/editorial/animation-start-20260913/scanner-wide-960.webp",
+          "src": "assets/editorial/neutral-20260915/scanner-wide-960.webp",
           "width": 960,
           "height": 640,
-          "bytes": 35314,
-          "sha256": "029010cbc8c0b3eeafa56d88a15c4c610e7c824306b7b158f5db2377c09a933c"
+          "sha256": "d6ba17ad1cb89d08f0b9d50e068aa8bda4f6e4621578d87fbbe352d6d3bc43cd",
+          "bytes": 32874
         },
         {
-          "src": "assets/editorial/animation-start-20260913/scanner-wide-1800.webp",
+          "src": "assets/editorial/neutral-20260915/scanner-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "bytes": 89488,
-          "sha256": "81c8b13c8e742b3dd5fd08ef2a82b7d34dfa9de8b005a7828a067e9634a35ace"
+          "sha256": "ffd3ab3e99cd27c92ee908825a024d9349539cca5d8d6a6dcfb4682e0713de2e",
+          "bytes": 81374
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/functional-20260913/scanner/00.webp?v=ab3bc33f886a",
-      "sourceFrameSha256": "ab3bc33f886ab2c4e8b753dd4c8beb37f22e19b77b6610e54d2a1f4a9fae7909",
-      "provenance": "assets/editorial/animation-start-20260913/scanner-provenance.json?v=33d2fbfe7b63"
-    },
-    "carbonSeat": {
-      "src": "assets/editorial/animation-start-20260913/carbonSeat-wide-1800.webp?v=e55168f5b204",
-      "srcset": "assets/editorial/animation-start-20260913/carbonSeat-wide-480.webp?v=b4d0ed782e04 480w, assets/editorial/animation-start-20260913/carbonSeat-wide-960.webp?v=4ce57e1ee13b 960w, assets/editorial/animation-start-20260913/carbonSeat-wide-1800.webp?v=e55168f5b204 1800w",
-      "alt": "Carbon-fiber seat layup at the beginning of the fabrication sequence.",
-      "width": 1800,
-      "height": 1200,
-      "variants": [
-        {
-          "src": "assets/editorial/animation-start-20260913/carbonSeat-wide-480.webp",
-          "width": 480,
-          "height": 320,
-          "bytes": 4490,
-          "sha256": "b4d0ed782e0422636e748d19a93462813a578f00ed16686f55de8498d73e1604"
-        },
-        {
-          "src": "assets/editorial/animation-start-20260913/carbonSeat-wide-960.webp",
-          "width": 960,
-          "height": 640,
-          "bytes": 13216,
-          "sha256": "4ce57e1ee13b1bd146b886495fb535a38ded323927e22cb5ae27a02749b0b40e"
-        },
-        {
-          "src": "assets/editorial/animation-start-20260913/carbonSeat-wide-1800.webp",
-          "width": 1800,
-          "height": 1200,
-          "bytes": 68180,
-          "sha256": "e55168f5b204f8d9b2696c6bf585bb26905237a1fc78c0e88b35d39e6ce6631f"
-        }
-      ],
-      "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/refined-20260913/carbonSeat/00.webp?v=e139d5b0ff92",
-      "sourceFrameSha256": "e139d5b0ff92e86f1c6ba79d29e8297a6bac93cddd9f80d2bcd782fe393f9efa",
-      "provenance": "assets/editorial/animation-start-20260913/carbonSeat-provenance.json?v=492efdff1133"
+      "sourceFrame": "assets/exploded/neutral-20260915/sd/scanner/00.webp?v=0046b9958ded",
+      "sourceFrameSha256": "0046b9958dede6d6e1e65f9d96fc027d038b42ee6c7fc5ed339c8154ee6e0af2",
+      "provenance": "assets/editorial/neutral-20260915/scanner-provenance.json?v=7405f572fbe4"
     },
     "seat": {
-      "src": "assets/editorial/animation-start-20260913/seat-wide-1800.webp?v=b7141b451e94",
-      "srcset": "assets/editorial/animation-start-20260913/seat-wide-480.webp?v=51a70042cd0e 480w, assets/editorial/animation-start-20260913/seat-wide-960.webp?v=4ad9afc13786 960w, assets/editorial/animation-start-20260913/seat-wide-1800.webp?v=b7141b451e94 1800w",
+      "src": "assets/editorial/neutral-20260915/seat-wide-1800.webp?v=ad9330bcc20e",
+      "srcset": "assets/editorial/neutral-20260915/seat-wide-480.webp?v=d59c63530faf 480w, assets/editorial/neutral-20260915/seat-wide-960.webp?v=808ba2b7e914 960w, assets/editorial/neutral-20260915/seat-wide-1800.webp?v=ad9330bcc20e 1800w",
       "alt": "Folded and perforated aluminum driver seat.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/animation-start-20260913/seat-wide-480.webp",
+          "src": "assets/editorial/neutral-20260915/seat-wide-480.webp",
           "width": 480,
           "height": 320,
-          "bytes": 8514,
-          "sha256": "51a70042cd0e5b8095853b8810e14fb3c21f329aabb112c985f94ea06e5a80ee"
+          "sha256": "d59c63530fafc9e645ceb2a4f2acaa68a70a00fc5bf4c8d367689fb280a78fbf",
+          "bytes": 7068
         },
         {
-          "src": "assets/editorial/animation-start-20260913/seat-wide-960.webp",
+          "src": "assets/editorial/neutral-20260915/seat-wide-960.webp",
           "width": 960,
           "height": 640,
-          "bytes": 17868,
-          "sha256": "4ad9afc137867aca5953022ae39b9a4714f9684308eb6ee142eee5081ed9ebae"
+          "sha256": "808ba2b7e914daaded365c9b94689c7a1a794539c54958f5a1e4a313b9e68c13",
+          "bytes": 14914
         },
         {
-          "src": "assets/editorial/animation-start-20260913/seat-wide-1800.webp",
+          "src": "assets/editorial/neutral-20260915/seat-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "bytes": 41966,
-          "sha256": "b7141b451e94a76fb76c5e442614981ac7fbf4f7c311acbffc335a5c922b413a"
+          "sha256": "ad9330bcc20eaff3d971f8acab0b1fbb597aa31e62918819e09d72aa5a0ea5d7",
+          "bytes": 33088
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/functional-20260913/seat/00.webp?v=348e13543726",
-      "sourceFrameSha256": "348e13543726515c4dfd8a6421f37cc16c917fee0304504f5ea0c6614666f7a3",
-      "provenance": "assets/editorial/animation-start-20260913/seat-provenance.json?v=ba67d30df850"
+      "sourceFrame": "assets/exploded/neutral-20260915/sd/seat/00.webp?v=61d7ae2190c4",
+      "sourceFrameSha256": "61d7ae2190c4c5cda72b8ba1ace0670bb7640cfd8fb009c1dd383729eb9eebf6",
+      "provenance": "assets/editorial/neutral-20260915/seat-provenance.json?v=688676a306bf"
     },
     "materialTest": {
-      "src": "assets/editorial/animation-start-20260913/materialTest-wide-1800.webp?v=ae3f78031cc9",
-      "srcset": "assets/editorial/animation-start-20260913/materialTest-wide-480.webp?v=fc175327fb3d 480w, assets/editorial/animation-start-20260913/materialTest-wide-960.webp?v=ddf2eb275716 960w, assets/editorial/animation-start-20260913/materialTest-wide-1800.webp?v=ae3f78031cc9 1800w",
+      "src": "assets/editorial/neutral-20260915/materialTest-wide-1800.webp?v=068925b08a8d",
+      "srcset": "assets/editorial/neutral-20260915/materialTest-wide-480.webp?v=4f1b6bd5723c 480w, assets/editorial/neutral-20260915/materialTest-wide-960.webp?v=19302d4e4b56 960w, assets/editorial/neutral-20260915/materialTest-wide-1800.webp?v=068925b08a8d 1800w",
       "alt": "Orange tensile specimen held between silver grips before stretching.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/animation-start-20260913/materialTest-wide-480.webp",
+          "src": "assets/editorial/neutral-20260915/materialTest-wide-480.webp",
           "width": 480,
           "height": 320,
-          "bytes": 6058,
-          "sha256": "fc175327fb3d7ee236182e56edab39108ea8696a51a19185f3d1816ff23f28a5"
+          "sha256": "4f1b6bd5723ca0846c1a7e529d3ec6524d95de29d3fbeb09948b16085f54dc34",
+          "bytes": 4804
         },
         {
-          "src": "assets/editorial/animation-start-20260913/materialTest-wide-960.webp",
+          "src": "assets/editorial/neutral-20260915/materialTest-wide-960.webp",
           "width": 960,
           "height": 640,
-          "bytes": 14366,
-          "sha256": "ddf2eb2757161ade9647ccbf7ad8fda68bf80fa28bf036e6ba9d20bfd82dd711"
+          "sha256": "19302d4e4b560803c460f45dd05edeabbbc87dfe380999de5a5c6ae447f85e96",
+          "bytes": 11410
         },
         {
-          "src": "assets/editorial/animation-start-20260913/materialTest-wide-1800.webp",
+          "src": "assets/editorial/neutral-20260915/materialTest-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "bytes": 38556,
-          "sha256": "ae3f78031cc95c6b8012e922fc008e3c67a8d52330f286a3accaae3a3c6c97b6"
+          "sha256": "068925b08a8d2488b6cf435220506dfd07f1156b4ea6cca0b8c97815278b9fb0",
+          "bytes": 29968
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/refined-20260913/materialTest/00.webp?v=f066fae29ae1",
-      "sourceFrameSha256": "f066fae29ae10bb8c2cbb7a432d427e45a1c9e3a52c62e74f553e15cd92adb5c",
-      "provenance": "assets/editorial/animation-start-20260913/materialTest-provenance.json?v=03d2c947e96a"
+      "sourceFrame": "assets/exploded/neutral-20260915/sd/materialTest/00.webp?v=9cb889211618",
+      "sourceFrameSha256": "9cb8892116189bb94826149f206f954c45ef5d7bbb19817064d5bf281d99850c",
+      "provenance": "assets/editorial/neutral-20260915/materialTest-provenance.json?v=55d9aea0c6b5"
     },
     "ansysCfd": {
-      "src": "assets/editorial/animation-start-20260913/ansysCfd-wide-1800.webp?v=79560302c1eb",
-      "srcset": "assets/editorial/animation-start-20260913/ansysCfd-wide-480.webp?v=c1cb16c29c38 480w, assets/editorial/animation-start-20260913/ansysCfd-wide-960.webp?v=d40a994e3edf 960w, assets/editorial/animation-start-20260913/ansysCfd-wide-1800.webp?v=79560302c1eb 1800w",
+      "src": "assets/editorial/neutral-20260915/ansysCfd-wide-1800.webp?v=4939c9fb3c04",
+      "srcset": "assets/editorial/neutral-20260915/ansysCfd-wide-480.webp?v=f4355c0a3fd6 480w, assets/editorial/neutral-20260915/ansysCfd-wide-960.webp?v=d8e7f9aab982 960w, assets/editorial/neutral-20260915/ansysCfd-wide-1800.webp?v=4939c9fb3c04 1800w",
       "alt": "Javelin pressure field and numerical flow paths at the beginning of the flow sequence.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/animation-start-20260913/ansysCfd-wide-480.webp",
+          "src": "assets/editorial/neutral-20260915/ansysCfd-wide-480.webp",
           "width": 480,
           "height": 320,
-          "bytes": 16898,
-          "sha256": "c1cb16c29c38b98f1ed517a47524df63903848dc5529c197c50f1b2f1c7737f9"
+          "sha256": "f4355c0a3fd695be929600e72b9adea401ee44b0e3c9e36a0bfbec655facb77c",
+          "bytes": 16664
         },
         {
-          "src": "assets/editorial/animation-start-20260913/ansysCfd-wide-960.webp",
+          "src": "assets/editorial/neutral-20260915/ansysCfd-wide-960.webp",
           "width": 960,
           "height": 640,
-          "bytes": 50124,
-          "sha256": "d40a994e3edfa27409dc0c37395a7ef0562bdd36ccaf95635249a90f847b1682"
+          "sha256": "d8e7f9aab982df5e102f8e28ca0a153562c9ad4748b9d7df3da3f38abcae96ce",
+          "bytes": 48934
         },
         {
-          "src": "assets/editorial/animation-start-20260913/ansysCfd-wide-1800.webp",
+          "src": "assets/editorial/neutral-20260915/ansysCfd-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "bytes": 145730,
-          "sha256": "79560302c1eb3c227ce9dfd5266b822fa8ddc4da474cf487a425aa9ac5893324"
+          "sha256": "4939c9fb3c049923e63b48ef9a2c532e37a7327c796ee8cd95b82d40d42807ff",
+          "bytes": 139948
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/functional-20260913/ansysCfd/00.webp?v=75fc279aa1b1",
-      "sourceFrameSha256": "75fc279aa1b12ecf6833c4c945e305cb72fc5d22054e5b09e49af3dbdf16d94e",
-      "provenance": "assets/editorial/animation-start-20260913/ansysCfd-provenance.json?v=2ba052735a12"
+      "sourceFrame": "assets/exploded/neutral-20260915/sd/ansysCfd/00.webp?v=5ebabcb8e3a8",
+      "sourceFrameSha256": "5ebabcb8e3a88d6b9aea0a9e76d29aaf8f664e382a287988b801ef8e83d40067",
+      "provenance": "assets/editorial/neutral-20260915/ansysCfd-provenance.json?v=628f63e72be4"
     },
     "pool": {
-      "src": "assets/editorial/animation-start-20260913/pool-wide-1800.webp?v=9e21238a7a7a",
-      "srcset": "assets/editorial/animation-start-20260913/pool-wide-480.webp?v=21df1f6ee5c4 480w, assets/editorial/animation-start-20260913/pool-wide-960.webp?v=d14d1960a595 960w, assets/editorial/animation-start-20260913/pool-wide-1800.webp?v=9e21238a7a7a 1800w",
+      "src": "assets/editorial/neutral-20260915/pool-wide-1800.webp?v=0e639426ec12",
+      "srcset": "assets/editorial/neutral-20260915/pool-wide-480.webp?v=600b76931736 480w, assets/editorial/neutral-20260915/pool-wide-960.webp?v=59971dff9b28 960w, assets/editorial/neutral-20260915/pool-wide-1800.webp?v=0e639426ec12 1800w",
       "alt": "Pool Sniper launcher with its cue extended before retraction.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/animation-start-20260913/pool-wide-480.webp",
+          "src": "assets/editorial/neutral-20260915/pool-wide-480.webp",
           "width": 480,
           "height": 320,
-          "bytes": 10252,
-          "sha256": "21df1f6ee5c4d38648be18296ef6d09bd72b23d6a06154a17c6df8084590311e"
+          "sha256": "600b76931736392a4ceb3d9068615c58e2e0ceff4a22296cdd8edf75984aec15",
+          "bytes": 9222
         },
         {
-          "src": "assets/editorial/animation-start-20260913/pool-wide-960.webp",
+          "src": "assets/editorial/neutral-20260915/pool-wide-960.webp",
           "width": 960,
           "height": 640,
-          "bytes": 23922,
-          "sha256": "d14d1960a595ff5218106518c5025a3a40f9652de58af895fc1edb63ebc74767"
+          "sha256": "59971dff9b2882c4b5525677b496404cfdc90b7596e05995fc46afe2c882dde7",
+          "bytes": 21072
         },
         {
-          "src": "assets/editorial/animation-start-20260913/pool-wide-1800.webp",
+          "src": "assets/editorial/neutral-20260915/pool-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "bytes": 62394,
-          "sha256": "9e21238a7a7af9b942e15779818a59c1428a182ba7b51d783b8de5dcf468977e"
+          "sha256": "0e639426ec12e0865183879d9658247c7fc774cc6c16d9da5855fbdf5c54ea35",
+          "bytes": 53606
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/refined-20260913/pool/00.webp?v=2b27e063d43f",
-      "sourceFrameSha256": "2b27e063d43f9159d2ed1c6599ac50a8c294bbbe9336a85abc140f7148d24e21",
-      "provenance": "assets/editorial/animation-start-20260913/pool-provenance.json?v=24beb9f60737"
+      "sourceFrame": "assets/exploded/neutral-20260915/sd/pool/00.webp?v=613da4f89557",
+      "sourceFrameSha256": "613da4f895574fdb56e348301ed67820dc60928f40c39a8e509cf1a09a1021d1",
+      "provenance": "assets/editorial/neutral-20260915/pool-provenance.json?v=794bcd71f3e4"
     },
     "lineFollower": {
-      "src": "assets/editorial/animation-start-20260913/lineFollower-wide-1800.webp?v=a854f61a252d",
-      "srcset": "assets/editorial/animation-start-20260913/lineFollower-wide-480.webp?v=9ecb1d9656e5 480w, assets/editorial/animation-start-20260913/lineFollower-wide-960.webp?v=f3d10acdf1f9 960w, assets/editorial/animation-start-20260913/lineFollower-wide-1800.webp?v=a854f61a252d 1800w",
+      "src": "assets/editorial/neutral-20260915/lineFollower-wide-1800.webp?v=245156d8b639",
+      "srcset": "assets/editorial/neutral-20260915/lineFollower-wide-480.webp?v=e22c538f6809 480w, assets/editorial/neutral-20260915/lineFollower-wide-960.webp?v=ca5b7d605a88 960w, assets/editorial/neutral-20260915/lineFollower-wide-1800.webp?v=245156d8b639 1800w",
       "alt": "Line-following robot with orange wheels and a teal circuit board.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/animation-start-20260913/lineFollower-wide-480.webp",
+          "src": "assets/editorial/neutral-20260915/lineFollower-wide-480.webp",
           "width": 480,
           "height": 320,
-          "bytes": 12294,
-          "sha256": "9ecb1d9656e557912b4f59bdf51b90f16270bec5b94d641f820a923d5b08e1d1"
+          "sha256": "e22c538f6809887b706de1b69b6951175b0dbb9591269067d8fa5825121283fb",
+          "bytes": 10616
         },
         {
-          "src": "assets/editorial/animation-start-20260913/lineFollower-wide-960.webp",
+          "src": "assets/editorial/neutral-20260915/lineFollower-wide-960.webp",
           "width": 960,
           "height": 640,
-          "bytes": 30424,
-          "sha256": "f3d10acdf1f98c08293a8f89a608b7866e72ea3aa3edc4f033f45011dc23cf7e"
+          "sha256": "ca5b7d605a88ae05b660d6ef65509d9f090477b3e9235989673f6aef8c603073",
+          "bytes": 26654
         },
         {
-          "src": "assets/editorial/animation-start-20260913/lineFollower-wide-1800.webp",
+          "src": "assets/editorial/neutral-20260915/lineFollower-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "bytes": 80430,
-          "sha256": "a854f61a252da6bb6d5472dd61e89de346ebcf27f49be66889a27ef3a28b64df"
+          "sha256": "245156d8b6393130978e6d138cf08577b3f9d35d0e59225bb75f3387dbd88bcd",
+          "bytes": 71360
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/refined-20260913/lineFollower/00.webp?v=ad8738f1579c",
-      "sourceFrameSha256": "ad8738f1579c5a43b0c0bc2b8fa1e8f1a9ff246a939ee11a4dea66adc1181ff1",
-      "provenance": "assets/editorial/animation-start-20260913/lineFollower-provenance.json?v=68d85e3b41f7"
+      "sourceFrame": "assets/exploded/neutral-20260915/sd/lineFollower/00.webp?v=df6c54919c3e",
+      "sourceFrameSha256": "df6c54919c3e4bcb70ac7b2e2f146269079d7e028ef0e2a3bf2b25e925b6d941",
+      "provenance": "assets/editorial/neutral-20260915/lineFollower-provenance.json?v=e773c2ebdd67"
     },
     "formlabs": {
-      "src": "assets/editorial/animation-start-20260913/formlabs-wide-1800.webp?v=641ab2c47949",
-      "srcset": "assets/editorial/animation-start-20260913/formlabs-wide-480.webp?v=2078d7cb0a6b 480w, assets/editorial/animation-start-20260913/formlabs-wide-960.webp?v=867ce147dd15 960w, assets/editorial/animation-start-20260913/formlabs-wide-1800.webp?v=641ab2c47949 1800w",
+      "src": "assets/editorial/neutral-20260915/formlabs-wide-1800.webp?v=8ee38bc86fde",
+      "srcset": "assets/editorial/neutral-20260915/formlabs-wide-480.webp?v=1e2e276204d5 480w, assets/editorial/neutral-20260915/formlabs-wide-960.webp?v=e0b45afb0739 960w, assets/editorial/neutral-20260915/formlabs-wide-1800.webp?v=8ee38bc86fde 1800w",
       "alt": "Smelly perfume mixer with its white structure and steel guide rods.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/animation-start-20260913/formlabs-wide-480.webp",
+          "src": "assets/editorial/neutral-20260915/formlabs-wide-480.webp",
           "width": 480,
           "height": 320,
-          "bytes": 10870,
-          "sha256": "2078d7cb0a6b15387eee55dbc5040bc121efdf3b3a1c2bfeff478a30be5fd986"
+          "sha256": "1e2e276204d5b9019b8bfb4a4d866a1cfdb4853cdaae4c9b395106678ce6c3e4",
+          "bytes": 9446
         },
         {
-          "src": "assets/editorial/animation-start-20260913/formlabs-wide-960.webp",
+          "src": "assets/editorial/neutral-20260915/formlabs-wide-960.webp",
           "width": 960,
           "height": 640,
-          "bytes": 25776,
-          "sha256": "867ce147dd158f3c9e61de95621170ba163d74655fa16990088135511198f725"
+          "sha256": "e0b45afb07395117f90bd8be558d690b913302a1dc53ffd9c1bc01579e7871ed",
+          "bytes": 22742
         },
         {
-          "src": "assets/editorial/animation-start-20260913/formlabs-wide-1800.webp",
+          "src": "assets/editorial/neutral-20260915/formlabs-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "bytes": 71184,
-          "sha256": "641ab2c47949a0832423af610123949ed82339843463ba4a0768c53114467296"
+          "sha256": "8ee38bc86fdeefa4640ef0931d78335b01b5fff9de98522983f8047f896d341e",
+          "bytes": 60698
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/functional-20260913/formlabs/00.webp?v=85651d469b0a",
-      "sourceFrameSha256": "85651d469b0a6a5dc9ed408f26d2476581cf356036463937cb9e23c7ad7348e7",
-      "provenance": "assets/editorial/animation-start-20260913/formlabs-provenance.json?v=4f680aa6c51f"
+      "sourceFrame": "assets/exploded/neutral-20260915/sd/formlabs/00.webp?v=b57473555c26",
+      "sourceFrameSha256": "b57473555c26bf68c3a73a336f24f7587b4b54bbac53ae3e6c12b06f488e0067",
+      "provenance": "assets/editorial/neutral-20260915/formlabs-provenance.json?v=531fa4325118"
     },
     "education": {
-      "src": "assets/editorial/education-studio-20260914/education-wide-1800.webp?v=76cc945f8d76",
-      "srcset": "assets/editorial/education-studio-20260914/education-wide-480.webp?v=8088a519b0e6 480w, assets/editorial/education-studio-20260914/education-wide-960.webp?v=4ed350740b13 960w, assets/editorial/education-studio-20260914/education-wide-1800.webp?v=76cc945f8d76 1800w",
+      "src": "assets/editorial/neutral-20260915/education-wide-1800.webp?v=b73dd2720c2e",
+      "srcset": "assets/editorial/neutral-20260915/education-wide-480.webp?v=da4195e24743 480w, assets/editorial/neutral-20260915/education-wide-960.webp?v=750b95301d9b 960w, assets/editorial/neutral-20260915/education-wide-1800.webp?v=b73dd2720c2e 1800w",
       "alt": "Separated guitar education kit before assembly.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/education-studio-20260914/education-wide-480.webp",
+          "src": "assets/editorial/neutral-20260915/education-wide-480.webp",
           "width": 480,
           "height": 320,
-          "bytes": 4192,
-          "sha256": "8088a519b0e6c2bbfbbd924a71e8dc84d401cebe976e58943e5e857692728268"
+          "sha256": "da4195e247437eaf11448a38c2c0ecadfdd07aec038277791c1a192bfec29611",
+          "bytes": 3198
         },
         {
-          "src": "assets/editorial/education-studio-20260914/education-wide-960.webp",
+          "src": "assets/editorial/neutral-20260915/education-wide-960.webp",
           "width": 960,
           "height": 640,
-          "bytes": 10078,
-          "sha256": "4ed350740b13cfccf48cc68ba43890eb187f8ce88390c69ed3a1a76b5fb0c2ad"
+          "sha256": "750b95301d9bf7324ddc36560a1cec257c5f3ccb1d5b5719cd443bbe2c363b50",
+          "bytes": 7988
         },
         {
-          "src": "assets/editorial/education-studio-20260914/education-wide-1800.webp",
+          "src": "assets/editorial/neutral-20260915/education-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "bytes": 27996,
-          "sha256": "76cc945f8d7678ab7e77991e6b005fb92d86db1e4d65e5faa682548cbdf6b754"
+          "sha256": "b73dd2720c2e875d8669a0d2d1db177f8d3753f4be75ba1012c6c1527d537ef1",
+          "bytes": 20344
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/education-studio-20260914/education/00.webp?v=22a033bdc40f",
-      "sourceFrameSha256": "22a033bdc40f649a71da3f04f2e5f00a71cbac8fd173e1fc016461ce75dc2bbe",
-      "provenance": "assets/editorial/education-studio-20260914/education-provenance.json?v=1f804cc795c3"
+      "sourceFrame": "assets/exploded/neutral-20260915/sd/education/00.webp?v=6f35287dd76e",
+      "sourceFrameSha256": "6f35287dd76ed79c3c538ed26e94a418c875ffc4bdc36f0194bd66a56094a898",
+      "provenance": "assets/editorial/neutral-20260915/education-provenance.json?v=9566e31c218e"
     },
     "ftc": {
-      "src": "assets/editorial/animation-start-20260913/ftc-wide-1800.webp?v=5871c5896c13",
-      "srcset": "assets/editorial/animation-start-20260913/ftc-wide-480.webp?v=8c09a3b5c72e 480w, assets/editorial/animation-start-20260913/ftc-wide-960.webp?v=0fd0dafb6f46 960w, assets/editorial/animation-start-20260913/ftc-wide-1800.webp?v=5871c5896c13 1800w",
+      "src": "assets/editorial/neutral-20260915/ftc-wide-1800.webp?v=131cc1ffd5e2",
+      "srcset": "assets/editorial/neutral-20260915/ftc-wide-480.webp?v=b9fae292b6aa 480w, assets/editorial/neutral-20260915/ftc-wide-960.webp?v=e864f3f2bbd7 960w, assets/editorial/neutral-20260915/ftc-wide-1800.webp?v=131cc1ffd5e2 1800w",
       "alt": "Assembled FTC robot with an aluminum lift, red panels and mecanum wheels.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/animation-start-20260913/ftc-wide-480.webp",
+          "src": "assets/editorial/neutral-20260915/ftc-wide-480.webp",
           "width": 480,
           "height": 320,
-          "bytes": 11738,
-          "sha256": "8c09a3b5c72e871c56aa85a7edaaf4d03822066bf236beeb88a2fc0146a7df8a"
+          "sha256": "b9fae292b6aa41767dc8be338d291b2fa14dc5cc4909802cb4ad8089df8f51b7",
+          "bytes": 10300
         },
         {
-          "src": "assets/editorial/animation-start-20260913/ftc-wide-960.webp",
+          "src": "assets/editorial/neutral-20260915/ftc-wide-960.webp",
           "width": 960,
           "height": 640,
-          "bytes": 31260,
-          "sha256": "0fd0dafb6f46b43f1103504142150da7f7c330e3fecf4c3ed68a57bc8c6b58af"
+          "sha256": "e864f3f2bbd72c4f9cea16e8c1701c131566518c44b91470508d832b79b56f24",
+          "bytes": 27888
         },
         {
-          "src": "assets/editorial/animation-start-20260913/ftc-wide-1800.webp",
+          "src": "assets/editorial/neutral-20260915/ftc-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "bytes": 84454,
-          "sha256": "5871c5896c13c97738f4ab27a09628b44edb4dcfb024a66b72d6987ac5697bd7"
+          "sha256": "131cc1ffd5e20796b7f82d750df71eb8bf671030f3ce02fd53c466a6f489cbc5",
+          "bytes": 73770
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/functional-20260913/ftc/00.webp?v=bdd13a62894e",
-      "sourceFrameSha256": "bdd13a62894efcc5be88ff50c53b1ab832d2f209b32eece8c6c9f73c15bc1257",
-      "provenance": "assets/editorial/animation-start-20260913/ftc-provenance.json?v=98969a402dab"
+      "sourceFrame": "assets/exploded/neutral-20260915/sd/ftc/00.webp?v=9c83c456829c",
+      "sourceFrameSha256": "9c83c456829c5ce5057802406f81b74798904e9c2f461470287c0bd58089f9b0",
+      "provenance": "assets/editorial/neutral-20260915/ftc-provenance.json?v=7d135ee212a2"
     },
     "telecaster": {
-      "src": "assets/editorial/animation-start-20260913/telecaster-wide-1800.webp?v=8070d2fb8672",
-      "srcset": "assets/editorial/animation-start-20260913/telecaster-wide-480.webp?v=6387951b4ea8 480w, assets/editorial/animation-start-20260913/telecaster-wide-960.webp?v=06a4a7e77290 960w, assets/editorial/animation-start-20260913/telecaster-wide-1800.webp?v=8070d2fb8672 1800w",
+      "src": "assets/editorial/neutral-20260915/telecaster-wide-1800.webp?v=878b56f5406b",
+      "srcset": "assets/editorial/neutral-20260915/telecaster-wide-480.webp?v=f3f6071661ee 480w, assets/editorial/neutral-20260915/telecaster-wide-960.webp?v=9b8c76bead9c 960w, assets/editorial/neutral-20260915/telecaster-wide-1800.webp?v=878b56f5406b 1800w",
       "alt": "Finished Telecaster-style guitar at the start of its full rotation.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/animation-start-20260913/telecaster-wide-480.webp",
+          "src": "assets/editorial/neutral-20260915/telecaster-wide-480.webp",
           "width": 480,
           "height": 320,
-          "bytes": 4828,
-          "sha256": "6387951b4ea8fee0572e266e92af850dccaabe212a377a2062a6d8b01d2ec510"
+          "sha256": "f3f6071661eef47254c9854171798bfc5059e2d65d01ddb4ca9d3f65b1816ff9",
+          "bytes": 3788
         },
         {
-          "src": "assets/editorial/animation-start-20260913/telecaster-wide-960.webp",
+          "src": "assets/editorial/neutral-20260915/telecaster-wide-960.webp",
           "width": 960,
           "height": 640,
-          "bytes": 12396,
-          "sha256": "06a4a7e7729096240758b19d308dd000c9a3ea7fcc55c39c33c110bf53caf2a5"
+          "sha256": "9b8c76bead9c83c987849d37749e7998b24b37cc405bf64cede656cbbc7b586d",
+          "bytes": 10008
         },
         {
-          "src": "assets/editorial/animation-start-20260913/telecaster-wide-1800.webp",
+          "src": "assets/editorial/neutral-20260915/telecaster-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "bytes": 36448,
-          "sha256": "8070d2fb867209b1156d72ba33d1b28f60045213b914cfdce8cfa28f325c84fd"
+          "sha256": "878b56f5406bcd8908e4bd6196791a89aad33c60883daa1b4dd7da28a804e097",
+          "bytes": 29146
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/flight-20260913/telecaster/00.webp?v=2f326de66073",
-      "sourceFrameSha256": "2f326de660732ee82bdb3b48199789e3bef99f83012aa55807120797eadc379f",
-      "provenance": "assets/editorial/animation-start-20260913/telecaster-provenance.json?v=e5851df6b78e"
+      "sourceFrame": "assets/exploded/neutral-20260915/sd/telecaster/00.webp?v=088ef37d7ed7",
+      "sourceFrameSha256": "088ef37d7ed7416e4d3f4949130a0816a92940e3936cea11998fe57674e2e94d",
+      "provenance": "assets/editorial/neutral-20260915/telecaster-provenance.json?v=3d5b508657b0"
+    },
+    "carbonSeat": {
+      "src": "assets/editorial/neutral-20260915/carbonSeat-wide-1800.webp?v=9947d45e1ef7",
+      "srcset": "assets/editorial/neutral-20260915/carbonSeat-wide-480.webp?v=79b769fb52aa 480w, assets/editorial/neutral-20260915/carbonSeat-wide-960.webp?v=0326964b222e 960w, assets/editorial/neutral-20260915/carbonSeat-wide-1800.webp?v=9947d45e1ef7 1800w",
+      "alt": "Carbon-fiber seat layup at the beginning of the fabrication sequence.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/neutral-20260915/carbonSeat-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "79b769fb52aa26b6beae9b3065f3cbaa2501cf2469c2f37eb683fb0a2340bdd4",
+          "bytes": 3292
+        },
+        {
+          "src": "assets/editorial/neutral-20260915/carbonSeat-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "0326964b222e831e5e1f46eba91b2d70449fad02f26f11fc0d8e3757ff92c3c3",
+          "bytes": 10890
+        },
+        {
+          "src": "assets/editorial/neutral-20260915/carbonSeat-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "9947d45e1ef78ddeb424e5e19b0f0d974a869f7c6c05bd62c419abfcab2f7b59",
+          "bytes": 63098
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/neutral-20260915/sd/carbonSeat/00.webp?v=e60373cb8faf",
+      "sourceFrameSha256": "e60373cb8faf40baead50560d446748484ef0f70f2d1bd83a4cd890a9839406c",
+      "provenance": "assets/editorial/neutral-20260915/carbonSeat-provenance.json?v=0f8104f88273"
     }
   }
 }
