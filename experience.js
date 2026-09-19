@@ -14,7 +14,8 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
-import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=studio-polish-20260907";
+import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=studio-v2-20260919";
+import { roomBridge } from "./studio-room-bridge.js?v=studio-v2-20260919";
 import { AdaptiveFrameClock, frameAlpha } from "./experience-timing.js?v=exp-adaptive-20260907";
 import { createStudioLoader } from "./experience-loader.js?v=exp-adaptive-20260907";
 import { createHDRService, createHDRTexture } from "./experience-hdr.js?v=exp-adaptive-20260907";
@@ -412,12 +413,18 @@ async function initScene(canvas) {
   try { deepLinkKey = decodeURIComponent(location.hash.slice(1)); } catch (error) {
     console.warn("[experience] malformed deep link", error);
   }
-  const loader = new ModelLODLoader(manager, { targetKey: deepLinkKey });
+  const backgroundProjects = new Set(["seat", "ftc", "formlabs", "pool", "telecaster", "lineFollower", "education"]);
+  const loader = new ModelLODLoader(manager, {
+    targetKey: deepLinkKey,
+    deferBase: (url, key) => roomBridge.managed &&
+      (backgroundProjects.has(key) || /chair|helmet|tire-hoosier/.test(url)),
+  });
   loader.onLevelLoaded = () => { ANISO_DIRTY = true; };
   const barEl = loaderEl ? loaderEl.querySelector(".exp-loader__bar i") : null;
   const txtEl = loaderEl ? loaderEl.querySelector(".exp-loader__text") : null;
   manager.onProgress = (url, loaded, total) => {
     startupUI.update({ loaded, total, phase: "loading" });
+    if (roomBridge.managed && !revealed) roomBridge.status("loading", `Preparing the room · ${loaded} of ${total} resources. Projects can be opened now.`);
   };
   let revealed = false, revealPending = false;
   // one-shot: set when a flow (deep link) skips the normal drag-hint timing;
@@ -427,7 +434,8 @@ async function initScene(canvas) {
     if (revealed || document.hidden || renderer.getContext().isContextLost()) return;
     revealed = true;
     readiness.revealed = true;
-    loader.enabled = true;
+    loader.enabled = !roomBridge.managed;
+    loader.releaseBackground();
     startupUI.complete();
     if (loaderEl) {
       const hideStatus = () => {
@@ -451,6 +459,11 @@ async function initScene(canvas) {
     const lightToggle = document.getElementById("exp-light-toggle");
     if (lightToggle) lightToggle.disabled = false;
     updateLightingUI();
+    if (roomBridge.managed) {
+      roomBridge.status("ready", "Drag to look around. Select a project to inspect.");
+      controls.enabled = roomBridge.active;
+      return;
+    }
     // Every entry gets the same guided camera sweep. A deep link keeps its
     // destination and opens that exhibit when the sweep finishes.
     const dlKey = deepLinkKey;
@@ -491,10 +504,10 @@ async function initScene(canvas) {
   });
 
   /* ---------- lighting ---------- */
-  const hemi = new THREE.HemisphereLight(0x4e5766, 0x14161a, 0.95);
+  const hemi = new THREE.HemisphereLight(0x666666, 0x181818, 0.95);
   scene.add(hemi);
 
-  const key = new THREE.DirectionalLight(0xeef2f8, 1.35);
+  const key = new THREE.DirectionalLight(0xffffff, 1.35);
   key.position.set(2.6, 4.6, 2.4);
   key.castShadow = true;
   // 2048 (was 4096): the PCF radius-7 blur already softens edges and the
@@ -512,7 +525,7 @@ async function initScene(canvas) {
   scene.add(key);
 
   // soft cool fill from the front-left balances the warm key (cinematic 2-point)
-  const fill = new THREE.DirectionalLight(0xa8bfdd, 0.3);
+  const fill = new THREE.DirectionalLight(0xffffff, 0.3);
   fill.position.set(-3, 2.2, 3);
   scene.add(fill);
 
@@ -903,16 +916,16 @@ async function initScene(canvas) {
   scene.add(buildDisplayCabinet());
 
   // real SolidWorks assemblies (merged per-part STLs, material buckets)
-  // hero row (middle, eye level): javelin / steering / brake
+  // Motorsport above robotics; material and flow studies on the lower shelf.
   const ASSEMBLIES = [
-    { file: "seat",     key: "carbonSeat", label: "Carbon fiber seat", size: 0.3,  axis: "y", bay: 0, row: 0, rotY: 0.4 },
-    { file: "aura",     key: "aura",       label: "AURA Swerve",       size: 0.29, axis: "y", bay: 1, row: 0, rotY: 0.35, rotZ: -Math.PI / 2,
+    { file: "seat",     key: "carbonSeat", label: "Carbon fiber seat", size: 0.3,  axis: "y", bay: 2, row: 0, rotY: 0.4 },
+    { file: "aura",     key: "aura",       label: "AURA Swerve",       size: 0.29, axis: "y", bay: 1, row: 1, rotY: 0.35, rotZ: -Math.PI / 2,
       matTweak: { printed: { color: 0x9299a1, metalness: 0.05, roughness: 0.45 } } }, // aluminum/grey structure
-    { file: "scanner",  key: "scanner",    label: "3D scanner",        size: 0.38, axis: "x", bay: 2, row: 0, rotY: 0.35,
+    { file: "scanner",  key: "scanner",    label: "3D scanner",        size: 0.38, axis: "x", bay: 2, row: 1, rotY: 0.35,
       matTweak: { printed: { color: 0x2a55c8 }, wood: { color: 0xdfd2b0, roughness: 0.7 } } }, // blue brackets, near-white plywood base (photo); truss + EMG cover ride the light-grey aero bucket
     { file: "javelin",  key: "javelin",    label: "Javelin VTOL",      size: 0.44, axis: "x", bay: 0, row: 1, rotY: 0.6,
       matTweak: { aero: { color: 0x3a3e44, roughness: 0.4, envMapIntensity: 1.6 }, printed: { color: 0x26292e }, dark: { color: 0x24272c } } },
-    { file: "steering", key: "steering",   label: "Mk.8 Steering",     size: 0.32, axis: "y", bay: 1, row: 1, rotY: 0.5 },
+    { file: "steering", key: "steering",   label: "Mk.8 Steering",     size: 0.32, axis: "y", bay: 0, row: 0, rotY: 0.5 },
   ];
   ASSEMBLIES.forEach((a) =>
     loadAssembly(loader, scene, `models/real/${a.file}.glb`, {
@@ -925,8 +938,8 @@ async function initScene(canvas) {
 
   // real CAD exhibits (merged per-part STLs) + one procedural CFD monitor
   loadAssembly(loader, scene, "models/real/brakeSim.glb", {
-    fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[1] + 0.44, name: "ex_brakeSim", projectKey: "brakeSim", label: "FSAE Brake Sim",
-    targetSize: 0.26, axis: "y", pos: [CAB.bays[2], CAB.rows[1], CAB.frontZ], rotY: Math.PI / 2 + 0.25,
+    fit: [0.6, 0.36, 0.4], markerCap: CAB.rows[0] + 0.36, name: "ex_brakeSim", projectKey: "brakeSim", label: "FSAE Brake Sim",
+    targetSize: 0.26, axis: "y", pos: [CAB.bays[1], CAB.rows[0], CAB.frontZ], rotY: Math.PI / 2 + 0.25,
     matTweak: { steel: { color: 0xbcc2c9, roughness: 0.4, metalness: 1.0 } }, // bright silver rotor
   });
   // real CAD (Tensile Machine.STL -> materialTest.glb): the Instron-style
@@ -946,7 +959,7 @@ async function initScene(canvas) {
     // this bay's established cant (lineFollower ran 0.45 here) so the
     // frame reads 3/4-on into the room instead of a flat, square-on
     // billboard at 0.
-    targetSize: 0.38, axis: "y", pos: [CAB.bays[0], CAB.rows[2], CAB.frontZ], rotY: 0.4,
+    targetSize: 0.38, axis: "y", pos: [CAB.bays[1], CAB.rows[2], CAB.frontZ], rotY: 0.4,
     // converter-suggested tweaks over the 4 merged material buckets:
     // aero = both side columns + the base housing, warmed toward a cream
     // off-white (the raw photo sample carries a green-white fluorescent
@@ -968,7 +981,7 @@ async function initScene(canvas) {
   });
   placeRoot(buildCfdDisplay(artLoader), scene, {
     fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_ansysCfd", projectKey: "ansysCfd", label: "Agent-based CFD",
-    targetSize: 0.34, axis: "x", pos: [CAB.bays[1], CAB.rows[2], CAB.frontZ], rotY: 0.25,
+    targetSize: 0.34, axis: "x", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotY: 0.25,
   });
   // real CAD (Bucketbot - *.STL -> vineRobot.glb): the pressure vessel that
   // spools out the everting vine. Native axes are ALREADY y-up — feet at min y,
@@ -985,7 +998,7 @@ async function initScene(canvas) {
     // at that height comes out 0.31 wide x 0.37 deep: clear of the 0.7 bay,
     // still inside the shelf board's 0.46 of depth, and under every `fit` axis
     // so the clamp never fires. 0.12 of the 0.48 row is left for the marker.
-    targetSize: 0.36, axis: "y", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotY: Math.PI / 2 - 0.2,
+    targetSize: 0.36, axis: "y", pos: [CAB.bays[0], CAB.rows[2], CAB.frontZ], rotY: Math.PI / 2 - 0.2,
     // Re-audited for the regenerated GLB (60 parts -> 7 buckets). The build
     // photos beat the CAD renders on every part they actually show:
     //   printed (38) — the one royal blue now also paints the 3 C-bands, the
@@ -1037,7 +1050,7 @@ async function initScene(canvas) {
     // (z->up) with rotX, then face the room with rotY.
     { file: "driverseat",      key: "seat",      label: "Driver seat",       size: 0.34, axis: "y", bay: 0, row: 0, rotX: Math.PI / 2, rotY: -Math.PI / 2 + 0.4, rotZ: Math.PI / 2,
       matTweak: { steel: { color: 0xccd2da, metalness: 0.85, roughness: 0.35 } } }, // light brushed aluminum, reclined bucket facing the room
-    { build: buildFtcBot,      key: "ftc",       label: "FTC robot",         size: 0.28, bay: 1, row: 0 },
+    { sourceURL: "assets/studio-motion/ftc/room.glb", key: "ftc", label: "FTC robot", size: 0.28, axis: "y", bay: 1, row: 0 },
     { file: "smelly",          key: "formlabs",  label: "Smelly",            size: 0.3,  axis: "y", bay: 0, row: 1, rotY: -Math.PI / 2 + 0.2,
       // photo-matched: the printed frame/gantry is white FDM plastic, not
       // aluminum; rods/lead screws stay bright steel
@@ -1088,12 +1101,20 @@ async function initScene(canvas) {
       rotY: s.rotY !== undefined ? s.rotY : -Math.PI / 2 + 0.25,
       rotZ: s.rotZ, rotX: s.rotX, matTweak: s.matTweak, extraParts: s.extraParts,
     };
-    if (s.file) loadAssembly(loader, scene, `models/real/${s.file}.glb`, opts);
+    if (s.sourceURL) loader.load(s.sourceURL, (gltf) => placeRoot(gltf.scene, scene, opts), undefined, undefined, null, s.key);
+    else if (s.file) loadAssembly(loader, scene, `models/real/${s.file}.glb`, opts);
     else placeRoot(s.build(), scene, opts);
     await yieldToBrowser();
   }
   await yieldToBrowser();
   scene.add(await buildWorkbench());
+  // The education kit belongs on the working desk, alongside the drawing pad.
+  loader.load("assets/studio-motion/education/room.glb", (gltf) => placeRoot(gltf.scene, scene, {
+    name: "ex_education", projectKey: "education", label: "Guitar education kit",
+    targetSize: 0.4, axis: "x", fit: [0.46, 0.24, 0.38],
+    pos: [0.61, DESK_TOP + 0.014, 0.15], rotY: -0.35,
+    markerCap: DESK_TOP + 0.28,
+  }), undefined, undefined, null, "education");
   await yieldToBrowser();
   const studioRealism = addStudioRealism(scene, { cabinet: CAB, sideCabinet: CAB2 });
   await yieldToBrowser();
@@ -1530,6 +1551,7 @@ async function initScene(canvas) {
     console.warn("[experience] using procedural room fallback", error);
   }
   function updateLightingUI(message = "") {
+    roomBridge.onLighting?.({on: lightsOn, busy: lightingBusy, ready: readiness.revealed});
     if (qualityControl) {
       qualityControl.value = lightQuality;
       qualityControl.setAttribute("aria-busy", String(lightingBusy));
@@ -1794,6 +1816,7 @@ async function initScene(canvas) {
   // named + exposed (see window.__exp.pump) so QA can hand-step frames with
   // synthetic timestamps in a backgrounded tab, where rAF never fires
   const tick = (t, forced) => {
+    if (roomBridge.managed && !roomBridge.active) return;
     // Estimate the display's available cadence from raw (ungated) callbacks.
     // A 60 Hz display must not lose resolution chasing unattainable 120 Hz.
     if (!forced) {
@@ -2092,6 +2115,7 @@ async function initScene(canvas) {
     });
     lastCameraPosition.copy(camera.position);
     lastCameraQuaternion.copy(camera.quaternion);
+    if (roomBridge.managed) roomBridge.onFrame?.(camera, HOTSPOTS, renderer.domElement);
     if (!readiness.revealed && !revealPending && !renderer.getContext().isContextLost()) {
       readiness.firstFrame = true;
       revealPending = true;
@@ -2180,7 +2204,7 @@ async function initScene(canvas) {
   const PM_V1 = new THREE.Vector3();
 
   /* ---------- custom cursor: ring + dot over the canvas (fine pointers) ---------- */
-  const FINE_POINTER = window.matchMedia("(pointer: fine)").matches;
+  const FINE_POINTER = !roomBridge.managed && window.matchMedia("(pointer: fine)").matches;
   let setCursorHover = (on) => {
     renderer.domElement.style.cursor = on ? "pointer" : "";
   };
@@ -2417,6 +2441,15 @@ async function initScene(canvas) {
   function focusHotspot(root) {
     if (!readiness.revealed || paperReturning) return;
     const hs = root.userData.hotspot;
+    if (roomBridge.managed && hs.key) {
+      clearPointerHover();
+      roomBridge.onSelect?.(hs.key);
+      return;
+    }
+    if (roomBridge.managed && hs.action === "resume") {
+      roomBridge.onResume?.();
+      return;
+    }
     const html =
       hs.action === "resume"
         ? resumeHTML(RESUME)
@@ -2487,7 +2520,7 @@ async function initScene(canvas) {
   // fixed tour order for prev/next navigation (matches cabinet layout)
   const PROJECT_ORDER = ["carbonSeat", "aura", "scanner", "javelin", "steering", "brakeSim",
     "materialTest", "ansysCfd", "vineRobot", "seat", "ftc", "formlabs", "pool", "telecaster",
-    "lineFollower"]; // vineRobot now closes the MAIN cabinet's bottom row (bay 2) before the
+    "lineFollower", "education"]; // all project choices also exist in the HTML catalogue
   // tour crosses to the right wall; lineFollower closes the side cabinet, bay 1
   // of its bottom row, after telecaster (the slot education used to hold)
   let currentProjectKey = null;
@@ -3233,7 +3266,7 @@ async function initScene(canvas) {
   // path the pointer uses when it leaves the canvas
   renderer.domElement.addEventListener("blur", () => setHover(null));
 
-  window.__exp = {
+  if (!roomBridge.managed) window.__exp = {
     THREE, scene, camera, renderer, controls, composer, bloom, key, hemi,
     models: MODELS, hotspots: HOTSPOTS, openPanel, showDragHint, runBootIntro,
     pump: (t) => tick(t, true), lod: loader, getLODStats: () => loader.getStats(), readiness,
@@ -3250,8 +3283,42 @@ async function initScene(canvas) {
       cached: Object.keys(LM).filter((key) => !!LM[key]),
     }),
   };
+  roomBridge.attach({
+    setActive(active) {
+      if (!roomBridge.managed) return;
+      running = active && !document.hidden;
+      controls.enabled = active && !panelOpen;
+      frameClock.reset();
+      shadowClock.reset();
+      tickLast = null;
+      if (active) {
+        onResize();
+        loader.start();
+        renderer.setAnimationLoop(tick);
+      } else {
+        clearPointerHover();
+        loader.queue.pause();
+        renderer.setAnimationLoop(null);
+      }
+    },
+    resetView() {
+      flight = null;
+      camera.position.copy(REST_POS);
+      controls.target.copy(REST_TARGET);
+      controls.update();
+    },
+    toggleLights: toggleRoomLights,
+    setQuality(quality) {
+      const select = document.getElementById("exp-light-quality");
+      if (select) {
+        select.value = quality === "high" ? "4k" : "2k";
+        select.dispatchEvent(new Event("change", {bubbles: true}));
+      }
+    },
+    resize: onResize,
+  });
   readiness.construction = true;
-  loader.start();
+  if (!roomBridge.managed || roomBridge.active) loader.start();
   manager.itemEnd("scene-bootstrap");
   await assetsReady;
   // Populate after proxies register; doReveal enables the dock after GPU preparation.
@@ -6498,6 +6565,7 @@ function resumeHTML(r) {
    bootstrap
    ============================================================ */
 if (!canvas || !webglSupported()) {
+  roomBridge.status("error", "The room is unavailable. Choose a project or read its case study.");
   document.documentElement.classList.add("exp-no-webgl");
   console.warn("[experience] WebGL unavailable — static fallback in use");
   if (loaderEl) {
@@ -6508,6 +6576,7 @@ if (!canvas || !webglSupported()) {
   }
 } else {
   initScene(canvas).catch((error) => {
+    roomBridge.status("error", "The room could not load. Project case studies remain available.");
     console.error("[experience] initialization failed", error);
     document.documentElement.classList.add("exp-no-webgl");
     const text = loaderEl?.querySelector(".exp-loader__text");

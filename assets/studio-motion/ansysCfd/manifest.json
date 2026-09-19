@@ -1,0 +1,6347 @@
+{
+  "schema": "studio-motion-v1",
+  "project": "ansysCfd",
+  "coordinates": "blender-z-up",
+  "quaternionOrder": "xyzw",
+  "colorSpace": "linear",
+  "sampleCount": 121,
+  "duration": 8,
+  "buffers": {
+    "geometry": {
+      "url": "geometry.bin.gz",
+      "compression": "gzip",
+      "byteLength": 10922352,
+      "compressedBytes": 3632124,
+      "sha256": "88c2c97f1c289355ada70b7db9f46dcc6127ce3d1d024fa1bac43bd534f50dca"
+    },
+    "motion": {
+      "url": "motion.bin.gz",
+      "compression": "gzip",
+      "byteLength": 85672,
+      "compressedBytes": 56729,
+      "sha256": "0e2f18e723849195f718ca3b206c806eb16f7c3400bd5d72f3acad965b404ca3"
+    }
+  },
+  "materials": [
+    {
+      "name": "Actual Fluent wall static pressure material",
+      "baseColor": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "metalness": 0,
+      "roughness": 0.5,
+      "opacity": 1,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 0.8500000238418579,
+      "unlit": true,
+      "vertexColors": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical streamline quiet cyan",
+      "baseColor": [
+        0.03500000014901161,
+        0.2199999988079071,
+        0.2800000011920929,
+        1.0
+      ],
+      "metalness": 0.0,
+      "roughness": 0.44999998807907104,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        0.03500000014901161,
+        0.2199999988079071,
+        0.2800000011920929
+      ],
+      "emissiveIntensity": 0.3499999940395355,
+      "transmission": 0.0,
+      "ior": 1.5,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.029999999329447746,
+      "tracks": {}
+    },
+    {
+      "name": "Advected solver particle pale cyan",
+      "baseColor": [
+        0.36000001430511475,
+        0.9200000166893005,
+        1.0,
+        1.0
+      ],
+      "metalness": 0.0,
+      "roughness": 0.44999998807907104,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        0.36000001430511475,
+        0.9200000166893005,
+        1.0
+      ],
+      "emissiveIntensity": 2.0,
+      "transmission": 0.0,
+      "ior": 1.5,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.029999999329447746,
+      "tracks": {}
+    },
+    {
+      "name": "CFD legend white",
+      "baseColor": [
+        0.699999988079071,
+        0.7599999904632568,
+        0.800000011920929,
+        1.0
+      ],
+      "metalness": 0.0,
+      "roughness": 0.44999998807907104,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        0.699999988079071,
+        0.7599999904632568,
+        0.800000011920929
+      ],
+      "emissiveIntensity": 0.800000011920929,
+      "transmission": 0.0,
+      "ior": 1.5,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.029999999329447746,
+      "tracks": {}
+    },
+    {
+      "name": "Actual pressure range color scale material",
+      "baseColor": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "metalness": 0,
+      "roughness": 0.5,
+      "opacity": 1,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        0,
+        0,
+        0
+      ],
+      "emissiveIntensity": 0.8500000238418579,
+      "unlit": true,
+      "vertexColors": true,
+      "tracks": {}
+    }
+  ],
+  "nodes": [
+    {
+      "name": "Actual Fluent wall static pressure",
+      "group": "Actual Fluent wall static pressure",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 142350,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 0,
+          "count": 139627,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1675524,
+          "count": 139627,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3351048,
+          "count": 142350,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3920448,
+          "count": 139627,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "color": {
+          "byteOffset": 5595972,
+          "count": 139627,
+          "itemSize": 4,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Fluent path 24",
+      "group": "Fluent path 24",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 40968,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 7830004,
+          "count": 7973,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 7925680,
+          "count": 7973,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8021356,
+          "count": 40968,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8185228,
+          "count": 7973,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8280904,
+          "count": 7973,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 00 0",
+      "group": "Numerical tracer 00 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          -2.0167601108551025,
+          0.1134093701839447,
+          1.0735065937042236
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 1936,
+          "count": 72,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 2800,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 00 1",
+      "group": "Numerical tracer 00 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.520068883895874,
+          0.2554466128349304,
+          1.065295934677124
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          0.7749261260032654,
+          0.7749261260032654,
+          0.7749261260032654
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 3284,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4736,
+          "count": 71,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 5588,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 42",
+      "group": "Fluent path 42",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 4752,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8347568,
+          "count": 931,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8358740,
+          "count": 931,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8369912,
+          "count": 4752,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8388920,
+          "count": 931,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8400092,
+          "count": 931,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 01 0",
+      "group": "Numerical tracer 01 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          -1.389186978340149,
+          -0.6323862671852112,
+          0.3635253608226776
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 6072,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 7524,
+          "count": 8,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 7620,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 01 1",
+      "group": "Numerical tracer 01 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          1.065346121788025,
+          -0.7740530371665955,
+          0.3643665611743927
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 8104,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 9556,
+          "count": 16,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 9748,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 0",
+      "group": "Fluent path 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 4932,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8407540,
+          "count": 966,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8419132,
+          "count": 966,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8430724,
+          "count": 4932,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8450452,
+          "count": 966,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8462044,
+          "count": 966,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 02 0",
+      "group": "Numerical tracer 02 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          -0.6954787969589233,
+          -0.6775806546211243,
+          1.7911419868469238
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 10232,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 11684,
+          "count": 9,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 11792,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 02 1",
+      "group": "Numerical tracer 02 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          1.7969778776168823,
+          -0.8065270185470581,
+          1.7716190814971924
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 12276,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 13728,
+          "count": 17,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 13932,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 48",
+      "group": "Fluent path 48",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 4608,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8469772,
+          "count": 903,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8480608,
+          "count": 903,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8491444,
+          "count": 4608,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8509876,
+          "count": 903,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8520712,
+          "count": 903,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 03 0",
+      "group": "Numerical tracer 03 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.038371358066797256,
+          0.7321802973747253,
+          0.34336283802986145
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 14416,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 15868,
+          "count": 8,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 15964,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 03 1",
+      "group": "Numerical tracer 03 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          2.4862968921661377,
+          0.5901429653167725,
+          0.3401489555835724
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 16448,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 17900,
+          "count": 17,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 18104,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 6",
+      "group": "Fluent path 6",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 4752,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8527936,
+          "count": 931,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8539108,
+          "count": 931,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8369912,
+          "count": 4752,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8550280,
+          "count": 931,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8400092,
+          "count": 931,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 04 0",
+      "group": "Numerical tracer 04 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.716949999332428,
+          0.6941582560539246,
+          1.8064818382263184
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 18588,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 20040,
+          "count": 10,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 20160,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 04 1",
+      "group": "Numerical tracer 04 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          -1.7454169988632202,
+          0.8077226877212524,
+          1.78030264377594
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 20644,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 22096,
+          "count": 8,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 22192,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 21",
+      "group": "Fluent path 21",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 6516,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8561452,
+          "count": 1274,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8576740,
+          "count": 1274,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8592028,
+          "count": 6516,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8618092,
+          "count": 1274,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8633380,
+          "count": 1274,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 05 0",
+      "group": "Numerical tracer 05 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          1.3914833068847656,
+          -0.7695481777191162,
+          1.07473886013031
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 22676,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 24128,
+          "count": 17,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 24332,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 05 1",
+      "group": "Numerical tracer 05 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          -1.1403988599777222,
+          -0.6583592295646667,
+          1.0737146139144897
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 24816,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 26268,
+          "count": 9,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 26376,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 45",
+      "group": "Fluent path 45",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 5652,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8643572,
+          "count": 1106,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8656844,
+          "count": 1106,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8670116,
+          "count": 5652,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8692724,
+          "count": 1106,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8705996,
+          "count": 1106,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 06 0",
+      "group": "Numerical tracer 06 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          2.0378878116607666,
+          -0.10901492834091187,
+          0.35168445110321045
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 26860,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 28312,
+          "count": 16,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 28504,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 06 1",
+      "group": "Numerical tracer 06 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          -0.4361397325992584,
+          0.027913426980376244,
+          0.33432066440582275
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 28988,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 30440,
+          "count": 9,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 30548,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 3",
+      "group": "Fluent path 3",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 5868,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8714844,
+          "count": 1148,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8728620,
+          "count": 1148,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8742396,
+          "count": 5868,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8765868,
+          "count": 1148,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8779644,
+          "count": 1148,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 07 0",
+      "group": "Numerical tracer 07 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          2.694572687149048,
+          -0.1440538763999939,
+          1.7945423126220703
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          0.97770094871521,
+          0.97770094871521,
+          0.97770094871521
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 31032,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 32484,
+          "count": 17,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 32688,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 07 1",
+      "group": "Numerical tracer 07 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.24468839168548584,
+          -0.010768738575279713,
+          1.823072075843811
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 33172,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 34624,
+          "count": 8,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 34720,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 27",
+      "group": "Fluent path 27",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 4968,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8788828,
+          "count": 973,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8800504,
+          "count": 973,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8812180,
+          "count": 4968,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8832052,
+          "count": 973,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8843728,
+          "count": 973,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 08 0",
+      "group": "Numerical tracer 08 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          -1.512492060661316,
+          0.7994839549064636,
+          1.0734633207321167
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 35204,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 36656,
+          "count": 8,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 36752,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 08 1",
+      "group": "Numerical tracer 08 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.957737147808075,
+          0.7171215415000916,
+          1.0741060972213745
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 37236,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 38688,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 38856,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 36",
+      "group": "Fluent path 36",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 15516,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8851512,
+          "count": 3024,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8887800,
+          "count": 3024,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8924088,
+          "count": 15516,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8986152,
+          "count": 3024,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 9022440,
+          "count": 3024,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 09 0",
+      "group": "Numerical tracer 09 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          -0.8078658580780029,
+          -0.4430394768714905,
+          0.5831412672996521
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 39340,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 40792,
+          "count": 17,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 40996,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 09 1",
+      "group": "Numerical tracer 09 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          1.5252879858016968,
+          -0.5131877064704895,
+          0.6502811312675476
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 41480,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 42932,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 43184,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 8",
+      "group": "Fluent path 8",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 15192,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 9046632,
+          "count": 2961,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 9082164,
+          "count": 2961,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 9117696,
+          "count": 15192,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 9178464,
+          "count": 2961,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 9213996,
+          "count": 2961,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 10 0",
+      "group": "Numerical tracer 10 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          -0.09584140032529831,
+          -0.4897000789642334,
+          1.5697810649871826
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 43668,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 45120,
+          "count": 17,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 45324,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 10 1",
+      "group": "Numerical tracer 10 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          2.1609158515930176,
+          -0.5420418977737427,
+          1.4940440654754639
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 45808,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 47260,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 47512,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 39",
+      "group": "Fluent path 39",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 8892,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 9237684,
+          "count": 1736,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 9258516,
+          "count": 1736,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 9279348,
+          "count": 8892,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 9314916,
+          "count": 1736,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 9335748,
+          "count": 1736,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 11 0",
+      "group": "Numerical tracer 11 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.5108534097671509,
+          0.22790087759494781,
+          0.5435718894004822
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 47996,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 49448,
+          "count": 8,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 49544,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 11 1",
+      "group": "Numerical tracer 11 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          -1.9702305793762207,
+          0.34688326716423035,
+          0.6029692888259888
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          0.06506447494029999,
+          0.06506447494029999,
+          0.06506447494029999
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 50028,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 51480,
+          "count": 12,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 51624,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 18",
+      "group": "Fluent path 18",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 16632,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 9349636,
+          "count": 3241,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 9388528,
+          "count": 3241,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 9427420,
+          "count": 16632,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 9493948,
+          "count": 3241,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 9532840,
+          "count": 3241,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 12 0",
+      "group": "Numerical tracer 12 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          1.204925537109375,
+          0.2144555002450943,
+          1.336179494857788
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 52108,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 53560,
+          "count": 16,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 53752,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 12 1",
+      "group": "Numerical tracer 12 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          -1.2897820472717285,
+          0.32443323731422424,
+          1.32183039188385
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 54236,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 55688,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 55856,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 16",
+      "group": "Fluent path 16",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 18540,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 9558768,
+          "count": 3612,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 9602112,
+          "count": 3612,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 9645456,
+          "count": 18540,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 9719616,
+          "count": 3612,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 9762960,
+          "count": 3612,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 13 0",
+      "group": "Numerical tracer 13 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          1.834810733795166,
+          -0.26927947998046875,
+          1.287211537361145
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 56340,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 57792,
+          "count": 25,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 58092,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 13 1",
+      "group": "Numerical tracer 13 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          -0.6099948287010193,
+          -0.2463635355234146,
+          1.3608688116073608
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 58576,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 60028,
+          "count": 23,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 60304,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 30",
+      "group": "Fluent path 30",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 18324,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 9791856,
+          "count": 3570,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 9834696,
+          "count": 3570,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 9877536,
+          "count": 18324,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 9950832,
+          "count": 3570,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 9993672,
+          "count": 3570,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 14 0",
+      "group": "Numerical tracer 14 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          2.5285701751708984,
+          -0.28591692447662354,
+          0.8647566437721252
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 60788,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 62240,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 62492,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 14 1",
+      "group": "Numerical tracer 14 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.10068386793136597,
+          -0.29087308049201965,
+          0.7950515747070312
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 62976,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 64428,
+          "count": 13,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 64584,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 12",
+      "group": "Fluent path 12",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 19008,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10022232,
+          "count": 3703,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10066668,
+          "count": 3703,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10111104,
+          "count": 19008,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10187136,
+          "count": 3703,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 10231572,
+          "count": 3703,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 15 0",
+      "group": "Numerical tracer 15 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          -1.6948986053466797,
+          0.5705690979957581,
+          1.546043872833252
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 65068,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 66520,
+          "count": 23,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 66796,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 15 1",
+      "group": "Numerical tracer 15 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.60267174243927,
+          0.48044443130493164,
+          1.5417088270187378
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 67280,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 68732,
+          "count": 24,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 69020,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 33",
+      "group": "Fluent path 33",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 8100,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10261196,
+          "count": 1582,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10280180,
+          "count": 1582,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10299164,
+          "count": 8100,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10331564,
+          "count": 1582,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 10350548,
+          "count": 1582,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 16 0",
+      "group": "Numerical tracer 16 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          -1.0573773384094238,
+          0.5552266836166382,
+          0.8291605114936829
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 69504,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 70956,
+          "count": 8,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 71052,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 16 1",
+      "group": "Numerical tracer 16 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          1.4130115509033203,
+          0.4675751328468323,
+          0.8144756555557251
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 71536,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 72988,
+          "count": 17,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 73192,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 4",
+      "group": "Fluent path 4",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 5832,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10363204,
+          "count": 1141,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10376896,
+          "count": 1141,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10390588,
+          "count": 5832,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10413916,
+          "count": 1141,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 10427608,
+          "count": 1141,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 17 0",
+      "group": "Numerical tracer 17 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          -0.38456326723098755,
+          0.2708827555179596,
+          1.810612678527832
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 73676,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 75128,
+          "count": 9,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 30548,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 17 1",
+      "group": "Numerical tracer 17 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          2.089574098587036,
+          0.1278364062309265,
+          1.7989108562469482
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 75236,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 76688,
+          "count": 16,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 76880,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 47",
+      "group": "Fluent path 47",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 5796,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10436736,
+          "count": 1134,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10450344,
+          "count": 1134,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10463952,
+          "count": 5796,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10487136,
+          "count": 1134,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 10500744,
+          "count": 1134,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 18 0",
+      "group": "Numerical tracer 18 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.26407405734062195,
+          0.4788133203983307,
+          0.325708270072937
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 77364,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 78816,
+          "count": 9,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 78924,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 18 1",
+      "group": "Numerical tracer 18 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          2.6546742916107178,
+          0.33693474531173706,
+          0.34723058342933655
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          0.8499533534049988,
+          0.8499533534049988,
+          0.8499533534049988
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 79408,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 80860,
+          "count": 16,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 81052,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Fluent path 22",
+      "group": "Fluent path 22",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 10476,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10509816,
+          "count": 2044,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10534344,
+          "count": 2044,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10558872,
+          "count": 10476,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10600776,
+          "count": 2044,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 10625304,
+          "count": 2044,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Numerical tracer 19 0",
+      "group": "Numerical tracer 19 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          1.001312017440796,
+          -0.5326399803161621,
+          1.0733568668365479
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 81536,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 82988,
+          "count": 13,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 83144,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Numerical tracer 19 1",
+      "group": "Numerical tracer 19 1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 60,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 8344688,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 8345408,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 8346128,
+          "count": 60,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 8346368,
+          "count": 60,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 8347088,
+          "count": 60,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          -1.5390465259552002,
+          -0.3922368884086609,
+          1.0738192796707153
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 83628,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1452,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 85080,
+          "count": 9,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 85188,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Pressure legend label",
+      "group": "Pressure legend label",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 8040,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10641656,
+          "count": 3563,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10684412,
+          "count": 3563,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10727168,
+          "count": 8040,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10759328,
+          "count": 3563,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 10802084,
+          "count": 3563,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          -2.188950538635254,
+          0.1770385503768921,
+          -0.034419819712638855
+        ],
+        "quaternion": [
+          0.5120598077774048,
+          -0.12088095396757126,
+          -0.195382222533226,
+          0.8276523351669312
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Actual pressure range color scale",
+      "group": "Actual pressure range color scale",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 768,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10830588,
+          "count": 512,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10836732,
+          "count": 512,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10842876,
+          "count": 768,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10845948,
+          "count": 512,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "color": {
+          "byteOffset": 10852092,
+          "count": 512,
+          "itemSize": 4,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Pressure tick -10645.8 Pa",
+      "group": "Pressure tick -10645.8 Pa",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 819,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10860284,
+          "count": 384,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10864892,
+          "count": 384,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10869500,
+          "count": 819,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10872776,
+          "count": 384,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 10877384,
+          "count": 384,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          -2.240851879119873,
+          0.07323582470417023,
+          -0.26708102226257324
+        ],
+        "quaternion": [
+          0.5120598077774048,
+          -0.12088095396757126,
+          -0.195382222533226,
+          0.8276523351669312
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Pressure tick mark -10645.8",
+      "group": "Pressure tick mark -10645.8",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 36,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10880456,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10880624,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10880792,
+          "count": 36,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10880936,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 10881104,
+          "count": 14,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Pressure tick -2000 Pa",
+      "group": "Pressure tick -2000 Pa",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 285,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10881216,
+          "count": 135,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10882836,
+          "count": 135,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10884456,
+          "count": 285,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10885596,
+          "count": 135,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 10887216,
+          "count": 135,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          -1.8245779275894165,
+          -0.1349012702703476,
+          -0.26708099246025085
+        ],
+        "quaternion": [
+          0.5120598077774048,
+          -0.12088095396757126,
+          -0.195382222533226,
+          0.8276523351669312
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Pressure tick mark -2000",
+      "group": "Pressure tick mark -2000",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 36,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10888296,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10888464,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10880792,
+          "count": 36,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10888632,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 10881104,
+          "count": 14,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Pressure tick 0 Pa",
+      "group": "Pressure tick 0 Pa",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 288,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10888800,
+          "count": 136,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10890432,
+          "count": 136,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10892064,
+          "count": 288,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10893216,
+          "count": 136,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 10894848,
+          "count": 136,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          -1.391146183013916,
+          -0.35161712765693665,
+          -0.26708096265792847
+        ],
+        "quaternion": [
+          0.5120598077774048,
+          -0.12088095396757126,
+          -0.195382222533226,
+          0.8276523351669312
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Pressure tick mark 0",
+      "group": "Pressure tick mark 0",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 36,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10895936,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10896104,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10880792,
+          "count": 36,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10896272,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 10881104,
+          "count": 14,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Pressure tick 2000 Pa",
+      "group": "Pressure tick 2000 Pa",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 309,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10896440,
+          "count": 134,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10898048,
+          "count": 134,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10899656,
+          "count": 309,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10900892,
+          "count": 134,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 10902500,
+          "count": 134,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          -0.9138386845588684,
+          -0.5902708768844604,
+          -0.2670809328556061
+        ],
+        "quaternion": [
+          0.5120598077774048,
+          -0.12088095396757126,
+          -0.195382222533226,
+          0.8276523351669312
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Pressure tick mark 2000",
+      "group": "Pressure tick mark 2000",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 36,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10903572,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10903740,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10880792,
+          "count": 36,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10903908,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 10881104,
+          "count": 14,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Pressure tick 7817.95 Pa",
+      "group": "Pressure tick 7817.95 Pa",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 780,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10904076,
+          "count": 333,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10908072,
+          "count": 333,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10912068,
+          "count": 780,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10915188,
+          "count": 333,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 10919184,
+          "count": 333,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          -0.5414403080940247,
+          -0.7764701247215271,
+          -0.2670808732509613
+        ],
+        "quaternion": [
+          0.5120598077774048,
+          -0.12088095396757126,
+          -0.195382222533226,
+          0.8276523351669312
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Pressure tick mark 7817.95",
+      "group": "Pressure tick mark 7817.95",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 36,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 10921848,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 10922016,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 10880792,
+          "count": 36,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 10922184,
+          "count": 14,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "uv": {
+          "byteOffset": 10881104,
+          "count": 14,
+          "itemSize": 2,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    }
+  ],
+  "bounds": {
+    "initial": {
+      "min": [
+        -2.3232912056565147,
+        -0.860327959060669,
+        -0.26770920861564707
+      ],
+      "max": [
+        2.9345972537994385,
+        0.8217783570289612,
+        1.8370720762759447
+      ],
+      "center": [
+        0.3056530240714619,
+        -0.019274801015853882,
+        0.7846814338301489
+      ],
+      "size": [
+        5.257888459455954,
+        1.6821063160896301,
+        2.1047812848915917
+      ]
+    },
+    "motion": {
+      "min": [
+        -2.3232912056565147,
+        -0.860327959060669,
+        -0.26770920861564707
+      ],
+      "max": [
+        2.9345972537994385,
+        0.8217783570289612,
+        1.8385571856051683
+      ],
+      "center": [
+        0.3056530240714619,
+        -0.019274801015853882,
+        0.7854239884947607
+      ],
+      "size": [
+        5.257888459455954,
+        1.6821063160896301,
+        2.1062663942208153
+      ]
+    }
+  },
+  "camera": {
+    "type": "orthographic",
+    "position": [
+      -3.161327838897705,
+      -7.22268533706665,
+      5.092059135437012
+    ],
+    "target": [
+      0.47062110900878906,
+      0.04121065139770508,
+      1.0410399436950684
+    ],
+    "up": [
+      0.1996205598115921,
+      0.39924120903015137,
+      0.8948508501052856
+    ],
+    "orthoScale": 5.099999904632568,
+    "sensorFit": "HORIZONTAL",
+    "fov": 39.597755335771296,
+    "aspect": 1.4988290398126465
+  },
+  "source": {
+    "pipeline": "tools/exploded-render/render_exploded.py",
+    "motionReport": {
+      "mode": "flow",
+      "source": "Actual newly solved Fluent wall pressure and Fluent numerical pathline vertices.",
+      "scope": "New airframe-only visualization CFD on documented simplified shell. Lost original case/data are not reproduced. No rotor wake or new validated aerodynamic performance conclusion.",
+      "solver": "Ansys Fluent 24.1.0",
+      "dataSha256": "341b60893b2ac860e63b28e0a0931b60506912c411968cbbfc5b9092e966044b",
+      "dataPath": "workspace/.codex/functional-motion-20260913/cfd/flow-data.npz",
+      "provenancePath": "workspace/.codex/functional-motion-20260913/cfd/flow-provenance.json",
+      "pressureRangePa": [
+        -10645.810546875,
+        7817.95458984375
+      ],
+      "pressureColorLimitsPa": [
+        -10645.810546875,
+        7817.95458984375
+      ],
+      "pressureClipping": false,
+      "pressureColorDisplay": "Zero-centered blue-to-orange/red diverging colors with full-range asinh normalization. The wall and labeled nonlinear legend use the same unlit transfer; no pressure interpolation or clipping.",
+      "pressureColorNormalization": {
+        "method": "zero-centered asinh",
+        "scalePa": 750.0,
+        "separateNegativePositiveExtents": true,
+        "legendTicksPa": [
+          -10645.810546875,
+          -2000.0,
+          0.0,
+          2000.0,
+          7817.95458984375
+        ],
+        "positions": [
+          0.0,
+          0.3,
+          0.5,
+          0.72,
+          1.0
+        ],
+        "linearRgbAnchors": [
+          [
+            0.004,
+            0.018,
+            0.32
+          ],
+          [
+            0.005,
+            0.19,
+            0.6
+          ],
+          [
+            0.065,
+            0.105,
+            0.14
+          ],
+          [
+            1.0,
+            0.14,
+            0.002
+          ],
+          [
+            0.62,
+            0.002,
+            0.001
+          ]
+        ]
+      },
+      "surfaceTriangles": 47450,
+      "sourcePaths": 49,
+      "displayedPaths": 20,
+      "surfaceWindingReversedForOutwardDisplay": false,
+      "displayedPathRanges": [
+        {
+          "id": 24,
+          "vertexRange": [
+            9234,
+            10374
+          ]
+        },
+        {
+          "id": 42,
+          "vertexRange": [
+            17500,
+            17633
+          ]
+        },
+        {
+          "id": 0,
+          "vertexRange": [
+            0,
+            138
+          ]
+        },
+        {
+          "id": 48,
+          "vertexRange": [
+            19082,
+            19211
+          ]
+        },
+        {
+          "id": 6,
+          "vertexRange": [
+            1606,
+            1739
+          ]
+        },
+        {
+          "id": 21,
+          "vertexRange": [
+            7758,
+            7940
+          ]
+        },
+        {
+          "id": 45,
+          "vertexRange": [
+            18273,
+            18431
+          ]
+        },
+        {
+          "id": 3,
+          "vertexRange": [
+            795,
+            959
+          ]
+        },
+        {
+          "id": 27,
+          "vertexRange": [
+            11489,
+            11628
+          ]
+        },
+        {
+          "id": 36,
+          "vertexRange": [
+            15112,
+            15544
+          ]
+        },
+        {
+          "id": 8,
+          "vertexRange": [
+            2120,
+            2543
+          ]
+        },
+        {
+          "id": 39,
+          "vertexRange": [
+            16376,
+            16624
+          ]
+        },
+        {
+          "id": 18,
+          "vertexRange": [
+            6577,
+            7040
+          ]
+        },
+        {
+          "id": 16,
+          "vertexRange": [
+            5354,
+            5870
+          ]
+        },
+        {
+          "id": 30,
+          "vertexRange": [
+            12422,
+            12932
+          ]
+        },
+        {
+          "id": 12,
+          "vertexRange": [
+            3769,
+            4298
+          ]
+        },
+        {
+          "id": 33,
+          "vertexRange": [
+            14252,
+            14478
+          ]
+        },
+        {
+          "id": 4,
+          "vertexRange": [
+            1069,
+            1232
+          ]
+        },
+        {
+          "id": 47,
+          "vertexRange": [
+            18806,
+            18968
+          ]
+        },
+        {
+          "id": 22,
+          "vertexRange": [
+            8043,
+            8335
+          ]
+        }
+      ],
+      "excludedPathsWithSegmentWallCrossing": [],
+      "displayedPolylineSegmentWallCrossings": 0,
+      "markerRadiusPolicy": "Marker centers remain on numerical paths; marker radius shrinks near the actual wall to avoid visual penetration.",
+      "pathTimeMethods": [
+        "particle-time"
+      ],
+      "physicalPlaybackSeconds": 0.01466046767309308,
+      "particleInterpolation": "Piecewise linear between consecutive exported numerical path vertices, parameterized by actual exported/integrated physical travel time.",
+      "pressureAnimation": "Steady solved field held constant; only marker advection is animated.",
+      "floorMinimum": -0.30770919561386106,
+      "normalizationScale": 5.684528312703548,
+      "arbitrarySeek": true,
+      "originalMonitorHidden": true
+    },
+    "sourceContractSha256": "d579b381d393ef8ff8c1846b87aac6d6863644923877b008da423143e447b08f"
+  },
+  "limitations": [
+    "Sampled source poses; interpolation does not imply measured engineering time."
+  ]
+}

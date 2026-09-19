@@ -1,0 +1,1919 @@
+{
+  "schema": "studio-motion-v1",
+  "project": "carbonSeat",
+  "coordinates": "blender-z-up",
+  "quaternionOrder": "xyzw",
+  "colorSpace": "linear",
+  "sampleCount": 121,
+  "duration": 8,
+  "buffers": {
+    "geometry": {
+      "url": "geometry.bin.gz",
+      "compression": "gzip",
+      "byteLength": 2103280,
+      "compressedBytes": 859332,
+      "sha256": "37204b82784980ae8b10a702f2c318901489b4f1185f4799ec4ea2d2ebde68a1"
+    },
+    "motion": {
+      "url": "motion.bin.gz",
+      "compression": "gzip",
+      "byteLength": 2448040,
+      "compressedBytes": 1648179,
+      "sha256": "fe096a59fddc78e6795274c268d04452a135e5f31ee7120a6c79cb78ca5d3468"
+    }
+  },
+  "materials": [
+    {
+      "name": "Catalogue carbon weave — fixed source coordinates",
+      "baseColor": [
+        0.017641954123973846,
+        0.019382361322641373,
+        0.021219009533524513,
+        1.0
+      ],
+      "metalness": 0.0,
+      "roughness": 0.5,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.11999999731779099,
+      "clearcoatRoughness": 0.23999999463558197,
+      "procedural": {
+        "type": "carbon",
+        "scale": 240.0,
+        "color1": [
+          0.009721217676997185,
+          0.010960093699395657,
+          0.012286487966775894,
+          1.0
+        ],
+        "color2": [
+          0.017641954123973846,
+          0.019382361322641373,
+          0.021219009533524513,
+          1.0
+        ],
+        "bumpStrength": 0.05000000074505806,
+        "bumpDistance": 0.00019999999494757503,
+        "coordinates": "sourceCoordinates"
+      },
+      "tracks": {}
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mat_carbon",
+      "group": "mat_carbon",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 61290,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 0,
+          "count": 12617,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 151404,
+          "count": 12617,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 302808,
+          "count": 61290,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 547968,
+          "count": 12617,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "attributeOpacity": {
+          "byteOffset": 699372,
+          "count": 12617,
+          "itemSize": 1,
+          "componentType": "float32"
+        },
+        "attributeRoughness": {
+          "byteOffset": 749840,
+          "count": 12617,
+          "itemSize": 1,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "Carbon cloth ply 01 of 10",
+      "group": "Carbon cloth ply 01 of 10",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 29613,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 800308,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1155664,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1511020,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1629472,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "attributeOpacity": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        },
+        "attributeRoughness": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": false,
+      "tracks": {
+        "visible": {
+          "byteOffset": 0,
+          "count": 2,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 1,
+          "frameMap": {
+            "byteOffset": 8,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationPosition": {
+          "byteOffset": 118944,
+          "count": 67836,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 16959,
+          "elementMap": {
+            "byteOffset": 492,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 932976,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationNormal": {
+          "byteOffset": 1051912,
+          "count": 77988,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 19497,
+          "elementMap": {
+            "byteOffset": 933460,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 932976,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeOpacity": {
+          "byteOffset": 2106220,
+          "count": 3050,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 305,
+          "elementMap": {
+            "byteOffset": 1987768,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2118420,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeRoughness": {
+          "byteOffset": 2237356,
+          "count": 49404,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 4117,
+          "elementMap": {
+            "byteOffset": 2118904,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 932976,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Carbon cloth ply 02 of 10",
+      "group": "Carbon cloth ply 02 of 10",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 29613,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 800308,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1155664,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1511020,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1629472,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "attributeOpacity": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        },
+        "attributeRoughness": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": false,
+      "tracks": {
+        "visible": {
+          "byteOffset": 0,
+          "count": 2,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 1,
+          "frameMap": {
+            "byteOffset": 2434972,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationPosition": {
+          "byteOffset": 118944,
+          "count": 67836,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 16959,
+          "elementMap": {
+            "byteOffset": 492,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2435456,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationNormal": {
+          "byteOffset": 1051912,
+          "count": 77988,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 19497,
+          "elementMap": {
+            "byteOffset": 933460,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2435456,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeOpacity": {
+          "byteOffset": 2106220,
+          "count": 3050,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 305,
+          "elementMap": {
+            "byteOffset": 1987768,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2435940,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeRoughness": {
+          "byteOffset": 2237356,
+          "count": 49404,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 4117,
+          "elementMap": {
+            "byteOffset": 2118904,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2435456,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Carbon cloth ply 03 of 10",
+      "group": "Carbon cloth ply 03 of 10",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 29613,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 800308,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1155664,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1511020,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1629472,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "attributeOpacity": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        },
+        "attributeRoughness": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": false,
+      "tracks": {
+        "visible": {
+          "byteOffset": 0,
+          "count": 2,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 1,
+          "frameMap": {
+            "byteOffset": 2436424,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationPosition": {
+          "byteOffset": 118944,
+          "count": 67836,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 16959,
+          "elementMap": {
+            "byteOffset": 492,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2436908,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationNormal": {
+          "byteOffset": 1051912,
+          "count": 77988,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 19497,
+          "elementMap": {
+            "byteOffset": 933460,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2436908,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeOpacity": {
+          "byteOffset": 2106220,
+          "count": 3050,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 305,
+          "elementMap": {
+            "byteOffset": 1987768,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2437392,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeRoughness": {
+          "byteOffset": 2237356,
+          "count": 49404,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 4117,
+          "elementMap": {
+            "byteOffset": 2118904,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2436908,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Carbon cloth ply 04 of 10",
+      "group": "Carbon cloth ply 04 of 10",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 29613,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 800308,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1155664,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1511020,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1629472,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "attributeOpacity": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        },
+        "attributeRoughness": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": false,
+      "tracks": {
+        "visible": {
+          "byteOffset": 0,
+          "count": 2,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 1,
+          "frameMap": {
+            "byteOffset": 2437876,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationPosition": {
+          "byteOffset": 118944,
+          "count": 67836,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 16959,
+          "elementMap": {
+            "byteOffset": 492,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2438360,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationNormal": {
+          "byteOffset": 1051912,
+          "count": 77988,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 19497,
+          "elementMap": {
+            "byteOffset": 933460,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2438360,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeOpacity": {
+          "byteOffset": 2106220,
+          "count": 3050,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 305,
+          "elementMap": {
+            "byteOffset": 1987768,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2438844,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeRoughness": {
+          "byteOffset": 2237356,
+          "count": 49404,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 4117,
+          "elementMap": {
+            "byteOffset": 2118904,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2438360,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Carbon cloth ply 05 of 10",
+      "group": "Carbon cloth ply 05 of 10",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 29613,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 800308,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1155664,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1511020,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1629472,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "attributeOpacity": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        },
+        "attributeRoughness": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": false,
+      "tracks": {
+        "visible": {
+          "byteOffset": 0,
+          "count": 2,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 1,
+          "frameMap": {
+            "byteOffset": 2439328,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationPosition": {
+          "byteOffset": 118944,
+          "count": 67836,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 16959,
+          "elementMap": {
+            "byteOffset": 492,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2439812,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationNormal": {
+          "byteOffset": 1051912,
+          "count": 77988,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 19497,
+          "elementMap": {
+            "byteOffset": 933460,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2439812,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeOpacity": {
+          "byteOffset": 2106220,
+          "count": 3050,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 305,
+          "elementMap": {
+            "byteOffset": 1987768,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2440296,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeRoughness": {
+          "byteOffset": 2237356,
+          "count": 49404,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 4117,
+          "elementMap": {
+            "byteOffset": 2118904,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2439812,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Carbon cloth ply 06 of 10",
+      "group": "Carbon cloth ply 06 of 10",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 29613,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 800308,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1155664,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1511020,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1629472,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "attributeOpacity": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        },
+        "attributeRoughness": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": false,
+      "tracks": {
+        "visible": {
+          "byteOffset": 0,
+          "count": 2,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 1,
+          "frameMap": {
+            "byteOffset": 2440780,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationPosition": {
+          "byteOffset": 118944,
+          "count": 67836,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 16959,
+          "elementMap": {
+            "byteOffset": 492,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2441264,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationNormal": {
+          "byteOffset": 1051912,
+          "count": 77988,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 19497,
+          "elementMap": {
+            "byteOffset": 933460,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2441264,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeOpacity": {
+          "byteOffset": 2106220,
+          "count": 3050,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 305,
+          "elementMap": {
+            "byteOffset": 1987768,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2441748,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeRoughness": {
+          "byteOffset": 2237356,
+          "count": 49404,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 4117,
+          "elementMap": {
+            "byteOffset": 2118904,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2441264,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Carbon cloth ply 07 of 10",
+      "group": "Carbon cloth ply 07 of 10",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 29613,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 800308,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1155664,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1511020,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1629472,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "attributeOpacity": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        },
+        "attributeRoughness": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": false,
+      "tracks": {
+        "visible": {
+          "byteOffset": 0,
+          "count": 2,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 1,
+          "frameMap": {
+            "byteOffset": 2442232,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationPosition": {
+          "byteOffset": 118944,
+          "count": 67836,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 16959,
+          "elementMap": {
+            "byteOffset": 492,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2442716,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationNormal": {
+          "byteOffset": 1051912,
+          "count": 77988,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 19497,
+          "elementMap": {
+            "byteOffset": 933460,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2442716,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeOpacity": {
+          "byteOffset": 2106220,
+          "count": 3050,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 305,
+          "elementMap": {
+            "byteOffset": 1987768,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2443200,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeRoughness": {
+          "byteOffset": 2237356,
+          "count": 49404,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 4117,
+          "elementMap": {
+            "byteOffset": 2118904,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2442716,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Carbon cloth ply 08 of 10",
+      "group": "Carbon cloth ply 08 of 10",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 29613,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 800308,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1155664,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1511020,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1629472,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "attributeOpacity": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        },
+        "attributeRoughness": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": false,
+      "tracks": {
+        "visible": {
+          "byteOffset": 0,
+          "count": 2,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 1,
+          "frameMap": {
+            "byteOffset": 2443684,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationPosition": {
+          "byteOffset": 118944,
+          "count": 67836,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 16959,
+          "elementMap": {
+            "byteOffset": 492,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2444168,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationNormal": {
+          "byteOffset": 1051912,
+          "count": 77988,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 19497,
+          "elementMap": {
+            "byteOffset": 933460,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2444168,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeOpacity": {
+          "byteOffset": 2106220,
+          "count": 3050,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 305,
+          "elementMap": {
+            "byteOffset": 1987768,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2444652,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeRoughness": {
+          "byteOffset": 2237356,
+          "count": 49404,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 4117,
+          "elementMap": {
+            "byteOffset": 2118904,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2444168,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Carbon cloth ply 09 of 10",
+      "group": "Carbon cloth ply 09 of 10",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 29613,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 800308,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1155664,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1511020,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1629472,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "attributeOpacity": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        },
+        "attributeRoughness": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": false,
+      "tracks": {
+        "visible": {
+          "byteOffset": 0,
+          "count": 2,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 1,
+          "frameMap": {
+            "byteOffset": 2445136,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationPosition": {
+          "byteOffset": 118944,
+          "count": 67836,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 16959,
+          "elementMap": {
+            "byteOffset": 492,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2445620,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationNormal": {
+          "byteOffset": 1051912,
+          "count": 77988,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 19497,
+          "elementMap": {
+            "byteOffset": 933460,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2445620,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeOpacity": {
+          "byteOffset": 2106220,
+          "count": 3050,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 305,
+          "elementMap": {
+            "byteOffset": 1987768,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2446104,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeRoughness": {
+          "byteOffset": 2237356,
+          "count": 49404,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 4117,
+          "elementMap": {
+            "byteOffset": 2118904,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2445620,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "Carbon cloth ply 10 of 10",
+      "group": "Carbon cloth ply 10 of 10",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 29613,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 800308,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1155664,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1511020,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1629472,
+          "count": 29613,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "attributeOpacity": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        },
+        "attributeRoughness": {
+          "byteOffset": 1984828,
+          "count": 29613,
+          "itemSize": 1,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": false,
+      "tracks": {
+        "visible": {
+          "byteOffset": 0,
+          "count": 2,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 1,
+          "frameMap": {
+            "byteOffset": 2446588,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationPosition": {
+          "byteOffset": 118944,
+          "count": 67836,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 16959,
+          "elementMap": {
+            "byteOffset": 492,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2447072,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationNormal": {
+          "byteOffset": 1051912,
+          "count": 77988,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 19497,
+          "elementMap": {
+            "byteOffset": 933460,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2447072,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeOpacity": {
+          "byteOffset": 2106220,
+          "count": 3050,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 305,
+          "elementMap": {
+            "byteOffset": 1987768,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2447556,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "attributeRoughness": {
+          "byteOffset": 2237356,
+          "count": 49404,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 4117,
+          "elementMap": {
+            "byteOffset": 2118904,
+            "count": 29613,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 2447072,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    }
+  ],
+  "bounds": {
+    "initial": {
+      "min": [
+        -1.2723844051361084,
+        -1.399999976158142,
+        0.02500000409781933
+      ],
+      "max": [
+        1.2723844051361084,
+        1.399999976158142,
+        2.8150691986083984
+      ],
+      "center": [
+        0.0,
+        0.0,
+        1.4200346013531089
+      ],
+      "size": [
+        2.544768810272217,
+        2.799999952316284,
+        2.790069194510579
+      ]
+    },
+    "motion": {
+      "min": [
+        -1.2723844051361084,
+        -2.1319351196289062,
+        0.02500000409781933
+      ],
+      "max": [
+        1.2723844051361084,
+        1.399999976158142,
+        3.618295192718506
+      ],
+      "center": [
+        0.0,
+        -0.3659675717353821,
+        1.8216475984081626
+      ],
+      "size": [
+        2.544768810272217,
+        3.5319350957870483,
+        3.5932951886206865
+      ]
+    }
+  },
+  "camera": {
+    "type": "orthographic",
+    "position": [
+      5.537104606628418,
+      -9.496232032775879,
+      6.220449924468994
+    ],
+    "target": [
+      -0.03768730163574219,
+      -0.01908397674560547,
+      1.4261293411254883
+    ],
+    "up": [
+      -0.20265239477157593,
+      0.3445092439651489,
+      0.9166490435600281
+    ],
+    "orthoScale": 6.784670829772949,
+    "sensorFit": "HORIZONTAL",
+    "fov": 39.597755335771296,
+    "aspect": 1.4988290398126465
+  },
+  "source": {
+    "pipeline": "tools/exploded-render/render_exploded.py",
+    "motionReport": {
+      "process": "ten illustrative carbon-cloth placements conforming to the unchanged finished shell",
+      "mode": "layup",
+      "layerCount": 10,
+      "appearance": {
+        "sourceMaterial": "carbon",
+        "sharedMaterial": "Catalogue carbon weave — fixed source coordinates",
+        "shaderPolicy": "Copy every original catalogue shader node and value. Replace Generated input with an equivalent immutable source-coordinate point attribute; separate process attributes control Alpha and moving-cloth roughness. The original shell remains fully opaque at its original roughness; shell and illustrative cloth share one material datablock.",
+        "coordinateAttribute": "Carbon cover source Generated coordinates",
+        "coordinateFormula": "(source mesh-local vertex - source texspace_location) / (2 * source texspace_size) + 0.5",
+        "coordinateInterpolation": "POINT FLOAT_VECTOR, barycentrically interpolated on the same retained source triangles; never recomputed by apply(progress).",
+        "sourceTextureSpaces": [
+          {
+            "object": "mat_carbon",
+            "location": [
+              0.0,
+              0.0,
+              1.420034646987915
+            ],
+            "size": [
+              1.2723844051361084,
+              1.399999976158142,
+              1.3950345516204834
+            ],
+            "vertexCount": 12611
+          }
+        ],
+        "checkerScale": 240.0,
+        "checkerColorsLinear": [
+          [
+            0.009721217676997185,
+            0.010960093699395657,
+            0.012286487966775894,
+            1.0
+          ],
+          [
+            0.017641954123973846,
+            0.019382361322641373,
+            0.021219009533524513,
+            1.0
+          ]
+        ],
+        "roughness": 0.5,
+        "metallic": 0.0,
+        "specular": 0.25,
+        "coat": 0.11999999731779099,
+        "bumpStrength": 0.05000000074505806,
+        "bumpDistance": 0.00019999999494757503,
+        "additionalWeaveRotation": 0,
+        "processVisibility": "An independent point attribute drives Alpha only: original shell is exactly one; moving cloth fades in and its subpixel contact band blends into the same original shell. Carbon color, weave, coat, bump, source-shell roughness and source mapping remain unchanged.",
+        "clothRoughnessTransition": {
+          "sourceShell": 0.5,
+          "liftedCloth": 0.64,
+          "policy": "Only the illustrative moving surface is rougher before contact; original shell roughness, color, coat, bump and weave are unchanged."
+        }
+      },
+      "seatedNormals": "Original source corner normals carried onto corresponding retained skin triangles.",
+      "recommendedFrameCount": 61,
+      "sourceFaceCount": 20430,
+      "clothFacesPerPly": 9871,
+      "clothVerticesPerPly": 6478,
+      "excludedGrazingSkinTriangles": 0,
+      "skinClearanceValidationPoses": 482,
+      "localizedLipClearanceVertices": 11,
+      "maximumLocalizedLipClearance": 0.046,
+      "geometryPolicy": "Intact supplied shell retained. Each ply derives only from unobstructed original skin triangles; no shell slicing or solid-seat duplicates.",
+      "layupPolicy": "One moving cloth surface at a time; a continuous contact front seats it from the pan toward the upper back. A subpixel contact band blends each seated region into the unchanged source shell, with no accumulated stand-off or shell growth. Completed and future surfaces remain hidden.",
+      "clearancePolicy": "Every placement uses the same small positive render clearance along an unobstructed pull direction, with local lip avoidance that preserves whole cloth triangles. No index-based spacing, added ply volume or persistent overlay stack. At all completed-stage boundaries, including progress one, only the original shell is visible.",
+      "pullDirection": [
+        0.0,
+        -0.8574929237365723,
+        0.5144957900047302
+      ],
+      "illustrativeClearance": 0.003,
+      "illustrativePlySpacing": 0.0,
+      "finishedShellGeometryInvariant": true,
+      "maximumSimultaneousClothSurfaces": 1,
+      "interpretation": "Ten visual stages illustrate cloth placement, not the physical ply count. The confirmed build uses 20 main plies of 3K 200 g/m² twill, 5–10 local reinforcement plies, and EL2 epoxy. Render clearance and cloth motion are conceptual; no measured laminate thickness, ply orientation schedule, cure cycle or material performance is claimed."
+    },
+    "sourceContractSha256": "d579b381d393ef8ff8c1846b87aac6d6863644923877b008da423143e447b08f"
+  },
+  "limitations": [
+    "Sampled source poses; interpolation does not imply measured engineering time."
+  ]
+}

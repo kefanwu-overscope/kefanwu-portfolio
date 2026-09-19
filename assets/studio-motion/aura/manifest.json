@@ -1,0 +1,3321 @@
+{
+  "schema": "studio-motion-v1",
+  "project": "aura",
+  "coordinates": "blender-z-up",
+  "quaternionOrder": "xyzw",
+  "colorSpace": "linear",
+  "sampleCount": 145,
+  "duration": 8,
+  "buffers": {
+    "geometry": {
+      "url": "geometry.bin.gz",
+      "compression": "gzip",
+      "byteLength": 3845808,
+      "compressedBytes": 1689383,
+      "sha256": "fcac9f2bbde96fea005ba962231e65509d3efd82e8dd0eee68f932512ec2578b"
+    },
+    "motion": {
+      "url": "motion.bin.gz",
+      "compression": "gzip",
+      "byteLength": 7988,
+      "compressedBytes": 734,
+      "sha256": "7525b4c8c1dee84ab84961c3bf62a2ffc89096d400e5bfea3ff1d764ee8f748a"
+    }
+  },
+  "materials": [
+    {
+      "name": "paint_gray",
+      "baseColor": [
+        0.2541520893573761,
+        0.28314873576164246,
+        0.30054378509521484,
+        1.0
+      ],
+      "metalness": 0.0,
+      "roughness": 0.5199999809265137,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.23999999463558197,
+      "tracks": {}
+    },
+    {
+      "name": "plastic_black",
+      "baseColor": [
+        0.014443843625485897,
+        0.016807375475764275,
+        0.022173885256052017,
+        1.0
+      ],
+      "metalness": 0.0,
+      "roughness": 0.47999998927116394,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.23999999463558197,
+      "tracks": {}
+    },
+    {
+      "name": "rubber_black",
+      "baseColor": [
+        0.017641954123973846,
+        0.020288562402129173,
+        0.024157632142305374,
+        1.0
+      ],
+      "metalness": 0.0,
+      "roughness": 0.699999988079071,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.23999999463558197,
+      "tracks": {}
+    },
+    {
+      "name": "steel",
+      "baseColor": [
+        0.40724021196365356,
+        0.44520118832588196,
+        0.4910208582878113,
+        1.0
+      ],
+      "metalness": 1.0,
+      "roughness": 0.3499999940395355,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.23999999463558197,
+      "tracks": {}
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mat_paint_gray_part_0",
+      "group": "wheel_axle_fork_and_side_drive",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 462,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 0,
+          "count": 162,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1944,
+          "count": 162,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3888,
+          "count": 462,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5736,
+          "count": 162,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_paint_gray_part_1",
+      "group": "drive_motor_and_finish",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 6987,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 7680,
+          "count": 1319,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 23508,
+          "count": 1319,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 39336,
+          "count": 6987,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 67284,
+          "count": 1319,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 16,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 192,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_paint_gray_part_2",
+      "group": "wheel_axle_fork_and_side_drive",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 9162,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 83112,
+          "count": 3073,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 119988,
+          "count": 3073,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 156864,
+          "count": 9162,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 193512,
+          "count": 3073,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_paint_gray_part_3",
+      "group": "bearing_top_cover",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 2508,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 230388,
+          "count": 824,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 240276,
+          "count": 824,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 250164,
+          "count": 2508,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 260196,
+          "count": 824,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 772,
+          "count": 19,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1000,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_paint_gray_part_4",
+      "group": "lower_mount_plate_and_embedded_fasteners",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1944,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 270084,
+          "count": 680,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 278244,
+          "count": 680,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 286404,
+          "count": 1944,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 294180,
+          "count": 680,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1580,
+          "count": 19,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1808,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_plastic_black_part_0",
+      "group": "steering_motor",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 420,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 302340,
+          "count": 144,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 304068,
+          "count": 144,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 305796,
+          "count": 420,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 307476,
+          "count": 144,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 2388,
+          "count": 16,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 2580,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_plastic_black_part_1",
+      "group": "steering_motor",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 99054,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 309204,
+          "count": 19477,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 542928,
+          "count": 19477,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 776652,
+          "count": 99054,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1172868,
+          "count": 19477,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 2388,
+          "count": 16,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 2580,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_plastic_black_part_2",
+      "group": "steering_motor",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 420,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1406592,
+          "count": 144,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1408320,
+          "count": 144,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1410048,
+          "count": 420,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1411728,
+          "count": 144,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 2388,
+          "count": 16,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 2580,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_plastic_black_part_3",
+      "group": "steering_motor",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 420,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1413456,
+          "count": 144,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1415184,
+          "count": 144,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1416912,
+          "count": 420,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1418592,
+          "count": 144,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 2388,
+          "count": 16,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 2580,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_plastic_black_part_4",
+      "group": "steering_motor",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 420,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1420320,
+          "count": 144,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1422048,
+          "count": 144,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1423776,
+          "count": 420,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1425456,
+          "count": 144,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 2388,
+          "count": 16,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 2580,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_plastic_black_part_5",
+      "group": "wheel_axle_fork_and_side_drive",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 6642,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1427184,
+          "count": 2215,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1453764,
+          "count": 2215,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1480344,
+          "count": 6642,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1506912,
+          "count": 2215,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_plastic_black_part_6",
+      "group": "wheel_axle_fork_and_side_drive",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 19140,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1533492,
+          "count": 4199,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1583880,
+          "count": 4199,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1634268,
+          "count": 19140,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1710828,
+          "count": 4199,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_plastic_black_part_7",
+      "group": "drive_motor_and_finish",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 76077,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1761216,
+          "count": 14179,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1931364,
+          "count": 14179,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2101512,
+          "count": 76077,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2405820,
+          "count": 14179,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 16,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 192,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_rubber_black_part_0",
+      "group": "wheel_axle_fork_and_side_drive",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1176,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2575968,
+          "count": 392,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2580672,
+          "count": 392,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2585376,
+          "count": 1176,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2590080,
+          "count": 392,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_steel_part_0",
+      "group": "steering_motor",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1704,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2594784,
+          "count": 568,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2601600,
+          "count": 568,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2608416,
+          "count": 1704,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2615232,
+          "count": 568,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 2388,
+          "count": 16,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 2580,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_1",
+      "group": "wheel_axle_fork_and_side_drive",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 4224,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2622048,
+          "count": 1342,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2638152,
+          "count": 1342,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2654256,
+          "count": 4224,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2671152,
+          "count": 1342,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_steel_part_2",
+      "group": "wheel_axle_fork_and_side_drive",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 432,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2687256,
+          "count": 146,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2689008,
+          "count": 146,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2690760,
+          "count": 432,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2692488,
+          "count": 146,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_steel_part_3",
+      "group": "wheel_axle_fork_and_side_drive",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 5742,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2694240,
+          "count": 1794,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2715768,
+          "count": 1794,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2737296,
+          "count": 5742,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2760264,
+          "count": 1794,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_steel_part_4",
+      "group": "lower_mount_plate_and_embedded_fasteners",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 12684,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2781792,
+          "count": 3956,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2829264,
+          "count": 3956,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2876736,
+          "count": 12684,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2927472,
+          "count": 3956,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1580,
+          "count": 19,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1808,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_5",
+      "group": "bearing_support_ring",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3048,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2974944,
+          "count": 1000,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2986944,
+          "count": 1000,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2998944,
+          "count": 3048,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3011136,
+          "count": 1000,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 3160,
+          "count": 19,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 3388,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_6",
+      "group": "bearing_outer_ring",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3252,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3023136,
+          "count": 1068,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3035952,
+          "count": 1068,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3048768,
+          "count": 3252,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3061776,
+          "count": 1068,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 3968,
+          "count": 19,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4196,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_7",
+      "group": "bearing_inner_ring",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3216,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3074592,
+          "count": 1056,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3087264,
+          "count": 1056,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3099936,
+          "count": 3216,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3112800,
+          "count": 1056,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 4776,
+          "count": 19,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 5004,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_8",
+      "group": "wheel_axle_fork_and_side_drive",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3660,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3125472,
+          "count": 1028,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3137808,
+          "count": 1028,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3150144,
+          "count": 3660,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3164784,
+          "count": 1028,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_steel_part_9",
+      "group": "wheel_axle_fork_and_side_drive",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3660,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3177120,
+          "count": 1028,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3189456,
+          "count": 1028,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3201792,
+          "count": 3660,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3216432,
+          "count": 1028,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_steel_part_10",
+      "group": "wheel_axle_fork_and_side_drive",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3660,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3228768,
+          "count": 1028,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3241104,
+          "count": 1028,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3253440,
+          "count": 3660,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3268080,
+          "count": 1028,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_steel_part_11",
+      "group": "bearing_fastener_1",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3960,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3280416,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3290880,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3301344,
+          "count": 3960,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3317184,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 5584,
+          "count": 7,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 5668,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_12",
+      "group": "bearing_fastener_2",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3960,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3327648,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3338112,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3348576,
+          "count": 3960,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3364416,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 5584,
+          "count": 7,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 6248,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_13",
+      "group": "bearing_fastener_3",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3960,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3374880,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3385344,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3395808,
+          "count": 3960,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3411648,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 5584,
+          "count": 7,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 6828,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_14",
+      "group": "bearing_fastener_4",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3960,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3422112,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3432576,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3443040,
+          "count": 3960,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3458880,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 5584,
+          "count": 7,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 7408,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_15",
+      "group": "lower_mount_plate_and_embedded_fasteners",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3960,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3469344,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3479808,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3490272,
+          "count": 3960,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3506112,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1580,
+          "count": 19,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1808,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_16",
+      "group": "lower_mount_plate_and_embedded_fasteners",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3960,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3516576,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3527040,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3537504,
+          "count": 3960,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3553344,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1580,
+          "count": 19,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1808,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_17",
+      "group": "lower_mount_plate_and_embedded_fasteners",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3960,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3563808,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3574272,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3584736,
+          "count": 3960,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3600576,
+          "count": 872,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1580,
+          "count": 19,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1808,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_18",
+      "group": "wheel_axle_fork_and_side_drive",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 4770,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3611040,
+          "count": 1031,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3623412,
+          "count": 1031,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3635784,
+          "count": 4770,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3654864,
+          "count": 1031,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_steel_part_19",
+      "group": "wheel_axle_fork_and_side_drive",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 4770,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3667236,
+          "count": 1031,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3679608,
+          "count": 1031,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3691980,
+          "count": 4770,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3711060,
+          "count": 1031,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_steel_part_20",
+      "group": "wheel_axle_fork_and_side_drive",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 4770,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3723432,
+          "count": 1031,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3735804,
+          "count": 1031,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3691980,
+          "count": 4770,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3748176,
+          "count": 1031,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_steel_part_21",
+      "group": "drive_motor_and_finish",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1404,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3760548,
+          "count": 433,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3765744,
+          "count": 433,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3770940,
+          "count": 1404,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3776556,
+          "count": 433,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 16,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 192,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_22",
+      "group": "drive_motor_and_finish",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 5394,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3781752,
+          "count": 1180,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3795912,
+          "count": 1180,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3810072,
+          "count": 5394,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3831648,
+          "count": 1180,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 16,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 192,
+            "count": 145,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    }
+  ],
+  "bounds": {
+    "initial": {
+      "min": [
+        -1.2408722639083862,
+        -1.4000005722045898,
+        0.025000005960464478
+      ],
+      "max": [
+        1.2408723831176758,
+        1.3999994993209839,
+        1.69742751121521
+      ],
+      "center": [
+        5.960464477539063e-08,
+        -5.364418029785156e-07,
+        0.8612137585878372
+      ],
+      "size": [
+        2.481744647026062,
+        2.8000000715255737,
+        1.6724275052547455
+      ]
+    },
+    "motion": {
+      "min": [
+        -1.2408722639083862,
+        -2.100000560283661,
+        0.025000005960464478
+      ],
+      "max": [
+        1.2408723831176758,
+        2.099999487400055,
+        3.097427487373352
+      ],
+      "center": [
+        5.960464477539063e-08,
+        -5.364418029785156e-07,
+        1.5612137466669083
+      ],
+      "size": [
+        2.481744647026062,
+        4.200000047683716,
+        3.0724274814128876
+      ]
+    }
+  },
+  "camera": {
+    "type": "orthographic",
+    "position": [
+      5.6258225440979,
+      -9.44029712677002,
+      5.669037342071533
+    ],
+    "target": [
+      0.05103158950805664,
+      0.036849021911621094,
+      0.8747177124023438
+    ],
+    "up": [
+      -0.20265239477157593,
+      0.3445092439651489,
+      0.9166490435600281
+    ],
+    "orthoScale": 4.528417110443115,
+    "sensorFit": "HORIZONTAL",
+    "fov": 39.597755335771296,
+    "aspect": 1.4988290398126465
+  },
+  "source": {
+    "pipeline": "tools/exploded-render/render_exploded.py",
+    "motionReport": {
+      "version": 1,
+      "project": "aura",
+      "mode": "assembly",
+      "frameCount": 145,
+      "geometryDigest": "9016ce91f299f9fa4dee6ad115e01d3d1b2cf307d485a2531d576aa733aeb068",
+      "geometryTriangles": 106314,
+      "sourceComponentCount": 37,
+      "movingStageCount": 11,
+      "floorMinimum": 0.025000005960464478,
+      "policy": "Sequential rigid extraction using the unchanged assembly_motion.check_path checker: continuous triangle SAT and 100 positive sampled poses per stage. No added seam relaxation, sliding allowance, or source geometry edit.",
+      "sourceContactPolicy": "Original contacts must begin by normalized path time 0.000001 and withdraw within the first quarter of their stage. Baseline contact counts and sampled solid penetration depth are bounded by the original checker. Later-entering contacts, increasing source interference and floor crossings are rejected.",
+      "containmentPolicy": "Bidirectional distributed vertex probes against welded watertight source components at sampled poses complement continuous surface checking. Open finish meshes remain surfaces; this is not a continuous volumetric manufacturing certificate.",
+      "stages": [
+        {
+          "group": "steering_motor",
+          "translation": [
+            0.0,
+            0.7,
+            0.0
+          ],
+          "start": 0.0,
+          "end": 0.10416666666666667,
+          "verification": {
+            "positiveSamples": 100,
+            "triangleBVHPairTests": 14,
+            "newGroupSurfaceIntersections": 0,
+            "floorCrossings": 0,
+            "continuousTriangleTests": 0,
+            "continuousCandidatePairs": 0,
+            "initialTriangleContactsWithdrawing": 0,
+            "newContinuousTriangleContacts": 0,
+            "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+          }
+        },
+        {
+          "group": "drive_motor_and_finish",
+          "translation": [
+            0.0,
+            -0.7,
+            0.0
+          ],
+          "start": 0.10416666666666667,
+          "end": 0.20833333333333334,
+          "verification": {
+            "positiveSamples": 100,
+            "triangleBVHPairTests": 56,
+            "newGroupSurfaceIntersections": 0,
+            "floorCrossings": 0,
+            "continuousTriangleTests": 5339,
+            "continuousCandidatePairs": 5339,
+            "initialTriangleContactsWithdrawing": 0,
+            "newContinuousTriangleContacts": 0,
+            "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+          }
+        },
+        {
+          "group": "bearing_fastener_1",
+          "translation": [
+            0.0,
+            0.0,
+            1.35
+          ],
+          "start": 0.20833333333333334,
+          "end": 0.25,
+          "verification": {
+            "positiveSamples": 100,
+            "triangleBVHPairTests": 42,
+            "newGroupSurfaceIntersections": 0,
+            "floorCrossings": 0,
+            "continuousTriangleTests": 2878,
+            "continuousCandidatePairs": 2878,
+            "initialTriangleContactsWithdrawing": 515,
+            "newContinuousTriangleContacts": 0,
+            "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+          }
+        },
+        {
+          "group": "bearing_fastener_2",
+          "translation": [
+            0.0,
+            0.0,
+            1.35
+          ],
+          "start": 0.25,
+          "end": 0.2916666666666667,
+          "verification": {
+            "positiveSamples": 100,
+            "triangleBVHPairTests": 42,
+            "newGroupSurfaceIntersections": 0,
+            "floorCrossings": 0,
+            "continuousTriangleTests": 3005,
+            "continuousCandidatePairs": 3005,
+            "initialTriangleContactsWithdrawing": 502,
+            "newContinuousTriangleContacts": 0,
+            "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+          }
+        },
+        {
+          "group": "bearing_fastener_3",
+          "translation": [
+            0.0,
+            0.0,
+            1.35
+          ],
+          "start": 0.2916666666666667,
+          "end": 0.3333333333333333,
+          "verification": {
+            "positiveSamples": 100,
+            "triangleBVHPairTests": 42,
+            "newGroupSurfaceIntersections": 0,
+            "floorCrossings": 0,
+            "continuousTriangleTests": 1583,
+            "continuousCandidatePairs": 1583,
+            "initialTriangleContactsWithdrawing": 510,
+            "newContinuousTriangleContacts": 0,
+            "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+          }
+        },
+        {
+          "group": "bearing_fastener_4",
+          "translation": [
+            0.0,
+            0.0,
+            1.35
+          ],
+          "start": 0.3333333333333333,
+          "end": 0.375,
+          "verification": {
+            "positiveSamples": 100,
+            "triangleBVHPairTests": 42,
+            "newGroupSurfaceIntersections": 0,
+            "floorCrossings": 0,
+            "continuousTriangleTests": 1601,
+            "continuousCandidatePairs": 1601,
+            "initialTriangleContactsWithdrawing": 487,
+            "newContinuousTriangleContacts": 0,
+            "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+          }
+        },
+        {
+          "group": "bearing_top_cover",
+          "translation": [
+            0.0,
+            0.0,
+            1.4
+          ],
+          "start": 0.375,
+          "end": 0.5,
+          "verification": {
+            "positiveSamples": 100,
+            "triangleBVHPairTests": 0,
+            "newGroupSurfaceIntersections": 0,
+            "floorCrossings": 0,
+            "continuousTriangleTests": 18803,
+            "continuousCandidatePairs": 18803,
+            "initialTriangleContactsWithdrawing": 6059,
+            "newContinuousTriangleContacts": 0,
+            "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+          }
+        },
+        {
+          "group": "bearing_inner_ring",
+          "translation": [
+            0.0,
+            0.0,
+            1.1
+          ],
+          "start": 0.5,
+          "end": 0.625,
+          "verification": {
+            "positiveSamples": 100,
+            "triangleBVHPairTests": 11,
+            "newGroupSurfaceIntersections": 0,
+            "floorCrossings": 0,
+            "continuousTriangleTests": 11036,
+            "continuousCandidatePairs": 11036,
+            "initialTriangleContactsWithdrawing": 0,
+            "newContinuousTriangleContacts": 0,
+            "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+          }
+        },
+        {
+          "group": "bearing_outer_ring",
+          "translation": [
+            0.0,
+            0.0,
+            0.85
+          ],
+          "start": 0.625,
+          "end": 0.75,
+          "verification": {
+            "positiveSamples": 100,
+            "triangleBVHPairTests": 0,
+            "newGroupSurfaceIntersections": 0,
+            "floorCrossings": 0,
+            "continuousTriangleTests": 9899,
+            "continuousCandidatePairs": 9899,
+            "initialTriangleContactsWithdrawing": 3043,
+            "newContinuousTriangleContacts": 0,
+            "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+          }
+        },
+        {
+          "group": "bearing_support_ring",
+          "translation": [
+            0.0,
+            0.0,
+            0.62
+          ],
+          "start": 0.75,
+          "end": 0.875,
+          "verification": {
+            "positiveSamples": 100,
+            "triangleBVHPairTests": 10,
+            "newGroupSurfaceIntersections": 0,
+            "floorCrossings": 0,
+            "continuousTriangleTests": 11525,
+            "continuousCandidatePairs": 11525,
+            "initialTriangleContactsWithdrawing": 4679,
+            "newContinuousTriangleContacts": 0,
+            "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+          }
+        },
+        {
+          "group": "lower_mount_plate_and_embedded_fasteners",
+          "translation": [
+            0.0,
+            0.0,
+            0.33
+          ],
+          "start": 0.875,
+          "end": 1.0,
+          "verification": {
+            "positiveSamples": 100,
+            "triangleBVHPairTests": 42,
+            "newGroupSurfaceIntersections": 0,
+            "floorCrossings": 0,
+            "continuousTriangleTests": 807,
+            "continuousCandidatePairs": 807,
+            "initialTriangleContactsWithdrawing": 216,
+            "newContinuousTriangleContacts": 0,
+            "sourceContactAllowance": "Original group contacts may withdraw for at most the first quarter of the path; intersection count cannot exceed baseline and sampled oriented surface depth cannot increase by more than 0.0002 source units."
+          }
+        }
+      ],
+      "partGroups": {
+        "mat_paint_gray_part_0": "wheel_axle_fork_and_side_drive",
+        "mat_paint_gray_part_1": "drive_motor_and_finish",
+        "mat_paint_gray_part_2": "wheel_axle_fork_and_side_drive",
+        "mat_paint_gray_part_3": "bearing_top_cover",
+        "mat_paint_gray_part_4": "lower_mount_plate_and_embedded_fasteners",
+        "mat_plastic_black_part_0": "steering_motor",
+        "mat_plastic_black_part_1": "steering_motor",
+        "mat_plastic_black_part_2": "steering_motor",
+        "mat_plastic_black_part_3": "steering_motor",
+        "mat_plastic_black_part_4": "steering_motor",
+        "mat_plastic_black_part_5": "wheel_axle_fork_and_side_drive",
+        "mat_plastic_black_part_6": "wheel_axle_fork_and_side_drive",
+        "mat_plastic_black_part_7": "drive_motor_and_finish",
+        "mat_rubber_black_part_0": "wheel_axle_fork_and_side_drive",
+        "mat_steel_part_0": "steering_motor",
+        "mat_steel_part_1": "wheel_axle_fork_and_side_drive",
+        "mat_steel_part_2": "wheel_axle_fork_and_side_drive",
+        "mat_steel_part_3": "wheel_axle_fork_and_side_drive",
+        "mat_steel_part_4": "lower_mount_plate_and_embedded_fasteners",
+        "mat_steel_part_5": "bearing_support_ring",
+        "mat_steel_part_6": "bearing_outer_ring",
+        "mat_steel_part_7": "bearing_inner_ring",
+        "mat_steel_part_8": "wheel_axle_fork_and_side_drive",
+        "mat_steel_part_9": "wheel_axle_fork_and_side_drive",
+        "mat_steel_part_10": "wheel_axle_fork_and_side_drive",
+        "mat_steel_part_11": "bearing_fastener_1",
+        "mat_steel_part_12": "bearing_fastener_2",
+        "mat_steel_part_13": "bearing_fastener_3",
+        "mat_steel_part_14": "bearing_fastener_4",
+        "mat_steel_part_15": "lower_mount_plate_and_embedded_fasteners",
+        "mat_steel_part_16": "lower_mount_plate_and_embedded_fasteners",
+        "mat_steel_part_17": "lower_mount_plate_and_embedded_fasteners",
+        "mat_steel_part_18": "wheel_axle_fork_and_side_drive",
+        "mat_steel_part_19": "wheel_axle_fork_and_side_drive",
+        "mat_steel_part_20": "wheel_axle_fork_and_side_drive",
+        "mat_steel_part_21": "drive_motor_and_finish",
+        "mat_steel_part_22": "drive_motor_and_finish"
+      },
+      "retainedGroups": [
+        "wheel_axle_fork_and_side_drive"
+      ],
+      "retainedComponentReason": "The source wheel/axle/fork, side-drive geometry and embedded side fasteners are mechanically interlocked or intersect in the source. Tested independent translations introduce new contacts. The lower mount plate retains its three embedded source screws; the motor retains its shaft fitting and contiguous finish masks.",
+      "sourceGeometryChanges": [],
+      "sourceSurfaceContacts": [
+        {
+          "parts": [
+            "mat_paint_gray_part_0",
+            "mat_paint_gray_part_2"
+          ],
+          "trianglePairs": 108,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_paint_gray_part_0",
+            "mat_plastic_black_part_6"
+          ],
+          "trianglePairs": 1,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_paint_gray_part_1",
+            "mat_plastic_black_part_7"
+          ],
+          "trianglePairs": 32,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_paint_gray_part_2",
+            "mat_paint_gray_part_4"
+          ],
+          "trianglePairs": 79,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_paint_gray_part_2",
+            "mat_plastic_black_part_6"
+          ],
+          "trianglePairs": 736,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_paint_gray_part_2",
+            "mat_steel_part_4"
+          ],
+          "trianglePairs": 29,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_paint_gray_part_2",
+            "mat_steel_part_18"
+          ],
+          "trianglePairs": 443,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_paint_gray_part_2",
+            "mat_steel_part_19"
+          ],
+          "trianglePairs": 447,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_paint_gray_part_2",
+            "mat_steel_part_20"
+          ],
+          "trianglePairs": 447,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_paint_gray_part_3",
+            "mat_steel_part_7"
+          ],
+          "trianglePairs": 524,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_paint_gray_part_4",
+            "mat_steel_part_4"
+          ],
+          "trianglePairs": 670,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_paint_gray_part_4",
+            "mat_steel_part_15"
+          ],
+          "trianglePairs": 233,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_plastic_black_part_0",
+            "mat_plastic_black_part_1"
+          ],
+          "trianglePairs": 72,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_plastic_black_part_1",
+            "mat_plastic_black_part_2"
+          ],
+          "trianglePairs": 72,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_plastic_black_part_1",
+            "mat_plastic_black_part_3"
+          ],
+          "trianglePairs": 72,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_plastic_black_part_1",
+            "mat_plastic_black_part_4"
+          ],
+          "trianglePairs": 72,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_plastic_black_part_1",
+            "mat_steel_part_0"
+          ],
+          "trianglePairs": 370,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_plastic_black_part_7",
+            "mat_steel_part_21"
+          ],
+          "trianglePairs": 31,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_plastic_black_part_7",
+            "mat_steel_part_22"
+          ],
+          "trianglePairs": 8,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_rubber_black_part_0",
+            "mat_steel_part_2"
+          ],
+          "trianglePairs": 288,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_rubber_black_part_0",
+            "mat_steel_part_3"
+          ],
+          "trianglePairs": 782,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_steel_part_1",
+            "mat_steel_part_3"
+          ],
+          "trianglePairs": 452,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_steel_part_2",
+            "mat_steel_part_3"
+          ],
+          "trianglePairs": 288,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_steel_part_4",
+            "mat_steel_part_5"
+          ],
+          "trianglePairs": 1355,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_steel_part_4",
+            "mat_steel_part_15"
+          ],
+          "trianglePairs": 324,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_steel_part_4",
+            "mat_steel_part_16"
+          ],
+          "trianglePairs": 332,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_steel_part_4",
+            "mat_steel_part_17"
+          ],
+          "trianglePairs": 328,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_steel_part_5",
+            "mat_steel_part_6"
+          ],
+          "trianglePairs": 1200,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_steel_part_6",
+            "mat_steel_part_11"
+          ],
+          "trianglePairs": 132,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_steel_part_6",
+            "mat_steel_part_12"
+          ],
+          "trianglePairs": 136,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_steel_part_6",
+            "mat_steel_part_13"
+          ],
+          "trianglePairs": 173,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_steel_part_6",
+            "mat_steel_part_14"
+          ],
+          "trianglePairs": 151,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_steel_part_8",
+            "mat_steel_part_18"
+          ],
+          "trianglePairs": 828,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_steel_part_9",
+            "mat_steel_part_20"
+          ],
+          "trianglePairs": 827,
+          "type": "original source surface contact/intersection"
+        },
+        {
+          "parts": [
+            "mat_steel_part_10",
+            "mat_steel_part_19"
+          ],
+          "trianglePairs": 861,
+          "type": "original source surface contact/intersection"
+        }
+      ],
+      "newContinuousTriangleContacts": 0,
+      "floorCrossings": 0
+    },
+    "sourceContractSha256": "d579b381d393ef8ff8c1846b87aac6d6863644923877b008da423143e447b08f"
+  },
+  "limitations": [
+    "Sampled source poses; interpolation does not imply measured engineering time."
+  ]
+}

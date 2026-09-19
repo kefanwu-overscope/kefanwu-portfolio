@@ -1,0 +1,53 @@
+{
+  "schema": "studio-motion-index-v1",
+  "projects": {
+    "steering": {
+      "manifest": "steering/manifest.json"
+    },
+    "vineRobot": {
+      "manifest": "vineRobot/manifest.json"
+    },
+    "javelin": {
+      "manifest": "javelin/manifest.json"
+    },
+    "scanner": {
+      "manifest": "scanner/manifest.json"
+    },
+    "brakeSim": {
+      "manifest": "brakeSim/manifest.json"
+    },
+    "aura": {
+      "manifest": "aura/manifest.json"
+    },
+    "carbonSeat": {
+      "manifest": "carbonSeat/manifest.json"
+    },
+    "seat": {
+      "manifest": "seat/manifest.json"
+    },
+    "materialTest": {
+      "manifest": "materialTest/manifest.json"
+    },
+    "ansysCfd": {
+      "manifest": "ansysCfd/manifest.json"
+    },
+    "pool": {
+      "manifest": "pool/manifest.json"
+    },
+    "lineFollower": {
+      "manifest": "lineFollower/manifest.json"
+    },
+    "formlabs": {
+      "manifest": "formlabs/manifest.json"
+    },
+    "telecaster": {
+      "manifest": "telecaster/manifest.json"
+    },
+    "education": {
+      "manifest": "education/manifest.json"
+    },
+    "ftc": {
+      "manifest": "ftc/manifest.json"
+    }
+  }
+}

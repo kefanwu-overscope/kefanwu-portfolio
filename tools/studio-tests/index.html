@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Studio runtime acceptance</title>
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/"}}</script>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#191919;color:#eee;font:14px/1.5 system-ui}main{display:grid;grid-template-columns:minmax(0,1fr) 360px;min-height:100vh}.stage{position:sticky;top:0;height:100vh;min-height:360px}canvas{display:block;width:100%;height:calc(100% - 96px);touch-action:none}aside{padding:20px;background:#242424}h1{font-size:20px}button,select,input{font:inherit}button,select{padding:8px;background:#383838;color:white;border:1px solid #626262;border-radius:4px;margin:3px}button:disabled{opacity:.5}input{width:98%}.controls{padding:8px 16px}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px}#status{min-height:24px;margin:0}#result{color:#acdcab}.compact main{grid-template-columns:390px minmax(320px,1fr)}.compact .stage{height:640px}@media(max-width:760px){main{display:block}.stage{height:58vh}aside{padding:14px}.compact main{display:block}}
+  </style>
+</head>
+<body>
+  <main>
+    <section class="stage"><canvas id="canvas" aria-label="Interactive test model" tabindex="0"></canvas><div class="controls"><p id="status">Ready to load a project.</p><input id="progress" type="range" min="0" max="1" step="0.001" value="0" aria-label="Mechanism progress"><button id="play">Play</button><button id="reverse">Reverse</button><button id="reset">Reset</button><button id="view">Side view</button></div></section>
+    <aside><h1>Studio runtime acceptance</h1><p>This local QA page runs the actual workbench module. Results appear below; no test state is attached to window.</p><select id="project" aria-label="Project"></select><button id="load">Load</button><button id="run">Run all 16</button><button id="compact">Toggle 390 px</button><button id="context">Lose / restore context</button><p id="result" role="status">Not started.</p><pre id="report"></pre></aside>
+  </main>
+  <script type="module" src="./runtime-acceptance.js"></script>
+</body>
+</html>

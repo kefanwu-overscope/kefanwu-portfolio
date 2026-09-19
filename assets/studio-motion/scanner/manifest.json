@@ -1,0 +1,4596 @@
+{
+  "schema": "studio-motion-v1",
+  "project": "scanner",
+  "coordinates": "blender-z-up",
+  "quaternionOrder": "xyzw",
+  "colorSpace": "linear",
+  "sampleCount": 121,
+  "duration": 8,
+  "buffers": {
+    "geometry": {
+      "url": "geometry.bin.gz",
+      "compression": "gzip",
+      "byteLength": 7165248,
+      "compressedBytes": 3069616,
+      "sha256": "0962b97dadf20b785ca41da244daf3f712357df54965d199293f84a99478bfb8"
+    },
+    "motion": {
+      "url": "motion.bin.gz",
+      "compression": "gzip",
+      "byteLength": 1948,
+      "compressedBytes": 1566,
+      "sha256": "a4f6f1106deee0e82a19cfd6add9e4042a7639cbcd1e2ba7f42e849e2faf1a43"
+    }
+  },
+  "materials": [
+    {
+      "name": "Pale plywood base",
+      "baseColor": [
+        0.6172065734863281,
+        0.5520114302635193,
+        0.40724021196365356,
+        1.0
+      ],
+      "metalness": 0.0,
+      "roughness": 0.5600000023841858,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.029999999329447746,
+      "tracks": {}
+    },
+    {
+      "name": "Royal blue printed components",
+      "baseColor": [
+        0.023153366521000862,
+        0.11443537473678589,
+        0.5520114302635193,
+        1.0
+      ],
+      "metalness": 0.009999999776482582,
+      "roughness": 0.4000000059604645,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.029999999329447746,
+      "tracks": {}
+    },
+    {
+      "name": "Motor and electronics housings",
+      "baseColor": [
+        0.020288562402129173,
+        0.023153366521000862,
+        0.028426039963960648,
+        1.0
+      ],
+      "metalness": 0.11999999731779099,
+      "roughness": 0.3700000047683716,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.029999999329447746,
+      "tracks": {}
+    },
+    {
+      "name": "Brass fittings",
+      "baseColor": [
+        0.4564110338687897,
+        0.32314321398735046,
+        0.12477181851863861,
+        1.0
+      ],
+      "metalness": 0.699999988079071,
+      "roughness": 0.3100000023841858,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.029999999329447746,
+      "tracks": {}
+    },
+    {
+      "name": "Satin machined steel",
+      "baseColor": [
+        0.423267662525177,
+        0.4677838087081909,
+        0.5271151065826416,
+        1.0
+      ],
+      "metalness": 0.9200000166893005,
+      "roughness": 0.3199999928474426,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.029999999329447746,
+      "tracks": {}
+    },
+    {
+      "name": "Pale engineering polymer",
+      "baseColor": [
+        0.7379103899002075,
+        0.7454041838645935,
+        0.7379103899002075,
+        1.0
+      ],
+      "metalness": 0.0,
+      "roughness": 0.4300000071525574,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.029999999329447746,
+      "tracks": {}
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mat_wood_part_0",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 15492,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 0,
+          "count": 4708,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 56496,
+          "count": 4708,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 112992,
+          "count": 15492,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 174960,
+          "count": 4708,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_printed_part_0",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 8082,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 231456,
+          "count": 2493,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 261372,
+          "count": 2493,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 291288,
+          "count": 8082,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 323616,
+          "count": 2493,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_printed_part_1",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 8082,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 353532,
+          "count": 2492,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 383436,
+          "count": 2492,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 413340,
+          "count": 8082,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 445668,
+          "count": 2492,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_printed_part_2",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3366,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 475572,
+          "count": 1019,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 487800,
+          "count": 1019,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 500028,
+          "count": 3366,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 513492,
+          "count": 1019,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_printed_part_3",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3366,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 525720,
+          "count": 1019,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 537948,
+          "count": 1019,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 550176,
+          "count": 3366,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 563640,
+          "count": 1019,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_printed_part_4",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 22068,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 575868,
+          "count": 6982,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 659652,
+          "count": 6982,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 743436,
+          "count": 22068,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 831708,
+          "count": 6982,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_printed_part_5",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1914,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 915492,
+          "count": 654,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 923340,
+          "count": 654,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 931188,
+          "count": 1914,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 938844,
+          "count": 654,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_printed_part_6",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 10920,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 946692,
+          "count": 3519,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 988920,
+          "count": 3519,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1031148,
+          "count": 10920,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1074828,
+          "count": 3519,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_printed_part_7",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 294,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1117056,
+          "count": 104,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1118304,
+          "count": 104,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1119552,
+          "count": 294,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1120728,
+          "count": 104,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_printed_part_8",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 6036,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1121976,
+          "count": 1942,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1145280,
+          "count": 1942,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1168584,
+          "count": 6036,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1192728,
+          "count": 1942,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_printed_part_9",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 6036,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1216032,
+          "count": 1942,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1239336,
+          "count": 1942,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1262640,
+          "count": 6036,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1286784,
+          "count": 1942,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_printed_part_10",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 12696,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1310088,
+          "count": 3974,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1357776,
+          "count": 3974,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1405464,
+          "count": 12696,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1456248,
+          "count": 3974,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_0",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 16944,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1503936,
+          "count": 5114,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1565304,
+          "count": 5114,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1626672,
+          "count": 16944,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1694448,
+          "count": 5114,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_dark_part_1",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 16944,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1755816,
+          "count": 5114,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1817184,
+          "count": 5114,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1878552,
+          "count": 16944,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1946328,
+          "count": 5114,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_dark_part_2",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3240,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2007696,
+          "count": 1076,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2020608,
+          "count": 1076,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2033520,
+          "count": 3240,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2046480,
+          "count": 1076,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_dark_part_3",
+      "group": "gantry",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 2808,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2059392,
+          "count": 942,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2070696,
+          "count": 942,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2082000,
+          "count": 2808,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2093232,
+          "count": 942,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1216,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_4",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 10044,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2104536,
+          "count": 2932,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2139720,
+          "count": 2932,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2174904,
+          "count": 10044,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2215080,
+          "count": 2932,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_5",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 19608,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2250264,
+          "count": 4490,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2304144,
+          "count": 4490,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2358024,
+          "count": 19608,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2436456,
+          "count": 4490,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_6",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1812,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2490336,
+          "count": 600,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2497536,
+          "count": 600,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2504736,
+          "count": 1812,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2511984,
+          "count": 600,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_7",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 12006,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2519184,
+          "count": 2090,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2544264,
+          "count": 2090,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2569344,
+          "count": 12006,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2617368,
+          "count": 2090,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_8",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 228,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2642448,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2643888,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2645328,
+          "count": 228,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2646240,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_9",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3804,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2647680,
+          "count": 1261,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2662812,
+          "count": 1261,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2677944,
+          "count": 3804,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2693160,
+          "count": 1261,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_dark_part_10",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3573,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2708292,
+          "count": 1233,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2723088,
+          "count": 1233,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2737884,
+          "count": 3573,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2752176,
+          "count": 1233,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_dark_part_11",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 59958,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2766972,
+          "count": 20471,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3012624,
+          "count": 20471,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3258276,
+          "count": 59958,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3498108,
+          "count": 20471,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_12",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 6810,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3743760,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3761232,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3778704,
+          "count": 6810,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3805944,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_13",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 6810,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3823416,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3840888,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3858360,
+          "count": 6810,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3885600,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_14",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 6810,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3903072,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3920544,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3938016,
+          "count": 6810,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3965256,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_15",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 6810,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3982728,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 4000200,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 4017672,
+          "count": 6810,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 4044912,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_16",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 828,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 4062384,
+          "count": 288,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 4065840,
+          "count": 288,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 4069296,
+          "count": 828,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 4072608,
+          "count": 288,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_17",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1296,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 4076064,
+          "count": 442,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 4081368,
+          "count": 442,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 4086672,
+          "count": 1296,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 4091856,
+          "count": 442,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_18",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 59958,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 4097160,
+          "count": 20470,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 4342800,
+          "count": 20470,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 4588440,
+          "count": 59958,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 4828272,
+          "count": 20470,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_19",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 6810,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 5073912,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 5091384,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 5108856,
+          "count": 6810,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5136096,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_20",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 6810,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 5153568,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 5171040,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 5188512,
+          "count": 6810,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5215752,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_21",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 6810,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 5233224,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 5250696,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 5268168,
+          "count": 6810,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5295408,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_22",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 6810,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 5312880,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 5330352,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 5347824,
+          "count": 6810,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5375064,
+          "count": 1456,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_23",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 828,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 5392536,
+          "count": 288,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 5395992,
+          "count": 288,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 5399448,
+          "count": 828,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5402760,
+          "count": 288,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_24",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1296,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 5406216,
+          "count": 446,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 5411568,
+          "count": 446,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 5416920,
+          "count": 1296,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5422104,
+          "count": 446,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_25",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 10086,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 5427456,
+          "count": 3474,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 5469144,
+          "count": 3474,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 5510832,
+          "count": 10086,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5551176,
+          "count": 3474,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_26",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 10086,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 5592864,
+          "count": 3474,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 5634552,
+          "count": 3474,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 5676240,
+          "count": 10086,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5716584,
+          "count": 3474,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_brass_part_0",
+      "group": "gantry",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3936,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 5758272,
+          "count": 1296,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 5773824,
+          "count": 1296,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 5789376,
+          "count": 3936,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5805120,
+          "count": 1296,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1216,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_brass_part_1",
+      "group": "gantry",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3936,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 5820672,
+          "count": 1296,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 5836224,
+          "count": 1296,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 5851776,
+          "count": 3936,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5867520,
+          "count": 1296,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1216,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_0",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1836,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 5883072,
+          "count": 644,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 5890800,
+          "count": 644,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 5898528,
+          "count": 1836,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5905872,
+          "count": 644,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_steel_part_1",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1944,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 5913600,
+          "count": 652,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 5921424,
+          "count": 652,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 5929248,
+          "count": 1944,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5937024,
+          "count": 652,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_steel_part_2",
+      "group": "gantry",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 2112,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 5944848,
+          "count": 706,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 5953320,
+          "count": 706,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 5961792,
+          "count": 2112,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5970240,
+          "count": 706,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1216,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_3",
+      "group": "gantry",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 20622,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 5978712,
+          "count": 5480,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6044472,
+          "count": 5480,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6110232,
+          "count": 20622,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6192720,
+          "count": 5480,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1216,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_4",
+      "group": "gantry",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1080,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6258480,
+          "count": 360,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6262800,
+          "count": 360,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6267120,
+          "count": 1080,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6271440,
+          "count": 360,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1216,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_5",
+      "group": "gantry",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1080,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6275760,
+          "count": 360,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6280080,
+          "count": 360,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6284400,
+          "count": 1080,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6288720,
+          "count": 360,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1216,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_6",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1080,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6293040,
+          "count": 360,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6297360,
+          "count": 360,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6301680,
+          "count": 1080,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6306000,
+          "count": 360,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_7",
+      "group": "carriage",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1080,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6310320,
+          "count": 360,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6314640,
+          "count": 360,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6301680,
+          "count": 1080,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6318960,
+          "count": 360,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_8",
+      "group": "gantry",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 14898,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6323280,
+          "count": 4028,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6371616,
+          "count": 4028,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6419952,
+          "count": 14898,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6479544,
+          "count": 4028,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1216,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_9",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 7512,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6527880,
+          "count": 2466,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6557472,
+          "count": 2466,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6587064,
+          "count": 7512,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6617112,
+          "count": 2466,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_steel_part_10",
+      "group": "gantry",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 432,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6646704,
+          "count": 146,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6648456,
+          "count": 146,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6650208,
+          "count": 432,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6651936,
+          "count": 146,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1216,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_11",
+      "group": "gantry",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 432,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6653688,
+          "count": 146,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6655440,
+          "count": 146,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6650208,
+          "count": 432,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6657192,
+          "count": 146,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1216,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_12",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 7512,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6658944,
+          "count": 2466,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6688536,
+          "count": 2466,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6718128,
+          "count": 7512,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6748176,
+          "count": 2466,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_steel_part_13",
+      "group": "gantry",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3540,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6777768,
+          "count": 1163,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6791724,
+          "count": 1163,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6805680,
+          "count": 3540,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6819840,
+          "count": 1163,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1216,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_14",
+      "group": "gantry",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3540,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6833796,
+          "count": 1163,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6847752,
+          "count": 1163,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6805680,
+          "count": 3540,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6861708,
+          "count": 1163,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1216,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_15",
+      "group": "gantry",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3540,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6875664,
+          "count": 1163,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6889620,
+          "count": 1163,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6903576,
+          "count": 3540,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6917736,
+          "count": 1163,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1216,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_16",
+      "group": "gantry",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 3540,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6931692,
+          "count": 1163,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6945648,
+          "count": 1163,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6903576,
+          "count": 3540,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6959604,
+          "count": 1163,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1216,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_17",
+      "group": "gantry",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1104,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6973560,
+          "count": 368,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6977976,
+          "count": 368,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6982392,
+          "count": 1104,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6986808,
+          "count": 368,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 1216,
+          "count": 61,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 732,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_aero_part_0",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 4374,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6991224,
+          "count": 1440,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 7008504,
+          "count": 1440,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 7025784,
+          "count": 4374,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 7043280,
+          "count": 1440,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        5
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    },
+    {
+      "name": "mat_aero_part_1",
+      "group": "fixed_frame",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 6768,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 7060560,
+          "count": 2156,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 7086432,
+          "count": 2156,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 7112304,
+          "count": 6768,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 7139376,
+          "count": 2156,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        5
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    }
+  ],
+  "bounds": {
+    "initial": {
+      "min": [
+        -1.399999976158142,
+        -0.6321106553077698,
+        0.035000015050172806
+      ],
+      "max": [
+        1.399999976158142,
+        0.632110595703125,
+        1.9685089588165283
+      ],
+      "center": [
+        0.0,
+        -2.9802322387695312e-08,
+        1.0017544869333506
+      ],
+      "size": [
+        2.799999952316284,
+        1.2642212510108948,
+        1.9335089437663555
+      ]
+    },
+    "motion": {
+      "min": [
+        -1.399999976158142,
+        -0.6321106553077698,
+        0.035000015050172806
+      ],
+      "max": [
+        1.399999976158142,
+        0.632110595703125,
+        1.9685089588165283
+      ],
+      "center": [
+        0.0,
+        -2.9802322387695312e-08,
+        1.0017544869333506
+      ],
+      "size": [
+        2.799999952316284,
+        1.2642212510108948,
+        1.9335089437663555
+      ]
+    }
+  },
+  "camera": {
+    "type": "orthographic",
+    "position": [
+      5.567635536193848,
+      -9.54642391204834,
+      5.679952621459961
+    ],
+    "target": [
+      -0.009478569030761719,
+      -0.06532859802246094,
+      0.8836350440979004
+    ],
+    "up": [
+      -0.20265239477157593,
+      0.3445092439651489,
+      0.9166490435600281
+    ],
+    "orthoScale": 4.35875940322876,
+    "sensorFit": "HORIZONTAL",
+    "fov": 39.597755335771296,
+    "aspect": 1.4988290398126465
+  },
+  "source": {
+    "pipeline": "tools/exploded-render/render_exploded.py",
+    "motionReport": {
+      "project": "scanner",
+      "mode": "mechanism",
+      "periodic": true,
+      "sourcePartCount": 61,
+      "preservedTriangles": 161359,
+      "geometryPolicy": "Original connected CAD meshes and material slots; object transforms only.",
+      "seekPolicy": "Absolute transforms from saved source matrices; source pose at progress 0 and 1.",
+      "motion": "Horizontal gantry rises on its vertical guide rods while the complete tool carriage travels along the two horizontal rails, then both return.",
+      "gantryAxis": [
+        1.456256781828813e-10,
+        1.6701287108844554e-07,
+        1.0
+      ],
+      "carriageAxis": [
+        0.9999999403953552,
+        0.0002847909927368164,
+        -1.6225331349323625e-17
+      ],
+      "gantryTravel": [
+        0,
+        0.22
+      ],
+      "carriageTravel": [
+        0,
+        0.68
+      ],
+      "fixedVerticalGuides": [
+        "mat_steel_part_0",
+        "mat_steel_part_1",
+        "mat_steel_part_12",
+        "mat_steel_part_9"
+      ],
+      "movingHorizontalRails": [
+        "mat_steel_part_10",
+        "mat_steel_part_11"
+      ],
+      "limitations": "A conservative demonstration stroke within the modeled rail travel; it does not specify programmed machine travel, speed or tool operation.",
+      "groups": {
+        "carriage": [
+          "mat_dark_part_11",
+          "mat_dark_part_12",
+          "mat_dark_part_13",
+          "mat_dark_part_14",
+          "mat_dark_part_15",
+          "mat_dark_part_16",
+          "mat_dark_part_17",
+          "mat_dark_part_18",
+          "mat_dark_part_19",
+          "mat_dark_part_20",
+          "mat_dark_part_21",
+          "mat_dark_part_22",
+          "mat_dark_part_23",
+          "mat_dark_part_24",
+          "mat_dark_part_25",
+          "mat_dark_part_26",
+          "mat_dark_part_4",
+          "mat_dark_part_5",
+          "mat_dark_part_6",
+          "mat_dark_part_7",
+          "mat_dark_part_8",
+          "mat_printed_part_10",
+          "mat_printed_part_6",
+          "mat_printed_part_7",
+          "mat_steel_part_6",
+          "mat_steel_part_7"
+        ],
+        "fixed_frame": [
+          "mat_aero_part_0",
+          "mat_aero_part_1",
+          "mat_dark_part_0",
+          "mat_dark_part_1",
+          "mat_dark_part_10",
+          "mat_dark_part_2",
+          "mat_dark_part_9",
+          "mat_printed_part_0",
+          "mat_printed_part_1",
+          "mat_printed_part_2",
+          "mat_printed_part_3",
+          "mat_printed_part_4",
+          "mat_printed_part_5",
+          "mat_printed_part_8",
+          "mat_printed_part_9",
+          "mat_steel_part_0",
+          "mat_steel_part_1",
+          "mat_steel_part_12",
+          "mat_steel_part_9",
+          "mat_wood_part_0"
+        ],
+        "gantry": [
+          "mat_brass_part_0",
+          "mat_brass_part_1",
+          "mat_dark_part_3",
+          "mat_steel_part_10",
+          "mat_steel_part_11",
+          "mat_steel_part_13",
+          "mat_steel_part_14",
+          "mat_steel_part_15",
+          "mat_steel_part_16",
+          "mat_steel_part_17",
+          "mat_steel_part_2",
+          "mat_steel_part_3",
+          "mat_steel_part_4",
+          "mat_steel_part_5",
+          "mat_steel_part_8"
+        ]
+      }
+    },
+    "sourceContractSha256": "d579b381d393ef8ff8c1846b87aac6d6863644923877b008da423143e447b08f"
+  },
+  "limitations": [
+    "Sampled source poses; interpolation does not imply measured engineering time."
+  ]
+}

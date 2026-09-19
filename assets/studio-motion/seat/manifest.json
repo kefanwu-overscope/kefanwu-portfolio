@@ -1,0 +1,412 @@
+{
+  "schema": "studio-motion-v1",
+  "project": "seat",
+  "coordinates": "blender-z-up",
+  "quaternionOrder": "xyzw",
+  "colorSpace": "linear",
+  "sampleCount": 121,
+  "duration": 8,
+  "buffers": {
+    "geometry": {
+      "url": "geometry.bin.gz",
+      "compression": "gzip",
+      "byteLength": 1131840,
+      "compressedBytes": 321954,
+      "sha256": "33712a6e611346dce446d85e2c35b76057697e4f06d270dfa7c06a1a9ef69459"
+    },
+    "motion": {
+      "url": "motion.bin.gz",
+      "compression": "gzip",
+      "byteLength": 20270260,
+      "compressedBytes": 13425037,
+      "sha256": "79b41e03c0e66586add040ebfc68ce6690d1b4fdb3672666c28874392bcaaf94"
+    }
+  },
+  "materials": [
+    {
+      "name": "steel",
+      "baseColor": [
+        0.577580451965332,
+        0.6038273572921753,
+        0.6307571530342102,
+        1.0
+      ],
+      "metalness": 1.0,
+      "roughness": 0.4000000059604645,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.23999999463558197,
+      "tracks": {}
+    }
+  ],
+  "nodes": [
+    {
+      "name": "Driver seat continuous unfolding surface with two corner relief",
+      "group": "Driver seat continuous unfolding surface with two corner relief",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 28296,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 0,
+          "count": 28296,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 339552,
+          "count": 28296,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 679104,
+          "count": 28296,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 792288,
+          "count": 28296,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "deformationPosition": {
+          "byteOffset": 113184,
+          "count": 560230,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 13890,
+          "elementMap": {
+            "byteOffset": 0,
+            "count": 28296,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 6835944,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "deformationNormal": {
+          "byteOffset": 6949612,
+          "count": 1110054,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 27522,
+          "elementMap": {
+            "byteOffset": 6836428,
+            "count": 28296,
+            "itemSize": 1,
+            "componentType": "uint32"
+          },
+          "frameMap": {
+            "byteOffset": 6835944,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    }
+  ],
+  "bounds": {
+    "initial": {
+      "min": [
+        -1.4000002145767212,
+        -1.0749030113220215,
+        0.02500016987323761
+      ],
+      "max": [
+        1.3924481868743896,
+        1.074903130531311,
+        1.9784862995147705
+      ],
+      "center": [
+        -0.0037760138511657715,
+        5.960464477539063e-08,
+        1.001743234694004
+      ],
+      "size": [
+        2.792448401451111,
+        2.1498061418533325,
+        1.953486129641533
+      ]
+    },
+    "motion": {
+      "min": [
+        -1.4051573276519775,
+        -1.5048030614852905,
+        0.005499999970197678
+      ],
+      "max": [
+        2.364098072052002,
+        1.5048030614852905,
+        1.9784873723983765
+      ],
+      "center": [
+        0.4794703722000122,
+        0.0,
+        0.9919936861842871
+      ],
+      "size": [
+        3.7692553997039795,
+        3.009606122970581,
+        1.9729873724281788
+      ]
+    }
+  },
+  "camera": {
+    "type": "orthographic",
+    "position": [
+      -8.406200408935547,
+      -6.077800273895264,
+      7.0222673416137695
+    ],
+    "target": [
+      -0.01738739013671875,
+      -0.019215106964111328,
+      0.9636826515197754
+    ],
+    "up": [
+      0.4096032381057739,
+      0.29582446813583374,
+      0.8629676103591919
+    ],
+    "orthoScale": 5.512909889221191,
+    "sensorFit": "HORIZONTAL",
+    "fov": 39.597755335771296,
+    "aspect": 1.4988290398126465
+  },
+  "source": {
+    "pipeline": "tools/exploded-render/render_exploded.py",
+    "motionReport": {
+      "mode": "unfold",
+      "source": "models/real/driverseat.glb",
+      "geometryPolicy": "The real perforated seat develops as one continuous sheet. Planar panels move rigidly along recovered source bends; curved strips develop continuously at constant neutral-axis arc length. Two tiny upper corner return tabs and their bends receive render-only corner reliefs because their exact flat footprints overlap the head flange. All main perforations and the remaining outline are preserved. The source GLB and approved cover remain unchanged.",
+      "panelCount": 23,
+      "bendCount": 22,
+      "visiblePanelCount": 21,
+      "visibleBendCount": 20,
+      "sourceFaceCount": 9526,
+      "sourceVertexCount": 4677,
+      "sheetThicknessSceneUnits": 0.00490310886332862,
+      "bendAllowancePolicy": "Mid-thickness neutral surface recovered from the supplied inner and outer skins; visual development, not a production blank with material-specific K-factor.",
+      "stagingPolicy": "The complete connected blank levels by the original pan inclination during unfolding; a small rigid lift keeps every posed vertex above the fixed photographic ground.",
+      "cornerReliefs": {
+        "count": 2,
+        "location": "Small unperforated inward return at each upper shoulder-rim end",
+        "reason": "Exact development of these supplied CAD returns overlaps the integral head flange; trimming their render-only tangent ends clears that footprint.",
+        "removedLeafPanelIds": [
+          19,
+          22
+        ],
+        "fullyRemovedSourceTriangles": 116,
+        "retainedSourceTriangles": 9410,
+        "renderTrianglesIncludingClippedFacesAndCaps": 9432,
+        "capTriangles": 13,
+        "sourceFilesModified": false
+      },
+      "bends": [
+        {
+          "parent": 6,
+          "child": 7,
+          "foldDegrees": 90.00000245685834,
+          "neutralRadius": 0.01716055084912117,
+          "neutralArcLength": 0.026955730975425585
+        },
+        {
+          "parent": 6,
+          "child": 9,
+          "foldDegrees": 90.00002034589626,
+          "neutralRadius": 0.017160560225471654,
+          "neutralArcLength": 0.02695575106167782
+        },
+        {
+          "parent": 6,
+          "child": 1,
+          "foldDegrees": 51.25568006517036,
+          "neutralRadius": 0.01716078965868634,
+          "neutralArcLength": 0.015351705690826235
+        },
+        {
+          "parent": 7,
+          "child": 13,
+          "foldDegrees": -54.99996085218997,
+          "neutralRadius": 0.01716046779619062,
+          "neutralArcLength": 0.01647285480739899
+        },
+        {
+          "parent": 9,
+          "child": 14,
+          "foldDegrees": -54.99995234952042,
+          "neutralRadius": 0.017160656296843574,
+          "neutralArcLength": 0.01647303320827302
+        },
+        {
+          "parent": 1,
+          "child": 8,
+          "foldDegrees": 90.00000276359012,
+          "neutralRadius": 0.017160533374667986,
+          "neutralArcLength": 0.026955703618486523
+        },
+        {
+          "parent": 1,
+          "child": 2,
+          "foldDegrees": 45.00000888685345,
+          "neutralRadius": 0.017160492330448557,
+          "neutralArcLength": 0.01347782182100593
+        },
+        {
+          "parent": 1,
+          "child": 10,
+          "foldDegrees": 90.00001347073574,
+          "neutralRadius": 0.017160496342502725,
+          "neutralArcLength": 0.026955648655362374
+        },
+        {
+          "parent": 1,
+          "child": 5,
+          "foldDegrees": 43.431098645623976,
+          "neutralRadius": 0.017159723381551032,
+          "neutralArcLength": 0.013007339201059249
+        },
+        {
+          "parent": 1,
+          "child": 0,
+          "foldDegrees": 45.000017171198785,
+          "neutralRadius": 0.017160816290076066,
+          "neutralArcLength": 0.013478078739619665
+        },
+        {
+          "parent": 8,
+          "child": 12,
+          "foldDegrees": -65.00008968836799,
+          "neutralRadius": 0.017160734335115342,
+          "neutralArcLength": 0.01946826241618832
+        },
+        {
+          "parent": 2,
+          "child": 4,
+          "foldDegrees": 54.99996282800587,
+          "neutralRadius": 0.017160131689884447,
+          "neutralArcLength": 0.01647253276049471
+        },
+        {
+          "parent": 2,
+          "child": 16,
+          "foldDegrees": 34.9995744349201,
+          "neutralRadius": 0.017160551046740854,
+          "neutralArcLength": 0.010482656642580718
+        },
+        {
+          "parent": 10,
+          "child": 11,
+          "foldDegrees": -65.00019343943771,
+          "neutralRadius": 0.01716080422346532,
+          "neutralArcLength": 0.01946837277686176
+        },
+        {
+          "parent": 0,
+          "child": 3,
+          "foldDegrees": 54.99997591528378,
+          "neutralRadius": 0.0171606279032706,
+          "neutralArcLength": 0.016473013010592244
+        },
+        {
+          "parent": 0,
+          "child": 15,
+          "foldDegrees": 34.99973063468182,
+          "neutralRadius": 0.017160305860465463,
+          "neutralArcLength": 0.010482553651057437
+        },
+        {
+          "parent": 12,
+          "child": 20,
+          "foldDegrees": 13.999927559171775,
+          "neutralRadius": 0.01715901750649682,
+          "neutralArcLength": 0.004192717231862869
+        },
+        {
+          "parent": 16,
+          "child": 19,
+          "foldDegrees": 52.99993760066268,
+          "neutralRadius": 0.017159882624446843,
+          "neutralArcLength": 0.015873293217395164
+        },
+        {
+          "parent": 16,
+          "child": 18,
+          "foldDegrees": 46.000004947120715,
+          "neutralRadius": 0.01716045265937139,
+          "neutralArcLength": 0.013777295883472112
+        },
+        {
+          "parent": 11,
+          "child": 17,
+          "foldDegrees": 13.999970909175039,
+          "neutralRadius": 0.017160628495487336,
+          "neutralArcLength": 0.0041931238524318725
+        },
+        {
+          "parent": 15,
+          "child": 21,
+          "foldDegrees": 45.99999897978422,
+          "neutralRadius": 0.017160896948222884,
+          "neutralArcLength": 0.013777650794159997
+        },
+        {
+          "parent": 15,
+          "child": 22,
+          "foldDegrees": 52.999951439621206,
+          "neutralRadius": 0.01716010279568666,
+          "neutralArcLength": 0.015873501025719335
+        }
+      ]
+    },
+    "sourceContractSha256": "d579b381d393ef8ff8c1846b87aac6d6863644923877b008da423143e447b08f"
+  },
+  "limitations": [
+    "Sampled source poses; interpolation does not imply measured engineering time."
+  ]
+}

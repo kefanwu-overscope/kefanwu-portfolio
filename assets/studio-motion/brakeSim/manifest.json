@@ -1,0 +1,246 @@
+{
+  "schema": "studio-motion-v1",
+  "project": "brakeSim",
+  "coordinates": "blender-z-up",
+  "quaternionOrder": "xyzw",
+  "colorSpace": "linear",
+  "sampleCount": 121,
+  "duration": 8,
+  "buffers": {
+    "geometry": {
+      "url": "geometry.bin.gz",
+      "compression": "gzip",
+      "byteLength": 4222416,
+      "compressedBytes": 1353820,
+      "sha256": "d33b50299e63dd751e6fd296295d45033d615ceb61c7049ae23c4c1634264e66"
+    },
+    "motion": {
+      "url": "motion.bin.gz",
+      "compression": "gzip",
+      "byteLength": 1452,
+      "compressedBytes": 1167,
+      "sha256": "f3bf782b7e00cd990dd11d66ce1172357336fdd6d408738300704b78f869bc89"
+    }
+  },
+  "materials": [
+    {
+      "name": "Qualitative warming metal — steel",
+      "baseColor": [
+        0.366252601146698,
+        0.3762621283531189,
+        0.3915724754333496,
+        1.0
+      ],
+      "metalness": 1.0,
+      "roughness": 0.47999998927116394,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        0.699999988079071,
+        0.0010000000474974513,
+        0.0001500000071246177
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.23999999463558197,
+      "heat": {
+        "warmColor": [
+          0.12,
+          0.001,
+          0.0005
+        ],
+        "emissiveColor": [
+          0.7,
+          0.001,
+          0.00015
+        ],
+        "exposureAttribute": "heatExposure",
+        "interpretation": "Qualitative incandescence, not measured temperature"
+      },
+      "tracks": {
+        "warming": {
+          "byteOffset": 0,
+          "count": 121,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 1,
+          "frameMap": {
+            "byteOffset": 484,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "incandescence": {
+          "byteOffset": 968,
+          "count": 121,
+          "itemSize": 1,
+          "componentType": "float32",
+          "valuesPerFrame": 1,
+          "frameMap": {
+            "byteOffset": 484,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mat_steel",
+      "group": "mat_steel",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 248664,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 0,
+          "count": 80694,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 968328,
+          "count": 80694,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1936656,
+          "count": 248664,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2931312,
+          "count": 80694,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "heatExposure": {
+          "byteOffset": 3899640,
+          "count": 80694,
+          "itemSize": 1,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {}
+    }
+  ],
+  "bounds": {
+    "initial": {
+      "min": [
+        -0.03490666672587395,
+        -1.399999976158142,
+        0.025000104680657387
+      ],
+      "max": [
+        0.03490666672587395,
+        1.399999976158142,
+        2.824402093887329
+      ],
+      "center": [
+        0.0,
+        0.0,
+        1.4247010992839932
+      ],
+      "size": [
+        0.0698133334517479,
+        2.799999952316284,
+        2.7994019892066717
+      ]
+    },
+    "motion": {
+      "min": [
+        -0.03490666672587395,
+        -1.399999976158142,
+        0.025000104680657387
+      ],
+      "max": [
+        0.03490666672587395,
+        1.399999976158142,
+        2.824402093887329
+      ],
+      "center": [
+        0.0,
+        0.0,
+        1.4247010992839932
+      ],
+      "size": [
+        0.0698133334517479,
+        2.799999952316284,
+        2.7994019892066717
+      ]
+    }
+  },
+  "camera": {
+    "type": "orthographic",
+    "position": [
+      11.02041244506836,
+      -3.1486892700195312,
+      4.966976165771484
+    ],
+    "target": [
+      -9.5367431640625e-07,
+      -1.1920928955078125e-06,
+      1.4247024059295654
+    ],
+    "up": [
+      -0.2839190363883972,
+      0.08111979067325592,
+      0.9554107189178467
+    ],
+    "orthoScale": 4.944589138031006,
+    "sensorFit": "HORIZONTAL",
+    "fov": 39.597755335771296,
+    "aspect": 1.4988290398126465
+  },
+  "source": {
+    "pipeline": "tools/exploded-render/render_exploded.py",
+    "motionReport": {
+      "process": "intact metal gradually warming to a red glow",
+      "mode": "heat",
+      "geometryPolicy": "All supplied brake vertices, polygons and object transforms remain unchanged.",
+      "sourceVertexCount": 40364,
+      "sourceFaceCount": 82888,
+      "heatingPolicy": "Qualitative visual warming and incandescence only; no temperatures, thermal field, time scale or simulation values are asserted.",
+      "layerCount": null,
+      "recommendedFrameCount": 25
+    },
+    "sourceContractSha256": "d579b381d393ef8ff8c1846b87aac6d6863644923877b008da423143e447b08f"
+  },
+  "limitations": [
+    "Sampled source poses; interpolation does not imply measured engineering time."
+  ]
+}

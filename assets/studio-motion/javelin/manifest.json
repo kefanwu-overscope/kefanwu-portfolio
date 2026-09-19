@@ -1,0 +1,5219 @@
+{
+  "schema": "studio-motion-v1",
+  "project": "javelin",
+  "coordinates": "blender-z-up",
+  "quaternionOrder": "xyzw",
+  "colorSpace": "linear",
+  "sampleCount": 121,
+  "duration": 8,
+  "buffers": {
+    "geometry": {
+      "url": "geometry.bin.gz",
+      "compression": "gzip",
+      "byteLength": 6481644,
+      "compressedBytes": 2587933,
+      "sha256": "e0a3aeb382e7efb8aaa05927d8187519c8ef86cd85e24979dba6d7d934690f4b"
+    },
+    "motion": {
+      "url": "motion.bin.gz",
+      "compression": "gzip",
+      "byteLength": 17140,
+      "compressedBytes": 12496,
+      "sha256": "16c48acdd63a8943d4412236fb99c226e1b63332c2eaadba24173cb65a0d7055"
+    }
+  },
+  "materials": [
+    {
+      "name": "dark.001",
+      "baseColor": [
+        0.01599629409611225,
+        0.01850022003054619,
+        0.021219009533524513,
+        1.0
+      ],
+      "metalness": 0.0,
+      "roughness": 0.5400000214576721,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.23999999463558197,
+      "tracks": {}
+    },
+    {
+      "name": "printed.001",
+      "baseColor": [
+        0.022173885256052017,
+        0.02518685907125473,
+        0.02955683507025242,
+        1.0
+      ],
+      "metalness": 0.0,
+      "roughness": 0.5799999833106995,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.23999999463558197,
+      "procedural": {
+        "type": "noise",
+        "scale": 170.0,
+        "mappingScale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": 0,
+        "coordinates": "sourceCoordinates",
+        "coordinateSpace": "generated",
+        "detail": 2.0,
+        "roughness": 0.5,
+        "lacunarity": 2.0,
+        "distortion": 0.0,
+        "normalize": true,
+        "ramp": null,
+        "bumpStrength": 0.07999999821186066,
+        "bumpDistance": 0.0006000000284984708
+      },
+      "tracks": {}
+    },
+    {
+      "name": "steel.001",
+      "baseColor": [
+        0.47353148460388184,
+        0.5088813304901123,
+        0.533276379108429,
+        1.0
+      ],
+      "metalness": 1.0,
+      "roughness": 0.3199999928474426,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.23999999463558197,
+      "tracks": {}
+    },
+    {
+      "name": "motor_silver.001",
+      "baseColor": [
+        0.5520114302635193,
+        0.5840784311294556,
+        0.6172065734863281,
+        1.0
+      ],
+      "metalness": 1.0,
+      "roughness": 0.30000001192092896,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.23999999463558197,
+      "tracks": {}
+    },
+    {
+      "name": "motor_black.001",
+      "baseColor": [
+        0.008568125776946545,
+        0.010960093699395657,
+        0.013702083379030228,
+        1.0
+      ],
+      "metalness": 0.6499999761581421,
+      "roughness": 0.36000001430511475,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.23999999463558197,
+      "tracks": {}
+    },
+    {
+      "name": "propeller.001",
+      "baseColor": [
+        0.012286487966775894,
+        0.014443843625485897,
+        0.016807375475764275,
+        1.0
+      ],
+      "metalness": 0.0,
+      "roughness": 0.5199999809265137,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.23999999463558197,
+      "tracks": {}
+    },
+    {
+      "name": "aero.001",
+      "baseColor": [
+        0.017641954123973846,
+        0.019382361322641373,
+        0.022173885256052017,
+        1.0
+      ],
+      "metalness": 0.0,
+      "roughness": 0.6100000143051147,
+      "opacity": 1.0,
+      "doubleSide": true,
+      "colorSpace": "linear",
+      "emissive": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emissiveIntensity": 0.0,
+      "transmission": 0.0,
+      "ior": 1.4600000381469727,
+      "clearcoat": 0.0,
+      "clearcoatRoughness": 0.23999999463558197,
+      "procedural": {
+        "type": "noise",
+        "scale": 170.0,
+        "mappingScale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "rotation": 0,
+        "coordinates": "sourceCoordinates",
+        "coordinateSpace": "generated",
+        "detail": 2.0,
+        "roughness": 0.5,
+        "lacunarity": 2.0,
+        "distortion": 0.0,
+        "normalize": true,
+        "ramp": null,
+        "bumpStrength": 0.07999999821186066,
+        "bumpDistance": 0.0006000000284984708
+      },
+      "tracks": {}
+    }
+  ],
+  "nodes": [
+    {
+      "name": "mat_dark_part_0",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 2544,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 0,
+          "count": 932,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 11184,
+          "count": 932,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 22368,
+          "count": 2544,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 32544,
+          "count": 932,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_1",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 276,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 43728,
+          "count": 144,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 45456,
+          "count": 144,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 47184,
+          "count": 276,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 48288,
+          "count": 144,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_2",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1770,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 50016,
+          "count": 601,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 57228,
+          "count": 601,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 64440,
+          "count": 1770,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 71520,
+          "count": 601,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_3",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1770,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 78732,
+          "count": 601,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 85944,
+          "count": 601,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 93156,
+          "count": 1770,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 100236,
+          "count": 601,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_4",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 14694,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 107448,
+          "count": 5066,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 168240,
+          "count": 5066,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 229032,
+          "count": 14694,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 287808,
+          "count": 5066,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_5",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 24474,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 348600,
+          "count": 4636,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 404232,
+          "count": 4636,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 459864,
+          "count": 24474,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 557760,
+          "count": 4636,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_dark_part_6",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 2850,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 613392,
+          "count": 953,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 624828,
+          "count": 953,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 636264,
+          "count": 2850,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 647664,
+          "count": 953,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        0
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_printed_part_0",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 21636,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 659100,
+          "count": 7060,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 743820,
+          "count": 7060,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 828540,
+          "count": 21636,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 915084,
+          "count": 7060,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_printed_part_1",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 4956,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 999804,
+          "count": 1080,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1012764,
+          "count": 1080,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1025724,
+          "count": 4956,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1045548,
+          "count": 1080,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        1
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_0",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 864,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1058508,
+          "count": 288,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1061964,
+          "count": 288,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1065420,
+          "count": 864,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1068876,
+          "count": 288,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_1",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 16752,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1072332,
+          "count": 4252,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1123356,
+          "count": 4252,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1174380,
+          "count": 16752,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1241388,
+          "count": 4252,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_steel_part_2",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 864,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1292412,
+          "count": 288,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1295868,
+          "count": 288,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1299324,
+          "count": 864,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1302780,
+          "count": 288,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        2
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_motor_silver_part_0",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 2040,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1306236,
+          "count": 772,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1315500,
+          "count": 772,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1324764,
+          "count": 2040,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1332924,
+          "count": 772,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_motor_silver_part_1",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 10914,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1342188,
+          "count": 3639,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1385856,
+          "count": 3639,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1429524,
+          "count": 10914,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1473180,
+          "count": 3639,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_motor_silver_part_2",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 144,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1516848,
+          "count": 72,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1517712,
+          "count": 72,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1518576,
+          "count": 144,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1519152,
+          "count": 72,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_motor_silver_part_3",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 2040,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1520016,
+          "count": 771,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1529268,
+          "count": 771,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1538520,
+          "count": 2040,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1546680,
+          "count": 771,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_motor_silver_part_4",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 10914,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1555932,
+          "count": 3639,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1599600,
+          "count": 3639,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1429524,
+          "count": 10914,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1643268,
+          "count": 3639,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_motor_silver_part_5",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 144,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1686936,
+          "count": 72,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1687800,
+          "count": 72,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1688664,
+          "count": 144,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1689240,
+          "count": 72,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_motor_silver_part_6",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 2040,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1690104,
+          "count": 773,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1699380,
+          "count": 773,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1708656,
+          "count": 2040,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1716816,
+          "count": 773,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_motor_silver_part_7",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 10914,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1726092,
+          "count": 3639,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1769760,
+          "count": 3639,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1429524,
+          "count": 10914,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1813428,
+          "count": 3639,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_motor_silver_part_8",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 144,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1857096,
+          "count": 72,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1857960,
+          "count": 72,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1688664,
+          "count": 144,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1858824,
+          "count": 72,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_motor_silver_part_9",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 2040,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1859688,
+          "count": 771,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1868940,
+          "count": 771,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1878192,
+          "count": 2040,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1886352,
+          "count": 771,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_motor_silver_part_10",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 10914,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 1895604,
+          "count": 3639,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 1939272,
+          "count": 3639,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1429524,
+          "count": 10914,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 1982940,
+          "count": 3639,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_motor_silver_part_11",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 144,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2026608,
+          "count": 72,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2027472,
+          "count": 72,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 1518576,
+          "count": 144,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2028336,
+          "count": 72,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        3
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_motor_black_part_0",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 8352,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2029200,
+          "count": 2947,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2064564,
+          "count": 2947,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2099928,
+          "count": 8352,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2133336,
+          "count": 2947,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_motor_black_part_1",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 8352,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2168700,
+          "count": 2950,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2204100,
+          "count": 2950,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2239500,
+          "count": 8352,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2272908,
+          "count": 2950,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_motor_black_part_2",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 8352,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2308308,
+          "count": 2948,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2343684,
+          "count": 2948,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2379060,
+          "count": 8352,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2412468,
+          "count": 2948,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_motor_black_part_3",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 8352,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2447844,
+          "count": 2947,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2483208,
+          "count": 2947,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2518572,
+          "count": 8352,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2551980,
+          "count": 2947,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        4
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_propeller_part_0",
+      "group": "propeller",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 756,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2587344,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2589624,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2591904,
+          "count": 756,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2594928,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        5
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 5048,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 6984,
+          "count": 121,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 8920,
+          "count": 38,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 9376,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_propeller_part_1",
+      "group": "propeller",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 756,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2597208,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2599488,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2591904,
+          "count": 756,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2601768,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        5
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 5048,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 6984,
+          "count": 121,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 8920,
+          "count": 38,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 9376,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_propeller_part_2",
+      "group": "propeller",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1152,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2604048,
+          "count": 384,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2608656,
+          "count": 384,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2613264,
+          "count": 1152,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2617872,
+          "count": 384,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        5
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 5048,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 6984,
+          "count": 121,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 8920,
+          "count": 38,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 9376,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_propeller_part_3",
+      "group": "propeller",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 756,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2622480,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2624760,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2591904,
+          "count": 756,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2627040,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        5
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 9860,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 11312,
+          "count": 121,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 13248,
+          "count": 42,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 13752,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_propeller_part_4",
+      "group": "propeller",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 756,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2629320,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2631600,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2591904,
+          "count": 756,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2633880,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        5
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 9860,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 11312,
+          "count": 121,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 13248,
+          "count": 42,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 13752,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_propeller_part_5",
+      "group": "propeller",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1152,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2636160,
+          "count": 384,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2640768,
+          "count": 384,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2613264,
+          "count": 1152,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2645376,
+          "count": 384,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        5
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 9860,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 11312,
+          "count": 121,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 13248,
+          "count": 42,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 13752,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_propeller_part_6",
+      "group": "propeller",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 756,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2649984,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2652264,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2591904,
+          "count": 756,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2654544,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        5
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 14236,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 6984,
+          "count": 121,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 8920,
+          "count": 38,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 9376,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_propeller_part_7",
+      "group": "propeller",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 756,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2656824,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2659104,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2591904,
+          "count": 756,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2661384,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        5
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 14236,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 6984,
+          "count": 121,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 8920,
+          "count": 38,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 9376,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_propeller_part_8",
+      "group": "propeller",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1152,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2663664,
+          "count": 384,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2668272,
+          "count": 384,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2613264,
+          "count": 1152,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2672880,
+          "count": 384,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        5
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 14236,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 6984,
+          "count": 121,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 8920,
+          "count": 38,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 9376,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_propeller_part_9",
+      "group": "propeller",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 756,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2677488,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2679768,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2591904,
+          "count": 756,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2682048,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        5
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 15688,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 11312,
+          "count": 121,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 13248,
+          "count": 42,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 13752,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_propeller_part_10",
+      "group": "propeller",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 756,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2684328,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2686608,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2591904,
+          "count": 756,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2688888,
+          "count": 190,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        5
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 15688,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 11312,
+          "count": 121,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 13248,
+          "count": 42,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 13752,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "mat_propeller_part_11",
+      "group": "propeller",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 1152,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2691168,
+          "count": 384,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2695776,
+          "count": 384,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 2613264,
+          "count": 1152,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 2700384,
+          "count": 384,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        5
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 15688,
+          "count": 121,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 11312,
+          "count": 121,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 6500,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 13248,
+          "count": 42,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 13752,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "JavelinSTL Javelin_V1 - Nosecone-3",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 80442,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 2704992,
+          "count": 22849,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 2979180,
+          "count": 22849,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3253368,
+          "count": 80442,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3575136,
+          "count": 22849,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        6
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "JavelinSTL Javelin_V1 - Nosecone_Cover-1",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 11682,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 3849324,
+          "count": 3289,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 3888792,
+          "count": 3289,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 3928260,
+          "count": 11682,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 3974988,
+          "count": 3289,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        6
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "JavelinSTL Javelin_V1 - Tailcone-1",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 110286,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 4014456,
+          "count": 30808,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 4384152,
+          "count": 30808,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 4753848,
+          "count": 110286,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5194992,
+          "count": 30808,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        6
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "JavelinSTL Javelin_V1 - Wing_Assem-3 NACA0008_Wing-1",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 17136,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 5564688,
+          "count": 4463,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 5618244,
+          "count": 4463,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 5671800,
+          "count": 17136,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5740344,
+          "count": 4463,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        6
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "JavelinSTL Javelin_V1 - Wing_Assem-3 NACA0008_Wing-2",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 17136,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 5793900,
+          "count": 4466,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 5847492,
+          "count": 4466,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 5901084,
+          "count": 17136,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 5969628,
+          "count": 4466,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        6
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "JavelinSTL Javelin_V1 - Wing_Assem-3 NACA0008_Wing-3",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 17136,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6023220,
+          "count": 4463,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6076776,
+          "count": 4463,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6130332,
+          "count": 17136,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6198876,
+          "count": 4463,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        6
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    },
+    {
+      "name": "JavelinSTL Javelin_V1 - Wing_Assem-3 NACA0008_Wing-4",
+      "group": "airframe",
+      "geometry": {
+        "groups": [
+          {
+            "start": 0,
+            "count": 17136,
+            "materialIndex": 0
+          }
+        ],
+        "position": {
+          "byteOffset": 6252432,
+          "count": 4463,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "normal": {
+          "byteOffset": 6305988,
+          "count": 4463,
+          "itemSize": 3,
+          "componentType": "float32"
+        },
+        "index": {
+          "byteOffset": 6359544,
+          "count": 17136,
+          "itemSize": 1,
+          "componentType": "uint32"
+        },
+        "sourceCoordinates": {
+          "byteOffset": 6428088,
+          "count": 4463,
+          "itemSize": 3,
+          "componentType": "float32"
+        }
+      },
+      "materialIndices": [
+        6
+      ],
+      "transform": {
+        "position": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "quaternion": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "scale": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "visible": true,
+      "tracks": {
+        "position": {
+          "byteOffset": 0,
+          "count": 120,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 1440,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "quaternion": {
+          "byteOffset": 1924,
+          "count": 119,
+          "itemSize": 4,
+          "componentType": "float32",
+          "valuesPerFrame": 4,
+          "frameMap": {
+            "byteOffset": 3828,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        },
+        "scale": {
+          "byteOffset": 4312,
+          "count": 21,
+          "itemSize": 3,
+          "componentType": "float32",
+          "valuesPerFrame": 3,
+          "frameMap": {
+            "byteOffset": 4564,
+            "count": 121,
+            "itemSize": 1,
+            "componentType": "uint32"
+          }
+        }
+      }
+    }
+  ],
+  "bounds": {
+    "initial": {
+      "min": [
+        -1.399999976158142,
+        -0.6485270261764526,
+        0.024999994784593582
+      ],
+      "max": [
+        1.399999976158142,
+        0.6485273838043213,
+        1.5492908954620361
+      ],
+      "center": [
+        0.0,
+        1.7881393432617188e-07,
+        0.7871454451233149
+      ],
+      "size": [
+        2.799999952316284,
+        1.297054409980774,
+        1.5242909006774426
+      ]
+    },
+    "motion": {
+      "min": [
+        -1.400760971155036,
+        -0.842927860985982,
+        -0.03704354795331749
+      ],
+      "max": [
+        1.4123919453252949,
+        0.8426173938330721,
+        1.671002319752101
+      ],
+      "center": [
+        0.005815487085129467,
+        -0.0001552335764549717,
+        0.8169793858993917
+      ],
+      "size": [
+        2.813152916480331,
+        1.6855452548190542,
+        1.7080458677054184
+      ]
+    }
+  },
+  "camera": {
+    "type": "orthographic",
+    "position": [
+      -11.288986206054688,
+      -2.8920538425445557,
+      3.638335943222046
+    ],
+    "target": [
+      0.02194690704345703,
+      -0.06432056427001953,
+      0.8106017112731934
+    ],
+    "up": [
+      0.22866493463516235,
+      0.05716618895530701,
+      0.971825361251831
+    ],
+    "orthoScale": 2.8443644046783447,
+    "sensorFit": "HORIZONTAL",
+    "fov": 39.597755335771296,
+    "aspect": 1.4988290398126465
+  },
+  "source": {
+    "pipeline": "tools/exploded-render/render_exploded.py",
+    "motionReport": {
+      "project": "javelin",
+      "mode": "flight",
+      "sourcePartCount": 47,
+      "preservedTriangles": 153620,
+      "sourceBounds": [
+        [
+          -1.399999976158142,
+          -0.6485270261764526,
+          0.024999994784593582
+        ],
+        [
+          1.399999976158142,
+          0.6485273838043213,
+          1.5492908954620361
+        ]
+      ],
+      "sourceCenter": [
+        0.0,
+        1.7881393432617188e-07,
+        0.7871454358100891
+      ],
+      "geometryPolicy": "Original source meshes, material slots, modifiers and parenting retained; object matrices only.",
+      "arbitrarySeek": true,
+      "seekPolicy": "Absolute source matrices at every seek; exact original matrices at progress zero.",
+      "source": "Original Javelin motor CAD; existing photo-informed display propellers and bored nuts from mechanical_sources.py.",
+      "demonstration": "Qualitative flight presentation; the source model is not a solved flight trajectory, measured attitude history or measured RPM.",
+      "rotorCount": 4,
+      "turns": 5.375,
+      "floorMinimum": -0.17127060133806168,
+      "fixedParts": [],
+      "motionGroups": [
+        {
+          "name": "rotor_1",
+          "axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "center": [
+            0.10559067130088806,
+            0.4697597026824951,
+            0.31738555431365967
+          ],
+          "parts": [
+            "mat_propeller_part_9",
+            "mat_propeller_part_10",
+            "mat_propeller_part_11"
+          ],
+          "radialEnvelope": 0.34092616166401946,
+          "handedness": 1
+        },
+        {
+          "name": "rotor_2",
+          "axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "center": [
+            0.10559067130088806,
+            -0.4697597026824951,
+            0.31738555431365967
+          ],
+          "parts": [
+            "mat_propeller_part_0",
+            "mat_propeller_part_1",
+            "mat_propeller_part_2"
+          ],
+          "radialEnvelope": 0.34092597739844577,
+          "handedness": -1
+        },
+        {
+          "name": "rotor_3",
+          "axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "center": [
+            0.10559067130088806,
+            -0.4697597026824951,
+            1.2569053173065186
+          ],
+          "parts": [
+            "mat_propeller_part_3",
+            "mat_propeller_part_4",
+            "mat_propeller_part_5"
+          ],
+          "radialEnvelope": 0.34092600871758455,
+          "handedness": 1
+        },
+        {
+          "name": "rotor_4",
+          "axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "center": [
+            0.10559067130088806,
+            0.4697597026824951,
+            1.2569053173065186
+          ],
+          "parts": [
+            "mat_propeller_part_6",
+            "mat_propeller_part_7",
+            "mat_propeller_part_8"
+          ],
+          "radialEnvelope": 0.34092617762769634,
+          "handedness": -1
+        }
+      ],
+      "sourceMotorBasesFixed": false,
+      "sourceMatingContacts": "The rotating annular hubs retain their original coplanar contact with fixed display nuts; their axial solid bounds have zero overlap.",
+      "periodicAirframe": true,
+      "motion": "Four propellers spin about their existing motor hub axes while the intact airframe gently banks, pitches, yaws and bobs in place.",
+      "airframeMotion": {
+        "pivot": [
+          0.0,
+          1.7881393432617188e-07,
+          0.7871454358100891
+        ],
+        "bankAxis": [
+          1,
+          0,
+          0
+        ],
+        "pitchAxis": [
+          0,
+          1,
+          0
+        ],
+        "yawAxis": [
+          0,
+          0,
+          1
+        ],
+        "bankMaximumDegrees": 4.0,
+        "pitchMaximumDegrees": 1.8,
+        "yawMaximumDegrees": 1.2,
+        "bobMinimum": 0.0,
+        "bobMaximum": 0.05599999904632569,
+        "phaseRadians": "2*pi*progress",
+        "bank": "4*sin(phase) degrees",
+        "pitch": "1.8*sin(2*phase) degrees",
+        "yaw": "1.2*sin(phase) degrees",
+        "bob": "0.5*bobMaximum*(1-cos(phase))",
+        "composition": "T(pivot + bob*Z) Rz(yaw) Ry(pitch) Rx(bank) T(-pivot)",
+        "sourceLongitudinalAxis": "X",
+        "sceneVerticalAxis": "Z",
+        "allSourcePartsCarriedTogether": true
+      },
+      "sourceMotorBasesFixedInAirframe": true,
+      "airframeFixedParts": [
+        "mat_dark_part_0",
+        "mat_dark_part_1",
+        "mat_dark_part_2",
+        "mat_dark_part_3",
+        "mat_dark_part_4",
+        "mat_dark_part_5",
+        "mat_dark_part_6",
+        "mat_printed_part_0",
+        "mat_printed_part_1",
+        "mat_steel_part_0",
+        "mat_steel_part_1",
+        "mat_steel_part_2",
+        "mat_motor_silver_part_0",
+        "mat_motor_silver_part_1",
+        "mat_motor_silver_part_2",
+        "mat_motor_silver_part_3",
+        "mat_motor_silver_part_4",
+        "mat_motor_silver_part_5",
+        "mat_motor_silver_part_6",
+        "mat_motor_silver_part_7",
+        "mat_motor_silver_part_8",
+        "mat_motor_silver_part_9",
+        "mat_motor_silver_part_10",
+        "mat_motor_silver_part_11",
+        "mat_motor_black_part_0",
+        "mat_motor_black_part_1",
+        "mat_motor_black_part_2",
+        "mat_motor_black_part_3",
+        "JavelinSTL Javelin_V1 - Nosecone-3",
+        "JavelinSTL Javelin_V1 - Nosecone_Cover-1",
+        "JavelinSTL Javelin_V1 - Tailcone-1",
+        "JavelinSTL Javelin_V1 - Wing_Assem-3 NACA0008_Wing-1",
+        "JavelinSTL Javelin_V1 - Wing_Assem-3 NACA0008_Wing-2",
+        "JavelinSTL Javelin_V1 - Wing_Assem-3 NACA0008_Wing-3",
+        "JavelinSTL Javelin_V1 - Wing_Assem-3 NACA0008_Wing-4"
+      ],
+      "floorMinimumMethod": "Conservative all-angle rotor disk envelope minus maximum X/Y tilt displacement; bob never lowers the airframe.",
+      "presentation": {
+        "groundZMaximum": -0.45127059656969015,
+        "groundPolicy": "Lower the photographic sweep to leave visible air beneath the full motion; source CAD placement is unchanged.",
+        "cameraPolicy": "Keep the source camera position/direction; use one fixed orthographic scale fitted across all 121 poses."
+      },
+      "endpointPolicy": "Progress 0 is exactly the source pose. Progress 1 restores the source airframe attitude with the original rotor controller at 5.375 turns.",
+      "originalRotorController": "functional_processes.Propellers"
+    },
+    "sourceContractSha256": "d579b381d393ef8ff8c1846b87aac6d6863644923877b008da423143e447b08f"
+  },
+  "limitations": [
+    "Sampled source poses; interpolation does not imply measured engineering time."
+  ]
+}

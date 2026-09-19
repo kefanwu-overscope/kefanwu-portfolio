@@ -187,7 +187,7 @@
     </section>
     <section class="next-section" aria-label="Continue exploring"><div class="next-inner wrap">
       <a class="next-link" href="case-study.html?project=${encodeURIComponent(nextKey)}"><span class="eyebrow">Next case / ${escape(next.number)}</span><span class="next-title">${escape(next.title)}<span aria-hidden="true">↗</span></span></a>
-      <div class="studio-invitation"><h3>Explore the hardware.</h3><p>${project.noStudio ? 'Browse more projects in the interactive engineering studio.' : 'Find this project in the interactive engineering studio.'}</p><a class="text-link" href="${studioURL}">${project.noStudio ? 'Explore the' : 'View in'} 3D Studio <span aria-hidden="true">↗</span></a></div>
+      <div class="studio-invitation"><h3>Explore the hardware.</h3><p>${project.noStudio ? 'Browse more projects in the interactive engineering studio.' : 'Rotate the model and control its motion in the interactive studio.'}</p><a class="text-link" href="${studioURL}">${project.noStudio ? 'Explore the' : 'View in'} 3D Studio <span aria-hidden="true">↗</span></a></div>
     </div></section>
   </article>`;
   window.dispatchEvent(new Event('project-previews-ready'));

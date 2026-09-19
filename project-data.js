@@ -1143,7 +1143,7 @@ const projectData = {
     // no 3D exhibit anymore -- the kit was retired from the studio scene
     // (its cabinet slot now holds lineFollower); hides the "view in the
     // studio" link the same way materialTest's old flag used to
-    noStudio: true,
+    noStudio: false,
   },
   telecaster: {
     "kicker": "CNC / finishing / electronics integration",

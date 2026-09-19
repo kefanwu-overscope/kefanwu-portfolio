@@ -12,7 +12,7 @@
     <meta property="og:title" content="Kefan Wu — Interactive 3D Studio" />
     <meta
       property="og:description"
-      content="An interactive 3D engineering studio: click the resume on the desk, click project models for case studies."
+      content="Explore 16 engineering projects. Rotate real models, control their motion, and follow the build through photographs and complete case studies."
     />
     <meta property="og:image" content="assets/studio-hover.webp" />
     <meta property="og:image:width" content="1280" />
@@ -25,7 +25,9 @@
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/InterTight-700.woff2" crossorigin />
     <link rel="stylesheet" href="fonts.css?v=studio-polish-20260907" />
     <link rel="stylesheet" href="experience.css?v=studio-realism-20260907" />
-    <noscript><style>.exp-loader, .exp-stage { display: none; }</style></noscript>
+    <link rel="stylesheet" href="studio-ui.css?v=studio-20260919" />
+    <link rel="stylesheet" href="studio-room.css?v=studio-20260919" />
+    <noscript><style>#studio-room, #studio-app { display: none; } body.studio-v2 { overflow:auto; }</style></noscript>
 
     <!-- Three.js import map (pinned, single CDN). -->
     <script type="importmap">
@@ -37,7 +39,12 @@
       }
     </script>
   </head>
-  <body>
+  <body class="studio-v2" data-studio-mode="room">
+    <div id="studio-app"></div>
+    <!-- The legacy room is loaded only when requested. Keep its DOM hooks for
+         scene startup, while the new shell owns navigation and project details. -->
+    <div id="studio-room">
+    <img id="studio-room-poster" src="assets/studio-hover.webp" alt="" decoding="async" fetchpriority="high" />
     <!-- Always-visible, keyboard-focusable escape hatch to the classic site -->
     <div class="exp-topbar">
       <a class="exp-brand" href="index.html#top" aria-label="Kefan Wu — home">
@@ -161,12 +168,13 @@
           <li data-loader-stage="first-frame"><span class="exp-loader__step-index" aria-hidden="true">03</span><span>First frame</span><span class="exp-loader__step-state" data-loader-step-state>Waiting</span></li>
         </ol>
         <div class="exp-loader__footer">
-          <span>15 exhibits. Built to explore.</span>
+          <span>16 projects. Built to explore.</span>
           <a class="exp-loader__exit" href="index.html">Portfolio <span aria-hidden="true">↗</span></a>
         </div>
       </div>
     </div>
 
+    </div>
     <noscript>
       <div style="text-align:center;color:#a1a1a6;padding:3rem 1.5rem;font-family:sans-serif">
         <h2 style="font-weight:700">Kefan Wu — Interactive 3D Studio</h2>
@@ -175,7 +183,10 @@
       </div>
     </noscript>
 
-    <script src="project-data.js?v=confirmed-build-20260914"></script>
-    <script type="module" src="experience.js?v=studio-realism-20260907"></script>
+    <script src="project-data.js?v=studio-20260919"></script>
+    <script src="case-study-data.js?v=studio-20260919"></script>
+    <script src="case-study-supplements.js?v=studio-20260919"></script>
+    <script src="case-study-media.js?v=studio-20260919"></script>
+    <script type="module" src="experience-v2.js?v=studio-20260919"></script>
   </body>
 </html>
