@@ -1140,9 +1140,7 @@ const projectData = {
       { src: "assets/education-kit-experiment.webp", alt: "Exploded CAD view of the guitar kit parts on white", caption: "Exploded view" },
       { src: "assets/education-kit-parts.webp", alt: "STEAM hardware kit market test poster", caption: "Market test poster" }
     ],
-    // no 3D exhibit anymore -- the kit was retired from the studio scene
-    // (its cabinet slot now holds lineFollower); hides the "view in the
-    // studio" link the same way materialTest's old flag used to
+    // The original room has no kit exhibit; its separate 3D workbench remains available.
     noStudio: false,
   },
   telecaster: {

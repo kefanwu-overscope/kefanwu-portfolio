@@ -15,7 +15,6 @@ export class AssetQueue {
     this.sequence = 0;
   }
   start() { this.started = true; this.drain(); }
-  pause() { this.started = false; }
   add(run, priority = 10, eligible = () => true) {
     return new Promise((resolve, reject) => {
       this.jobs.push({ run, priority, eligible, resolve, reject, sequence: this.sequence++ });
@@ -25,7 +24,7 @@ export class AssetQueue {
   drain() {
     if (!this.started) return;
     this.jobs.sort((a, b) => a.priority - b.priority || a.sequence - b.sequence);
-    while (this.started && this.active < this.concurrency && this.jobs.length) {
+    while (this.active < this.concurrency && this.jobs.length) {
       const job = this.jobs.shift();
       if (!job.eligible()) { job.resolve(null); continue; }
       this.active++;
@@ -68,15 +67,13 @@ function prepareGeometry(root) {
 }
 
 export class ModelLODLoader {
-  constructor(manager, { manifestURL = "models/lod/manifest.json?v=exp-adaptive-20260907", targetKey = "", requestTimeoutMs = 45000, deferBase = () => false } = {}) {
+  constructor(manager, { manifestURL = "models/lod/manifest.json?v=exp-adaptive-20260907", targetKey = "", requestTimeoutMs = 45000 } = {}) {
     this.manager = manager;
     this.raw = new GLTFLoader();
     this.requestTimeoutMs = requestTimeoutMs;
     this.queue = new AssetQueue(1);
     this.records = [];
     this.targetKey = targetKey;
-    this.deferBase = deferBase;
-    this.backgroundReady = new Promise((resolve) => { this.releaseBackground = resolve; });
     this.enabled = false;
     this.frustum = new THREE.Frustum();
     this.viewProjection = new THREE.Matrix4();
@@ -124,8 +121,7 @@ export class ModelLODLoader {
   }
   load(url, onLoad, onProgress, onError, prepare = null, key = null) {
     const token = `base-model:${this.records.length}:${url}`;
-    const deferred = Boolean(this.deferBase(url, key));
-    if (!deferred) this.manager.itemStart(token);
+    this.manager.itemStart(token); // includes jobs still waiting for the queue
     const record = {
       key, url, currentLevel: "pending", highLoaded: false, loading: "base",
       visible: false, projectedFraction: 0, distance: null, lowTriangles: null,
@@ -133,10 +129,8 @@ export class ModelLODLoader {
       baseStatus: "queued", error: null, holder: null, low: null, high: null,
     };
     this.records.push(record);
-    const priority = url.includes("room-baked") ? -100 : deferred ? 40 : key === this.targetKey ? -50 : 10;
-    // Do not occupy the shared preparation slot while waiting for first paint:
-    // late HDR decoding must still be able to enqueue its critical GPU upload.
-    const enqueue = () => this.queue.add(async () => {
+    const priority = url.includes("room-baked") ? -100 : key === this.targetKey ? -50 : 10;
+    this.queue.add(async () => {
       const models = await this.manifest;
       const entry = models[url];
       record.entry = entry && typeof entry.low === "string" && entry.low.startsWith("models/lod/") && validBounds(entry.sourceBounds) ? entry : null;
@@ -177,15 +171,14 @@ export class ModelLODLoader {
         new THREE.Box3().setFromObject(holder).applyMatrix4(holder.matrixWorld.clone().invert());
       record.baseStatus = "ready";
       record.loading = null;
-    }, priority);
-    (deferred ? this.backgroundReady.then(enqueue) : enqueue()).catch((error) => {
+    }, priority).catch((error) => {
       record.baseStatus = "failed";
       record.loading = null;
       record.error = String(error.message || error);
-      if (!deferred) this.manager.itemError(token);
+      this.manager.itemError(token);
       console.warn(`[experience] failed to load ${url}`, error);
       if (onError) onError(error);
-    }).finally(() => { if (!deferred) this.manager.itemEnd(token); });
+    }).finally(() => this.manager.itemEnd(token));
     return record;
   }
   measure(record) {

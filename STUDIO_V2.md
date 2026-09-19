@@ -4,12 +4,27 @@
 Exact publication status is recorded separately in the release backup's
 `release-metadata.json` and `deployment-verification.json`.
 
+## Room rollback, retaining the project workbench
+
+The room, first-entry camera tour, lighting, exhibit placement, résumé sheet,
+header and dock are restored to the preceding `69ee72c` version. The homepage
+studio invitation is also restored. The new project workbench remains at
+`project-3d.html#<key>`, with the same 16 source animations and shared records.
+Project clicks in the original room now open that page; its Studio button returns
+to the original room. One-use return state preserves the room camera and lighting
+when browser storage is available. Existing `experience.html#<key>` links redirect
+directly to the workbench without downloading the room. Case-study 3D links use
+the new explicit workbench address.
+
+The original implementation notes below describe the retained workbench and its
+source assets. The v2 room shell/labels are no longer used by `experience.html`.
+
 ## Visit and operate
 
-Open `experience.html` to browse the room and its 16-project cover directory.
-`experience.html#steering` opens that project directly; every catalog key supports
-the same deep-link form. Search and categories follow the main portfolio order.
-Education now has a room exhibit and its own direct workbench entry.
+Open `experience.html` to browse the original 15-exhibit room. Open
+`project-3d.html#steering` for a project workbench and its 16-project cover
+directory. Search and categories follow the main portfolio order. Education is
+available through the workbench directory and its case-study link.
 
 Drag the model to orbit; scroll or pinch over the model to zoom. The separate
 timeline accepts dragging, native range-keyboard input and wheel scrubbing only
@@ -17,17 +32,17 @@ within the timeline. Play, pause, reverse, reset and source/front/side/top/isome
 views remain available. Camera changes do not change motion progress. Steering
 components can be selected for short explanations of the transmission path.
 
-The workbench starts paused at the source pose. Reduced-motion preferences cancel
-automatic room camera movement. Desktop details occupy a separate sidebar;
+The workbench starts paused at the source pose. The room uses its original
+first-entry camera behavior. Desktop details occupy a separate sidebar;
 mobile keeps the model and controls above collapsible project details. Full case
 studies, the Javelin BOM, technical records and the resume remain ordinary links.
 Returning to the studio restores room browsing without a forced camera tour.
 
 ## Modules and assets
 
-- `experience-v2.js` owns routing, cancellation and room/workbench activation.
-  Direct project entry loads the workbench without importing the room. The room
-  is imported from `experience.js` when needed through `studio-room-bridge.js`.
+- `experience-v2.js` owns project routing, cancellation and workbench activation.
+  `experience-entry.js` preserves old project links or imports the restored room.
+  Workbench and room now use separate documents; the room bridge is inactive.
 - `studio-ui.js` / `studio-ui.css` provide navigation, controls, loading/retry
   states and responsive details. The source cover remains until the first real
   WebGL paint; a failed model leaves project information and case links usable.
@@ -48,8 +63,8 @@ Only the active view renders. Superseded requests and decoding are cancelled;
 evicted GPU resources are disposed. The cache holds at most two projects, with
 100 MiB mobile / 192 MiB desktop managed-array budgets. One oversized current
 project may remain after other entries are evicted. These accounting limits are
-not total browser or GPU memory limits. Auto/low/high quality is available in
-the room settings.
+not total browser or GPU memory limits. The standalone workbench uses automatic
+quality; the restored room retains its original 2K/4K lighting selector.
 
 ## Source motion coverage
 

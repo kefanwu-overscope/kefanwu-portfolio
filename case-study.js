@@ -55,7 +55,7 @@
   const nextKey = has(editorials, editorial.next) && has(projects, editorial.next) ? editorial.next
     : availableKeys[(availableKeys.indexOf(key) + 1) % availableKeys.length];
   const next = editorials[nextKey];
-  const studioURL = project.noStudio ? 'experience.html' : `experience.html#${encodeURIComponent(key)}`;
+  const studioURL = project.noStudio ? 'experience.html' : `project-3d.html#${encodeURIComponent(key)}`;
   document.title = `${project.title} — Kefan Wu`;
   document.querySelector('meta[name="description"]').content =
     `${editorial.deck} ${editorial.summary.map((item) => item[1]).join(' ')}`;

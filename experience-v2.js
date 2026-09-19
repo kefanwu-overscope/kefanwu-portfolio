@@ -1,12 +1,10 @@
 import { createStudioUI } from './studio-ui.js?v=studio-20260919';
 import { getStudioProject } from './studio-catalog.js?v=studio-20260919';
-import { roomBridge } from './studio-room-bridge.js?v=studio-v2-20260919';
 
 let inspector = null;
 let inspectorPromise = null;
-let roomPromise = null;
 let selectedKey = '';
-let mode = 'room';
+let mode = 'inspect';
 let selection = 0;
 let request = null;
 let quality = 'auto';
@@ -28,14 +26,9 @@ const ui = createStudioUI({
   onReset: () => inspector?.reset({camera: true}),
   onView: (view) => inspector?.setView(view),
   onRetry: () => selectProject(selectedKey, {history: false}),
-  onRoomReset: () => roomBridge.controller?.resetView(),
   onQuality: (value) => {
     quality = value;
     inspector?.setQuality(value);
-    roomBridge.controller?.setQuality(value);
-  },
-  onToggleRoomLights: () => {
-    roomBridge.controller?.toggleLights();
   },
 });
 
@@ -141,7 +134,6 @@ async function selectProject(key, {history = true} = {}) {
   selectedKey = key;
   annotation.hidden = true;
   pressureLegend.hidden = true;
-  roomBridge.setActive(false);
   inspector?.pause();
   ui.setMode(mode);
   ui.setProject(key);
@@ -161,88 +153,20 @@ async function selectProject(key, {history = true} = {}) {
   }
 }
 
-async function showRoom({history = true} = {}) {
+function showRoom({replace = false} = {}) {
   ++selection;
   request?.abort();
-  mode = 'room';
   inspector?.setActive(false);
-  ui.setMode(mode);
-  document.title = 'Engineering Studio — Kefan Wu';
-  if (history) updateURL('');
-  roomBridge.setActive(true);
-  if (!roomPromise) {
-    ui.setRoomStatus('loading');
-    roomPromise = import('./experience.js?v=studio-v2-20260919').catch((error) => {
-      console.error('[studio] Room unavailable', error);
-      ui.setRoomStatus('error');
-      roomPromise = null;
-    });
-  }
-  await roomPromise;
+  const url = 'experience.html?return=project';
+  if (replace) location.replace(url);
+  else location.assign(url);
 }
-
-const labels = document.createElement('div');
-labels.id = 'studio-room-labels';
-labels.setAttribute('aria-label', 'Projects in the room');
-document.getElementById('studio-room').append(labels);
-const labelButtons = new Map();
-let lastLabels = 0;
-
-roomBridge.configure({
-  onSelect: (key) => selectProject(key),
-  onResume: () => window.open('assets/kefan-wu-resume.pdf?v=e1902c160b0d', '_blank', 'noopener'),
-  onStatus: (state) => {
-    ui.setRoomStatus(state);
-    if (state.state === 'ready') roomBridge.controller?.setQuality(quality);
-  },
-  onLighting: ({on, busy, ready}) => {
-    ui.setRoomLights(on);
-    const button = document.getElementById('studio-room-lights');
-    button.disabled = !ready || busy;
-    button.setAttribute('aria-busy', String(busy));
-  },
-  onFrame: (camera, hotspots, canvas) => {
-    const now = performance.now();
-    if (now - lastLabels < 120) return;
-    lastLabels = now;
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    const occupied = [];
-    for (const hotspot of hotspots) {
-      const data = hotspot.userData.hotspot;
-      const project = getStudioProject(data.key);
-      if (!project) continue;
-      let button = labelButtons.get(data.key);
-      if (!button) {
-        button = document.createElement('button');
-        button.type = 'button';
-        button.textContent = project.name;
-        button.title = `Inspect ${project.name}`;
-        button.addEventListener('click', () => selectProject(data.key));
-        labels.append(button);
-        labelButtons.set(data.key, button);
-      }
-      const point = data.center.clone();
-      // markerY is a local offset from the pivot, not a world height.
-      if (data.marker) data.marker.getWorldPosition(point);
-      point.project(camera);
-      const x = (point.x + 1) * width / 2;
-      const y = (1 - point.y) * height / 2;
-      const labelWidth = Math.min(160, button.offsetWidth || 160);
-      const bounds = [x - labelWidth / 2, y - 14, x + labelWidth / 2, y + 14];
-      const visible = point.z > -1 && point.z < 1 && x > 70 && x < width - 70 && y > 100 && y < height - 80 &&
-        !occupied.some((r) => bounds[0] < r[2] + 8 && bounds[2] > r[0] - 8 && bounds[1] < r[3] + 5 && bounds[3] > r[1] - 5);
-      button.hidden = !visible;
-      if (visible) { occupied.push(bounds); button.style.transform = `translate(${x}px,${y}px) translate(-50%,-50%)`; }
-    }
-  },
-});
 
 function route() {
   let key = '';
   try { key = decodeURIComponent(location.hash.slice(1)); } catch {}
   if (getStudioProject(key)) void selectProject(key, {history: false});
-  else void showRoom({history: false});
+  else showRoom({replace: true});
 }
 window.addEventListener('popstate', route);
 window.addEventListener('hashchange', () => {
@@ -250,9 +174,12 @@ window.addEventListener('hashchange', () => {
   if ((mode === 'inspect' && key === selectedKey) || (mode === 'room' && !key)) return;
   route();
 });
-window.addEventListener('pagehide', () => { inspector?.setActive(false); roomBridge.setActive(false); });
-window.addEventListener('pageshow', () => {
-  if (mode === 'inspect') inspector?.setActive(true);
-  else roomBridge.setActive(true);
+window.addEventListener('pagehide', () => inspector?.setActive(false));
+window.addEventListener('pageshow', (event) => {
+  // Leaving during fetch or the first-paint handoff invalidates that selection.
+  // A cached document needs a fresh selection before its poster can disappear.
+  if (event.persisted && request?.signal.aborted && ui.viewport.dataset.status !== 'ready') {
+    void selectProject(selectedKey, {history: false});
+  } else if (mode === 'inspect') inspector?.setActive(true);
 });
 route();
