@@ -13,6 +13,11 @@ export function createStudioUI(callbacks = {}) {
   let playing = false;
   let progress = 0;
   let status = 'loading';
+  let motionReady = false;
+  let progressFrame = 0;
+  let lastProgressPaint = -Infinity;
+  let paintedStep = -1;
+  let paintedPercent = -1;
   let category = 'all';
   let catalogOpen = true;
   let roomExploring = false;
@@ -55,7 +60,7 @@ export function createStudioUI(callbacks = {}) {
         </div>
         <div class="studio-controls" aria-label="Model controls">
           <div class="studio-control-row"><button type="button" class="studio-button studio-play" id="studio-play" aria-pressed="false" disabled><span data-play-icon aria-hidden="true">▶</span><span data-play-label>Play</span></button><button type="button" class="studio-button studio-reverse" id="studio-reverse" aria-pressed="false" disabled>Reverse</button><button type="button" class="studio-button studio-reset" id="studio-reset" disabled>Reset <span aria-hidden="true">↺</span></button><label class="studio-view-label"><span class="sr-only">Standard model view</span><select id="studio-view" disabled><option value="source">Original view</option><option value="front">Front view</option><option value="side">Side view</option><option value="top">Top view</option><option value="iso">Isometric view</option></select></label></div>
-          <div class="studio-timeline" id="studio-timeline"><div class="studio-timeline__labels"><label for="studio-progress" id="studio-motion-label">Motion progress</label><output id="studio-progress-value" for="studio-progress">0%</output></div><input type="range" id="studio-progress" min="0" max="1000" step="1" value="0" aria-valuetext="0 percent" disabled><span class="studio-timeline__hint">Drag or scroll here to move forward and back</span></div>
+          <div class="studio-timeline" id="studio-timeline"><div class="studio-timeline__labels"><label for="studio-progress" id="studio-motion-label">Motion progress</label><output id="studio-progress-value" for="studio-progress">0%</output></div><input type="range" id="studio-progress" min="0" max="1000" step="1" value="0" aria-valuetext="0 percent" disabled><span class="studio-timeline__hint" id="studio-motion-status" role="status">Loading animation…</span><button type="button" class="studio-motion-retry" id="studio-motion-retry" hidden>Retry animation</button></div>
         </div>
       </section>
       <aside class="studio-info" id="studio-info" aria-label="Project details"><div class="studio-project-nav"><button type="button" id="studio-previous" aria-label="Previous project">← Previous</button><span id="studio-project-number"></span><button type="button" id="studio-next" aria-label="Next project">Next →</button></div><details id="studio-info-details" open><summary>Project details <span aria-hidden="true">+</span></summary><div class="studio-info-content" id="studio-info-content"></div></details><a class="studio-story-link" id="studio-story-link" href="index.html#work">Read full case study <span aria-hidden="true">↗</span></a></aside>
@@ -79,7 +84,14 @@ export function createStudioUI(callbacks = {}) {
   const infoDetails = find('studio-info-details');
   const poster = find('studio-poster');
   const play = find('studio-play');
-  const motionControls = ['studio-play', 'studio-reverse', 'studio-reset', 'studio-view', 'studio-progress'].map(find);
+  const motionControls = ['studio-play', 'studio-reverse', 'studio-progress'].map(find);
+  const viewControls = ['studio-reset', 'studio-view'].map(find);
+  const progressValue = find('studio-progress-value');
+  const motionStatus = find('studio-motion-status');
+  const motionRetry = find('studio-motion-retry');
+  const reverse = find('studio-reverse');
+  const playLabel = play.querySelector('[data-play-label]');
+  const playIcon = play.querySelector('[data-play-icon]');
 
   function setCatalogOpen(open, { focus = false } = {}) {
     catalogOpen = Boolean(open);
@@ -140,35 +152,62 @@ export function createStudioUI(callbacks = {}) {
   }
 
   function setStatus(nextStatus, message = '') {
+    const details = typeof nextStatus === 'object' ? nextStatus : {};
     if (typeof nextStatus === 'object') { message = nextStatus.message || ''; nextStatus = nextStatus.state || nextStatus.status; }
     status = nextStatus || 'loading';
+    motionReady = status === 'ready' && details.motionReady !== false;
     viewport.dataset.status = status;
+    viewport.dataset.motionReady = String(motionReady);
+    find('studio-timeline').dataset.ready = String(motionReady);
     viewport.setAttribute('aria-busy', String(status === 'loading'));
     find('studio-status-text').textContent = message || ({ loading: 'Loading interactive model…', ready: 'Ready to explore', error: 'The interactive model could not load. The project images and case study are still available.' })[status] || status;
     find('studio-load-status').hidden = status === 'ready';
     find('studio-retry').hidden = status !== 'error';
     poster.hidden = false;
     poster.setAttribute('aria-hidden', String(status === 'ready'));
-    motionControls.forEach((control) => { control.disabled = status !== 'ready'; });
-    if (status !== 'ready') setPlaying(false);
+    motionControls.forEach((control) => { control.disabled = !motionReady; });
+    viewControls.forEach((control) => { control.disabled = status !== 'ready'; });
+    motionStatus.textContent = motionReady ? 'Drag or scroll here to move forward and back' :
+      details.motionError ? 'Animation unavailable. You can still rotate the model.' :
+        status === 'ready' ? 'Loading animation… You can rotate the model.' : 'Preparing model…';
+    motionRetry.hidden = !details.motionError;
+    if (!motionReady) setPlaying(false);
+  }
+
+  function paintProgress(time) {
+    progressFrame = 0;
+    // The mechanism renders independently; only the small control UI is capped.
+    if (playing && time - lastProgressPaint < 30 && progress !== 0 && progress !== 1) {
+      progressFrame = requestAnimationFrame(paintProgress);
+      return;
+    }
+    lastProgressPaint = time;
+    const step = Math.round(progress * 1000);
+    const percent = Math.round(progress * 100);
+    if (step !== paintedStep) {
+      if (range.value !== String(step)) range.value = String(step);
+      range.style.setProperty('--progress', `${step / 10}%`);
+      paintedStep = step;
+    }
+    if (percent !== paintedPercent) {
+      progressValue.textContent = `${percent}%`;
+      range.setAttribute('aria-valuetext', `${percent} percent`);
+      paintedPercent = percent;
+    }
   }
 
   function setProgress(value) {
     progress = clamp(value);
-    range.value = String(Math.round(progress * 1000));
-    const percent = `${Math.round(progress * 100)}%`;
-    find('studio-progress-value').textContent = percent;
-    range.setAttribute('aria-valuetext', `${Math.round(progress * 100)} percent`);
-    range.style.setProperty('--progress', percent);
+    if (!progressFrame) progressFrame = requestAnimationFrame(paintProgress);
   }
 
   function setPlaying(value, direction = 1) {
     playing = Boolean(value);
     play.setAttribute('aria-pressed', String(playing && direction !== -1));
-    find('studio-reverse').setAttribute('aria-pressed', String(playing && direction === -1));
-    find('studio-reverse').textContent = playing && direction === -1 ? 'Pause reverse' : 'Reverse';
-    play.querySelector('[data-play-label]').textContent = playing ? 'Pause' : 'Play';
-    play.querySelector('[data-play-icon]').textContent = playing ? 'Ⅱ' : '▶';
+    reverse.setAttribute('aria-pressed', String(playing && direction === -1));
+    reverse.textContent = playing && direction === -1 ? 'Pause reverse' : 'Reverse';
+    playLabel.textContent = playing ? 'Pause' : 'Play';
+    playIcon.textContent = playing ? 'Ⅱ' : '▶';
   }
 
   function setRoomStatus(nextStatus, message = '') {
@@ -212,9 +251,10 @@ export function createStudioUI(callbacks = {}) {
   listen(find('studio-reset'), 'click', () => { find('studio-view').value = 'source'; call('onReset'); });
   listen(find('studio-view'), 'change', (event) => call('onView', event.target.value));
   listen(find('studio-retry'), 'click', () => call('onRetry'));
+  listen(motionRetry, 'click', () => call('onRetryMotion'));
   listen(range, 'input', () => { setProgress(Number(range.value) / 1000); call('onProgress', progress); });
   listen(find('studio-timeline'), 'wheel', (event) => {
-    if (status !== 'ready' || event.ctrlKey) return;
+    if (!motionReady || event.ctrlKey) return;
     const delta = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? 300 : 1);
     const next = clamp(progress + delta * .0007);
     if (next === progress) return;
@@ -230,7 +270,7 @@ export function createStudioUI(callbacks = {}) {
   listen(root.querySelector('.studio-skip'), 'click', (event) => { event.preventDefault(); setCatalogOpen(true, { focus: true }); });
   listen(document, 'keydown', (event) => {
     if (event.key === 'Escape' && catalogOpen) { setCatalogOpen(false); event.preventDefault(); return; }
-    if (event.target !== canvas || mode !== 'inspect' || status !== 'ready') return;
+    if (event.target !== canvas || mode !== 'inspect' || !motionReady) return;
     if (event.key === ' ') { event.preventDefault(); call('onTogglePlay'); }
     else if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
       event.preventDefault();
@@ -249,6 +289,6 @@ export function createStudioUI(callbacks = {}) {
     setRoomLights: (enabled) => find('studio-room-lights').setAttribute('aria-pressed', String(Boolean(enabled))),
     setQuality: (quality) => { find('studio-quality').value = quality; },
     focusModel: () => canvas.focus({ preventScroll: true }),
-    destroy: () => { abort.abort(); root.replaceChildren(); }
+    destroy: () => { abort.abort(); cancelAnimationFrame(progressFrame); root.replaceChildren(); }
   };
 }

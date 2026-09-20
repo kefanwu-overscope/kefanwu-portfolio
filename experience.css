@@ -1446,6 +1446,7 @@ a {
 .exp-dock select { width: 220px; min-width: 0; height: 42px; padding: 0.6rem 0.7rem; border: 1px solid #ffffff24; border-radius: 6px; background: #151e2a; color: #e7edf7; font: 0.78rem var(--font-body); cursor: pointer; }
 .exp-dock button { min-height: 42px; padding: 0.6rem 0.75rem; border: 1px solid transparent; border-radius: 6px; background: transparent; color: #bfcbda; white-space: nowrap; cursor: pointer; font: 0.67rem var(--font-mono); }
 .exp-dock button:hover { border-color: #ffffff30; background: #ffffff08; }
+.exp-dock button[hidden] { display: none; }
 .exp-dock__hint { position: absolute; bottom: 100%; left: 0; width: 100%; text-align: center; font: 0.59rem var(--font-mono); letter-spacing: 0.05em; color: #d6dfeb; text-shadow: 0 1px 6px #000; }
 .exp-panel-open .exp-dock, .exp-paper-active .exp-dock { visibility: hidden; }
 .exp-panel { top: 5.3rem; right: 1.25rem; bottom: 1.25rem; height: auto; width: clamp(520px, 49vw, 760px); padding: 3.5rem 1.8rem 1.5rem; border: 1px solid #93b1d338; border-radius: 12px; background: #10151dfc; box-shadow: -15px 15px 55px #0008; }

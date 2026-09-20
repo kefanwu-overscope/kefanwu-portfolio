@@ -11,8 +11,7 @@ for (const key of keys) picker.add(new Option(key, key));
 const reports = [];
 const statuses = [];
 const inspector = createStudioInspector({ canvas,
-  manifestUrl: (key) => `../../assets/studio-motion/${key}/manifest.json`,
-  onStatus(value) { status.textContent = `${value.key || ''}: ${value.message || value.state}`; statuses.push({ key: value.key, state: value.state, milliseconds: value.loadMilliseconds }); },
+  onStatus(value) { status.textContent = `${value.key || ''}: ${value.message || value.state}`; statuses.push({ key: value.key, state: value.state, motionReady: value.motionReady, milliseconds: value.loadMilliseconds }); },
   onProgress(value) { slider.value = value; },
   onPlaybackChange({ playing }) { document.querySelector('#play').textContent = playing ? 'Pause' : 'Play'; },
   onPartSelect(value) { status.textContent = `${value.key}: ${value.group || value.name}`; },
@@ -23,7 +22,15 @@ const check = (condition, message) => { if (!condition) throw new Error(message)
 const cameraKey = () => inspector.getState().camera;
 const cameraEqual = (a, b) => ['position', 'target', 'up'].every((key) => a[key].every((value, index) => Math.abs(value - b[key][index]) < 1e-8)) && a.zoom === b.zoom;
 function report() { output.textContent = JSON.stringify({ status: result.dataset.state || 'manual', projects: reports, statuses }, null, 2); }
-async function load(key) { picker.value = key; const loaded = await inspector.selectProject(key); await painted(); check(loaded && inspector.getState().state === 'ready', `${key} failed to load`); return loaded; }
+async function load(key) {
+  picker.value = key;
+  const loaded = await inspector.selectProject(key);
+  await painted();
+  check(loaded && inspector.getState().state === 'ready', `${key} failed to load`);
+  await loaded.whenMotionReady; await painted();
+  check(inspector.getState().motionReady, `${key} animation failed to load`);
+  return loaded;
+}
 
 document.querySelector('#load').onclick = () => load(picker.value).catch((error) => { result.textContent = error.message; });
 slider.oninput = () => { inspector.pause(); inspector.setProgress(Number(slider.value)); };
@@ -66,7 +73,7 @@ async function run() {
     }
     // A superseded, uncached download must never install over the latest key.
     const requests = [inspector.selectProject('steering'), inspector.selectProject('vineRobot'), inspector.selectProject('education')];
-    await Promise.all(requests); await painted();
+    await Promise.all(requests); await inspector.whenMotionReady(); await painted();
     check(inspector.getState().key === 'education' && inspector.getState().state === 'ready', 'Rapid switch installed a stale project');
     inspector.setProgress(0.4); inspector.play({ direction: 1 }); await wait(120); inspector.pause();
     check(inspector.getState().progress > 0.4, 'Forward playback failed');

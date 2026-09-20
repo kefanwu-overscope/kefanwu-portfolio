@@ -1,7 +1,7 @@
 // A display-cadence gate, not an extra timer: the browser remains responsible
-// for vsync. Camera motion gets 120 FPS; the steady scene gets 60 FPS.
+// for vsync. Camera motion gets 120 FPS; ambient motion gets 30 FPS.
 export class AdaptiveFrameClock {
-  constructor({ idleFps = 60, movingFps = 120, settleMs = 180 } = {}) {
+  constructor({ idleFps = 30, movingFps = 120, settleMs = 180 } = {}) {
     this.idleFps = idleFps;
     this.movingFps = movingFps;
     this.settleMs = settleMs;

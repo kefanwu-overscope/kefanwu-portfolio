@@ -14,8 +14,10 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
-import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=studio-polish-20260907";
-import { AdaptiveFrameClock, frameAlpha } from "./experience-timing.js?v=exp-adaptive-20260907";
+import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=room-performance-20260919";
+import { AdaptiveFrameClock, frameAlpha } from "./experience-timing.js?v=room-performance-20260919";
+import { batchStaticRoom } from "./experience-batching.js?v=room-performance-20260919";
+import { prepareRoomShaders } from "./experience-warmup.js?v=room-performance-20260919";
 import { createStudioLoader } from "./experience-loader.js?v=exp-adaptive-20260907";
 import { createHDRService, createHDRTexture } from "./experience-hdr.js?v=exp-adaptive-20260907";
 import { AdaptiveQuality, GpuFrameTimer } from "./experience-quality.js?v=exp-adaptive-20260907";
@@ -347,10 +349,11 @@ async function initScene(canvas) {
   renderer.toneMappingExposure = 1.3;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
-  // S3: with autoUpdate the shadow pass re-rendered for EVERY sub-render of a
-  // composer frame (beauty + GTAO prepass + bokeh depth = 3x). tick() flags
-  // needsUpdate once per frame instead — measured -55% CPU frame cost.
+  // A composer frame has several scene passes. Each light owns its cached
+  // shadow; only geometry/caster motion invalidates it in tick().
   renderer.shadowMap.autoUpdate = false;
+  renderer.transmissionResolutionScale = 0.75;
+  renderer.info.autoReset = false;
   MAXA = renderer.capabilities.getMaxAnisotropy();
 
   const scene = new THREE.Scene();
@@ -440,7 +443,8 @@ async function initScene(canvas) {
   manager.itemStart("scene-bootstrap");
   let markAssetsReady;
   const assetsReady = new Promise((resolve) => { markAssetsReady = resolve; });
-  const readiness = { construction: false, assets: false, prepared: false, firstFrame: false, revealed: false, failures: [] };
+  const readiness = { construction: false, assets: false, prepared: false, firstFrame: false, revealed: false, failures: [], timings: { started: performance.now() } };
+  let batchingStats = null;
   manager.onError = (url) => { readiness.failures.push(url); };
   let deepLinkKey = "";
   try { deepLinkKey = decodeURIComponent(location.hash.slice(1)); } catch (error) {
@@ -461,6 +465,7 @@ async function initScene(canvas) {
     if (revealed || document.hidden || renderer.getContext().isContextLost()) return;
     revealed = true;
     readiness.revealed = true;
+    readiness.timings.revealed = performance.now();
     loader.enabled = true;
     startupUI.complete();
     if (loaderEl) {
@@ -542,6 +547,8 @@ async function initScene(canvas) {
   const key = new THREE.DirectionalLight(0xeef2f8, 1.35);
   key.position.set(2.6, 4.6, 2.4);
   key.castShadow = true;
+  key.shadow.autoUpdate = false;
+  key.shadow.needsUpdate = true;
   // 2048 (was 4096): the PCF radius-7 blur already softens edges and the
   // room's own shadows are baked — quarter the shadow buffer for free (S3)
   key.shadow.mapSize.set(LOW_TIER ? 1024 : 2048, LOW_TIER ? 1024 : 2048);
@@ -1311,6 +1318,8 @@ async function initScene(canvas) {
   if (!LOW_TIER) {
     // shadows sell the source: the paper, tray and pen throw away from the lamp
     resumeSpot.castShadow = true;
+    resumeSpot.shadow.autoUpdate = false;
+    resumeSpot.shadow.needsUpdate = true;
     resumeSpot.shadow.mapSize.set(1024, 1024);
     resumeSpot.shadow.camera.near = 0.05;
     resumeSpot.shadow.camera.far = 2.4;
@@ -1779,7 +1788,7 @@ async function initScene(canvas) {
   let scopeLastDraw = 0;
   const headRun = { x: 0, dir: 1, dwell: 0, limit: 0.12 };
   function startFlight(toPos, toLook, ms, onDone, introLeg = false) {
-    if (!introLeg && cameraIntro.phase === "playing") cameraIntro.phase = "interrupted";
+    if (!introLeg && cameraIntro.phase === "playing") takeOverIntro();
     flight = {
       fromPos: camera.position.clone(),
       toPos: toPos.clone(),
@@ -1797,6 +1806,7 @@ async function initScene(canvas) {
     cameraIntro.plays++;
     cameraIntro.phase = "playing";
     cameraIntro.completedLegs = 0;
+    document.getElementById("exp-skip-intro").hidden = false;
     // Preserve the original first-visit path and timing, with no visit flag.
     const legs = [
       [new THREE.Vector3(0.7, 1.5, 1.9), new THREE.Vector3(2.3, 1.2, CAB2.z), 1700],
@@ -1808,14 +1818,48 @@ async function initScene(canvas) {
       startFlight(position, target, duration, () => {
         cameraIntro.completedLegs = index + 1;
         if (index + 1 < legs.length) playLeg(index + 1);
-        else { cameraIntro.phase = "complete"; onDone(); }
+        else {
+          cameraIntro.phase = "complete";
+          document.getElementById("exp-skip-intro").hidden = true;
+          onDone();
+        }
       }, true);
     };
     playLeg(0);
   }
+  function takeOverIntro(resetView = false) {
+    if (cameraIntro.phase !== "playing") return;
+    cameraIntro.phase = "interrupted";
+    flight = null;
+    // Preserve the current direction on pointer takeover; the explicit Skip
+    // button lands at the original resting composition.
+    if (resetView) {
+      camera.position.copy(REST_POS);
+      controls.target.copy(REST_TARGET);
+    } else {
+      const distance = camera.position.distanceTo(controls.target);
+      camera.getWorldDirection(controls.target).multiplyScalar(distance).add(camera.position);
+    }
+    cancelBoot();
+    applyLightState(false);
+    controls.enabled = true;
+    controls.update();
+    document.getElementById("exp-skip-intro").hidden = true;
+    showDragHint();
+  }
+  renderer.domElement.addEventListener("pointerdown", () => takeOverIntro(), { capture: true });
+  renderer.domElement.addEventListener("wheel", () => takeOverIntro(), { capture: true, passive: true });
+  renderer.domElement.addEventListener("keydown", () => takeOverIntro(), { capture: true });
+  document.getElementById("exp-skip-intro").addEventListener("click", () => {
+    takeOverIntro(true);
+    renderer.domElement.focus();
+  });
 
-  const frameClock = new AdaptiveFrameClock();
-  const shadowClock = new AdaptiveFrameClock({ idleFps: 60, movingFps: 60, settleMs: 0 });
+  const frameClock = new AdaptiveFrameClock({ idleFps: prefersReducedMotion ? 1 : 30 });
+  const shadowClock = new AdaptiveFrameClock({ idleFps: 12, movingFps: 12, settleMs: 0 });
+  const renderStats = { frames: 0, shadowFrames: 0, deskShadowFrames: 0, calls: 0, triangles: 0, cpuMs: 0 };
+  let lastCameraMotion = performance.now(), lastLODUpdate = -Infinity;
+  let shadowsDirty = true;
   const lastCameraPosition = camera.position.clone();
   const lastCameraQuaternion = camera.quaternion.clone();
   const baseDamping = controls.dampingFactor;
@@ -1825,6 +1869,18 @@ async function initScene(canvas) {
   controls.addEventListener("start", () => frameClock.noteMotion(performance.now()));
   controls.addEventListener("change", () => frameClock.noteMotion(performance.now()));
   let running = !document.hidden;
+  window.addEventListener("pagehide", (event) => {
+    running = false;
+    if (!event.persisted) {
+      loader.dispose();
+      hdrService.dispose();
+      renderer.setAnimationLoop(null);
+      gpuTimer.dispose();
+    }
+  });
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) { running = !document.hidden; frameClock.reset(); tickLast = null; }
+  });
   document.addEventListener("visibilitychange", () => {
     running = !document.hidden;
     frameClock.reset();
@@ -1847,7 +1903,7 @@ async function initScene(canvas) {
       if (delta >= 3 && delta <= 40) {
         rafDeltas.push(delta);
         if (rafDeltas.length > 90) rafDeltas.shift();
-        if (++rafSamples % 30 === 0 && rafDeltas.length >= 12 && frameClock.fps === 60) {
+        if (++rafSamples % 30 === 0 && rafDeltas.length >= 12 && frameClock.fps === frameClock.idleFps) {
           const sorted = [...rafDeltas].sort((a, b) => a - b);
           refreshBudget = Math.max(1000 / 120, sorted[Math.floor(sorted.length * 0.15)]);
         }
@@ -1857,11 +1913,13 @@ async function initScene(canvas) {
     if (!running && !forced) return;
     const cameraMoved = lastCameraPosition.distanceToSquared(camera.position) > 1e-10 ||
       1 - Math.abs(lastCameraQuaternion.dot(camera.quaternion)) > 1e-10;
-    if (!forced && !frameClock.accept(t, !!flight || cameraMoved)) return;
+    const interactionMotion = !!flight || cameraMoved || !!paperMotion || lightFadeActive || bootTakeover;
+    if (cameraMoved || flight) lastCameraMotion = t;
+    if (!forced && !frameClock.accept(t, interactionMotion)) return;
     const dtms = tickLast === null ? 1000 / 60 : Math.min(100, Math.max(0, t - tickLast));
     tickLast = t;
     controls.dampingFactor = frameAlpha(baseDamping, dtms);
-    const scale = frameClock.fps === 60 ? 1 : pendingResolutionScale;
+    const scale = frameClock.fps === frameClock.idleFps ? 1 : pendingResolutionScale;
     if (scale !== resolutionScale) {
       resolutionScale = scale;
       onResize(); // resize before drawing, never blank an already-drawn frame
@@ -2055,11 +2113,11 @@ async function initScene(canvas) {
     // focused exhibit slowly turns on its pedestal; DoF opens up
     // (CFD is a flat monitor — turntabling it reads badly, so leave it still)
     if (panelOpen && focusedPivot && !prefersReducedMotion && focusedPivot.userData.hotspot.key !== "ansysCfd") {
-      focusedPivot.rotation.y += 0.0035;
+      focusedPivot.rotation.y += 0.0035 * dtms / (1000 / 60);
     }
     // museum follow-spot eases onto the focused exhibit
     const spotWant = panelOpen && focusedPivot ? 1.6 : 0;
-    focusSpot.intensity += (spotWant - focusSpot.intensity) * 0.06;
+    focusSpot.intensity += (spotWant - focusSpot.intensity) * frameAlpha(0.06, dtms);
     if (focusedPivot) {
       const fc = focusedPivot.userData.hotspot.center;
       focusSpot.position.set(fc.x * 0.7, fc.y + 1.1, fc.z * 0.7 + 0.35);
@@ -2092,6 +2150,7 @@ async function initScene(canvas) {
       const target = h === hovered && !busy ? h.userData.hotspot.baseScale * 1.06 : h.userData.hotspot.baseScale;
       if (Math.abs(h.scale.x - target) > 0.0004) {
         h.scale.setScalar(h.scale.x + (target - h.scale.x) * frameAlpha(0.16, dtms));
+        shadowsDirty = true;
       }
       const m = h.userData.hotspot.marker;
       if (!m) continue;
@@ -2121,15 +2180,33 @@ async function initScene(canvas) {
       lampLeds.forEach((m) => { m.emissiveIntensity *= flk; });
     }
 
-    const lodChanged = loader.update(camera, focusedPivot?.userData.hotspot.key || null, t);
-    // Camera-only frames at 120 Hz do not need to redraw fixed-light shadows
-    // twice as often. Preserve the old 60 Hz caster motion and refresh a LOD
-    // switch immediately; offscreen casters still contribute normally.
-    renderer.shadowMap.needsUpdate = !!forced || !!lodChanged || shadowClock.accept(t);
+    // High detail is background work after the intro and a settled camera.
+    // Project selection navigates away, so it must not start an obsolete GLB.
+    loader.allowUpgrades = revealed && !flight && !bootTakeover && !panelOpen && t - lastCameraMotion > 900;
+    let lodChanged = false;
+    if (forced || t - lastLODUpdate >= 180) {
+      lastLODUpdate = t;
+      lodChanged = loader.update(camera, null, t);
+    }
+    const movingCasters = !prefersReducedMotion && !!MODELS.printerHead;
+    const movingPaper = !!paperMotion || !!focusedPivot;
+    const shadowDue = shadowClock.accept(t);
+    const refreshAll = shadowsDirty || lodChanged || !!forced;
+    key.shadow.needsUpdate ||= refreshAll || ((movingCasters || movingPaper) && shadowDue);
+    resumeSpot.shadow.needsUpdate ||= refreshAll || movingPaper;
+    renderer.shadowMap.needsUpdate = key.shadow.needsUpdate || resumeSpot.shadow.needsUpdate;
+    if (key.shadow.needsUpdate) renderStats.shadowFrames++;
+    if (resumeSpot.castShadow && resumeSpot.shadow.needsUpdate) renderStats.deskShadowFrames++;
+    shadowsDirty = false;
     const gpuMs = gpuTimer.poll();
     gpuTimer.begin();
     const renderStart = performance.now();
+    renderer.info.reset();
     try { composer.render(); } finally { gpuTimer.end(); }
+    renderStats.frames++;
+    renderStats.calls = renderer.info.render.calls;
+    renderStats.triangles = renderer.info.render.triangles;
+    renderStats.cpuMs = performance.now() - renderStart;
     pendingResolutionScale = adaptiveQuality.sample({
       now: performance.now(), moving: frameClock.fps === 120,
       frameMs: Math.max(performance.now() - renderStart, gpuMs ?? 0),
@@ -2356,6 +2433,7 @@ async function initScene(canvas) {
 
   function setHover(root) {
     if (hovered === root) return;
+    frameClock.noteMotion(performance.now());
     hovered = root; // scale eases toward its target in the render loop (no pop)
     if (hovered) {
       setCursorHover(true);
@@ -2461,6 +2539,7 @@ async function initScene(canvas) {
 
   function focusHotspot(root) {
     if (!readiness.revealed || paperReturning) return;
+    takeOverIntro();
     const hs = root.userData.hotspot;
     if (hs.key && window.projectData?.[hs.key]) {
       const returnState = {
@@ -3300,6 +3379,7 @@ async function initScene(canvas) {
     models: MODELS, hotspots: HOTSPOTS, openPanel, showDragHint, runBootIntro,
     pump: (t) => tick(t, true), lod: loader, getLODStats: () => loader.getStats(), readiness,
     getFrameStats: () => frameClock.snapshot(),
+    getRenderStats: () => ({ ...renderStats, batching: batchingStats }),
     getBootStats: () => ({ ...bootStatus, active: bootTakeover }),
     getCameraIntroStats: () => ({ ...cameraIntro }),
     getRealismStats: () => ({ ...studioRealism.stats }),
@@ -3313,9 +3393,16 @@ async function initScene(canvas) {
     }),
   };
   readiness.construction = true;
+  readiness.timings.construction = performance.now();
   loader.start();
   manager.itemEnd("scene-bootstrap");
   await assetsReady;
+  if (loader.disposed) return;
+  readiness.timings.assets = performance.now();
+  batchingStats = await batchStaticRoom(scene, {
+    exclude: [MODELS.printerHead, MODELS.chamberFan, MODELS.activeSpool, ...HOTSPOTS],
+    yieldTask: yieldToBrowser,
+  });
   // Populate after proxies register; doReveal enables the dock after GPU preparation.
   const dock = document.getElementById("exp-dock");
   const exhibitSelect = document.getElementById("exp-project-select");
@@ -3370,11 +3457,12 @@ async function initScene(canvas) {
     if (prepared % 4 === 0) await yieldToBrowser();
   }
   if (document.hidden) await waitForVisible();
-  if (renderer.compileAsync) await renderer.compileAsync(scene, camera);
+  await prepareRoomShaders(renderer, scene, camera, composer, { gtao, bokeh });
   startupUI.update({ phase: "preparing", loaded: textures.size + 1, total: textures.size + 1 });
   await yieldToBrowser();
   startupUI.setPhase("first-frame");
   readiness.prepared = true;
+  readiness.timings.prepared = performance.now();
   console.info(`[experience] base assets prepared — ${HOTSPOTS.length} hotspots; awaiting first frame`);
 }
 

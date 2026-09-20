@@ -1,53 +1,70 @@
 {
   "schema": "studio-motion-index-v1",
+  "release": "studio-packed-20260919",
   "projects": {
     "steering": {
-      "manifest": "steering/manifest.json"
+      "manifest": "steering/manifest.58205faed00ee856.json",
+      "sha256": "58205faed00ee856ad236b9df0e0532d2e942c1f54af76c2952478477c1d5f5c"
     },
     "vineRobot": {
-      "manifest": "vineRobot/manifest.json"
+      "manifest": "vineRobot/manifest.b9a288a0d3a38c69.json",
+      "sha256": "b9a288a0d3a38c6943fa423f0d910e44f14ed9db958cfb00c63f13f6870ddbbd"
     },
     "javelin": {
-      "manifest": "javelin/manifest.json"
+      "manifest": "javelin/manifest.abd6d43cbbda460e.json",
+      "sha256": "abd6d43cbbda460eebaeb9b71f78841d4c9a5f3848e267d817e7b7a5e802b3f3"
     },
     "scanner": {
-      "manifest": "scanner/manifest.json"
+      "manifest": "scanner/manifest.871477ce65e6213f.json",
+      "sha256": "871477ce65e6213f3c9636b3808a8ae9743eb89d2b5389969ee92427627d4549"
     },
     "brakeSim": {
-      "manifest": "brakeSim/manifest.json"
+      "manifest": "brakeSim/manifest.f6b37bc3ff99110c.json",
+      "sha256": "f6b37bc3ff99110cb6faadb73cf825b7b57f15f4a1e227845a1a776d1e3e08a1"
     },
     "aura": {
-      "manifest": "aura/manifest.json"
+      "manifest": "aura/manifest.04a5825a491acd77.json",
+      "sha256": "04a5825a491acd77d00ae0caa78caf677b381ec310eab9881eada95d78203f3d"
     },
     "carbonSeat": {
-      "manifest": "carbonSeat/manifest.json"
+      "manifest": "carbonSeat/manifest.0bf7f9454f6e0f98.json",
+      "sha256": "0bf7f9454f6e0f9806ee820478ef9710fdd0de6aeb69cc06a104b5489e9ff1b5"
     },
     "seat": {
-      "manifest": "seat/manifest.json"
+      "manifest": "seat/manifest.23366eabc26a4356.json",
+      "sha256": "23366eabc26a43567dbab95f1f4c3bc0ce1b86049b7708ebcbb6c1d3693ceb6a"
     },
     "materialTest": {
-      "manifest": "materialTest/manifest.json"
+      "manifest": "materialTest/manifest.c781882d09d49302.json",
+      "sha256": "c781882d09d49302e19668bcb581b757ae46e8153d8bb3801cf67e5901f6607b"
     },
     "ansysCfd": {
-      "manifest": "ansysCfd/manifest.json"
+      "manifest": "ansysCfd/manifest.cf5210b57d16cd5a.json",
+      "sha256": "cf5210b57d16cd5aeb202723075a7e715591ccf5625fc134f320e46f7b503203"
     },
     "pool": {
-      "manifest": "pool/manifest.json"
+      "manifest": "pool/manifest.f517eeb94c59f232.json",
+      "sha256": "f517eeb94c59f232e232f1930b5eaf59c4d70d8cafc873e223e51230b8d2cda1"
     },
     "lineFollower": {
-      "manifest": "lineFollower/manifest.json"
+      "manifest": "lineFollower/manifest.c524f1b5987f1c3e.json",
+      "sha256": "c524f1b5987f1c3e24b6af281af3816ed3569174b5c881a31e48989630567128"
     },
     "formlabs": {
-      "manifest": "formlabs/manifest.json"
+      "manifest": "formlabs/manifest.7b0fe642931dab3e.json",
+      "sha256": "7b0fe642931dab3e2c4b9d7b9fbe096966edfdd3a7ef11d91dbe3b4275a2307f"
     },
     "telecaster": {
-      "manifest": "telecaster/manifest.json"
+      "manifest": "telecaster/manifest.cda86ee072af36e7.json",
+      "sha256": "cda86ee072af36e7b754bf37c1de166c309cfc0f2f4d9fede91fa32d86c64b62"
     },
     "education": {
-      "manifest": "education/manifest.json"
+      "manifest": "education/manifest.436ba57cca2d7131.json",
+      "sha256": "436ba57cca2d7131d47653c834c354faf896fe8e2f3889be47d45923aa9fabee"
     },
     "ftc": {
-      "manifest": "ftc/manifest.json"
+      "manifest": "ftc/manifest.b301848c585dff0c.json",
+      "sha256": "b301848c585dff0c0b0235aa7bc5ba1f8a4b550be9ff93cd2ffcc19dad4cacfd"
     }
   }
 }

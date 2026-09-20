@@ -24,18 +24,20 @@
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/Inter-400.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/InterTight-700.woff2" crossorigin />
     <link rel="stylesheet" href="fonts.css?v=studio-polish-20260907" />
-    <link rel="stylesheet" href="experience.css?v=studio-realism-20260907" />
+    <link rel="stylesheet" href="experience.css?v=performance-20260919" />
     <noscript><style>.exp-loader, .exp-stage { display: none; }</style></noscript>
 
-    <!-- Three.js import map (pinned, single CDN). -->
+    <!-- Pinned, byte-identical Three.js runtime served with the website. -->
     <script type="importmap">
       {
         "imports": {
-          "three": "https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.js",
-          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/"
+          "three": "./vendor/three/0.185.0/build/three.module.js",
+          "three/addons/": "./vendor/three/0.185.0/examples/jsm/"
         }
       }
     </script>
+    <link rel="modulepreload" href="vendor/three/0.185.0/build/three.core.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/build/three.module.js" />
   </head>
   <body>
     <!-- Always-visible, keyboard-focusable escape hatch to the classic site -->
@@ -115,6 +117,7 @@
       <label class="sr-only" for="exp-project-select">Choose an exhibit</label>
       <select id="exp-project-select"><option value="">Choose an exhibit</option></select>
       <button id="exp-reset-view" type="button" aria-label="Reset studio view" title="Reset view">Reset view <span aria-hidden="true">↺</span></button>
+      <button id="exp-skip-intro" type="button" hidden>Skip intro</button>
       <p class="exp-dock__hint">Drag to orbit · Scroll to zoom</p>
     </nav>
 

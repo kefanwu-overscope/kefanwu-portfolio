@@ -8,4 +8,4 @@ function redirectProject() {
 }
 
 window.addEventListener('hashchange', redirectProject);
-if (!redirectProject()) await import('./experience.js?v=room-return-20260919');
+if (!redirectProject()) await import('./experience.js?v=performance-20260919');

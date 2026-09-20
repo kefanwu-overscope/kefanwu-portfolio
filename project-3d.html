@@ -10,11 +10,14 @@
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/Inter-400.woff2" crossorigin>
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/InterTight-700.woff2" crossorigin>
     <link rel="stylesheet" href="fonts.css?v=studio-polish-20260907">
-    <link rel="stylesheet" href="experience.css?v=studio-realism-20260907">
-    <link rel="stylesheet" href="studio-ui.css?v=studio-20260919">
+    <link rel="stylesheet" href="studio-ui.css?v=performance-20260919">
     <script type="importmap">
-      {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/"}}
+      {"imports":{"three":"./vendor/three/0.185.0/build/three.module.js","three/addons/":"./vendor/three/0.185.0/examples/jsm/"}}
     </script>
+    <link rel="modulepreload" href="vendor/three/0.185.0/build/three.core.js">
+    <link rel="modulepreload" href="vendor/three/0.185.0/build/three.module.js">
+    <link rel="modulepreload" href="studio-inspector.js?v=performance-20260919">
+    <link rel="preload" as="fetch" href="assets/studio-motion/index.json?v=studio-packed-20260919" crossorigin>
   </head>
   <body class="studio-v2" data-studio-mode="inspect">
     <div id="studio-app"></div>
@@ -24,6 +27,6 @@
     <script src="case-study-data.js?v=studio-20260919"></script>
     <script src="case-study-supplements.js?v=studio-20260919"></script>
     <script src="case-study-media.js?v=studio-20260919"></script>
-    <script type="module" src="experience-v2.js?v=room-return-20260919"></script>
+    <script type="module" src="experience-v2.js?v=performance-20260919"></script>
   </body>
 </html>

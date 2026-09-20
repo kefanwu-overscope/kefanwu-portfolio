@@ -29,8 +29,12 @@ to that test script.
 onPartSelect, manifestUrl, quality })` creates the lazy workbench renderer.
 
 - `selectProject(key, { signal })` returns the selected key, manifest and
-  progress; an aborted or failed selection resolves to `null`. Failure details
-  arrive through `onStatus`.
+  progress once the initial pose can rotate; an aborted or failed selection
+  resolves to `null`. Its `whenMotionReady` promise (also available through
+  `inspector.whenMotionReady()`) settles after the separate animation load.
+  Playback and nonzero seeking are disabled until `motionReady` is true.
+  Animation begins loading after the first model render. `retryMotion()`
+  retries a failed animation while the model remains rotatable.
 - `setProgress(p)`, `play({ direction: 1 | -1 })`, `pause()` and
   `reset({ camera: true })` control absolute source poses.
 - `setView('source' | 'front' | 'side' | 'top' | 'iso')` changes only the camera.
@@ -45,9 +49,11 @@ onPartSelect, manifestUrl, quality })` creates the lazy workbench renderer.
 
 `onStatus` receives `{ state, key, message }`, with `manifest` and load duration
 on `ready`. Status values include `loading`, `ready`, `error`, `context-lost`
-and `idle`. `onProgress` receives a number. `onPlaybackChange` receives
+and `idle`. `ready` also includes `motionReady`; `motionError` indicates that
+only the animation load needs retrying. `onProgress` receives a number, with
+multiple pending seeks evaluated once at the next rendered frame. `onPlaybackChange` receives
 `{ playing, direction }`. A click on a source component calls `onPartSelect`
-with `{ key, name, group }`; the host translates source groups to visitor-facing
+with `{ key, name, group }` for steering; the host translates source groups to visitor-facing
 labels. No numerical CFD probe is inferred from the exported surface colors.
 
 The resource cache keeps at most two projects, with a 100 MiB mobile / 192 MiB

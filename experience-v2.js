@@ -1,4 +1,4 @@
-import { createStudioUI } from './studio-ui.js?v=studio-20260919';
+import { createStudioUI } from './studio-ui.js?v=performance-20260919';
 import { getStudioProject } from './studio-catalog.js?v=studio-20260919';
 
 let inspector = null;
@@ -10,6 +10,7 @@ let request = null;
 let quality = 'auto';
 let playing = false;
 let direction = 1;
+let statusRevision = 0;
 
 const ui = createStudioUI({
   onSelect: (key) => selectProject(key),
@@ -26,6 +27,7 @@ const ui = createStudioUI({
   onReset: () => inspector?.reset({camera: true}),
   onView: (view) => inspector?.setView(view),
   onRetry: () => selectProject(selectedKey, {history: false}),
+  onRetryMotion: () => inspector?.retryMotion?.(),
   onQuality: (value) => {
     quality = value;
     inspector?.setQuality(value);
@@ -85,18 +87,19 @@ function updateURL(key, replace = false) {
 
 function getInspector() {
   if (!inspectorPromise) {
-    inspectorPromise = import('./studio-inspector.js?v=studio-20260919').then(({createStudioInspector}) => {
+    inspectorPromise = import('./studio-inspector.js?v=performance-20260919').then(({createStudioInspector}) => {
       inspector = createStudioInspector({
         canvas: ui.canvas,
         quality,
         onStatus: (status) => {
           if (mode !== 'inspect' || (status.key && status.key !== selectedKey)) return;
+          const revision = ++statusRevision;
           if (status.state === 'ready') {
             const generation = selection;
             // Keep the source poster through the first real WebGL paint.
             requestAnimationFrame(() => requestAnimationFrame(() => {
-              if (generation !== selection || mode !== 'inspect') return;
-              ui.setStatus('ready', status.message);
+              if (generation !== selection || revision !== statusRevision || mode !== 'inspect') return;
+              ui.setStatus(status);
               updatePressureLegend(status.manifest);
             }));
           } else if (status.state === 'error') {
@@ -127,6 +130,7 @@ function getInspector() {
 async function selectProject(key, {history = true} = {}) {
   if (!getStudioProject(key)) return showRoom({history});
   const generation = ++selection;
+  ++statusRevision;
   request?.abort();
   request = new AbortController();
   const signal = request.signal;

@@ -6,7 +6,8 @@ import { clampProgress, readBufferView, createSampledMotion } from './studio-mot
 import { installSourceMaterial } from './studio-inspector-materials.js';
 import { fitCameraEnvelope } from './studio-inspector-camera.js';
 
-const RELEASE = 'studio-motion-20260919';
+const RELEASE = 'studio-packed-20260919';
+const ASSET_ROOT = new URL('./assets/studio-motion/', import.meta.url);
 const WORLD_ROTATION = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
 const toWorld = (point) => new THREE.Vector3().fromArray(point).applyQuaternion(WORLD_ROTATION);
 
@@ -56,10 +57,11 @@ function createMaterial(source) {
   return material;
 }
 
-function createGeometry(source, buffer, { dynamic = false } = {}) {
+function createGeometry(source, buffer, { dynamic = false, sourceCoordinates = false } = {}) {
   const geometry = new THREE.BufferGeometry();
   for (const name of ['position', 'normal', 'uv', 'color', 'sourceCoordinates', 'objectCoordinates', 'heatExposure', 'attributeOpacity', 'attributeRoughness']) {
     if (!source[name]) continue;
+    if (name === 'sourceCoordinates' && !sourceCoordinates) continue;
     let array = readBufferView(buffer, source[name]);
     // Deforming positions must not overwrite the immutable source buffer or
     // any sibling that shares the original component geometry.
@@ -76,7 +78,60 @@ function createGeometry(source, buffer, { dynamic = false } = {}) {
   return geometry;
 }
 
-function buildResource(key, manifest, geometryBuffer, motionBuffer) {
+// Parts with identical absolute motion can use one mesh without changing any
+// source vertex, material, transform or sample. Transparent parts retain their
+// own sorting; steering retains individual meshes for annotations.
+function batchRigidParts(key, manifest, root, nodes) {
+  if (key === 'steering') return;
+  const groups = new Map();
+  for (let index = 0; index < nodes.length; index++) {
+    const object = nodes[index], source = manifest.nodes[index], material = object.material;
+    if (Array.isArray(material) || material.transparent || material.transmission > 0 || object.userData.presentationHidden ||
+        Object.keys(source.tracks || {}).some((name) => !['position', 'quaternion', 'scale', 'visible'].includes(name))) continue;
+    const attributes = Object.entries(object.geometry.attributes).map(([name, attribute]) => [name, attribute.itemSize, attribute.array.constructor.name]);
+    const id = JSON.stringify([source.materialIndices, source.transform, source.visible, source.tracks, attributes]);
+    if (!groups.has(id)) groups.set(id, []);
+    groups.get(id).push(index);
+  }
+  const retired = new Set();
+  for (const indices of groups.values()) {
+    if (indices.length < 2) continue;
+    const leader = nodes[indices[0]], geometry = new THREE.BufferGeometry();
+    let vertices = 0, indexCount = 0;
+    for (const index of indices) {
+      const part = nodes[index].geometry;
+      vertices += part.attributes.position.count;
+      indexCount += part.index?.count || part.attributes.position.count;
+    }
+    for (const [name, attribute] of Object.entries(leader.geometry.attributes)) {
+      const array = new attribute.array.constructor(vertices * attribute.itemSize);
+      let offset = 0;
+      for (const index of indices) {
+        const source = nodes[index].geometry.attributes[name].array;
+        array.set(source, offset); offset += source.length;
+      }
+      geometry.setAttribute(name, new THREE.BufferAttribute(array, attribute.itemSize, attribute.normalized));
+    }
+    const indexArray = new (vertices > 65535 ? Uint32Array : Uint16Array)(indexCount);
+    let vertexOffset = 0, indexOffset = 0;
+    for (const index of indices) {
+      const part = nodes[index].geometry, source = part.index?.array;
+      const count = source?.length || part.attributes.position.count;
+      for (let i = 0; i < count; i++) indexArray[indexOffset++] = vertexOffset + (source ? source[i] : i);
+      vertexOffset += part.attributes.position.count;
+      retired.add(part);
+    }
+    geometry.setIndex(new THREE.BufferAttribute(indexArray, 1));
+    geometry.computeBoundingBox(); geometry.computeBoundingSphere();
+    leader.geometry = geometry;
+    leader.name = `${leader.name} (+${indices.length - 1} matching parts)`;
+    for (const index of indices.slice(1)) { root.remove(nodes[index]); nodes[index] = leader; }
+  }
+  const retained = new Set(nodes.map((node) => node.geometry));
+  for (const geometry of retired) if (!retained.has(geometry)) geometry.dispose();
+}
+
+function buildResource(key, manifest, geometryBuffer, motionBuffer, { initial = false, loadMotion } = {}) {
   if (manifest.schema !== 'studio-motion-v1' || manifest.coordinates !== 'blender-z-up') {
     throw new Error('Unsupported interactive model format.');
   }
@@ -86,16 +141,22 @@ function buildResource(key, manifest, geometryBuffer, motionBuffer) {
   const materials = manifest.materials.map(createMaterial);
   const geometries = new Map();
   const nodes = [];
+  const sharedDynamic = new Map();
   try {
     for (const source of manifest.nodes) {
       const dynamic = !!(source.tracks?.deformationPosition || source.tracks?.attributeRoughness);
-      const id = JSON.stringify(source.geometry);
-      let geometry = !dynamic && geometries.get(id);
-      if (!geometry) {
-        geometry = createGeometry(source.geometry, geometryBuffer, { dynamic });
-        if (!dynamic) geometries.set(id, geometry);
-      }
       const assigned = (source.materialIndices || [0]).map((index) => materials[index]);
+      const sourceCoordinates = assigned.some((material) => ['carbon', 'noise'].includes(material.userData.source.procedural?.type));
+      const id = JSON.stringify(source.geometry);
+      // The exporter certifies that this group has at most one visible cloth
+      // at every source sample. All shared attributes are replaced on seek.
+      const sharedId = dynamic && source.exclusiveDeformationGroup ? `${source.exclusiveDeformationGroup}:${id}` : null;
+      let geometry = sharedId ? sharedDynamic.get(sharedId) : !dynamic && geometries.get(`${sourceCoordinates}:${id}`);
+      if (!geometry) {
+        geometry = createGeometry(source.geometry, geometryBuffer, { dynamic, sourceCoordinates });
+        if (sharedId) sharedDynamic.set(sharedId, geometry);
+        else if (!dynamic) geometries.set(`${sourceCoordinates}:${id}`, geometry);
+      }
       if (assigned.some((material) => material.userData.source.procedural?.coordinateSpace === 'object') && !geometry.attributes.objectCoordinates) {
         geometry.setAttribute('objectCoordinates', new THREE.BufferAttribute(geometry.attributes.position.array.slice(), 3));
       }
@@ -125,34 +186,54 @@ function buildResource(key, manifest, geometryBuffer, motionBuffer) {
       root.add(object);
       nodes.push(object);
     }
-    const motion = createSampledMotion({ manifest, buffer: motionBuffer, nodes, materials });
+    batchRigidParts(key, manifest, root, nodes);
+    const motion = createSampledMotion({ manifest, buffer: motionBuffer, nodes, materials, initial });
     motion.seek(0);
     root.updateMatrixWorld(true);
     // Box3 deliberately includes invisible assembly parts, which are still
     // needed to frame a complete assembly/explosion without clipping.
     const bounds = new THREE.Box3();
-    for (const node of nodes) if (!node.userData.presentationHidden) bounds.expandByObject(node);
+    for (const node of new Set(nodes)) if (!node.userData.presentationHidden) bounds.expandByObject(node);
     if (manifest.bounds?.motion && key !== 'ansysCfd') {
       const { min, max } = manifest.bounds.motion;
       for (const x of [min[0], max[0]]) for (const y of [min[1], max[1]]) for (const z of [min[2], max[2]]) bounds.expandByPoint(toWorld([x, y, z]));
     }
-    let gpuAttributeBytes = 0;
-    const extraBuffers = new Set();
-    for (const geometry of new Set(nodes.map((object) => object.geometry))) {
-      for (const attribute of [...Object.values(geometry.attributes), geometry.index].filter(Boolean)) {
-        gpuAttributeBytes += attribute.array.byteLength;
-        if (attribute.array.buffer !== geometryBuffer && attribute.array.buffer !== motionBuffer) extraBuffers.add(attribute.array.buffer);
-      }
-    }
-    const extraCPUBytes = [...extraBuffers].reduce((total, buffer) => total + buffer.byteLength, 0);
-    return {
-      key, root, manifest, motion, nodes, bounds,
-      // Account for retained source data, mutable attribute copies, and each
-      // geometry's uploaded attributes. Driver allocations, render targets,
-      // compressed network bodies and JS objects remain outside this budget.
-      byteLength: geometryBuffer.byteLength + motionBuffer.byteLength + extraCPUBytes + gpuAttributeBytes,
-      dispose() { disposeObject(root); },
+    let motionController = null, motionRequest = null, closed = false;
+    const entry = {
+      key, root, manifest, motion, nodes, bounds, motionReady: !initial,
+      get byteLength() {
+        let gpuBytes = 0;
+        const buffers = new Set(entry.motion.buffers);
+        for (const geometry of new Set(nodes.map((object) => object.geometry))) {
+          for (const attribute of [...Object.values(geometry.attributes), geometry.index].filter(Boolean)) {
+            gpuBytes += attribute.array.byteLength; buffers.add(attribute.array.buffer);
+          }
+        }
+        return gpuBytes + [...buffers].reduce((total, buffer) => total + buffer.byteLength, 0);
+      },
+      ensureMotion() {
+        if (closed) return Promise.reject(abortError());
+        if (entry.motionReady) return Promise.resolve(entry);
+        if (motionRequest) return motionRequest;
+        const controller = new AbortController(); motionController = controller;
+        const request = (async () => {
+          const buffer = await loadMotion(controller.signal);
+          if (closed || controller.signal.aborted) throw abortError();
+          const next = createSampledMotion({ manifest, buffer, nodes, materials });
+          next.seek(0);
+          entry.motion = next; entry.motionReady = true;
+          return entry;
+        })();
+        motionRequest = request;
+        request.finally(() => {
+          if (motionRequest === request) { motionRequest = null; motionController = null; }
+        }).catch(() => {});
+        return request;
+      },
+      cancelMotion() { motionController?.abort(); motionController = null; motionRequest = null; },
+      dispose() { closed = true; entry.cancelMotion(); disposeObject(root); },
     };
+    return entry;
   } catch (error) {
     disposeObject(root);
     for (const material of materials) material.dispose();
@@ -236,29 +317,80 @@ export function createStudioInspector({
   let radius = 1;
   let selectedAt = 0;
   let renderedFrames = 0;
+  let poseDirty = false;
+  let insideFrame = false;
+  let motionTask = null;
+  let motionCompletion = Promise.resolve(null);
+  let motionError = false;
   const saved = new Map();
   const frameSamples = [];
+  let manifestIndexRequest = null;
+  const manifestIndexController = new AbortController();
+
+  async function resolveManifestUrl(key, signal) {
+    if (manifestUrl) {
+      const relative = typeof manifestUrl === 'function' ? manifestUrl(key) :
+        `${manifestUrl.replace(/\/$/, '')}/${encodeURIComponent(key)}/manifest.json`;
+      return new URL(relative, document.baseURI);
+    }
+    if (signal.aborted) throw abortError();
+    if (!manifestIndexRequest) {
+      // The small catalog belongs to this inspector, so switching projects
+      // must not abort a request that the next selection also needs.
+      const request = (async () => {
+        const response = await fetch(new URL(`index.json?v=${RELEASE}`, ASSET_ROOT), { signal: manifestIndexController.signal });
+        if (!response.ok) throw new Error(`The interactive project catalog could not load (${response.status}).`);
+        const index = await response.json();
+        if (index.schema !== 'studio-motion-index-v1' || !index.projects || typeof index.projects !== 'object') {
+          throw new Error('Unsupported interactive project catalog.');
+        }
+        return index;
+      })();
+      manifestIndexRequest = request;
+      request.catch(() => { if (manifestIndexRequest === request) manifestIndexRequest = null; });
+    }
+    const index = await new Promise((resolve, reject) => {
+      const abort = () => { signal.removeEventListener('abort', abort); reject(abortError()); };
+      signal.addEventListener('abort', abort, { once: true });
+      manifestIndexRequest.then(
+        (value) => { signal.removeEventListener('abort', abort); resolve(value); },
+        (error) => { signal.removeEventListener('abort', abort); reject(error); },
+      );
+    });
+    if (signal.aborted) throw abortError();
+    const relative = index.projects[key]?.manifest;
+    if (typeof relative !== 'string' || !relative) throw new Error('This interactive project is unavailable.');
+    return new URL(relative, ASSET_ROOT);
+  }
+
   const cache = createProjectResourceCache({
     maxEntries: 2,
     maxBytes: lowTier ? 100 * 1024 * 1024 : 192 * 1024 * 1024,
     dispose: (entry) => entry.dispose(),
-    load: async (key, signal) => {
-      const relative = typeof manifestUrl === 'function' ? manifestUrl(key) :
-        manifestUrl ? `${manifestUrl.replace(/\/$/, '')}/${encodeURIComponent(key)}/manifest.json` :
-          `assets/studio-motion/${encodeURIComponent(key)}/manifest.json?v=${RELEASE}`;
-      const url = new URL(relative, document.baseURI);
+    load: async (key, signal, reserve) => {
+      const url = await resolveManifestUrl(key, signal);
+      if (signal.aborted) throw abortError();
       const response = await fetch(url, { signal });
       if (!response.ok) throw new Error(`The interactive model could not load (${response.status}).`);
       const manifest = await response.json();
       const buffers = manifest.buffers || {};
       const geometryFile = typeof buffers.geometry === 'string' ? buffers.geometry : buffers.geometry?.url || buffers.geometry?.uri;
       const motionFile = typeof buffers.motion === 'string' ? buffers.motion : buffers.motion?.url || buffers.motion?.uri;
+      const initialFile = typeof buffers.initialMotion === 'string' ? buffers.initialMotion : buffers.initialMotion?.url || buffers.initialMotion?.uri;
+      // Includes decoded attributes and likely GPU copies, leaving space before
+      // any incoming binary starts to inflate. Precise accounting follows build.
+      reserve((buffers.geometry?.byteLength || 0) * 3 + (buffers.motion?.byteLength || 0) * 2);
       const [geometryBuffer, motionBuffer] = await Promise.all([
         fetchProjectBuffer(new URL(geometryFile || 'geometry.bin.gz', url), { signal }),
-        fetchProjectBuffer(new URL(motionFile || 'motion.bin.gz', url), { signal }),
+        fetchProjectBuffer(new URL(initialFile || motionFile || 'motion.bin.gz', url), { signal }),
       ]);
       if (signal.aborted) throw abortError();
-      return buildResource(key, manifest, geometryBuffer, motionBuffer);
+      return buildResource(key, manifest, geometryBuffer, motionBuffer, { initial: !!initialFile,
+        loadMotion: (motionSignal) => {
+          cache.reserve((buffers.motion?.byteLength || 0) * 2, 0);
+          return fetchProjectBuffer(new URL(motionFile || 'motion.bin.gz', url), { signal: motionSignal });
+        },
+      });
     },
   });
 
@@ -276,7 +408,7 @@ export function createStudioInspector({
 
   function invalidate() {
     dirty = true;
-    if (!raf && !disposed && active && !contextLost && !document.hidden) raf = requestAnimationFrame(frame);
+    if (!raf && !insideFrame && !disposed && active && !contextLost && !document.hidden) raf = requestAnimationFrame(frame);
   }
 
   function notifyPlayback() { onPlaybackChange({ playing, direction }); }
@@ -289,20 +421,28 @@ export function createStudioInspector({
 
   function setProgress(value) {
     if (disposed) return;
-    progress = clampProgress(value);
-    resource?.motion.seek(progress);
-    onProgress(progress);
+    const next = clampProgress(value);
+    if (resource && !resource.motionReady && next !== 0) return;
+    if (next === progress && !poseDirty) return;
+    progress = next;
+    poseDirty = true;
     invalidate();
   }
 
   function frame(time) {
     raf = 0;
     if (disposed || !active || contextLost || document.hidden) return;
+    insideFrame = true;
     const dt = lastTime ? Math.min((time - lastTime) / 1000, 0.08) : 0;
     lastTime = time;
     if (playing && resource) {
       setProgress(progress + direction * dt / resource.motion.duration);
       if ((direction > 0 && progress >= 1) || (direction < 0 && progress <= 0)) pause();
+    }
+    if (poseDirty && resource) {
+      resource.motion.seek(progress);
+      onProgress(progress);
+      poseDirty = false;
     }
     const moving = controls.update();
     if (dirty || moving || playing) {
@@ -312,9 +452,74 @@ export function createStudioInspector({
       frameSamples.push(performance.now() - started);
       if (frameSamples.length > 120) frameSamples.shift();
       dirty = false;
+      if (motionTask && !motionTask.scheduled) {
+        const task = motionTask;
+        task.scheduled = true;
+        // Let the first source pose reach the screen before animation download
+        // and decoding compete with its shader compilation and upload.
+        requestAnimationFrame(() => setTimeout(() => finishMotion(task), 0));
+      }
     }
+    insideFrame = false;
     if ((playing || moving || interaction) && !raf) raf = requestAnimationFrame(frame);
     else if (!raf) lastTime = 0;
+  }
+
+  async function finishMotion(task) {
+    if (task !== motionTask || disposed || task.ticket !== loadTicket || task.signal?.aborted) { task.resolve(null); return; }
+    try {
+      await task.entry.ensureMotion();
+      if (task !== motionTask || disposed || task.ticket !== loadTicket || task.signal?.aborted) { task.resolve(null); return; }
+      motionError = false;
+      poseDirty = true;
+      setProgress(task.restoreProgress);
+      cache.trim();
+      if (!contextLost) emitStatus('ready', { motionReady: true, manifest: task.entry.manifest, message: 'Drag to rotate · scroll to zoom', loadMilliseconds: performance.now() - selectedAt });
+      invalidate();
+      task.resolve({ key: task.entry.key, motionReady: true });
+    } catch (error) {
+      if (task === motionTask && !disposed && task.ticket === loadTicket && error.name !== 'AbortError') {
+        motionError = true;
+        if (!contextLost) emitStatus('ready', { motionReady: false, motionError: true, manifest: task.entry.manifest, message: 'Animation could not load. You can still rotate the model.', error });
+      }
+      task.resolve(null);
+    } finally {
+      task.signal?.removeEventListener('abort', task.abort);
+      if (motionTask === task) motionTask = null;
+    }
+  }
+
+  function prepareMotion(entry, ticket, { signal, restoreProgress = 0 } = {}) {
+    if (entry.motionReady) return Promise.resolve({ key: entry.key, motionReady: true });
+    return new Promise((resolve) => {
+      const task = { entry, ticket, signal, restoreProgress, resolve, scheduled: false,
+        abort() {
+          entry.cancelMotion();
+          signal?.removeEventListener('abort', task.abort);
+          if (motionTask === task) motionTask = null;
+          resolve(null);
+        },
+      };
+      signal?.addEventListener('abort', task.abort, { once: true });
+      motionTask = task;
+      if (signal?.aborted) task.abort();
+    });
+  }
+
+  function cancelMotionTask() {
+    if (!motionTask) return;
+    motionTask.signal?.removeEventListener('abort', motionTask.abort);
+    motionTask.abort(); motionTask = null;
+  }
+
+  function retryMotion() {
+    if (!resource || disposed) return Promise.resolve(null);
+    if (resource.motionReady || motionTask) return motionCompletion;
+    motionError = false;
+    motionCompletion = prepareMotion(resource, loadTicket, { restoreProgress: progress });
+    emitStatus('ready', { motionReady: false, manifest: resource.manifest, message: 'Loading animation…' });
+    invalidate();
+    return motionCompletion;
   }
 
   function resize() {
@@ -404,6 +609,8 @@ export function createStudioInspector({
   async function selectProject(key, { signal } = {}) {
     if (disposed) throw abortError();
     const ticket = ++loadTicket;
+    cancelMotionTask();
+    motionError = false;
     pause();
     if (resource) {
       saved.set(resource.key, { progress, view: captureView() });
@@ -422,12 +629,14 @@ export function createStudioInspector({
       scene.add(entry.root);
       initializeCamera(entry);
       const previous = saved.get(key);
-      setProgress(previous?.progress || 0);
+      poseDirty = true;
+      setProgress(entry.motionReady ? previous?.progress || 0 : 0);
       if (previous?.view) applyView(previous.view);
       frameSamples.length = 0;
-      if (!contextLost) emitStatus('ready', { message: 'Drag to rotate · scroll to zoom', manifest: entry.manifest, loadMilliseconds: performance.now() - selectedAt });
+      motionCompletion = prepareMotion(entry, ticket, { signal, restoreProgress: previous?.progress || 0 });
+      if (!contextLost) emitStatus('ready', { motionReady: entry.motionReady, message: entry.motionReady ? 'Drag to rotate · scroll to zoom' : 'Loading animation…', manifest: entry.manifest, loadMilliseconds: performance.now() - selectedAt });
       invalidate();
-      return { key, manifest: entry.manifest, progress };
+      return { key, manifest: entry.manifest, progress, motionReady: entry.motionReady, whenMotionReady: motionCompletion };
     } catch (error) {
       if (disposed || ticket !== loadTicket || error.name === 'AbortError') return null;
       emitStatus('error', { message: error.message || 'The interactive model is unavailable.', error });
@@ -436,7 +645,7 @@ export function createStudioInspector({
   }
 
   function play({ direction: nextDirection = direction } = {}) {
-    if (disposed || !resource || !active || contextLost) return;
+    if (disposed || !resource?.motionReady || !active || contextLost) return;
     direction = nextDirection < 0 ? -1 : 1;
     if ((direction > 0 && progress >= 1) || (direction < 0 && progress <= 0)) setProgress(direction > 0 ? 0 : 1);
     playing = true;
@@ -489,7 +698,7 @@ export function createStudioInspector({
     contextLost = false;
     rebuildEnvironment();
     controls.enabled = active;
-    emitStatus(resource ? 'ready' : 'idle', { message: '3D view restored.', ...(resource ? { manifest: resource.manifest } : {}) });
+    emitStatus(resource ? 'ready' : 'idle', { message: '3D view restored.', ...(resource ? { manifest: resource.manifest, motionReady: resource.motionReady, motionError } : {}) });
     resize();
   };
   const reducedChange = () => { if (reducedMotion.matches) pause(); };
@@ -504,7 +713,7 @@ export function createStudioInspector({
   let pointerDown = null;
   const pointerStart = (event) => { pointerDown = [event.clientX, event.clientY]; };
   const pointerEnd = (event) => {
-    if (!resource || !pointerDown || Math.hypot(event.clientX - pointerDown[0], event.clientY - pointerDown[1]) > 5) return;
+    if (selectedKey !== 'steering' || !resource || !pointerDown || Math.hypot(event.clientX - pointerDown[0], event.clientY - pointerDown[1]) > 5) return;
     pointerDown = null;
     const box = canvas.getBoundingClientRect();
     raycaster.setFromCamera(new THREE.Vector2((event.clientX - box.left) / box.width * 2 - 1, -(event.clientY - box.top) / box.height * 2 + 1), camera);
@@ -516,11 +725,15 @@ export function createStudioInspector({
   resize();
 
   return {
-    selectProject, setProgress, play, pause, resize, setView, setActive,
-    reset({ camera: resetCamera = true } = {}) { pause(); setProgress(0); if (resetCamera) setView('source'); },
+    selectProject, setProgress, play, pause, resize, setView, setActive, retryMotion,
+    whenMotionReady: () => motionCompletion,
+    reset({ camera: resetCamera = true } = {}) {
+      if (motionTask) motionTask.restoreProgress = 0;
+      pause(); setProgress(0); if (resetCamera) setView('source');
+    },
     setQuality(value) { quality = ['auto', 'low', 'high'].includes(value) ? value : 'auto'; resize(); },
     getState() {
-      return { key: selectedKey, state, progress, playing, direction, active, quality, reducedMotion: reducedMotion.matches,
+      return { key: selectedKey, state, progress, playing, direction, active, quality, motionReady: !!resource?.motionReady, motionError, reducedMotion: reducedMotion.matches,
         cache: cache.stats(), objects: { ...renderer.info.memory }, drawCalls: renderer.info.render.calls, renderedFrames,
         camera: captureView(),
         sourceShaders: resource ? [...new Set(resource.nodes.flatMap((object) => Array.isArray(object.material) ? object.material : [object.material]))]
@@ -533,6 +746,8 @@ export function createStudioInspector({
       if (disposed) return;
       disposed = true;
       loadTicket += 1;
+      cancelMotionTask();
+      manifestIndexController.abort();
       playing = false;
       cancelAnimationFrame(raf);
       resizeObserver.disconnect();
