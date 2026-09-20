@@ -1,32 +1,84 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Rotate Kefan Wu's engineering projects, control their mechanisms, and explore the build records.">
-    <title>Project workbench — Kefan Wu</title>
-    <link rel="canonical" href="https://www.kefanwu.com/">
-    <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/Inter-400.woff2" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/InterTight-700.woff2" crossorigin>
-    <link rel="stylesheet" href="fonts.css?v=studio-polish-20260907">
-    <link rel="stylesheet" href="studio-ui.css?v=performance-20260919">
-    <script type="importmap">
-      {"imports":{"three":"./vendor/three/0.185.0/build/three.module.js","three/addons/":"./vendor/three/0.185.0/examples/jsm/"}}
-    </script>
-    <link rel="modulepreload" href="vendor/three/0.185.0/build/three.core.js">
-    <link rel="modulepreload" href="vendor/three/0.185.0/build/three.module.js">
-    <link rel="modulepreload" href="studio-inspector.js?v=performance-20260919">
-    <link rel="preload" as="fetch" href="assets/studio-motion/index.json?v=studio-packed-20260919" crossorigin>
-  </head>
-  <body class="studio-v2" data-studio-mode="inspect">
-    <div id="studio-app"></div>
-    <div id="studio-room" hidden></div>
-    <noscript><p>This interactive workbench needs JavaScript. <a href="index.html#work">Read the project case studies.</a></p></noscript>
-    <script src="project-data.js?v=studio-20260919"></script>
-    <script src="case-study-data.js?v=studio-20260919"></script>
-    <script src="case-study-supplements.js?v=studio-20260919"></script>
-    <script src="case-study-media.js?v=studio-20260919"></script>
-    <script type="module" src="experience-v2.js?v=performance-20260919"></script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08090b">
+  <meta name="description" content="Explore sixteen engineering projects by Kefan Wu, with interactive model animations, project photographs, and technical records.">
+  <title>Engineering projects in 3D — Kefan Wu</title>
+  <link rel="stylesheet" href="fonts.css?v=studio-polish-20260907">
+  <link rel="stylesheet" href="case-study.css?v=confirmed-build-20260914">
+  <script defer src="project-data.js?v=studio-20260919"></script>
+  <script defer src="case-study-data.js?v=neutral-20260915"></script>
+  <script defer src="case-study-media.js?v=media-polish-20260913"></script>
+  <script defer src="case-study-supplements.js?v=confirmed-build-20260914"></script>
+  <script defer src="case-study.js?v=shared-case-20260920"></script>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="project-case-3d.css?v=shared-case-20260920">
+  <script type="importmap">{"imports":{"three":"./vendor/three/0.185.0/build/three.module.js","three/addons/":"./vendor/three/0.185.0/examples/jsm/"}}</script>
+  <link rel="modulepreload" href="vendor/three/0.185.0/build/three.core.js">
+  <link rel="modulepreload" href="vendor/three/0.185.0/build/three.module.js">
+  <link rel="modulepreload" href="studio-inspector.js?v=performance-20260919">
+  <link rel="preload" as="fetch" href="assets/studio-motion/index.json?v=studio-packed-20260919" crossorigin>
+  <script type="module" src="project-case-3d.js?v=shared-case-20260920"></script>
+</head>
+<body class="case-mode-studio" data-case-mode="studio">
+  <a class="skip-link" href="#case-main">Skip to case study</a>
+  <header class="site-header">
+    <nav class="site-nav wrap" aria-label="Main navigation">
+      <a class="wordmark" href="index.html" aria-label="Kefan Wu home"><span class="brand-mark" aria-hidden="true">KW</span><span class="brand-name" aria-hidden="true">Kefan Wu</span></a>
+      <div class="nav-links">
+        <a href="experience.html?return=project">3D Studio</a>
+        <a href="index.html#work">Selected work</a>
+        <a href="assets/kefan-wu-resume.pdf?v=e1902c160b0d" target="_blank" rel="noopener">Resume <span class="mono" aria-hidden="true">↗</span><span class="sr-only"> (PDF, opens in a new tab)</span></a>
+      </div>
+    </nav>
+  </header>
+  <main id="case-main" tabindex="-1">
+    <div class="case-loading wrap">
+      <p class="eyebrow">Kefan Wu / Engineering</p>
+      <h1>Selected work.</h1>
+      <p id="loading-message">Opening the case study…</p>
+      <noscript><p>Enable JavaScript to read these case studies, or <a href="index.html#work">browse selected work</a>.</p></noscript>
+      <div class="case-options" aria-label="Choose a case study">
+        <a href="project-3d.html?project=steering">Mk.8 steering →</a>
+        <a href="project-3d.html?project=vineRobot">Vine robotics →</a>
+        <a href="project-3d.html?project=javelin">Javelin VTOL →</a>
+        <a href="project-3d.html?project=scanner">LiDAR scanner →</a>
+        <a href="project-3d.html?project=brakeSim">Brake thermal model →</a>
+        <a href="project-3d.html?project=aura">Project AURA →</a>
+        <a href="project-3d.html?project=carbonSeat">Carbon seat →</a>
+        <a href="project-3d.html?project=seat">Driver seat →</a>
+        <a href="project-3d.html?project=materialTest">Material testing →</a>
+        <a href="project-3d.html?project=ansysCfd">CFD analysis →</a>
+        <a href="project-3d.html?project=pool">Pool robot →</a>
+        <a href="project-3d.html?project=lineFollower">Line follower →</a>
+        <a href="project-3d.html?project=formlabs">Smelly gantry →</a>
+        <a href="project-3d.html?project=telecaster">Telecaster →</a>
+        <a href="project-3d.html?project=education">Guitar education kit →</a>
+        <a href="project-3d.html?project=ftc">FTC robotics →</a>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer wrap">
+    <a href="index.html#work">← Back to selected work</a>
+    <span>Kefan Wu <span aria-hidden="true">/</span> Mechanical engineering</span>
+  </footer>
+  <dialog class="lightbox" id="case-lightbox" aria-labelledby="lightbox-title" aria-describedby="lightbox-help">
+    <div class="lightbox-toolbar">
+      <h2 id="lightbox-title">Project image</h2>
+      <button class="icon-button" type="button" id="lightbox-close" aria-label="Close image" autofocus>×</button>
+    </div>
+    <div class="lightbox-stage" id="lightbox-stage"></div>
+    <div class="lightbox-bottom">
+      <p id="lightbox-counter" class="mono" role="status" aria-live="polite" aria-atomic="true"></p>
+      <div class="lightbox-actions">
+        <a id="lightbox-original" target="_blank" rel="noopener">Original <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>
+        <button class="icon-button" id="lightbox-prev" type="button" aria-label="Previous image">←</button>
+        <button class="icon-button" id="lightbox-next" type="button" aria-label="Next image">→</button>
+      </div>
+    </div>
+    <p id="lightbox-help" class="lightbox-help">← → Browse · Home / End First / last · Esc Close</p>
+  </dialog>
+</body>
 </html>

@@ -1,0 +1,57 @@
+/* The case-study stylesheet owns the page; these rules only host its live model. */
+.case-mode-studio .case-animation-host { padding-bottom:0; }
+.case-mode-studio .case-animation-host .card-media { background:#191919; overflow:hidden; }
+.case-3d-viewport { position:relative; isolation:isolate; }
+#case-3d-canvas { position:absolute; inset:0; display:block; width:100%; height:100%; touch-action:none; outline-offset:-4px; }
+.case-3d-viewport > img { position:relative; z-index:1; pointer-events:none; background:#191919; transition:opacity .16s ease-out; }
+.case-3d-viewport[data-status=ready] > img { opacity:0; }
+.case-3d-status { position:absolute; z-index:2; bottom:14px; left:14px; right:14px; width:fit-content; max-width:calc(100% - 28px); padding:10px 13px; background:#202020ed; border:1px solid #ffffff26; border-radius:4px; color:#e2e2e0; font-size:12px; line-height:1.6; }
+.case-3d-status button { margin-left:12px; }
+.case-mode-studio [hidden] { display:none!important; }
+.case-3d-controls { border:1px solid var(--line); padding:12px 14px 10px; background:var(--surface); font-size:12px; }
+.case-3d-buttons { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.case-3d-controls button,.case-3d-status button,.case-3d-controls select { min-height:34px; padding:7px 10px; border:1px solid #ffffff26; border-radius:4px; background:#24272b; color:var(--ink); font:inherit; line-height:1.4; }
+.case-3d-controls button:hover:not(:disabled),.case-3d-status button:hover { border-color:var(--accent); }
+.case-3d-controls button:disabled,.case-3d-controls select:disabled { opacity:.45; cursor:default; }
+.case-3d-controls button[aria-pressed=true] { background:var(--accent); color:#162130; }
+#case-3d-play { min-width:70px; }
+#case-3d-reverse { min-width:74px; }
+.case-3d-buttons label { margin-left:auto; }
+#case-3d-view { max-width:155px; }
+.case-3d-timeline { margin-top:8px; contain:layout style; }
+.case-3d-timeline > div { display:flex; align-items:baseline; justify-content:space-between; gap:14px; }
+#case-3d-value { color:var(--muted); font-variant-numeric:tabular-nums; font-family:var(--font-mono); font-size:11px; }
+#case-3d-progress { --progress:0%; display:block; appearance:none; -webkit-appearance:none; width:100%; min-width:0; height:24px; margin:1px 0; padding:0; border:0; border-radius:0; background:linear-gradient(to right,var(--accent) 0 var(--progress),#50565e var(--progress) 100%) center / 100% 4px no-repeat; cursor:ew-resize; accent-color:var(--accent); }
+#case-3d-progress::-webkit-slider-thumb { appearance:none; width:14px; height:14px; border-radius:50%; background:var(--accent); border:0; }
+#case-3d-progress::-moz-range-thumb { width:14px; height:14px; border-radius:50%; background:var(--accent); border:0; }
+#case-3d-progress:disabled { opacity:.45; cursor:default; }
+.case-3d-hint { color:var(--muted); font-size:10px; line-height:1.6; }
+#case-3d-retry-motion { margin-top:7px; padding:4px 8px; min-height:32px; font-size:11px; }
+#case-3d-annotation { position:absolute; z-index:2; right:13px; bottom:13px; max-width:min(245px,75%); padding:11px 13px; color:var(--ink); background:#202020ee; border:1px solid #ffffff26; border-radius:4px; font-size:11px; line-height:1.5; pointer-events:none; }
+#case-3d-annotation strong { font-weight:600; }
+#case-3d-annotation p { margin-top:5px; color:var(--muted); }
+#case-3d-legend { padding:14px 17px 12px; border:1px solid var(--line); border-top:0; font-size:11px; background:var(--surface); }
+#case-3d-legend p { margin-bottom:9px; }
+#case-3d-legend .case-3d-legend-bar { height:8px; }
+#case-3d-legend .case-3d-legend-ticks { position:relative; height:22px; margin-top:5px; font-size:9px; font-variant-numeric:tabular-nums; }
+#case-3d-legend .case-3d-legend-ticks span { position:absolute; transform:translateX(-50%); }
+#case-3d-legend .case-3d-legend-ticks span:first-child { transform:none; }
+#case-3d-legend .case-3d-legend-ticks span:last-child { transform:translateX(-100%); }
+#case-3d-legend small { color:var(--muted); font-size:9px; }
+@media(max-width:700px) {
+  .case-mode-studio .nav-links { gap:16px; font-size:11px; }
+  .case-3d-controls { padding:12px; }
+  .case-3d-controls button,.case-3d-controls select { min-height:38px; padding:8px 9px; font-size:11px; }
+  #case-3d-progress { height:32px; }
+  #case-3d-play { min-width:54px; }
+  #case-3d-reverse { min-width:61px; }
+  #case-3d-view { max-width:118px; }
+  .case-3d-buttons { gap:6px; }
+  .case-3d-timeline { margin-top:12px; font-size:11px; }
+  .case-3d-status { font-size:11px; }
+}
+@media(max-width:370px) {
+  .case-3d-buttons label { flex:1 0 100%; margin-left:0; }
+  #case-3d-view { width:100%; max-width:none; }
+}
+@media(prefers-reduced-motion:reduce) { .case-3d-viewport > img { transition:none; } }

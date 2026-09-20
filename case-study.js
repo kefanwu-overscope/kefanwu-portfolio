@@ -6,12 +6,28 @@
   const root = document.getElementById('case-main');
   const projects = window.projectData;
   const editorials = window.caseStudyData;
-  const key = new URLSearchParams(location.search).get('project') ?? 'steering';
+  const studioMode = document.body.dataset.caseMode === 'studio';
+  const casePage = studioMode ? 'project-3d.html' : 'case-study.html';
+  const queryKey = new URLSearchParams(location.search).get('project');
+  let legacyKey = null;
+  if (studioMode && queryKey === null && location.hash) {
+    try { legacyKey = decodeURIComponent(location.hash.slice(1)); }
+    catch { legacyKey = location.hash.slice(1); }
+  }
+  const key = queryKey ?? legacyKey ?? 'steering';
   const has = (value, name) => value && Object.prototype.hasOwnProperty.call(value, name);
   const escape = (text) => String(text ?? '').replace(/[&<>"']/g, (char) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   })[char]);
   const availableKeys = Object.keys(editorials || {}).filter((name) => has(projects, name));
+
+  // Preserve old studio bookmarks, then free the hash for native chapter links.
+  if (legacyKey !== null && has(editorials, key) && has(projects, key)) {
+    const url = new URL(location.href);
+    url.searchParams.set('project', key);
+    url.hash = '';
+    history.replaceState(history.state, '', url);
+  }
 
   if (!has(editorials, key) || !has(projects, key)) {
     document.title = 'Choose a case study — Kefan Wu';
@@ -20,7 +36,7 @@
         'Choose a project below.';
     const options = root.querySelector('.case-options');
     if (options && availableKeys.length) options.innerHTML = availableKeys.map((name) =>
-      `<a href="case-study.html?project=${encodeURIComponent(name)}">${escape(projects[name].title)} →</a>`).join('');
+      `<a href="${casePage}?project=${encodeURIComponent(name)}">${escape(projects[name].title)} →</a>`).join('');
     return;
   }
 
@@ -55,8 +71,13 @@
   const nextKey = has(editorials, editorial.next) && has(projects, editorial.next) ? editorial.next
     : availableKeys[(availableKeys.indexOf(key) + 1) % availableKeys.length];
   const next = editorials[nextKey];
-  const studioURL = project.noStudio ? 'experience.html' : `project-3d.html#${encodeURIComponent(key)}`;
-  document.title = `${project.title} — Kefan Wu`;
+  const studioURL = studioMode ? 'experience.html?return=project'
+    : project.noStudio ? 'experience.html' : `project-3d.html#${encodeURIComponent(key)}`;
+  const studioLabel = studioMode ? 'Return to' : project.noStudio ? 'Explore the' : 'View in';
+  const previewInstructions = studioMode
+    ? 'Drag the model to rotate. Scroll or pinch to zoom. Use the animation controls and timeline to explore its motion; with a keyboard, focus the timeline and use the arrow keys.'
+    : 'Scroll over the model to move through the animation. Scroll back to reverse. On a touch screen, drag the slider; with a keyboard, focus it and use the arrow keys.';
+  document.title = `${project.title}${studioMode ? ' — 3D Studio' : ''} — Kefan Wu`;
   document.querySelector('meta[name="description"]').content =
     `${editorial.deck} ${editorial.summary.map((item) => item[1]).join(' ')}`;
   document.body.dataset.project = key;
@@ -162,7 +183,7 @@
           </div>
           <figcaption class="cover-caption"><span>${escape(cover.caption || 'Explore the project model and its motion.')}</span><span class="eyebrow">Interactive project model</span></figcaption>
         </figure>
-        <div class="preview-introduction"><p class="eyebrow">Explore the motion</p><h2 id="preview-title">Take a closer look.</h2><p id="preview-instructions">Scroll over the model to move through the animation. Scroll back to reverse. On a touch screen, drag the slider; with a keyboard, focus it and use the arrow keys.</p><div class="preview-links"><a class="text-link" href="${studioURL}">${project.noStudio ? 'Explore the' : 'View in'} 3D Studio <span aria-hidden="true">↗</span></a><a class="text-link" href="#evidence">Project images <span aria-hidden="true">↓</span></a></div></div>
+        <div class="preview-introduction"><p class="eyebrow">Explore the motion</p><h2 id="preview-title">Take a closer look.</h2><p id="preview-instructions">${previewInstructions}</p><div class="preview-links"><a class="text-link" href="${studioURL}">${studioLabel} 3D Studio <span aria-hidden="true">↗</span></a><a class="text-link" href="#evidence">Project images <span aria-hidden="true">↓</span></a></div></div>
       </div>
     </section>
     <nav class="chapter-nav" aria-label="Case study sections"><div class="chapter-nav-inner wrap">
@@ -186,8 +207,8 @@
       </div>
     </section>
     <section class="next-section" aria-label="Continue exploring"><div class="next-inner wrap">
-      <a class="next-link" href="case-study.html?project=${encodeURIComponent(nextKey)}"><span class="eyebrow">Next case / ${escape(next.number)}</span><span class="next-title">${escape(next.title)}<span aria-hidden="true">↗</span></span></a>
-      <div class="studio-invitation"><h3>Explore the hardware.</h3><p>${project.noStudio ? 'Browse more projects in the interactive engineering studio.' : 'Rotate the model and control its motion in the interactive studio.'}</p><a class="text-link" href="${studioURL}">${project.noStudio ? 'Explore the' : 'View in'} 3D Studio <span aria-hidden="true">↗</span></a></div>
+      <a class="next-link" href="${casePage}?project=${encodeURIComponent(nextKey)}"><span class="eyebrow">Next case / ${escape(next.number)}</span><span class="next-title">${escape(next.title)}<span aria-hidden="true">↗</span></span></a>
+      <div class="studio-invitation"><h3>${studioMode ? 'Explore the studio.' : 'Explore the hardware.'}</h3><p>${studioMode ? 'Return to the room to explore more engineering projects.' : project.noStudio ? 'Browse more projects in the interactive engineering studio.' : 'Rotate the model and control its motion in the interactive studio.'}</p><a class="text-link" href="${studioURL}">${studioLabel} 3D Studio <span aria-hidden="true">↗</span></a></div>
     </div></section>
   </article>`;
   window.dispatchEvent(new Event('project-previews-ready'));
@@ -249,6 +270,7 @@
     document.body.classList.add('lightbox-open');
     window.cardExplosions?.resetAll(true);
     dialog.showModal();
+    if (studioMode) window.dispatchEvent(new CustomEvent('case-lightbox-state', { detail: { open: true } }));
     closeButton.focus({ preventScroll: true });
   });
 
@@ -283,6 +305,7 @@
   dialog.addEventListener('close', () => {
     document.body.classList.remove('lightbox-open');
     stage.replaceChildren();
+    if (studioMode) window.dispatchEvent(new CustomEvent('case-lightbox-state', { detail: { open: false } }));
     if (opener?.isConnected) opener.focus({ preventScroll: true });
   });
 

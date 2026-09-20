@@ -1,5 +1,24 @@
 # Interactive engineering studio v2
 
+## Current project pages · 2026-09-20
+
+`project-3d.html?project=<key>` now uses the main site's complete case-study
+layout, content renderer and stylesheet. The original `#<key>` URLs normalize
+to this query form so native chapter anchors work. All sixteen pages include
+the full chapters, gallery/lightbox, documented facts, engineering record,
+downloads and Javelin BOM. Ordinary `case-study.html` output is unchanged.
+
+The live model occupies the case page's existing preview position.
+`project-case-3d.js` embeds the optimized `studio-inspector.js` with rotation,
+zoom, forward/reverse playback, reset and camera views. It suspends rendering
+offscreen, while hidden, and during the shared image lightbox. The page does
+not load the main site's pre-rendered WebP sequence player or the former
+sidebar UI. Keep those older modules available for already-open clients.
+
+Room appearance and return behavior are unchanged. Return links use the
+literal `experience.html?return=project` protocol; that value is not a project
+key. This section supersedes the historical sidebar/page layout below.
+
 2026-09-19 · Interactive studio release. Baseline: `69ee72c`.
 Exact publication status is recorded separately in the release backup's
 `release-metadata.json` and `deployment-verification.json`.
