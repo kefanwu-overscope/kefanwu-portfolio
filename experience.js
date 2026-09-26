@@ -18,6 +18,8 @@ import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js
 import { AdaptiveFrameClock, frameAlpha } from "./experience-timing.js?v=room-performance-20260919";
 import { batchStaticRoom } from "./experience-batching.js?v=room-performance-20260919";
 import { prepareRoomShaders } from "./experience-warmup.js?v=room-performance-20260919";
+import { loadRGBMLightmap, installBakedDiffuse } from "./experience-baked-material.js?v=realism-20260925";
+import { ROOM_BAKE } from "./experience-baked-assets.js?v=realism-20260925";
 import { createStudioLoader } from "./experience-loader.js?v=exp-adaptive-20260907";
 import { createHDRService, createHDRTexture } from "./experience-hdr.js?v=exp-adaptive-20260907";
 import { AdaptiveQuality, GpuFrameTimer } from "./experience-quality.js?v=exp-adaptive-20260907";
@@ -41,6 +43,8 @@ const LOW_TIER =
 // baked lighting (Blender/Cycles, tools/bake/): swap the architecture layer
 // for a lightmapped GLB; false = fully procedural fallback
 const USE_BAKED = true;
+// Photographic grade for the calibrated bake under the site's ACES exposure.
+const BAKED_LIGHT_GAIN = 0.7;
 
 const prefersReducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
@@ -261,7 +265,9 @@ function deskWearTex() {
 function cabinetFrameMaterial() {
   return new THREE.MeshStandardMaterial({
     color: 0x9da3aa,
-    roughness: 0.62,
+    // The map already supplies ~0.6 roughness. Multiplying it by 0.62 made
+    // powder-coated framing read as polished plastic instead of satin paint.
+    roughness: 1.0,
     metalness: 0.0,
     roughnessMap: brushedRoughTex(),
   });
@@ -269,7 +275,7 @@ function cabinetFrameMaterial() {
 
 function cabinetBackMaterial() {
   const mat = woodMaterial(0xb9bfc6, 0.78, "grey_wood");
-  mat.normalScale.set(0.3, 0.3);
+  mat.normalScale.set(0.16, 0.16);
   return mat;
 }
 const brassMat = () =>
@@ -404,7 +410,7 @@ async function initScene(canvas) {
     // contact-scale AO only — the default 0.25 m radius at full blend crushes
     // the enclosed cabinet interiors (and their exhibits) to black
     gtao.updateGtaoMaterial({ radius: 0.1 });
-    gtao.blendIntensity = 0.7;
+    gtao.blendIntensity = 0.42;
     composer.addPass(gtao);
   }
   // depth of field, opened up only while an exhibit is focused
@@ -429,9 +435,9 @@ async function initScene(canvas) {
   hideForPrepass(bokeh);
   const bloom = new UnrealBloomPass(
     new THREE.Vector2(window.innerWidth, window.innerHeight),
-    0.09, // strength — a whisper halo on true emitters only
-    0.4, // radius
-    0.96 // threshold — near-clipping emitters only; no wash off white surfaces
+    0.035, // subtle optical bloom on emitters, not a haze over pale furniture
+    0.35,
+    2.2 // scene-linear threshold: a brightly lit white slab is not a lamp
   );
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
@@ -726,7 +732,7 @@ async function initScene(canvas) {
       caseSpots.forEach((s) => { s.l.intensity = s.target; });
       caseStrips.main.concat(caseStrips.side).forEach((l) => { l.intensity = l.userData.bootTarget; });
       stripMats.main.concat(stripMats.side).forEach((m) => { m.emissiveIntensity = 1.15; });
-      bakedMats.forEach((m) => { m.lightMapIntensity = 0.6; });
+      bakedMats.forEach((m) => { m.lightMapIntensity = BAKED_LIGHT_GAIN; });
       // snap every blacked-out practical to its canonical night value so
       // cancelBoot is safe from ANY call site — today toggleRoomLights calls
       // applyLightState(true) right after and re-owns most of these, but
@@ -749,7 +755,7 @@ async function initScene(canvas) {
     // iris adaptation: exposure opens like an eye adjusting to a dark room
     seg(0, 1500, (k) => { renderer.toneMappingExposure = 0.12 + (exposure0 - 0.12) * k; }, easeOut);
     // the baked light pools warm up as if coming from the fixtures
-    seg(200, 2400, (k) => { bakedMats.forEach((m) => { m.lightMapIntensity = 0.15 + 0.45 * k; }); });
+    seg(200, 2400, (k) => { bakedMats.forEach((m) => { m.lightMapIntensity = 0.15 + (BAKED_LIGHT_GAIN - 0.15) * k; }); });
     seg(300, 1200, (k) => {
       key.intensity = night.key * k; hemi.intensity = night.hemi * k; fill.intensity = night.fill * k;
       scene.environmentIntensity = 0.06 + (night.env - 0.06) * k;
@@ -1280,7 +1286,7 @@ async function initScene(canvas) {
   const qualityControl = document.getElementById("exp-light-quality");
   const qualityStatus = document.getElementById("exp-quality-status");
   let bakedMats = [];
-  const LM = { on2k: null, off2k: null, on4k: null, off4k: null, probeOn: null, probeOff: null };
+  const LM = { on2k: null, off2k: null, on4k: null, off4k: null, probeOn: null, probeOff: null, deskOn: null, deskOff: null };
   // night-mode practicals: warm pool over the workbench (its lamp + printer
   // read as the only bench light) and the desk lamp's own LEDs glow warm
   const benchGlow = new THREE.PointLight(0xe8ecf2, 0, 1.7, 2);
@@ -1364,6 +1370,7 @@ async function initScene(canvas) {
   // toward lightMapB by lmMix, so the lamp toggle FADES between light states
   const lmMix = { value: 0 };
   const lmB = { value: null };
+  const deskLmA = { value: null }, deskLmB = { value: null };
   const blueLines = []; // rug LED inlay materials (baked GLB), glow at night
   const lampLeds = [];
   if (MODELS.deskLamp) MODELS.deskLamp.traverse((o) => {
@@ -1371,26 +1378,6 @@ async function initScene(canvas) {
       lampLeds.push(o.material);
     }
   });
-  function flipRows(tex) {
-    // .hdr loads bottom-up vs glTF's top-down UV convention — flip in place
-    const { data, width, height } = tex.image;
-    const stride = width * 4;
-    const tmp = new data.constructor(stride);
-    for (let y = 0; y < height >> 1; y++) {
-      const a = y * stride, b = (height - 1 - y) * stride;
-      tmp.set(data.subarray(a, a + stride));
-      data.copyWithin(a, b, b + stride);
-      data.set(tmp, b);
-    }
-    tex.needsUpdate = true;
-    return tex;
-  }
-  function prepLM(tex) {
-    flipRows(tex);
-    tex.channel = 1;
-    tex.colorSpace = THREE.LinearSRGBColorSpace;
-    return tex;
-  }
   // S8: while a case study is open at night, key/hemi lift so the focused
   // exhibit reads instead of silhouetting; closePanel eases them back
   let focusBoost = false;
@@ -1401,8 +1388,13 @@ async function initScene(canvas) {
     if (lightFadeActive) { gradePending = true; return lightTransition; }
     const gen = ++lightGen;
     const lm = LM[(lightsOn ? "on" : "off") + appliedQuality];
+    const deskLm = LM[lightsOn ? "deskOn" : "deskOff"];
     const lmCurrent = bakedMats.length ? bakedMats[0].lightMap : null;
     const fadeLm = !!(lm && lmCurrent && lm !== lmCurrent && animate && !prefersReducedMotion);
+    if (deskLm) {
+      deskLmB.value = deskLm;
+      if (!fadeLm) deskLmA.value = deskLm;
+    }
     if (lm && !fadeLm) {
       bakedMats.forEach((m) => { m.lightMap = lm; });
       lmB.value = lm; // both samplers refer to live cached textures
@@ -1495,6 +1487,7 @@ async function initScene(canvas) {
         if (fadeLm) {
           bakedMats.forEach((m) => { m.lightMap = lm; });
           lmB.value = lm;
+          deskLmA.value = deskLmB.value = deskLm;
           lmMix.value = 0;
         }
         lightFadeActive = false;
@@ -1515,14 +1508,14 @@ async function initScene(canvas) {
       return Promise.reject(new Error("Lighting resource unavailable; please try again later"));
     }
     const isProbe = key.startsWith("probe");
-    const state = key === "probeOn" || key.startsWith("on") ? "on" : "off";
-    const url = isProbe ? `models/baked/probe-${state}.hdr` :
-      `models/baked/lightmap-${state}-${key.endsWith("4k") ? "4k" : "2k"}.hdr`;
-    // CPU decoding runs concurrently in bounded workers. Only texture/GPU
-    // preparation enters the main-thread queue shared with model placement.
-    const promise = decodeLighting(url, !isProbe).then((pixels) => lightQueue.add(async () => {
+    const url = ROOM_BAKE[key];
+    // HDR probes use the bounded worker; compact lightmaps decode off-thread
+    // as straight-alpha ImageBitmaps. GPU upload still shares the paced queue.
+    const decoded = isProbe ? decodeLighting(url, false).then(async pixels =>
+      pixels ? createHDRTexture(THREE, pixels) : loadHDRFallback(url)) :
+      loadRGBMLightmap(url, { range: ROOM_BAKE.range });
+    const promise = decoded.then((texture) => lightQueue.add(async () => {
       if (document.hidden) await waitForVisible();
-      const texture = pixels ? createHDRTexture(THREE, pixels) : await loadHDRFallback(url);
       await yieldToBrowser();
       if (document.hidden) await waitForVisible();
       if (isProbe) {
@@ -1536,8 +1529,6 @@ async function initScene(canvas) {
         } finally { generator.dispose(); texture.dispose(); }
       } else {
         try {
-          if (!pixels) prepLM(texture); // workers already flipped the rows
-          else { texture.channel = 1; texture.colorSpace = THREE.LinearSRGBColorSpace; }
           renderer.initTexture(texture);
           LM[key] = texture;
         } catch (error) { texture.dispose(); throw error; }
@@ -1554,7 +1545,7 @@ async function initScene(canvas) {
   }
   const probeTargets = [];
   function activateBakedRoom() {
-    if (!bakeActive || !bakedRoot || !LM.off2k || !LM.probeOff) return;
+    if (!bakeActive || !bakedRoot || !LM.off2k || !LM.probeOff || !LM.deskOff) return;
     scene.children.forEach((o) => {
       if (o === bakedRoot) return;
       let tagged = false;
@@ -1608,7 +1599,7 @@ async function initScene(canvas) {
         const day = requestedLightsOn, quality = lightQuality;
         if (bakeActive) {
           // First daylight use always prepares the matching 2K map + probe.
-          await Promise.all([getLightResource(day ? "on2k" : "off2k"), getLightResource(day ? "probeOn" : "probeOff")]);
+          await Promise.all([getLightResource(day ? "on2k" : "off2k"), getLightResource(day ? "probeOn" : "probeOff"), getLightResource(day ? "deskOn" : "deskOff")]);
           if (day !== requestedLightsOn || quality !== lightQuality) continue;
           if (quality === "4k") await getLightResource(day ? "on4k" : "off4k");
           if (day !== requestedLightsOn || quality !== lightQuality) continue;
@@ -1648,7 +1639,7 @@ async function initScene(canvas) {
     applyLightState(false);
     manager.itemStart("initial-lighting");
     initialLightingReady = Promise.allSettled([
-      getLightResource("off2k", true), getLightResource("probeOff", true),
+      getLightResource("off2k", true), getLightResource("probeOff", true), getLightResource("deskOff", true),
     ]).then((results) => {
       const failure = results.find((result) => result.status === "rejected");
       if (failure) throw failure.reason;
@@ -1656,20 +1647,19 @@ async function initScene(canvas) {
     })
       .catch(restoreProceduralRoom)
       .finally(() => manager.itemEnd("initial-lighting"));
-    // baked surfaces keep their imported PBR materials (roughness/metalness
-    // survive the Blender round trip) so they still show speculars and probe
-    // reflections — but live on light-layer 1 so the real-time lights can't
-    // double-light what the lightmap already carries
+    // Keep imported PBR/specular response. The verified material hook replaces
+    // diffuse with the Cycles result; camera layers do not isolate lights.
     camera.layers.enable(1);
-    loader.load("models/baked/room-baked.glb", (gltf) => {
+    loader.load(ROOM_BAKE.geometry, (gltf) => {
       const pt = TEX.loadPBR("painted_plaster_wall");
       const fMap = repeatedTexture(pt.map, 8, 8);
       const fNor = repeatedTexture(pt.normalMap, 8, 8);
       const fRgh = repeatedTexture(pt.roughnessMap, 8, 8);
       gltf.scene.traverse((o) => {
         if (!o.isMesh) return;
-        const m = o.material;
-        m.lightMapIntensity = 0.6;
+        const m = o.material.clone();
+        o.material = m;
+        m.lightMapIntensity = BAKED_LIGHT_GAIN;
         m.envMapIntensity = 0.5;
         // Blender rewrites baseColor on texture-stripped materials, so match
         // the two big textured surfaces by GEOMETRY instead: the floor is the
@@ -1682,13 +1672,15 @@ async function initScene(canvas) {
         o.updateWorldMatrix(true, false);
         wbb.applyMatrix4(o.matrixWorld);
         const s = wbb.getSize(new THREE.Vector3());
-        if (s.x > 10 && s.z > 10 && s.y < 0.5) {
+        const role = o.userData.surfaceRole || o.parent?.userData.surfaceRole;
+        const isDesk = role === "desk" || (s.x > 1.7 && s.x < 2.0 && s.y < 0.06 && s.z > 0.8 && s.z < 1.0);
+        if (role === "floor" || (s.x > 10 && s.z > 10 && s.y < 0.5)) {
           m.map = fMap; m.normalMap = fNor; m.roughnessMap = fRgh;
           m.color.setHex(COL.floorTint);
-        } else if (s.y > 3 && Math.max(s.x, s.z) > 4) {
+        } else if (role === "wall" || (s.y > 3 && Math.max(s.x, s.z) > 4)) {
           m.map = pt.map; m.normalMap = pt.normalMap; m.roughnessMap = pt.roughnessMap;
           m.color.setHex(COL.wallTint);
-        } else if (s.x > 1.7 && s.x < 2.0 && s.y < 0.06 && s.z > 0.8 && s.z < 1.0) {
+        } else if (isDesk) {
           // J1: the desk slab — micro-wear so the largest close-range surface
           // stops reading injection-molded (map base ≈ its old 0.52 roughness)
           m.roughnessMap = deskWearTex();
@@ -1713,26 +1705,8 @@ async function initScene(canvas) {
         }
         // the rug's blue LED inlay lines glow for real at night
         if (m.color && m.color.getHexString() === "2b4d80") blueLines.push(m);
-        m.onBeforeCompile = (sh) => {
-          sh.uniforms.lightMapB = lmB;
-          sh.uniforms.lmMix = lmMix;
-          // onBeforeCompile sees the fragment source BEFORE #include expansion,
-          // so the patched line must be injected by expanding the chunk
-          // ourselves — replacing the expanded line directly silently no-ops
-          // (this was broken since the system was built: the toggle only faded
-          // the real-time lights, then the lightmap SNAPPED at the end — the
-          // "one dark frame" Kefan reported)
-          sh.fragmentShader = sh.fragmentShader
-            .replace("#include <common>", "#include <common>\nuniform sampler2D lightMapB;\nuniform float lmMix;")
-            .replace(
-              "#include <lights_fragment_maps>",
-              THREE.ShaderChunk.lights_fragment_maps.replace(
-                "vec4 lightMapTexel = texture2D( lightMap, vLightMapUv );",
-                "vec4 lightMapTexel = mix( texture2D( lightMap, vLightMapUv ), texture2D( lightMapB, vLightMapUv ), lmMix );"
-              )
-            );
-        };
-        m.needsUpdate = true;
+        installBakedDiffuse(m, { secondMap: lmB, blend: lmMix, range: ROOM_BAKE.range,
+          detail: isDesk ? { firstMap: deskLmA, secondMap: deskLmB, bounds: ROOM_BAKE.deskBounds } : null });
         o.layers.set(1);
         o.castShadow = false;
         o.receiveShadow = false;
