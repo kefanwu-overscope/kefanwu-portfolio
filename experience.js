@@ -34,7 +34,7 @@ import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { GTAOPass } from "three/addons/postprocessing/GTAOPass.js";
 import { BokehPass } from "three/addons/postprocessing/BokehPass.js";
 import { RESUME } from "./experience-data.js";
-import { RESUME_ASSET, RESUME_PAPER, resumeHTML, attachResumeReader } from "./experience-resume.js?v=resume-desk-20260926";
+import { RESUME_ASSET, RESUME_PAPER, resumeHTML, attachResumeReader } from "./experience-resume.js?v=resume-full-20260926";
 
 document.documentElement.classList.add("exp-js");
 
@@ -1722,6 +1722,7 @@ async function initScene(canvas) {
     }
     if (!readiness.assets || !readiness.construction || !readiness.prepared) return;
     if (!running && !forced) return;
+    if (!forced && resumeReader?.isReading()) return;
     const cameraMoved = lastCameraPosition.distanceToSquared(camera.position) > 1e-10 ||
       1 - Math.abs(lastCameraQuaternion.dot(camera.quaternion)) > 1e-10;
     const interactionMotion = !!flight || cameraMoved || !!paperMotion || lightFadeActive || bootTakeover;
@@ -1812,6 +1813,8 @@ async function initScene(canvas) {
       const e = easeInOutCubic(k);
       const face = paperHold && paperHold.face;
       if (pm.mode === "lift") {
+        // Keep the landing rectangle aligned if the viewport changes mid-lift.
+        paperHold = computePaperHold(pv) || paperHold;
         // the held target tracks the still-moving camera and converges
         paperHoldTargetWorld(paperHold, PM_POS, PM_QUAT);
         pv.position.lerpVectors(pm.fromPos, PM_POS, e);
@@ -2080,8 +2083,8 @@ async function initScene(canvas) {
      The camera approach and the lift overlap (one continuous reach-and-pick-
      up); the DOM sheet cross-fades in only once the paper has settled at the
      exact same on-screen rect, so nothing visibly "changes" mid-motion. */
-  const PAPER_LIFT_DELAY_MS = 430; // lift starts while the camera still moves
-  const PAPER_LIFT_MS = 900;       // desk -> held-in-front-of-camera flight
+  const PAPER_LIFT_DELAY_MS = 250; // overlap the reach sooner; no pause before expansion
+  const PAPER_LIFT_MS = 760;       // desk -> held-in-front-of-camera flight
   const PAPER_RETURN_MS = 820;     // held -> desk (runs with the camera return)
   const PAPER_SWAP_MS = 240;       // DOM sheet opacity cross-fade (CSS: 220ms)
   // 0.93, measured (frame-stepped via __exp.pump): on-screen sheet slide
@@ -2627,15 +2630,16 @@ async function initScene(canvas) {
 
   // Cross-fade the interactive DOM sheet in over the settled 3D paper.
   function showPaperDom(gen) {
-    if (!paperEl || gen !== paperAnimGen || !panelOpen) return;
+    if (!paperEl || gen !== paperAnimGen || !panelOpen || closingReader) return;
     const rootClass = document.documentElement.classList;
     rootClass.add("exp-paper-active", "exp-paper-open");
     setDialogInteractive(paperEl, true);
     focusDialog(paperEl, paperEl.querySelector(".exp-sheet__close"));
     const finishSwap = () => {
-      if (gen !== paperAnimGen || !panelOpen) return;
+      if (gen !== paperAnimGen || !panelOpen || closingReader) return;
       // fully covered by the opaque DOM sheet now — stop rendering it
       if (activePaperPivot) activePaperPivot.visible = false;
+      void resumeReader?.expand();
     };
     if (prefersReducedMotion) finishSwap();
     else setTimeout(finishSwap, PAPER_SWAP_MS);
@@ -2735,7 +2739,7 @@ async function initScene(canvas) {
     if (!panelOpen || closingReader) return;
     // Restore the full printed page before the existing paper/DOM handoff.
     // Zooming out is a short, explicit reader motion, never a changed desk skin.
-    if (activePaperPivot && resumeReader?.isZoomed() && document.documentElement.classList.contains("exp-paper-open")) {
+    if (activePaperPivot && resumeReader?.isExpanded() && document.documentElement.classList.contains("exp-paper-open")) {
       const reader = resumeReader;
       closingReader = true;
       reader.resetForClose().then(() => {
@@ -3015,6 +3019,7 @@ async function initScene(canvas) {
     pump: (t) => tick(t, true), lod: loader, getLODStats: () => loader.getStats(), readiness,
     getFrameStats: () => frameClock.snapshot(),
     getNavigationStats: () => studioNavigation.snapshot(),
+    getResumeReaderStats: () => resumeReader?.getState() || null,
     getRenderStats: () => ({ ...renderStats, batching: batchingStats }),
     getBootStats: () => ({ ...bootStatus, active: bootTakeover }),
     getCameraIntroStats: () => ({ ...cameraIntro }),
