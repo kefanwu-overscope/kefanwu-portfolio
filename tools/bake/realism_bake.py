@@ -28,7 +28,9 @@ args.add_argument('--evidence', type=Path, required=True)
 args.add_argument('--casters', type=Path)
 args.add_argument('--resolution', type=int, default=2048)
 args.add_argument('--samples', type=int, default=256)
-args.add_argument('--states', nargs='+', default=['off', 'on'])
+args.add_argument('--states', nargs='+', choices=['off', 'on'], default=['off', 'on'])
+args.add_argument('--version', default='realism-20260925')
+args.add_argument('--seed', type=int, default=20260925)
 args.add_argument('--preview-only', action='store_true')
 args.add_argument('--deploy', type=Path)
 cfg = args.parse_args(sys.argv[sys.argv.index('--') + 1:])
@@ -195,7 +197,7 @@ scene.cycles.diffuse_bounces = 6
 scene.cycles.glossy_bounces = 4
 scene.cycles.transparent_max_bounces = 8
 scene.cycles.sample_clamp_indirect = 8
-scene.cycles.seed = 20260925
+scene.cycles.seed = cfg.seed
 scene.world = bpy.data.worlds.new('Neutral indoor ambient')
 scene.world.use_nodes = True
 scene.world.node_tree.nodes.get('Background').inputs[0].default_value = (.72, .75, .8, 1)
@@ -247,7 +249,8 @@ for obj in architecture:
         nt.nodes.active = node
 
 manifest = {
-    'version': 'realism-20260925', 'source': str(source), 'sourceSha256': sha(source),
+    'version': cfg.version, 'source': str(source), 'sourceSha256': sha(source),
+    'bakeScriptSha256': sha(Path(__file__)),
     'sourceUv1Sha256': original_uv, 'visibleGeometryUnchanged': True,
     'repackedUv1': False, 'floorSubdivisionPreservesShapeAndUv0': False,
     'runtimeGlb': str(cfg.deploy / 'room-baked.glb') if cfg.deploy else str(source),
@@ -262,7 +265,7 @@ manifest = {
     'colorPass': False, 'denoiser': 'OpenImageDenoise compositor (color only)',
     'bakeUnits': 'outgoing unit-albedo Lambertian radiance = irradiance/pi',
     'threeR185REIndirectDiffuseInput': 'decoded RGB * PI * lightMapIntensity',
-    'diffuseBounces': 6, 'marginPixels': 12, 'seed': 20260925,
+    'diffuseBounces': 6, 'marginPixels': 12, 'seed': cfg.seed,
     'limitations': ['Only architecture receives a lightmap. Static exported props cast indirect/contact shadows. Dynamic exhibits remain runtime lit.', 'Preview renders document source lighting, not a pixel match of the browser tone mapper.'],
     'states': {},
 }
@@ -357,6 +360,10 @@ for state in cfg.states:
     np.save(cfg.evidence / f'lightmap-{state}-{cfg.resolution}.npy', pixels)
     manifest['states'][state] = {
         'seconds': round(time.time() - state_started, 2),
+        'probe': {'file': f'probe-{state}.hdr', 'width': 512, 'height': 256, 'samples': min(cfg.samples, 64), 'sha256': sha(cfg.evidence / f'probe-{state}.hdr')},
+        'rawExrSha256': sha(raw),
+        'denoisedExrSha256': sha(Path(scene.render.filepath)),
+        'floatArraySha256': sha(cfg.evidence / f'lightmap-{state}-{cfg.resolution}.npy'),
         'maxRgb': float(pixels[:, :, :3].max()),
         'percentilesRgb': np.percentile(pixels[:, :, :3], [50, 90, 99, 99.9, 100]).tolist(),
         'lights': [{'name': o.name, 'watts': o.data.energy, 'color': list(o.data.color), 'locationBlender': list(o.location), 'size': [o.data.size, o.data.size_y]} for o in scene.objects if o.type == 'LIGHT'],

@@ -1,10 +1,8 @@
 /* ============================================================
    experience.js — 3D study experience
-   Real SolidWorks assemblies (per-part STLs merged into GLBs with
-   material buckets), a custom wide display cabinet (3 per row),
-   PBR-textured desk/room, Genshin-style interact markers, and a
-   subtle bloom post pass. Click an exhibit -> camera flies in and
-   the case-study panel opens; the desk folder opens the resume.
+   Current project source poses in the original display cabinets,
+   detailed workshop props, PBR room surfaces and Cycles lighting.
+   Exhibits open their project pages; the desk folder opens the resume.
 
    Credits: green banker lamp — "Desk lamp" by Poly by Google,
    CC-BY 3.0 (via Poly Pizza). Other third-party assets CC0.
@@ -14,15 +12,17 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
-import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=room-performance-20260919";
+import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=room-detail-20260926";
 import { AdaptiveFrameClock, frameAlpha } from "./experience-timing.js?v=room-performance-20260919";
 import { batchStaticRoom } from "./experience-batching.js?v=room-performance-20260919";
 import { prepareRoomShaders } from "./experience-warmup.js?v=room-performance-20260919";
 import { loadRGBMLightmap, installBakedDiffuse } from "./experience-baked-material.js?v=realism-20260925";
-import { ROOM_BAKE } from "./experience-baked-assets.js?v=realism-20260925";
+import { ROOM_BAKE } from "./experience-baked-assets.js?v=room-detail-20260926";
 import { createStudioLoader } from "./experience-loader.js?v=exp-adaptive-20260907";
 import { createHDRService, createHDRTexture } from "./experience-hdr.js?v=exp-adaptive-20260907";
 import { AdaptiveQuality, GpuFrameTimer } from "./experience-quality.js?v=exp-adaptive-20260907";
+import { buildDetailedPrinter, buildDetailedPegboardTools, refineWorkbenchInstruments } from "./experience-workbench-details.js?v=room-detail-20260926";
+import { ROOM_EXHIBITS, prepareRoomExhibit } from "./experience-exhibits.js?v=room-detail-20260926";
 import { addStudioRealism } from "./experience-realism.js?v=studio-realism-20260907";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
@@ -282,40 +282,6 @@ const brassMat = () =>
   new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.3, metalness: 1.0 });
 
 /* engineering materials for the merged assembly buckets (mesh name mat_*) */
-const ASSEMBLY_MATS = {
-  // fully-metallic mats live off the env map — boost per-material intensity
-  // so the CAD exhibits stay readable at the scene's low global env level
-  steel: () => new THREE.MeshStandardMaterial({ color: 0x9aa0a8, metalness: 1.0, roughness: 0.45, envMapIntensity: 1.8 }),
-  brass: () => new THREE.MeshStandardMaterial({ color: 0x9d9789, metalness: 1.0, roughness: 0.35, envMapIntensity: 1.6 }),
-  dark: () => new THREE.MeshStandardMaterial({ color: 0x1a1c20, metalness: 0.15, roughness: 0.5, envMapIntensity: 1.4 }),
-  printed: () => new THREE.MeshStandardMaterial({ color: 0x2c3038, metalness: 0.12, roughness: 0.58, envMapIntensity: 1.2 }),
-  aero: () => new THREE.MeshStandardMaterial({ color: 0xd8dadc, metalness: 0.05, roughness: 0.42, envMapIntensity: 1.2 }),
-  carbon: () => {
-    // self-lit through the twill map: the weave stays readable inside the
-    // dim bay without flattening into grey plastic
-    const twill = makeCarbonTwillTexture();
-    return new THREE.MeshPhysicalMaterial({
-      map: twill,
-      color: 0xd8dce2,
-      emissiveMap: twill,
-      emissive: 0xaab4c4,
-      emissiveIntensity: 1.1,
-      metalness: 0.3,
-      roughness: 0.5,
-      clearcoat: 0.7,
-      clearcoatRoughness: 0.25,
-      envMapIntensity: 2.6,
-    });
-  },
-  rubber: () => new THREE.MeshStandardMaterial({ color: 0x0d0e10, metalness: 0.0, roughness: 0.95 }),
-  // guitar bodies/necks + pool cue — the one warm note, kept restrained
-  wood: () => new THREE.MeshStandardMaterial({ color: 0x9a774a, metalness: 0.0, roughness: 0.5, envMapIntensity: 1.0 }),
-  // circuit boards (Arduino, driver/sensor PCBs)
-  pcb: () => new THREE.MeshStandardMaterial({ color: 0x1e5f3c, metalness: 0.2, roughness: 0.5, envMapIntensity: 1.0 }),
-  // clear acrylic windows (pool sniper housing)
-  glass: () => new THREE.MeshPhysicalMaterial({ color: 0xcfd6dc, roughness: 0.06, metalness: 0, transparent: true, opacity: 0.22, transmission: 0.6, side: THREE.DoubleSide }),
-};
-
 const MODELS = {};
 const HOTSPOTS = [];
 // pick-proxy hitboxes + marker sprites: excluded from the GTAO/Bokeh
@@ -960,198 +926,55 @@ async function initScene(canvas) {
   /* ---------- display cabinet + exhibits (3 x 3) ---------- */
   scene.add(buildDisplayCabinet());
 
-  // real SolidWorks assemblies (merged per-part STLs, material buckets)
-  // hero row (middle, eye level): javelin / steering / brake
-  const ASSEMBLIES = [
-    { file: "seat",     key: "carbonSeat", label: "Carbon fiber seat", size: 0.3,  axis: "y", bay: 0, row: 0, rotY: 0.4 },
-    { file: "aura",     key: "aura",       label: "AURA Swerve",       size: 0.29, axis: "y", bay: 1, row: 0, rotY: 0.35, rotZ: -Math.PI / 2,
-      matTweak: { printed: { color: 0x9299a1, metalness: 0.05, roughness: 0.45 } } }, // aluminum/grey structure
-    { file: "scanner",  key: "scanner",    label: "3D scanner",        size: 0.38, axis: "x", bay: 2, row: 0, rotY: 0.35,
-      matTweak: { printed: { color: 0x2a55c8 }, wood: { color: 0xdfd2b0, roughness: 0.7 } } }, // blue brackets, near-white plywood base (photo); truss + EMG cover ride the light-grey aero bucket
-    { file: "javelin",  key: "javelin",    label: "Javelin VTOL",      size: 0.44, axis: "x", bay: 0, row: 1, rotY: 0.6,
-      matTweak: { aero: { color: 0x3a3e44, roughness: 0.4, envMapIntensity: 1.6 }, printed: { color: 0x26292e }, dark: { color: 0x24272c } } },
-    { file: "steering", key: "steering",   label: "Mk.8 Steering",     size: 0.32, axis: "y", bay: 1, row: 1, rotY: 0.5 },
+  // Every exhibit uses the current project viewer's initial geometry and
+  // materials. Only static, source-derived display meshes load in the room.
+  const mainExhibits = [
+    { key: "carbonSeat", size: .30, axis: "y", bay: 0, row: 0 },
+    { key: "aura", size: .29, axis: "y", bay: 1, row: 0 },
+    { key: "scanner", size: .40, axis: "x", bay: 2, row: 0 },
+    { key: "javelin", size: .44, axis: "x", bay: 0, row: 1 },
+    { key: "steering", size: .32, axis: "y", bay: 1, row: 1 },
+    { key: "brakeSim", size: .28, axis: "y", bay: 2, row: 1 },
+    { key: "materialTest", size: .38, axis: "y", bay: 0, row: 2 },
+    { key: "ansysCfd", size: .47, axis: "x", bay: 1, row: 2 },
+    { key: "vineRobot", size: .36, axis: "y", bay: 2, row: 2 },
   ];
-  ASSEMBLIES.forEach((a) =>
-    loadAssembly(loader, scene, `models/real/${a.file}.glb`, {
-      name: "ex_" + a.key, projectKey: a.key, label: a.label,
-      targetSize: a.size, axis: a.axis, matTweak: a.matTweak, fit: [0.6, 0.4, 0.4],
-      markerCap: CAB.rows[a.row] + (a.row === 0 ? 0.36 : 0.44), // top row: stay under the cabinet's top frame
-      pos: [CAB.bays[a.bay], CAB.rows[a.row], CAB.frontZ], rotY: a.rotY, rotZ: a.rotZ,
-    })
-  );
-
-  // real CAD exhibits (merged per-part STLs) + one procedural CFD monitor
-  loadAssembly(loader, scene, "models/real/brakeSim.glb", {
-    fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[1] + 0.44, name: "ex_brakeSim", projectKey: "brakeSim", label: "FSAE Brake Sim",
-    targetSize: 0.26, axis: "y", pos: [CAB.bays[2], CAB.rows[1], CAB.frontZ], rotY: Math.PI / 2 + 0.25,
-    matTweak: { steel: { color: 0xbcc2c9, roughness: 0.4, metalness: 1.0 } }, // bright silver rotor
-  });
-  // real CAD (Tensile Machine.STL -> materialTest.glb): the Instron-style
-  // tensile tester that measured the fabric/LDPE and bamboo specimens for
-  // the material property testing case study. Extents 152x310x150mm
-  // (x,y,z) with the native up axis already Y, like vineRobot's GLB -- no
-  // rotX needed, it just stands on its base housing. This takes over
-  // lineFollower's old bottom-left bay.
-  loadAssembly(loader, scene, "models/real/materialTest.glb", {
-    fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_materialTest", projectKey: "materialTest", label: "Material property testing",
-    // axis "y" sizes the tall frame itself. 0.38 leaves 0.02 of headroom
-    // under the row's 0.4 height cap -- so `fit` never clamps -- while
-    // still reading as a tall machine on the shelf rather than a squat
-    // one. At that height the 152x150mm footprint scales to roughly
-    // 0.19 x 0.18m, far inside the 0.6 along-wall / 0.4 depth budgets, so
-    // neither X nor Z gets anywhere near clamping either. rotY carries
-    // this bay's established cant (lineFollower ran 0.45 here) so the
-    // frame reads 3/4-on into the room instead of a flat, square-on
-    // billboard at 0.
-    targetSize: 0.38, axis: "y", pos: [CAB.bays[0], CAB.rows[2], CAB.frontZ], rotY: 0.4,
-    // converter-suggested tweaks over the 4 merged material buckets:
-    // aero = both side columns + the base housing, warmed toward a cream
-    // off-white (the raw photo sample carries a green-white fluorescent
-    // cast; pulled toward vineRobot's cream-plastic precedent instead);
-    // dark = the fixed top beam, the moving "MTS Insight" crosshead, both
-    // grip-jaw yokes, and the hand-pendant body -- one merged bucket, read
-    // as a warm dark charcoal rather than stock near-black (this knowingly
-    // lightens the pendant's true medium-grey housing, a fair trade since
-    // the grips/beams dominate the read and the pendant is a minor
-    // accessory); brass = the two flange/spacer rings, a warmer and more
-    // saturated copper than the stock muted tan. Steel (load cell, base
-    // coupling, grip pins, pendant bracket) stays stock -- already a close
-    // match for that silver-grey hardware.
-    matTweak: {
-      aero: { color: 0xe0ddd0, metalness: 0.05, roughness: 0.5 },
-      dark: { color: 0x2f2d2d, metalness: 0.15, roughness: 0.48 },
-      brass: { color: 0xaa7648, metalness: 0.9, roughness: 0.4 },
-    },
-  });
-  placeRoot(buildCfdDisplay(artLoader), scene, {
-    fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_ansysCfd", projectKey: "ansysCfd", label: "Agent-based CFD",
-    targetSize: 0.34, axis: "x", pos: [CAB.bays[1], CAB.rows[2], CAB.frontZ], rotY: 0.25,
-  });
-  // real CAD (Bucketbot - *.STL -> vineRobot.glb): the pressure vessel that
-  // spools out the everting vine. Native axes are ALREADY y-up — feet at min y,
-  // lid + gearmotor at max y — so no rotX/rotZ; the guitar kit that used to
-  // hold this slot needed rotZ 90 to lie down, this one stands as exported.
-  // The only rotation is the yaw that swings the outlet face (native -x, where
-  // the vine everts out) round to the room: +90deg lands it on +z, and the
-  // extra -0.2 cants it toward room center, since focusHotspot approaches this
-  // right-hand bay from the left (its dir runs room center -> exhibit).
-  loadAssembly(loader, scene, "models/real/vineRobot.glb", {
-    fit: [0.6, 0.4, 0.4], markerCap: CAB.rows[2] + 0.44, name: "ex_vineRobot", projectKey: "vineRobot", label: "Vine everting robot",
-    // 0.36 tall — up from the 0.31 the cramped side slot allowed, and it fills
-    // the bay about as much as the guitar kit's 0.44 spread did. 380x424x298mm
-    // at that height comes out 0.31 wide x 0.37 deep: clear of the 0.7 bay,
-    // still inside the shelf board's 0.46 of depth, and under every `fit` axis
-    // so the clamp never fires. 0.12 of the 0.48 row is left for the marker.
-    targetSize: 0.36, axis: "y", pos: [CAB.bays[2], CAB.rows[2], CAB.frontZ], rotY: Math.PI / 2 - 0.2,
-    // Re-audited for the regenerated GLB (60 parts -> 7 buckets). The build
-    // photos beat the CAD renders on every part they actually show:
-    //   printed (38) — the one royal blue now also paints the 3 C-bands, the
-    //     lid's top plate and the outlet funnel; all three used to sit in other
-    //     buckets purely on the CAD's default grey.
-    //   aero (9) — vessel plates, spool spider and the lid's clamp band are
-    //     cream-white plastic in the photos, NOT the bare aluminum the old
-    //     comment assumed, so warm the stock cool grey and drop the metalness.
-    //   rubber (5) — the TPU gaskets photograph orange (the line under the lid,
-    //     the squeeze-out at the outlet); the old crimson was the CAD's color.
-    //   brass (1) — only the outlet clamp is still yellow. Lid_Mount, the other
-    //     half of the old "yellow clamp flanges", is white and moved to aero.
-    //   dark (1) DC_Motor and steel (5) bearings/coupling keep their stock
-    //     mats: a near-black can and plain metal is exactly what the photos
-    //     show, so there is nothing left to override.
-    matTweak: {
-      printed: { color: 0x2a5fc4, metalness: 0.05, roughness: 0.5 },
-      aero: { color: 0xe6e3da, metalness: 0.0, roughness: 0.52 },
-      rubber: { color: 0xcc5b26, roughness: 0.7 },
-      brass: { color: 0xc9a83a, metalness: 0.45, roughness: 0.45 },
-      // glass (1) — the EBK pail is milky HDPE, not the clear acrylic the
-      // shared `glass` mat was written for (pool's housing windows still need
-      // that, so retune HERE rather than in ASSEMBLY_MATS). matTweak runs
-      // material.setValues(), so each MeshPhysicalMaterial prop below lands
-      // cleanly: neutral tint sampled off the wall in the photos (#bcb9bd /
-      // #b6b5bd, sat 0.02-0.04 = unpigmented), opacity 0.22 -> 0.55 so it reads
-      // as a tub you see INTO rather than a window, transmission 0.6 -> 0.35,
-      // and roughness 0.06 -> 0.38 — in three that same number blurs the
-      // transmission sample, so it is what turns clear into milky. The folded
-      // vine and the internal ribs still read through the wall, which is what
-      // every body photo and the cutaway render show.
-      glass: { color: 0xc9c6c9, opacity: 0.55, transmission: 0.35, roughness: 0.38 },
-    },
-  });
-
-  await yieldToBrowser();
-
-  /* ---------- side dressing ---------- */
-  // right wall: filled bookshelf; left wall: the electronics workbench
-  // (bench + Bambu H2S mid-print + PSU + soldering station + drivers +
-  // multimeter + task lamp)
-  scene.add(buildSideCabinet());
-
-  // six more projects in the right-wall cabinet (15 on display total).
-  // `build` = procedural group; `file` = real CAD GLB via loadAssembly.
-  const SIDE_EXHIBITS = [
-    // real CAD (7-CP06-P00-SEAT.STL -> driverseat.glb): bent-sheet aluminum
-    // seat. Native axes: x=width, z=back height, y=face normal. Stand it up
-    // (z->up) with rotX, then face the room with rotY.
-    { file: "driverseat",      key: "seat",      label: "Driver seat",       size: 0.34, axis: "y", bay: 0, row: 0, rotX: Math.PI / 2, rotY: -Math.PI / 2 + 0.4, rotZ: Math.PI / 2,
-      matTweak: { steel: { color: 0xccd2da, metalness: 0.85, roughness: 0.35 } } }, // light brushed aluminum, reclined bucket facing the room
-    { build: buildFtcBot,      key: "ftc",       label: "FTC robot",         size: 0.28, bay: 1, row: 0 },
-    { file: "smelly",          key: "formlabs",  label: "Smelly",            size: 0.3,  axis: "y", bay: 0, row: 1, rotY: -Math.PI / 2 + 0.2,
-      // photo-matched: the printed frame/gantry is white FDM plastic, not
-      // aluminum; rods/lead screws stay bright steel
-      matTweak: { printed: { color: 0xe7e5e0, metalness: 0.0, roughness: 0.5 }, steel: { color: 0xaeb4bc } } },
-    // the launcher's long axis is raw +y — lay it down along the shelf
-    // native X = floor-normal, Y = length, Z = width; rotate so the opaque
-    // floor plate faces down and the length runs along the shelf (z)
-    { file: "pool",            key: "pool",      label: "Pool Sniper",       size: 0.5, axis: "z", bay: 1, row: 1, rotZ: Math.PI / 2, rotY: -Math.PI / 2,
-      // CAD-matched buckets (pool.glb re-exported with split buckets):
-      // printed = the blue parts only (rack, pinion, cue cradle, brackets);
-      // aero = dark-grey housings/plates/floor; steel = bright hardware;
-      // the cue itself is a silver metallic rod
-      matTweak: { printed: { color: 0x2a5fc4, metalness: 0.05, roughness: 0.5 },
-        aero: { color: 0x84827e, metalness: 0.5, roughness: 0.5 },
-        wood: { color: 0xaeb0b3, metalness: 0.8, roughness: 0.4 } } },
-    { file: "telecaster",      key: "telecaster", label: "Telecaster",       size: 0.42, axis: "y", bay: 0, row: 2, rotY: -Math.PI / 2 + 0.2,
-      matTweak: { printed: { color: 0xe9e6da, metalness: 0.0, roughness: 0.45 }, wood: { color: 0xa97c4c, roughness: 0.55 } } }, // warm white body, honey-maple neck (photos)
-    // real CAD (lineFollower.glb): moved out of the main cabinet's
-    // bottom-left bay to make room for the tensile-machine exhibit -- this
-    // is exactly the slot the guitar kit used to hold. Only rotY was ever
-    // set for it (no rotX/rotZ) in either bay, and pure Y-axis yaws compose
-    // additively, so adding this cabinet's -90deg reface on top of the old
-    // 0.45 cant (new = -PI/2 + 0.45) does more than turn the robot to face
-    // -x instead of +z: a clean extra -90deg of yaw also swaps its world
-    // x/z footprint exactly, so whatever measured 0.34 along world z
-    // (depth, axis "z") now measures that same 0.34 along world x instead
-    // -- axis becomes "x" and the SAME targetSize keeps fixing the SAME
-    // physical dimension of the chassis. That lands exactly on this bay's
-    // tighter 0.34 depth cap (was 0.4 in the main bay) with no slack but no
-    // overshoot either. The footprint that swaps in along the wall (now z,
-    // was x) sat comfortably clear of the main bay's ~0.62, so it has
-    // plenty of room under this bay's tighter 0.58; height is untouched by
-    // a Y-axis yaw and was already under the shared 0.4 cap in the main
-    // bay, so it stays clear here too -- `fit` never clamps on any axis.
-    { file: "lineFollower",    key: "lineFollower", label: "LineFollower robot", size: 0.34, axis: "x", bay: 1, row: 2, rotY: -Math.PI / 2 + 0.45,
-      // photo-matched: bright orange tires, Arduino-teal main PCB, silver
-      // motors + silver/white battery wrap (both live in the "dark" bucket)
-      matTweak: { rubber: { color: 0xe8883a, roughness: 0.6 }, pcb: { color: 0x146e80 },
-        dark: { color: 0x9a9ea3, metalness: 0.6, roughness: 0.45 } } },
-  ];
-  for (const s of SIDE_EXHIBITS) {
-    const opts = {
-      name: "ex_" + s.key, projectKey: s.key, label: s.label,
-      targetSize: s.size, axis: s.axis || "x",
-      fit: [0.34, 0.4, 0.58], // x depth into cabinet, z along the wall
-      markerCap: CAB2.rows[s.row] + (s.row === 0 ? 0.36 : 0.44),
-      pos: [CAB2.frontX, CAB2.rows[s.row], CAB2.bays[s.bay]],
-      rotY: s.rotY !== undefined ? s.rotY : -Math.PI / 2 + 0.25,
-      rotZ: s.rotZ, rotX: s.rotX, matTweak: s.matTweak, extraParts: s.extraParts,
-    };
-    if (s.file) loadAssembly(loader, scene, `models/real/${s.file}.glb`, opts);
-    else placeRoot(s.build(), scene, opts);
-    await yieldToBrowser();
+  for (const item of mainExhibits) {
+    loadCurrentExhibit(loader, scene, item.key, {
+      targetSize: item.size, axis: item.axis, fit: [.60, .40, .40],
+      markerCap: CAB.rows[item.row] + (item.row === 0 ? .36 : .44),
+      pos: [CAB.bays[item.bay], CAB.rows[item.row], CAB.frontZ],
+      rotY: ROOM_EXHIBITS[item.key].frontYaw,
+    });
   }
   await yieldToBrowser();
+
+  // Preserve the six established side-cabinet positions.
+  scene.add(buildSideCabinet());
+  const sideExhibits = [
+    { key: "seat", size: .34, axis: "y", bay: 0, row: 0 },
+    { key: "ftc", size: .32, axis: "y", bay: 1, row: 0 },
+    { key: "formlabs", size: .30, axis: "y", bay: 0, row: 1 },
+    { key: "pool", size: .50, axis: "z", bay: 1, row: 1, yaw: -.08 },
+    { key: "telecaster", size: .38, axis: "y", bay: 0, row: 2 },
+    { key: "lineFollower", size: .40, axis: "z", bay: 1, row: 2, yaw: -.25 },
+  ];
+  for (const item of sideExhibits) {
+    loadCurrentExhibit(loader, scene, item.key, {
+      targetSize: item.size, axis: item.axis, fit: [.34, .40, .58],
+      markerCap: CAB2.rows[item.row] + (item.row === 0 ? .36 : .44),
+      pos: [CAB2.frontX, CAB2.rows[item.row], CAB2.bays[item.bay]],
+      rotY: item.yaw ?? -Math.PI / 2 + .35 + ROOM_EXHIBITS[item.key].frontYaw,
+    });
+    await yieldToBrowser();
+  }
   scene.add(await buildWorkbench());
+  // The kit's parts occupy the existing clear assembly area on the bench.
+  loadCurrentExhibit(loader, scene, "education", {
+    targetSize: .38, axis: "z", fit: [.24, .22, .40],
+    pos: [-2.07, .781, -.10], markerCap: .98,
+    rotationOrder: "YXZ", rotX: -Math.PI / 2, rotY: Math.PI / 2,
+  });
   await yieldToBrowser();
   const studioRealism = addStudioRealism(scene, { cabinet: CAB, sideCabinet: CAB2 });
   await yieldToBrowser();
@@ -1760,7 +1583,7 @@ async function initScene(canvas) {
   // per-frame animation state (G-batch): tick delta + printer toolpath run
   let tickLast = null;
   let scopeLastDraw = 0;
-  const headRun = { x: 0, dir: 1, dwell: 0, limit: 0.12 };
+  const headRun = { x: 0, dir: 1, dwell: 0, limit: 0.04 };
   function startFlight(toPos, toLook, ms, onDone, introLeg = false) {
     if (!introLeg && cameraIntro.phase === "playing") takeOverIntro();
     flight = {
@@ -2046,7 +1869,7 @@ async function initScene(canvas) {
       }
     }
 
-    // Bambu printer: the head runs a real TOOLPATH rhythm — constant-velocity
+    // Printer: the head runs a real TOOLPATH rhythm — constant-velocity
     // passes, a short dwell at each turnaround, pass length slightly
     // randomized. (The old pure sine read as a metronome, not a machine.)
     if (!prefersReducedMotion && MODELS.printerHead) {
@@ -2059,7 +1882,7 @@ async function initScene(canvas) {
           hs.x = hs.dir > 0 ? hs.limit : -hs.limit;
           hs.dir *= -1;
           hs.dwell = 120 + Math.random() * 180;             // line-end hitch
-          hs.limit = 0.085 + Math.random() * 0.045;         // next pass length
+          hs.limit = 0.025 + Math.random() * 0.019;         // next pass length
         }
       }
       MODELS.printerHead.position.x = hs.x;
@@ -2067,7 +1890,7 @@ async function initScene(canvas) {
     if (!prefersReducedMotion) {
       // G2: chamber circulation fan spins while the job runs
       if (MODELS.chamberFan) MODELS.chamberFan.rotation.z -= dtms * 0.0085;
-      // G4: the blue AMS spool feeds the blue print (slow payout)
+      // G4: the blue feeder spool supplies the blue print (slow payout)
       if (MODELS.activeSpool) MODELS.activeSpool.rotation.x += dtms * 0.00028;
       // G5: status LED breathes like a real activity indicator
       if (MODELS.printerStatusLed) {
@@ -2085,7 +1908,7 @@ async function initScene(canvas) {
     }
 
     // focused exhibit slowly turns on its pedestal; DoF opens up
-    // (CFD is a flat monitor — turntabling it reads badly, so leave it still)
+    // Scientific flow retains its reference orientation.
     if (panelOpen && focusedPivot && !prefersReducedMotion && focusedPivot.userData.hotspot.key !== "ansysCfd") {
       focusedPivot.rotation.y += 0.0035 * dtms / (1000 / 60);
     }
@@ -2602,9 +2425,7 @@ async function initScene(canvas) {
   // fixed tour order for prev/next navigation (matches cabinet layout)
   const PROJECT_ORDER = ["carbonSeat", "aura", "scanner", "javelin", "steering", "brakeSim",
     "materialTest", "ansysCfd", "vineRobot", "seat", "ftc", "formlabs", "pool", "telecaster",
-    "lineFollower"]; // vineRobot now closes the MAIN cabinet's bottom row (bay 2) before the
-  // tour crosses to the right wall; lineFollower closes the side cabinet, bay 1
-  // of its bottom row, after telecaster (the slot education used to hold)
+    "lineFollower", "education"];
   let currentProjectKey = null;
   // set for the duration of a stepProject() → openPanel() call so openPanel
   // knows to cross-fade the content swap instead of hard-cutting it (the
@@ -3290,7 +3111,7 @@ async function initScene(canvas) {
   });
 
   /* ---------- keyboard navigation layer (additive; mirrors the pointer flow) ----------
-     Cycle order: the 15 project pivots (PROJECT_ORDER), then résumé, then the
+     Cycle order: the 16 project pivots (PROJECT_ORDER), then résumé, then the
      lamp switch. Rebuilt fresh on every keypress (not snapshotted once) —
      the real-CAD exhibits attach to HOTSPOTS asynchronously as their GLTFs
      finish loading, so a one-time snapshot at init would miss most of them.
@@ -3510,6 +3331,7 @@ function placeRoot(root, scene, opts, onPlaced) {
       }
     }
   });
+  if (opts.rotationOrder) root.rotation.order = opts.rotationOrder;
   if (opts.rotX) root.rotation.x = opts.rotX;
   if (opts.rotY) root.rotation.y = opts.rotY;
   if (opts.rotZ) root.rotation.z = opts.rotZ;
@@ -3610,31 +3432,16 @@ function loadModel(loader, scene, url, opts, onPlaced) {
   );
 }
 
-// merged SolidWorks assembly: assign engineering materials by bucket name
-function loadAssembly(loader, scene, url, opts, onPlaced) {
-  const prepare = (root) => {
-    root.traverse((o) => {
-      if (!o.isMesh) return;
-      const name = (o.name || "").toLowerCase();
-      let matKey = "printed";
-      for (const k of Object.keys(ASSEMBLY_MATS)) {
-        if (name.includes(`mat_${k}`)) { matKey = k; break; }
-      }
-      o.material = ASSEMBLY_MATS[matKey]();
-      // per-project material overrides (e.g. Javelin's dark PPA-CF shell)
-      if (opts.matTweak && opts.matTweak[matKey]) o.material.setValues(opts.matTweak[matKey]);
-      // STL-derived meshes have no UVs; box-project some so the carbon
-      // weave map can tile across the surface
-      if (matKey === "carbon") boxProjectUVs(o.geometry, 0.08); // geometry is in mm; ~12mm weave tile
-      o.castShadow = true;
-      o.receiveShadow = true;
+// Source materials are retained, including carbon weave and scientific colors.
+function loadCurrentExhibit(loader, scene, key, opts) {
+  const exhibit = ROOM_EXHIBITS[key];
+  loader.load(exhibit.url, (gltf) => {
+    placeRoot(gltf.scene, scene, {
+      ...opts, name: "ex_" + key, projectKey: key,
+      label: window.projectData?.[key]?.title || key,
     });
-  };
-  loader.load(url, (gltf) => {
-    if (opts.extraParts) opts.extraParts(gltf.scene);
-    placeRoot(gltf.scene, scene, opts, onPlaced);
     ANISO_DIRTY = true;
-  }, undefined, undefined, prepare, opts.projectKey);
+  }, undefined, undefined, (root) => prepareRoomExhibit(root, key), key);
 }
 
 /* ============================================================
@@ -4276,60 +4083,10 @@ function makeInteractMarker() {
 }
 
 /* 2x2 twill carbon-fiber weave tile (cached) */
-let _carbonTex = null;
-function makeCarbonTwillTexture() {
-  if (_carbonTex) return _carbonTex;
-  const s = 128;
-  const c = document.createElement("canvas");
-  c.width = c.height = s;
-  const ctx = c.getContext("2d");
-  const cell = s / 8;
-  for (let y = 0; y < 8; y++) {
-    for (let x = 0; x < 8; x++) {
-      const horizontal = ((x + y) >> 1) % 2 === 0;
-      const g = ctx.createLinearGradient(
-        x * cell, y * cell,
-        horizontal ? x * cell : (x + 1) * cell,
-        horizontal ? (y + 1) * cell : y * cell
-      );
-      g.addColorStop(0, "#17181b");
-      g.addColorStop(0.5, horizontal ? "#33363c" : "#26282d");
-      g.addColorStop(1, "#101114");
-      ctx.fillStyle = g;
-      ctx.fillRect(x * cell, y * cell, cell, cell);
-    }
-  }
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-  tex.anisotropy = MAXA;
-  _carbonTex = tex;
-  return tex;
-}
-
-/* STL meshes carry no UVs — box-project by dominant face normal so a
-   tiling texture can wrap the surface (scale = tiles per unit) */
-function boxProjectUVs(geo, scale) {
-  const pos = geo.attributes.position;
-  if (!geo.attributes.normal) geo.computeVertexNormals();
-  const nor = geo.attributes.normal;
-  const uv = new Float32Array(pos.count * 2);
-  for (let i = 0; i < pos.count; i++) {
-    const nx = Math.abs(nor.getX(i)), ny = Math.abs(nor.getY(i)), nz = Math.abs(nor.getZ(i));
-    let u, v;
-    if (nx >= ny && nx >= nz) { u = pos.getY(i); v = pos.getZ(i); }
-    else if (ny >= nx && ny >= nz) { u = pos.getX(i); v = pos.getZ(i); }
-    else { u = pos.getX(i); v = pos.getY(i); }
-    uv[i * 2] = u * scale;
-    uv[i * 2 + 1] = v * scale;
-  }
-  geo.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
-}
-
 async function buildWorkbench() {
   // electronics workbench, left wall: pegboard with real MechE tools,
-  // H2S printing on the left, instruments clustered right, and the middle
-  // of the bench deliberately left CLEAR for a future project
+  // Printer on the left, instruments to the right, and the guitar kit
+  // in the existing clear central assembly area.
   const g = new THREE.Group();
   const steel = new THREE.MeshStandardMaterial({ color: 0x2e3136, roughness: 0.45, metalness: 0.8 });
   const darkPlastic = new THREE.MeshStandardMaterial({ color: 0x1b1d21, roughness: 0.5, metalness: 0.2 });
@@ -4374,14 +4131,19 @@ async function buildWorkbench() {
   spTop.position.set(-0.62, 0.302, 0.05); // stacked on the green one
   g.add(spTop);
 
-  // pegboard with dot-grid
+  // Small perforations on 25 mm centers; the old enlarged dots looked like
+  // painted circles. A narrow rim catches light without a separate mesh per hole.
   const pb = document.createElement("canvas");
-  pb.width = 256; pb.height = 128;
+  pb.width = 1024; pb.height = 512;
   const pctx = pb.getContext("2d");
-  pctx.fillStyle = "#4a4d52"; pctx.fillRect(0, 0, 256, 128);
-  pctx.fillStyle = "#26282c";
-  for (let py = 8; py < 128; py += 16)
-    for (let px = 8; px < 256; px += 16) { pctx.beginPath(); pctx.arc(px, py, 2.6, 0, 7); pctx.fill(); }
+  pctx.fillStyle = "#4a4d52"; pctx.fillRect(0, 0, pb.width, pb.height);
+  const holePitch = pb.width * .025 / 1.9;
+  for (let py = holePitch; py < pb.height - holePitch / 2; py += holePitch) {
+    for (let px = holePitch; px < pb.width - holePitch / 2; px += holePitch) {
+      pctx.fillStyle = "#64676a"; pctx.beginPath(); pctx.arc(px, py + .45, 1.65, 0, Math.PI * 2); pctx.fill();
+      pctx.fillStyle = "#24272a"; pctx.beginPath(); pctx.arc(px, py, 1.35, 0, Math.PI * 2); pctx.fill();
+    }
+  }
   const pbTex = new THREE.CanvasTexture(pb);
   pbTex.colorSpace = THREE.SRGBColorSpace;
   const board = new THREE.Mesh(
@@ -4395,267 +4157,11 @@ async function buildWorkbench() {
   /* ---- pegboard tools (hung at boardZ) ---- */
   const bz = -0.283;
 
-  // steel rule with etched ticks
-  const rc = document.createElement("canvas");
-  rc.width = 32; rc.height = 256;
-  const rctx = rc.getContext("2d");
-  rctx.fillStyle = "#b9bdc4"; rctx.fillRect(0, 0, 32, 256);
-  rctx.fillStyle = "#3a3d42";
-  for (let i = 0; i < 256; i += 8) rctx.fillRect(0, i, i % 32 === 0 ? 16 : 9, 1.6);
-  const rTex = new THREE.CanvasTexture(rc);
-  rTex.colorSpace = THREE.SRGBColorSpace;
-  const rule = new THREE.Mesh(
-    new THREE.BoxGeometry(0.032, 0.32, 0.002),
-    new THREE.MeshStandardMaterial({ map: rTex, metalness: 0.85, roughness: 0.3 })
-  );
-  rule.position.set(-0.82, TOP_Y + 0.58, bz);
-  g.add(rule);
-
-  // cordless drill (body, grip, trigger, chuck, battery)
-  const drill = new THREE.Group();
-  const dBodyMat = new THREE.MeshStandardMaterial({ color: 0x1c4f9e, roughness: 0.45, metalness: 0.1 });
-  const dBody = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.033, 0.15, 16), dBodyMat);
-  dBody.rotation.z = Math.PI / 2;
-  drill.add(dBody);
-  const chuckBase = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.03, 0.035, 16), darkPlastic);
-  chuckBase.rotation.z = Math.PI / 2;
-  chuckBase.position.x = -0.09;
-  drill.add(chuckBase);
-  const chuck = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.02, 0.03, 12), toolSteel);
-  chuck.rotation.z = Math.PI / 2;
-  chuck.position.x = -0.12;
-  drill.add(chuck);
-  const grip = new THREE.Mesh(new RoundedBoxGeometry(0.035, 0.13, 0.045, 2, 0.01), dBodyMat);
-  grip.position.set(0.02, -0.085, 0);
-  grip.rotation.z = 0.16;
-  drill.add(grip);
-  const trigger = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.025, 0.02), darkPlastic);
-  trigger.position.set(-0.012, -0.045, 0);
-  drill.add(trigger);
-  const battery = new THREE.Mesh(new RoundedBoxGeometry(0.06, 0.04, 0.055, 2, 0.008), darkPlastic);
-  battery.position.set(0.035, -0.16, 0);
-  drill.add(battery);
-  drill.position.set(-0.5, TOP_Y + 0.62, bz + 0.03);
-  g.add(drill);
-
-  // Dremel rotary tool (slim taper body, grip rings, silver collet)
-  const dremel = new THREE.Group();
-  const dmBody = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.02, 0.13, 14),
-    new THREE.MeshStandardMaterial({ color: 0x74777d, roughness: 0.4, metalness: 0.3 }));
-  dremel.add(dmBody);
-  for (let i = 0; i < 3; i++) {
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.0185, 0.0022, 8, 20), darkPlastic);
-    ring.rotation.x = Math.PI / 2;
-    ring.position.y = -0.02 - i * 0.014;
-    dremel.add(ring);
-  }
-  const nose = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.016, 0.035, 12), toolSteel);
-  nose.position.y = 0.08;
-  dremel.add(nose);
-  const bit = new THREE.Mesh(new THREE.CylinderGeometry(0.0022, 0.0022, 0.028, 8), toolSteel);
-  bit.position.y = 0.108;
-  dremel.add(bit);
-  dremel.position.set(-0.18, TOP_Y + 0.56, bz + 0.014);
-  dremel.rotation.z = 0.06;
-  g.add(dremel);
-
-  // torque wrench (long shaft, ratchet head, knurled handle + red band)
-  const torque = new THREE.Group();
-  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.007, 0.3, 12), toolSteel);
-  torque.add(shaft);
-  const headBox = new THREE.Mesh(new RoundedBoxGeometry(0.026, 0.045, 0.016, 2, 0.005), toolSteel);
-  headBox.position.y = 0.165;
-  torque.add(headBox);
-  const ratchet = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.02, 14), toolSteel);
-  ratchet.rotation.x = Math.PI / 2;
-  ratchet.position.y = 0.185;
-  torque.add(ratchet);
-  const tHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.1, 14), darkPlastic);
-  tHandle.position.y = -0.14;
-  torque.add(tHandle);
-  const band = new THREE.Mesh(new THREE.CylinderGeometry(0.0125, 0.0125, 0.02, 14),
-    new THREE.MeshStandardMaterial({ color: 0x2b66d9, roughness: 0.45 }));
-  band.position.y = -0.1;
-  torque.add(band);
-  const scaleWin = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.05, 0.004),
-    new THREE.MeshStandardMaterial({ color: 0xd8dce2, roughness: 0.3 }));
-  scaleWin.position.set(0, -0.05, 0.006);
-  torque.add(scaleWin);
-  torque.position.set(0.18, TOP_Y + 0.6, bz + 0.012);
-  torque.rotation.z = 0.5;
-  g.add(torque);
-
-  // combination wrench + pliers round out the board
-  const wr = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.17, 0.007), toolSteel);
-  wr.position.set(0.55, TOP_Y + 0.6, bz);
-  wr.rotation.z = -0.1;
-  g.add(wr);
-  const wrRing = new THREE.Mesh(new THREE.TorusGeometry(0.016, 0.006, 8, 18), toolSteel);
-  wrRing.position.set(0.563, TOP_Y + 0.69, bz);
-  g.add(wrRing);
-  const wrJaw = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.007, 12), toolSteel);
-  wrJaw.rotation.x = Math.PI / 2;
-  wrJaw.position.set(0.536, TOP_Y + 0.515, bz);
-  g.add(wrJaw);
-  const plierHandleL = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.006, 0.09, 10),
-    new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.5 }));
-  plierHandleL.position.set(0.76, TOP_Y + 0.56, bz);
-  plierHandleL.rotation.z = 0.16;
-  g.add(plierHandleL);
-  const plierHandleR = plierHandleL.clone();
-  plierHandleR.position.x = 0.785;
-  plierHandleR.rotation.z = -0.16;
-  g.add(plierHandleR);
-  const plierHead = new THREE.Mesh(new THREE.ConeGeometry(0.014, 0.05, 10), toolSteel);
-  plierHead.position.set(0.7725, TOP_Y + 0.635, bz);
-  g.add(plierHead);
-
-  await yieldToBrowser();
-  // digital caliper (beam + fixed/sliding jaws + LCD)
-  const caliper = new THREE.Group();
-  const beam = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.24, 0.004), toolSteel);
-  caliper.add(beam);
-  const jawF = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.03, 0.005), toolSteel);
-  jawF.position.set(-0.018, 0.11, 0);
-  caliper.add(jawF);
-  const slider = new THREE.Mesh(new RoundedBoxGeometry(0.045, 0.055, 0.012, 2, 0.004), darkPlastic);
-  slider.position.set(-0.008, 0.045, 0);
-  caliper.add(slider);
-  const lcd = new THREE.Mesh(new THREE.PlaneGeometry(0.028, 0.014),
-    new THREE.MeshStandardMaterial({ color: 0x9fae9a, roughness: 0.3 }));
-  lcd.position.set(-0.008, 0.05, 0.0065);
-  caliper.add(lcd);
-  const jawS = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.025, 0.005), toolSteel);
-  jawS.position.set(-0.02, 0.075, 0);
-  caliper.add(jawS);
-  caliper.position.set(-0.68, TOP_Y + 0.58, bz + 0.008);
-  caliper.rotation.z = 0.06;
-  g.add(caliper);
-
-  // hex key set: 5 L-keys in a row, descending sizes
-  for (let i = 0; i < 5; i++) {
-    const r = 0.004 - i * 0.0005;
-    const lenL = 0.09 - i * 0.012;
-    const long = new THREE.Mesh(new THREE.CylinderGeometry(r, r, lenL, 6), toolSteel);
-    long.position.set(-0.33 + i * 0.024, TOP_Y + 0.56 - (0.09 - lenL) / 2, bz);
-    g.add(long);
-    const short = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 0.03, 6), toolSteel);
-    short.rotation.z = Math.PI / 2;
-    short.position.set(-0.33 + i * 0.024 + 0.013, TOP_Y + 0.56 + lenL / 2, bz);
-    g.add(short);
-  }
-
-  // ball-peen hammer
-  const hammer = new THREE.Group();
-  const hHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.011, 0.2, 10), woodMaterial(0x4a4038, 0.55));
-  hammer.add(hHandle);
-  const hHead = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.075, 12), toolSteel);
-  hHead.rotation.z = Math.PI / 2;
-  hHead.position.y = 0.1;
-  hammer.add(hHead);
-  const hBall = new THREE.Mesh(new THREE.SphereGeometry(0.013, 10, 10), toolSteel);
-  hBall.position.set(0.045, 0.1, 0);
-  hammer.add(hBall);
-  hammer.position.set(0.02, TOP_Y + 0.56, bz + 0.01);
-  hammer.rotation.z = -0.06;
-  g.add(hammer);
-
-  // flush cutters (equipment-blue handles)
-  const cutL = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.006, 0.075, 10),
-    new THREE.MeshStandardMaterial({ color: 0x2b66d9, roughness: 0.5 }));
-  cutL.position.set(0.895, TOP_Y + 0.55, bz);
-  cutL.rotation.z = 0.14;
-  g.add(cutL);
-  const cutR = cutL.clone();
-  cutR.position.x = 0.915;
-  cutR.rotation.z = -0.14;
-  g.add(cutR);
-  const cutHead = new THREE.Mesh(new THREE.ConeGeometry(0.011, 0.035, 8), toolSteel);
-  cutHead.position.set(0.905, TOP_Y + 0.605, bz);
-  g.add(cutHead);
-
-  // tape measure
-  const tape = new THREE.Group();
-  const tBody = new THREE.Mesh(new RoundedBoxGeometry(0.055, 0.055, 0.032, 2, 0.01),
-    new THREE.MeshStandardMaterial({ color: 0x2b66d9, roughness: 0.5 }));
-  tape.add(tBody);
-  const tClip = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.03, 0.036), toolSteel);
-  tClip.position.set(-0.032, 0, 0);
-  tape.add(tClip);
-  tape.position.set(0.68, TOP_Y + 0.52, bz + 0.018);
-  g.add(tape);
-
-  // torpedo level (graphite body, two blue vials) — upper band, left
-  const level = new THREE.Group();
-  const lvBody = new THREE.Mesh(new RoundedBoxGeometry(0.22, 0.034, 0.018, 2, 0.006), darkPlastic);
-  level.add(lvBody);
-  [-0.05, 0.05].forEach((vx) => {
-    const vial = new THREE.Mesh(new THREE.BoxGeometry(0.028, 0.014, 0.02),
-      new THREE.MeshPhysicalMaterial({ color: 0x2b66d9, roughness: 0.2, transparent: true, opacity: 0.85 }));
-    vial.position.set(vx, 0.002, 0.001);
-    level.add(vial);
-  });
-  level.position.set(-0.55, TOP_Y + 0.83, bz + 0.012);
-  g.add(level);
-
-  // hex key set — five L-keys hung in descending sizes
-  for (let i = 0; i < 5; i++) {
-    const hk = new THREE.Group();
-    const len = 0.085 - i * 0.011;
-    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.006 - i * 0.0006, len, 0.005), toolSteel);
-    leg.position.y = -len / 2;
-    hk.add(leg);
-    const foot = new THREE.Mesh(new THREE.BoxGeometry(0.03 - i * 0.003, 0.006 - i * 0.0006, 0.005), toolSteel);
-    foot.position.set(0.012, -len - 0.001, 0);
-    hk.add(foot);
-    hk.position.set(-0.32 + i * 0.036, TOP_Y + 0.85, bz + 0.01);
-    g.add(hk);
-  }
-
-  // machinist square (L of steel, clear of the torque wrench head)
-  const sqV = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.13, 0.005), toolSteel);
-  sqV.position.set(-0.06, TOP_Y + 0.79, bz + 0.01);
-  g.add(sqV);
-  const sqH = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.02, 0.005), toolSteel);
-  sqH.position.set(-0.022, TOP_Y + 0.734, bz + 0.01);
-  g.add(sqH);
-
-  // adjustable wrench fills the mid gap between torque and combo wrench
-  const aw = new THREE.Group();
-  const awShaft = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.15, 0.008), toolSteel);
-  aw.add(awShaft);
-  const awJawF = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.03, 0.01), toolSteel);
-  awJawF.position.set(0.008, 0.088, 0);
-  aw.add(awJawF);
-  const awJawM = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.016, 0.01), toolSteel);
-  awJawM.position.set(-0.002, 0.062, 0);
-  aw.add(awJawM);
-  const awGrip = new THREE.Mesh(new RoundedBoxGeometry(0.024, 0.06, 0.012, 2, 0.005),
-    new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.5 }));
-  awGrip.position.y = -0.05;
-  aw.add(awGrip);
-  aw.position.set(0.35, TOP_Y + 0.6, bz + 0.01);
-  aw.rotation.z = -0.12;
-  g.add(aw);
-
-  // wire strippers (blue handles, steel head) — upper band, right
-  const stp = new THREE.Group();
-  [-1, 1].forEach((s) => {
-    const h = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.006, 0.08, 10),
-      new THREE.MeshStandardMaterial({ color: 0x2b66d9, roughness: 0.5 }));
-    h.position.set(s * 0.011, -0.02, 0);
-    h.rotation.z = s * 0.18;
-    stp.add(h);
-  });
-  const stpHead = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.05, 0.007), toolSteel);
-  stpHead.position.y = 0.04;
-  stp.add(stpHead);
-  stp.position.set(0.9, TOP_Y + 0.8, bz + 0.01);
-  g.add(stp);
+  g.add(buildDetailedPegboardTools({ topY: TOP_Y, boardZ: bz }));
 
   /* ---- bench top: printer LEFT, clear middle, instruments RIGHT ---- */
   await yieldToBrowser();
-  const printer = await buildBambuPrinter();
+  const printer = buildDetailedPrinter({ models: MODELS });
   await yieldToBrowser();
   printer.scale.setScalar(0.8);
   printer.position.set(-0.62, TOP_Y, 0.02);
@@ -4663,44 +4169,10 @@ async function buildWorkbench() {
   g.add(printer);
   MODELS.printer = printer;
 
-  // (middle of the bench intentionally left clear for a future project)
+  // The guitar education exhibit is placed in the middle after construction.
 
   // programmable bench PSU with a live readout
   const psu = new THREE.Group();
-  // J3: brushed dark-alu case — the PSU/scope/solder station were three
-  // identical molded boxes; real bench gear mixes metal chassis with plastic
-  const psuBody = new THREE.Mesh(new RoundedBoxGeometry(0.21, 0.105, 0.17, 2, 0.008),
-    new THREE.MeshStandardMaterial({ color: 0x30353c, roughness: 0.38, metalness: 0.55, roughnessMap: brushedRoughTex() }));
-  psuBody.position.y = 0.0525;
-  psu.add(psuBody);
-  const dc = document.createElement("canvas");
-  dc.width = 128; dc.height = 48;
-  const dctx = dc.getContext("2d");
-  dctx.fillStyle = "#050807"; dctx.fillRect(0, 0, 128, 48);
-  dctx.fillStyle = "#42e88a"; dctx.font = "700 20px Consolas, monospace";
-  dctx.fillText("12.00 V", 10, 21);
-  dctx.fillStyle = "#e8c542"; dctx.fillText(" 1.52 A", 10, 43);
-  const dcTex = new THREE.CanvasTexture(dc);
-  dcTex.colorSpace = THREE.SRGBColorSpace;
-  const psuScreen = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.11, 0.042),
-    new THREE.MeshBasicMaterial({ map: dcTex, color: 0x9a9a9a })
-  );
-  psuScreen.position.set(-0.03, 0.066, 0.0865);
-  psu.add(psuScreen);
-  [[0.055, 0.07], [0.085, 0.07]].forEach(([kx, ky]) => {
-    const knob = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.012, 16), steel);
-    knob.rotation.x = Math.PI / 2;
-    knob.position.set(kx, ky, 0.088);
-    psu.add(knob);
-  });
-  [[-0.06, 0x2b66d9], [-0.03, 0x111111], [0.0, 0x2b66d9], [0.03, 0x111111]].forEach(([jx, col]) => {
-    const jack = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.012, 10),
-      new THREE.MeshStandardMaterial({ color: col, roughness: 0.4 }));
-    jack.rotation.x = Math.PI / 2;
-    jack.position.set(jx, 0.026, 0.088);
-    psu.add(jack);
-  });
   psu.position.set(0.42, TOP_Y, -0.16);
 
   /* ---- cables + wall power strip (a bench without wires reads as a prop) ---- */
@@ -4731,171 +4203,24 @@ async function buildWorkbench() {
   // PSU mains into the strip
   g.add(cable([[0.36, 0.82, -0.24], [0.22, 0.88, -0.29], [0.05, 0.958, -0.293]], 0.0042, 0x17181c));
 
-  /* ---- spare J-hooks filling the pegboard's empty lower band ---- */
-  const hookMat = new THREE.MeshStandardMaterial({ color: 0x8f959d, roughness: 0.4, metalness: 0.85 });
-  const mkHook = (hx, hy) => {
-    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.05, 8), hookMat);
-    stem.rotation.x = Math.PI / 2 - 0.25; // slight upward tilt
-    stem.position.set(hx, hy, bz + 0.006);
-    g.add(stem);
-    const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.02, 8), hookMat);
-    tip.position.set(hx, hy + 0.016, bz + 0.028);
-    g.add(tip);
-  };
-  [-0.66, -0.5, -0.34, -0.18, 0.02, 0.22, 0.42, 0.62].forEach((hx) => mkHook(hx, 1.06));
-  // H2: the DISPLAYED tools hung flush on the board with no support — they
-  // read as decals next to the fully-modeled empty hooks below. One or two
-  // hooks per tool at its actual hang point:
-  mkHook(-0.82, TOP_Y + 0.745);                       // steel rule (top hole)
-  mkHook(-0.56, TOP_Y + 0.585); mkHook(-0.44, TOP_Y + 0.585); // drill body cradle
-  mkHook(-0.18, TOP_Y + 0.63);                        // dremel clip
-  mkHook(0.115, TOP_Y + 0.70); mkHook(0.24, TOP_Y + 0.49);    // torque wrench shaft
-  mkHook(0.563, TOP_Y + 0.69);                        // comb wrench ring
-  mkHook(0.7725, TOP_Y + 0.648);                      // pliers head
-  mkHook(-0.68, TOP_Y + 0.705);                       // caliper beam
-  mkHook(-0.02, TOP_Y + 0.643); mkHook(0.06, TOP_Y + 0.643);  // hammer head rest
-  mkHook(0.905, TOP_Y + 0.612);                       // flush cutters
-  mkHook(0.648, TOP_Y + 0.535);                       // tape measure clip
-  mkHook(-0.62, TOP_Y + 0.812); mkHook(-0.48, TOP_Y + 0.812); // torpedo level
-  for (let i = 0; i < 5; i++) mkHook(-0.32 + i * 0.036, TOP_Y + 0.856); // hung hex keys
   psu.rotation.y = -0.06;
   g.add(psu);
 
   await yieldToBrowser();
   // soldering station + iron
   const solder = new THREE.Group();
-  const sBody = new THREE.Mesh(new RoundedBoxGeometry(0.13, 0.075, 0.11, 2, 0.007), darkPlastic);
-  sBody.position.y = 0.0375;
-  solder.add(sBody);
-  const sd = document.createElement("canvas");
-  sd.width = 64; sd.height = 32;
-  const sctx = sd.getContext("2d");
-  sctx.fillStyle = "#080505"; sctx.fillRect(0, 0, 64, 32);
-  sctx.fillStyle = "#ff5a3c"; sctx.font = "700 18px Consolas, monospace"; sctx.fillText("350", 8, 23);
-  sctx.fillText("C", 46, 23);
-  const sdTex = new THREE.CanvasTexture(sd);
-  sdTex.colorSpace = THREE.SRGBColorSpace;
-  const sScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.05, 0.025), new THREE.MeshBasicMaterial({ map: sdTex, color: 0x9a9a9a }));
-  sScreen.position.set(-0.02, 0.05, 0.0565);
-  solder.add(sScreen);
-  const sKnob = new THREE.Mesh(new THREE.CylinderGeometry(0.013, 0.013, 0.014, 16), steel);
-  sKnob.rotation.x = Math.PI / 2;
-  sKnob.position.set(0.035, 0.045, 0.057);
-  solder.add(sKnob);
-  const stand = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.028, 0.06, 14, 1, true), steel);
-  stand.rotation.z = 1.15;
-  stand.position.set(0.1, 0.045, 0.02);
-  solder.add(stand);
-  const ironHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.009, 0.09, 12),
-    new THREE.MeshStandardMaterial({ color: 0x27408a, roughness: 0.5 }));
-  ironHandle.rotation.z = 1.15;
-  ironHandle.position.set(0.135, 0.062, 0.02);
-  solder.add(ironHandle);
-  const ironTip = new THREE.Mesh(new THREE.CylinderGeometry(0.0015, 0.004, 0.05, 8), toolSteel);
-  ironTip.rotation.z = 1.15;
-  ironTip.position.set(0.07, 0.032, 0.02);
-  solder.add(ironTip);
-  // brass-wool tip cleaner pot + yellow sponge tray on the station top
-  const cleanPot = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.018, 0.02, 14), steel);
-  cleanPot.position.set(-0.045, 0.085, -0.03);
-  solder.add(cleanPot);
-  const wool = new THREE.Mesh(new THREE.SphereGeometry(0.013, 10, 8),
-    new THREE.MeshStandardMaterial({ color: 0xb08d3e, roughness: 0.85 }));
-  wool.scale.y = 0.55;
-  wool.position.set(-0.045, 0.095, -0.03);
-  solder.add(wool);
-  const spongeTray = new THREE.Mesh(new RoundedBoxGeometry(0.046, 0.008, 0.046, 2, 0.003), darkPlastic);
-  spongeTray.position.set(-0.038, 0.079, 0.025);
-  solder.add(spongeTray);
-  const sponge = new THREE.Mesh(new RoundedBoxGeometry(0.038, 0.009, 0.038, 2, 0.003),
-    new THREE.MeshStandardMaterial({ color: 0xd8c14a, roughness: 0.95 }));
-  sponge.position.set(-0.038, 0.087, 0.025);
-  solder.add(sponge);
-  // iron cable: handle end sags to the bench and loops back into the station
-  const ironCable = new THREE.Mesh(
-    new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
-      new THREE.Vector3(0.175, 0.085, 0.02),
-      new THREE.Vector3(0.205, 0.03, 0.055),
-      new THREE.Vector3(0.15, 0.004, 0.1),
-      new THREE.Vector3(0.08, 0.01, 0.075),
-      new THREE.Vector3(0.062, 0.03, 0.045),
-    ]), 28, 0.0022, 8),
-    new THREE.MeshStandardMaterial({ color: 0x1c2743, roughness: 0.6, metalness: 0.05 })
-  );
-  solder.add(ironCable);
   solder.position.set(0.72, TOP_Y, -0.08);
   solder.rotation.y = 0.18;
   g.add(solder);
 
   // screwdriver set
   const drivers = new THREE.Group();
-  const block = new THREE.Mesh(new RoundedBoxGeometry(0.17, 0.032, 0.055, 2, 0.006), woodMaterial(0x4a3527, 0.5));
-  block.position.y = 0.045;
-  drivers.add(block);
-  [[-0.06, 0x2b66d9], [-0.036, 0x17181c], [-0.012, 0x2b66d9], [0.012, 0x8a8f96], [0.036, 0x17181c], [0.06, 0x2b66d9]].forEach(([dx, col], i) => {
-    const shaft2 = new THREE.Mesh(new THREE.CylinderGeometry(0.0022, 0.0022, 0.075, 8), toolSteel);
-    shaft2.position.set(dx, 0.02, 0);
-    drivers.add(shaft2);
-    const hdl = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.0065, 0.045, 10),
-      new THREE.MeshStandardMaterial({ color: col, roughness: 0.42 }));
-    hdl.position.set(dx, 0.085 + (i % 2) * 0.004, 0);
-    drivers.add(hdl);
-  });
   drivers.position.set(0.52, TOP_Y, 0.17);
   drivers.rotation.y = -0.22;
   g.add(drivers);
 
   // multimeter
   const meter = new THREE.Group();
-  const mBody = new THREE.Mesh(new RoundedBoxGeometry(0.082, 0.02, 0.15, 2, 0.007),
-    new THREE.MeshStandardMaterial({ color: 0x27408a, roughness: 0.55 }));
-  mBody.position.y = 0.01;
-  meter.add(mBody);
-  const mScreen = new THREE.Mesh(new THREE.PlaneGeometry(0.058, 0.03),
-    new THREE.MeshStandardMaterial({ color: 0x9fae9a, roughness: 0.3, emissive: 0x2a2f28, emissiveIntensity: 0.4 }));
-  mScreen.rotation.x = -Math.PI / 2;
-  mScreen.position.set(0, 0.0205, -0.045);
-  meter.add(mScreen);
-  const dial = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.008, 20), darkPlastic);
-  dial.position.set(0, 0.022, 0.02);
-  meter.add(dial);
-  const dialMark = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.004, 0.018),
-    new THREE.MeshStandardMaterial({ color: 0xe8e8ea, roughness: 0.4 }));
-  dialMark.position.set(0, 0.026, 0.014);
-  meter.add(dialMark);
-  // the meter's OWN probe leads (red + black) coiled loosely beside it —
-  // plugged into its bottom jacks, clearly separate from the PSU's leads
-  const probeLead = (side, col) => {
-    const jack = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.006, 8),
-      new THREE.MeshStandardMaterial({ color: col, roughness: 0.5 }));
-    jack.position.set(side * 0.014, 0.012, 0.072);
-    meter.add(jack);
-    const lead = new THREE.Mesh(
-      new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
-        new THREE.Vector3(side * 0.014, 0.01, 0.075),
-        new THREE.Vector3(side * 0.05, 0.003, 0.115),
-        new THREE.Vector3(side * 0.105, 0.003, 0.09),
-        new THREE.Vector3(side * 0.115, 0.003, 0.03),
-        new THREE.Vector3(side * 0.08, 0.003, -0.01),
-      ]), 30, 0.0018, 8),
-      new THREE.MeshStandardMaterial({ color: col, roughness: 0.55, metalness: 0.05 })
-    );
-    meter.add(lead);
-    // probe pen resting at the end of the lead
-    const pen = new THREE.Mesh(new THREE.CylinderGeometry(0.0032, 0.0042, 0.055, 10),
-      new THREE.MeshStandardMaterial({ color: col, roughness: 0.45 }));
-    pen.rotation.x = Math.PI / 2;
-    pen.rotation.z = side * 0.35;
-    pen.position.set(side * 0.075, 0.0042, -0.035);
-    meter.add(pen);
-    const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.0008, 0.0016, 0.02, 6), toolSteel);
-    tip.rotation.x = Math.PI / 2;
-    tip.rotation.z = side * 0.35;
-    tip.position.set(side * 0.062, 0.0042, -0.068);
-    meter.add(tip);
-  };
-  probeLead(1, 0xb3342e);
-  probeLead(-1, 0x141519);
   meter.position.set(0.24, TOP_Y, 0.16);
   meter.rotation.y = 0.5;
   g.add(meter);
@@ -4966,7 +4291,9 @@ async function buildWorkbench() {
   benchLamp.rotation.y = -0.6;
   g.add(benchLamp);
 
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  refineWorkbenchInstruments({ psu, solder, drivers, meter, scope, benchLamp });
+
+  g.traverse((o) => { if (o.isMesh) { o.castShadow = !o.material?.transparent; o.receiveShadow = true; } });
   g.position.set(-2.22, 0, -0.25);
   g.rotation.y = Math.PI / 2;
   return g;
@@ -4983,471 +4310,6 @@ function makeMiniSpool(col) {
   const fil = new THREE.Mesh(new THREE.CylinderGeometry(0.038, 0.038, 0.028, 22),
     new THREE.MeshStandardMaterial({ color: col, roughness: 0.55 }));
   g.add(fil);
-  return g;
-}
-
-async function buildBambuPrinter() {
-  // Bambu Lab H2S per reference: light-silver side shells, dark front with a
-  // large tinted door, top control band with screen + wordmark, side logo,
-  // and an AMS 2 unit on top with four visible spools under a smoked cover
-  const g = new THREE.Group();
-  const silver = new THREE.MeshStandardMaterial({ color: 0xb9b9bb, roughness: 0.44, metalness: 0.3 });
-  const darkFace = new THREE.MeshStandardMaterial({ color: 0x202227, roughness: 0.45, metalness: 0.4 });
-  const trim = new THREE.MeshStandardMaterial({ color: 0x101114, roughness: 0.5, metalness: 0.4 });
-  const W = 0.49, H = 0.62, D = 0.5;
-
-  // hollow shell (light silver): back + two sides + top + bottom, with the
-  // FRONT left open so the door glass actually reveals the lit chamber
-  // (a solid box here would block the view no matter how clear the door is)
-  const wall = 0.014, cy = H / 2 + 0.008;
-  [
-    [W, H, wall, 0, cy, -D / 2 + wall / 2],       // back
-    [wall, H, D, -W / 2 + wall / 2, cy, 0],       // left
-    [wall, H, D, W / 2 - wall / 2, cy, 0],        // right
-    [W, wall, D, 0, H + 0.008 - wall / 2, 0],     // top
-    [W, wall, D, 0, 0.008 + wall / 2, 0],         // bottom
-  ].forEach(([w, h, d, x, y, z]) => {
-    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), silver);
-    m.position.set(x, y, z);
-    m.castShadow = true;
-    m.receiveShadow = true;
-    g.add(m);
-  });
-  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz]) => {
-    const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.02, 0.018, 12), trim);
-    foot.position.set(sx * (W / 2 - 0.05), 0.009, sz * (D / 2 - 0.05));
-    g.add(foot);
-  });
-
-  // dark front face — a BEZEL only (open where the glass door is, so the lit
-  // chamber shows through). Solid top band carries the screen + wordmark.
-  const frontZ = D / 2 + 0.006;
-  const chamberW = W - 0.05, doorH = H * 0.7; // wide, tall tinted door per the H2S reference
-  const doorY0 = 0.05, doorY1 = doorY0 + doorH;          // door opening in Y
-  const faceY0 = 0.018, faceY1 = H - 0.002, faceHW = (W - 0.02) / 2;
-  const bezel = [
-    [W - 0.02, faceY1 - doorY1, 0, (doorY1 + faceY1) / 2],   // top band (screen)
-    [W - 0.02, doorY0 - faceY0, 0, (faceY0 + doorY0) / 2],   // bottom lip
-    [faceHW - chamberW / 2, doorH, -(faceHW + chamberW / 2) / 2, (doorY0 + doorY1) / 2], // left rail
-    [faceHW - chamberW / 2, doorH,  (faceHW + chamberW / 2) / 2, (doorY0 + doorY1) / 2], // right rail
-  ];
-  bezel.forEach(([w, h, x, y]) => {
-    const m = new THREE.Mesh(new RoundedBoxGeometry(w, h, 0.014, 2, 0.006), darkFace);
-    m.position.set(x, y, D / 2);
-    g.add(m);
-  });
-  // slim print-state LED strip along the bottom lip (teal = printing, matches
-  // the screen's progress-gauge accent)
-  const statusLed = new THREE.Mesh(new THREE.BoxGeometry(W - 0.14, 0.0045, 0.002),
-    new THREE.MeshStandardMaterial({ color: 0x1b4f43, emissive: 0x22c39c, emissiveIntensity: 0.7 }));
-  statusLed.position.set(0, 0.036, D / 2 + 0.0075);
-  g.add(statusLed);
-  MODELS.printerStatusLed = statusLed; // G5: breathes while "printing"
-
-  // printing chamber behind the glass
-  const chamber = new THREE.Mesh(
-    new THREE.BoxGeometry(chamberW, doorH, 0.34),
-    new THREE.MeshStandardMaterial({ color: 0x1b1e24, roughness: 0.85, side: THREE.BackSide })
-  );
-  chamber.position.set(0, doorH / 2 + 0.05, D / 2 - 0.18);
-  g.add(chamber);
-  // textured build plate: dark PEI sheet with a faint machined dot grid
-  const bedCanvas = document.createElement("canvas");
-  bedCanvas.width = bedCanvas.height = 128;
-  {
-    const bctx = bedCanvas.getContext("2d");
-    bctx.fillStyle = "#3c4046";
-    bctx.fillRect(0, 0, 128, 128);
-    // subtle speckle
-    for (let i = 0; i < 340; i++) {
-      const v = 56 + ((i * 37) % 26);
-      bctx.fillStyle = `rgb(${v},${v + 3},${v + 7})`;
-      bctx.fillRect((i * 53) % 128, (i * 91) % 128, 1, 1);
-    }
-    // faint alignment dot grid
-    bctx.fillStyle = "rgba(150,158,168,0.5)";
-    for (let gxx = 10; gxx < 128; gxx += 18)
-      for (let gyy = 10; gyy < 128; gyy += 18) {
-        bctx.beginPath(); bctx.arc(gxx, gyy, 1.1, 0, Math.PI * 2); bctx.fill();
-      }
-  }
-  const bedTex = new THREE.CanvasTexture(bedCanvas);
-  bedTex.colorSpace = THREE.SRGBColorSpace;
-  const plate = new THREE.Mesh(
-    new THREE.BoxGeometry(chamberW - 0.05, 0.006, 0.24),
-    new THREE.MeshStandardMaterial({ map: bedTex, color: 0xb9bec6, roughness: 0.55, metalness: 0.45 })
-  );
-  plate.position.set(0, 0.12, D / 2 - 0.19);
-  g.add(plate);
-  // heated bed carrier under the build plate
-  const bed = new THREE.Mesh(new THREE.BoxGeometry(chamberW - 0.03, 0.01, 0.26),
-    new THREE.MeshStandardMaterial({ color: 0x141519, roughness: 0.6, metalness: 0.4 }));
-  bed.position.set(0, 0.111, D / 2 - 0.19);
-  g.add(bed);
-  const printZ = D / 2 - 0.19;
-  const printMat = new THREE.MeshStandardMaterial({ color: 0x2f7fff, roughness: 0.5, metalness: 0.05, emissive: 0x2f7fff, emissiveIntensity: 0.35 });
-  // mid-print: a recognizable ENGINEERING BRACKET (base plate + bolt bosses +
-  // upright web + 45° gusset), echoing the blue printed parts in the cabinet
-  const brBase = new THREE.Mesh(new RoundedBoxGeometry(0.105, 0.01, 0.058, 2, 0.004), printMat);
-  brBase.position.set(0, 0.128, printZ);
-  g.add(brBase);
-  [-1, 1].forEach((s) => {
-    const boss = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.011, 0.012, 12), printMat);
-    boss.position.set(s * 0.036, 0.138, printZ + 0.016);
-    g.add(boss);
-  });
-  const brWeb = new THREE.Mesh(new THREE.BoxGeometry(0.095, 0.042, 0.008), printMat);
-  brWeb.position.set(0, 0.148, printZ - 0.02);
-  g.add(brWeb);
-  const brGusset = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.008, 0.032), printMat);
-  brGusset.position.set(0, 0.145, printZ - 0.005);
-  brGusset.rotation.x = -0.72; // leans from the base up to the web
-  g.add(brGusset);
-  // unfinished top layers of the web: lighter, slightly translucent — the
-  // slice the head is currently laying down
-  const brTop = new THREE.Mesh(new THREE.BoxGeometry(0.095, 0.005, 0.008),
-    new THREE.MeshStandardMaterial({
-      color: 0x5f9dff, roughness: 0.45, transparent: true, opacity: 0.75,
-      emissive: 0x3f8cff, emissiveIntensity: 0.5,
-    }));
-  brTop.position.set(0, 0.1715, printZ - 0.02);
-  g.add(brTop);
-  const railMat = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.35, metalness: 0.9 });
-  // X-gantry rail, lowered closer to the bed so the head isn't on a long drop
-  const crossbar = new THREE.Mesh(new THREE.BoxGeometry(chamberW - 0.04, 0.012, 0.018), railMat);
-  crossbar.position.set(0, 0.285, printZ - 0.01);
-  g.add(crossbar);
-  // CoreXY signature: idler pulleys at the crossbar ends + two thin timing
-  // belts running the crossbar's front/rear faces (static — the sweep's
-  // visual delta is minor, the belts just need to EXIST)
-  const beltMat = new THREE.MeshStandardMaterial({ color: 0x141517, roughness: 0.9, metalness: 0.05 });
-  [-1, 1].forEach((s) => {
-    const pulley = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.009, 14), railMat);
-    pulley.position.set(s * (chamberW / 2 - 0.035), 0.285, printZ - 0.024);
-    g.add(pulley);
-  });
-  [printZ - 0.0225, printZ + 0.001].forEach((bz) => {
-    const belt = new THREE.Mesh(new THREE.BoxGeometry(chamberW - 0.07, 0.006, 0.0016), beltMat);
-    belt.position.set(0, 0.285, bz);
-    g.add(belt);
-  });
-  await yieldToBrowser();
-  // moving print head: carriage on the rail + short Z-post + nozzle to the bed,
-  // with a hot-end glow at the tip (sweeps in X)
-  const headGroup = new THREE.Group();
-  const carriage = new THREE.Mesh(new RoundedBoxGeometry(0.05, 0.03, 0.05, 2, 0.008), railMat);
-  carriage.position.set(0, 0.28, printZ - 0.004);
-  headGroup.add(carriage);
-  const post = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.06, 0.02),
-    new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.4, metalness: 0.3 }));
-  post.position.set(0, 0.245, printZ);
-  headGroup.add(post);
-  const nozzleBlock = new THREE.Mesh(new RoundedBoxGeometry(0.05, 0.05, 0.045, 2, 0.009),
-    new THREE.MeshStandardMaterial({ color: 0x1b1d21, roughness: 0.4, metalness: 0.4 }));
-  nozzleBlock.position.set(0, 0.205, printZ);
-  headGroup.add(nozzleBlock);
-  const nozzle = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.009, 0.022, 10), railMat);
-  nozzle.position.set(0, 0.176, printZ);
-  headGroup.add(nozzle);
-  const headLed = new THREE.Mesh(new THREE.SphereGeometry(0.005, 10, 10),
-    new THREE.MeshStandardMaterial({ color: 0xff5533, emissive: 0xff4422, emissiveIntensity: 1.8 }));
-  headLed.position.set(0, 0.167, printZ);
-  headGroup.add(headLed);
-  // toolhead fan shroud (the chunky Bambu hot-end cover) with a fan face
-  const shroud = new THREE.Mesh(new RoundedBoxGeometry(0.06, 0.058, 0.022, 2, 0.006),
-    new THREE.MeshStandardMaterial({ color: 0x202226, roughness: 0.42, metalness: 0.35 }));
-  shroud.position.set(0, 0.206, printZ + 0.03);
-  headGroup.add(shroud);
-  const fan = new THREE.Mesh(new THREE.CircleGeometry(0.016, 16),
-    new THREE.MeshStandardMaterial({ color: 0x0d0e10, roughness: 0.5, metalness: 0.2 }));
-  fan.position.set(0, 0.209, printZ + 0.042);
-  headGroup.add(fan);
-  // first-layer inspection lens on the shroud, beside the part fan (X1/H2-class
-  // machines carry an AI camera on the toolhead) — rides the sweep for free
-  const headLens = new THREE.Mesh(new THREE.CylinderGeometry(0.0042, 0.0042, 0.004, 10),
-    new THREE.MeshStandardMaterial({ color: 0x05070a, roughness: 0.15, metalness: 0.4 }));
-  headLens.rotation.x = Math.PI / 2;
-  headLens.position.set(0.021, 0.222, printZ + 0.042);
-  headGroup.add(headLens);
-  g.add(headGroup);
-  MODELS.printerHead = headGroup;
-  // CoreXY gantry ends (Y-rails + carriages) and rear Z lead screws — makes
-  // the lit chamber read as a real machine through the door
-  const gantryMat = new THREE.MeshStandardMaterial({ color: 0x2a2c30, roughness: 0.4, metalness: 0.5 });
-  const screwMat = new THREE.MeshStandardMaterial({ color: 0x8a8f96, roughness: 0.35, metalness: 0.95 });
-  [-1, 1].forEach((s) => {
-    const yrail = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.014, 0.26), gantryMat);
-    yrail.position.set(s * (chamberW / 2 - 0.02), 0.292, printZ - 0.02);
-    g.add(yrail);
-    const yc = new THREE.Mesh(new RoundedBoxGeometry(0.024, 0.022, 0.034, 2, 0.004), gantryMat);
-    yc.position.set(s * (chamberW / 2 - 0.02), 0.286, printZ - 0.01);
-    g.add(yc);
-    const screw = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.23, 10), screwMat);
-    screw.position.set(s * (chamberW / 2 - 0.035), 0.225, -0.06);
-    g.add(screw);
-    // stepper coupler collar at the screw top — bare rods read as props
-    const coupler = new THREE.Mesh(new THREE.CylinderGeometry(0.0095, 0.0095, 0.016, 12), gantryMat);
-    coupler.position.set(s * (chamberW / 2 - 0.035), 0.345, -0.06);
-    g.add(coupler);
-  });
-  // restrained chamber light: below the bloom threshold, short throw so the
-  // glow stays INSIDE the enclosure instead of haloing the bench
-  const chamberLed = new THREE.Mesh(
-    new THREE.BoxGeometry(chamberW - 0.04, 0.006, 0.01),
-    new THREE.MeshStandardMaterial({ color: 0xf2f6fc, emissive: 0xeef4ff, emissiveIntensity: 0.75 })
-  );
-  chamberLed.position.set(0, doorH - 0.02, D / 2 - 0.05);
-  g.add(chamberLed);
-  // Bambu-signature chamber timelapse camera: a small dark module in the
-  // top-front corner, lens dot facing the bed — instantly recognizable
-  const camBody = new THREE.Mesh(new RoundedBoxGeometry(0.02, 0.02, 0.02, 2, 0.004),
-    new THREE.MeshStandardMaterial({ color: 0x0f1114, roughness: 0.4, metalness: 0.3 }));
-  camBody.position.set(chamberW / 2 - 0.045, doorH - 0.02, D / 2 - 0.08);
-  camBody.rotation.y = -0.5;
-  g.add(camBody);
-  const camLens = new THREE.Mesh(new THREE.CylinderGeometry(0.0045, 0.0045, 0.004, 10),
-    new THREE.MeshStandardMaterial({ color: 0x04060a, roughness: 0.12, metalness: 0.5 }));
-  camLens.rotation.x = Math.PI / 2;
-  camLens.rotation.z = -0.5;
-  camLens.position.set(chamberW / 2 - 0.051, doorH - 0.022, D / 2 - 0.069);
-  g.add(camLens);
-  // auxiliary chamber-circulation fan on the interior back wall — a real
-  // axial fan (frame, hub, pitched blades, wire guard). The v1 flat decal of
-  // concentric rings caught the chamber light and read as a floating coil.
-  const fanG = new THREE.Group();
-  const fanFrame = new THREE.Mesh(new RoundedBoxGeometry(0.078, 0.078, 0.012, 2, 0.004),
-    new THREE.MeshStandardMaterial({ color: 0x1a1c20, roughness: 0.55, metalness: 0.3 }));
-  fanG.add(fanFrame);
-  // rotor = hub + blades in their own group: ONLY this spins — animating the
-  // whole fanG turned the square frame and guard with it (Kefan 2026-07-14)
-  const fanRotor = new THREE.Group();
-  const fanHub = new THREE.Mesh(new THREE.CylinderGeometry(0.013, 0.013, 0.011, 14),
-    new THREE.MeshStandardMaterial({ color: 0x4a4e55, roughness: 0.45, metalness: 0.4 }));
-  fanHub.rotation.x = Math.PI / 2;
-  fanRotor.add(fanHub);
-  // blades LIGHT against the dark frame — same-tone blades vanished and the
-  // bright guard read as a coil again (review verdict on v2)
-  const bladeMat = new THREE.MeshStandardMaterial({ color: 0x8f959d, roughness: 0.4, metalness: 0.6 });
-  for (let b = 0; b < 5; b++) {
-    const bSpoke = new THREE.Group();
-    bSpoke.rotation.z = (b / 5) * Math.PI * 2;
-    const blade = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.026, 0.0028), bladeMat);
-    blade.position.y = 0.023;
-    blade.rotation.y = 0.55; // uniform pitch: local y IS the radial axis here
-    bSpoke.add(blade);
-    fanRotor.add(bSpoke);
-  }
-  fanG.add(fanRotor);
-  const guardMat = new THREE.MeshStandardMaterial({ color: 0x3f4348, roughness: 0.5, metalness: 0.5 });
-  [0.016, 0.032].forEach((gr) => {
-    const guardRing = new THREE.Mesh(new THREE.TorusGeometry(gr, 0.0011, 6, 20), guardMat);
-    guardRing.position.z = 0.009;
-    fanG.add(guardRing);
-  });
-  for (let w = 0; w < 4; w++) {
-    const wire = new THREE.Mesh(new THREE.CylinderGeometry(0.001, 0.001, 0.068, 6), guardMat);
-    wire.rotation.z = (w / 4) * Math.PI * 2 + Math.PI / 4;
-    wire.position.z = 0.0095;
-    fanG.add(wire);
-  }
-  // chamber box: center z = D/2-0.18, half-depth 0.17 -> inner back plane at
-  // z = -0.10; the frame (half-depth 0.006) sits flush against it
-  fanG.position.set(0.09, 0.3, -0.094);
-  g.add(fanG);
-  MODELS.chamberFan = fanRotor; // G2: the rotor spins in the render loop, frame stays put
-  const inner = new THREE.PointLight(0xeaf2ff, 0.38, 0.8, 2);
-  inner.position.set(0, doorH - 0.06, D / 2 - 0.16);
-  g.add(inner);
-  const inner2 = new THREE.PointLight(0xfff0e0, 0.28, 0.5, 2); // warm fill near the hot-end
-  inner2.position.set(0, 0.24, printZ);
-  g.add(inner2);
-
-  await yieldToBrowser();
-  // tinted door — unlit basic material so the bright bench can't wash it out
-  // with specular; you see cleanly through to the lit chamber
-  const glass = new THREE.Mesh(
-    new THREE.PlaneGeometry(chamberW, doorH),
-    new THREE.MeshBasicMaterial({
-      color: 0x1c2530, transparent: true, opacity: 0.26,
-      side: THREE.DoubleSide, depthWrite: false,
-    })
-  );
-  glass.position.set(0, doorH / 2 + 0.05, frontZ + 0.004);
-  g.add(glass);
-  // door bar handle on two standoffs (right edge) — reads as grabbable
-  const handleMat = new THREE.MeshStandardMaterial({ color: 0x24262b, roughness: 0.35, metalness: 0.6 });
-  [-0.045, 0.045].forEach((dy) => {
-    const standoff = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.016, 10), handleMat);
-    standoff.rotation.x = Math.PI / 2;
-    standoff.position.set(chamberW / 2 - 0.016, doorH / 2 + 0.06 + dy, frontZ + 0.012);
-    g.add(standoff);
-  });
-  const handleBar = new THREE.Mesh(new THREE.CapsuleGeometry(0.006, 0.11, 4, 10), handleMat);
-  handleBar.position.set(chamberW / 2 - 0.016, doorH / 2 + 0.06, frontZ + 0.021);
-  g.add(handleBar);
-  // two hinges on the left edge: knuckle blocks + a vertical pin
-  [-0.22, 0.22].forEach((dy) => {
-    const knuckle = new THREE.Mesh(new RoundedBoxGeometry(0.014, 0.034, 0.014, 2, 0.003), handleMat);
-    knuckle.position.set(-chamberW / 2 - 0.002, doorH / 2 + 0.05 + dy, frontZ + 0.006);
-    g.add(knuckle);
-    const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.0035, 0.0035, 0.044, 8),
-      new THREE.MeshStandardMaterial({ color: 0x8f959d, roughness: 0.3, metalness: 0.9 }));
-    pin.position.set(-chamberW / 2 - 0.002, doorH / 2 + 0.05 + dy, frontZ + 0.012);
-    g.add(pin);
-  });
-
-  // top control band: large touchscreen (left, circular gauge + menu) and the
-  // "Bambu Lab H2S" wordmark (right), matching the H2S reference photo
-  const ui = document.createElement("canvas");
-  ui.width = 176; ui.height = 124;
-  const uctx = ui.getContext("2d");
-  uctx.fillStyle = "#0a0d10"; uctx.fillRect(0, 0, 176, 124);
-  // circular print-progress gauge (left)
-  const gx = 44, gy = 66, gr = 34;
-  uctx.lineWidth = 7; uctx.strokeStyle = "#233040";
-  uctx.beginPath(); uctx.arc(gx, gy, gr, 0, Math.PI * 2); uctx.stroke();
-  uctx.strokeStyle = "#22c39c";
-  uctx.beginPath(); uctx.arc(gx, gy, gr, -Math.PI / 2, -Math.PI / 2 + Math.PI * 1.32); uctx.stroke();
-  uctx.fillStyle = "#e8ecf2"; uctx.textAlign = "center"; uctx.font = "700 20px Arial";
-  uctx.fillText("66%", gx, gy + 7);
-  // menu rows (right, top three slots)
-  uctx.textAlign = "left";
-  for (let r = 0; r < 3; r++) {
-    uctx.fillStyle = r === 0 ? "#16283a" : "#131922";
-    uctx.fillRect(96, 16 + r * 26, 68, 20);
-    uctx.fillStyle = r === 0 ? "#22c39c" : "#586675";
-    uctx.beginPath(); uctx.arc(106, 26 + r * 26, 4, 0, Math.PI * 2); uctx.fill();
-    uctx.fillStyle = "#9aa4b0"; uctx.fillRect(116, 24 + r * 26, 42, 4);
-  }
-  // print-job slot (bottom right): part thumbnail + layer counter
-  uctx.fillStyle = "#131922"; uctx.fillRect(96, 94, 68, 24);
-  uctx.fillStyle = "#2f7fff";
-  uctx.fillRect(101, 106, 16, 3);                 // thumbnail: bracket base
-  uctx.fillRect(101, 99, 16, 3);                  // bracket web
-  uctx.fillRect(106, 102, 3, 5);                  // gusset link
-  uctx.fillStyle = "#9aa4b0"; uctx.font = "600 10px Arial";
-  uctx.fillText("L 142/215", 122, 109);
-  // status strip (temps)
-  uctx.fillStyle = "#22c39c"; uctx.font = "600 11px Arial";
-  uctx.fillText("210°  60°", 10, 16);
-  const uiTex = new THREE.CanvasTexture(ui);
-  uiTex.colorSpace = THREE.SRGBColorSpace;
-  const scFrame = new THREE.Mesh(new RoundedBoxGeometry(0.126, 0.094, 0.006, 2, 0.004),
-    new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.5 }));
-  scFrame.position.set(-W / 2 + 0.088, H - 0.082, frontZ + 0.004);
-  g.add(scFrame);
-  const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.115, 0.082),
-    new THREE.MeshBasicMaterial({ map: uiTex, color: 0xcaccd0 }));
-  screen.position.set(-W / 2 + 0.088, H - 0.082, frontZ + 0.009);
-  g.add(screen);
-  const wm = document.createElement("canvas");
-  wm.width = 200; wm.height = 40;
-  const wctx = wm.getContext("2d");
-  wctx.textAlign = "right";
-  wctx.fillStyle = "#a9afb8"; wctx.font = "600 12px Arial"; wctx.fillText("Bambu Lab", 132, 26);
-  wctx.fillStyle = "#e8ebf0"; wctx.font = "700 26px Arial"; wctx.fillText("H2S", 190, 30);
-  const wmTex = new THREE.CanvasTexture(wm);
-  wmTex.colorSpace = THREE.SRGBColorSpace;
-  const mark = new THREE.Mesh(new THREE.PlaneGeometry(0.15, 0.03), new THREE.MeshBasicMaterial({ map: wmTex, transparent: true }));
-  mark.position.set(W / 2 - 0.105, H - 0.062, frontZ + 0.009);
-  g.add(mark);
-
-  // Bambu Lab logo on the right side shell (two bars + wordmark)
-  const lg = document.createElement("canvas");
-  lg.width = 128; lg.height = 128;
-  const lctx = lg.getContext("2d");
-  // transparent bg so only the dark mark shows on the silver side panel;
-  // the Bambu Lab mark = two vertical bars linked by a diagonal top cut
-  lctx.fillStyle = "#2b2d31";
-  lctx.fillRect(73, 26, 13, 58);   // right (tall) bar
-  lctx.fillRect(49, 42, 13, 42);   // left (short) bar
-  lctx.beginPath();                // diagonal linking the two bar tops
-  lctx.moveTo(49, 42); lctx.lineTo(86, 26); lctx.lineTo(86, 37); lctx.lineTo(62, 48); lctx.closePath(); lctx.fill();
-  lctx.fillStyle = "#34363b"; lctx.font = "600 13px Arial"; lctx.textAlign = "center";
-  lctx.fillText("Bambu Lab", 67, 104);
-  const lgTex = new THREE.CanvasTexture(lg);
-  lgTex.colorSpace = THREE.SRGBColorSpace;
-  const logo = new THREE.Mesh(new THREE.PlaneGeometry(0.17, 0.17), new THREE.MeshBasicMaterial({ map: lgTex, transparent: true }));
-  logo.position.set(W / 2 + 0.002, H * 0.5 + 0.05, -0.02);
-  logo.rotation.y = Math.PI / 2;
-  g.add(logo);
-
-  await yieldToBrowser();
-  /* ---- AMS 2 on top: dark tray + four spools under a smoked cover ---- */
-  const ams = new THREE.Group();
-  const amsW = W - 0.06, amsD = D - 0.16, amsH = 0.05;
-  const tray = new THREE.Mesh(new RoundedBoxGeometry(amsW, amsH, amsD, 2, 0.01), trim);
-  tray.position.y = amsH / 2;
-  ams.add(tray);
-  // 4 feed slots on the tray front
-  for (let i = 0; i < 4; i++) {
-    const slot = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.02, 0.008),
-      new THREE.MeshStandardMaterial({ color: 0x2a2d33, roughness: 0.5 }));
-    slot.position.set(-amsW / 2 + 0.08 + i * 0.095, 0.03, amsD / 2 - 0.002);
-    ams.add(slot);
-  }
-  // spools row — same 1.6x scale as the spare spools on the bench shelf
-  [0xe8eaee, 0x2b66d9, 0x2fa98c, 0xd97b2b].forEach((col, i) => {
-    const sp = makeMiniSpool(col);
-    sp.scale.setScalar(1.6);
-    sp.rotation.z = Math.PI / 2;
-    sp.position.set(-amsW / 2 + 0.075 + i * 0.095, amsH + 0.055, 0);
-    ams.add(sp);
-    // G4: the blue spool feeds the blue bracket on the bed — it slowly turns
-    // (rotation.x spins about the axle: XYZ euler applies Rz(π/2) first)
-    if (i === 1) MODELS.activeSpool = sp;
-  });
-  // smoked half-cylinder cover along the width (sized to clear the spools)
-  const cover = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.085, 0.085, amsW, 26, 1, true, 0, Math.PI),
-    new THREE.MeshPhysicalMaterial({
-      color: 0x101114, roughness: 0.12, metalness: 0,
-      transparent: true, opacity: 0.42, side: THREE.DoubleSide,
-    })
-  );
-  cover.rotation.z = Math.PI / 2;
-  cover.position.set(0, amsH + 0.045, 0);
-  ams.add(cover);
-  // cover end caps
-  [-amsW / 2, amsW / 2].forEach((ex) => {
-    const cap = new THREE.Mesh(new THREE.CircleGeometry(0.085, 26, 0, Math.PI),
-      new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.45, metalness: 0.3, side: THREE.DoubleSide }));
-    cap.position.set(ex, amsH + 0.045, 0);
-    cap.rotation.y = Math.PI / 2;
-    ams.add(cap);
-  });
-  ams.position.set(0, H + 0.016, -0.02);
-  g.add(ams);
-  // PTFE feed tube: AMS lid down into the body top (the spools must connect)
-  const tubePts = [
-    new THREE.Vector3(0.16, H + 0.07, -0.12),
-    new THREE.Vector3(0.225, H + 0.1, -0.1),
-    new THREE.Vector3(0.235, H + 0.03, -0.05),
-    new THREE.Vector3(0.2, H + 0.005, -0.02),
-  ];
-  const tube = new THREE.Mesh(
-    new THREE.TubeGeometry(new THREE.CatmullRomCurve3(tubePts), 24, 0.0045, 8),
-    new THREE.MeshStandardMaterial({ color: 0xdfe2e6, roughness: 0.5, metalness: 0.05 })
-  );
-  g.add(tube);
-  // thin door frame around the glass + a side vent slot
-  const doorFrameMat = new THREE.MeshStandardMaterial({ color: 0x17181c, roughness: 0.5, metalness: 0.35 });
-  [
-    [chamberW + 0.016, 0.008, 0, doorY1 + 0.004],
-    [chamberW + 0.016, 0.008, 0, doorY0 - 0.004],
-    [0.008, doorH + 0.016, -chamberW / 2 - 0.004, (doorY0 + doorY1) / 2],
-    [0.008, doorH + 0.016, chamberW / 2 + 0.004, (doorY0 + doorY1) / 2],
-  ].forEach(([w, h, x, y]) => {
-    const bar = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.006), doorFrameMat);
-    bar.position.set(x, y, frontZ + 0.006);
-    g.add(bar);
-  });
-  const vent = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.05, 0.26),
-    new THREE.MeshStandardMaterial({ color: 0x24262b, roughness: 0.7, metalness: 0.2 }));
-  vent.position.set(W / 2 + 0.001, H - 0.12, -0.08);
-  g.add(vent);
-
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
 }
 
@@ -5534,79 +4396,6 @@ function buildSideCabinet() {
   });
 
   g.position.set(CAB2.x, 0, CAB2.z);
-  return g;
-}
-
-function steelToolMat() {
-  return new THREE.MeshStandardMaterial({ color: 0x9aa0a8, metalness: 0.9, roughness: 0.4 });
-}
-
-function buildFtcBot() {
-  // FTC robot: chassis, four mecanum wheels, vertical lift, claw, hub
-  const g = new THREE.Group();
-  const dark = new THREE.MeshStandardMaterial({ color: 0x26282c, roughness: 0.5, metalness: 0.4 });
-  const alu = new THREE.MeshStandardMaterial({ color: 0x9ba1a9, roughness: 0.35, metalness: 0.9 });
-  const chassis = new THREE.Mesh(new RoundedBoxGeometry(0.2, 0.02, 0.16, 2, 0.005), alu);
-  chassis.position.y = 0.045;
-  g.add(chassis);
-  // mecanum wheels: small hub + rollers ON the rim at 45deg (the rollers are
-  // the tread — no solid tyre cylinder to poke through them), mounted flush
-  // outside the chassis so nothing clips
-  const hubMat = new THREE.MeshStandardMaterial({ color: 0x1a1c20, roughness: 0.55, metalness: 0.5 });
-  const rollerMat = new THREE.MeshStandardMaterial({ color: 0x53565c, roughness: 0.55, metalness: 0.3 });
-  const wheelUp = new THREE.Vector3(0, 1, 0);
-  function mecanumWheel(hand) {
-    const wheel = new THREE.Group();
-    const hubR = 0.015, hubW = 0.02, ringR = 0.028;
-    const hub = new THREE.Mesh(new THREE.CylinderGeometry(hubR, hubR, hubW, 18), hubMat); // axis = local y
-    wheel.add(hub);
-    [-1, 1].forEach((s) => {
-      const disc = new THREE.Mesh(new THREE.CylinderGeometry(hubR * 1.2, hubR * 1.2, 0.002, 18), hubMat);
-      disc.position.y = (s * hubW) / 2;
-      wheel.add(disc);
-    });
-    const N = 10;
-    for (let i = 0; i < N; i++) {
-      const a = (i / N) * Math.PI * 2;
-      const roller = new THREE.Mesh(new THREE.CapsuleGeometry(0.0055, 0.015, 4, 8), rollerMat);
-      roller.position.set(ringR * Math.cos(a), 0, ringR * Math.sin(a));
-      // long axis = tangent blended 45deg toward the wheel axis (mecanum);
-      // `hand` mirrors the tilt on the left vs right wheels
-      const dir = new THREE.Vector3(-hand * Math.sin(a), 1, hand * Math.cos(a)).normalize();
-      roller.quaternion.setFromUnitVectors(wheelUp, dir);
-      wheel.add(roller);
-    }
-    return wheel;
-  }
-  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz]) => {
-    const w = mecanumWheel(sx);
-    w.rotation.z = Math.PI / 2;                 // spin axis -> world x
-    w.position.set(sx * 0.112, 0.034, sz * 0.07); // flush just outside the chassis side
-    g.add(w);
-  });
-  // vertical lift + claw
-  [[-0.03], [0.03]].forEach(([x]) => {
-    const rail = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.22, 0.012), alu);
-    rail.position.set(x, 0.16, -0.05);
-    g.add(rail);
-  });
-  const carriage = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.03, 0.02), dark);
-  carriage.position.set(0, 0.2, -0.04);
-  g.add(carriage);
-  // claw fingers are red on the real robot (competition photos)
-  const red = new THREE.MeshStandardMaterial({ color: 0xc5342c, roughness: 0.5, metalness: 0.1 });
-  [[-0.02, 0.25], [0.02, -0.25]].forEach(([x, rot]) => {
-    const finger = new THREE.Mesh(new THREE.BoxGeometry(0.01, 0.05, 0.03), red);
-    finger.position.set(x, 0.185, -0.015);
-    finger.rotation.z = rot;
-    g.add(finger);
-  });
-  // REV control hub is black on the real robot (was stylized blue)
-  const hub = new THREE.Mesh(new RoundedBoxGeometry(0.07, 0.02, 0.05, 2, 0.005),
-    new THREE.MeshStandardMaterial({ color: 0x212226, roughness: 0.5 }));
-  hub.position.set(0.04, 0.065, 0.03);
-  g.add(hub);
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
 }
 
@@ -6489,41 +5278,6 @@ function buildResumePaper() {
   // the pickup animation needs the printed face: its world pose defines the
   // sheet's on-screen rect, and its emissiveIntensity is the night glow ramp
   g.userData.resumeFace = face;
-  return g;
-}
-
-function buildCfdDisplay(texLoader) {
-  // small monitor on a stand showing the real Ansys pressure field render
-  const g = new THREE.Group();
-  const dark = new THREE.MeshStandardMaterial({ color: 0x101114, roughness: 0.4, metalness: 0.5 });
-  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.012, 24), dark);
-  base.position.y = 0.006;
-  g.add(base);
-  const neck = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.07, 0.016), dark);
-  neck.position.y = 0.045;
-  g.add(neck);
-  const bezel = new THREE.Mesh(new RoundedBoxGeometry(0.26, 0.17, 0.014, 2, 0.005), dark);
-  bezel.position.y = 0.16;
-  bezel.rotation.x = -0.06;
-  g.add(bezel);
-  const tex = texLoader.load("assets/ansys-cfd-pressure.webp");
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = MAXA; // screen is viewed at an angle — aniso keeps it sharp
-  // the source render is 16:9-ish (1800x1013) but the panel is 1.58:1 —
-  // crop the texture horizontally instead of squashing it
-  const crop = (0.245 / 0.155) / (1800 / 1013);
-  tex.repeat.set(crop, 1);
-  tex.offset.set((1 - crop) / 2, 0);
-  // unlit screen, dimmed below the bloom threshold so it reads as an LCD,
-  // not a light fixture
-  const screen = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.245, 0.155),
-    new THREE.MeshBasicMaterial({ map: tex, color: 0x9d9d9d })
-  );
-  screen.position.set(0, 0.16, 0.0078);
-  screen.rotation.x = -0.06;
-  g.add(screen);
-  g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
   return g;
 }
 

@@ -1,5 +1,14 @@
 # Kefan Wu Portfolio Site
 
+## Current 3D room · 2026-09-26
+
+The original room now has 16 source-aligned project exhibits, including the
+guitar kit on the workbench, detailed printer/tools and refreshed Cycles lighting.
+Project introductions use the same full case-study structure as the main site.
+See [STUDIO_ROOM_DETAIL.md](STUDIO_ROOM_DETAIL.md) for current assets, changes,
+performance measurements and reproduction. Earlier release sections below are
+historical; their 15-exhibit and missing-Education descriptions are superseded.
+
 ## Shared neutral backgrounds and conforming carbon layup · 2026-09-15
 
 The current presentation revision is `neutral-20260915`, based on published

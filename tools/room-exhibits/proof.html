@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Room source alignment proof</title>
+<style>body{margin:0;background:#111;color:#eee;font:15px system-ui}header{padding:20px 24px}h1{font-size:23px;margin:0 0 8px}p{margin:0;color:#aaa}main{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px}article{background:#191919;padding:10px}h2{font-size:17px;margin:0 0 7px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:6px}.pair img{width:100%;display:block}.label{font-size:11px;display:block;color:#aaa;padding:5px 0}canvas{position:fixed;left:-2000px;top:0}body[data-status=failed]header{color:#ff8279}</style>
+<script type="importmap">{"imports":{"three":"../../vendor/three/0.185.0/build/three.module.js","three/addons/":"../../vendor/three/0.185.0/examples/jsm/"}}</script>
+<header><h1>Current MAIN cover / room geometry</h1><p id="status">Preparing source-aligned exhibits…</p></header><main></main>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+import {ROOM_EXHIBITS,prepareRoomExhibit} from '../../experience-exhibits.js';
+const renderer = new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+renderer.setSize(640,427);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
+document.body.append(renderer.domElement);
+const room=new RoomEnvironment(),pmrem=new THREE.PMREMGenerator(renderer),env=pmrem.fromScene(room,.04);room.dispose();pmrem.dispose();
+const loader=new GLTFLoader(),report=await(await fetch('./report.json')).json(),covers=await(await fetch('../../assets/editorial/animation-covers.json')).json();
+const errors=[]; const results=[];
+try{for(const[key,entry]of Object.entries(ROOM_EXHIBITS)){
+  const source=report.projects[key],article=document.createElement('article');article.dataset.project=key;
+  article.innerHTML=`<h2>${key}</h2><div class="pair"><div><img alt="MAIN ${key}" src="../../${covers.projects[key].variants[1].src}"><span class="label">Current MAIN cover</span></div><div class="result"><span class="label">Current room · ${(entry.bytes/1000).toFixed(0)} kB · ${entry.triangles.toLocaleString()} triangles</span></div></div>`;document.querySelector('main').append(article);
+  const response=await fetch('../../'+entry.url);if(!response.ok)throw Error(response.status+' '+key);
+  const buffer=await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+  const gltf=await loader.parseAsync(buffer,'');prepareRoomExhibit(gltf.scene,key);
+  const scene=new THREE.Scene();scene.background=new THREE.Color(0x191919);scene.environment=env.texture;scene.environmentIntensity=.65;
+  scene.add(new THREE.HemisphereLight(0xffffff,0x737373,1));const light=new THREE.DirectionalLight(0xffffff,2.5);light.position.set(4,6,5);scene.add(light);const fill=new THREE.DirectionalLight(0xffffff,1.3);fill.position.set(-5,2,-3);scene.add(fill);scene.add(gltf.scene);
+  const cam=source.sourceCamera,aspect=640/427,half=cam.orthoScale/2;
+  const camera=new THREE.OrthographicCamera(-half,half,half/aspect,-half/aspect,.001,1000);
+  const world=point=>new THREE.Vector3(point[0],point[2],-point[1]).add(new THREE.Vector3().fromArray(source.sourceTranslationAfterYUp));
+  camera.position.copy(world(cam.position));camera.up.set(cam.up[0],cam.up[2],-cam.up[1]);camera.lookAt(world(cam.target));
+  await renderer.compileAsync(scene,camera);renderer.render(scene,camera);
+  const img=document.createElement('img');img.alt='Room '+key;img.src=renderer.domElement.toDataURL();article.querySelector('.result').prepend(img);
+  const procedural=[];gltf.scene.traverse(o=>{if(o.isMesh)for(const material of Array.isArray(o.material)?o.material:[o.material])if(material.userData.source.procedural)procedural.push({name:material.name,compiled:!!material.userData.sourceShaderCompiled});});
+  results.push({key,triangles:renderer.info.render.triangles,calls:renderer.info.render.calls,procedural});
+  gltf.scene.traverse(o=>{o.geometry?.dispose();if(o.material)for(const material of Array.isArray(o.material)?o.material:[o.material])material.dispose();});
+}document.body.dataset.status='passed';document.querySelector('#status').textContent='16 static source poses rendered. Source camera and current workbench lighting; room performance geometry.';
+}catch(error){errors.push(String(error.stack));document.body.dataset.status='failed';document.querySelector('#status').textContent=String(error);console.error(error);}
+document.body.dataset.results=JSON.stringify({results,errors});
+</script></html>

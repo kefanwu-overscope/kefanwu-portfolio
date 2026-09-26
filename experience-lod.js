@@ -139,7 +139,19 @@ export class ModelLODLoader {
   }
   async parseGLB(source) {
     if (this.disposed) throw new DOMException("Room closed", "AbortError");
-    const gltf = await this.raw.parseAsync(source.data, THREE.LoaderUtils.extractUrlBase(source.url));
+    // Room exhibits are static snapshots of the same source as the project
+    // viewer. Compressing those attributes preserves detail without fetching
+    // the animation package. Decode inside the serialized preparation queue.
+    let data = source.data;
+    if (data?.byteLength >= 2) {
+      const signature = new Uint8Array(data, 0, 2);
+      if (signature[0] === 0x1f && signature[1] === 0x8b) {
+        data = await new Response(new Blob([data]).stream()
+          .pipeThrough(new DecompressionStream("gzip"))).arrayBuffer();
+      }
+    }
+    if (this.disposed) throw new DOMException("Room closed", "AbortError");
+    const gltf = await this.raw.parseAsync(data, THREE.LoaderUtils.extractUrlBase(source.url));
     if (this.disposed) throw new DOMException("Room closed", "AbortError");
     return gltf;
   }

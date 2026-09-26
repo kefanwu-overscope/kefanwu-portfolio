@@ -1,0 +1,440 @@
+{
+  "schema": "room-exhibits-v1",
+  "sourceRelease": "studio-packed-20260919",
+  "sourceIndexSha256": "a4392f8e555ef2c8641994cc263d4625fe8eecdd575f617c90b6291ab3e75a2d",
+  "sample": 0,
+  "projects": {
+    "steering": {
+      "url": "models/room-current/steering.ab50611278a1e6f7.glb.gz",
+      "sha256": "ab50611278a1e6f7d31cac879530ce4e1a0f002534e9bf0da4fb556daec8d070",
+      "bytes": 332043,
+      "glbBytes": 556592,
+      "compression": "gzip",
+      "triangles": 19144,
+      "bounds": {
+        "min": [
+          -1.3999998569488525,
+          0,
+          -1.387578010559082
+        ],
+        "max": [
+          1.3999998569488525,
+          2.6226468086242676,
+          1.387578010559082
+        ]
+      },
+      "frontYaw": -0.5667292443623301,
+      "source": {
+        "manifest": "assets/studio-motion/steering/manifest.58205faed00ee856.json",
+        "manifestSha256": "58205faed00ee856ad236b9df0e0532d2e942c1f54af76c2952478477c1d5f5c",
+        "geometrySha256": "399ef952de1a515d51acb6f55fc3cee7120543f802f9dfd9841b283cb56d8057",
+        "initialMotionSha256": "c0592ed4ddf75a8fd122df9e79afc82adb57ee467d73104e8446f5c4ca9b2700"
+      }
+    },
+    "vineRobot": {
+      "url": "models/room-current/vineRobot.b71178f06ae275a8.glb.gz",
+      "sha256": "b71178f06ae275a8d7b4968a85f6448dbc0e08461901f4e9e07a10b78afa27d1",
+      "bytes": 249710,
+      "glbBytes": 500916,
+      "compression": "gzip",
+      "triangles": 19240,
+      "bounds": {
+        "min": [
+          -1.3379242420196533,
+          0,
+          -0.9862948060035706
+        ],
+        "max": [
+          1.3379242420196533,
+          2.8000001907348633,
+          0.9862948060035706
+        ]
+      },
+      "frontYaw": 1.0022718051098825,
+      "source": {
+        "manifest": "assets/studio-motion/vineRobot/manifest.b9a288a0d3a38c69.json",
+        "manifestSha256": "b9a288a0d3a38c6943fa423f0d910e44f14ed9db958cfb00c63f13f6870ddbbd",
+        "geometrySha256": "8d935fced79b9afe6bcb5c5d48628b1b3fb9ff55a409d934d46144888f28a190",
+        "initialMotionSha256": "ec561d3317041e44caabe1331945a76080a32c950b5c74763f9fc70d0a14cace"
+      }
+    },
+    "javelin": {
+      "url": "models/room-current/javelin.cef61a83518bd614.glb.gz",
+      "sha256": "cef61a83518bd614d623c33d8273dc30767144ef709afd59ca6e894032561446",
+      "bytes": 377481,
+      "glbBytes": 831344,
+      "compression": "gzip",
+      "triangles": 23802,
+      "bounds": {
+        "min": [
+          -1.399999976158142,
+          0,
+          -0.648527204990387
+        ],
+        "max": [
+          1.399999976158142,
+          1.524290919303894,
+          0.648527204990387
+        ]
+      },
+      "frontYaw": 1.3258176636680326,
+      "source": {
+        "manifest": "assets/studio-motion/javelin/manifest.abd6d43cbbda460e.json",
+        "manifestSha256": "abd6d43cbbda460eebaeb9b71f78841d4c9a5f3848e267d817e7b7a5e802b3f3",
+        "geometrySha256": "83439295144c31a5547a3fd9a531f040ad8d52bbe686fd2b95b28797412dc676",
+        "initialMotionSha256": "c0592ed4ddf75a8fd122df9e79afc82adb57ee467d73104e8446f5c4ca9b2700"
+      }
+    },
+    "scanner": {
+      "url": "models/room-current/scanner.41ecb17165900906.glb.gz",
+      "sha256": "41ecb171659009064750ef0e7c16009b8b901bb0fd102c6715d86a13acb16448",
+      "bytes": 331997,
+      "glbBytes": 660080,
+      "compression": "gzip",
+      "triangles": 21946,
+      "bounds": {
+        "min": [
+          -1.399999976158142,
+          0,
+          -0.632110595703125
+        ],
+        "max": [
+          1.399999976158142,
+          1.9335089921951294,
+          0.632110595703125
+        ]
+      },
+      "frontYaw": -0.5317240057171826,
+      "source": {
+        "manifest": "assets/studio-motion/scanner/manifest.871477ce65e6213f.json",
+        "manifestSha256": "871477ce65e6213f3c9636b3808a8ae9743eb89d2b5389969ee92427627d4549",
+        "geometrySha256": "7ea7d419e6703eeba93ae167c5e194b188490e617580cc23d68c1b984aa25356",
+        "initialMotionSha256": "d77850f2a898c5c1ba223cc21ebdec3d623d0082a7da75e42a32981d0cc34fee"
+      }
+    },
+    "brakeSim": {
+      "url": "models/room-current/brakeSim.529756e9c1f80320.glb.gz",
+      "sha256": "529756e9c1f80320436d4a5fe51ebd38336cc18f8e656acab33a0cb021793ee4",
+      "bytes": 110314,
+      "glbBytes": 248888,
+      "compression": "gzip",
+      "triangles": 9946,
+      "bounds": {
+        "min": [
+          -0.03490666672587395,
+          0,
+          -1.399999976158142
+        ],
+        "max": [
+          0.03490666672587395,
+          2.7994019985198975,
+          1.399999976158142
+        ]
+      },
+      "frontYaw": -1.2924967906561051,
+      "source": {
+        "manifest": "assets/studio-motion/brakeSim/manifest.f6b37bc3ff99110c.json",
+        "manifestSha256": "f6b37bc3ff99110cb6faadb73cf825b7b57f15f4a1e227845a1a776d1e3e08a1",
+        "geometrySha256": "4181f8a44a9ce53322891777238ef59122a6443ea2ced935c9be730724da6d6e",
+        "initialMotionSha256": "4d6015c3dc9fc41f6ac8bf53c208a68863d149d965096d1729770f4a623ee11f"
+      }
+    },
+    "aura": {
+      "url": "models/room-current/aura.45e33a70c105e6e6.glb.gz",
+      "sha256": "45e33a70c105e6e6559e55149a8bc80338419167403b8486dc3c0629ef1b421f",
+      "bytes": 188337,
+      "glbBytes": 357840,
+      "compression": "gzip",
+      "triangles": 13118,
+      "bounds": {
+        "min": [
+          -1.2408723831176758,
+          0,
+          -1.4000000953674316
+        ],
+        "max": [
+          1.2408723831176758,
+          1.6724275350570679,
+          1.4000000953674316
+        ]
+      },
+      "frontYaw": -0.5317239968962136,
+      "source": {
+        "manifest": "assets/studio-motion/aura/manifest.04a5825a491acd77.json",
+        "manifestSha256": "04a5825a491acd77d00ae0caa78caf677b381ec310eab9881eada95d78203f3d",
+        "geometrySha256": "861cdd94e2823d8507ea8487074595631405d8aaf1c063e43464e470323cb41e",
+        "initialMotionSha256": "d77850f2a898c5c1ba223cc21ebdec3d623d0082a7da75e42a32981d0cc34fee"
+      }
+    },
+    "carbonSeat": {
+      "url": "models/room-current/carbonSeat.f07a6d92671c19e2.glb.gz",
+      "sha256": "f07a6d92671c19e2b85e3a0ce0cfdd0d391698022970e00e1709e091fb821c61",
+      "bytes": 491244,
+      "glbBytes": 680740,
+      "compression": "gzip",
+      "triangles": 20430,
+      "bounds": {
+        "min": [
+          -1.2723844051361084,
+          0,
+          -1.399999976158142
+        ],
+        "max": [
+          1.2723844051361084,
+          2.790069103240967,
+          1.399999976158142
+        ]
+      },
+      "frontYaw": -0.5317239837032438,
+      "source": {
+        "manifest": "assets/studio-motion/carbonSeat/manifest.0bf7f9454f6e0f98.json",
+        "manifestSha256": "0bf7f9454f6e0f9806ee820478ef9710fdd0de6aeb69cc06a104b5489e9ff1b5",
+        "geometrySha256": "5edf2dc15233185131452b0233a914bc74ee51b04908a389be2a143f7f113ed0",
+        "initialMotionSha256": "21756c277d8ac56b947e4a857c4ace44d353eec086485b32376764c50022ccba"
+      }
+    },
+    "seat": {
+      "url": "models/room-current/seat.a1b62d9f5e3cd135.glb.gz",
+      "sha256": "a1b62d9f5e3cd13564a86d22451239d60f1f57150a97b27833167b0bc9c9d913",
+      "bytes": 124020,
+      "glbBytes": 279052,
+      "compression": "gzip",
+      "triangles": 9432,
+      "bounds": {
+        "min": [
+          -1.3962090015411377,
+          0,
+          -1.0749118328094482
+        ],
+        "max": [
+          1.3962090015411377,
+          1.9534788131713867,
+          1.0749118328094482
+        ]
+      },
+      "frontYaw": 0.9453114442836704,
+      "source": {
+        "manifest": "assets/studio-motion/seat/manifest.23366eabc26a4356.json",
+        "manifestSha256": "23366eabc26a43567dbab95f1f4c3bc0ce1b86049b7708ebcbb6c1d3693ceb6a",
+        "geometrySha256": "d47910c643896b70481c33c31a246f1a6a6cd8b50c98f470af1268dac7d6292a",
+        "initialMotionSha256": "babd055aed8589ee535d53e3611bdd6dd8d62ee4c9c6d1f17f6d4fe27d25233c"
+      }
+    },
+    "materialTest": {
+      "url": "models/room-current/materialTest.bced6eaa6ef9bbcf.glb.gz",
+      "sha256": "bced6eaa6ef9bbcfd95d8df94b95296af822e66a34721ea16adcc841cccc0c96",
+      "bytes": 292148,
+      "glbBytes": 614324,
+      "compression": "gzip",
+      "triangles": 14886,
+      "bounds": {
+        "min": [
+          -0.5744431018829346,
+          0,
+          -0.5564211010932922
+        ],
+        "max": [
+          0.5744431018829346,
+          2.799999952316284,
+          0.5564211010932922
+        ]
+      },
+      "frontYaw": -0.531723990299728,
+      "source": {
+        "manifest": "assets/studio-motion/materialTest/manifest.c781882d09d49302.json",
+        "manifestSha256": "c781882d09d49302e19668bcb581b757ae46e8153d8bb3801cf67e5901f6607b",
+        "geometrySha256": "2f71f6940b6aedc551b94c09798c6a8577a74e907b1acf858de01c404473e13b",
+        "initialMotionSha256": "7f452fd8214315e47881eb118f533e027fd3d7a671ba6aafd71fe4dfefd96fe4"
+      }
+    },
+    "ansysCfd": {
+      "url": "models/room-current/ansysCfd.7de2c7c1b72bde26.glb.gz",
+      "sha256": "7de2c7c1b72bde2619983700410237f2df25d9205923091d67285a8be318476c",
+      "bytes": 381517,
+      "glbBytes": 684824,
+      "compression": "gzip",
+      "triangles": 15470,
+      "bounds": {
+        "min": [
+          -2.4942526817321777,
+          0,
+          -0.8410531282424927
+        ],
+        "max": [
+          2.4942526817321777,
+          1.5253639221191406,
+          0.8410531282424927
+        ]
+      },
+      "frontYaw": 0.4636477140325156,
+      "source": {
+        "manifest": "assets/studio-motion/ansysCfd/manifest.cf5210b57d16cd5a.json",
+        "manifestSha256": "cf5210b57d16cd5aeb202723075a7e715591ccf5625fc134f320e46f7b503203",
+        "geometrySha256": "b0d1636e65fdd4fde68d5d07454fca6b24a50cf54e19421a711a831121f21b8a",
+        "initialMotionSha256": "ee3f96607498f689563061ecc4bd15bdcf56708f89593265878580ea3867e888"
+      }
+    },
+    "pool": {
+      "url": "models/room-current/pool.d4baa4f11d1d1456.glb.gz",
+      "sha256": "d4baa4f11d1d14561f999256924548fa0d853a81a220e7669aea0e81c97ee840",
+      "bytes": 257658,
+      "glbBytes": 489760,
+      "compression": "gzip",
+      "triangles": 14980,
+      "bounds": {
+        "min": [
+          -0.49974173307418823,
+          0,
+          -1.399999976158142
+        ],
+        "max": [
+          0.49974173307418823,
+          0.6793400049209595,
+          1.399999976158142
+        ]
+      },
+      "frontYaw": -0.5317239837032438,
+      "source": {
+        "manifest": "assets/studio-motion/pool/manifest.f517eeb94c59f232.json",
+        "manifestSha256": "f517eeb94c59f232e232f1930b5eaf59c4d70d8cafc873e223e51230b8d2cda1",
+        "geometrySha256": "e053e0dddcdeb522910fa1868cb497350236467b4467a5d296eff5a0919f1fe3",
+        "initialMotionSha256": "c0592ed4ddf75a8fd122df9e79afc82adb57ee467d73104e8446f5c4ca9b2700"
+      }
+    },
+    "lineFollower": {
+      "url": "models/room-current/lineFollower.a404ac560c819008.glb.gz",
+      "sha256": "a404ac560c8190084529a53419955579ef53308f7e9d05900b28930206406d3f",
+      "bytes": 557309,
+      "glbBytes": 1348540,
+      "compression": "gzip",
+      "triangles": 37380,
+      "bounds": {
+        "min": [
+          -1.050067663192749,
+          0,
+          -1.399999976158142
+        ],
+        "max": [
+          1.050067663192749,
+          0.7498182654380798,
+          1.399999976158142
+        ]
+      },
+      "frontYaw": -0.531723990299728,
+      "source": {
+        "manifest": "assets/studio-motion/lineFollower/manifest.c524f1b5987f1c3e.json",
+        "manifestSha256": "c524f1b5987f1c3e24b6af281af3816ed3569174b5c881a31e48989630567128",
+        "geometrySha256": "a31b66070df6051b591f79ea840075ac7ad5d20278ced3cfc77091bdd032b847",
+        "initialMotionSha256": "c0592ed4ddf75a8fd122df9e79afc82adb57ee467d73104e8446f5c4ca9b2700"
+      }
+    },
+    "formlabs": {
+      "url": "models/room-current/formlabs.c9ecb6e08e46363d.glb.gz",
+      "sha256": "c9ecb6e08e46363da12be7ca3a19388f56589bb37a7804b8aee2d0ca50675b63",
+      "bytes": 831111,
+      "glbBytes": 1385064,
+      "compression": "gzip",
+      "triangles": 42902,
+      "bounds": {
+        "min": [
+          -1.399999976158142,
+          0,
+          -0.8705546855926514
+        ],
+        "max": [
+          1.399999976158142,
+          1.8093104362487793,
+          0.8705546855926514
+        ]
+      },
+      "frontYaw": -0.5317239837032438,
+      "source": {
+        "manifest": "assets/studio-motion/formlabs/manifest.7b0fe642931dab3e.json",
+        "manifestSha256": "7b0fe642931dab3e2c4b9d7b9fbe096966edfdd3a7ef11d91dbe3b4275a2307f",
+        "geometrySha256": "b709237cee1ab0239e1cc0a8709e91ae42a7178d39f52eef47bd7763335e9929",
+        "initialMotionSha256": "c0592ed4ddf75a8fd122df9e79afc82adb57ee467d73104e8446f5c4ca9b2700"
+      }
+    },
+    "telecaster": {
+      "url": "models/room-current/telecaster.0efe13eb5ac4b385.glb.gz",
+      "sha256": "0efe13eb5ac4b3854267b7210fdfebdd0ffff4211f63995739259325edb47040",
+      "bytes": 553606,
+      "glbBytes": 814608,
+      "compression": "gzip",
+      "triangles": 35054,
+      "bounds": {
+        "min": [
+          -0.45466798543930054,
+          0,
+          -0.08528709411621094
+        ],
+        "max": [
+          0.45466798543930054,
+          2.799999952316284,
+          0.08528709411621094
+        ]
+      },
+      "frontYaw": -0.5317239837032438,
+      "source": {
+        "manifest": "assets/studio-motion/telecaster/manifest.cda86ee072af36e7.json",
+        "manifestSha256": "cda86ee072af36e7b754bf37c1de166c309cfc0f2f4d9fede91fa32d86c64b62",
+        "geometrySha256": "69023678190f112815bf3be7b8801193212edbcdfce52a0a67895b9c33d53069",
+        "initialMotionSha256": "69e51536c2bad56f1266ec7b42a39fb49f993edb62ceeefbb9f0ff1c8da6dc30"
+      }
+    },
+    "education": {
+      "url": "models/room-current/education.17269d7f34e3e0d4.glb.gz",
+      "sha256": "17269d7f34e3e0d49fea2d080ccbddcee541559402b1dd68914aaab5ad5f4c12",
+      "bytes": 574571,
+      "glbBytes": 838268,
+      "compression": "gzip",
+      "triangles": 29940,
+      "bounds": {
+        "min": [
+          -1.399999976158142,
+          0,
+          -0.14648550748825073
+        ],
+        "max": [
+          1.399999976158142,
+          1.6896294355392456,
+          0.14648550748825073
+        ]
+      },
+      "frontYaw": -0.19739561827898963,
+      "source": {
+        "manifest": "assets/studio-motion/education/manifest.436ba57cca2d7131.json",
+        "manifestSha256": "436ba57cca2d7131d47653c834c354faf896fe8e2f3889be47d45923aa9fabee",
+        "geometrySha256": "36db09a20d9b7d6abf02e731536e35889e7e3cec07293bfdaa948a92078c3dff",
+        "initialMotionSha256": "a1ba409ef1be93430b53081620fe26582dc30e63b7aa2c42cde5265ca36af89a"
+      }
+    },
+    "ftc": {
+      "url": "models/room-current/ftc.bf4eb6a30cc29165.glb.gz",
+      "sha256": "bf4eb6a30cc29165465241331f56eb67d1dee5727b8f0e9d82c9dccaea443a87",
+      "bytes": 491894,
+      "glbBytes": 1522340,
+      "compression": "gzip",
+      "triangles": 40682,
+      "bounds": {
+        "min": [
+          -0.843864381313324,
+          0,
+          -1.222517728805542
+        ],
+        "max": [
+          0.843864381313324,
+          2.799999952316284,
+          1.222517728805542
+        ]
+      },
+      "frontYaw": -0.531723990299728,
+      "source": {
+        "manifest": "assets/studio-motion/ftc/manifest.b301848c585dff0c.json",
+        "manifestSha256": "b301848c585dff0c0b0235aa7bc5ba1f8a4b550be9ff93cd2ffcc19dad4cacfd",
+        "geometrySha256": "864bec8556c74a83af3bf7b88c7f9eb1e3ce7a7252ab9e282254bd02af0df226",
+        "initialMotionSha256": "d77850f2a898c5c1ba223cc21ebdec3d623d0082a7da75e42a32981d0cc34fee"
+      }
+    }
+  }
+}

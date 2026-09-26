@@ -22,6 +22,8 @@ cfg = p.parse_args()
 source_resolution = cfg.source_resolution or cfg.resolution
 cfg.output.mkdir(parents=True, exist_ok=True)
 manifest = json.loads((cfg.evidence / 'bake-manifest.json').read_text(encoding='utf-8'))
+if cfg.range <= 0 or cfg.resolution <= 0 or source_resolution != manifest['nativeResolution']:
+    raise ValueError('Invalid encoding range, resolution, or source provenance.')
 encoding = {
     'encoding': 'RGBM8', 'range': cfg.range, 'decode': 'rgb * alpha * range',
     'colorSpace': 'NoColorSpace', 'flipY': False, 'uvChannel': 1,
@@ -35,12 +37,16 @@ for state in ['off', 'on']:
     if not source.exists():
         continue
     raw = np.load(source)[:, :, :3]
+    if raw.shape != (source_resolution, source_resolution, 3) or not np.isfinite(raw).all():
+        raise ValueError('Lightmap shape is wrong or contains non-finite values.')
+    if np.any(raw > cfg.range):
+        raise ValueError('RGBM range clips native lightmap values; choose a larger range and rerun.')
     if source_resolution != cfg.resolution:
         if source_resolution % cfg.resolution:
             raise ValueError('Only exact integer area downsampling is supported.')
         factor = source_resolution // cfg.resolution
         raw = raw.reshape(cfg.resolution, factor, cfg.resolution, factor, 3).mean(axis=(1, 3))
-    clean = np.nan_to_num(raw, nan=0, posinf=cfg.range, neginf=0).clip(0, cfg.range)
+    clean = raw.clip(0, cfg.range)
     multiplier = np.maximum(1, np.ceil(clean.max(axis=2) / cfg.range * 255)).astype(np.uint8)
     rgb = np.rint(clean / (multiplier[:, :, None].astype(np.float32) / 255 * cfg.range) * 255).clip(0, 255).astype(np.uint8)
     rgba = np.concatenate([rgb, multiplier[:, :, None]], axis=2)

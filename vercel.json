@@ -893,15 +893,6 @@
       ]
     },
     {
-      "source": "/models/baked/realism-20260925/room-baked.a318939777a14e42.glb",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
       "source": "/models/baked/realism-20260925/lightmap-off-2k.rgbm.d9a5f67c83db3b21.png",
       "headers": [
         {
@@ -966,6 +957,231 @@
     },
     {
       "source": "/models/baked/realism-20260925/desk-on.rgbm.0ceab9c7c6df7582.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/baked/realism-20260925/room-baked.a318939777a14e42.glb",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/baked/detail-20260926/lightmap-off-2k.rgbm.51f1457b180c7331.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/baked/detail-20260926/lightmap-on-2k.rgbm.8cb82df563ae02bc.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/baked/detail-20260926/lightmap-off-4k.rgbm.1c981b54df3a3f76.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/baked/detail-20260926/lightmap-on-4k.rgbm.12429b2c3c69a338.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/baked/detail-20260926/probe-off.dfef0be6b8c0e93e.hdr",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/baked/detail-20260926/desk-off.rgbm.ff2ce1b8637229cc.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/baked/detail-20260926/probe-on.154c8fa6e8bf4676.hdr",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/baked/detail-20260926/desk-on.rgbm.8f81986dfd2a0fa4.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/room-current/steering.ab50611278a1e6f7.glb.gz",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/room-current/vineRobot.b71178f06ae275a8.glb.gz",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/room-current/javelin.cef61a83518bd614.glb.gz",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/room-current/scanner.41ecb17165900906.glb.gz",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/room-current/brakeSim.529756e9c1f80320.glb.gz",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/room-current/aura.45e33a70c105e6e6.glb.gz",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/room-current/carbonSeat.f07a6d92671c19e2.glb.gz",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/room-current/seat.a1b62d9f5e3cd135.glb.gz",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/room-current/materialTest.bced6eaa6ef9bbcf.glb.gz",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/room-current/ansysCfd.7de2c7c1b72bde26.glb.gz",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/room-current/pool.d4baa4f11d1d1456.glb.gz",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/room-current/lineFollower.a404ac560c819008.glb.gz",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/room-current/formlabs.c9ecb6e08e46363d.glb.gz",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/room-current/telecaster.0efe13eb5ac4b385.glb.gz",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/room-current/education.17269d7f34e3e0d4.glb.gz",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/models/room-current/ftc.bf4eb6a30cc29165.glb.gz",
       "headers": [
         {
           "key": "Cache-Control",

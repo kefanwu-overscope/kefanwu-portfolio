@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
+import { gzipSync } from 'node:zlib';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import * as THREE from '../../vendor/three/0.185.0/build/three.module.js';
 
@@ -45,6 +46,34 @@ await check('Easing reaches the same position at 30 Hz and 60 Hz', () => {
 });
 
 const loaderSource = await read('experience-lod.js');
+function compressedLoaderHarness() {
+  const parsed = [];
+  const context = moduleContext(`${loaderSource}\nglobalThis.Loader=ModelLODLoader;`, {
+    Blob, Response, DecompressionStream,
+    GLTFLoader: class { async parseAsync(data) { parsed.push(Buffer.from(data)); return { scene: new THREE.Group() }; } },
+    fetch: async () => ({ ok: true, json: async () => ({ version: 1, models: {} }) }),
+  });
+  return { loader: new context.Loader({}), parsed };
+}
+const arrayBuffer = (bytes) => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
+await check('Static exhibit gzip and already-decoded responses reach GLTF with identical bytes', async () => {
+  const payload = Buffer.from('glTF room exhibit source attributes');
+  const h = compressedLoaderHarness();
+  await h.loader.parseGLB({ data: arrayBuffer(gzipSync(payload)), url: 'models/room-current/project.glb.gz' });
+  await h.loader.parseGLB({ data: arrayBuffer(payload), url: 'models/room-current/project.glb.gz' });
+  assert.equal(h.parsed.length, 2); h.parsed.forEach(bytes => assert.deepEqual(bytes, payload));
+  h.loader.dispose();
+});
+await check('Corrupt compressed exhibit never reaches the GPU preparation stage', async () => {
+  const h = compressedLoaderHarness();
+  await assert.rejects(h.loader.parseGLB({ data: arrayBuffer(gzipSync(Buffer.from('glTF')).subarray(0, 12)), url: 'models/room-current/broken.glb.gz' }));
+  assert.equal(h.parsed.length, 0); h.loader.dispose();
+});
+await check('Leaving during exhibit decompression prevents late GLTF parsing', async () => {
+  const h = compressedLoaderHarness();
+  const pending = h.loader.parseGLB({ data: arrayBuffer(gzipSync(Buffer.alloc(1000000, 23))), url: 'models/room-current/project.glb.gz' });
+  h.loader.dispose(); await assert.rejects(pending, { name: 'AbortError' }); assert.equal(h.parsed.length, 0);
+});
 function loaderHarness({ count = 6, failLow = false, badLow = false, manifestFail = false, stalled = false } = {}) {
   let activeDownloads = 0, maxDownloads = 0, activeParses = 0, maxParses = 0, aborted = 0, mounts = 0;
   const requests = [], parsed = [], pending = new Set(), failures = [];
@@ -275,9 +304,9 @@ await check('Sound toggle retains mute default, persistence and accessible state
   assert.equal(attrs['aria-pressed'], 'true'); assert.equal(saved.get('kw_snd'), 'on');
   events.click(); assert.equal(attrs['aria-label'], 'Enable sound'); assert.equal(saved.get('kw_snd'), 'off');
 });
-await check('All 15 room project options preserve workbench navigation and return-state handoff', () => {
+await check('All 16 room project options preserve workbench navigation and return-state handoff', () => {
   const match = roomSource.match(/const PROJECT_ORDER\s*=\s*\[([^\]]+)\]/);
-  assert(match); const order = vm.runInNewContext(`[${match[1]}]`); assert.equal(order.length, 15);
+  assert(match); const order = vm.runInNewContext(`[${match[1]}]`); assert.equal(order.length, 16);
   const start = roomSource.indexOf('  function focusHotspot(root) {');
   const end = roomSource.indexOf('    const html =', start);
   const block = `${roomSource.slice(start, end)}\n}`;

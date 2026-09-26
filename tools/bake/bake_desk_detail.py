@@ -18,11 +18,14 @@ p.add_argument('--source', type=Path, required=True)
 p.add_argument('--output', type=Path, required=True)
 p.add_argument('--resolution', type=int, default=512)
 p.add_argument('--samples', type=int, default=256)
+p.add_argument('--source-resolution', type=int, default=4096)
 cfg = p.parse_args(sys.argv[sys.argv.index('--') + 1:])
 cfg.source, cfg.output = cfg.source.resolve(), cfg.output.resolve()
 cfg.output.mkdir(parents=True, exist_ok=True)
 manifest = {
     'resolution': cfg.resolution, 'samples': cfg.samples,
+    'sourceResolution': cfg.source_resolution,
+    'bakeScriptSha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
     'units': 'irradiance/pi', 'geometryExported': False,
     'receiverY': .7602, 'desktopY': .76000005,
     'boundsThree': {'xMin': -.925, 'xMax': .925, 'zMin': -.45, 'zMax': .45},
@@ -32,8 +35,13 @@ manifest = {
     'restriction': 'Use on upward-facing desktop only; retain original atlas on sides/bevels.',
     'states': {},
 }
+source_manifest = json.loads((cfg.source / 'bake-manifest.json').read_text(encoding='utf-8'))
+manifest['version'] = source_manifest['version']
+manifest['sourceCasterSha256'] = source_manifest['casterSha256']
+if source_manifest['nativeResolution'] != cfg.source_resolution:
+    raise ValueError('Desktop source resolution differs from the accepted room bake.')
 for state in ['off', 'on']:
-    source = cfg.source / f'studio-{state}-4096.blend'
+    source = cfg.source / f'studio-{state}-{cfg.source_resolution}.blend'
     bpy.ops.wm.open_mainfile(filepath=str(source))
     scene = bpy.context.scene
     scene.render.engine = 'CYCLES'
