@@ -10,6 +10,7 @@
    ============================================================ */
 
 import * as THREE from "three";
+import { createStudioNavigation } from "./studio-navigation.js?v=retained-room-20260926";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
 import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=room-detail-20260926";
@@ -1665,7 +1666,15 @@ async function initScene(canvas) {
   let rafSamples = 0;
   controls.addEventListener("start", () => frameClock.noteMotion(performance.now()));
   controls.addEventListener("change", () => frameClock.noteMotion(performance.now()));
+  let projectPageOpen = false;
   let running = !document.hidden;
+  const studioNavigation = createStudioNavigation({ onActiveChange(open) {
+    projectPageOpen = open;
+    running = !document.hidden && !open;
+    frameClock.reset(); shadowClock.reset(); tickLast = null; rafStamp = null;
+    renderer.setAnimationLoop(running ? tick : null);
+    if (!open) { try { sessionStorage.removeItem(ROOM_RETURN_KEY); } catch {} }
+  } });
   window.addEventListener("pagehide", (event) => {
     running = false;
     if (!event.persisted) {
@@ -1676,10 +1685,13 @@ async function initScene(canvas) {
     }
   });
   window.addEventListener("pageshow", (event) => {
-    if (event.persisted) { running = !document.hidden; frameClock.reset(); tickLast = null; }
+    if (event.persisted) {
+      running = !document.hidden && !projectPageOpen; frameClock.reset(); tickLast = null;
+      renderer.setAnimationLoop(running ? tick : null);
+    }
   });
   document.addEventListener("visibilitychange", () => {
-    running = !document.hidden;
+    running = !document.hidden && !projectPageOpen;
     frameClock.reset();
     shadowClock.reset();
     pendingResolutionScale = adaptiveQuality.reset();
@@ -1687,6 +1699,7 @@ async function initScene(canvas) {
     rafStamp = null;
     rafDeltas.length = 0;
     tickLast = null;
+    renderer.setAnimationLoop(running ? tick : null);
   });
 
   // named + exposed (see window.__exp.pump) so QA can hand-step frames with
@@ -2352,7 +2365,7 @@ async function initScene(canvas) {
       clearPointerHover();
       const exhibitSelect = document.getElementById("exp-project-select");
       if (exhibitSelect) exhibitSelect.value = "";
-      location.assign(`project-3d.html#${encodeURIComponent(hs.key)}`);
+      studioNavigation.openProject(hs.key);
       return;
     }
     const html =
@@ -3174,6 +3187,7 @@ async function initScene(canvas) {
     models: MODELS, hotspots: HOTSPOTS, openPanel, showDragHint, runBootIntro,
     pump: (t) => tick(t, true), lod: loader, getLODStats: () => loader.getStats(), readiness,
     getFrameStats: () => frameClock.snapshot(),
+    getNavigationStats: () => studioNavigation.snapshot(),
     getRenderStats: () => ({ ...renderStats, batching: batchingStats }),
     getBootStats: () => ({ ...bootStatus, active: bootTakeover }),
     getCameraIntroStats: () => ({ ...cameraIntro }),

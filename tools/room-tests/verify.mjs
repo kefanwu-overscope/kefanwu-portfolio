@@ -318,7 +318,7 @@ await check('All 16 room project options preserve workbench navigation and retur
       requestedLightsOn: true, lightQuality: '4k', window: { projectData: { [key]: {} } }, ROOM_RETURN_KEY: 'return',
       sessionStorage: { setItem: (_k, value) => saved = JSON.parse(value) }, history: { state: {}, replaceState() {} },
       dismissDragHint() {}, dismissClickHint() {}, clearPointerHover() {}, document: { getElementById: () => null },
-      location: { assign: (url) => assigned = url } };
+      studioNavigation: { openProject: (key) => assigned = `project-3d.html#${key}` } };
     vm.runInNewContext(block, context); context.focusHotspot({ userData: { hotspot: { key } } });
     assert.equal(assigned, `project-3d.html#${key}`); assert.deepEqual(saved, state);
   }

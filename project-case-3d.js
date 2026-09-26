@@ -389,7 +389,8 @@ function mount() {
   });
   observer.observe(viewport);
 
-  listen(window, 'pagehide', (event) => {
+  function suspendProject(persisted) {
+    if (disposed) return;
     suspended = true;
     request?.abort();
     inspector?.setActive(false);
@@ -397,7 +398,7 @@ function mount() {
     cancelReveal();
     cancelAnimationFrame(progressFrame);
     progressFrame = 0;
-    if (event.persisted && motionRetryInFlight) {
+    if (persisted && motionRetryInFlight) {
       // A retry does not share request.signal. Disposing an unfinished retry
       // avoids a hidden completion whose ready event the cached page misses.
       generation += 1;
@@ -407,7 +408,7 @@ function mount() {
       motionRetryInFlight = false;
       receiveStatus({ state: 'loading' });
     }
-    if (!event.persisted) {
+    if (!persisted) {
       disposed = true;
       generation += 1;
       observer.disconnect();
@@ -415,7 +416,9 @@ function mount() {
       inspector?.dispose();
       inspector = null;
     }
-  });
+  }
+  listen(window, 'pagehide', (event) => suspendProject(event.persisted));
+  listen(window, 'studio-project-dispose', () => suspendProject(false));
   listen(window, 'pageshow', (event) => {
     if (!event.persisted || disposed) return;
     suspended = false;

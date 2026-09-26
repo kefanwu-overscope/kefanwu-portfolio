@@ -1,5 +1,6 @@
 // Preserve shared links while keeping the original room as the default entry.
 function redirectProject() {
+  if (document.body.classList.contains('studio-project-open')) return false;
   let projectKey = '';
   try { projectKey = decodeURIComponent(location.hash.slice(1)); } catch {}
   if (!Object.prototype.hasOwnProperty.call(window.projectData || {}, projectKey)) return false;
@@ -8,4 +9,4 @@ function redirectProject() {
 }
 
 window.addEventListener('hashchange', redirectProject);
-if (!redirectProject()) await import('./experience.js?v=room-detail-20260926');
+if (!redirectProject()) await import('./experience.js?v=retained-room-20260926');
