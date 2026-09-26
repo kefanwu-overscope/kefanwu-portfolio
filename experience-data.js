@@ -1,6 +1,7 @@
 /* ============================================================
    experience-data.js  (ES module)
-   RESUME — condensed resume rendered into the 3D desk's resume sheet.
+   RESUME — compact biography and the room's skills hover matrix.
+   The printed desk sheet uses the actual PDF through experience-resume.js.
    Rich case-study content is read from window.projectData
    (shared with the homepage; see project-data.js wiring).
    ============================================================ */

@@ -34,6 +34,7 @@ import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { GTAOPass } from "three/addons/postprocessing/GTAOPass.js";
 import { BokehPass } from "three/addons/postprocessing/BokehPass.js";
 import { RESUME } from "./experience-data.js";
+import { RESUME_ASSET, RESUME_PAPER, resumeHTML, attachResumeReader } from "./experience-resume.js?v=resume-desk-20260926";
 
 document.documentElement.classList.add("exp-js");
 
@@ -915,11 +916,11 @@ async function initScene(canvas) {
   await yieldToBrowser();
 
   // resume: the hero object on the desk — front and center, in the light
-  placeRoot(buildResumePaper(), scene, {
+  placeRoot(buildResumePaper(artLoader), scene, {
     name: "resumePaper", action: "resume", label: "Résumé",
     // sits ON the cutting-mat overlay (mat top 0.7668; the old baked pad the
     // paper used to ride is hidden at GLB load)
-    pos: [0.02, DESK_TOP + 0.0061, 0.16], rotY: 0.12,
+    pos: [0.02, RESUME_PAPER.bottom, 0.16], rotY: 0.12,
   });
 
   await yieldToBrowser();
@@ -2510,14 +2511,18 @@ async function initScene(canvas) {
     }
     applyPanelContent();
   }
+  let resumeReader = null, closingReader = false;
   function preparePaperContent(html, pivot) {
     if (!paperEl) return;
     setDialogInteractive(paperEl, false); // pre-painted for the lift, still inaccessible
     const rootClass = document.documentElement.classList;
     rootClass.remove("exp-paper-active", "exp-paper-open");
 
-    paperEl.innerHTML = html;
+    resumeReader?.dispose();
+    if (!paperEl.querySelector('.exp-sheet__viewport')) paperEl.innerHTML = html;
     paperEl.scrollTop = 0;
+    resumeReader = attachResumeReader(paperEl, { reducedMotion: prefersReducedMotion });
+    closingReader = false;
     paperEl.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", closePanel));
     activePaperPivot = pivot;
     // remember the sheet's resting pose once — every pickup returns EXACTLY
@@ -2530,182 +2535,9 @@ async function initScene(canvas) {
     paperEl.style.visibility = "visible";
   }
 
-  /* ---- DOM-parity sheet snapshot ----
-     The desk sheet's printed texture is a dense Arial mini-layout that looks
-     right as a room prop, but it is NOT what the DOM résumé looks like — a
-     cross-fade between the two visibly switches typography and font size
-     (Kefan's second ghosting report). For the pickup flight the face instead
-     wears a snapshot rasterized FROM the laid-out DOM sheet itself: every
-     rendered text line is drawn at its measured client rect with its computed
-     font (the Google webfonts are document-loaded, so canvas 2D can use
-     them), making the held 3D sheet and the DOM that fades in over it
-     glyph-identical. Geometry is MEASURED from the live layout, never
-     re-implemented, so future resumeHTML/CSS edits stay in sync for free. */
-  let sheetSnap = null; // { width, tex } — rebuilt when the sheet width changes
-  function buildSheetSnapshot() {
-    if (!paperEl) return null;
-    const rect = paperEl.getBoundingClientRect();
-    const W = Math.round(rect.width);
-    if (!W || !rect.height) return null;
-    // The physical sheet is stretched along its long axis (≤8%, see
-    // computePaperHold) so it backs the DOM sheet FULL-BLEED on viewports
-    // where the content-fit DOM is slightly taller than 3:4 — the texture
-    // must cover the same extended span or the glyphs would smear.
-    const stretch = THREE.MathUtils.clamp((rect.height / rect.width) / (0.312 / 0.234), 1, 1.08);
-    const texW = 1024;
-    const texH = Math.round(texW * (0.312 / 0.234) * stretch);
-    if (sheetSnap && sheetSnap.width === W && sheetSnap.texH === texH) return sheetSnap.tex;
-    const scale = texW / rect.width;
-    const c = document.createElement("canvas");
-    c.width = texW;
-    c.height = texH;
-    const ctx = c.getContext("2d");
-    // same surface as .exp-sheet: the gradient spans the FULL sheet height;
-    // the texture just crops at the face's 3:4 extent — exactly the region
-    // of the DOM sheet the physical paper covers (width + top aligned)
-    const bg = ctx.createLinearGradient(0, 0, 0, rect.height * scale);
-    bg.addColorStop(0, "#fafbfd");
-    bg.addColorStop(1, "#eef0f4");
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, texW, texH);
-    const X = (v) => (v - rect.left) * scale;
-    const Y = (v) => (v - rect.top) * scale;
-
-    // painted boxes: the blue rule + the list bullets (::before pseudos)
-    paperEl.querySelectorAll(".exp-sheet__rule").forEach((el) => {
-      const r = el.getBoundingClientRect();
-      ctx.fillStyle = getComputedStyle(el).backgroundColor;
-      ctx.fillRect(X(r.left), Y(r.top), r.width * scale, Math.max(1, r.height * scale));
-    });
-    paperEl.querySelectorAll(".exp-sheet__list li").forEach((el) => {
-      const ps = getComputedStyle(el, "::before");
-      const w = parseFloat(ps.width), h = parseFloat(ps.height);
-      if (!w || !h || ps.backgroundColor === "rgba(0, 0, 0, 0)") return;
-      const r = el.getBoundingClientRect();
-      ctx.fillStyle = ps.backgroundColor;
-      ctx.fillRect(
-        X(r.left + (parseFloat(ps.left) || 0)),
-        Y(r.top + (parseFloat(ps.top) || 0)),
-        w * scale, h * scale
-      );
-    });
-
-    // text: split every text node into its rendered line fragments (grouped
-    // by each character's line-box top) and draw each at its measured rect
-    const range = document.createRange();
-    const walker = document.createTreeWalker(paperEl, NodeFilter.SHOW_TEXT, {
-      acceptNode: (n) =>
-        n.data.trim() && n.parentElement && !n.parentElement.closest(".exp-sheet__close")
-          ? NodeFilter.FILTER_ACCEPT
-          : NodeFilter.FILTER_REJECT,
-    });
-    let node;
-    while ((node = walker.nextNode())) {
-      const cs = getComputedStyle(node.parentElement);
-      const fontPx = parseFloat(cs.fontSize) * scale;
-      ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${fontPx}px ${cs.fontFamily}`;
-      const lsRaw = parseFloat(cs.letterSpacing);
-      const lsPx = Number.isFinite(lsRaw) ? lsRaw * scale : 0;
-      let manualLS = false;
-      if ("letterSpacing" in ctx) {
-        ctx.letterSpacing = `${lsPx}px`;
-      } else {
-        // Safari <16.4 / Firefox <116: no canvas tracking — draw those runs
-        // char-by-char below so the mono section labels keep their spacing
-        manualLS = lsPx !== 0;
-      }
-      ctx.fillStyle = cs.color;
-      const met = ctx.measureText("Mg");
-      // legacy engines without fontBoundingBox*: approximate from the actual
-      // ink extents of "Mg" before falling back to a generic ratio
-      const asc = met.fontBoundingBoxAscent ||
-        (met.actualBoundingBoxAscent && met.actualBoundingBoxAscent * 1.06) || fontPx * 0.8;
-      const desc = met.fontBoundingBoxDescent ||
-        (met.actualBoundingBoxDescent && met.actualBoundingBoxDescent * 1.1) || fontPx * 0.22;
-      const underline = (cs.textDecorationLine || "").includes("underline");
-      const upper = cs.textTransform === "uppercase";
-      const s = node.data;
-      const drawFrag = (a, b) => {
-        while (a < b && /\s/.test(s[a])) a++;   // collapsed at wrap points —
-        while (b > a && /\s/.test(s[b - 1])) b--; // must not shift the glyphs
-        if (a >= b) return;
-        range.setStart(node, a);
-        range.setEnd(node, b);
-        const fr = range.getBoundingClientRect();
-        if (!fr.width) return;
-        // center the glyph box inside the measured line box, like CSS leading
-        const baseline = Y(fr.top) + (fr.height * scale - (asc + desc)) / 2 + asc;
-        const text = upper ? s.slice(a, b).toUpperCase() : s.slice(a, b);
-        if (manualLS) {
-          let x = X(fr.left);
-          for (const ch of text) {
-            ctx.fillText(ch, x, baseline);
-            x += ctx.measureText(ch).width + lsPx;
-          }
-        } else {
-          ctx.fillText(text, X(fr.left), baseline);
-        }
-        if (underline) {
-          const off = parseFloat(cs.textUnderlineOffset) || 0;
-          ctx.fillRect(X(fr.left), baseline + Math.max(1.5, off * scale), fr.width * scale, Math.max(1, fontPx / 15));
-        }
-      };
-      let runStart = -1, runTop = 0;
-      for (let i = 0; i < s.length; i++) {
-        range.setStart(node, i);
-        range.setEnd(node, i + 1);
-        const rr = range.getClientRects()[0];
-        if (!rr || !rr.width) continue; // collapsed whitespace
-        if (runStart < 0) { runStart = i; runTop = rr.top; }
-        else if (Math.abs(rr.top - runTop) > 1.5) { // wrapped to a new line
-          drawFrag(runStart, i);
-          runStart = i;
-          runTop = rr.top;
-        }
-      }
-      if (runStart >= 0) drawFrag(runStart, s.length);
-    }
-
-    if (sheetSnap && sheetSnap.tex) sheetSnap.tex.dispose();
-    const tex = new THREE.CanvasTexture(c);
-    tex.colorSpace = THREE.SRGBColorSpace;
-    tex.anisotropy = MAXA;
-    sheetSnap = { width: W, texH, tex };
-    return tex;
-  }
-
-  // The snapshot is the sheet's ONE permanent texture — desk, flight and
-  // held all show the exact same document, so there is no content switch at
-  // any point of the interaction (Kefan's request: the résumé IS the
-  // model's skin). buildResumePaper()'s Arial canvas only bridges the few
-  // hundred ms until the webfonts are ready and this first snapshot lands.
-  function applySheetTexture() {
-    const pivot = HOTSPOTS.find((h) => h.userData.hotspot.action === "resume");
-    const root = pivot && pivot.userData.hotspot.pickupObject;
-    const face = root && root.userData.resumeFace;
-    if (!face) return;
-    const snap = buildSheetSnapshot();
-    if (snap && face.material.map !== snap) {
-      face.material.map = snap;
-      face.material.emissiveMap = snap;
-      renderer.initTexture(snap); // upload now, never during an interaction
-    }
-  }
-  // seed the hidden DOM sheet at startup so the snapshot can be rasterized
-  // before the visitor's first interaction (visibility:hidden still lays out)
+  // The desk and reader share a lossless rendering of the actual PDF.
+  // No viewport-dependent DOM rasterization or scroll-sensitive print cache.
   if (paperEl && !paperEl.innerHTML.trim()) paperEl.innerHTML = resumeHTML(RESUME);
-  if (document.fonts && document.fonts.ready) {
-    // (re)build once the real webfonts are in — a snapshot taken against
-    // fallback-font layout must not survive the reflow
-    document.fonts.ready.then(async () => {
-      if (document.hidden) await waitForVisible();
-      if (sheetSnap) sheetSnap.width = -1;
-      applySheetTexture();
-    });
-  } else {
-    if (document.hidden) void waitForVisible().then(applySheetTexture);
-    else applySheetTexture();
-  }
 
   // Project the DOM sheet's on-screen rect into camera space: at what
   // distance/offset must the physical sheet float so its printed face lands
@@ -2725,26 +2557,16 @@ async function initScene(canvas) {
     // the held distance is ~6% too far and the sheet lands smaller than the
     // DOM, popping at the swap (Kefan's "end-of-pickup flash").
     const hoverK = pivot.scale.x / ((pivot.userData.hotspot && pivot.userData.hotspot.baseScale) || 1) || 1;
-    // Stretch the sheet along its long axis (pivot-local z) to the DOM
-    // sheet's aspect, so the paper backs the DOM FULL-BLEED: content-fit
-    // viewports make the DOM slightly taller than 3:4, and the uncovered
-    // bottom strip flickered scene-through during the cross-fade (Kefan's
-    // bottom-band report). Clamped ≤8% — taller sheets (mobile 92vw) keep
-    // the top-aligned partial coverage instead of a silly 50% stretch.
-    // buildSheetSnapshot extends the texture by the SAME factor. Restored
-    // to baseScale at landing.
+    // The canonical Letter page and the reader use the same fixed aspect.
     const baseScale = (pivot.userData.hotspot && pivot.userData.hotspot.baseScale) || 1;
-    const stretch = THREE.MathUtils.clamp((rect.height / rect.width) / (0.312 / 0.234), 1, 1.08);
-    pivot.scale.z = baseScale * hoverK * stretch;
+    pivot.scale.z = baseScale * hoverK;
     pivot.updateWorldMatrix(true, true);
-    // measure the face edges DIRECTLY: getWorldScale decomposes the world
-    // matrix, and with the non-uniform z-stretch inside a rotated hierarchy
-    // the decomposition smears the stretch across axes (~1.3% width error at
-    // the 1.08 clamp — visible on mobile)
-    const worldW = face.localToWorld(new THREE.Vector3(-0.117, 0, 0))
-      .distanceTo(face.localToWorld(new THREE.Vector3(0.117, 0, 0))) / hoverK;
-    const worldH = face.localToWorld(new THREE.Vector3(0, -0.156, 0))
-      .distanceTo(face.localToWorld(new THREE.Vector3(0, 0.156, 0))) / hoverK;
+    // Measure the printed edges directly through the rotated hierarchy,
+    // excluding the temporary hover scale from the final held dimensions.
+    const worldW = face.localToWorld(new THREE.Vector3(-RESUME_PAPER.width / 2, 0, 0))
+      .distanceTo(face.localToWorld(new THREE.Vector3(RESUME_PAPER.width / 2, 0, 0))) / hoverK;
+    const worldH = face.localToWorld(new THREE.Vector3(0, -RESUME_PAPER.height / 2, 0))
+      .distanceTo(face.localToWorld(new THREE.Vector3(0, RESUME_PAPER.height / 2, 0))) / hoverK;
     const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
     const W = window.innerWidth, H = window.innerHeight;
     // fit the sheet inside the DOM rect on BOTH axes (short viewports are
@@ -2836,10 +2658,7 @@ async function initScene(canvas) {
     // be computed at click time and the loop starts the lift after `delay`
     paperHold = computePaperHold(pivot);
     if (!paperHold) { showPaperDom(gen); return; } // degraded fallback
-    // the sheet permanently wears the DOM-parity snapshot (applySheetTexture)
-    // — this only refreshes it if the viewport width changed since it was
-    // built (width-cached: O(1) no-op on the common path)
-    applySheetTexture();
+    // The original PDF texture stays attached throughout the complete flight.
     paperMotion = {
       mode: "lift", gen, t0: null, dur: PAPER_LIFT_MS, delay: delayMs || 0,
       fromPos: pivot.position.clone(), fromQuat: pivot.quaternion.clone(),
@@ -2913,7 +2732,18 @@ async function initScene(canvas) {
     return null;
   }
   function closePanel() {
-    if (!panelOpen) return;
+    if (!panelOpen || closingReader) return;
+    // Restore the full printed page before the existing paper/DOM handoff.
+    // Zooming out is a short, explicit reader motion, never a changed desk skin.
+    if (activePaperPivot && resumeReader?.isZoomed() && document.documentElement.classList.contains("exp-paper-open")) {
+      const reader = resumeReader;
+      closingReader = true;
+      reader.resetForClose().then(() => {
+        closingReader = false;
+        if (reader === resumeReader && panelOpen) closePanel();
+      });
+      return;
+    }
     invalidatePanelWork();
     isStepTransition = false;
     closeLightbox(false);
@@ -3006,9 +2836,6 @@ async function initScene(canvas) {
           pivot.quaternion.copy(PM_QUAT);
           if (face) face.material.emissiveIntensity = paperGlowTarget();
         }
-        // a resize while reading reflows the DOM sheet — refresh the parity
-        // snapshot too (width-cached: free when nothing changed)
-        applySheetTexture();
         pivot.visible = true;
         rootClass.remove("exp-paper-active", "exp-paper-open");
         setTimeout(startReturn, PAPER_SWAP_MS * 0.75);
@@ -3393,6 +3220,7 @@ function placeRoot(root, scene, opts, onPlaced) {
     // invisible hitbox so thin/flat exhibits are clickable anywhere in
     // their volume (raycaster tests geometry, not material visibility)
     const hbSize = bb.getSize(new THREE.Vector3());
+    if (opts.action === "resume") hbSize.y = Math.max(hbSize.y, .008);
     const hitbox = new THREE.Mesh(
       new THREE.BoxGeometry(hbSize.x, hbSize.y, hbSize.z),
       new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
@@ -5164,134 +4992,22 @@ function buildBlueprintPanel() {
   return g;
 }
 
-function buildResumePaper() {
-  // A4-ish sheet lying flat on the desk. The Arial canvas drawn here is only
-  // a BOOT PLACEHOLDER: once the webfonts are ready, applySheetTexture()
-  // permanently replaces it with the DOM-parity snapshot (the sheet then
-  // shows the exact same document as the interactive résumé, everywhere).
+function buildResumePaper(loader) {
   const g = new THREE.Group();
-  const c = document.createElement("canvas");
-  // 4x supersampled so the text stays crisp at fly-in distance; drawing
-  // coordinates below stay in the original 256x340 space via ctx.scale
-  c.width = 1024;
-  c.height = 1360;
-  const ctx = c.getContext("2d");
-  ctx.scale(4, 4);
-  const bg = ctx.createLinearGradient(0, 0, 0, 340);
-  bg.addColorStop(0, "#fafbfd");
-  bg.addColorStop(1, "#eef0f4");
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, 256, 340);
-  ctx.textBaseline = "alphabetic";
-
-  const wrap = (text, maxWidth, maxLines = Infinity) => {
-    const words = String(text || "").split(/\s+/);
-    const lines = [];
-    let line = "";
-    for (let i = 0; i < words.length; i++) {
-      const trial = line ? `${line} ${words[i]}` : words[i];
-      if (line && ctx.measureText(trial).width > maxWidth) {
-        lines.push(line);
-        line = words[i];
-        if (lines.length === maxLines - 1) {
-          const rest = [line, ...words.slice(i + 1)].join(" ");
-          let clipped = rest;
-          while (clipped && ctx.measureText(`${clipped}…`).width > maxWidth) clipped = clipped.slice(0, -1);
-          lines.push(`${clipped.trim()}…`);
-          return lines;
-        }
-      } else {
-        line = trial;
-      }
-    }
-    if (line && lines.length < maxLines) lines.push(line);
-    return lines;
-  };
-  const textBlock = (text, x, y, maxWidth, lineHeight, maxLines = Infinity) => {
-    const lines = wrap(text, maxWidth, maxLines);
-    lines.forEach((line, i) => ctx.fillText(line, x, y + i * lineHeight));
-    return y + lines.length * lineHeight;
-  };
-  const sectionLabel = (label, y) => {
-    ctx.fillStyle = "#6b7077";
-    ctx.font = "700 5.3px 'Courier New', monospace";
-    ctx.fillText(label.toUpperCase(), 20, y);
-  };
-
-  ctx.fillStyle = "#0f1114";
-  ctx.font = "800 15px Arial, sans-serif";
-  ctx.fillText(RESUME.name, 20, 30);
-  ctx.fillStyle = "#565b63";
-  ctx.font = "500 6.8px Arial, sans-serif";
-  let y = textBlock(`${RESUME.role} — ${RESUME.meta}`, 20, 43, 216, 8.2, 2);
-  y += 1.5;
-  ctx.fillStyle = "#3f8cff";
-  ctx.fillRect(20, y, 216, 1.5);
-
-  ctx.fillStyle = "#1d1f24";
-  ctx.font = "400 6.8px Arial, sans-serif";
-  y = textBlock(RESUME.summary, 20, y + 10, 216, 9, 5) + 5;
-
-  sectionLabel("Highlights", y);
-  y += 10;
-  ctx.font = "400 6.5px Arial, sans-serif";
-  (RESUME.highlights || []).forEach((item) => {
-    const lines = wrap(item, 207, 2);
-    ctx.fillStyle = "#3f8cff";
-    ctx.fillRect(20, y - 4.4, 2.5, 2.5);
-    ctx.fillStyle = "#1d1f24";
-    lines.forEach((line, i) => ctx.fillText(line, 27, y + i * 8));
-    y += lines.length * 8 + 3;
-  });
-
-  sectionLabel("Skills", y + 2);
-  y += 13;
-  (RESUME.skills || []).forEach((skill) => {
-    ctx.fillStyle = "#1d1f24";
-    ctx.font = "700 5.3px Arial, sans-serif";
-    ctx.fillText(skill.group, 20, y);
-    ctx.fillStyle = "#565b63";
-    ctx.font = "400 5.3px Arial, sans-serif";
-    const items = wrap((skill.items || []).join(" · "), 130, 1)[0] || "";
-    ctx.fillText(items, 106, y);
-    y += 10;
-  });
-
-  sectionLabel("Contact", y + 3);
-  ctx.fillStyle = "#1d5cc4";
-  ctx.font = "400 5.3px Arial, sans-serif";
-  textBlock((RESUME.contact || []).map((item) => item.label).join(" · "), 20, y + 14, 216, 7, 2);
-
-  const tex = new THREE.CanvasTexture(c);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = MAXA; // the sheet lies flat — grazing view needs aniso
-
-  // backing slab matches the printed face EXACTLY (0.234 x 0.312): any
-  // overhang sticks out past the pixel-aligned DOM sheet during the pickup
-  // cross-fade and reads as a white rim around the résumé (Kefan)
-  const sheet = new THREE.Mesh(
-    new THREE.BoxGeometry(0.234, 0.004, 0.312),
-    new THREE.MeshStandardMaterial({ color: 0xe4e6ea, roughness: 0.96 })
-  );
-  sheet.castShadow = true;
-  sheet.receiveShadow = true;
-  g.add(sheet);
-  // The emissiveMap is wired at build time with intensity 0 (zero visual
-  // contribution on the desk) so the pickup can brighten the sheet at night
-  // by ramping a uniform — no shader recompile, no mid-animation hitch.
-  const face = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.234, 0.312),
-    new THREE.MeshStandardMaterial({
-      map: tex, color: 0xf1f3f6, roughness: 0.96,
-      emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0,
-    })
-  );
+  const { width, height, thickness } = RESUME_PAPER;
+  const texture = loader.load(RESUME_ASSET.preview, () => { ANISO_DIRTY = true; });
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = MAXA;
+  const sheet = new THREE.Mesh(new THREE.BoxGeometry(width, thickness, height),
+    new THREE.MeshStandardMaterial({ color: 0xf3f0e9, roughness: .98 }));
+  sheet.castShadow = true; sheet.receiveShadow = true; g.add(sheet);
+  const face = new THREE.Mesh(new THREE.PlaneGeometry(width, height),
+    new THREE.MeshStandardMaterial({ map: texture, color: 0xffffff, roughness: .98,
+      polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1,
+      emissive: 0xffffff, emissiveMap: texture, emissiveIntensity: 0 }));
   face.rotation.x = -Math.PI / 2;
-  face.position.y = 0.0025;
-  g.add(face);
-  // the pickup animation needs the printed face: its world pose defines the
-  // sheet's on-screen rect, and its emissiveIntensity is the night glow ramp
-  g.userData.resumeFace = face;
+  face.position.y = thickness / 2 + .00002;
+  g.add(face); g.userData.resumeFace = face;
   return g;
 }
 
@@ -5359,30 +5075,6 @@ function projectHTML(p) {
     ${hi ? `<h3 class="exp-panel__h3">Key results</h3><ul class="exp-panel__list">${hi}</ul>` : ""}
     ${tools ? `<h3 class="exp-panel__h3">Tools and methods</h3><div class="exp-panel__chips">${tools}</div>` : ""}
     ${details}
-  `;
-}
-
-function resumeHTML(r) {
-  const hi = (r.highlights || []).map((h) => `<li>${h}</li>`).join("");
-  const skills = (r.skills || [])
-    .map((s) => `<div class="exp-sheet__skill"><b>${s.group}</b><span>${s.items.join(" · ")}</span></div>`)
-    .join("");
-  const contact = (r.contact || [])
-    // S12: .pdf entries download in place so the studio stays open
-    .map((c) => `<a href="${c.href}"${c.href.startsWith("http") ? ' target="_blank" rel="noopener"' : ""}${c.href.endsWith(".pdf") ? " download" : ""}>${c.label}</a>`)
-    .join('<span class="exp-sheet__dot">·</span>');
-  return `
-    <button class="exp-sheet__close" data-close aria-label="Close">&times;</button>
-    <h2 class="exp-sheet__name">${r.name}</h2>
-    <p class="exp-sheet__role">${r.role} — ${r.meta}</p>
-    <hr class="exp-sheet__rule" />
-    <p class="exp-sheet__summary">${r.summary}</p>
-    <h3 class="exp-sheet__h3">Highlights</h3>
-    <ul class="exp-sheet__list">${hi}</ul>
-    <h3 class="exp-sheet__h3">Skills</h3>
-    <div class="exp-sheet__skills">${skills}</div>
-    <h3 class="exp-sheet__h3">Contact</h3>
-    <p class="exp-sheet__contact">${contact}</p>
   `;
 }
 
