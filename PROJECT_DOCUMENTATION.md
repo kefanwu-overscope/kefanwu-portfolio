@@ -1,5 +1,14 @@
 # Portfolio Website Project Documentation
 
+## Engineering design loops and adaptive rendering · 2026-09-30
+
+Current work builds on6059b1b, retaining accepted room assets, baked lighting,
+source materials and the full-window résumé. See STUDIO_ADVANCED_RENDERING.md
+for the shared16-project narrative revision, actual WebGPU BVH ray tracing,
+temporal reconstruction, cluster/adaptive quality controls, fallback boundaries
+and reproducible tests. Release records are kept under
+../.codex/engineering-render-20260930/release/.
+
 ## Shared neutral backgrounds and conforming carbon layup · 2026-09-15
 
 The current presentation revision is `neutral-20260915`, based on published

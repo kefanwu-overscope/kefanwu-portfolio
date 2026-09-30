@@ -1,5 +1,18 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## Current engineering/rendering revision · 2026-09-30
+
+`advanced-render-20260930` preserves the accepted room, Cycles bake and retained
+project/resume navigation while adding custom TAAU, progressive compute BVH AO/
+soft shadows, cluster LOD, adaptive shadows, attention and cached-frame budgets.
+All16 shared case studies now include engineering briefs and58 evidence rows.
+Read STUDIO_ADVANCED_RENDERING.md for exact boundaries, APIs, evidence and pending
+user facts. Runtime orchestration is experience-advanced.js; retain the shared
+versioned GPU service and full cluster source geometry for shadows and rays.
+Do not claim hardware RT cores, branded FSR, full Nanite, virtual shadows or
+serializable native shader binaries. Exact release/backup/live integrity records
+are in ../.codex/engineering-render-20260930/release/.
+
 ## Shared neutral backgrounds and conforming carbon layup · 2026-09-15
 
 The current presentation revision is `neutral-20260915`, based on published

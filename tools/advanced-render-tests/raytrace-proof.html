@@ -1,0 +1,13 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Stationary WebGPU triangle ray tracing proof</title>
+<style>body{font:15px/1.5 ui-monospace,monospace;background:#13171c;color:#d8e6ee;padding:24px}pre{white-space:pre-wrap}</style>
+<h1>WebGPU compute ray tracing</h1>
+<p>Actual production WGSL / CPU reference comparison. This page does not require the portfolio scene.</p>
+<pre id="result">Running…</pre>
+<script type="module">
+import { runRaytraceProof } from "./raytrace-proof.js";
+try { window.raytraceProof = await runRaytraceProof(); }
+catch (error) { window.raytraceProof = { status: "failed", error: error.stack || error.message }; }
+document.getElementById("result").textContent = JSON.stringify(window.raytraceProof, null, 2);
+</script>

@@ -8,7 +8,7 @@ export const yieldToBrowser = () => globalThis.scheduler?.yield
 
 export class AssetQueue {
   constructor(concurrency = 1) {
-    this.concurrency = concurrency;
+    this.concurrency = Number.isFinite(concurrency) ? Math.max(1, Math.floor(concurrency)) : 1;
     this.active = 0;
     this.jobs = [];
     this.started = false;
@@ -25,10 +25,18 @@ export class AssetQueue {
   }
   drain() {
     if (!this.started || this.closed) return;
-    this.jobs.sort((a, b) => a.priority - b.priority || a.sequence - b.sequence);
+    // Evaluate priorities at dispatch, not registration: pointer/selection
+    // attention can change while earlier network or preparation work is active.
+    for (const job of this.jobs) {
+      try { job.rank = typeof job.priority === "function" ? job.priority() : job.priority; }
+      catch { job.rank = 10; }
+      if (!Number.isFinite(job.rank)) job.rank = 10;
+    }
+    this.jobs.sort((a, b) => a.rank - b.rank || a.sequence - b.sequence);
     while (this.active < this.concurrency && this.jobs.length) {
       const job = this.jobs.shift();
-      if (!job.eligible()) { job.resolve(null); continue; }
+      try { if (!job.eligible()) { job.resolve(null); continue; } }
+      catch (error) { job.reject(error); continue; }
       this.active++;
       // Keep the slot through parse, preparation, placement and the yield.
       Promise.resolve().then(job.run).then(job.resolve, job.reject).finally(async () => {
@@ -88,6 +96,8 @@ export class ModelLODLoader {
     this.allowUpgrades = false;
     this.records = [];
     this.targetKey = targetKey;
+    this.attentionKey = null;
+    this.selectedKey = null;
     this.enabled = false;
     this.frustum = new THREE.Frustum();
     this.viewProjection = new THREE.Matrix4();
@@ -114,6 +124,23 @@ export class ModelLODLoader {
     })();
   }
   start() { this.queue.start(); }
+  // Attention changes waiting work only; transfers and parses already in flight
+  // are kept, avoiding duplicate downloads or discarded readiness callbacks.
+  setAttention(key = null) {
+    const next = typeof key === "string" && key ? key : null;
+    if (next === this.attentionKey || this.disposed) return false;
+    this.attentionKey = next;
+    this.network.drain();
+    this.queue.drain();
+    return true;
+  }
+  priority(record, level = "base") {
+    if (record.url.includes("room-baked")) return -100;
+    if (record.key && record.key === this.selectedKey) return -60;
+    if (record.key && record.key === this.attentionKey) return -50;
+    if (record.key && record.key === this.targetKey) return -40;
+    return level === "base" ? 10 : 20;
+  }
   async fetchGLB(url, onProgress) {
     // Abort the actual transfer (including the body), so a stalled asset cannot
     // permanently occupy the single preparation slot. Existing fallback paths
@@ -155,8 +182,8 @@ export class ModelLODLoader {
     if (this.disposed) throw new DOMException("Room closed", "AbortError");
     return gltf;
   }
-  async loadGLB(url, onProgress) {
-    return this.parseGLB(await this.network.add(() => this.fetchGLB(url, onProgress)));
+  async loadGLB(url, onProgress, priority = 10) {
+    return this.parseGLB(await this.network.add(() => this.fetchGLB(url, onProgress), priority));
   }
   load(url, onLoad, onProgress, onError, prepare = null, key = null) {
     const token = `base-model:${this.records.length}:${url}`;
@@ -168,7 +195,7 @@ export class ModelLODLoader {
       baseStatus: "queued", error: null, holder: null, low: null, high: null,
     };
     this.records.push(record);
-    const priority = url.includes("room-baked") ? -100 : key === this.targetKey ? -50 : 10;
+    const priority = () => this.priority(record);
     const downloaded = this.network.add(async () => {
       const models = await this.manifest;
       const entry = models[url];
@@ -199,8 +226,10 @@ export class ModelLODLoader {
     // The preparation queue starts after construction; attach a rejection
     // handler now so a failed early download is not an unhandled rejection.
     downloaded.catch(() => {});
-    this.queue.add(async () => {
-      let { source, isLow } = await downloaded;
+    // Queue preparation only when bytes exist. A slow background transfer must
+    // not reserve the sole CPU slot ahead of a downloaded, attended exhibit.
+    downloaded.then((download) => this.queue.add(async () => {
+      let { source, isLow } = download;
       let gltf;
       if (source) {
         try { gltf = await this.parseGLB(source); }
@@ -235,7 +264,7 @@ export class ModelLODLoader {
         new THREE.Box3().setFromObject(holder).applyMatrix4(holder.matrixWorld.clone().invert());
       record.baseStatus = "ready";
       record.loading = null;
-    }, priority).catch((error) => {
+    }, priority)).catch((error) => {
       record.baseStatus = "failed";
       record.loading = null;
       record.error = String(error.message || error);
@@ -256,33 +285,43 @@ export class ModelLODLoader {
       (Math.max(this.camera.near, -this.viewCenter.z) * Math.tan(THREE.MathUtils.degToRad(this.camera.fov * 0.5)));
     return record.visible;
   }
+  wantsHigh(record) {
+    const selected = !!record.key && record.key === this.selectedKey;
+    const attended = !!record.key && record.key === this.attentionKey;
+    const near = record.projectedFraction >= (record.wantedHigh ? 0.17 : 0.24) &&
+      record.distance <= (record.wantedHigh ? 2.8 : 2.2);
+    return selected || (record.visible && (attended || near));
+  }
   async loadHigh(record, onProgress) {
     if (this.disposed) throw new DOMException("Room closed", "AbortError");
     if (record.highURL && record.highURL !== record.url) {
-      try { return await this.loadGLB(record.highURL, onProgress); }
+      try { return await this.loadGLB(record.highURL, onProgress, () => this.priority(record, "high")); }
       catch (error) {
         if (this.disposed) throw error;
         console.warn(`[experience] optimized high model unavailable; using original: ${record.url}`, error);
         record.highURL = record.url;
       }
     }
-    return this.loadGLB(record.url, onProgress);
+    return this.loadGLB(record.url, onProgress, () => this.priority(record, "high"));
   }
   update(camera, selectedKey = null, now = performance.now()) {
     let changed = false;
     this.camera = camera;
+    const nextSelected = typeof selectedKey === "string" && selectedKey ? selectedKey : null;
+    const attentionChanged = nextSelected !== this.selectedKey;
+    this.selectedKey = nextSelected;
     camera.updateMatrixWorld();
     this.viewProjection.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
     this.frustum.setFromProjectionMatrix(this.viewProjection);
-    for (const record of this.records) {
+    // Admit attended upgrades first even when multiple roots become eligible
+    // in the same update and the preparation queue currently has an open slot.
+    const orderedRecords = [...this.records].sort((a, b) => this.priority(a, "high") - this.priority(b, "high"));
+    for (const record of orderedRecords) {
       if (record.baseStatus !== "ready") continue;
       this.measure(record);
-      const selected = !!record.key && record.key === selectedKey;
       // Diameter / viewport height: enter at 24%, leave below 17%.
       // Distance cap stops a large distant furnishing requesting full detail.
-      const near = record.projectedFraction >= (record.wantedHigh ? 0.17 : 0.24) &&
-        record.distance <= (record.wantedHigh ? 2.8 : 2.2);
-      record.wantedHigh = selected || (record.visible && near);
+      record.wantedHigh = this.wantsHigh(record);
       if (!this.enabled || !record.low) continue;
       if (record.high) {
         const high = record.wantedHigh;
@@ -308,9 +347,14 @@ export class ModelLODLoader {
           record.highLoaded = true;
           record.error = null;
           record.nextRetryAt = 0;
-          this.onLevelLoaded?.();
+          this.onLevelLoaded?.(record);
           // Commit the level only from update(), never a network/render callback.
-        }, selected ? 0 : 20, () => !this.disposed && this.allowUpgrades && record.wantedHigh && (selected || this.measure(record)))
+        }, () => this.priority(record, "high"), () => {
+          if (this.disposed || !this.enabled || !this.allowUpgrades) return false;
+          this.measure(record);
+          record.wantedHigh = this.wantsHigh(record);
+          return record.wantedHigh;
+        })
           .catch((error) => {
             record.error = String(error.message || error);
             record.nextRetryAt = performance.now() + 5000 * 2 ** (record.attempts - 1);
@@ -318,6 +362,7 @@ export class ModelLODLoader {
           }).finally(() => { record.loading = null; });
       }
     }
+    if (attentionChanged) { this.network.drain(); this.queue.drain(); }
     return changed;
   }
   dispose() {
@@ -330,6 +375,7 @@ export class ModelLODLoader {
   getStats() {
     return {
       manifest: this.manifestStatus, enabled: this.enabled,
+      attentionKey: this.attentionKey, selectedKey: this.selectedKey,
       queue: { active: this.queue.active, pending: this.queue.jobs.length, concurrency: this.queue.concurrency },
       network: { active: this.network.active, pending: this.network.jobs.length, concurrency: this.network.concurrency },
       allowUpgrades: this.allowUpgrades, disposed: this.disposed,

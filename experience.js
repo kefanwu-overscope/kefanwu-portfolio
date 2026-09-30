@@ -13,7 +13,7 @@ import * as THREE from "three";
 import { createStudioNavigation } from "./studio-navigation.js?v=retained-room-20260926";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
-import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=room-detail-20260926";
+import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=advanced-render-20260930";
 import { AdaptiveFrameClock, frameAlpha } from "./experience-timing.js?v=room-performance-20260919";
 import { batchStaticRoom } from "./experience-batching.js?v=room-performance-20260919";
 import { prepareRoomShaders } from "./experience-warmup.js?v=room-performance-20260919";
@@ -22,6 +22,8 @@ import { ROOM_BAKE } from "./experience-baked-assets.js?v=room-detail-20260926";
 import { createStudioLoader } from "./experience-loader.js?v=exp-adaptive-20260907";
 import { createHDRService, createHDRTexture } from "./experience-hdr.js?v=exp-adaptive-20260907";
 import { AdaptiveQuality, GpuFrameTimer } from "./experience-quality.js?v=exp-adaptive-20260907";
+import { createAdvancedRenderer } from "./experience-advanced.js?v=advanced-render-20260930";
+import { createAdaptiveShadows } from "./experience-shadow-budget.js?v=advanced-render-20260930";
 import { buildDetailedPrinter, buildDetailedPegboardTools, refineWorkbenchInstruments } from "./experience-workbench-details.js?v=room-detail-20260926";
 import { ROOM_EXHIBITS, prepareRoomExhibit } from "./experience-exhibits.js?v=room-detail-20260926";
 import { addStudioRealism } from "./experience-realism.js?v=studio-realism-20260907";
@@ -30,7 +32,6 @@ import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { RectAreaLightUniformsLib } from "three/addons/lights/RectAreaLightUniformsLib.js";
-import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { GTAOPass } from "three/addons/postprocessing/GTAOPass.js";
 import { BokehPass } from "three/addons/postprocessing/BokehPass.js";
 import { RESUME } from "./experience-data.js";
@@ -313,7 +314,7 @@ async function initScene(canvas) {
       (window.screen.height || h) / Math.max(1, h));
     const nativeLimit = nativeDpr * screenScale;
     const qualityLimit = LOW_TIER ? 1.5 : 2.2;
-    const budget = LOW_TIER ? Infinity : Math.sqrt(10e6 / Math.max(1, w * h));
+    const budget = Math.sqrt((LOW_TIER ? 3e6 : 10e6) / Math.max(1, w * h));
     return Math.min(nativeLimit, qualityLimit, budget);
   };
   renderer.setPixelRatio(pixelRatioFor(window.innerWidth, window.innerHeight));
@@ -408,7 +409,8 @@ async function initScene(canvas) {
     2.2 // scene-linear threshold: a brightly lit white slab is not a lamp
   );
   composer.addPass(bloom);
-  composer.addPass(new OutputPass());
+  composer.renderToScreen = false;
+  let advanced = null, assetGeometryChanged = false;
 
   /* ---------- loading manager ---------- */
   const manager = new THREE.LoadingManager();
@@ -425,7 +427,7 @@ async function initScene(canvas) {
     console.warn("[experience] malformed deep link", error);
   }
   const loader = new ModelLODLoader(manager, { targetKey: deepLinkKey });
-  loader.onLevelLoaded = () => { ANISO_DIRTY = true; };
+  loader.onLevelLoaded = record => { ANISO_DIRTY = true; assetGeometryChanged = true; advanced?.prewarm(record?.high, record?.key || record?.url); };
   const barEl = loaderEl ? loaderEl.querySelector(".exp-loader__bar i") : null;
   const txtEl = loaderEl ? loaderEl.querySelector(".exp-loader__text") : null;
   manager.onProgress = (url, loaded, total) => {
@@ -1554,7 +1556,7 @@ async function initScene(canvas) {
 
   /* ---------- resize ---------- */
   const adaptiveQuality = new AdaptiveQuality();
-  const gpuTimer = new GpuFrameTimer(renderer.getContext());
+  let gpuTimer = new GpuFrameTimer(renderer.getContext());
   let resolutionScale = 1, pendingResolutionScale = 1;
   let displayDpr = window.devicePixelRatio;
   let displayWidth = window.screen.width, displayHeight = window.screen.height;
@@ -1571,10 +1573,10 @@ async function initScene(canvas) {
     camera.updateProjectionMatrix();
     displayDpr = window.devicePixelRatio;
     displayWidth = window.screen.width; displayHeight = window.screen.height;
-    renderer.setPixelRatio(pixelRatioFor(w, h) * resolutionScale);
+    renderer.setPixelRatio(pixelRatioFor(w, h));
     renderer.setSize(w, h);
-    composer.setPixelRatio(renderer.getPixelRatio());
-    composer.setSize(w, h);
+    if (advanced) advanced.resize(w, h, renderer.getPixelRatio());
+    else { composer.setPixelRatio(renderer.getPixelRatio()); composer.setSize(w, h); }
   }
   window.addEventListener("resize", onResize);
   onResize(); // S13: apply the portrait fov on a phone's very first frame too
@@ -1657,6 +1659,11 @@ async function initScene(canvas) {
   const frameClock = new AdaptiveFrameClock({ idleFps: prefersReducedMotion ? 1 : 30 });
   const shadowClock = new AdaptiveFrameClock({ idleFps: 12, movingFps: 12, settleMs: 0 });
   const renderStats = { frames: 0, shadowFrames: 0, deskShadowFrames: 0, calls: 0, triangles: 0, cpuMs: 0 };
+  const adaptiveShadows = createAdaptiveShadows({ renderer, key, resumeSpot, lowTier: LOW_TIER });
+  advanced = createAdvancedRenderer({ renderer, scene, camera, composer, gtao, key, resumeSpot, lowTier: LOW_TIER,
+    exclude: [...NO_PREPASS, MODELS.printerHead, MODELS.chamberFan, MODELS.activeSpool].filter(Boolean) });
+  advanced.resize(window.innerWidth, window.innerHeight, renderer.getPixelRatio());
+  let paperWasMoving = false;
   let lastCameraMotion = performance.now(), lastLODUpdate = -Infinity;
   let shadowsDirty = true;
   const lastCameraPosition = camera.position.clone();
@@ -1672,6 +1679,7 @@ async function initScene(canvas) {
   const studioNavigation = createStudioNavigation({ onActiveChange(open) {
     projectPageOpen = open;
     running = !document.hidden && !open;
+    advanced.invalidate(open ? 'project-open' : 'project-return');
     frameClock.reset(); shadowClock.reset(); tickLast = null; rafStamp = null;
     renderer.setAnimationLoop(running ? tick : null);
     if (!open) { try { sessionStorage.removeItem(ROOM_RETURN_KEY); } catch {} }
@@ -1683,6 +1691,7 @@ async function initScene(canvas) {
       hdrService.dispose();
       renderer.setAnimationLoop(null);
       gpuTimer.dispose();
+      advanced.dispose(); adaptiveShadows.dispose();
     }
   });
   window.addEventListener("pageshow", (event) => {
@@ -1700,6 +1709,19 @@ async function initScene(canvas) {
     rafStamp = null;
     rafDeltas.length = 0;
     tickLast = null;
+    advanced.invalidate('visibility');
+    renderer.setAnimationLoop(running ? tick : null);
+  });
+  renderer.domElement.addEventListener('webglcontextlost', event => {
+    event.preventDefault(); running = false; renderer.setAnimationLoop(null);
+    advanced.invalidate('webgl-context-lost'); gpuTimer.dispose();
+  });
+  renderer.domElement.addEventListener('webglcontextrestored', () => {
+    gpuTimer = new GpuFrameTimer(renderer.getContext());
+    advanced.invalidate('webgl-context-restored', { geometry: true });
+    adaptiveShadows.invalidate(); renderer.shadowMap.needsUpdate = true;
+    frameClock.reset(); tickLast = null;
+    running = !document.hidden && !projectPageOpen;
     renderer.setAnimationLoop(running ? tick : null);
   });
 
@@ -1721,6 +1743,7 @@ async function initScene(canvas) {
       }
     }
     if (!readiness.assets || !readiness.construction || !readiness.prepared) return;
+    if (renderer.getContext().isContextLost()) return;
     if (!running && !forced) return;
     if (!forced && resumeReader?.isReading()) return;
     const cameraMoved = lastCameraPosition.distanceToSquared(camera.position) > 1e-10 ||
@@ -1728,6 +1751,7 @@ async function initScene(canvas) {
     const interactionMotion = !!flight || cameraMoved || !!paperMotion || lightFadeActive || bootTakeover;
     if (cameraMoved || flight) lastCameraMotion = t;
     if (!forced && !frameClock.accept(t, interactionMotion)) return;
+    const animateAmbient = !prefersReducedMotion && frameClock.fps === frameClock.movingFps;
     const dtms = tickLast === null ? 1000 / 60 : Math.min(100, Math.max(0, t - tickLast));
     tickLast = t;
     controls.dampingFactor = frameAlpha(baseDamping, dtms);
@@ -1889,7 +1913,7 @@ async function initScene(canvas) {
     // Printer: the head runs a real TOOLPATH rhythm — constant-velocity
     // passes, a short dwell at each turnaround, pass length slightly
     // randomized. (The old pure sine read as a metronome, not a machine.)
-    if (!prefersReducedMotion && MODELS.printerHead) {
+    if (animateAmbient && MODELS.printerHead) {
       const hs = headRun;
       if (hs.dwell > 0) {
         hs.dwell -= dtms;
@@ -1904,7 +1928,7 @@ async function initScene(canvas) {
       }
       MODELS.printerHead.position.x = hs.x;
     }
-    if (!prefersReducedMotion) {
+    if (animateAmbient) {
       // G2: chamber circulation fan spins while the job runs
       if (MODELS.chamberFan) MODELS.chamberFan.rotation.z -= dtms * 0.0085;
       // G4: the blue feeder spool supplies the blue print (slow payout)
@@ -1961,7 +1985,7 @@ async function initScene(canvas) {
     const busy = panelOpen || !!flight || paperReturning;
     for (const h of HOTSPOTS) {
       // eased hover scale (an instant 6% pop read as a flash on click)
-      const target = h === hovered && !busy ? h.userData.hotspot.baseScale * 1.06 : h.userData.hotspot.baseScale;
+      const target = h.userData.hotspot.baseScale;
       if (Math.abs(h.scale.x - target) > 0.0004) {
         h.scale.setScalar(h.scale.x + (target - h.scale.x) * frameAlpha(0.16, dtms));
         shadowsDirty = true;
@@ -1969,7 +1993,7 @@ async function initScene(canvas) {
       const m = h.userData.hotspot.marker;
       if (!m) continue;
       m.visible = !busy;
-      if (!busy && !prefersReducedMotion) {
+      if (!busy && animateAmbient) {
         const ph = h.userData.hotspot.phase;
         m.position.y = h.userData.hotspot.markerY + Math.sin(t * 0.0024 + ph) * 0.016;
         // higher floor than the old additive marker: normal blending needs
@@ -1980,47 +2004,48 @@ async function initScene(canvas) {
       }
     }
 
-    // sub-2% 1/f flicker on the warm practicals so the still room doesn't
-    // read as a screenshot (applied around the render, then unwound)
-    let flk = 0;
-    // the sheet's light must be rock steady through the whole pickup cycle —
-    // the pool flicker crossing the moving page read as "light flicker"
-    const spotSteady = !!(paperMotion || activePaperPivot);
-    if (!prefersReducedMotion) {
-      flk = 1 + 0.013 * Math.sin(t * 0.00071) + 0.009 * Math.sin(t * 0.00173) + 0.006 * Math.sin(t * 0.00347);
-      if (!spotSteady) resumeSpot.intensity *= flk;
-      benchGlow.intensity *= flk;
-      benchBarSpot.intensity *= flk;
-      lampLeds.forEach((m) => { m.emissiveIntensity *= flk; });
-    }
-
     // High detail is background work after the intro and a settled camera.
     // Project selection navigates away, so it must not start an obsolete GLB.
     loader.allowUpgrades = revealed && !flight && !bootTakeover && !panelOpen && t - lastCameraMotion > 900;
     let lodChanged = false;
     if (forced || t - lastLODUpdate >= 180) {
       lastLODUpdate = t;
+      loader.setAttention(hovered?.userData.hotspot?.key || null);
       lodChanged = loader.update(camera, null, t);
     }
-    const movingCasters = !prefersReducedMotion && !!MODELS.printerHead;
+    const movingCasters = animateAmbient && !!MODELS.printerHead;
     const movingPaper = !!paperMotion || !!focusedPivot;
-    const shadowDue = shadowClock.accept(t);
-    const refreshAll = shadowsDirty || lodChanged || !!forced;
-    key.shadow.needsUpdate ||= refreshAll || ((movingCasters || movingPaper) && shadowDue);
-    resumeSpot.shadow.needsUpdate ||= refreshAll || movingPaper;
-    renderer.shadowMap.needsUpdate = key.shadow.needsUpdate || resumeSpot.shadow.needsUpdate;
+    const geometryChanged = shadowsDirty || lodChanged || assetGeometryChanged || (paperWasMoving && !movingPaper);
+    paperWasMoving = movingPaper; assetGeometryChanged = false;
+    const attentionKey = hovered?.userData.hotspot?.key || '';
+    const attentionPosition = hovered?.userData.hotspot?.center || null;
+    const shadowState = adaptiveShadows.update({ camera, moving: frameClock.fps === frameClock.movingFps, attentionKey, attentionPosition,
+      geometryDirty: geometryChanged, movingCasters, movingPaper, now: t });
+    if (shadowState.changed) advanced.refresh('shadow-budget');
     if (key.shadow.needsUpdate) renderStats.shadowFrames++;
     if (resumeSpot.castShadow && resumeSpot.shadow.needsUpdate) renderStats.deskShadowFrames++;
     shadowsDirty = false;
+    const renderNeeded = advanced.update({ now: t, moving: frameClock.fps === frameClock.movingFps,
+      scale: pendingResolutionScale, geometryChanged, attentionKey, attentionPosition,
+      lightStamp: `${lightsOn}:${appliedQuality}:${lmMix.value.toFixed(4)}`,
+      reactive: !!paperMotion || !!bokeh?.enabled });
+    lastCameraPosition.copy(camera.position); lastCameraQuaternion.copy(camera.quaternion);
+    if (!renderNeeded && !renderer.shadowMap.needsUpdate && !forced) {
+      advanced.schedule({ moving: false, frameMs: 0, frameBudgetMs: refreshBudget });
+      return;
+    }
     const gpuMs = gpuTimer.poll();
     gpuTimer.begin();
     const renderStart = performance.now();
     renderer.info.reset();
-    try { composer.render(); } finally { gpuTimer.end(); }
+    try { advanced.render({ reactive: !!paperMotion || !!bokeh?.enabled }); } finally { gpuTimer.end(); }
     renderStats.frames++;
     renderStats.calls = renderer.info.render.calls;
     renderStats.triangles = renderer.info.render.triangles;
     renderStats.cpuMs = performance.now() - renderStart;
+    renderStats.gpuMs = gpuMs;
+    advanced.schedule({ moving: frameClock.fps === frameClock.movingFps,
+      frameMs: Math.max(renderStats.cpuMs, gpuMs || 0), frameBudgetMs: refreshBudget });
     pendingResolutionScale = adaptiveQuality.sample({
       now: performance.now(), moving: frameClock.fps === 120,
       frameMs: Math.max(performance.now() - renderStart, gpuMs ?? 0),
@@ -2038,12 +2063,6 @@ async function initScene(canvas) {
       });
     }
 
-    if (flk) {
-      if (!spotSteady) resumeSpot.intensity /= flk;
-      benchGlow.intensity /= flk;
-      benchBarSpot.intensity /= flk;
-      lampLeds.forEach((m) => { m.emissiveIntensity /= flk; });
-    }
   };
   renderer.setAnimationLoop(tick);
 
@@ -3021,6 +3040,7 @@ async function initScene(canvas) {
     getNavigationStats: () => studioNavigation.snapshot(),
     getResumeReaderStats: () => resumeReader?.getState() || null,
     getRenderStats: () => ({ ...renderStats, batching: batchingStats }),
+    getAdvancedStats: () => ({ ...advanced.getStats(), shadows: adaptiveShadows.getStats() }),
     getBootStats: () => ({ ...bootStatus, active: bootTakeover }),
     getCameraIntroStats: () => ({ ...cameraIntro }),
     getRealismStats: () => ({ ...studioRealism.stats }),
@@ -3044,6 +3064,7 @@ async function initScene(canvas) {
     exclude: [MODELS.printerHead, MODELS.chamberFan, MODELS.activeSpool, ...HOTSPOTS],
     yieldTask: yieldToBrowser,
   });
+  advanced.install();
   // Populate after proxies register; doReveal enables the dock after GPU preparation.
   const dock = document.getElementById("exp-dock");
   const exhibitSelect = document.getElementById("exp-project-select");
@@ -3099,6 +3120,7 @@ async function initScene(canvas) {
   }
   if (document.hidden) await waitForVisible();
   await prepareRoomShaders(renderer, scene, camera, composer, { gtao, bokeh });
+  await advanced.warmup();
   startupUI.update({ phase: "preparing", loaded: textures.size + 1, total: textures.size + 1 });
   await yieldToBrowser();
   startupUI.setPhase("first-frame");

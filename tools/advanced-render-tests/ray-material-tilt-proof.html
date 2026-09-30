@@ -1,0 +1,15 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Plane-aware ray-traced visibility upsampling proof</title>
+<script type="importmap">{"imports":{"three":"../../vendor/three/0.185.0/build/three.module.js"}}</script>
+<style>body{font:15px/1.5 ui-monospace,monospace;background:#13171c;color:#d8e6ee;padding:24px}pre{white-space:pre-wrap}canvas{width:720px;max-width:100%}</style>
+<h1>Tilted-plane visibility upsampling</h1>
+<p>A 42 × 28 guide shades a 360 × 240 perspective view. Uniform 25% indirect AO must stay uniform across the steep orange plane; the gray background must remain unchanged.</p>
+<canvas id="proof"></canvas>
+<pre id="result">Running actual float WebGL pixel comparisons…</pre>
+<script type="module">
+import { runRayMaterialTiltProof } from './ray-material-tilt-proof.js';
+try { window.rayMaterialTiltProof = await runRayMaterialTiltProof(document.getElementById('proof')); }
+catch(error) { window.rayMaterialTiltProof = {status:'failed',error:error.stack || error.message}; }
+document.getElementById('result').textContent = JSON.stringify(window.rayMaterialTiltProof,null,2);
+</script>

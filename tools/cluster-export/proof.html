@@ -1,0 +1,89 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cluster GPU and WebGL integration proof</title>
+<style>body{margin:0;background:#151821;color:#e6edf8;font:14px ui-monospace,monospace}canvas{width:640px;max-width:100%;height:auto;display:block}pre{white-space:pre-wrap;padding:20px}</style>
+<canvas></canvas><pre id="report">Running real worker, GPU compute, and WebGL shadow/index checks…</pre>
+<script type="module">
+import * as THREE from '../../vendor/three/0.185.0/build/three.module.js';
+import { getGpuDevice } from '../../experience-gpu-device.js?v=advanced-render-20260930';
+import { classifyCluster } from '../../experience-clusters-core.js?v=advanced-render-20260930';
+import { createClusterGpuCuller } from '../../experience-clusters-gpu.js?v=advanced-render-20260930';
+import { createClusterRenderer } from '../../experience-clusters.js?v=advanced-render-20260930';
+import { createAdaptiveShadows } from '../../experience-shadow-budget.js?v=advanced-render-20260930';
+const report = window.__clusterProof = { status: 'running', checks: [], errors: [] };
+const assert = (value, label) => { if (!value) throw Error(label); report.checks.push(label); };
+try {
+  const device = await getGpuDevice();
+  assert(!!device, 'Real WebGPU device is available');
+  device.addEventListener('uncapturederror', event => report.errors.push(event.error.message));
+  const camera = new THREE.PerspectiveCamera(60, 640 / 400, .1, 100); camera.updateMatrixWorld(true);
+  const vp = new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+  const frustum = new THREE.Frustum().setFromProjectionMatrix(vp), frame = new Float32Array(52);
+  frustum.planes.forEach((p, i) => frame.set([p.normal.x, p.normal.y, p.normal.z, p.constant], i * 4));
+  frame.set(vp.elements, 24); frame.set([0, 0, 0, 400 * camera.projectionMatrix.elements[5] / 2], 40);
+  frame.set([0, 0, -1, .1, 0, 0, 1, 1024], 44);
+  const nodes = new Float32Array(1024 * 8); let seed = 317;
+  const random = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
+  for (let n = 0; n < 1024; n++) nodes.set([(random() - .5) * 30, (random() - .5) * 20,
+    (random() - .8) * 30, .03 + random() * 2, random() * .05, n % 3 ? 1 : .5, n % 7 ? 1 : 0, n % 2], n * 8);
+  const culler = await createClusterGpuCuller(device), result = await culler.classify(nodes, frame);
+  const expected = Uint32Array.from({ length: 1024 }, (_, id) => classifyCluster(nodes, id * 8, frame));
+  assert(result.every((value, id) => value === expected[id]), '1,024 real GPU frustum/error/attention results equal CPU reference');
+  report.gpu = { ...culler.stats, outside: [...result].filter(v => !v).length,
+    refine: [...result].filter(v => v === 1).length, coarse: [...result].filter(v => v === 2).length };
+  culler.dispose();
+
+  const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('canvas'), antialias: false });
+  renderer.setSize(640, 400, false); renderer.shadowMap.enabled = true; renderer.shadowMap.autoUpdate = false;
+  const scene = new THREE.Scene(); scene.background = new THREE.Color('#202838');
+  scene.add(new THREE.HemisphereLight(0xc9e2ff, 0x131314, 2));
+  const light = new THREE.DirectionalLight(0xffffff, 3); light.position.set(2, 4, 1); light.castShadow = true;
+  light.shadow.mapSize.set(2048, 2048);
+  scene.add(light); light.target.position.set(0, 0, -5); scene.add(light.target);
+  const source = new THREE.PlaneGeometry(16, 16, 64, 64);
+  source.setAttribute('sourceCoordinates', source.attributes.position.clone());
+  const mesh = new THREE.Mesh(source, new THREE.MeshStandardMaterial({ color: 0x3e9daf, roughness: .7, side: THREE.DoubleSide }));
+  mesh.position.z = -5; mesh.castShadow = mesh.receiveShadow = true; scene.add(mesh);
+  let shadowFull = false;
+  mesh.onBeforeShadow = (_renderer, _object, _camera, _shadowCamera, geometry) => {
+    shadowFull = geometry.index === source.index && geometry.drawRange.count === source.index.count;
+  };
+  const controller = createClusterRenderer({ device });
+  await controller.registerRoot(scene, { key: 'proof' });
+  assert(controller.getStats().meshes === 1, 'Real module worker built and installed hierarchy');
+  controller.update(camera, { viewportHeight: 400 });
+  renderer.shadowMap.needsUpdate = true; renderer.render(scene, camera);
+  assert(shadowFull, 'Real WebGL shadow pass received full source indices');
+  const sourceCount = source.index.count;
+  assert(mesh.geometry.index !== source.index && mesh.geometry.drawRange.count < sourceCount, 'Main pass restored compact LOD indices after shadow draw');
+  assert(mesh.geometry.attributes.sourceCoordinates === source.attributes.sourceCoordinates, 'Custom shader coordinate attribute is shared unchanged');
+  for (let i = 0; i < 20 && !controller.getStats().gpuAccepted; i++) {
+    await new Promise(resolve => setTimeout(resolve, 30)); controller.update(camera, { viewportHeight: 400 }); renderer.render(scene, camera);
+  }
+  assert(controller.getStats().gpuAccepted > 0, 'Render controller consumed real GPU classification');
+  const before = controller.getStats();
+  mesh.position.x = 100; controller.update(camera, { viewportHeight: 400 }); renderer.render(scene, camera);
+  assert(mesh.geometry.drawRange.count === 0, 'Transform invalidation rejects stale GPU visibility immediately');
+  mesh.position.x = 0; controller.update(camera, { viewportHeight: 400 }); renderer.render(scene, camera);
+  assert(mesh.geometry.drawRange.count > 0, 'Newly visible source appears in current frame');
+  controller.dispose(); assert(mesh.geometry === source, 'Dispose restores original geometry identity');
+  const cached = createClusterRenderer({ device }); await cached.registerRoot(scene, { key: 'proof' });
+  assert(cached.getStats().cacheHits === 1, 'Second real worker loads content-hashed hierarchy from IndexedDB');
+  cached.update(camera, { viewportHeight: 400 }); renderer.render(scene, camera);
+  report.render = { sourceTriangles: sourceCount / 3, drawnTriangles: renderer.info.render.triangles, first: before, cached: cached.getStats() };
+  const shadowBudget = createAdaptiveShadows({ renderer, key: light });
+  const coverage = ['left', 'right', 'top', 'bottom', 'near', 'far'].map(name => light.shadow.camera[name]);
+  shadowBudget.update({ camera, now: 0 }); renderer.render(scene, camera);
+  shadowBudget.update({ camera, moving: true, now: 100 });
+  assert(!light.shadow.needsUpdate && light.shadow.mapSize.x === 2048, 'Camera-only motion reuses the actual cached shadow map');
+  shadowBudget.update({ camera, now: 300 });
+  shadowBudget.update({ camera, now: 2500 }); renderer.render(scene, camera);
+  assert(light.shadow.map.width === 1024 && light.shadow.map.height === 1024, 'Settled adaptive policy creates an actual bounded 1024 shadow target');
+  assert(coverage.every((value, i) => value === light.shadow.camera[['left', 'right', 'top', 'bottom', 'near', 'far'][i]]), 'Adaptive map resolution retains the entire original light frustum');
+  report.shadows = shadowBudget.getStats();
+  assert(report.errors.length === 0, 'No WebGPU validation errors');
+  report.status = 'passed';
+} catch (error) { report.status = 'failed'; report.errors.push(error.stack || String(error)); }
+document.querySelector('#report').textContent = JSON.stringify(report, null, 2);
+</script>

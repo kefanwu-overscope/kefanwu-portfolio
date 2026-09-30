@@ -1,0 +1,15 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Ray-traced PBR material integration proof</title>
+<script type="importmap">{"imports":{"three":"../../vendor/three/0.185.0/build/three.module.js"}}</script>
+<style>body{font:15px/1.5 ui-monospace,monospace;background:#13171c;color:#d8e6ee;padding:24px}pre{white-space:pre-wrap}canvas{width:576px;max-width:100%;image-rendering:auto}</style>
+<h1>Ray-traced PBR integration</h1>
+<p>Ordinary PBR, Cycles RGBM diffuse, and original source carbon shaders.</p>
+<canvas id="proof"></canvas>
+<pre id="result">Running actual WebGL render/readback comparisons…</pre>
+<script type="module">
+import { runRayMaterialProof } from "./ray-material-proof.js";
+try { window.rayMaterialProof = await runRayMaterialProof(document.getElementById('proof')); }
+catch(error) { window.rayMaterialProof = {status:'failed',error:error.stack || error.message}; }
+document.getElementById('result').textContent = JSON.stringify(window.rayMaterialProof,null,2);
+</script>

@@ -6,7 +6,7 @@ const projectData = {
     "kicker": "Formula SAE / steering / fabrication",
     "title": "Mk.8 steering system",
     "image": "assets/cover-steering-system.webp",
-    "summary": "Mk.8 steering redesign: matched 27.5-degree dual U-joints cancel speed ripple; the wheel sits 3.5 inches closer and 15 degrees more upright than Mk.7. Hand calculations using peak tire friction and Ackermann geometry gave a 50 N·m worst-case torque. I cut, turned, and welded every steering part; the installed system has run without issues.",
+    summary: "Redesigned and fabricated the Mk.8 steering system around driver reach, joint kinematics, and service access. Matched 27.5° U-joint bends support ripple cancellation in the model; hand calculations and FEA sized the shafts for a calculated 50 N·m load. The wheel moved 3.5 in closer, bearing cages shed 0.9 kg, and the installed system has run without reported issues.",
     "highlights": [
       "Matched dual U-joint bend angles to reduce rotational velocity ripple through the steering column.",
       "Moved the wheel 3.5 inches closer and 15 degrees more vertical than Mk.7, improving driver posture and cockpit clearance.",
@@ -103,7 +103,7 @@ const projectData = {
     "kicker": "Aerospace / VTOL / differential thrust",
     "title": "Javelin high-speed VTOL drone",
     "image": "assets/javelin-3q.webp",
-    "summary": "Tail-sitter VTOL drone targeting 300 km/h without moving control surfaces. It launches vertically, tips onto its belly, and flies like a dart, maneuvering through differential thrust across four motors. The airframe is shaped to reduce drag at 300 km/h.",
+    summary: "Designed and built a four-motor tail-sitter VTOL concept targeting 300 km/h through differential thrust without moving control surfaces. A 26-item requirements matrix guided structure, thermal packaging, sensing, and service access. The airframe and electronics are integrated; flight control, fail-safe verification, and demonstrated speed remain open in the project record.",
     "highlights": [
       "Targets 300 km/h without control surfaces: four-motor differential thrust provides yaw, pitch, and roll, placing control demands on autopilot tuning.",
       "Drag-driven airframe: Von Karman ogive nose, swept wing, NACA-0008 stabilizers, streamlined motor fairings, and CG ahead of the center of pressure for high-speed stability.",
@@ -207,8 +207,7 @@ const projectData = {
     kicker: "Ansys Fluent / PyFluent / CFD automation",
     title: "Agent-based CFD",
     image: "assets/cover-ansys-cfd.webp",
-    summary:
-      "Open teaching package for AI agents running Ansys Fluent 2024 R1 headlessly through PyFluent, using a VTOL drone cruise validation case.",
+    summary: "Developed a reusable headless Ansys Fluent workflow through PyFluent, using Javelin at a prescribed 300 km/h cruise condition. Replaced a problematic wrap-mesh approach, added critical-setting readback and quality gates, and documented 11 real failures. The package demonstrates a reviewable process; its cases are not validated aerodynamic performance data.",
     highlights: [
       "Turned a completed Javelin VTOL cruise CFD run at 300 kph, Mach 0.245, into reusable agent instructions.",
       "Packaged a system prompt, workflow SOP, PyFluent playbook, failure recovery catalog, quality gates, templates, and verified reference scripts.",
@@ -272,7 +271,7 @@ const projectData = {
     "kicker": "Formula SAE / Mk.7 / seat fabrication",
     "title": "Mk.7 driver seat",
     "image": "assets/cover-aluminum-seat.webp",
-    "summary": "Fabrication of the Mk.7 aluminum driver seat, translating the seat geometry into the physical cockpit component.",
+    summary: "Fabricated the aluminum driver seat for the Mk.7 Formula SAE car, working from the seat geometry. The project connects a perforated pan, back, and folded sides to their cockpit context; fabrication ownership is distinct from the supporting CAD and analysis.",
     "highlights": [
       "Owned fabrication of the Mk.7 driver seat.",
       "Worked from the Mk.7 seat geometry, with perforated sheet-metal panels and folded sides.",
@@ -341,7 +340,7 @@ const projectData = {
     "kicker": "Formula SAE / composites / support",
     "title": "Carbon fiber seat",
     "image": "assets/cover-carbon-fiber-seat.webp",
-    "summary": "Composite seat and bodywork support improving shoulder retention, driver support, repairability, and manufacturability.",
+    summary: "Developed and fabricated a Mk.8 carbon cockpit-support shell to address shoulder and hip support, layup practicality, and service access. Used EL2 resin, 20 main plies of 3K 200 g/m² twill, and 5–10 local patch plies. The documented result is a cured, demolded, and trimmed shell; support and repairability remain design objectives.",
     "highlights": [
       "Added a carbon shoulder- and hip-support shell above the seat pan for retention under cornering load.",
       "Chose the carbon-fiber layup for stiffness-to-weight where driver retention mattered more than a metal pan.",
@@ -418,7 +417,7 @@ const projectData = {
     "kicker": "Formula SAE / MATLAB / brake thermal model",
     "title": "FSAE Brake Sim",
     "image": "assets/oem-brake-fea.webp",
-    "summary": "Rotor and pad temperature model for Mk.8: a 25 percent rotor mass-reduction target, checked against endurance heat loads and structural FEA.",
+    summary: "Developed a 22-lap, 25-segment thermal model to evaluate a 25% Mk.8 rotor mass-reduction target. Balanced heat capacity and cooling against unsprung and rotational mass, selected cast iron, and compared assumptions with Mk.7 and peer-team data. The final rotor diameter is 7.4 in; historical thermal calculations retain their original geometry.",
     "highlights": [
       "Modeled a 22-lap FSAE endurance cycle with 25 track segments of varying velocity and brake demand.",
       "Predicted rotor temperature using heat input, hub conduction, radiation, and velocity-dependent convection.",
@@ -497,8 +496,7 @@ const projectData = {
     kicker: "LiDAR / motion control / data capture",
     title: "3D scanner",
     image: "assets/scanner-live-7.webp",
-    summary:
-      "Gantry scanner reconstructing geometry from 2,206 calibrated TFmini-S LiDAR readings along a controlled Cartesian path. Built in one week for Olin's Principles of Integrated Engineering course.",
+    summary: "Co-built a one-week LiDAR scanner, replacing a less accurate pan/tilt concept with Cartesian gantry motion. Calibrated TFmini-S readings at 14 distances, selected its stable range, and reduced electrical noise. The integrated system captured 2,206 readings over 140 × 165 mm; distance-calibration error was below roughly 3% in the stable range.",
     highlights: [
       "Calibrated at 14 known distances, reducing stable-range error below 3 percent beyond roughly 30 cm.",
       "Captured 2,206 measurements over a 140 mm by 165 mm area of a small test object.",
@@ -556,8 +554,7 @@ const projectData = {
     kicker: "2.5-day hardware sprint",
     title: "Smelly",
     image: "assets/cover-perfume-dispenser.webp",
-    summary:
-      "Gantry and actuator hardware for Smelly, Team Scent-A-Tubbies' fully automated perfume-mixing vending machine at a Formlabs hackathon.",
+    summary: "Designed and fabricated the gantry and linear actuators for Smelly, a six-fragrance perfume-mixing prototype built in 2.5 days. Compared lead-screw and rack-and-pinion concepts and used resin/FDM printing for rapid integration. Sustained operation overheated the stepper lead-screw actuator, making runtime and thermal behavior part of the next design decision.",
     highlights: [
       "Built in 2.5 days around a digital scent profile and six fragrance bases.",
       "Designed and fabricated the custom gantry plus linear actuator mechanisms.",
@@ -631,8 +628,7 @@ const projectData = {
         ["45", "Experiment runs"],
       ],
     },
-    summary:
-      "A 34 kPa (5 psi) vessel for soft-vine cross-section deformation research at the Olin Vine Robotics Lab: 19 L polypropylene pail, bolted PETG lid, printed TPU gaskets, swappable outlets, and motor-driven internal spool. After the first build yielded at 1.2 psi, I added aluminum and steel reinforcement and re-validated it in FEA, then ran a 45-test factorial experiment and measured material inputs for the lab's prediction model.",
+    summary: "Built an eversion platform for three soft-vine body geometries, targeting 34 kPa (5 psi) containment and frequent specimen changes. Initial testing reached 1.2 psi with deformation and connection failures, prompting aluminum and steel reinforcement evaluated in FEA. The platform supported a 45-run experiment with directly measured contact force.",
     highlights: [
       "Bolted the lid against the underside of the pail flange with 39 Grade 12.9 M4x30 bolts, carrying the ~2,304 N (518 lbf) blow-off load in tension instead of a snap fit.",
       "Printed TPU 85A gaskets (0.5-3 mm) for five seal families; the soft durometer conforms to FDM layer lines under bolt preload, making the printed vessel sealable.",
@@ -799,7 +795,7 @@ const projectData = {
         ]
       ]
     },
-    "summary": "Measured membrane and rod bending stiffness for the Olin Vine Robotics Lab's cross-section model using an Instron 3345: ASTM D882 tension on 30 film and fabric specimens, three-point bending on 11 bamboo reinforcing rods, and a plane-stress orthotropic fit to the fabric results.",
+    summary: "Measured stiffness inputs for the Olin Vine Robotics Lab using 30 membrane tensile specimens and 11 bamboo rods on an Instron 3345. Adapted the setup to available grips, characterized fabric directionality, and fitted rod force–deflection data. Measured rod stiffness supports EI = 0.672 ± 0.063 N·m²; the historical rod modulus requires a diameter-convention recheck.",
     "highlights": [
       "Tested TPU-coated fabric in three directions because its weave is orthotropic: MD 76.30 +/- 3.08 MPa, TD 69.89 +/- 2.47 MPa, 45 deg 41.78 +/- 0.99 MPa; LDPE film measured 100.96 +/- 5.00 MPa.",
       "Every group's scatter stayed under 4.9% of its mean; on-axis fabric fits reached R2 0.99.",
@@ -886,7 +882,7 @@ const projectData = {
         ]
       ]
     },
-    "summary": "Front-wheel swerve drive for Project AURA, an autonomous luggage robot with an initial 200 lb payload target. Testing reached 300 lb, exceeding the target. My mechanical scope covered independent steering, chain reduction, MY1016Z DC drive motors, shafts, and fabricated steel mounts.",
+    summary: "Designed and fabricated the front-wheel swerve mechanics for Project AURA, targeting a 200 lb payload. Independent steering, chain reductions, MY1016Z drive motors, and A36 mounts were revised to address interference and chain skipping. The robot carried 300 lb in testing; slower steering remained a tradeoff of the revised step setting.",
     "highlights": [
       "Owned mechanical swerve-drive design for an initial 200 lb payload target; the robot carried 300 lb in testing.",
       "Combined drive and steering in two front modules to preserve maneuverability.",
@@ -991,8 +987,7 @@ const projectData = {
     kicker: "Robotics / compact embedded build",
     title: "LineFollower robot",
     image: "assets/line-follower-cover.webp",
-    summary:
-      "Palm-size line-following robot integrating an Arduino Mega, drive hardware, sensors, and dense wiring. Built in two weeks for Olin's Principles of Integrated Engineering course.",
+    summary: "Built and iterated a two-week line-following robot around an Arduino Mega and 14 reflectance channels. Switched from 4 mm to 8 mm sensor pitch, revised feedback control, and reduced mass from 428 g to 284 g. The best recorded lap was 18 s on the team’s track, short of the under-15-second target.",
     highlights: [
       "Packaged an Arduino Mega, motor drivers, battery, sensors, and drive into a palm-size chassis.",
       "Ran stable low-speed line tracking with front-mounted sensing and a compact two-wheel differential drive.",
@@ -1036,8 +1031,7 @@ const projectData = {
     kicker: "Assistive mechanism / powertrain",
     title: "Pool Sniper",
     image: "assets/pool-sniper.webp",
-    summary:
-      "Accessible pool cue launcher for beginners and users with physical or visual limitations, combining laser aiming, variable-force release, and chain drive.",
+    summary: "Built a compact pool-cue launcher intended to support users who find traditional aiming or striking difficult. Surgical tubing stores energy, a sliding trigger selects pullback, and laser aiming supports alignment. My documented work covered the cue and cue base; fabrication iteration, including a switch from plasma-cut to waterjet plates, brought the mechanism to working condition.",
     highlights: [
       "Built for break-shot power with adjustable shot force.",
       "Used surgical tubing for energy storage and a sliding trigger for adjustable release.",
@@ -1090,8 +1084,7 @@ const projectData = {
     kicker: "Product design / education / user testing",
     title: "Guitar education kit",
     image: "assets/education-kit.webp",
-    summary:
-      "Affordable STEAM hardware kit for middle and high school assembly, tested with students, parents, teachers, and community educators.",
+    summary: "Developed an affordable guitar-building kit around a roughly $100 cost goal and student assembly. A documented prototype cost about $80 to prepare; two 15-year-olds assembled the body in about 45 minutes, while younger users exposed wiring and instruction barriers. Feedback shifted the product toward an age-appropriate STEAM build experience.",
     highlights: [
       "Targeted roughly $100 per kit to broaden access to hands-on engineering education.",
       "Used letter-coded screws, color-coded solderless wiring, preassembled shielding, and written instructions.",
@@ -1147,7 +1140,7 @@ const projectData = {
     "kicker": "CNC / finishing / electronics integration",
     "title": "Telecaster guitar",
     "image": "assets/cover-telecaster.webp",
-    "summary": "Walnut-body Telecaster-style electric guitar built through material prep, ShopBot CNC routing, drilling, sanding, finishing, and electronics installation.",
+    summary: "Built a playable walnut-body Telecaster-style guitar from raw stock. Glued smaller pieces into an affordable blank, CNC-routed pockets and wiring channels, and used laser-cut templates to check post-CNC drilling. Multi-coat finishing and Fender Deluxe Drive installation completed the manufacturing and integration sequence.",
     "highlights": [
       "Glued smaller walnut pieces into a blank, controlling cost while preserving material quality.",
       "ShopBot CNC-routed body pockets and wiring channels after planning toolpaths and hold-downs.",
@@ -1238,8 +1231,7 @@ const projectData = {
     kicker: "Competition robotics / mechanism design",
     title: "FTC robot",
     image: "assets/cover-ftc-robot.webp",
-    summary:
-      "Senior Mechanical Engineer, Pioneer Robotics FTC Team 12589: cone intake and deposit robot for a Massachusetts championship-winning season.",
+    summary: "Contributed as Senior Mechanical Engineer on Pioneer Robotics FTC Team 12589 to the 2022–2023 cone-handling robot. Linkage extension, claw/arm intake, string-driven lift, rotational deposit, and mecanum drive were integrated for repeated scoring and repair access. The team earned Massachusetts Championship Tournament Winning Alliance.",
     highlights: [
       "Supported the 2022-2023 cone intake and deposit robot as Senior Mechanical Engineer.",
       "Contributed to linkage extension, claw and arm intake, string-driven slide, rotational deposit, and mecanum drivetrain.",

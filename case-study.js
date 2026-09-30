@@ -42,6 +42,7 @@
 
   const project = projects[key];
   const editorial = editorials[key];
+  const engineering = editorial.engineering;
   const supplement = window.caseStudySupplements?.[key] || {};
   const gallery = [...(project.gallery || []), ...(supplement.gallery || [])];
   const images = gallery;
@@ -168,6 +169,27 @@
     </section>`;
   }
 
+  function designBrief() {
+    if (!engineering) return '';
+    return `<section class="design-brief wrap" id="brief" aria-labelledby="brief-title">
+      <div><p class="eyebrow">The engineering problem</p><h2 id="brief-title">Design brief.</h2><p class="brief-goal">${escape(engineering.goal)}</p></div>
+      <div class="brief-constraints"><h3>Working constraints</h3><ul>${engineering.constraints.map((constraint) => `<li>${escape(constraint)}</li>`).join('')}</ul></div>
+    </section>`;
+  }
+
+  function requirementsReview() {
+    if (!engineering?.checks?.length) return '';
+    return `<section class="requirements-review wrap" id="verification" aria-labelledby="verification-title">
+      <div class="section-heading"><div><p class="eyebrow">Close the design loop</p><h2 id="verification-title">Requirements &amp; evidence.</h2></div></div>
+      <div class="verification-table-wrap" role="region" aria-labelledby="verification-title" tabindex="0"><table class="verification-table">
+        <caption class="sr-only">Each project criterion, how it was checked, and the resulting evidence.</caption>
+        <thead><tr><th scope="col">Criterion</th><th scope="col">Method / evidence</th><th scope="col">Finding</th></tr></thead>
+        <tbody>${engineering.checks.map(([criterion, method, result, basis]) => `<tr><th scope="row">${escape(criterion)}</th><td>${escape(method)}</td><td><span class="evidence-basis">${escape(basis)}</span>${escape(result)}</td></tr>`).join('')}</tbody>
+      </table></div>
+      <div class="iteration-takeaway"><h3>What the review changes</h3><p>${escape(engineering.iteration)}</p></div>
+    </section>`;
+  }
+
   root.innerHTML = `<article>
     <section class="case-hero wrap" aria-labelledby="case-title">
       <p class="hero-kicker eyebrow"><span class="case-number">Case ${escape(editorial.number)} / ${number(availableKeys.length)}</span><span>${escape(editorial.label)}</span></p>
@@ -187,13 +209,16 @@
       </div>
     </section>
     <nav class="chapter-nav" aria-label="Case study sections"><div class="chapter-nav-inner wrap">
-      <a href="#motion">Motion</a>${editorial.chapters.map((chapter, index) => `<a href="#${escape(chapter.id)}"><span class="mono">${number(index + 1)}</span>${escape(chapter.label)}</a>`).join('')}
+      <a href="#motion">Motion</a>${engineering ? '<a href="#brief">Brief</a>' : ''}${editorial.chapters.map((chapter, index) => `<a href="#${escape(chapter.id)}"><span class="mono">${number(index + 1)}</span>${escape(chapter.label)}</a>`).join('')}
+      ${engineering?.checks?.length ? '<a href="#verification">Evidence review</a>' : ''}
       <a href="#evidence">Image archive</a>${supplement.bom ? '<a href="#bom">BOM</a>' : ''}<a href="#record">Technical record</a>
     </div></nav>
+    ${designBrief()}
     <div class="wrap">${chapters.map((chapter, index) => `<section class="chapter${chapter.image !== null ? '' : ' chapter-text-only'}" id="${escape(chapter.id)}" aria-labelledby="${escape(chapter.id)}-title">
       <div class="chapter-copy"><p class="eyebrow">${number(index + 1)} / ${escape(chapter.label)}</p><h2 id="${escape(chapter.id)}-title">${escape(chapter.title)}</h2>${chapter.paragraphs.map((text) => `<p>${escape(text)}</p>`).join('')}</div>
       ${chapter.image !== null ? `<figure class="chapter-figure ${mediaClass(gallery[chapter.image])}"${mediaStyle(gallery[chapter.image])}>${imageButton(gallery[chapter.image], chapter.image)}<figcaption><span class="evidence-type">${escape(chapter.evidence)}</span>${escape(chapter.note)}</figcaption></figure>` : ''}
     </section>`).join('')}</div>
+    ${requirementsReview()}
     <section class="evidence-section wrap" id="evidence" aria-labelledby="evidence-title">
       <div class="section-heading"><div><p class="eyebrow">The project images</p><h2 id="evidence-title">A closer look.</h2></div><p>${archive.length ? `${archive.length} more image${archive.length === 1 ? '' : 's'}. Open any to browse all ${gallery.length}.` : `${gallery.length === 1 ? 'The project image appears' : `All ${gallery.length} project images appear`} in the chapters above. Open any to browse the complete set.`}</p></div>
       ${archive.length ? `<div class="gallery-grid">${archive.map(({ image, index }) => `<figure class="gallery-item ${mediaClass(image)}"${mediaStyle(image)}>${imageButton(image, index)}<figcaption><span class="mono">${number(index + 1)}</span><span>${escape(image.caption || image.alt)}</span></figcaption></figure>`).join('')}</div>` : gallery.length ? `<button type="button" class="text-link gallery-browse" data-image="0">Browse ${gallery.length === 1 ? 'the image' : `all ${imageCount(gallery.length)}`} <span aria-hidden="true">↗</span></button>` : ''}

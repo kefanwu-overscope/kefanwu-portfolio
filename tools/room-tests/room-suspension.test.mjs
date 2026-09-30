@@ -21,27 +21,45 @@ class EventHost {
 }
 
 function harness() {
-  const window = new EventHost(), document = new EventHost();
+  const window = new EventHost(), document = new EventHost(), canvas = new EventHost();
   document.hidden = false;
   const tick = () => {};
-  let loop = tick, changeProject;
-  const released = [];
+  let loop = tick, changeProject, contextLost = false, shadowInvalidations = 0;
+  const released = [], invalidations = [], timers = [];
+  const gl = { isContextLost: () => contextLost };
   const context = {
     window, document, tick,
     createStudioNavigation({ onActiveChange }) { changeProject = onActiveChange; return {}; },
-    renderer: { setAnimationLoop(callback) { loop = callback; } },
+    renderer: { domElement: canvas, getContext: () => gl, shadowMap: { needsUpdate: false },
+      setAnimationLoop(callback) { loop = callback; } },
     frameClock: { reset() {} }, shadowClock: { reset() {} },
     adaptiveQuality: { reset: () => 1 },
     loader: { dispose() { released.push('models'); } },
     hdrService: { dispose() { released.push('lighting'); } },
     gpuTimer: { reset() {}, dispose() { released.push('gpu-timer'); } },
+    GpuFrameTimer: class {
+      constructor(value) { assert.equal(value, gl); timers.push(this); }
+      reset() {}
+      dispose() { released.push('restored-gpu-timer'); }
+    },
+    advanced: { invalidate(reason, options = {}) { invalidations.push({ reason, geometry: !!options.geometry }); },
+      dispose() { released.push('advanced-render'); } },
+    adaptiveShadows: { invalidate() { shadowInvalidations++; }, dispose() { released.push('adaptive-shadows'); } },
     sessionStorage: { removeItem() {} }, ROOM_RETURN_KEY: 'room-return',
     tickLast: 42, rafStamp: 99, rafDeltas: [16, 17], pendingResolutionScale: 0.9,
   };
   vm.runInNewContext(`${lifecycle}\nglobalThis.state = () => ({ running, projectPageOpen });`, context);
-  return { window, document, tick, released, state: context.state, loop: () => loop,
+  return { window, document, tick, released, invalidations, timers, context, state: context.state, loop: () => loop,
+    shadowInvalidations: () => shadowInvalidations,
     project: open => changeProject(open),
-    hidden(value) { document.hidden = value; document.emit('visibilitychange'); } };
+    hidden(value) { document.hidden = value; document.emit('visibilitychange'); },
+    loseContext() {
+      contextLost = true; let prevented = false;
+      canvas.emit('webglcontextlost', { preventDefault() { prevented = true; } });
+      assert(prevented, 'Context loss must permit the browser to restore WebGL');
+    },
+    restoreContext() { contextLost = false; canvas.emit('webglcontextrestored'); },
+  };
 }
 
 test('The room stays suspended behind a project when the tab hides and becomes visible', () => {
@@ -84,4 +102,44 @@ test('BFCache restoration retains the open-project flag and restarts only an exp
   assert.equal(h.state().running, true);
   assert.equal(h.loop(), h.tick);
   assert.deepEqual(h.released, []);
+});
+
+test('Restoring a converged idle room invalidates histories, geometry, shadows and GPU timing before resuming', () => {
+  const h = harness();
+  h.loseContext();
+  assert.equal(h.loop(), null); assert.equal(h.state().running, false);
+  assert.deepEqual(h.released, ['gpu-timer']);
+  assert.deepEqual(h.invalidations.at(-1), { reason: 'webgl-context-lost', geometry: false });
+  h.restoreContext();
+  assert.equal(h.loop(), h.tick); assert.equal(h.state().running, true);
+  assert.deepEqual(h.invalidations.at(-1), { reason: 'webgl-context-restored', geometry: true });
+  assert.equal(h.shadowInvalidations(), 1); assert.equal(h.context.renderer.shadowMap.needsUpdate, true);
+  assert.equal(h.timers.length, 1); assert.equal(h.context.gpuTimer, h.timers[0]);
+  assert.equal(h.context.tickLast, null);
+});
+
+test('A restored context stays suspended behind a project until the room is exposed', () => {
+  const h = harness(); h.project(true); h.loseContext(); h.restoreContext();
+  assert.equal(h.state().projectPageOpen, true); assert.equal(h.state().running, false);
+  assert.equal(h.loop(), null); assert.equal(h.shadowInvalidations(), 1);
+  h.project(false); assert.equal(h.loop(), h.tick); assert.equal(h.state().running, true);
+});
+
+test('A context restored while hidden cannot resume until both tab visibility and project state permit it', () => {
+  const h = harness(); h.project(true); h.hidden(true); h.loseContext(); h.restoreContext();
+  assert.equal(h.loop(), null); assert.equal(h.state().running, false);
+  h.project(false); assert.equal(h.loop(), null); assert.equal(h.state().running, false);
+  h.hidden(false); assert.equal(h.loop(), h.tick); assert.equal(h.state().running, true);
+});
+
+test('The actual render eligibility gates reject even a forced QA frame during WebGL context loss', () => {
+  const gateStart = source.indexOf('  const tick = (t, forced) => {', end);
+  const gateEnd = source.indexOf('    const cameraMoved', gateStart);
+  assert(gateStart >= 0 && gateEnd > gateStart);
+  let lost = true;
+  const context = { readiness: { assets: true, construction: true, prepared: true }, running: true,
+    renderer: { getContext: () => ({ isContextLost: () => lost }) } };
+  vm.runInNewContext(`${source.slice(gateStart, gateEnd)}return 'eligible';};globalThis.forced = () => tick(0, true);`, context);
+  assert.equal(context.forced(), undefined);
+  lost = false; assert.equal(context.forced(), 'eligible');
 });

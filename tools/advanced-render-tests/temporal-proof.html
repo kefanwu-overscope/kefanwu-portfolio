@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Temporal reconstruction GPU proof</title>
+  <style>
+    body{margin:24px;background:#11151b;color:#e4ebf4;font:14px/1.6 system-ui,sans-serif}h1{font-size:24px}canvas{width:384px;height:384px;max-width:100%;border:1px solid #51617b;image-rendering:auto}pre{white-space:pre-wrap;overflow-wrap:anywhere;max-width:1100px}a{color:#9fcafa}.failed{color:#ffae9a}.passed{color:#a8efbb}
+  </style>
+  <script type="importmap">{"imports":{"three":"../../vendor/three/0.185.0/build/three.module.js","three/addons/":"../../vendor/three/0.185.0/examples/jsm/"}}</script>
+</head>
+<body>
+  <h1>Temporal reconstruction: actual WebGL proof</h1>
+  <p>Tests the production custom TAAU shader with rendered color/depth, 2× reconstruction, reference readbacks, camera translation, and a moving reactive foreground.</p>
+  <canvas id="proof" width="192" height="192"></canvas>
+  <pre id="result">Running…</pre>
+  <script type="module" src="./temporal-proof.js"></script>
+</body>
+</html>
