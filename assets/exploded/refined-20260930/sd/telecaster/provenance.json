@@ -1,0 +1,32 @@
+{
+  "project": "telecaster",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "refined-20260930",
+  "palette": "studio-photo-materials.js",
+  "background": "#181818",
+  "sourceManifest": "telecaster/manifest.cda86ee072af36e7.json",
+  "camera": {
+    "position": [
+      5.587418079376221,
+      6.20474672317505,
+      9.477091789245605
+    ],
+    "target": [
+      0.012626171112060556,
+      1.410426139831545,
+      -5.626678466774672e-05
+    ],
+    "up": [
+      -0.20265238652933804,
+      0.9166490062782604,
+      -0.3445092299533372
+    ],
+    "zoom": 1,
+    "frameWidth": 4.929925169335695,
+    "frameAspect": 1.4988290398126465
+  },
+  "frameCount": 121,
+  "width": 640,
+  "height": 427,
+  "bytes": 532456
+}

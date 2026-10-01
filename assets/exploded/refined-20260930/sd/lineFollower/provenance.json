@@ -1,0 +1,32 @@
+{
+  "project": "lineFollower",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "refined-20260930",
+  "palette": "studio-photo-materials.js",
+  "background": "#181818",
+  "sourceManifest": "lineFollower/manifest.c524f1b5987f1c3e.json",
+  "camera": {
+    "position": [
+      5.612339973449708,
+      5.191827297210692,
+      9.456274032592775
+    ],
+    "target": [
+      0.03754854202270508,
+      0.3975071907043457,
+      -0.020873069763183538
+    ],
+    "up": [
+      -0.20265238652933804,
+      0.9166490062782604,
+      -0.3445092299533372
+    ],
+    "zoom": 1,
+    "frameWidth": 4.173936325023126,
+    "frameAspect": 1.4988290398126465
+  },
+  "frameCount": 121,
+  "width": 640,
+  "height": 427,
+  "bytes": 1621784
+}

@@ -1,0 +1,32 @@
+{
+  "project": "brakeSim",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "refined-20260930",
+  "palette": "studio-photo-materials.js",
+  "background": "#181818",
+  "sourceManifest": "brakeSim/manifest.f6b37bc3ff99110c.json",
+  "camera": {
+    "position": [
+      11.020412445068368,
+      4.966976165771486,
+      3.148689270019535
+    ],
+    "target": [
+      -9.5367431640625e-07,
+      1.4247024059295654,
+      1.192092895729857e-06
+    ],
+    "up": [
+      -0.2839190248207264,
+      0.9554106799916907,
+      -0.08111978736820433
+    ],
+    "zoom": 1,
+    "frameWidth": 4.944589138031006,
+    "frameAspect": 1.4988290398126465
+  },
+  "frameCount": 121,
+  "width": 640,
+  "height": 427,
+  "bytes": 3669130
+}

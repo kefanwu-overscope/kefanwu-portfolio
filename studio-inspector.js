@@ -3,8 +3,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { createProjectResourceCache, fetchProjectBuffer, abortError } from './studio-inspector-loader.js';
 import { clampProgress, readBufferView, createSampledMotion } from './studio-motion-runtime.js?v=page-integrated-20260930';
-import { applyPhotoFinish, applyPhotoPart } from './studio-photo-materials.js';
-import { installSourceMaterial } from './studio-inspector-materials.js';
+import { applyPhotoFinish, applyPhotoPart } from './studio-photo-materials.js?v=refined-20260930';
+import { installSourceMaterial } from './studio-inspector-materials.js?v=refined-20260930';
 import { fitCameraEnvelope } from './studio-inspector-camera.js';
 
 const RELEASE = 'studio-packed-20260919';
@@ -170,6 +170,9 @@ function buildResource(key, manifest, geometryBuffer, motionBuffer, { initial = 
       }
       const object = new THREE.Mesh(geometry, assigned.length === 1 ? assigned[0] : assigned);
       object.name = source.name;
+      const opaqueSurface = assigned.every(material => !material.transparent && !material.userData.source.unlit && material.transmission < .02);
+      object.castShadow = opaqueSurface;
+      object.receiveShadow = assigned.some(material => !material.userData.source.unlit);
       object.userData.group = source.group;
       object.userData.sourceName = source.name;
       const transform = source.transform || {};
@@ -196,7 +199,7 @@ function buildResource(key, manifest, geometryBuffer, motionBuffer, { initial = 
         const d = point.fromBufferAttribute(positions, i).distanceToSquared(center);
         if (d < distance) { distance = d; nearest = i; }
       }
-      anchors.push(dynamic ? { positions, vertex: nearest } : { point: new THREE.Vector3().fromBufferAttribute(positions, nearest).toArray() });
+      anchors.push({ ...(dynamic ? { positions, vertex: nearest } : { point: new THREE.Vector3().fromBufferAttribute(positions, nearest).toArray() }), bounds: geometry.boundingBox.clone() });
     }
     batchRigidParts(key, manifest, root, nodes);
     const motion = createSampledMotion({ manifest, buffer: motionBuffer, nodes, materials, initial });
@@ -278,6 +281,11 @@ export function createStudioInspector({
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
   renderer.setClearColor(0x191919, transparentBackground ? 0 : 1);
+  if (renderer.shadowMap) {
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.autoUpdate = false;
+  }
   const scene = new THREE.Scene();
   // Let the page supply the surrounding surface without changing the source
   // material, environment lighting or initial camera/pose.
@@ -297,6 +305,9 @@ export function createStudioInspector({
   scene.add(new THREE.HemisphereLight(0xffffff, 0x737373, 1));
   const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
   keyLight.position.set(4, 6, 5);
+  keyLight.castShadow = true;
+  keyLight.shadow.mapSize.set(window.innerWidth < 820 ? 512 : 1024, window.innerWidth < 820 ? 512 : 1024);
+  keyLight.shadow.bias = -.00008;
   scene.add(keyLight);
   const fillLight = new THREE.DirectionalLight(0xffffff, 1.3);
   fillLight.position.set(-5, 2, -3);
@@ -337,6 +348,7 @@ export function createStudioInspector({
   let radius = 1;
   let selectedAt = 0;
   let renderedFrames = 0;
+  let shadowUpdates = 0;
   let poseDirty = false;
   let insideFrame = false;
   let motionTask = null;
@@ -461,12 +473,14 @@ export function createStudioInspector({
     }
     if (poseDirty && resource) {
       resource.motion.seek(progress);
+      if (renderer.shadowMap) renderer.shadowMap.needsUpdate = true;
       onProgress(progress);
       poseDirty = false;
     }
     const moving = controls.update();
     if (dirty || moving || playing) {
       const started = performance.now();
+      if (resource && renderer.shadowMap?.needsUpdate) shadowUpdates++;
       renderer.render(scene, camera);
       renderedFrames += 1;
       onFrame({ progress });
@@ -549,6 +563,12 @@ export function createStudioInspector({
     const width = Math.max(1, box.width);
     const height = Math.max(1, box.height);
     const tier = quality === 'auto' ? (lowTier ? 'low' : 'high') : quality;
+    const shadowSize = tier === 'low' ? 512 : 1024;
+    if (keyLight.shadow.mapSize.x !== shadowSize) {
+      keyLight.shadow.map?.dispose(); keyLight.shadow.map = null;
+      keyLight.shadow.mapSize.set(shadowSize, shadowSize);
+      if (renderer.shadowMap) renderer.shadowMap.needsUpdate = true;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, tier === 'low' ? 1.25 : 2));
     renderer.setSize(width, height, false);
     if (camera.isOrthographicCamera) {
@@ -594,6 +614,17 @@ export function createStudioInspector({
     const center = bounds.getCenter(new THREE.Vector3());
     const size = bounds.getSize(new THREE.Vector3());
     radius = Math.max(size.length() / 2, 0.01);
+    // One fixed source-light volume contains the whole mechanism envelope.
+    // Orbiting/repainting UI reuses this map; only an applied pose invalidates it.
+    keyLight.position.copy(center).addScaledVector(new THREE.Vector3(4, 6, 5).normalize(), radius * 3);
+    keyLight.target.position.copy(center); keyLight.target.updateMatrixWorld();
+    const shadowCamera = keyLight.shadow.camera;
+    shadowCamera.left = shadowCamera.bottom = -radius * 1.08;
+    shadowCamera.right = shadowCamera.top = radius * 1.08;
+    shadowCamera.near = radius * .25; shadowCamera.far = radius * 6;
+    shadowCamera.updateProjectionMatrix();
+    keyLight.shadow.normalBias = radius * .0007;
+    if (renderer.shadowMap) renderer.shadowMap.needsUpdate = true;
     const source = entry.manifest.camera || {};
     const box = canvas.getBoundingClientRect();
     const aspect = Math.max(0.2, box.width / Math.max(1, box.height));
@@ -718,6 +749,7 @@ export function createStudioInspector({
   const restored = () => {
     contextLost = false;
     renderer.setClearColor(0x191919, transparentBackground ? 0 : 1);
+    if (renderer.shadowMap) renderer.shadowMap.needsUpdate = true;
     rebuildEnvironment();
     controls.enabled = active;
     emitStatus(resource ? 'ready' : 'idle', { message: '3D view restored.', ...(resource ? { manifest: resource.manifest, motionReady: resource.motionReady, motionError } : {}) });
@@ -764,8 +796,34 @@ export function createStudioInspector({
     return candidates[0] || null;
   }
 
+  // Export/QA only. Callout placement uses these baked per-phase occupancy
+  // masks, with no geometry scanning or pixel readback during page scrolling.
+  function projectRegions() {
+    if (!resource) return [];
+    resource.root.updateMatrixWorld(true); camera.updateMatrixWorld(true);
+    const regions = [], point = new THREE.Vector3();
+    const dynamicBounds = new Map();
+    resource.nodes.forEach((object, index) => {
+      const anchor = resource.anchors[index], source = resource.manifest.nodes[index];
+      if (!object.visible || object.userData.presentationHidden || /^(Fluent path|Flow tracer)/.test(source.name)) return;
+      let bounds = anchor.bounds;
+      if (anchor.positions) {
+        if (!dynamicBounds.has(object.geometry)) { object.geometry.computeBoundingBox(); dynamicBounds.set(object.geometry, object.geometry.boundingBox); }
+        bounds = dynamicBounds.get(object.geometry);
+      }
+      let minX = 1, minY = 1, maxX = 0, maxY = 0;
+      for (const x of [bounds.min.x, bounds.max.x]) for (const y of [bounds.min.y, bounds.max.y]) for (const z of [bounds.min.z, bounds.max.z]) {
+        point.set(x,y,z).applyMatrix4(object.matrixWorld).project(camera);
+        minX = Math.min(minX, (point.x+1)/2); maxX = Math.max(maxX, (point.x+1)/2);
+        minY = Math.min(minY, (1-point.y)/2); maxY = Math.max(maxY, (1-point.y)/2);
+      }
+      if (maxX > 0 && minX < 1 && maxY > 0 && minY < 1) regions.push({ x: Math.max(0,minX), y: Math.max(0,minY), width: Math.min(1,maxX)-Math.max(0,minX), height: Math.min(1,maxY)-Math.max(0,minY) });
+    });
+    return regions;
+  }
+
   return {
-    projectAnchor,
+    projectAnchor, projectRegions,
     selectProject, setProgress, play, pause, resize, setView, setActive, retryMotion,
     whenMotionReady: () => motionCompletion,
     reset({ camera: resetCamera = true } = {}) {
@@ -782,6 +840,7 @@ export function createStudioInspector({
           .filter((material) => material.userData.source.procedural || material.userData.source.heat)
           .map((material) => ({ name: material.name, compiled: !!material.userData.sourceShaderCompiled, type: material.userData.source.procedural?.type || 'heat' })) : [],
         triangles: renderer.info.render.triangles,
+        shadows: { enabled: !!renderer.shadowMap?.enabled, size: keyLight.shadow.mapSize.x, updates: shadowUpdates },
         renderMilliseconds: frameSamples.length ? frameSamples.reduce((a, b) => a + b, 0) / frameSamples.length : 0 };
     },
     dispose() {
@@ -801,6 +860,7 @@ export function createStudioInspector({
       reducedMotion.removeEventListener('change', reducedChange);
       controls.dispose();
       cache.dispose();
+      keyLight.shadow.map?.dispose(); keyLight.shadow.mapPass?.dispose();
       environmentTarget.dispose();
       renderer.dispose();
       resource = null;

@@ -1,3 +1,4 @@
+import { layoutAnnotation, maskRegions } from '../../project-annotation-layout.js';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
@@ -55,7 +56,7 @@ function setup({ reducedMotion = false, scroll = 923, width = 1280, height = 900
   const nodes = Object.fromEntries([
     '#preview-title', '.motion-note-body', '.motion-step-count', '.motion-evidence-note',
     '.motion-step-buttons', '#motion-story-progress', '.motion-story-timeline output',
-    '.motion-explore', '#preview-instructions', '.motion-notes', '.motion-story-footer', '.motion-leader-line',
+    '.motion-explore', '#preview-instructions', '.motion-notes', '.motion-story-footer', '.motion-leader-line', '.motion-leader-target',
   ].map(selector => [selector, new Element()]));
   for (const [selector, node] of Object.entries(nodes)) story.selectors.set(selector, node);
   story.selectors.set('.case-animation-host', host); story.selectors.set('.case-motion-pin', pin);
@@ -79,12 +80,12 @@ function setup({ reducedMotion = false, scroll = 923, width = 1280, height = 900
   };
   const frames = new Map(), requests = [], modes = [], scrolls = [], intersections = [], resizes = [];
   const fetches = [];
-  let frameID = 0, time = 0;
+  let frameID = 0, time = 0, liveAnchor = { x: .5, y: .5 };
   window.scrollTo = options => { scrolls.push(options); window.scrollY = options.top; window.emit('scroll'); };
   host.addEventListener('case-motion-request', event => requests.push(event.detail));
   host.addEventListener('case-motion-mode', event => modes.push(event.detail));
   const context = {
-    window, document, innerWidth: width, innerHeight: height,
+    window, document, layoutAnnotation, maskRegions, innerWidth: width, innerHeight: height,
     matchMedia: () => reduced,
     AbortController: class {
       constructor() { this.signal = new Element(); }
@@ -118,8 +119,8 @@ function setup({ reducedMotion = false, scroll = 923, width = 1280, height = 900
     scrollToProgress(progress) {
       const { start, travel } = controller.getState(); window.scrollY = start + progress * travel; window.emit('scroll');
     },
-    show(progress) { host.emit('case-motion-progress', { progress }); },
-    anchor(point) { host.emit('case-motion-anchor', { point }); },
+    show(progress) { host.emit('case-motion-progress', { progress }); if (host.dataset.motionLive === 'true' && liveAnchor) host.emit('case-motion-anchor', { point: liveAnchor }); },
+    anchor(point) { liveAnchor = point; host.emit('case-motion-anchor', { point }); },
     async resolveAnchors(data) {
       fetches.at(-1).resolve({ ok: true, json: async () => data });
       for (let i = 0; i < 5; i++) await Promise.resolve();
@@ -184,7 +185,7 @@ test('Annotations appear from the displayed pose and animate only actual stage c
   assert.equal(h.story.dataset.notesVisible, 'true');
   assert.equal(annotation.getAttribute('aria-hidden'), 'false');
   const firstEntrance = annotation.animations[0];
-  assert.equal(firstEntrance.options.duration, 160);
+  assert.equal(firstEntrance.options.duration, 240);
   h.show(.15);
   assert.equal(annotation.animations.length, 1, 'Progress inside a stage must not restart the entrance');
   h.show(.68);
@@ -453,11 +454,11 @@ test('Live leaders follow projected model points without seeking or moving the m
   h.show(.22); h.requests.length = 0;
   h.anchor({ x: .25, y: .5 });
   assert.equal(h.story.dataset.anchorVisible, 'true');
-  assert.match(leader.getAttribute('d'), /L320\.0,186\.0$/);
+  assert.equal(h.nodes['.motion-leader-target'].getAttribute('cx'), '320.0'); assert.equal(h.nodes['.motion-leader-target'].getAttribute('cy'), '186.0');
   assert.equal(h.controller.getState().shown, .22);
   assert.equal(h.requests.length, 0, 'Projection must not create a seek feedback loop');
   h.anchor({ x: .75, y: .3 });
-  assert.match(leader.getAttribute('d'), /L960\.0,126\.0$/);
+  assert.equal(h.nodes['.motion-leader-target'].getAttribute('cx'), '960.0'); assert.equal(h.nodes['.motion-leader-target'].getAttribute('cy'), '126.0');
   h.anchor(null);
   assert.equal(h.story.dataset.anchorVisible, 'false');
 });
@@ -482,10 +483,10 @@ test('Offline leaders use the decoded frame and preserve contain-fit letterboxin
   h.scrollToProgress(.9); h.drain(); h.show(.25);
   await h.resolveAnchors({ materialTest: { aspect: 1.5, points } });
   assert.equal(h.controller.getState().shown, .25);
-  assert.match(leader.getAttribute('d'), /L527\.5,186\.0$/, '450px contained frame is centered in the 1280px media surface');
+  assert.equal(h.nodes['.motion-leader-target'].getAttribute('cx'), '527.5', '450px contained frame is centered in the 1280px media surface');
   h.geometry.mediaHeight = 200; h.context.innerWidth = 390; h.window.emit('resize'); h.drain();
-  assert.match(leader.getAttribute('d'), /L120\.0,136\.0$/, '300px contained frame is centered in the 390px media surface');
-  assert.equal(h.story.properties.get('--label-x'), '24px');
+  assert.equal(h.nodes['.motion-leader-target'].getAttribute('cx'), '120.0', '300px contained frame is centered in the 390px media surface');
+  assert(Number.parseFloat(h.story.properties.get('--label-x')) >= 18);
   assert.equal(h.controller.getState().shown, .25, 'Resize must not advance the displayed frame');
 });
 
@@ -522,4 +523,40 @@ test('The actual image renderer republishes an identical cached pose after reset
   assert.equal(stage.firstChild, images[78].image);
   assert.equal(card.classList.contains('is-explode-playing'), true);
   assert.deepEqual(shown, [.78, 0, .78], 'Restoring the same cached pose must restore its actual-progress annotation too');
+});
+
+
+test('Component dot, drawn leader and delayed label form one cancellable entrance', () => {
+  const h = setup(); h.show(.22);
+  const dot = h.nodes['.motion-leader-target'].animations.at(-1);
+  const line = h.nodes['.motion-leader-line'].animations.at(-1);
+  const text = h.nodes['.motion-notes'].animations.at(-1);
+  assert.equal(dot.options.duration, 210);
+  assert.equal(line.options.duration, 300);
+  assert.equal(line.keyframes[0].strokeDashoffset, -1);
+  assert.equal(text.options.delay, 110);
+  assert.equal(text.options.duration, 240);
+  assert.equal(text.keyframes[0].translate, '0 5px');
+  const counts = [h.nodes['.motion-leader-target'], h.nodes['.motion-leader-line'], h.nodes['.motion-notes']].map(node => node.animations.length);
+  h.show(.24);
+  assert.deepEqual([h.nodes['.motion-leader-target'], h.nodes['.motion-leader-line'], h.nodes['.motion-notes']].map(node => node.animations.length), counts);
+  h.hidden(true);
+  assert.deepEqual([dot, line, text].map(animation => animation.playState), ['idle', 'idle', 'idle']);
+});
+
+test('Opening the image viewer cancels every annotation animation', () => {
+  const h = setup(); h.show(.22);
+  const animations = ['.motion-notes','.motion-leader-line','.motion-leader-target'].map(selector => h.nodes[selector].animations.at(-1));
+  h.window.emit('case-lightbox-state', {open:true});
+  assert(animations.every(animation => animation.playState === 'idle'));
+});
+
+
+test('Explicit stage selection remeasures a section moved by late fonts or case content', () => {
+  const h = setup({project:'materialTest'});
+  h.geometry.top += 25;
+  h.choose(1); h.drain();
+  assert.equal(h.controller.getState().start, 948);
+  assertScrollBoundary(h,h.notes.steps[1].at);
+  assert.equal(h.story.dataset.userSeeking,'true');
 });

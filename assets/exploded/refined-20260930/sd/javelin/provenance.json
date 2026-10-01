@@ -1,0 +1,32 @@
+{
+  "project": "javelin",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "refined-20260930",
+  "palette": "studio-photo-materials.js",
+  "background": "#181818",
+  "sourceManifest": "javelin/manifest.abd6d43cbbda460e.json",
+  "camera": {
+    "position": [
+      -11.288986206054682,
+      3.6383359432220437,
+      2.892053842544556
+    ],
+    "target": [
+      0.021946907043457028,
+      0.8106017112731932,
+      0.06432056427001964
+    ],
+    "up": [
+      0.2286649165404933,
+      0.971825284349536,
+      -0.05716618443164306
+    ],
+    "zoom": 1,
+    "frameWidth": 3.8319310336914083,
+    "frameAspect": 1.4988290398126465
+  },
+  "frameCount": 121,
+  "width": 640,
+  "height": 427,
+  "bytes": 592016
+}

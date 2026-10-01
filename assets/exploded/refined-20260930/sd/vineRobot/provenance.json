@@ -1,0 +1,32 @@
+{
+  "project": "vineRobot",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "refined-20260930",
+  "palette": "studio-photo-materials.js",
+  "background": "#181818",
+  "sourceManifest": "vineRobot/manifest.b9a288a0d3a38c69.json",
+  "camera": {
+    "position": [
+      -9.355234146118164,
+      5.735403060913082,
+      6.165333271026613
+    ],
+    "target": [
+      0.034247398376464844,
+      1.4579734802246092,
+      0.166498184204102
+    ],
+    "up": [
+      0.30201643560203034,
+      0.9335707977245284,
+      -0.19295501616240007
+    ],
+    "zoom": 1,
+    "frameWidth": 7.7704965913698585,
+    "frameAspect": 1.4988290398126465
+  },
+  "frameCount": 145,
+  "width": 640,
+  "height": 427,
+  "bytes": 1600608
+}

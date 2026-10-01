@@ -1,0 +1,32 @@
+{
+  "project": "scanner",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "refined-20260930",
+  "palette": "studio-photo-materials.js",
+  "background": "#181818",
+  "sourceManifest": "scanner/manifest.871477ce65e6213f.json",
+  "camera": {
+    "position": [
+      5.567635536193848,
+      5.679952621459957,
+      9.546423912048342
+    ],
+    "target": [
+      -0.009478569030761717,
+      0.8836350440979004,
+      0.06532859802246105
+    ],
+    "up": [
+      -0.20265238652933804,
+      0.9166490062782604,
+      -0.3445092299533372
+    ],
+    "zoom": 1,
+    "frameWidth": 4.818753937886044,
+    "frameAspect": 1.4988290398126465
+  },
+  "frameCount": 121,
+  "width": 1280,
+  "height": 854,
+  "bytes": 4384552
+}

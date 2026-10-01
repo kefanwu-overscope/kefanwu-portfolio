@@ -1,0 +1,32 @@
+{
+  "project": "ftc",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "refined-20260930",
+  "palette": "studio-photo-materials.js",
+  "background": "#181818",
+  "sourceManifest": "ftc/manifest.b301848c585dff0c.json",
+  "camera": {
+    "position": [
+      5.796556472778321,
+      6.174357891082762,
+      9.369441986083986
+    ],
+    "target": [
+      0.2217650413513183,
+      1.380037784576416,
+      -0.10770511627197243
+    ],
+    "up": [
+      -0.20265238652933804,
+      0.9166490062782604,
+      -0.3445092299533372
+    ],
+    "zoom": 1,
+    "frameWidth": 7.020569393438901,
+    "frameAspect": 1.4988290398126465
+  },
+  "frameCount": 121,
+  "width": 640,
+  "height": 427,
+  "bytes": 1350560
+}

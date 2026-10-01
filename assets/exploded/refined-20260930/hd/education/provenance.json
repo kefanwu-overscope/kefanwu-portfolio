@@ -1,0 +1,32 @@
+{
+  "project": "education",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "refined-20260930",
+  "palette": "studio-photo-materials.js",
+  "background": "#181818",
+  "sourceManifest": "education/manifest.436ba57cca2d7131.json",
+  "camera": {
+    "position": [
+      1.9235137701034546,
+      3.364858865737914,
+      10.079805374145508
+    ],
+    "target": [
+      -0.11672484874725343,
+      1.834681272506714,
+      -0.12138462066650373
+    ],
+    "up": [
+      -0.028539086730732306,
+      0.9893551159405654,
+      -0.14269539267546932
+    ],
+    "zoom": 1,
+    "frameWidth": 6.531311846394583,
+    "frameAspect": 1.4988290398126465
+  },
+  "frameCount": 121,
+  "width": 1280,
+  "height": 854,
+  "bytes": 1203568
+}

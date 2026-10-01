@@ -5,10 +5,10 @@
   "sample": 0,
   "projects": {
     "steering": {
-      "url": "models/room-current/steering.ab50611278a1e6f7.glb.gz",
-      "sha256": "ab50611278a1e6f7d31cac879530ce4e1a0f002534e9bf0da4fb556daec8d070",
-      "bytes": 332043,
-      "glbBytes": 556592,
+      "url": "models/room-current/steering.db681ab9882824eb.glb.gz",
+      "sha256": "db681ab9882824eb5f4aa76dca3a7e4bbad26e0bb3749d552df214d6fbb1a80c",
+      "bytes": 361918,
+      "glbBytes": 626660,
       "compression": "gzip",
       "triangles": 19144,
       "bounds": {

@@ -1,8 +1,8 @@
 import json,hashlib,re,shutil
 from pathlib import Path
 from PIL import Image
-root=Path(__file__).resolve().parents[2];folder=root.parent/'.codex/photo-fidelity-20260930';exports=folder/'exports'
-REV='photo-20260930';base='assets/exploded/'+REV;coverbase='assets/editorial/'+REV
+root=Path(__file__).resolve().parents[2];folder=root.parent/'.codex/refined-annotations-20260930';exports=folder/'exports'
+REV='refined-20260930';base='assets/exploded/'+REV;coverbase='assets/editorial/'+REV
 result=json.loads((exports/'result.json').read_text(encoding='utf-8'));assert not result['errors'],result['errors']
 def read(p):return json.loads(p.read_text(encoding='utf-8'))
 def write(p,x):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(x,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
@@ -14,7 +14,7 @@ for quality,name,width,height in [('sd','manifest.json',640,427),('hd','manifest
  manifest=read(root/'assets/exploded'/name);before=sum(p['bytes'] for p in manifest['projects'].values())
  for key,project in manifest['projects'].items():
   report=read(exports/key/'report.json');assert report['count']==len(project['frames']);assert all(report['points'])
-  if quality=='sd':anchors[key]={'aspect':640/427,'points':report['points']}
+  if quality=='sd':anchors[key]={'aspect':640/427,'points':report['points'],'masks':report['masks']}
   frames=[];chunks=[];records=[];payload=bytearray();total=0
   def flush():
    if not records:return
@@ -50,6 +50,8 @@ covers['revision']=REV;write(root/'assets/editorial/animation-covers.json',cover
 p=root/'index.html';html=p.read_text(encoding='utf-8')
 for key,old in oldcovers['projects'].items():
  new=covers['projects'][key];html=html.replace(old['srcset'],new['srcset'])
- for ov,nv in zip(old['variants'],new['variants']):html=html.replace(ov['src']+'?v='+ov['sha256'][:12],nv['src']+'?v='+nv['sha256'][:12])
+ for nv in new['variants']:
+  pattern=r'assets/editorial/[^/]+/'+re.escape(key)+r'-wide-'+str(nv['width'])+r'\.webp\?v=[0-9a-f]+'
+  html=re.sub(pattern,nv['src']+'?v='+nv['sha256'][:12],html)
 p.write_text(html,encoding='utf-8')
 write(folder/'pack-report.json',reports);print(json.dumps(reports))

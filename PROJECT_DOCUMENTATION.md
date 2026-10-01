@@ -1,5 +1,26 @@
 # Portfolio Website Project Documentation
 
+## Refined surfaces and nearby animated annotations · follow-up to465eb59e
+
+Models stay fixed in the page. Small callouts now choose nearby free space using
+baked source-pose occupancy masks; the component dot appears, the rounded
+leader draws outward, and concise text follows. Labels retain their position
+within a phase. Reduced motion, hidden pages, image viewers, free exploration
+and disposal cancel all three animations. Named seeks remeasure the current
+section position so late fonts cannot move the requested phase backwards.
+
+Surface changes restore existing source bump and add restrained neutral print,
+metal and paint detail. Steering weave is limited to verified broad plate faces;
+room steering exports preserve original objectCoordinates. Source geometry,
+mechanism motion, carbon-seat weave/layup, real photos and scientific colors
+remain intact. Project viewers use one512/1024px self-shadow map, updated only
+on applied poses or quality/context changes; free orbit/UI reuse the map.
+
+Read tools/studio-tests/refined-surface-review.md and tools/photo-fidelity/README.md.
+Runtime and matched covers/SD/HD frames share the same pipeline. Evidence and
+exact release backup records are in ../.codex/refined-annotations-20260930/.
+
+
 ## Stable annotated project presentation · follow-up to d97015c
 
 User requested no lateral whole-model movement, small technical labels with

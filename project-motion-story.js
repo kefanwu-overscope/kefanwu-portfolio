@@ -1,3 +1,4 @@
+import { layoutAnnotation, maskRegions } from './project-annotation-layout.js';
 import { renderPressureLegend } from './project-pressure-legend.js';
 import { projectMotionLabels } from './project-motion-labels.js';
 import { projectMotionNotes } from './project-motion-notes.js?v=page-integrated-20260930';
@@ -31,10 +32,26 @@ export function attachMotionStory(story) {
   let pendingMeasure = false, sent = -1, annotationRequested = false, noteAnimation = null;
   const annotation = story.querySelector('.motion-notes');
   const leader = story.querySelector('.motion-leader-line');
-  let lastAnchor = null, frameAnchors = null;
+  const endpoint = story.querySelector('.motion-leader-target');
+  let lastAnchor = null, frameAnchors = null, placement = null, placementSize = '', entrancePending = false;
+  let occupancyKey = '', occupied = [];
+  let lineAnimation = null, dotAnimation = null;
+  function cancelEntrance() {
+    noteAnimation?.cancel(); lineAnimation?.cancel(); dotAnimation?.cancel();
+    noteAnimation = lineAnimation = dotAnimation = null;
+    story.dataset.labelPending = 'false';
+  }
+  function revealAnnotation() {
+    if (!entrancePending || story.dataset.anchorVisible !== 'true') return;
+    entrancePending = false; cancelEntrance();
+    if (reduced.matches || !active() || free || story.dataset.notesVisible !== 'true') return;
+    dotAnimation = endpoint?.animate?.([{ opacity:0, transform:'scale(.55)' },{ opacity:1, transform:'scale(1)' }], { duration:210,easing:'ease-out' });
+    lineAnimation = leader.animate?.([{ strokeDasharray:'1',strokeDashoffset:-1 },{ strokeDasharray:'1',strokeDashoffset:0 }], { duration:300,easing:'cubic-bezier(.2,.65,.25,1)' });
+    noteAnimation = annotation?.animate?.([{ opacity:0,translate:'0 5px' },{ opacity:1,translate:'0 0' }], { duration:240,delay:110,fill:'backwards',easing:'cubic-bezier(.2,.65,.25,1)' });
+  }
   function placeAnchor(point) {
     lastAnchor = point;
-    if (!point || !leader) { story.dataset.anchorVisible = 'false'; noteAnimation?.cancel(); return; }
+    if (!point || !leader) { story.dataset.anchorVisible = 'false'; cancelEntrance(); return; }
     const box = pin.getBoundingClientRect(), surface = media.getBoundingClientRect();
     let width = surface.width, height = surface.height, left = surface.left - box.left, top = surface.top - box.top;
     if (host.dataset.motionLive !== 'true') {
@@ -44,29 +61,48 @@ export function attachMotionStory(story) {
       width = scale * aspect; height = scale;
     }
     const x = left + point.x * width, y = top + point.y * height;
-    const compact = box.width <= 700, labelWidth = compact ? 150 : 190;
-    const onLeft = point.x < .5;
-    const lx = compact ? (onLeft ? 24 : box.width - labelWidth - 24) : (onLeft ? Math.max(28, box.width * .06) : box.width - labelWidth - Math.max(28, box.width * .06));
-    const labelHeight = annotation?.getBoundingClientRect?.().height || 80;
-    const ly = compact ? box.height - 82 - labelHeight : Math.max(82, Math.min(box.height - 148, y - 72));
-    story.style.setProperty('--label-x', `${lx}px`); story.style.setProperty('--label-y', `${ly}px`);
-    const startX = lx + (onLeft ? labelWidth : 0), startY = ly + 23;
-    const elbow = startX + (onLeft ? 16 : -16);
-    leader.setAttribute('d', `M${startX.toFixed(1)},${startY.toFixed(1)} L${elbow.toFixed(1)},${startY.toFixed(1)} L${x.toFixed(1)},${y.toFixed(1)}`);
+    const labelBox = annotation?.getBoundingClientRect?.();
+    const labelWidth = labelBox?.width || (box.width <= 700 ? 164 : 184), labelHeight = labelBox?.height || 80;
+    // The original camera uses the same contain fit as the frame renderer.
+    // These per-phase masks include moving components throughout the phase.
+    const imageAspect = frameAnchors?.aspect || 640 / 427;
+    const fittedHeight = Math.min(surface.width / imageAspect, surface.height);
+    const imageBox = { x: surface.left - box.left + (surface.width-fittedHeight*imageAspect)/2,
+      y: surface.top - box.top + (surface.height-fittedHeight)/2, width:fittedHeight*imageAspect,height:fittedHeight };
+    const nextOccupancyKey = `${activeNote}:${[imageBox.x,imageBox.y,imageBox.width,imageBox.height].map(value=>value.toFixed(2)).join(':')}`;
+    if (nextOccupancyKey !== occupancyKey) {
+      occupancyKey = nextOccupancyKey; occupied = maskRegions(frameAnchors?.masks?.[activeNote], imageBox);
+    }
+    const regions = occupied;
+    const reserved = [{x:0,y:0,width:box.width,height:62},{x:0,y:box.height-80,width:box.width,height:80}];
+    const legend = story.querySelector('#case-3d-legend');
+    if (legend && !legend.hidden) { const r=legend.getBoundingClientRect(); reserved.push({x:r.left-box.left,y:r.top-box.top,width:r.width,height:r.height}); }
+    const sizeKey = `${box.width}:${box.height}:${labelWidth}:${labelHeight}`;
+    const reset = !placement || placementSize !== sizeKey;
+    placement = layoutAnnotation({anchor:{x,y},width:box.width,height:box.height,labelWidth,labelHeight,regions,reserved,previous:placement,reset});
+    placementSize = sizeKey;
+    story.style.setProperty('--label-x', `${placement.x}px`); story.style.setProperty('--label-y', `${placement.y}px`);
+    leader.setAttribute('d', placement.path);
+    endpoint?.setAttribute('cx',x.toFixed(1)); endpoint?.setAttribute('cy',y.toFixed(1));
+    story.dataset.leaderLength = placement.length.toFixed(1);
+    story.dataset.labelOverlap = placement.overlap.toFixed(1);
     story.dataset.anchorVisible = String(x >= 0 && x <= box.width && y > 30 && y < box.height - 40);
-    if (story.dataset.anchorVisible !== 'true') noteAnimation?.cancel();
+    if (story.dataset.anchorVisible !== 'true') cancelEntrance();
+    else revealAnnotation();
   }
-  if (host.dataset.motionLive !== 'true' && leader) {
-    fetch('assets/exploded/photo-20260930/anchors.json', { signal: events.signal }).then(response => {
+  if (leader) {
+    fetch('assets/exploded/refined-20260930/anchors.json', { signal: events.signal }).then(response => {
       if (!response.ok) throw new Error('Annotation coordinates unavailable');
       return response.json();
-    }).then(data => { if (disposed) return; frameAnchors = data[story.dataset.motionProject];
-      if (frameAnchors?.legend) {
+    }).then(data => { if (disposed) return; frameAnchors = data[story.dataset.motionProject]; placement = null; occupancyKey = '';
+      if (host.dataset.motionLive !== 'true' && frameAnchors?.legend) {
         const legend = document.createElement('div'); legend.id = 'case-3d-legend'; legend.className = 'case-3d-legend';
         host.append(legend); renderPressureLegend(legend, frameAnchors.legend);
       }
-      paint(shown); }).catch(() => {});
+      paint(shown); if (host.dataset.motionLive === 'true') placeAnchor(lastAnchor);
+    }).catch(() => {});
   }
+
   const active = () => !disposed && !suspended && !document.hidden && !lightbox && inView;
   const label = index => `${String(index + 1).padStart(2, '0')} / ${String(notes.steps.length).padStart(2, '0')}`;
   function paint(progress) {
@@ -75,22 +111,21 @@ export function attachMotionStory(story) {
     if (activeNote !== index) {
       activeNote = index; title.textContent = step.title; body.textContent = step.body; count.textContent = label(index);
       story.dataset.noteSide = step.side || (index % 2 ? 'left' : 'right');
-      noteAnimation?.cancel();
-      if (!reduced.matches && shown > .015 && story.dataset.anchorVisible === 'true' && annotation?.animate) {
-        noteAnimation = annotation.animate([{ opacity:0 },{ opacity:1 }],
-          { duration:160,easing:'ease-out' });
-      }
+      cancelEntrance(); placement = null; entrancePending = true;
+      story.dataset.labelPending = 'true';
       [...buttons.children].forEach((button, i) => button.setAttribute('aria-pressed', String(i === index)));
     }
-    if (frameAnchors) placeAnchor(frameAnchors.points[Math.round(shown * (frameAnchors.points.length - 1))]);
     const percent = Math.round(shown * 100);
     output.value = `${percent}%`; output.textContent = `${percent}%`;
     range.setAttribute('aria-valuetext', `${percent} percent — ${step.title}`);
     story.dataset.shownProgress = shown.toFixed(4);
     const notesVisible = annotationRequested || reduced.matches || !pinned || (shown > .018 && shown < .995);
+    if (notesVisible && story.dataset.notesVisible !== 'true') entrancePending = true;
     story.dataset.notesVisible = String(notesVisible);
     annotation?.setAttribute('aria-hidden', String(!notesVisible || free));
     story.dataset.loading = String(Math.abs(target - shown) > .04 && !free);
+    if (frameAnchors && host.dataset.motionLive !== 'true') placeAnchor(frameAnchors.points[Math.round(shown * (frameAnchors.points.length - 1))]);
+    if (!notesVisible || free) cancelEntrance();
   }
   function reflectTarget() {
     range.value = String(Math.round(target * 1000));
@@ -120,7 +155,7 @@ export function attachMotionStory(story) {
     if (reduced.matches || !pinned || free) return;
     target = progressFromScroll(window.scrollY, start, travel); reflectTarget(); schedule();
   }
-  function measure() {
+  function measure({ sync = true } = {}) {
     const headerHeight = document.querySelector('.site-header')?.getBoundingClientRect().height || 77;
     const top = headerHeight;
     story.style.setProperty('--story-top', `${top}px`);
@@ -138,13 +173,18 @@ export function attachMotionStory(story) {
       ? 'Choose a numbered stage or use the slider to inspect each pose. Automatic scroll animation is off for reduced motion.'
       : !pinned ? 'Choose a numbered stage or use the slider to explore the model and its notes.'
         : 'Scroll down to explore; scroll back to reverse. The notes follow the model. Choose a numbered stage or use the slider at any time.';
+    if (!sync) return;
     if (reduced.matches || !pinned) { eased = target; reflectTarget(); emit(target, true); }
     else readScroll();
     paint(shown); placeAnchor(lastAnchor);
   }
   function choose(progress) {
-    annotationRequested = true;
     if (free) setFree(false);
+    // Fonts and asynchronous case content can move the section without
+    // resizing the pinned viewport. Seek from its current document position.
+    measure({ sync: false });
+    annotationRequested = true;
+    story.dataset.userSeeking = 'true';
     target = clamp(progress); reflectTarget();
     if (reduced.matches || !pinned) { eased = target; emit(target, true); }
     else {
@@ -155,7 +195,7 @@ export function attachMotionStory(story) {
   }
   function setFree(value) {
     const returning = free && !value, returnProgress = shown;
-    free = !!value; story.classList.toggle('is-free', free);
+    cancelEntrance(); placement = null; free = !!value; story.classList.toggle('is-free', free);
     if (mode) { mode.setAttribute('aria-pressed', String(free)); mode.textContent = free ? 'Back to the story ↓' : 'Explore freely ↗'; }
     host.dispatchEvent(new CustomEvent('case-motion-mode', { detail: { free } }));
     instructions.textContent = free
@@ -186,30 +226,32 @@ export function attachMotionStory(story) {
   listen(window, 'scroll', readScroll, { passive: true });
   listen(window, 'resize', () => { pendingMeasure = true; measure(); }, { passive: true });
   listen(document, 'visibilitychange', () => {
-    if (document.hidden) { cancelAnimationFrame(raf); raf = 0; previousTime = 0; noteAnimation?.cancel(); }
+    if (document.hidden) { cancelAnimationFrame(raf); raf = 0; previousTime = 0; cancelEntrance(); }
     else { sent = -1; measure(); if (active() && !free) emit(eased, true); schedule(); }
   });
   listen(window, 'case-lightbox-state', event => {
     lightbox = Boolean(event.detail?.open);
+    if (lightbox) cancelEntrance();
     if (!lightbox) { sent = -1; measure(); emit(eased, true); schedule(); }
   });
-  listen(reduced, 'change', () => { noteAnimation?.cancel(); noteAnimation = null; sent = -1; setFree(false); measure(); });
+  listen(reduced, 'change', () => { cancelEntrance(); sent = -1; setFree(false); measure(); });
   const visibility = new IntersectionObserver(entries => {
     inView = entries[0].isIntersecting;
     if (inView) { sent = -1; measure(); emit(eased, true); schedule(); }
-    else { cancelAnimationFrame(raf); raf = 0; previousTime = 0; noteAnimation?.cancel(); }
+    else { cancelAnimationFrame(raf); raf = 0; previousTime = 0; cancelEntrance(); }
   });
   visibility.observe(pin);
   const resize = new ResizeObserver(() => { if (!disposed) measure(); });
   resize.observe(pin);
+  if (annotation) resize.observe(annotation);
   function dispose() {
     if (disposed) return;
     disposed = true; cancelAnimationFrame(raf); visibility.disconnect(); resize.disconnect(); events.abort();
-    noteAnimation?.cancel();
+    cancelEntrance();
   }
   listen(window, 'studio-project-dispose', dispose);
   listen(window, 'pagehide', event => {
-    suspended = true; cancelAnimationFrame(raf); raf = 0; previousTime = 0; noteAnimation?.cancel();
+    suspended = true; cancelAnimationFrame(raf); raf = 0; previousTime = 0; cancelEntrance();
     if (!event.persisted) dispose();
   });
   listen(window, 'pageshow', event => { if (event.persisted && !disposed) { suspended = false; sent = -1; measure(); emit(eased, true); schedule(); } });

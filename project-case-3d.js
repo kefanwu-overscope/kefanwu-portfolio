@@ -285,13 +285,13 @@ function mount() {
     receiveStatus({ state: 'loading' });
     const current = () => ticket === generation && !disposed && !suspended;
     try {
-      const { createStudioInspector } = await import('./studio-inspector.js?v=photo-20260930');
+      const { createStudioInspector } = await import('./studio-inspector.js?v=refined-20260930');
       if (!current() || signal.aborted) return;
       inspector = createStudioInspector({
         canvas,
         transparentBackground: true,
         onFrame: ({ progress: applied }) => {
-          if (!current() || !inspector) return;
+          if (!current() || !inspector || freeExploration) return;
           const steps = projectMotionNotes[key]?.steps || [];
           let index = 0;
           for (let i = 1; i < steps.length; i++) if (applied + .00001 >= steps[i].at) index = i;
@@ -387,6 +387,7 @@ function mount() {
   });
   listen(host, 'case-motion-mode', event => {
     freeExploration = Boolean(event.detail?.free);
+    annotation.hidden = true;
     canvas.setAttribute('aria-label', canvasLabel());
     canvas.tabIndex = freeExploration && modelDrawn ? 0 : -1;
     inspector?.pause();

@@ -27,11 +27,16 @@ document.querySelector('#start').onclick=async()=>{
    inspector.reset({camera:true});inspector.setProgress(0);
    const covers={};
    for(const width of (hdOnly?[]:[480,960,1800])){const blob=await capture(width,width*2/3);await save(`${key}/cover-${width}.webp`,blob);covers[width]=blob.size;}
-   const count=config.frames.length,points=[],sizes=[];const steps=projectMotionNotes[key].steps;
+   const count=config.frames.length,points=[],sizes=[],masks=projectMotionNotes[key].steps.map(()=>Array(24).fill(0));const steps=projectMotionNotes[key].steps;
    canvas.style.width='640px';canvas.style.height='427px';inspector.resize();
    for(let i=0;i<count;i++){
     const p=i/(count-1);inspector.setProgress(p);const blob=await capture(640,427);
     let stage=0;for(let j=1;j<steps.length;j++)if(p+.00001>=steps[j].at)stage=j;
+    for(const rect of inspector.projectRegions()) {
+      const x0=Math.max(0,Math.floor(rect.x*32)),x1=Math.min(31,Math.floor((rect.x+rect.width)*32));
+      const y0=Math.max(0,Math.floor(rect.y*24)),y1=Math.min(23,Math.floor((rect.y+rect.height)*24));
+      for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)masks[stage][y]=(masks[stage][y]|(1<<x))>>>0;
+    }
     const point=inspector.projectAnchor(projectMotionLabels[key][stage].target);
     if(!point||!Number.isFinite(point.x)||!Number.isFinite(point.y))errors.push({key,i,stage,error:'Missing anchor'});
     points.push(point&&{x:+point.x.toFixed(6),y:+point.y.toFixed(6)});sizes.push(blob.size);
@@ -39,7 +44,7 @@ document.querySelector('#start').onclick=async()=>{
     await save(`${key}/detail/${String(i).padStart(2,'0')}.webp`,await capture(1280,854));
     if(i%10===0)status.textContent=`Rendering ${key}: ${i+1}/${count}`;
    }
-   results[key]={aspect:640/427,points,bytes:sizes.reduce((a,b)=>a+b,0),covers,count,state:inspector.getState()};
+   results[key]={aspect:640/427,points,masks,bytes:sizes.reduce((a,b)=>a+b,0),covers,count,state:inspector.getState()};
    if(!hdOnly)await save(key+'/report.json',JSON.stringify(results[key],null,2));
    report.textContent=JSON.stringify({done:Object.keys(results),errors},null,2);
   }

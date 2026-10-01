@@ -1,0 +1,32 @@
+{
+  "project": "aura",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "refined-20260930",
+  "palette": "studio-photo-materials.js",
+  "background": "#181818",
+  "sourceManifest": "aura/manifest.04a5825a491acd77.json",
+  "camera": {
+    "position": [
+      5.6258225440978995,
+      5.669037342071531,
+      9.44029712677002
+    ],
+    "target": [
+      0.051031589508056655,
+      0.8747177124023438,
+      -0.03684902191162098
+    ],
+    "up": [
+      -0.20265238652933804,
+      0.9166490062782604,
+      -0.3445092299533372
+    ],
+    "zoom": 1,
+    "frameWidth": 9.564411776288406,
+    "frameAspect": 1.4988290398126465
+  },
+  "frameCount": 145,
+  "width": 640,
+  "height": 427,
+  "bytes": 682082
+}

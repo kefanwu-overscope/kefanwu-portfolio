@@ -86,7 +86,7 @@
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 3000);
     try {
-      const response = await fetch('assets/editorial/animation-covers.json?v=photo-20260930', { signal: controller.signal, cache: 'force-cache' });
+      const response = await fetch('assets/editorial/animation-covers.json?v=refined-20260930', { signal: controller.signal, cache: 'force-cache' });
       if (!response.ok) throw new Error('Cover catalog unavailable');
       const catalog = await response.json();
       const cover = catalog.version === 1 && catalog.projects?.[key];
@@ -199,7 +199,7 @@
       <dl class="case-summary" aria-label="Case study in 30 seconds">${editorial.summary.map(([label, text]) => `<div><dt>${escape(label)}</dt><dd>${escape(text)}</dd></div>`).join('')}</dl>
     </section>
       <section class="case-motion-story" id="motion" aria-labelledby="preview-title" data-motion-project="${escape(key)}">
-      <div class="case-motion-pin"><svg class="motion-leader" aria-hidden="true"><defs><marker id="motion-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 L2 4 Z"/></marker></defs><path class="motion-leader-line" marker-end="url(#motion-arrow)"/></svg>
+      <div class="case-motion-pin"><svg class="motion-leader" aria-hidden="true"><defs><marker id="motion-arrow" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M1 1 L6 4 L1 7"/></marker></defs><path class="motion-leader-line" pathLength="1" marker-end="url(#motion-arrow)"/><circle class="motion-leader-target" r="2.5"/></svg>
       <div class="motion-story-heading"><p class="eyebrow">${escape(project.title)} <span aria-hidden="true"> / </span> In motion</p><a class="motion-skip" href="#brief">The design story <span aria-hidden="true">↓</span></a></div>
       <div class="case-preview-layout">
         <figure class="case-preview-figure">
@@ -370,6 +370,11 @@
   // Dynamic content must honor a shared chapter URL after the sections exist.
   const hashTarget = document.getElementById(location.hash.slice(1));
   if (hashTarget && root.contains(hashTarget)) {
-    requestAnimationFrame(() => hashTarget.scrollIntoView({ behavior: 'instant' }));
+    const requestedHash = location.hash;
+    requestAnimationFrame(() => {
+      if (location.hash === requestedHash && !root.querySelector('.case-motion-story[data-user-seeking="true"]')) {
+        hashTarget.scrollIntoView({ behavior: 'instant' });
+      }
+    });
   }
 })();

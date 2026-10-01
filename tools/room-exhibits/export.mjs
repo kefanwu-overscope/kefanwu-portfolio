@@ -5,7 +5,7 @@ import { createHash } from 'node:crypto';
 import { gunzipSync, gzipSync } from 'node:zlib';
 import assert from 'node:assert/strict';
 import { Matrix4, Matrix3, Quaternion, Vector3, MeshPhysicalMaterial } from '../../vendor/three/0.185.0/build/three.module.js';
-import { applyPhotoPart } from '../../studio-photo-materials.js';
+import { applyPhotoPart, applyPhotoFinish } from '../../studio-photo-materials.js';
 import { readBufferView } from '../../studio-motion-runtime.js';
 import { MeshoptSimplifier as simplify } from '../lod/vendor/meshopt_simplifier.mjs';
 import { Builder, readGLB, accessor, bounds } from '../lod/glb.mjs';
@@ -233,6 +233,13 @@ for (const [key, entry] of Object.entries(INDEX.projects)) {
   const geometryBuffer = buffer(path.join(directory, manifest.buffers.geometry.url), manifest.buffers.geometry);
   const motion = buffer(path.join(directory, manifest.buffers.initialMotion.url), manifest.buffers.initialMotion);
   const materials = sourceMaterials(manifest, motion);
+  if (key === 'steering') for (let i = 0; i < materials.length; i++) {
+    const material = new MeshPhysicalMaterial();
+    const refined = applyPhotoFinish(key, material, materials[i]);
+    // Source coordinates required by the selective wheel-face weave must be
+    // preserved before the static room geometry is transformed and merged.
+    materials[i] = refined; material.dispose();
+  }
   // Preserve a distinct physical finish before merging by shared CAD material.
   for (const node of manifest.nodes) {
     const original = materials[node.materialIndices?.[0]];

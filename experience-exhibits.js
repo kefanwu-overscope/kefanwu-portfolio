@@ -1,5 +1,5 @@
-import { applyPhotoFinish } from './studio-photo-materials.js';
-import { installSourceMaterial } from './studio-inspector-materials.js';
+import { applyPhotoFinish } from './studio-photo-materials.js?v=refined-20260930';
+import { installSourceMaterial } from './studio-inspector-materials.js?v=refined-20260930';
 
 // Static source sample zero, with geometry/material provenance recorded in
 // models/room-current/index.json. URLs hash the gzip bytes actually transferred.
@@ -7,8 +7,8 @@ import { installSourceMaterial } from './studio-inspector-materials.js';
 // GENERATED CATALOG START
 export const ROOM_EXHIBITS = Object.freeze({
   "steering": {
-    "url": "models/room-current/steering.ab50611278a1e6f7.glb.gz",
-    "bytes": 332043,
+    "url": "models/room-current/steering.db681ab9882824eb.glb.gz",
+    "bytes": 361918,
     "triangles": 19144,
     "bounds": {
       "min": [
