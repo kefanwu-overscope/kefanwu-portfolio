@@ -75,9 +75,7 @@
   const studioURL = studioMode ? 'experience.html?return=project'
     : project.noStudio ? 'experience.html' : `project-3d.html#${encodeURIComponent(key)}`;
   const studioLabel = studioMode ? 'Return to' : project.noStudio ? 'Explore the' : 'View in';
-  const previewInstructions = studioMode
-    ? 'Drag the model to rotate. Scroll or pinch to zoom. Use the animation controls and timeline to explore its motion; with a keyboard, focus the timeline and use the arrow keys.'
-    : 'Scroll over the model to move through the animation. Scroll back to reverse. On a touch screen, drag the slider; with a keyboard, focus it and use the arrow keys.';
+  const previewInstructions = 'Scroll down to explore the mechanism; scroll back to reverse. The notes follow each stage. You can also choose a numbered step or use the progress slider.';
   document.title = `${project.title}${studioMode ? ' — 3D Studio' : ''} — Kefan Wu`;
   document.querySelector('meta[name="description"]').content =
     `${editorial.deck} ${editorial.summary.map((item) => item[1]).join(' ')}`;
@@ -198,15 +196,20 @@
         <div class="hero-deck"><h2>${escape(editorial.deck)}</h2><p>${escape(editorial.description)}</p></div>
       </div>
       <dl class="case-summary" aria-label="Case study in 30 seconds">${editorial.summary.map(([label, text]) => `<div><dt>${escape(label)}</dt><dd>${escape(text)}</dd></div>`).join('')}</dl>
-      <div class="case-preview-layout" id="motion">
+      <section class="case-motion-story" id="motion" aria-labelledby="preview-title" data-motion-project="${escape(key)}">
+      <div class="case-motion-pin">
+      <div class="motion-story-heading"><p class="eyebrow">Inside the mechanism</p><a class="motion-skip" href="#brief">Continue to the design brief <span aria-hidden="true">↓</span></a></div>
+      <div class="case-preview-layout">
         <figure class="case-preview-figure">
-          <div class="case-animation-host" data-project="${escape(key)}" data-preview-title="${escape(project.title)}" data-preview-instructions="preview-instructions" role="group" aria-labelledby="preview-title">
+          <div class="case-animation-host" data-scroll-driven="true" data-project="${escape(key)}" data-preview-title="${escape(project.title)}" data-preview-instructions="preview-instructions" role="group" aria-labelledby="preview-title">
             <div class="card-media"><img src="${escape(cover.src)}"${cover.srcset ? ` srcset="${escape(cover.srcset)}" sizes="(max-width: 700px) calc(100vw - 44px), (max-width: 1000px) calc(100vw - 112px), 640px"` : ''} alt="${escape(cover.alt || project.title)}" width="${cover.width || 1800}" height="${cover.height || 1200}" loading="eager" decoding="async" fetchpriority="high"></div>
           </div>
           <figcaption class="cover-caption"><span>${escape(cover.caption || 'Explore the project model and its motion.')}</span><span class="eyebrow">Interactive project model</span></figcaption>
         </figure>
-        <div class="preview-introduction"><p class="eyebrow">Explore the motion</p><h2 id="preview-title">Take a closer look.</h2><p id="preview-instructions">${previewInstructions}</p><div class="preview-links"><a class="text-link" href="${studioURL}">${studioLabel} 3D Studio <span aria-hidden="true">↗</span></a><a class="text-link" href="#evidence">Project images <span aria-hidden="true">↓</span></a></div></div>
+        <aside class="preview-introduction motion-notes" aria-label="Animation notes"><p class="eyebrow motion-step-count">01 / 04</p><h2 id="preview-title">Take a closer look.</h2><p class="motion-note-body">${escape(cover.caption || editorial.deck)}</p><div class="motion-step-buttons" role="group" aria-label="Animation stages"></div><p class="motion-evidence-note"></p><div class="preview-links">${studioMode ? '<button type="button" class="text-link motion-explore" aria-pressed="false">Rotate the model ↗</button>' : `<a class="text-link" href="${studioURL}">${studioLabel} 3D Studio <span aria-hidden="true">↗</span></a>`}</div></aside>
       </div>
+      <div class="motion-story-footer"><p id="preview-instructions">${previewInstructions}</p><div class="motion-story-timeline"><label class="sr-only" for="motion-story-progress">Animation progress</label><input type="range" id="motion-story-progress" min="0" max="1000" step="1" value="0" aria-describedby="preview-instructions"><output for="motion-story-progress">0%</output></div></div>
+      </div></section>
     </section>
     <nav class="chapter-nav" aria-label="Case study sections"><div class="chapter-nav-inner wrap">
       <a href="#motion">Motion</a>${engineering ? '<a href="#brief">Brief</a>' : ''}${editorial.chapters.map((chapter, index) => `<a href="#${escape(chapter.id)}"><span class="mono">${number(index + 1)}</span>${escape(chapter.label)}</a>`).join('')}
@@ -295,7 +298,7 @@
     document.body.classList.add('lightbox-open');
     window.cardExplosions?.resetAll(true);
     dialog.showModal();
-    if (studioMode) window.dispatchEvent(new CustomEvent('case-lightbox-state', { detail: { open: true } }));
+    window.dispatchEvent(new CustomEvent('case-lightbox-state', { detail: { open: true } }));
     closeButton.focus({ preventScroll: true });
   });
 
@@ -330,7 +333,7 @@
   dialog.addEventListener('close', () => {
     document.body.classList.remove('lightbox-open');
     stage.replaceChildren();
-    if (studioMode) window.dispatchEvent(new CustomEvent('case-lightbox-state', { detail: { open: false } }));
+    window.dispatchEvent(new CustomEvent('case-lightbox-state', { detail: { open: false } }));
     if (opener?.isConnected) opener.focus({ preventScroll: true });
   });
 

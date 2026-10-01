@@ -87,7 +87,7 @@ async function setup({ lowTier = false } = {}) {
   const depthTextures = targets.map(target => target.depthTexture);
   for (const texture of depthTextures) texture?.addEventListener('dispose', () => env.depthDisposals.push(texture));
   instance.resize(32, 32, 1);
-  Object.assign(env, { instance, camera, bridge, temporal, tracer, composer, targets, depthTextures,
+  Object.assign(env, { instance, scene, camera, bridge, temporal, tracer, composer, targets, depthTextures,
     update: (now, options = {}) => instance.update({ now, moving: false, lightStamp: 'true:2k:1.0000', ...options }),
     tick: () => instance.schedule({ moving: false, frameMs: 0, frameBudgetMs: 1000 / 60 }),
     emit: update => tracerOptions.onUpdate(update),
@@ -107,6 +107,29 @@ async function capture(env, now = 1200) {
 }
 
 async function main() {
+{
+  const env = await setup(); await readyGeometry(env); await capture(env);
+  env.captures[0].resolve(env.frame); await flush(); env.emit({ samples: 24 }); env.instance.render();
+  const stats = env.instance.getStats(), invalidations = env.invalidations.length;
+  const object = new THREE.Mesh(new THREE.BoxGeometry(.2, .2, .2), new THREE.MeshStandardMaterial());
+  object.position.set(-.3, 0, -3); env.scene.add(object); env.scene.updateMatrixWorld(true);
+  assert.equal(env.update(1500, { ambientChanged: true }), true);
+  env.instance.render({ dynamicObjects: [object] });
+  const first = env.resolves.at(-1).rects[0];
+  assert(first && first[2] > first[0]); assert.equal(env.resolves.at(-1).moving, false);
+  object.position.x = .3; env.scene.updateMatrixWorld(true);
+  assert.equal(env.update(1600, { ambientChanged: true }), true);
+  env.instance.render({ dynamicObjects: [object] });
+  const next = env.resolves.at(-1).rects[0];
+  assert(next[0] <= first[0] && next[2] > first[2], 'Reactive mask spans the previous and current moving footprint');
+  assert.equal(env.instance.getStats().inputScale, stats.inputScale);
+  assert.equal(env.instance.getStats().revision, stats.revision);
+  assert.equal(env.invalidations.length, invalidations);
+  assert.equal(env.bridge.stats.enabled, true); assert.equal(env.begins.length, 1);
+  assert.equal(env.update(1700), false, 'Pausing ambient work returns to the fully converged cache');
+  env.instance.dispose();
+  checks.push('Visible ambient motion renders at rest with current/previous reactive masks while retaining native resolution, RT capture and static history');
+}
 {
   const env = await setup(); await readyGeometry(env); await capture(env);
   env.instance.invalidate('project-open'); env.captures[0].resolve(env.frame); await flush();

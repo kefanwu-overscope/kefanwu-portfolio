@@ -10,11 +10,13 @@
    ============================================================ */
 
 import * as THREE from "three";
-import { createStudioNavigation } from "./studio-navigation.js?v=retained-room-20260926";
+import { createStudioNavigation } from "./studio-navigation.js?v=motion-story-20260930";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
 import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=advanced-render-20260930";
 import { AdaptiveFrameClock, frameAlpha } from "./experience-timing.js?v=room-performance-20260919";
+import { AmbientClock, ambientScreenRect } from "./experience-ambient.js?v=workbench-live-20260930";
+import { ROOM_LIGHT_GRADE } from "./experience-light-grade.js?v=workbench-live-20260930";
 import { batchStaticRoom } from "./experience-batching.js?v=room-performance-20260919";
 import { prepareRoomShaders } from "./experience-warmup.js?v=room-performance-20260919";
 import { loadRGBMLightmap, installBakedDiffuse } from "./experience-baked-material.js?v=realism-20260925";
@@ -22,7 +24,7 @@ import { ROOM_BAKE } from "./experience-baked-assets.js?v=room-detail-20260926";
 import { createStudioLoader } from "./experience-loader.js?v=exp-adaptive-20260907";
 import { createHDRService, createHDRTexture } from "./experience-hdr.js?v=exp-adaptive-20260907";
 import { AdaptiveQuality, GpuFrameTimer } from "./experience-quality.js?v=exp-adaptive-20260907";
-import { createAdvancedRenderer } from "./experience-advanced.js?v=advanced-render-20260930";
+import { createAdvancedRenderer } from "./experience-advanced.js?v=workbench-live-20260930";
 import { createAdaptiveShadows } from "./experience-shadow-budget.js?v=advanced-render-20260930";
 import { buildDetailedPrinter, buildDetailedPegboardTools, refineWorkbenchInstruments } from "./experience-workbench-details.js?v=room-detail-20260926";
 import { ROOM_EXHIBITS, prepareRoomExhibit } from "./experience-exhibits.js?v=room-detail-20260926";
@@ -49,9 +51,10 @@ const USE_BAKED = true;
 // Photographic grade for the calibrated bake under the site's ACES exposure.
 const BAKED_LIGHT_GAIN = 0.7;
 
-const prefersReducedMotion = window.matchMedia(
+const reducedMotionQuery = window.matchMedia(
   "(prefers-reduced-motion: reduce)"
-).matches;
+);
+let prefersReducedMotion = reducedMotionQuery.matches;
 
 // A project opens on its own page. Explicit returns use a one-use snapshot;
 // browser Back restores that room's history entry. Fresh visits keep the intro.
@@ -558,12 +561,14 @@ async function initScene(canvas) {
   // display spots washing the cabinet
   // gentle front spots for modeling/speculars only — the actual case light
   // comes from the shelf strips below
+  const displaySpots = [];
   [-0.7, 0, 0.7].forEach((x) => {
     const spot = new THREE.SpotLight(0xe8ecf4, 0.9, 6, 0.56, 1.0, 1.6);
     spot.position.set(x, 2.55, 0.45);
     spot.target.position.set(x, 1.0, CAB.z);
     scene.add(spot);
     scene.add(spot.target);
+    spot.userData.gradeBaseIntensity = spot.intensity; displaySpots.push(spot);
   });
   CAB2.bays.forEach((z) => {
     const spot = new THREE.SpotLight(0xe8ecf4, 0.85, 6, 0.56, 1.0, 1.6);
@@ -571,6 +576,7 @@ async function initScene(canvas) {
     spot.target.position.set(2.3, 1.0, z);
     scene.add(spot);
     scene.add(spot.target);
+    spot.userData.gradeBaseIntensity = spot.intensity; displaySpots.push(spot);
   });
   // real strip lights: one RectAreaLight per shelf row, sitting exactly at
   // each row's LED strip and washing DOWN into the bay — the light visibly
@@ -578,6 +584,7 @@ async function initScene(canvas) {
   RectAreaLightUniformsLib.init();
   const stripLight = (w, intensity) => {
     const l = new THREE.RectAreaLight(0xdfe8f4, intensity, w, 0.05);
+    l.userData.gradeBaseIntensity = intensity;
     return l;
   };
   // LOW_TIER: one taller-reach strip per cabinet instead of one per row
@@ -1113,6 +1120,8 @@ async function initScene(canvas) {
   const qualityControl = document.getElementById("exp-light-quality");
   const qualityStatus = document.getElementById("exp-quality-status");
   let bakedMats = [];
+  const deskBakedMats = [];
+  let cabinetGain = 1, deskBakeGain = BAKED_LIGHT_GAIN;
   const LM = { on2k: null, off2k: null, on4k: null, off4k: null, probeOn: null, probeOff: null, deskOn: null, deskOff: null };
   // night-mode practicals: warm pool over the workbench (its lamp + printer
   // read as the only bench light) and the desk lamp's own LEDs glow warm
@@ -1236,14 +1245,10 @@ async function initScene(canvas) {
     // start of the fade was one of the toggle's visible "steps"
     if (probe && (!animate || prefersReducedMotion)) scene.environment = probe;
     // real-time lights serve the exhibits; dim them with the room
-    let want = lightsOn
-      ? { key: 1.15, hemi: 0.75, fill: 0.25, env: 0.5, bench: 0, resume: 0, moon: 0, pendant: 2.6 } // day grade: strips + bake carry the room
-      // night: the desk lamp (resume) is the dominant practical, the pendant
-      // recedes to a whisper so the lamp's pool owns the desk
-      // resume 1.5, NOT higher: sampled at 2.8 the pool washed out the sheet's
-      // upper half (DOM-parity texture has more white than the old Arial mini);
-      // at 1.5 every section reads while the pool still owns the mat (Kefan)
-      : { key: 0.22, hemi: 0.16, fill: 0.05, env: 0.35, bench: 0.95, resume: 1.5, moon: MOON_NIGHT, pendant: 0.3 };
+    // Keep source albedo and the Cycles irradiance maps intact. Reduce the
+    // stacked daytime light, with a local diffuse grade for the white desk.
+    // Night retains the accepted lamp intensity and readable résumé pool.
+    let want = lightsOn ? ROOM_LIGHT_GRADE.day : ROOM_LIGHT_GRADE.night;
     // S8 reading light: every applyLightState caller (including the late 4k
     // lightmap upgrades) respects the boost, so nothing can stomp it mid-read
     if (focusBoost && !lightsOn) want = { ...want, key: 0.55, hemi: 0.32 };
@@ -1264,6 +1269,12 @@ async function initScene(canvas) {
       pendant: MODELS.pendantLight.intensity,
       led: lampLeds.length ? lampLeds[0].emissiveIntensity : wantLed,
       blue: blueLines.length ? blueLines[0].emissiveIntensity : wantBlue,
+      cabinet: cabinetGain, deskBake: deskBakeGain,
+    };
+    const gradeSurfaces = (cabinet, deskBake) => {
+      cabinetGain = cabinet; deskBakeGain = deskBake;
+      for (const light of [...displaySpots, ...caseStrips.main, ...caseStrips.side]) light.intensity = light.userData.gradeBaseIntensity * cabinet;
+      for (const material of deskBakedMats) material.lightMapIntensity = deskBake;
     };
     if (prefersReducedMotion || !animate) {
       key.intensity = want.key; hemi.intensity = want.hemi; fill.intensity = want.fill;
@@ -1271,6 +1282,7 @@ async function initScene(canvas) {
       resumeSpot.intensity = want.resume;
       moonSpot.intensity = want.moon;
       MODELS.pendantLight.intensity = want.pendant;
+      gradeSurfaces(want.cabinet, want.deskBake);
       benchBarSpot.intensity = want.bench * 1.6; // I2 ramp; S15 raised 1.2→1.6
       // I1: the bulb's visible glow follows its actual light output
       if (MODELS.pendantBulb) MODELS.pendantBulb.material.emissiveIntensity = 0.15 + 0.85 * (want.pendant / 2.6);
@@ -1297,6 +1309,7 @@ async function initScene(canvas) {
       resumeSpot.intensity = from.resume + (want.resume - from.resume) * e;
       moonSpot.intensity = from.moon + (want.moon - from.moon) * e;
       MODELS.pendantLight.intensity = from.pendant + (want.pendant - from.pendant) * e;
+      gradeSurfaces(from.cabinet + (want.cabinet - from.cabinet) * e, from.deskBake + (want.deskBake - from.deskBake) * e);
       benchBarSpot.intensity = (from.bench + (want.bench - from.bench) * e) * 1.6; // I2; S15
       if (MODELS.pendantBulb) { // I1
         MODELS.pendantBulb.material.emissiveIntensity = 0.15 + 0.85 * (MODELS.pendantLight.intensity / 2.6);
@@ -1386,6 +1399,7 @@ async function initScene(canvas) {
     bakeActive = false;
     if (bakedRoot) bakedRoot.visible = false;
     bakedMats = [];
+    deskBakedMats.length = 0;
     blueLines.length = 0;
     scene.children.forEach((o) => {
       if (o === bakedRoot) return;
@@ -1512,6 +1526,7 @@ async function initScene(canvas) {
           // stops reading injection-molded (map base ≈ its old 0.52 roughness)
           m.roughnessMap = deskWearTex();
           m.roughness = 1.0;
+          deskBakedMats.push(m);
         } else {
           // H4 rebuilt the pendant (bell shade, canopy, live bulb) as a
           // real-time group — hide the old cone frozen into the bake, or the
@@ -1586,7 +1601,11 @@ async function initScene(canvas) {
   const cameraIntro = { plays: 0, phase: "idle", completedLegs: 0 };
   // per-frame animation state (G-batch): tick delta + printer toolpath run
   let tickLast = null;
-  let scopeLastDraw = 0;
+  const printerClock = new AmbientClock(30), scopeClock = new AmbientClock(10);
+  const suspendAmbient = (reason) => { printerClock.suspend(reason); scopeClock.suspend(reason); };
+  const printerParts = [MODELS.printerHead, MODELS.chamberFan, MODELS.activeSpool, MODELS.printerStatusLed].filter(Boolean);
+  const ambientObjects = [...printerParts, MODELS.scope?.screen].filter(Boolean);
+  let ambientVisibility = { printer: false, scope: false }, ambientVisibilityAt = -Infinity;
   const headRun = { x: 0, dir: 1, dwell: 0, limit: 0.04 };
   function startFlight(toPos, toLook, ms, onDone, introLeg = false) {
     if (!introLeg && cameraIntro.phase === "playing") takeOverIntro();
@@ -1661,7 +1680,7 @@ async function initScene(canvas) {
   const renderStats = { frames: 0, shadowFrames: 0, deskShadowFrames: 0, calls: 0, triangles: 0, cpuMs: 0 };
   const adaptiveShadows = createAdaptiveShadows({ renderer, key, resumeSpot, lowTier: LOW_TIER });
   advanced = createAdvancedRenderer({ renderer, scene, camera, composer, gtao, key, resumeSpot, lowTier: LOW_TIER,
-    exclude: [...NO_PREPASS, MODELS.printerHead, MODELS.chamberFan, MODELS.activeSpool].filter(Boolean) });
+    exclude: [...NO_PREPASS, ...ambientObjects].filter(Boolean) });
   advanced.resize(window.innerWidth, window.innerHeight, renderer.getPixelRatio());
   let paperWasMoving = false;
   let lastCameraMotion = performance.now(), lastLODUpdate = -Infinity;
@@ -1676,16 +1695,25 @@ async function initScene(canvas) {
   controls.addEventListener("change", () => frameClock.noteMotion(performance.now()));
   let projectPageOpen = false;
   let running = !document.hidden;
+  reducedMotionQuery.addEventListener('change', (event) => {
+    prefersReducedMotion = event.matches;
+    suspendAmbient(prefersReducedMotion ? 'reduced-motion' : 'resuming');
+    frameClock.idleFps = prefersReducedMotion ? 1 : 30;
+    frameClock.reset(); tickLast = null; ambientVisibilityAt = -Infinity;
+    advanced.refresh('motion-preference');
+  });
   const studioNavigation = createStudioNavigation({ onActiveChange(open) {
     projectPageOpen = open;
     running = !document.hidden && !open;
     advanced.invalidate(open ? 'project-open' : 'project-return');
+    suspendAmbient(open ? 'project' : 'resuming'); ambientVisibilityAt = -Infinity;
     frameClock.reset(); shadowClock.reset(); tickLast = null; rafStamp = null;
     renderer.setAnimationLoop(running ? tick : null);
     if (!open) { try { sessionStorage.removeItem(ROOM_RETURN_KEY); } catch {} }
   } });
   window.addEventListener("pagehide", (event) => {
     running = false;
+    suspendAmbient('page-hidden');
     if (!event.persisted) {
       loader.dispose();
       hdrService.dispose();
@@ -1696,6 +1724,7 @@ async function initScene(canvas) {
   });
   window.addEventListener("pageshow", (event) => {
     if (event.persisted) {
+      suspendAmbient('resuming'); ambientVisibilityAt = -Infinity;
       running = !document.hidden && !projectPageOpen; frameClock.reset(); tickLast = null;
       renderer.setAnimationLoop(running ? tick : null);
     }
@@ -1709,11 +1738,13 @@ async function initScene(canvas) {
     rafStamp = null;
     rafDeltas.length = 0;
     tickLast = null;
+    suspendAmbient(document.hidden ? 'hidden' : 'resuming'); ambientVisibilityAt = -Infinity;
     advanced.invalidate('visibility');
     renderer.setAnimationLoop(running ? tick : null);
   });
   renderer.domElement.addEventListener('webglcontextlost', event => {
     event.preventDefault(); running = false; renderer.setAnimationLoop(null);
+    suspendAmbient('context-lost');
     advanced.invalidate('webgl-context-lost'); gpuTimer.dispose();
   });
   renderer.domElement.addEventListener('webglcontextrestored', () => {
@@ -1721,6 +1752,7 @@ async function initScene(canvas) {
     advanced.invalidate('webgl-context-restored', { geometry: true });
     adaptiveShadows.invalidate(); renderer.shadowMap.needsUpdate = true;
     frameClock.reset(); tickLast = null;
+    suspendAmbient('resuming'); ambientVisibilityAt = -Infinity;
     running = !document.hidden && !projectPageOpen;
     renderer.setAnimationLoop(running ? tick : null);
   });
@@ -1745,13 +1777,13 @@ async function initScene(canvas) {
     if (!readiness.assets || !readiness.construction || !readiness.prepared) return;
     if (renderer.getContext().isContextLost()) return;
     if (!running && !forced) return;
-    if (!forced && resumeReader?.isReading()) return;
+    if (!forced && resumeReader?.isReading()) { suspendAmbient('resume'); return; }
     const cameraMoved = lastCameraPosition.distanceToSquared(camera.position) > 1e-10 ||
       1 - Math.abs(lastCameraQuaternion.dot(camera.quaternion)) > 1e-10;
     const interactionMotion = !!flight || cameraMoved || !!paperMotion || lightFadeActive || bootTakeover;
     if (cameraMoved || flight) lastCameraMotion = t;
     if (!forced && !frameClock.accept(t, interactionMotion)) return;
-    const animateAmbient = !prefersReducedMotion && frameClock.fps === frameClock.movingFps;
+    const animateDecorations = !prefersReducedMotion && frameClock.fps === frameClock.movingFps;
     const dtms = tickLast === null ? 1000 / 60 : Math.min(100, Math.max(0, t - tickLast));
     tickLast = t;
     controls.dampingFactor = frameAlpha(baseDamping, dtms);
@@ -1910,15 +1942,35 @@ async function initScene(canvas) {
       }
     }
 
+    // Printer/scope have their own visible-time clocks. Camera settling enables
+    // static refinement without stopping these two running instruments.
+    const ambientEnabled = !prefersReducedMotion && !panelOpen && !projectPageOpen && !document.hidden && running;
+    if (ambientEnabled && (cameraMoved || flight || t - ambientVisibilityAt >= 250)) {
+      ambientVisibilityAt = t;
+      const viewport = { width: window.innerWidth, height: window.innerHeight, minPixels: 2 };
+      ambientVisibility = {
+        printer: printerParts.some((object) => ambientScreenRect(object, camera, viewport)),
+        scope: !!ambientScreenRect(MODELS.scope?.screen, camera, { ...viewport, frontFace: true }),
+      };
+    }
+    const ambientPause = prefersReducedMotion ? 'reduced-motion' : panelOpen ? 'overlay' : !running || document.hidden ? 'hidden' : 'offscreen';
+    const printerStep = printerClock.sample(t, ambientEnabled && ambientVisibility.printer, ambientPause);
+    const scopeStep = scopeClock.sample(t, ambientEnabled && ambientVisibility.scope, ambientPause);
+    const ambientChanged = !!printerStep || !!scopeStep;
+    const dynamicObjects = [
+      ...(printerClock.active ? printerParts : []),
+      ...(scopeClock.active ? [MODELS.scope.screen] : []),
+    ];
+
     // Printer: the head runs a real TOOLPATH rhythm — constant-velocity
     // passes, a short dwell at each turnaround, pass length slightly
     // randomized. (The old pure sine read as a metronome, not a machine.)
-    if (animateAmbient && MODELS.printerHead) {
+    if (printerStep && MODELS.printerHead) {
       const hs = headRun;
       if (hs.dwell > 0) {
-        hs.dwell -= dtms;
+        hs.dwell -= printerStep.delta;
       } else {
-        hs.x += hs.dir * 0.00024 * dtms; // ~0.24 m/s traverse
+        hs.x += hs.dir * 0.00024 * printerStep.delta; // ~0.24 m/s traverse
         if (hs.dir > 0 ? hs.x >= hs.limit : hs.x <= -hs.limit) {
           hs.x = hs.dir > 0 ? hs.limit : -hs.limit;
           hs.dir *= -1;
@@ -1928,21 +1980,22 @@ async function initScene(canvas) {
       }
       MODELS.printerHead.position.x = hs.x;
     }
-    if (animateAmbient) {
+    if (printerStep) {
       // G2: chamber circulation fan spins while the job runs
-      if (MODELS.chamberFan) MODELS.chamberFan.rotation.z -= dtms * 0.0085;
+      if (MODELS.chamberFan) MODELS.chamberFan.rotation.z -= printerStep.delta * 0.0085;
       // G4: the blue feeder spool supplies the blue print (slow payout)
-      if (MODELS.activeSpool) MODELS.activeSpool.rotation.x += dtms * 0.00028;
+      if (MODELS.activeSpool) MODELS.activeSpool.rotation.x += printerStep.delta * 0.00028;
       // G5: status LED breathes like a real activity indicator
       if (MODELS.printerStatusLed) {
-        MODELS.printerStatusLed.material.emissiveIntensity = 0.55 + 0.18 * Math.sin(t * 0.0016);
+        MODELS.printerStatusLed.material.emissiveIntensity = 0.55 + 0.18 * Math.sin(printerStep.time * 0.0016);
       }
-      // G1: the scope trace crawls (cheap 128x80 canvas redraw ~11 fps)
-      if (MODELS.scope && t - scopeLastDraw > 90) {
-        scopeLastDraw = t;
-        MODELS.scope.draw(t * 0.0045);
-        MODELS.scope.tex.needsUpdate = true;
-      }
+    }
+    if (scopeStep && MODELS.scope) {
+      // 128x80 texture upload at most 10 Hz, with no phase jump after suspension.
+      MODELS.scope.draw(scopeStep.time * 0.0045);
+      MODELS.scope.tex.needsUpdate = true;
+    }
+    if (animateDecorations) {
       // G6: near-subliminal moonlight drift — "there is a real sky out there"
       moonSpot.target.position.x = 0.85 + 0.05 * Math.sin(t * 0.00008);
       moonSpot.target.position.z = 0.7 + 0.04 * Math.sin(t * 0.000063 + 1.7);
@@ -1993,7 +2046,7 @@ async function initScene(canvas) {
       const m = h.userData.hotspot.marker;
       if (!m) continue;
       m.visible = !busy;
-      if (!busy && animateAmbient) {
+      if (!busy && animateDecorations) {
         const ph = h.userData.hotspot.phase;
         m.position.y = h.userData.hotspot.markerY + Math.sin(t * 0.0024 + ph) * 0.016;
         // higher floor than the old additive marker: normal blending needs
@@ -2013,7 +2066,7 @@ async function initScene(canvas) {
       loader.setAttention(hovered?.userData.hotspot?.key || null);
       lodChanged = loader.update(camera, null, t);
     }
-    const movingCasters = animateAmbient && !!MODELS.printerHead;
+    const movingCasters = printerClock.active && !!MODELS.printerHead;
     const movingPaper = !!paperMotion || !!focusedPivot;
     const geometryChanged = shadowsDirty || lodChanged || assetGeometryChanged || (paperWasMoving && !movingPaper);
     paperWasMoving = movingPaper; assetGeometryChanged = false;
@@ -2028,6 +2081,7 @@ async function initScene(canvas) {
     const renderNeeded = advanced.update({ now: t, moving: frameClock.fps === frameClock.movingFps,
       scale: pendingResolutionScale, geometryChanged, attentionKey, attentionPosition,
       lightStamp: `${lightsOn}:${appliedQuality}:${lmMix.value.toFixed(4)}`,
+      ambientChanged,
       reactive: !!paperMotion || !!bokeh?.enabled });
     lastCameraPosition.copy(camera.position); lastCameraQuaternion.copy(camera.quaternion);
     if (!renderNeeded && !renderer.shadowMap.needsUpdate && !forced) {
@@ -2038,7 +2092,7 @@ async function initScene(canvas) {
     gpuTimer.begin();
     const renderStart = performance.now();
     renderer.info.reset();
-    try { advanced.render({ reactive: !!paperMotion || !!bokeh?.enabled }); } finally { gpuTimer.end(); }
+    try { advanced.render({ reactive: !!paperMotion || !!bokeh?.enabled, dynamicObjects }); } finally { gpuTimer.end(); }
     renderStats.frames++;
     renderStats.calls = renderer.info.render.calls;
     renderStats.triangles = renderer.info.render.triangles;
@@ -3041,6 +3095,10 @@ async function initScene(canvas) {
     getResumeReaderStats: () => resumeReader?.getState() || null,
     getRenderStats: () => ({ ...renderStats, batching: batchingStats }),
     getAdvancedStats: () => ({ ...advanced.getStats(), shadows: adaptiveShadows.getStats() }),
+    getAmbientStats: () => ({ printer: printerClock.snapshot(), scope: scopeClock.snapshot(),
+      visibility: { ...ambientVisibility }, reducedMotion: prefersReducedMotion,
+      printerX: MODELS.printerHead?.position.x, fanAngle: MODELS.chamberFan?.rotation.z,
+      spoolAngle: MODELS.activeSpool?.rotation.x, scopeTextureVersion: MODELS.scope?.tex.version }),
     getBootStats: () => ({ ...bootStatus, active: bootTakeover }),
     getCameraIntroStats: () => ({ ...cameraIntro }),
     getRealismStats: () => ({ ...studioRealism.stats }),
@@ -3050,6 +3108,9 @@ async function initScene(canvas) {
       lightsOn, requestedLightsOn, quality: lightQuality, appliedQuality,
       loading: lightingBusy, transitioning: lightFadeActive, blend: lmMix.value,
       baked: bakeActive, pending: [...lightRequests.keys()],
+      grade: { exposure: renderer.toneMappingExposure, key: key.intensity, hemi: hemi.intensity,
+        fill: fill.intensity, environment: scene.environmentIntensity, cabinet: cabinetGain,
+        deskBake: deskBakeGain, pendant: MODELS.pendantLight.intensity, resume: resumeSpot.intensity, moon: moonSpot.intensity },
       cached: Object.keys(LM).filter((key) => !!LM[key]),
     }),
   };
@@ -4136,6 +4197,7 @@ async function buildWorkbench() {
     new THREE.MeshStandardMaterial({ map: scTex, color: 0x8f9298, emissive: 0xffffff, emissiveMap: scTex, emissiveIntensity: 0.55 }));
   scScreen.position.set(-0.028, 0.062, 0.0435);
   scope.add(scScreen);
+  MODELS.scope.screen = scScreen;
   // knob column on the right of the screen
   [[0.062, 0.088, 0.011], [0.062, 0.06, 0.011], [0.048, 0.031, 0.006], [0.074, 0.031, 0.006]].forEach(([kx, ky, kr]) => {
     const kn = new THREE.Mesh(new THREE.CylinderGeometry(kr, kr, 0.012, 14), steel);

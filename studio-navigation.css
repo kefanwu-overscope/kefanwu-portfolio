@@ -1,7 +1,7 @@
 body.studio-project-open > :not(.studio-project-page) {
-  visibility: hidden !important;
   pointer-events: none !important;
 }
+body.studio-project-covered > :not(.studio-project-page) { visibility: hidden !important; }
 .studio-project-page {
   position: fixed;
   inset: 0;
@@ -16,6 +16,7 @@ body.studio-project-open > :not(.studio-project-page) {
   height: 100%;
   border: 0;
   background: #08090b;
+  opacity: 0;
   visibility: hidden;
 }
 .studio-project-loading {
@@ -36,4 +37,4 @@ body.studio-project-open > :not(.studio-project-page) {
 }
 .studio-project-loading p { margin-top: 28px; color: #b4bdc8; }
 .studio-project-page.is-ready .studio-project-loading { display: none; }
-.studio-project-page.is-ready .studio-project-frame { visibility: visible; }
+.studio-project-page.is-ready .studio-project-frame { visibility: visible; opacity: 1; }

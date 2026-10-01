@@ -23,7 +23,7 @@ export function createAdvancedRenderer({renderer,scene,camera,composer,gtao,key,
  let width=1,height=1,dpr=1,inputScale=1,started=false,disposed=false,moving=true,previousMoving=true,dirty=true;
  let idleSince=0,revision=0,captureToken=0,geometryGeneration=0,geometryDirty=true,geometryBuilding=false;
  let snapshot=null,rayCaptured=false,capturing=false,lastLight='',lastAttention='',lastClusterUploads=-1,rayQueued=false;
- let frameRenders=0,cachedFrames=0,registrations=0,lastError=null,rayFailed=false;
+ let frameRenders=0,cachedFrames=0,registrations=0,lastError=null,rayFailed=false,ambientFrames=0,lastReactiveRects=0;
  const previousRects=new WeakMap();
  const reactiveMeshes=[],bbox=new THREE.Box3(),point=new THREE.Vector3();
  const tracer=createStationaryRayTracer({deviceProvider:()=>getGpuDevice({disabled:!computeEnabled}),maxPixels:65536,targetSamples:24,tilePixels:8192,
@@ -51,7 +51,7 @@ export function createAdvancedRenderer({renderer,scene,camera,composer,gtao,key,
    if(Math.abs(desired-inputScale)<.001)return;
    inputScale=desired;composer.setPixelRatio(dpr*desired);composer.setSize(width,height);dirty=true;
  }
- function update({now,moving:isMoving,scale=1,geometryChanged=false,lightStamp='',attentionKey='',attentionPosition=null,reactive=false}){
+ function update({now,moving:isMoving,scale=1,geometryChanged=false,lightStamp='',attentionKey='',attentionPosition=null,reactive=false,ambientChanged=false}){
    moving=!!isMoving;previousMoving!==moving && temporal.invalidate(moving?'motion':'settled');
    if(moving){idleSince=now;if(rayCaptured||snapshot||capturing)invalidate('motion',{history:false});}
    if(previousMoving&&!moving)idleSince=now;previousMoving=moving;
@@ -92,32 +92,41 @@ export function createAdvancedRenderer({renderer,scene,camera,composer,gtao,key,
        scheduler.schedule(()=>tracer.step().finally(()=>{rayQueued=false;}),{key:'ray-step',priority:4,estimateMs:.15,idleOnly:true}).catch(e=>{rayQueued=false;lastError=e.message;});}
    }
    if(gtao)gtao.blendIntensity=snapshot&&tracer.stats.samples>0 ? .25 : .42;
-   const render=moving||dirty||!temporal.converged||reactive;
+   // A changing scope texture/toolhead needs raster work, but neither the
+   // camera resolution nor stationary BVH/capture/history revision changes.
+   const render=moving||dirty||!temporal.converged||reactive||ambientChanged;
+   if(ambientChanged)ambientFrames++;
    if(!render)cachedFrames++;
    return render;
  }
- function reactiveRects(){
+ function reactiveRects(dynamicObjects=[]){
    const rects=[];
-   for(const o of [...exclude,...reactiveMeshes]){
-     if(!o?.isObject3D||!o.visible||o.isSprite||o.material?.opacity===0||rects.length>=12)continue;
+   // Visible instrument rectangles take priority over transparent room props.
+   // Include them at rest too; otherwise a live trace smears into old history.
+   for(const o of new Set([...dynamicObjects,...(moving?[...exclude,...reactiveMeshes]:[])])){
+     if(!o?.isObject3D||o.isSprite||o.material?.opacity===0||rects.length>=12)continue;
+     let visible=true;for(let p=o;p;p=p.parent)visible&&=p.visible;
+     const prior=previousRects.get(o);
+     if(!visible){if(prior)rects.push(prior);previousRects.delete(o);continue;}
      bbox.setFromObject(o);if(bbox.isEmpty())continue;
      let minX=1,minY=1,maxX=0,maxY=0,front=false;
      for(let i=0;i<8;i++){point.set(i&1?bbox.max.x:bbox.min.x,i&2?bbox.max.y:bbox.min.y,i&4?bbox.max.z:bbox.min.z).project(camera);
        if(point.z>=-1&&point.z<1)front=true;minX=Math.min(minX,point.x*.5+.5);maxX=Math.max(maxX,point.x*.5+.5);minY=Math.min(minY,point.y*.5+.5);maxY=Math.max(maxY,point.y*.5+.5);}
      if(front&&maxX>0&&maxY>0&&minX<1&&minY<1){
        const current=[Math.max(0,minX-.015),Math.max(0,minY-.015),Math.min(1,maxX+.015),Math.min(1,maxY+.015)];
-       const prior=previousRects.get(o);previousRects.set(o,current);
+       previousRects.set(o,current);
        rects.push(prior?[Math.min(current[0],prior[0]),Math.min(current[1],prior[1]),Math.max(current[2],prior[2]),Math.max(current[3],prior[3])]:current);
-     }
+     }else {if(prior)rects.push(prior);previousRects.delete(o);}
    }return rects;
  }
- function render({reactive=false}={}){
+ function render({reactive=false,dynamicObjects=[]}={}){
    const w=composer.readBuffer.width,h=composer.readBuffer.height;
    temporal.begin(camera,w,h);
    try{
      composer.render();
      temporal.restore(camera);
-     temporal.resolve({color:composer.readBuffer.texture,depth:gtao?.depthTexture||composer.readBuffer.depthTexture,camera,moving,reactive,rects:moving?reactiveRects():[]});
+     const rects=reactiveRects(dynamicObjects);lastReactiveRects=rects.length;
+     temporal.resolve({color:composer.readBuffer.texture,depth:gtao?.depthTexture||composer.readBuffer.depthTexture,camera,moving,reactive,rects});
      dirty=false;frameRenders++;
    }finally{temporal.restore(camera);}
  }
@@ -125,7 +134,7 @@ export function createAdvancedRenderer({renderer,scene,camera,composer,gtao,key,
    refresh(reason='raster-update'){dirty=true;temporal.invalidate(reason);},
    prewarm(root,identity){if(!root)return;bridge.install(root);return scheduleShaderPrewarm(scheduler,{renderer,root,scene,camera,renderTarget:composer.readBuffer,key:`shader:${identity}`}).catch(e=>{lastError=e.message;});},
    schedule:measure=>scheduler.tick(measure),
-   getStats:()=>({moving,inputScale,frameRenders,cachedFrames,registrations,revision,geometryDirty,geometryBuilding,capturing,lastError,
+   getStats:()=>({moving,inputScale,frameRenders,cachedFrames,ambientFrames,lastReactiveRects,registrations,revision,geometryDirty,geometryBuilding,capturing,lastError,
      temporal:temporal.getStats(),compute:getGpuDeviceStats(),raytrace:tracer.stats,materials:bridge.stats,clusters:clusters.getStats(),scheduler:scheduler.getStats()}),
    dispose(){disposed=true;captureToken++;scheduler.dispose();tracer.dispose();clusters.dispose();temporal.dispose();capture.dispose();for(const target of sceneDepthTargets){target.depthTexture?.dispose();target.depthTexture=null;}bridge.dispose();}};
 }

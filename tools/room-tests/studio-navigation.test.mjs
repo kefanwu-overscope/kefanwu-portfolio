@@ -19,16 +19,32 @@ class EventHost {
   }
 }
 
-function harness() {
+function harness({ animations = false, reducedMotion = false } = {}) {
   const window = new EventHost();
-  const document = { title: 'Original studio', activeElement: null };
+  const document = new EventHost();
+  Object.assign(document, { title: 'Original studio', activeElement: null, hidden: false });
   const location = new URL('https://portfolio.test/experience.html');
   const assigned = [], active = [], disposal = [], frames = [], timers = new Map();
+  const animationLog = [], paints = new Map(), motion = new EventHost();
+  motion.matches = reducedMotion;
+  window.matchMedia = () => motion;
+  window.requestAnimationFrame = callback => { const id = ++nextTimer; paints.set(id, callback); return id; };
+  window.cancelAnimationFrame = id => paints.delete(id);
+  window.getComputedStyle = element => ({ opacity: String(element.animation?.opacity ?? element.style.opacity ?? 1) });
   let nextTimer = 0;
   location.assign = href => assigned.push(href);
   class Element extends EventHost {
     constructor(tag) {
       super(); this.tagName = tag; this.children = []; this.attributes = new Map(); this.inert = false;
+      this.style = {};
+      if (animations) this.animate = (keyframes, options) => {
+        const animation = { element: this, keyframes, options, opacity: keyframes[0].opacity, state: 'running',
+          onfinish: null,
+          cancel() { this.state = 'cancelled'; if (this.element.animation === this) this.element.animation = null; },
+          finish() { this.opacity = keyframes.at(-1).opacity; this.onfinish?.(); },
+        };
+        this.animation = animation; animationLog.push(animation); return animation;
+      };
       const classes = new Set();
       this.classList = { add: (...names) => names.forEach(name => classes.add(name)),
         remove: (...names) => names.forEach(name => classes.delete(name)), contains: name => classes.has(name) };
@@ -55,7 +71,7 @@ function harness() {
     focus() { document.activeElement = this; }
     querySelector(selector) {
       for (const child of this.children) {
-        if (selector === '[role="status"]' && child.getAttribute('role') === 'status') return child;
+        if ((selector === '[role="status"]' && child.getAttribute('role') === 'status') || selector === child.tagName) return child;
         const nested = child.querySelector(selector); if (nested) return nested;
       }
       return null;
@@ -103,7 +119,11 @@ function harness() {
       data: { protocol, type, ...detail }, ...overrides });
   }
   return { window, document, location, history, navigation, entries, traversals, assigned, active, disposal, frames,
-    timers, canvas, hud, receive, currentFrame, cursor: () => cursor,
+    timers, canvas, hud, receive, currentFrame, cursor: () => cursor, animationLog, paints,
+    paint() { const callbacks = [...paints.values()]; paints.clear(); callbacks.forEach(callback => callback()); },
+    finishAnimations() { for (const animation of animationLog) if (animation.state === 'running') animation.finish(); },
+    reduced(value) { motion.matches = value; motion.dispatchEvent({ type: 'change' }); },
+    hidden(value) { document.hidden = value; document.dispatchEvent({ type: 'visibilitychange' }); },
     panel: () => document.body.children.find(element => element.className === 'studio-project-page') };
 }
 
@@ -265,4 +285,194 @@ test('Dispose releases the open frame and prevents later child messages from act
   h.receive('leave', { url: 'https://example.org' }, { source: child });
   assert.equal(h.assigned.length, 0);
   assert.equal(h.timers.size, 0);
+});
+
+test('Entrance fades over the retained room before hiding it, without postponing the frame request', () => {
+  const h = harness({ animations: true });
+  h.navigation.openProject('steering');
+  assert.equal(h.currentFrame().src, `${url('steering')}&studioFrame=1`);
+  assert.equal(h.navigation.snapshot().phase, 'entering');
+  assert.equal(h.document.body.classList.contains('studio-project-covered'), false);
+  assert.equal(h.currentFrame().inert, true);
+  assert.deepEqual(h.active, [true]);
+  const entrance = h.animationLog[0];
+  assert.deepEqual(plain(entrance.keyframes), [{ opacity: 0 }, { opacity: 1 }]);
+  assert.equal(entrance.options.duration, 200);
+  entrance.finish();
+  assert.equal(h.navigation.snapshot().phase, 'loading');
+  assert.equal(h.document.body.classList.contains('studio-project-covered'), true);
+});
+
+test('Readiness starts a short frame fade immediately and duplicate ready messages cannot restart it', () => {
+  const h = harness({ animations: true });
+  h.navigation.openProject('steering'); h.finishAnimations();
+  const frame = h.currentFrame();
+  h.receive('ready');
+  const reveal = h.animationLog.at(-1);
+  assert.equal(reveal.element, frame); assert.equal(reveal.options.duration, 180);
+  assert.equal(h.navigation.snapshot().phase, 'revealing');
+  assert.equal(h.timers.size, 0); assert.equal(h.paints.size, 0);
+  assert.equal(frame.inert, false); assert.equal(h.document.activeElement, frame);
+  h.receive('ready');
+  assert.equal(h.animationLog.at(-1), reveal);
+  reveal.finish();
+  assert.equal(h.navigation.snapshot().phase, 'project');
+});
+
+test('Return paints the resumed room beneath the project before fading and disposing it', () => {
+  const h = harness({ animations: true });
+  h.navigation.openProject('steering'); h.receive('ready'); h.finishAnimations();
+  const frame = h.currentFrame(), panel = h.panel();
+  h.receive('return', { scrollY: 987 });
+  assert.equal(h.location.pathname, '/experience.html');
+  assert.equal(h.document.title, 'Original studio');
+  assert.equal(h.navigation.snapshot().phase, 'returning');
+  assert.deepEqual(h.active, [true, false]);
+  assert.equal(h.document.body.classList.contains('studio-project-covered'), false);
+  assert.equal(h.canvas.inert, true); assert.equal(panel.inert, true);
+  assert.equal(frame.isConnected, true); assert.equal(h.disposal.length, 0);
+  h.paint();
+  assert.equal(frame.isConnected, true); assert.equal(h.animationLog.length, 2);
+  h.paint();
+  const departure = h.animationLog.at(-1);
+  assert.equal(departure.element, panel); assert.equal(departure.options.duration, 200);
+  assert.deepEqual(plain(departure.keyframes), [{ opacity: 1 }, { opacity: 0 }]);
+  assert.equal(frame.isConnected, true);
+  departure.finish();
+  assert.equal(h.navigation.snapshot().phase, 'room');
+  assert.equal(h.canvas.inert, false); assert.equal(h.document.activeElement, h.canvas);
+  assert.equal(h.disposal.length, 1); assert.equal(h.disposal[0].connected, true);
+  assert.equal(h.currentFrame(), null); assert.equal(h.paints.size, 0);
+});
+
+test('A quick return reverses the current entrance opacity and cancels its old completion', () => {
+  const h = harness({ animations: true });
+  h.navigation.openProject('steering');
+  const entrance = h.animationLog[0], staleFinish = entrance.onfinish;
+  entrance.opacity = 0.35;
+  h.receive('return'); staleFinish();
+  assert.equal(h.panel().style.opacity, '0.35');
+  assert.equal(h.document.body.classList.contains('studio-project-covered'), false);
+  h.paint(); h.paint();
+  assert.equal(h.animationLog.at(-1).keyframes[0].opacity, 0.35);
+  h.finishAnimations();
+  assert.equal(h.navigation.snapshot().phase, 'room');
+  assert.equal(h.disposal.length, 1);
+});
+
+test('Forward during a return reverses the fade and keeps the same live project frame', () => {
+  const h = harness({ animations: true });
+  h.navigation.openProject('steering'); h.receive('ready'); h.finishAnimations();
+  const frame = h.currentFrame();
+  h.receive('return', { scrollY: 987 }); h.paint(); h.paint();
+  const departure = h.animationLog.at(-1), staleFinish = departure.onfinish;
+  departure.opacity = 0.4;
+  h.history.go(1);
+  assert.equal(h.currentFrame(), frame); assert.equal(h.panel().inert, false);
+  assert.equal(h.animationLog.at(-1).keyframes[0].opacity, 0.4);
+  assert.deepEqual(h.active, [true, false, true]);
+  assert.equal(frame.messages.at(-1).scrollY, 987);
+  staleFinish(); h.finishAnimations();
+  assert.equal(h.disposal.length, 0); assert.equal(h.navigation.snapshot().phase, 'project');
+  assert.equal(h.document.body.classList.contains('studio-project-covered'), true);
+  h.receive('return'); h.paint(); h.paint(); h.finishAnimations();
+  assert.equal(h.disposal.length, 1); assert.equal(h.navigation.snapshot().phase, 'room');
+});
+
+test('A new branch cancels a pending return paint and rejects stale readiness from its disposed frame', () => {
+  const h = harness({ animations: true });
+  h.navigation.openProject('steering'); h.receive('ready'); h.finishAnimations();
+  const old = h.currentFrame();
+  h.receive('return'); h.paint();
+  assert.equal(h.paints.size, 1);
+  h.navigation.openProject('pool');
+  assert.equal(h.paints.size, 0); assert.equal(old.isConnected, false);
+  assert.equal(h.disposal.length, 1); assert.equal(h.disposal[0].connected, true);
+  assert.equal(h.history.state.studioNavigation.index, 1);
+  assert.equal(h.entries.some(entry => entry.url === url('steering')), false);
+  h.receive('ready', {}, { source: old.contentWindow });
+  assert.equal(h.navigation.snapshot().ready, false);
+  h.receive('ready'); h.paint(); h.finishAnimations();
+  assert.equal(h.navigation.snapshot().key, 'pool'); assert.equal(h.navigation.snapshot().phase, 'project');
+  assert.deepEqual(h.active, [true, false, true]);
+});
+
+test('Forward recovers a frame whose one-shot ready message arrived during the return fade', () => {
+  const h = harness({ animations: true });
+  h.navigation.openProject('steering'); h.finishAnimations();
+  const frame = h.currentFrame();
+  h.history.go(-1); h.paint(); h.paint();
+  h.receive('ready');
+  assert.equal(h.navigation.snapshot().phase, 'returning');
+  assert.equal(h.navigation.snapshot().ready, false);
+  assert.equal(frame.messages.length, 0);
+  h.history.go(1);
+  assert.equal(h.currentFrame(), frame);
+  assert.equal(h.navigation.snapshot().ready, true);
+  assert.equal(h.navigation.snapshot().phase, 'revealing');
+  assert.equal(frame.messages.at(-1).url, url('steering'));
+  h.finishAnimations();
+  assert.equal(h.navigation.snapshot().phase, 'project');
+  assert.equal(h.timers.size, 0); assert.equal(h.disposal.length, 0);
+});
+
+test('Replacing a project cancels its unfinished reveal and cannot alter the new frame', () => {
+  const h = harness({ animations: true });
+  h.navigation.openProject('steering'); h.finishAnimations(); h.receive('ready');
+  const oldReveal = h.animationLog.at(-1), staleFinish = oldReveal.onfinish;
+  h.receive('navigate', { url: url('pool') }); h.receive('ready');
+  assert.equal(oldReveal.state, 'cancelled');
+  staleFinish();
+  assert.equal(h.navigation.snapshot().phase, 'revealing');
+  h.finishAnimations();
+  assert.equal(h.navigation.snapshot().phase, 'project');
+  assert.equal(h.navigation.snapshot().key, 'pool');
+});
+
+test('Reduced motion skips opacity animation while retaining the paint-before-removal return', () => {
+  const h = harness({ animations: true, reducedMotion: true });
+  h.navigation.openProject('steering'); h.receive('ready');
+  assert.equal(h.animationLog.length, 0);
+  assert.equal(h.navigation.snapshot().phase, 'project');
+  assert.equal(h.navigation.snapshot().reducedMotion, true);
+  h.receive('return');
+  assert.equal(h.currentFrame().isConnected, true);
+  h.paint(); h.paint();
+  assert.equal(h.animationLog.length, 0); assert.equal(h.currentFrame(), null);
+  assert.equal(h.navigation.snapshot().phase, 'room');
+});
+
+test('Changing to reduced motion settles a running entrance, frame reveal and return', () => {
+  const h = harness({ animations: true });
+  h.navigation.openProject('steering'); h.receive('ready');
+  h.reduced(true);
+  assert.equal(h.animationLog.every(animation => animation.state === 'cancelled'), true);
+  assert.equal(h.navigation.snapshot().phase, 'project');
+  assert.equal(h.document.body.classList.contains('studio-project-covered'), true);
+  h.reduced(false); h.receive('return'); h.paint(); h.paint();
+  h.reduced(true);
+  assert.equal(h.navigation.snapshot().phase, 'room'); assert.equal(h.disposal.length, 1);
+});
+
+test('Backgrounding a pending return releases the frame without waiting for suspended animation frames', () => {
+  const h = harness({ animations: true });
+  h.navigation.openProject('steering'); h.receive('ready'); h.finishAnimations();
+  h.receive('return');
+  assert.equal(h.paints.size, 1);
+  h.hidden(true);
+  assert.equal(h.paints.size, 0); assert.equal(h.currentFrame(), null);
+  assert.equal(h.navigation.snapshot().phase, 'room'); assert.equal(h.disposal.length, 1);
+  h.hidden(false); h.paint();
+  assert.deepEqual(h.active, [true, false]);
+});
+
+test('Disposal during a return cancels paints and animation completions without reopening navigation', () => {
+  const h = harness({ animations: true });
+  h.navigation.openProject('steering'); h.receive('ready'); h.finishAnimations();
+  h.receive('return'); h.paint();
+  h.navigation.dispose(); h.paint(); h.finishAnimations();
+  assert.equal(h.paints.size, 0); assert.equal(h.timers.size, 0);
+  assert.equal(h.navigation.snapshot().phase, 'room'); assert.equal(h.disposal.length, 1);
+  assert.equal(h.navigation.openProject('pool'), false);
+  assert.deepEqual(h.active, [true, false]);
 });

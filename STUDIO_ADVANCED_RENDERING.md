@@ -1,5 +1,14 @@
 # Engineering stories and adaptive studio rendering · 2026-09-30
 
+## Subsequent instrument-motion update
+
+The later studio polish keeps visible printer/scope motion running on independent
+30Hz/10Hz clocks. It redraws raster frames while those instruments animate, using
+reactive temporal footprints without invalidating the stationary ray solution.
+The zero-draw measurements and deliberate ambient freeze described below are
+historical behavior of2e2096f; zero draws now require instruments to be paused or
+off-screen. Daylight grading is also updated. See STUDIO_SCROLL_GUIDE.md.
+
 This revision starts from `6059b1b`. The room retains its accepted layout, source
 project models, Cycles RGBM diffuse maps, probes and real résumé. No model or
 lighting-map download was added. New code improves reconstruction, contact

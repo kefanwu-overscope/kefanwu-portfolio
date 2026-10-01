@@ -25,10 +25,12 @@ function harness() {
   document.hidden = false;
   const tick = () => {};
   let loop = tick, changeProject, contextLost = false, shadowInvalidations = 0;
-  const released = [], invalidations = [], timers = [];
+  const released = [], invalidations = [], timers = [], ambientSuspensions = [], refreshes = [];
+  const reducedMotionQuery = new EventHost();
   const gl = { isContextLost: () => contextLost };
   const context = {
-    window, document, tick,
+    window, document, tick, reducedMotionQuery, prefersReducedMotion: false,
+    suspendAmbient(reason) { ambientSuspensions.push(reason); }, ambientVisibilityAt: 42,
     createStudioNavigation({ onActiveChange }) { changeProject = onActiveChange; return {}; },
     renderer: { domElement: canvas, getContext: () => gl, shadowMap: { needsUpdate: false },
       setAnimationLoop(callback) { loop = callback; } },
@@ -43,13 +45,14 @@ function harness() {
       dispose() { released.push('restored-gpu-timer'); }
     },
     advanced: { invalidate(reason, options = {}) { invalidations.push({ reason, geometry: !!options.geometry }); },
+      refresh(reason) { refreshes.push(reason); },
       dispose() { released.push('advanced-render'); } },
     adaptiveShadows: { invalidate() { shadowInvalidations++; }, dispose() { released.push('adaptive-shadows'); } },
     sessionStorage: { removeItem() {} }, ROOM_RETURN_KEY: 'room-return',
     tickLast: 42, rafStamp: 99, rafDeltas: [16, 17], pendingResolutionScale: 0.9,
   };
   vm.runInNewContext(`${lifecycle}\nglobalThis.state = () => ({ running, projectPageOpen });`, context);
-  return { window, document, tick, released, invalidations, timers, context, state: context.state, loop: () => loop,
+  return { window, document, tick, released, invalidations, timers, context, ambientSuspensions, refreshes, reducedMotionQuery, state: context.state, loop: () => loop,
     shadowInvalidations: () => shadowInvalidations,
     project: open => changeProject(open),
     hidden(value) { document.hidden = value; document.emit('visibilitychange'); },
@@ -71,6 +74,7 @@ test('The room stays suspended behind a project when the tab hides and becomes v
   assert.equal(h.state().projectPageOpen, true);
   assert.equal(h.state().running, false);
   assert.deepEqual(h.released, []);
+  assert.equal(h.ambientSuspensions[0], 'project');
 });
 
 test('A project return while hidden reinstalls the room loop when the tab becomes visible', () => {
@@ -84,6 +88,20 @@ test('A project return while hidden reinstalls the room loop when the tab become
   assert.equal(h.loop(), h.tick);
   assert.equal(h.state().running, true);
   assert.deepEqual(h.released, []);
+  assert.equal(h.ambientSuspensions.at(-1), 'resuming');
+  assert.equal(h.context.ambientVisibilityAt, -Infinity);
+});
+
+test('Changing reduced-motion preference freezes decorative phase and resets its cadence without invalidating ray geometry', () => {
+  const h = harness();
+  h.reducedMotionQuery.emit('change', { matches: true });
+  assert.equal(h.context.prefersReducedMotion, true); assert.equal(h.context.frameClock.idleFps, 1);
+  assert.equal(h.ambientSuspensions.at(-1), 'reduced-motion');
+  assert.deepEqual(h.refreshes, ['motion-preference']); assert.deepEqual(h.invalidations, []);
+  h.reducedMotionQuery.emit('change', { matches: false });
+  assert.equal(h.context.prefersReducedMotion, false); assert.equal(h.context.frameClock.idleFps, 30);
+  assert.equal(h.ambientSuspensions.at(-1), 'resuming'); assert.equal(h.context.tickLast, null);
+  assert.equal(h.context.ambientVisibilityAt, -Infinity);
 });
 
 test('BFCache restoration retains the open-project flag and restarts only an exposed room', () => {

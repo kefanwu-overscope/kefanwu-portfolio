@@ -1,5 +1,7 @@
 const PROTOCOL = 'kw-studio-project-v1';
 const STATE = 'studioNavigation';
+const TRANSITION_MS = 200;
+const FRAME_REVEAL_MS = 180;
 
 // The loaded room remains the top-level document during project visits. One
 // disposable frame hosts the existing full project page; only this controller
@@ -9,8 +11,10 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
   const projectPath = new URL('project-3d.html', roomURL).pathname;
   const roomTitle = document.title;
   const session = crypto.randomUUID();
-  let panel = null, frame = null, frameKey = null, ready = false, timer = null;
+  let panel = null, frame = null, frameKey = null, ready = false, pendingReady = false, timer = null;
   let savedFocus = null, hiddenElements = [], lastIndex = 0, disposed = false;
+  let active = false, returning = false, panelTransition = null, frameTransition = null, returnPaint = null;
+  const motion = window.matchMedia?.('(prefers-reduced-motion: reduce)');
   const current = () => history.state?.[STATE];
   const owned = state => state?.session === session && Number.isInteger(state.index) && state.index >= 0;
   const route = value => {
@@ -33,26 +37,84 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
   function send(message) {
     frame?.contentWindow?.postMessage({ protocol: PROTOCOL, ...message }, roomURL.origin);
   }
+  function setActive(value) {
+    if (active === value) return;
+    active = value; onActiveChange(value);
+  }
+  function fade(element, from, to, duration, complete = () => {}) {
+    element.style.opacity = String(to);
+    if (motion?.matches || document.hidden || !element.animate) { complete(); return null; }
+    const animation = element.animate([{ opacity: from }, { opacity: to }], {
+      duration, easing: 'cubic-bezier(.22, 1, .36, 1)', fill: 'both',
+    });
+    let settled = false;
+    const cancel = () => {
+      if (settled) return false;
+      settled = true; animation.onfinish = null; animation.cancel(); return true;
+    };
+    const finish = () => { if (cancel()) complete(); };
+    animation.onfinish = finish;
+    return { cancel, finish };
+  }
+  const panelOpacity = () => Number.parseFloat(window.getComputedStyle(panel).opacity);
+  function cancelReturnPaint() {
+    if (returnPaint !== null) window.cancelAnimationFrame(returnPaint);
+    returnPaint = null;
+  }
+  function enterPanel(from = 0) {
+    panelTransition?.cancel();
+    panelTransition = fade(panel, from, 1, TRANSITION_MS, () => {
+      panelTransition = null;
+      if (panel && !returning) document.body.classList.add('studio-project-covered');
+    });
+  }
   function releaseFrame() {
     clearTimeout(timer); timer = null;
+    frameTransition?.cancel(); frameTransition = null;
     // Synchronous cleanup is deliberate: a queued postMessage can be discarded
     // when its browsing context is removed in the same task.
     try { const child = frame?.contentWindow; child?.dispatchEvent(new child.Event('studio-project-dispose')); } catch {}
-    frame?.remove(); frame = null; frameKey = null; ready = false;
+    frame?.remove(); frame = null; frameKey = null; ready = false; pendingReady = false;
   }
-  function showRoom() {
+  function finishRoom() {
     if (!panel) return;
+    cancelReturnPaint(); panelTransition?.cancel(); panelTransition = null;
     releaseFrame(); panel.remove(); panel = null;
-    document.body.classList.remove('studio-project-open');
+    returning = false;
+    document.body.classList.remove('studio-project-open', 'studio-project-covered');
     for (const [element, wasInert, aria] of hiddenElements) {
       element.inert = wasInert;
       if (aria === null) element.removeAttribute('aria-hidden'); else element.setAttribute('aria-hidden', aria);
     }
     hiddenElements = [];
     document.title = roomTitle;
-    onActiveChange(false);
+    setActive(false);
     if (savedFocus?.isConnected && !savedFocus.inert) savedFocus.focus({ preventScroll: true });
     else document.getElementById('exp-canvas')?.focus({ preventScroll: true });
+  }
+  function showRoom(immediate = false) {
+    if (!panel) return;
+    if (immediate) { finishRoom(); return; }
+    if (returning) return;
+    returning = true;
+    const from = panel.animate ? panelOpacity() : 1;
+    panelTransition?.cancel(); panelTransition = null;
+    panel.style.opacity = String(from);
+    panel.inert = true;
+    document.title = roomTitle;
+    document.body.classList.remove('studio-project-covered');
+    // Resume and paint the retained canvas behind the still-visible project.
+    // Removing the frame first can expose a blank WebGL buffer for one paint.
+    setActive(false);
+    const reveal = () => {
+      returnPaint = null;
+      if (!returning || !panel) return;
+      panelTransition = fade(panel, from, 0, TRANSITION_MS, finishRoom);
+    };
+    if (document.hidden || !panel.animate) { reveal(); return; }
+    returnPaint = window.requestAnimationFrame(() => {
+      returnPaint = window.requestAnimationFrame(reveal);
+    });
   }
   function returnToRoom() {
     const state = current();
@@ -60,7 +122,15 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
     else { write({ session, kind: 'room', index: 0 }, roomURL, true); showRoom(); }
   }
   function createPanel() {
-    if (panel) return;
+    if (panel) {
+      if (returning) {
+        const from = panel.animate ? panelOpacity() : 1;
+        cancelReturnPaint(); returning = false; panel.inert = false;
+        setActive(true); enterPanel(from);
+        (ready ? frame : panel.querySelector('button'))?.focus({ preventScroll: true });
+      }
+      return;
+    }
     savedFocus = document.activeElement;
     hiddenElements = [...document.body.children].map(element => [element, element.inert, element.getAttribute('aria-hidden')]);
     for (const [element] of hiddenElements) { element.inert = true; element.setAttribute('aria-hidden', 'true'); }
@@ -72,7 +142,15 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
     back.addEventListener('click', returnToRoom);
     const status = document.createElement('p'); status.setAttribute('role', 'status'); status.textContent = 'Opening project…';
     loading.append(back, status); panel.append(loading); document.body.append(panel);
-    back.focus({ preventScroll: true }); onActiveChange(true);
+    back.focus({ preventScroll: true }); setActive(true); enterPanel();
+  }
+  function revealFrame(state) {
+    ready = true; pendingReady = false; clearTimeout(timer); timer = null;
+    panel.classList.add('is-ready'); panel.classList.remove('has-error');
+    frame.inert = false;
+    frameTransition = fade(frame, 0, 1, FRAME_REVEAL_MS, () => { frameTransition = null; });
+    send({ type: 'location', url: state.url, scrollY: state.scrollY });
+    frame.focus({ preventScroll: true });
   }
   function showProject(state) {
     const url = route(state.url);
@@ -82,13 +160,16 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
     const title = `${window.projectData[key].title} — 3D Studio — Kefan Wu`;
     document.title = title;
     if (frame && frameKey === key) {
-      if (ready) send({ type: 'location', url: url.href, scrollY: state.scrollY });
+      if (pendingReady) revealFrame(state);
+      else if (ready) send({ type: 'location', url: url.href, scrollY: state.scrollY });
       return;
     }
     releaseFrame(); frameKey = key;
     panel.classList.remove('is-ready', 'has-error');
     panel.querySelector('[role="status"]').textContent = 'Opening project…';
+    panel.querySelector('button')?.focus({ preventScroll: true });
     frame = document.createElement('iframe');
+    frame.inert = true;
     frame.title = title; frame.className = 'studio-project-frame';
     // A new frame's initial URL adds no child-history navigation. Subsequent
     // project changes replace this frame instead of navigating it independently.
@@ -103,6 +184,7 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
     panel.append(frame);
   }
   function navigate(value) {
+    if (disposed) return false;
     const url = route(value); if (!url) return false;
     const state = current();
     if (owned(state) && state.kind === 'project' && state.url === url.href) {
@@ -116,15 +198,19 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
   function message(event) {
     if (disposed || !frame || event.origin !== roomURL.origin || event.source !== frame.contentWindow || event.data?.protocol !== PROTOCOL) return;
     const data = event.data, state = current();
-    if (!owned(state) || state.kind !== 'project') return;
+    if (!owned(state)) return;
+    if (state.kind !== 'project') {
+      // Forward may reuse this frame before the return fade has disposed it.
+      // Remember its one-shot ready message without changing the fading page.
+      if (returning && data.type === 'ready') pendingReady = true;
+      return;
+    }
     if (['navigate', 'return', 'leave'].includes(data.type) && Number.isFinite(data.scrollY) && data.scrollY >= 0) {
       write({ ...state, scrollY: data.scrollY }, state.url, true);
     }
     if (data.type === 'ready') {
-      ready = true; clearTimeout(timer); timer = null;
-      panel.classList.add('is-ready'); panel.classList.remove('has-error');
-      send({ type: 'location', url: state.url, scrollY: state.scrollY });
-      frame.focus({ preventScroll: true });
+      if (ready) return;
+      revealFrame(state);
     } else if (data.type === 'title' && typeof data.title === 'string') {
       document.title = data.title; frame.title = data.title;
     } else if (data.type === 'return') returnToRoom();
@@ -142,10 +228,24 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
     lastIndex = state.index;
     if (state.kind === 'project') showProject(state); else showRoom();
   }
+  function settleMotion() {
+    if (!motion?.matches && !document.hidden) return;
+    if (returning && document.hidden) finishRoom();
+    panelTransition?.finish(); frameTransition?.finish();
+  }
   window.addEventListener('message', message); window.addEventListener('popstate', pop);
+  motion?.addEventListener('change', settleMotion);
+  document.addEventListener?.('visibilitychange', settleMotion);
   return {
     openProject: key => navigate(new URL(`project-3d.html?project=${encodeURIComponent(key)}`, roomURL).href),
-    snapshot: () => ({ session, open: !!panel, key: frameKey, ready, historyIndex: current()?.index ?? null }),
-    dispose() { disposed = true; showRoom(); window.removeEventListener('message', message); window.removeEventListener('popstate', pop); },
+    snapshot: () => ({ session, open: !!panel, key: frameKey, ready, historyIndex: current()?.index ?? null,
+      phase: !panel ? 'room' : returning ? 'returning' : frameTransition ? 'revealing' : panelTransition ? 'entering' : ready ? 'project' : 'loading',
+      reducedMotion: !!motion?.matches, transitionMs: TRANSITION_MS, frameRevealMs: FRAME_REVEAL_MS }),
+    dispose() {
+      disposed = true; showRoom(true);
+      window.removeEventListener('message', message); window.removeEventListener('popstate', pop);
+      motion?.removeEventListener('change', settleMotion);
+      document.removeEventListener?.('visibilitychange', settleMotion);
+    },
   };
 }

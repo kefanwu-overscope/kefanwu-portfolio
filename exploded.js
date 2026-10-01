@@ -82,6 +82,10 @@
     if (index !== state.index || state.stage.firstChild !== entry.frames[index].image) {
       state.stage.replaceChildren(entry.frames[index].image);
       state.index = index;
+      if (state.external) {
+        state.card.dataset.motionProgress = String(index / (entry.frames.length - 1));
+        state.card.dispatchEvent(new CustomEvent('case-motion-progress', { detail: { progress: index / (entry.frames.length - 1) } }));
+      }
     }
     if (entry.streaming) entry.frames[index].used = ++cacheClock;
     state.card.classList.add("is-explode-ready");
@@ -165,6 +169,11 @@
     state.owner = null;
     state.dragging = false;
     state.card.classList.remove("is-explode-playing", "is-explode-active");
+    if (state.external) {
+      state.index = -1;
+      state.card.dataset.motionProgress = '0';
+      state.card.dispatchEvent(new CustomEvent('case-motion-progress', { detail: { progress: 0 } }));
+    }
     reflectProgress(state);
     const entry = cache.get(state.key);
     if (entry?.status === "loading") {
@@ -684,6 +693,7 @@
       if (!state) return;
       state.visible = isIntersecting;
       if (!isIntersecting) resetState(state);
+      else if (state.external) state.card.dispatchEvent(new CustomEvent('case-motion-ready'));
       else if (document.activeElement === state.range) {
         activate(state, "control");
         setProgress(state, Number(state.range.value) / 100, true);
@@ -767,12 +777,29 @@
     card.classList.add("has-explode");
     card.dataset.explodeMode = config.mode;
     const rect = card.getBoundingClientRect();
-    const state = { key, config, card, media, poster, stage, ui, range, badge, target: 0, progress: 0, index: -1,
+    const state = { key, config, card, media, poster, stage, ui, range, badge, target: 0, progress: 0, index: -1, external: card.dataset.scrollDriven === 'true',
       visible: rect.bottom > 0 && rect.top < innerHeight, owner: null, pointerInside: false, dragging: false,
       failed: false, loadJob: null, waitingIndex: null };
     states.set(key, state);
     reflectProgress(state);
     visibilityObserver.observe(card);
+
+    // Detail pages use native document scrolling and the shared annotated guide.
+    // The homepage keeps its original hover/wheel interaction.
+    if (state.external) {
+      ui.hidden = true;
+      card.dataset.motionEngine = 'frames';
+      card.dataset.motionFrames = String(config.frames.length);
+      card.dataset.motionReady = 'true';
+      card.addEventListener('case-motion-request', (event) => {
+        const value = Number(event.detail?.progress);
+        if (!Number.isFinite(value)) return;
+        activate(state, 'scroll');
+        if (active === state) setProgress(state, value, true);
+      });
+      card.dispatchEvent(new CustomEvent('case-motion-ready'));
+      return;
+    }
 
     card.addEventListener("pointerenter", (event) => {
       if (!finePointer.matches || event.pointerType === "touch") return;
@@ -813,7 +840,10 @@
     state.dragging = false;
     if (event.pointerType !== "touch" && finePointer.matches && !state.pointerInside) resetState(state);
   });
-  addEventListener("blur", resetAll);
+  addEventListener("blur", () => {
+    // An ordinary focus change must not rewind a scroll-guided case study.
+    states.forEach(state => { if (!state.external) resetState(state); });
+  });
   addEventListener("pagehide", () => {
     resetAll();
     for (const entry of [...cache.values()]) release(entry);

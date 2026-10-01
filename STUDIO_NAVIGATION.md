@@ -1,5 +1,15 @@
 # Retained studio navigation · 2026-09-26
 
+## Short transitions · 2026-09-30
+
+The retained navigation now uses200ms entry/return opacity transitions and a180ms
+ready-frame reveal. On return, the room is resumed and receives two paint frames
+underneath the outgoing iframe before fading it away and disposing it. Browser
+history and rapid re-entry cancel stale transitions; reduced motion and hidden
+returns settle without waiting for paused animation frames. snapshot().phase
+distinguishes entering/loading/revealing/project/returning/room for verification.
+Current follow-up evidence is in ../.codex/studio-polish-20260930/.
+
 Opening a project from the 3D room now keeps that room document, scene, renderer,
 decoded models, camera and lighting in memory. The existing complete project
 page occupies a full-viewport frame. Returning removes the project frame and

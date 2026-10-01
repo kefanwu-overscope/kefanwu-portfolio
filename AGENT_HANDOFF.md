@@ -1,5 +1,18 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## Current motion guide / room polish · 2026-09-30
+
+Follow-up to2e2096f: project-motion-story.js/css drives native-scroll pinned models
+and69 phase notes across both detail surfaces. Keep actual rendered progress
+events distinct from requested progress; frame quantization and scroll rounding
+must not leave stage buttons on the preceding annotation. Free3D exploration is
+explicit. Preserve homepage hover behavior and the shared engineering records.
+Room navigation fades over200ms, retains the outgoing iframe until the room has
+painted, then disposes it. AmbientClock now runs printer30Hz/scope10Hz while in
+view even at rest; do not restore camera-coupled pausing. Raster redraws are
+expected during visible instrument motion, while RT remains stationary.
+See STUDIO_SCROLL_GUIDE.md and ../.codex/studio-polish-20260930/release/.
+
 ## Current engineering/rendering revision · 2026-09-30
 
 `advanced-render-20260930` preserves the accepted room, Cycles bake and retained

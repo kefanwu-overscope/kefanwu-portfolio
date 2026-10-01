@@ -22,6 +22,8 @@ function mount() {
   window.removeEventListener('project-previews-ready', mount);
 
   const events = new AbortController();
+  const scrollDriven = host.dataset.scrollDriven === 'true';
+  let freeExploration = !scrollDriven, guidedProgress = 0;
   const listen = (node, type, listener, options = {}) => node.addEventListener(type, listener, { ...options, signal: events.signal });
   const poster = viewport.querySelector('img');
   const canvas = document.createElement('canvas');
@@ -151,6 +153,9 @@ function mount() {
     play.disabled = reverse.disabled = range.disabled = !availableMotion;
     reset.disabled = view.disabled = !ready;
     viewport.dataset.motionReady = String(availableMotion);
+    const wasReady = host.dataset.motionReady === 'true';
+    host.dataset.motionReady = String(availableMotion);
+    host.dataset.motionEngine = 'webgl';
     timeline.dataset.ready = String(availableMotion);
     retry.hidden = modelState !== 'error' && modelState !== 'context-lost';
     retryMotion.hidden = !ready || !motionError;
@@ -159,6 +164,10 @@ function mount() {
         ready ? 'Loading animation… You can rotate the model.' :
           modelState === 'error' ? 'The project images and full story are available below.' : 'Preparing model…');
     if (!availableMotion) setPlaying(false);
+    if (availableMotion && !wasReady) {
+      if (scrollDriven && !freeExploration) seek(guidedProgress);
+      host.dispatchEvent(new CustomEvent('case-motion-ready'));
+    }
   }
 
   function showCover(state, message) {
@@ -166,6 +175,10 @@ function mount() {
     viewport.dataset.status = state;
     viewport.setAttribute('aria-busy', String(state === 'loading'));
     poster?.setAttribute('aria-hidden', 'false');
+    if (scrollDriven) {
+      host.dataset.motionProgress = '0';
+      host.dispatchEvent(new CustomEvent('case-motion-progress', { detail: { progress: 0 } }));
+    }
     canvas.setAttribute('aria-hidden', 'true');
     canvas.tabIndex = -1;
     statusBox.hidden = false;
@@ -191,9 +204,13 @@ function mount() {
         viewport.setAttribute('aria-busy', 'false');
         poster?.setAttribute('aria-hidden', 'true');
         canvas.setAttribute('aria-hidden', 'false');
-        canvas.tabIndex = 0;
+        canvas.tabIndex = freeExploration ? 0 : -1;
         statusBox.hidden = true;
         setText(statusText, 'Ready to explore');
+        if (scrollDriven) {
+          host.dataset.motionProgress = String(clamp(state.progress));
+          host.dispatchEvent(new CustomEvent('case-motion-progress', { detail: { progress: clamp(state.progress) } }));
+        }
       } else if (attempts > 1) revealWhenDrawn(attempts - 1);
     });
   }
@@ -301,6 +318,8 @@ function mount() {
         onProgress: (next) => {
           if (!current()) return;
           setProgress(next);
+          host.dataset.motionProgress = String(progress);
+          host.dispatchEvent(new CustomEvent('case-motion-progress', { detail: { progress } }));
           revealWhenDrawn();
         },
         onPlaybackChange: (state) => { if (current()) setPlaying(state.playing, state.direction); },
@@ -329,8 +348,7 @@ function mount() {
   function seek(next) {
     if (!motionReady) return;
     inspector?.pause();
-    setProgress(next);
-    inspector?.setProgress(progress);
+    inspector?.setProgress(clamp(next));
   }
 
   function togglePlay() {
@@ -370,6 +388,7 @@ function mount() {
     togglePlay();
   });
   listen(timeline, 'wheel', (event) => {
+    if (scrollDriven && !freeExploration) return;
     if (!motionReady || event.ctrlKey || event.target.closest('button')) return;
     const delta = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? 300 : 1);
     const next = clamp(progress + delta * .0007);
@@ -377,6 +396,17 @@ function mount() {
     event.preventDefault();
     seek(next);
   }, { passive: false });
+  listen(host, 'case-motion-request', event => {
+    if (!scrollDriven || freeExploration) return;
+    guidedProgress = clamp(event.detail?.progress);
+    seek(guidedProgress);
+  });
+  listen(host, 'case-motion-mode', event => {
+    freeExploration = Boolean(event.detail?.free);
+    canvas.tabIndex = freeExploration && modelDrawn ? 0 : -1;
+    inspector?.pause();
+    if (!freeExploration) { inspector?.setView('source'); view.value = 'source'; seek(guidedProgress); }
+  });
   listen(document, 'visibilitychange', syncActivity);
   listen(window, 'case-lightbox-state', (event) => {
     lightboxOpen = Boolean(event.detail?.open);
