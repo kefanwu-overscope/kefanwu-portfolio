@@ -36,22 +36,32 @@ class Element {
   append(...children) { this.children.push(...children); }
   setAttribute(name, value) { this.attributes.set(name, String(value)); }
   getAttribute(name) { return this.attributes.get(name) ?? null; }
+  animate(keyframes, options) {
+    const animation = { keyframes, options, playState: 'running', cancelCount: 0,
+      cancel() { this.playState = 'idle'; this.cancelCount++; } };
+    (this.animations ||= []).push(animation);
+    return animation;
+  }
 }
 
-function setup({ reducedMotion = false, scroll = 909, width = 1280, height = 900,
+function setup({ reducedMotion = false, scroll = 923, width = 1280, height = 900,
   project = 'steering', storyTop = 1000, mediaHeight = 300 } = {}) {
   const window = new Element(), document = new Element(), reduced = new Element();
   document.hidden = false; window.scrollY = scroll; reduced.matches = reducedMotion;
   const story = new Element(), host = new Element(), pin = new Element(), media = new Element();
   story.dataset.motionProject = project;
+  if (project === 'steering') host.dataset.motionLive = 'true';
   const nodes = Object.fromEntries([
     '#preview-title', '.motion-note-body', '.motion-step-count', '.motion-evidence-note',
     '.motion-step-buttons', '#motion-story-progress', '.motion-story-timeline output',
-    '.motion-explore', '#preview-instructions',
+    '.motion-explore', '#preview-instructions', '.motion-notes', '.motion-story-footer',
   ].map(selector => [selector, new Element()]));
   for (const [selector, node] of Object.entries(nodes)) story.selectors.set(selector, node);
   story.selectors.set('.case-animation-host', host); story.selectors.set('.case-motion-pin', pin);
   host.selectors.set('.card-media', media);
+  story.append(pin); pin.append(host, nodes['.motion-notes'], nodes['.motion-story-footer']);
+  nodes['.motion-notes'].append(nodes['.motion-step-count'], nodes['#preview-title'], nodes['.motion-note-body'], nodes['.motion-evidence-note']);
+  nodes['.motion-story-footer'].append(nodes['.motion-step-buttons'], nodes['#motion-story-progress'], nodes['.motion-story-timeline output'], nodes['.motion-explore']);
   const header = new Element(); header.getBoundingClientRect = () => ({ height: 77 });
   document.selectors.set('.site-header', header);
   document.createElement = () => new Element();
@@ -60,7 +70,7 @@ function setup({ reducedMotion = false, scroll = 909, width = 1280, height = 900
   media.getBoundingClientRect = () => ({ height: geometry.mediaHeight });
   pin.getBoundingClientRect = () => {
     const natural = geometry.top - window.scrollY;
-    const stickyTop = Number.parseFloat(story.properties.get('--story-top') || 91);
+    const stickyTop = Number.parseFloat(story.properties.get('--story-top') || 77);
     const travel = Number.parseFloat(story.properties.get('--story-travel') || 1200);
     const top = reduced.matches || story.classList.contains('is-unpinned') ? natural : Math.min(Math.max(natural, stickyTop), natural + travel);
     return { top, bottom: top + geometry.pinHeight, height: geometry.pinHeight };
@@ -120,6 +130,16 @@ function assertScrollBoundary(app, requested) {
   assert(target >= requested && target <= requested + 2 / travel);
 }
 
+function assertNoteAt(app, progress) {
+  const index = app.notes.steps.findLastIndex(step => step.at <= progress);
+  const step = app.notes.steps[Math.max(0, index)];
+  assert.equal(app.nodes['#preview-title'].textContent, step.title);
+  assert.equal(app.nodes['.motion-note-body'].textContent, step.body);
+  assert.equal(app.nodes['.motion-step-count'].textContent, `${String(index + 1).padStart(2, '0')} / ${String(app.notes.steps.length).padStart(2, '0')}`);
+  app.nodes['.motion-step-buttons'].children.forEach((button, i) => assert.equal(button.getAttribute('aria-pressed'), String(i === index)));
+  assert.equal(app.story.dataset.noteSide, step.side || (index % 2 ? 'left' : 'right'));
+}
+
 test('Native scroll eases requested progress while annotations wait for the displayed pose', () => {
   const h = setup();
   assert.equal(h.window.lastOptions.scroll.passive, true);
@@ -131,7 +151,7 @@ test('Native scroll eases requested progress while annotations wait for the disp
   assert.equal(h.nodes['.motion-story-timeline output'].value, '0%');
   assert.equal(h.nodes['#motion-story-progress'].value, '780');
   h.show(.5);
-  assert.equal(h.nodes['#preview-title'].textContent, h.notes.steps[2].title);
+  assertNoteAt(h, .5);
   assert.equal(h.nodes['.motion-story-timeline output'].value, '50%');
   assert.match(h.nodes['#motion-story-progress'].getAttribute('aria-valuetext'), /^50 percent/);
   h.drain();
@@ -139,10 +159,59 @@ test('Native scroll eases requested progress while annotations wait for the disp
   assert.equal(h.controller.getState().shown, .5);
 });
 
+test('Annotations appear from the displayed pose and animate only actual stage changes', () => {
+  const h = setup(), annotation = h.nodes['.motion-notes'];
+  assert.equal(h.story.dataset.notesVisible, 'false');
+  assert.equal(annotation.getAttribute('aria-hidden'), 'true');
+  h.scrollToProgress(.73); h.drain();
+  assert.equal(h.story.dataset.notesVisible, 'false', 'An unloaded requested pose cannot reveal its notes');
+  assert.equal(annotation.animations?.length || 0, 0);
+  h.show(.1);
+  assertNoteAt(h, .1);
+  assert.equal(h.story.dataset.notesVisible, 'true');
+  assert.equal(annotation.getAttribute('aria-hidden'), 'false');
+  const firstEntrance = annotation.animations[0];
+  assert.equal(firstEntrance.options.duration, 280);
+  h.show(.15);
+  assert.equal(annotation.animations.length, 1, 'Progress inside a stage must not restart the entrance');
+  h.show(.68);
+  assertNoteAt(h, .68);
+  assert.equal(firstEntrance.playState, 'idle', 'Changing stages cancels the superseded entrance');
+  assert.equal(annotation.animations.length, 2);
+});
+
+test('All seven steering readings follow actual forward and reverse boundary crossings', () => {
+  const h = setup();
+  assert.deepEqual(Array.from(h.notes.steps, step => step.at), [0, .08, .22, .32, .54, .68, .78]);
+  assert.equal(h.nodes['.motion-step-buttons'].children.length, 7);
+  const boundaryPoses = h.notes.steps.map(step => step.at);
+  for (const progress of [...boundaryPoses, 1, ...boundaryPoses.toReversed()]) {
+    h.show(progress);
+    assertNoteAt(h, progress);
+    assert.equal(h.controller.getState().shown, progress);
+  }
+  assert.equal(h.requests.length, 0, 'A pose notification must not create a feedback seek');
+});
+
+test('A cover reset and later ready event cannot reveal the requested phase before its model pose arrives', () => {
+  const h = setup();
+  h.scrollToProgress(.73); h.drain(); h.show(.68);
+  assertNoteAt(h, .68);
+  h.show(0);
+  assert.equal(h.controller.getState().shown, 0); assertNoteAt(h, 0);
+  assert.equal(h.story.dataset.notesVisible, 'false');
+  assert.equal(h.nodes['.motion-notes'].getAttribute('aria-hidden'), 'true');
+  h.ready(); h.drain();
+  assert.equal(h.requests.at(-1).progress, .73);
+  assert.equal(h.controller.getState().shown, 0); assertNoteAt(h, 0);
+  h.show(.73);
+  assert.equal(h.story.dataset.notesVisible, 'true'); assertNoteAt(h, .73);
+});
+
 test('Stage buttons and the slider seek by normal document position without claiming an unloaded pose', () => {
   const h = setup();
   h.choose(2);
-  assertScrollBoundary(h, .5);
+  assertScrollBoundary(h, h.notes.steps[2].at);
   assert.equal(h.scrolls.at(-1).behavior, 'instant');
   assert.equal(h.controller.getState().shown, 0);
   h.nodes['#motion-story-progress'].value = '910'; h.nodes['#motion-story-progress'].emit('input'); h.drain();
@@ -150,7 +219,7 @@ test('Stage buttons and the slider seek by normal document position without clai
   assert.equal(h.requests.at(-1).progress, h.controller.getState().target);
   assert.equal(h.controller.getState().shown, 0);
   h.show(.91);
-  assert.equal(h.nodes['.motion-step-buttons'].children[3].getAttribute('aria-pressed'), 'true');
+  assertNoteAt(h, .91);
 });
 
 test('A late engine-ready event replays the current seek even after the scroll easing has settled', () => {
@@ -168,21 +237,28 @@ test('Reverse scrolling settles at the new target and selects notes from actual 
   h.scrollToProgress(.9); h.drain(); h.show(.9);
   h.requests.length = 0; h.scrollToProgress(.1); h.tick();
   assert(h.requests[0].progress < .9 && h.requests[0].progress > .1);
-  assert.equal(h.nodes['#preview-title'].textContent, h.notes.steps[3].title);
+  assertNoteAt(h, .9);
   h.show(.21);
-  assert.equal(h.nodes['#preview-title'].textContent, h.notes.steps[0].title);
+  assertNoteAt(h, .21);
   h.drain(); assert(Math.abs(h.requests.at(-1).progress - .1) < 1e-12);
 });
 
 test('Reduced motion uses explicit stages without scrolling or intermediate requests', () => {
   const h = setup({ reducedMotion: true });
+  const requested = h.notes.steps[2].at;
   h.choose(2);
   assert.equal(h.scrolls.length, 0); assert.equal(h.requests.length, 1);
-  assert.equal(h.requests[0].progress, .5); assert.equal(h.requests[0].immediate, true);
+  assert.equal(h.requests[0].progress, requested); assert.equal(h.requests[0].immediate, true);
   assert.equal(h.controller.getState().shown, 0); assert.equal(h.story.style.minHeight, '');
-  h.show(.5); h.scrollToProgress(.9); h.drain();
-  assert.equal(h.controller.getState().target, .5);
-  assert.equal(h.nodes['#preview-title'].textContent, h.notes.steps[2].title);
+  h.show(requested); h.scrollToProgress(.9); h.drain();
+  assert.equal(h.controller.getState().target, requested);
+  assertNoteAt(h, requested);
+  for (const progress of [0, requested, 1]) {
+    h.show(progress);
+    assert.equal(h.story.dataset.notesVisible, 'true', 'Reduced-motion notes stay visible at the endpoints');
+    assert.equal(h.nodes['.motion-notes'].getAttribute('aria-hidden'), 'false');
+  }
+  assert.equal(h.nodes['.motion-notes'].animations?.length || 0, 0, 'Explicit reduced-motion stages must not animate annotation entrance');
 });
 
 test('Reduced-motion changes settle an in-flight guide and keep explicit seeking available', () => {
@@ -190,17 +266,32 @@ test('Reduced-motion changes settle an in-flight guide and keep explicit seeking
   h.scrollToProgress(.78); h.tick(); h.reduce(true); h.drain();
   // Removing the tall sticky section can put it above the current viewport.
   // Its explicit request resumes when the now-static preview is visible again.
-  h.window.scrollY = 909; h.visible(true); h.drain();
+  h.window.scrollY = 923; h.visible(true); h.drain();
   assert.equal(h.requests.at(-1).progress, .78);
   assert.equal(h.requests.at(-1).immediate, true);
   assert.equal(h.story.style.minHeight, '');
-  h.choose(1); assert.equal(h.requests.at(-1).progress, .22);
+  h.choose(1); assert.equal(h.requests.at(-1).progress, h.notes.steps[1].at);
+});
+
+test('Enabling reduced motion cancels an entrance even when the displayed stage is unchanged', () => {
+  const h = setup();
+  h.show(.22);
+  const animation = h.nodes['.motion-notes'].animations.at(-1);
+  assert.equal(animation.playState, 'running');
+  h.reduce(true); h.drain();
+  assert.equal(animation.playState, 'idle');
+  assert.equal(h.nodes['.motion-notes'].animations.length, 1, 'Preference changes must not create a replacement fade');
+  assertNoteAt(h, .22);
+  assert.equal(h.story.dataset.notesVisible, 'true');
 });
 
 test('Hidden and offscreen guides stop work and replay their position on return', () => {
   const h = setup();
-  h.scrollToProgress(.5); h.tick(); h.hidden(true);
+  h.scrollToProgress(.5); h.tick(); h.show(.5);
+  const entrance = h.nodes['.motion-notes'].animations.at(-1);
+  h.hidden(true);
   assert.equal(h.frames.size, 0);
+  assert.equal(entrance.playState, 'idle');
   const count = h.requests.length;
   h.scrollToProgress(.75); h.ready(); h.drain();
   assert.equal(h.requests.length, count);
@@ -219,14 +310,17 @@ test('Lightbox close replays the same target after the visible frame was reset t
   h.window.emit('case-lightbox-state', { open: false }); h.drain();
   assert.equal(h.requests.at(-1).progress, .78); assert.equal(h.requests.at(-1).immediate, true);
   assert.equal(h.controller.getState().shown, 0);
-  h.show(.78); assert.equal(h.nodes['#preview-title'].textContent, h.notes.steps[3].title);
+  h.show(.78); assertNoteAt(h, .78);
 });
 
 test('Free exploration follows displayed progress and resumes the document-driven guide explicitly', () => {
   const h = setup();
+  assert.equal(h.nodes['.motion-explore'].textContent, 'Explore freely ↗');
   h.scrollToProgress(.22); h.drain();
   h.nodes['.motion-explore'].emit('click');
   assert.equal(h.controller.getState().free, true); assert.equal(h.modes.at(-1).free, true);
+  assert.equal(h.nodes['.motion-explore'].textContent, 'Back to the story ↓');
+  assert.equal(h.nodes['.motion-notes'].getAttribute('aria-hidden'), 'true');
   const count = h.requests.length;
   h.scrollToProgress(.5); h.drain(); assert.equal(h.requests.length, count);
   h.show(.78);
@@ -234,6 +328,7 @@ test('Free exploration follows displayed progress and resumes the document-drive
   assert.equal(h.nodes['#motion-story-progress'].value, '780');
   h.nodes['.motion-explore'].emit('click'); h.drain();
   assert.equal(h.controller.getState().free, false); assert.equal(h.modes.at(-1).free, false);
+  assert.equal(h.nodes['.motion-explore'].textContent, 'Explore freely ↗');
   assertScrollBoundary(h, .78);
   assert.equal(h.requests.at(-1).progress, h.controller.getState().target);
 });
@@ -270,7 +365,9 @@ test('Offline stage buttons choose a decoded-frame position at or after the name
 test('BFCache suspension preserves the guide and restoration resends the current pose request', () => {
   const h = setup();
   h.scrollToProgress(.5); h.drain(); h.show(.5);
+  const entrance = h.nodes['.motion-notes'].animations.at(-1);
   h.window.emit('pagehide', undefined, { persisted: true });
+  assert.equal(entrance.playState, 'idle');
   const count = h.requests.length;
   h.scrollToProgress(.78); h.ready(); h.drain();
   assert.equal(h.controller.getState().suspended, true); assert.equal(h.requests.length, count);
@@ -282,8 +379,10 @@ test('BFCache suspension preserves the guide and restoration resends the current
 
 test('Disposal cancels observers, listeners and frames so late engine events cannot mutate the guide', () => {
   const h = setup();
-  h.scrollToProgress(.78); h.tick();
+  h.scrollToProgress(.78); h.tick(); h.show(.56);
+  const entrance = h.nodes['.motion-notes'].animations.at(-1);
   h.window.emit('studio-project-dispose');
+  assert.equal(entrance.playState, 'idle');
   const count = h.requests.length, shown = h.controller.getState().shown;
   h.show(.78); h.ready(); h.window.emit('pageshow', undefined, { persisted: true });
   h.scrollToProgress(.2); h.drain();
@@ -297,10 +396,34 @@ test('Viewport changes remeasure scroll distance without advancing displayed ann
   const h = setup();
   h.scrollToProgress(.5); h.drain(); h.show(.5);
   h.geometry.mediaHeight = 200; h.context.innerWidth = 390; h.window.emit('resize'); h.drain();
-  assert.equal(h.controller.getState().travel, 850);
-  assert.equal(h.story.properties.get('--story-top'), '85px');
+  assert.equal(h.controller.getState().travel, 1200);
+  assert.equal(h.story.properties.get('--story-top'), '77px');
   assert.equal(h.controller.getState().shown, .5);
-  assert.equal(h.nodes['#preview-title'].textContent, h.notes.steps[2].title);
+  assertNoteAt(h, .5);
+});
+
+test('Model travel leaves room for both steering directions and pins directly below the header', () => {
+  const steering = setup({ mediaHeight: 600 });
+  assert.equal(steering.controller.getState().travel, 3600);
+  assert.equal(steering.controller.getState().start, 923);
+  assert.equal(steering.story.properties.get('--story-top'), '77px');
+  const offline = setup({ project: 'materialTest', mediaHeight: 600 });
+  assert.equal(offline.controller.getState().travel, 2400);
+  const compact = setup({ mediaHeight: 140 });
+  assert.equal(compact.controller.getState().travel, 1000);
+});
+
+test('Resizing into explicit short-screen mode reveals the current note without a new pose event', () => {
+  const h = setup();
+  assert.equal(h.controller.getState().shown, 0);
+  assert.equal(h.story.dataset.notesVisible, 'false');
+  h.context.innerHeight = 390; h.window.emit('resize'); h.drain();
+  assert.equal(h.story.classList.contains('is-unpinned'), true);
+  assert.equal(h.story.style.minHeight, '');
+  assert.equal(h.controller.getState().shown, 0);
+  assert.equal(h.story.dataset.notesVisible, 'true');
+  assert.equal(h.nodes['.motion-notes'].getAttribute('aria-hidden'), 'false');
+  assertNoteAt(h, 0);
 });
 
 test('Short viewports use explicit stages without a tall sticky scroll section', () => {
@@ -309,7 +432,7 @@ test('Short viewports use explicit stages without a tall sticky scroll section',
   assert.equal(h.story.style.minHeight, '');
   h.choose(2);
   assert.equal(h.scrolls.length, 0);
-  assert.equal(h.requests.at(-1).progress, .5); assert.equal(h.requests.at(-1).immediate, true);
+  assert.equal(h.requests.at(-1).progress, h.notes.steps[2].at); assert.equal(h.requests.at(-1).immediate, true);
 });
 
 test('The actual image renderer republishes an identical cached pose after resetting to its cover', () => {
@@ -320,11 +443,11 @@ test('The actual image renderer republishes an identical cached pose after reset
   stage.replaceChildren = image => { stage.firstChild = image; };
   range.removeAttribute = name => range.attributes.delete(name);
   const images = Array.from({ length: 101 }, () => ({ ready: true, image: {} }));
-  const state = { key: 'steering', config: { mode: 'steering' }, external: true, card, range, stage, poster,
+  const state = { key: 'materialTest', config: { mode: 'tensile' }, external: true, card, range, stage, poster,
     progress: .78, target: .78, index: -1, owner: 'scroll' };
   const shown = [];
   card.addEventListener('case-motion-progress', event => shown.push(event.detail.progress));
-  const context = { cache: new Map([['steering', { frames: images, status: 'ready' }]]), allowed: () => true,
+  const context = { cache: new Map([['materialTest', { frames: images, status: 'ready' }]]), allowed: () => true,
     active: state, stopAnimation() {}, reflectProgress() {},
     CustomEvent: class { constructor(type, { detail } = {}) { this.type = type; this.detail = detail; } },
   };

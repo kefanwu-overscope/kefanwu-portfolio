@@ -862,6 +862,7 @@
   function setupAvailableHosts() {
     if (!previewProjects) return;
     document.querySelectorAll(hostSelector).forEach((card) => {
+      if (card.dataset.motionLive === 'true') return;
       if (states.has(card.dataset.project)) return;
       try {
         const config = normalizeConfig(previewProjects[card.dataset.project]);

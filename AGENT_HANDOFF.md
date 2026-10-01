@@ -1,5 +1,20 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## Integrated models and bilateral steering · follow-up to63d4121
+
+The model belongs to the page now: full-width/full-height scene, #181818 common
+surface, transparent live renderer, no separate model box. Annotation overlays
+appear only with the displayed pose;72 readings total. Do not restore the compact
+two-column63d4121 panel. Main steering opts into live rendering via
+data-motion-live=true; other main cases keep frame packs. Both detail HTML files
+load the controller, which lazily imports Three only for an opted-in host.
+studio-steering-motion.js supplies the14-second signed sequence; keep its
+immutable binds, fixed rack ratio and qualified49.6°phase. Source binary assets
+remain unchanged. Both initial/full motion controllers expose the signed envelope
+before fitting the camera. Read STUDIO_SCROLL_GUIDE.md and the clearance reports
+before changing kinematics. Current evidence/backup is
+../.codex/page-integration-20260930/; release records establish exact publication.
+
 ## Current motion guide / room polish · 2026-09-30
 
 Follow-up to2e2096f: project-motion-story.js/css drives native-scroll pinned models

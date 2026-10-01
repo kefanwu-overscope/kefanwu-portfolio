@@ -1,4 +1,4 @@
-import { projectMotionNotes } from './project-motion-notes.js?v=motion-story-20260930';
+import { projectMotionNotes } from './project-motion-notes.js?v=page-integrated-20260930';
 
 const clamp = value => Math.max(0, Math.min(1, Number(value) || 0));
 export function progressFromScroll(scroll, start, distance) { return clamp((scroll - start) / Math.max(1, distance)); }
@@ -24,7 +24,8 @@ export function attachMotionStory(story) {
   const listen = (target, type, fn, options = {}) => target.addEventListener(type, fn, { ...options, signal: events.signal });
   let raf = 0, previousTime = 0, target = 0, eased = 0, shown = 0, start = 0, travel = 1;
   let inView = false, disposed = false, suspended = false, lightbox = false, free = false, pinned = true, activeNote = -1;
-  let pendingMeasure = false, sent = -1;
+  let pendingMeasure = false, sent = -1, annotationRequested = false, noteAnimation = null;
+  const annotation = story.querySelector('.motion-notes');
   const active = () => !disposed && !suspended && !document.hidden && !lightbox && inView;
   const label = index => `${String(index + 1).padStart(2, '0')} / ${String(notes.steps.length).padStart(2, '0')}`;
   function paint(progress) {
@@ -32,12 +33,21 @@ export function attachMotionStory(story) {
     const index = noteAt(notes.steps, shown), step = notes.steps[index];
     if (activeNote !== index) {
       activeNote = index; title.textContent = step.title; body.textContent = step.body; count.textContent = label(index);
+      story.dataset.noteSide = step.side || (index % 2 ? 'left' : 'right');
+      noteAnimation?.cancel();
+      if (!reduced.matches && shown > .015 && annotation?.animate) {
+        noteAnimation = annotation.animate([{ opacity:0,translate:`0 ${innerWidth <= 700 ? 8 : 18}px` },{ opacity:1,translate:'0 0' }],
+          { duration:280,easing:'cubic-bezier(.22,1,.36,1)' });
+      }
       [...buttons.children].forEach((button, i) => button.setAttribute('aria-pressed', String(i === index)));
     }
     const percent = Math.round(shown * 100);
     output.value = `${percent}%`; output.textContent = `${percent}%`;
     range.setAttribute('aria-valuetext', `${percent} percent — ${step.title}`);
     story.dataset.shownProgress = shown.toFixed(4);
+    const notesVisible = annotationRequested || reduced.matches || !pinned || (shown > .018 && shown < .995);
+    story.dataset.notesVisible = String(notesVisible);
+    annotation?.setAttribute('aria-hidden', String(!notesVisible || free));
     story.dataset.loading = String(Math.abs(target - shown) > .04 && !free);
   }
   function reflectTarget() {
@@ -70,14 +80,12 @@ export function attachMotionStory(story) {
   }
   function measure() {
     const headerHeight = document.querySelector('.site-header')?.getBoundingClientRect().height || 77;
-    const top = headerHeight + (innerWidth <= 700 ? 8 : 14);
+    const top = headerHeight;
     story.style.setProperty('--story-top', `${top}px`);
     // Four model-heights mirrors the reference's natural scroll distance.
-    travel = Math.max(850, media.getBoundingClientRect().height * 4);
+    travel = Math.max(1000, media.getBoundingClientRect().height * (story.dataset.motionProject === 'steering' ? 6 : 4));
     const pinHeight = pin.getBoundingClientRect().height;
-    const compactPressureView = document.body?.dataset.caseMode === 'studio' &&
-      story.dataset.motionProject === 'ansysCfd' && innerWidth <= 700 && innerHeight < 760;
-    pinned = innerHeight >= 600 && !(innerWidth < 350 && innerHeight < 760) && !compactPressureView;
+    pinned = innerHeight >= 600 && !(innerWidth < 350 && innerHeight < 760);
     story.classList.toggle('is-unpinned', !pinned);
     story.style.setProperty('--story-travel', `${travel}px`);
     story.style.minHeight = reduced.matches || !pinned ? '' : `${pinHeight + travel}px`;
@@ -90,8 +98,10 @@ export function attachMotionStory(story) {
         : 'Scroll down to explore; scroll back to reverse. The notes follow the model. Choose a numbered stage or use the slider at any time.';
     if (reduced.matches || !pinned) { eased = target; reflectTarget(); emit(target, true); }
     else readScroll();
+    paint(shown);
   }
   function choose(progress) {
+    annotationRequested = true;
     if (free) setFree(false);
     target = clamp(progress); reflectTarget();
     if (reduced.matches || !pinned) { eased = target; emit(target, true); }
@@ -104,13 +114,13 @@ export function attachMotionStory(story) {
   function setFree(value) {
     const returning = free && !value, returnProgress = shown;
     free = !!value; story.classList.toggle('is-free', free);
-    if (mode) { mode.setAttribute('aria-pressed', String(free)); mode.textContent = free ? 'Back to scroll guide ↓' : 'Rotate the model ↗'; }
+    if (mode) { mode.setAttribute('aria-pressed', String(free)); mode.textContent = free ? 'Back to the story ↓' : 'Explore freely ↗'; }
     host.dispatchEvent(new CustomEvent('case-motion-mode', { detail: { free } }));
     instructions.textContent = free
       ? 'Drag to rotate. Scroll or pinch over the model to zoom. Use the controls to play or seek; return to the scroll guide to continue the annotated sequence.'
       : reduced.matches ? 'Choose a numbered stage or use the slider to inspect each pose. Automatic scroll animation is off for reduced motion.'
         : 'Scroll down to explore; scroll back to reverse. The notes follow the model. Choose a numbered stage or use the slider at any time.';
-    sent = -1; measure();
+    sent = -1; measure(); paint(shown);
     if (returning) choose(returnProgress);
     if (!free) schedule();
   }
@@ -133,18 +143,18 @@ export function attachMotionStory(story) {
   listen(window, 'scroll', readScroll, { passive: true });
   listen(window, 'resize', () => { pendingMeasure = true; measure(); }, { passive: true });
   listen(document, 'visibilitychange', () => {
-    if (document.hidden) { cancelAnimationFrame(raf); raf = 0; previousTime = 0; }
+    if (document.hidden) { cancelAnimationFrame(raf); raf = 0; previousTime = 0; noteAnimation?.cancel(); }
     else { sent = -1; measure(); if (active() && !free) emit(eased, true); schedule(); }
   });
   listen(window, 'case-lightbox-state', event => {
     lightbox = Boolean(event.detail?.open);
     if (!lightbox) { sent = -1; measure(); emit(eased, true); schedule(); }
   });
-  listen(reduced, 'change', () => { sent = -1; setFree(false); measure(); });
+  listen(reduced, 'change', () => { noteAnimation?.cancel(); noteAnimation = null; sent = -1; setFree(false); measure(); });
   const visibility = new IntersectionObserver(entries => {
     inView = entries[0].isIntersecting;
     if (inView) { sent = -1; measure(); emit(eased, true); schedule(); }
-    else { cancelAnimationFrame(raf); raf = 0; previousTime = 0; }
+    else { cancelAnimationFrame(raf); raf = 0; previousTime = 0; noteAnimation?.cancel(); }
   });
   visibility.observe(pin);
   const resize = new ResizeObserver(() => { if (!disposed) measure(); });
@@ -152,10 +162,11 @@ export function attachMotionStory(story) {
   function dispose() {
     if (disposed) return;
     disposed = true; cancelAnimationFrame(raf); visibility.disconnect(); resize.disconnect(); events.abort();
+    noteAnimation?.cancel();
   }
   listen(window, 'studio-project-dispose', dispose);
   listen(window, 'pagehide', event => {
-    suspended = true; cancelAnimationFrame(raf); raf = 0; previousTime = 0;
+    suspended = true; cancelAnimationFrame(raf); raf = 0; previousTime = 0; noteAnimation?.cancel();
     if (!event.persisted) dispose();
   });
   listen(window, 'pageshow', event => { if (event.persisted && !disposed) { suspended = false; sent = -1; measure(); emit(eased, true); schedule(); } });

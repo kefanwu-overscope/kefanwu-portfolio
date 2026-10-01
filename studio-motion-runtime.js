@@ -1,5 +1,8 @@
-// Absolute sampled poses: every seek reads source samples; no delta transform
-// is applied to the previous pose. Camera controls never enter this module.
+import { createSteeringMotion, STEERING_MOTION_BOUNDS } from './studio-steering-motion.js?v=page-integrated-20260930';
+
+// Absolute poses: every seek reads source samples or the steering source bind;
+// no delta transform is applied to the previous pose. Camera controls remain
+// independent of both controllers.
 export const clampProgress = (value) => Math.min(1, Math.max(0, Number.isFinite(Number(value)) ? Number(value) : 0));
 
 const COMPONENTS = { float32: Float32Array, uint32: Uint32Array, uint16: Uint16Array, uint8: Uint8Array };
@@ -141,6 +144,7 @@ function bindTracks(specification, buffer) {
 }
 
 export function createSampledMotion({ manifest, buffer, nodes, materials, initial = false }) {
+  if (manifest.project === 'steering' && !initial) return createSteeringMotion({ manifest, nodes });
   const count = initial ? 1 : manifest.sampleCount;
   if (!Number.isInteger(count) || count < 1) throw new Error('The model has no valid pose samples.');
   const seen = new Set();
@@ -223,5 +227,6 @@ export function createSampledMotion({ manifest, buffer, nodes, materials, initia
   for (const { tracks } of [...nodeTracks, ...materialTracks]) for (const track of Object.values(tracks)) {
     for (const array of [track.array, track.frameMap, track.elementMap]) if (array) buffers.add(array.buffer);
   }
-  return { seek, buffers, duration: Math.max(0.1, Number(manifest.duration) || 8) };
+  return { seek, buffers, duration: Math.max(0.1, Number(manifest.duration) || 8),
+    bounds: manifest.project === 'steering' ? STEERING_MOTION_BOUNDS : undefined };
 }

@@ -41,6 +41,7 @@
   }
 
   const project = projects[key];
+  const liveModel = studioMode || key === 'steering';
   const editorial = editorials[key];
   const engineering = editorial.engineering;
   const supplement = window.caseStudySupplements?.[key] || {};
@@ -196,21 +197,22 @@
         <div class="hero-deck"><h2>${escape(editorial.deck)}</h2><p>${escape(editorial.description)}</p></div>
       </div>
       <dl class="case-summary" aria-label="Case study in 30 seconds">${editorial.summary.map(([label, text]) => `<div><dt>${escape(label)}</dt><dd>${escape(text)}</dd></div>`).join('')}</dl>
+    </section>
       <section class="case-motion-story" id="motion" aria-labelledby="preview-title" data-motion-project="${escape(key)}">
       <div class="case-motion-pin">
-      <div class="motion-story-heading"><p class="eyebrow">Inside the mechanism</p><a class="motion-skip" href="#brief">Continue to the design brief <span aria-hidden="true">↓</span></a></div>
+      <div class="motion-story-heading"><p class="eyebrow">${escape(project.title)} <span aria-hidden="true"> / </span> In motion</p><a class="motion-skip" href="#brief">The design story <span aria-hidden="true">↓</span></a></div>
       <div class="case-preview-layout">
         <figure class="case-preview-figure">
-          <div class="case-animation-host" data-scroll-driven="true" data-project="${escape(key)}" data-preview-title="${escape(project.title)}" data-preview-instructions="preview-instructions" role="group" aria-labelledby="preview-title">
+          <div class="case-animation-host" data-motion-live="${liveModel}" data-scroll-driven="true" data-project="${escape(key)}" data-preview-title="${escape(project.title)}" data-preview-instructions="preview-instructions" role="group" aria-labelledby="preview-title">
             <div class="card-media"><img src="${escape(cover.src)}"${cover.srcset ? ` srcset="${escape(cover.srcset)}" sizes="(max-width: 700px) calc(100vw - 44px), (max-width: 1000px) calc(100vw - 112px), 640px"` : ''} alt="${escape(cover.alt || project.title)}" width="${cover.width || 1800}" height="${cover.height || 1200}" loading="eager" decoding="async" fetchpriority="high"></div>
           </div>
           <figcaption class="cover-caption"><span>${escape(cover.caption || 'Explore the project model and its motion.')}</span><span class="eyebrow">Interactive project model</span></figcaption>
         </figure>
-        <aside class="preview-introduction motion-notes" aria-label="Animation notes"><p class="eyebrow motion-step-count">01 / 04</p><h2 id="preview-title">Take a closer look.</h2><p class="motion-note-body">${escape(cover.caption || editorial.deck)}</p><div class="motion-step-buttons" role="group" aria-label="Animation stages"></div><p class="motion-evidence-note"></p><div class="preview-links">${studioMode ? '<button type="button" class="text-link motion-explore" aria-pressed="false">Rotate the model ↗</button>' : `<a class="text-link" href="${studioURL}">${studioLabel} 3D Studio <span aria-hidden="true">↗</span></a>`}</div></aside>
+        <aside class="preview-introduction motion-notes" aria-label="Animation notes"><p class="eyebrow motion-step-count">01 / 04</p><h2 id="preview-title">Take a closer look.</h2><p class="motion-note-body">${escape(cover.caption || editorial.deck)}</p><p class="motion-evidence-note"></p></aside>
       </div>
-      <div class="motion-story-footer"><p id="preview-instructions">${previewInstructions}</p><div class="motion-story-timeline"><label class="sr-only" for="motion-story-progress">Animation progress</label><input type="range" id="motion-story-progress" min="0" max="1000" step="1" value="0" aria-describedby="preview-instructions"><output for="motion-story-progress">0%</output></div></div>
+      <p class="motion-scroll-cue" aria-hidden="true">Scroll to explore <span>↓</span></p>
+      <div class="motion-story-footer"><p id="preview-instructions" class="sr-only">${previewInstructions}</p><div class="motion-step-buttons" role="group" aria-label="Animation stages"></div><div class="motion-story-timeline"><label class="sr-only" for="motion-story-progress">Animation progress</label><input type="range" id="motion-story-progress" min="0" max="1000" step="1" value="0" aria-describedby="preview-instructions"><output for="motion-story-progress">0%</output></div><div class="preview-links">${liveModel ? '<button type="button" class="text-link motion-explore" aria-pressed="false">Explore freely ↗</button>' : `<a class="text-link" href="${studioURL}">Explore in 3D <span aria-hidden="true">↗</span></a>`}</div></div>
       </div></section>
-    </section>
     <nav class="chapter-nav" aria-label="Case study sections"><div class="chapter-nav-inner wrap">
       <a href="#motion">Motion</a>${engineering ? '<a href="#brief">Brief</a>' : ''}${editorial.chapters.map((chapter, index) => `<a href="#${escape(chapter.id)}"><span class="mono">${number(index + 1)}</span>${escape(chapter.label)}</a>`).join('')}
       ${engineering?.checks?.length ? '<a href="#verification">Evidence review</a>' : ''}

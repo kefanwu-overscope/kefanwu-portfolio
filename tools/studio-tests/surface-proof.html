@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Integrated model surface proof</title>
+  <style>
+    :root { color-scheme:dark; font:14px/1.5 system-ui,sans-serif; background:#181818; color:#eee; }
+    body { margin:24px; }
+    h1 { font-size:22px; margin-bottom:8px; }
+    p { max-width:850px; }
+    .surfaces { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+    figure { margin:0; min-width:0; }
+    figcaption { margin:12px 0; }
+    .checker { background:repeating-conic-gradient(#395544 0% 25%,#ca9868 0% 50%) 0 0 / 48px 48px; }
+    canvas { display:block; width:100%; height:360px; }
+    pre { padding:16px; background:#242424; white-space:pre-wrap; overflow-wrap:anywhere; }
+    [data-state=passed] { color:#a2e7b6; }
+    [data-state=failed] { color:#ffaaa3; }
+    @media(max-width:800px) { .surfaces { grid-template-columns:1fr; } canvas { height:300px; } }
+  </style>
+  <script type="importmap">{"imports":{"three":"../../vendor/three/0.185.0/build/three.module.js","three/addons/":"../../vendor/three/0.185.0/examples/jsm/"}}</script>
+  <script type="module" src="surface-proof.js"></script>
+</head>
+<body>
+  <h1>Integrated model surface proof</h1>
+  <p>The same steering model, material lighting, motion and camera appear in both canvases. The integrated surface lets the checker pattern show through empty pixels. The existing inspector keeps its solid neutral background.</p>
+  <p id="result" role="status" data-state="running">Loading both source models…</p>
+  <div class="surfaces">
+    <figure><div class="checker"><canvas id="integrated" aria-label="Transparent integrated steering model"></canvas></div><figcaption>Integrated surface · transparent canvas</figcaption></figure>
+    <figure><div class="checker"><canvas id="default" aria-label="Default solid steering model"></canvas></div><figcaption>Existing inspector · default solid canvas</figcaption></figure>
+  </div>
+  <pre id="report" aria-label="Actual WebGL pixel checks"></pre>
+</body>
+</html>

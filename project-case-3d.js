@@ -12,12 +12,12 @@ const steeringParts = {
 let mounted = false;
 
 function mount() {
-  if (mounted || document.body.dataset.caseMode !== 'studio') return;
+  if (mounted) return;
   const key = document.body.dataset.project;
   const project = getStudioProject(key);
   const host = document.querySelector('.case-animation-host[data-project]');
   const viewport = host?.querySelector('.card-media');
-  if (!project || !viewport || host.dataset.project !== key) return;
+  if (!project || !viewport || host.dataset.project !== key || host.dataset.motionLive !== 'true') return;
   mounted = true;
   window.removeEventListener('project-previews-ready', mount);
 
@@ -29,7 +29,10 @@ function mount() {
   const canvas = document.createElement('canvas');
   canvas.id = 'case-3d-canvas';
   canvas.tabIndex = 0;
-  canvas.setAttribute('aria-label', `${project.name}. Drag to rotate; scroll or pinch to zoom. Use the controls below to explore ${project.motionLabel.toLowerCase()}.`);
+  const canvasLabel = () => freeExploration
+    ? `${project.name}. Drag to rotate; scroll or pinch to zoom. Use the controls below to explore ${project.motionLabel.toLowerCase()}.`
+    : `${project.name}. Scroll the page or choose an annotated stage to explore the motion.`;
+  canvas.setAttribute('aria-label', canvasLabel());
   canvas.setAttribute('aria-describedby', 'preview-instructions');
   const annotation = document.createElement('div');
   annotation.id = 'case-3d-annotation';
@@ -310,10 +313,11 @@ function mount() {
     receiveStatus({ state: 'loading' });
     const current = () => ticket === generation && !disposed && !suspended;
     try {
-      const { createStudioInspector } = await import('./studio-inspector.js?v=performance-20260919');
+      const { createStudioInspector } = await import('./studio-inspector.js?v=page-integrated-20260930');
       if (!current() || signal.aborted) return;
       inspector = createStudioInspector({
         canvas,
+        transparentBackground: true,
         onStatus: (status) => { if (current()) receiveStatus(status); },
         onProgress: (next) => {
           if (!current()) return;
@@ -403,6 +407,7 @@ function mount() {
   });
   listen(host, 'case-motion-mode', event => {
     freeExploration = Boolean(event.detail?.free);
+    canvas.setAttribute('aria-label', canvasLabel());
     canvas.tabIndex = freeExploration && modelDrawn ? 0 : -1;
     inspector?.pause();
     if (!freeExploration) { inspector?.setView('source'); view.value = 'source'; seek(guidedProgress); }

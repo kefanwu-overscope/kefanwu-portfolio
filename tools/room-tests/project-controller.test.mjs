@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 
 const source = (await readFile(new URL('../../project-case-3d.js', import.meta.url), 'utf8'))
   .replace(/^import[^\n]+\n/, '')
-  .replace("import('./studio-inspector.js?v=performance-20260919')", 'loadInspectorModule()');
+  .replace(/import\('\.\/studio-inspector\.js[^']*'\)/, 'loadInspectorModule()');
 
 class Element {
   constructor(tag = 'div') {
@@ -52,10 +52,13 @@ class Element {
   }
 }
 
-async function setup({ offscreen = false, deferredImport = false, scrollDriven = false, deferredPose = false } = {}) {
+async function setup({ offscreen = false, deferredImport = false, scrollDriven = false, deferredPose = false,
+  caseMode = 'studio', motionLive = true, project = 'steering' } = {}) {
   const window = new Element(); const document = new Element(); document.hidden = false;
-  document.body = new Element('body'); document.body.dataset = { caseMode: 'studio', project: 'steering' };
-  const host = new Element(); host.className = 'case-animation-host'; host.dataset.project = 'steering';
+  document.body = new Element('body'); document.body.dataset = { project };
+  if (caseMode) document.body.dataset.caseMode = caseMode;
+  const host = new Element(); host.className = 'case-animation-host'; host.dataset.project = project;
+  if (motionLive) host.dataset.motionLive = 'true';
   if (scrollDriven) host.dataset.scrollDriven = 'true';
   const viewport = new Element(); viewport.className = 'card-media';
   if (offscreen) viewport.box = { top: -800, bottom: -400, left: 10, right: 650, width: 640, height: 400 };
@@ -64,7 +67,7 @@ async function setup({ offscreen = false, deferredImport = false, scrollDriven =
   window.innerHeight = 900; window.innerWidth = 1400;
   const frames = new Map(); let frameID = 0; let clock = 0; let intersection; let importResolve;
   const raf = fn => { const id = ++frameID; frames.set(id, fn); return id; };
-  const inspectors = [];
+  const inspectors = [], imports = [];
   function createStudioInspector(callbacks) {
     const state = { key: 'steering', renderedFrames: 0, active: true, motionReady: false, playing: false, direction: 1, progress: 0 };
     let selectedResolve; let disposed = false, pendingPose = null;
@@ -103,8 +106,8 @@ async function setup({ offscreen = false, deferredImport = false, scrollDriven =
   const context = {
     window, document, AbortController, console,
     CustomEvent: class { constructor(type, { detail } = {}) { this.type = type; this.detail = detail; } },
-    getStudioProject: key => key === 'steering' ? { name: 'Steering', motionLabel: 'Steering motion' } : null,
-    loadInspectorModule: () => deferredImport ? new Promise(resolve => importResolve = resolve) : Promise.resolve(module),
+    getStudioProject: key => key === project ? { name: project, motionLabel: 'Project motion' } : null,
+    loadInspectorModule: () => { imports.push('inspector'); return deferredImport ? new Promise(resolve => importResolve = resolve) : Promise.resolve(module); },
     requestAnimationFrame: raf, cancelAnimationFrame: id => frames.delete(id),
     IntersectionObserver: class { constructor(fn) { intersection = fn; } observe() {} disconnect() {} },
   };
@@ -112,7 +115,7 @@ async function setup({ offscreen = false, deferredImport = false, scrollDriven =
   async function settle() { await Promise.resolve(); await Promise.resolve(); await Promise.resolve(); }
   await settle();
   return {
-    window, document, host, viewport, inspectors, frames, settle,
+    window, document, host, viewport, inspectors, imports, frames, settle,
     find: id => host.querySelector(`#case-3d-${id}`),
     resolveImport: async () => { importResolve(module); await settle(); },
     intersect: visible => { intersection([{ isIntersecting: visible, intersectionRatio: visible ? 1 : 0 }]); },
@@ -120,6 +123,32 @@ async function setup({ offscreen = false, deferredImport = false, scrollDriven =
     drain() { for (let i = 0; frames.size && i < 10; i++) this.tick(); assert.equal(frames.size, 0, 'No unbounded controller RAF polling'); },
   };
 }
+
+test('Main steering mounts the live transparent surface without changing its navigation mode', async () => {
+  const app = await setup({ caseMode: null, scrollDriven: true });
+  assert.equal(app.inspectors.length, 1);
+  assert.equal(app.inspectors[0].callbacks.transparentBackground, true);
+  assert.equal(app.document.body.dataset.caseMode, undefined);
+  assert.equal(app.viewport.dataset.status, 'loading');
+  app.inspectors[0].ready(true);
+  assert.equal(app.viewport.dataset.status, 'loading', 'Ready data cannot uncover an undrawn model');
+  app.drain();
+  assert.equal(app.viewport.dataset.status, 'ready');
+  assert.equal(app.find('canvas').getAttribute('aria-hidden'), 'false');
+  assert.equal(app.find('canvas').tabIndex, -1, 'Guided surface stays out of free-rotation keyboard navigation');
+});
+
+test('Pages without an explicit live-motion flag never import or mount the WebGL inspector', async () => {
+  for (const caseMode of [null, 'studio']) {
+    const app = await setup({ caseMode, motionLive: false, project: 'vineRobot' });
+    app.window.emit('project-previews-ready');
+    await app.settle();
+    assert.equal(app.imports.length, 0);
+    assert.equal(app.inspectors.length, 0);
+    assert.equal(app.find('canvas'), null);
+    assert.equal(app.document.body.dataset.caseMode, caseMode || undefined);
+  }
+});
 
 test('Retained-frame disposal stops playback and releases the inspector exactly once', async () => {
   const app = await setup();

@@ -1,5 +1,42 @@
 # Annotated project motion and studio polish · 2026-09-30
 
+## Integrated page presentation · follow-up to63d4121
+
+The compact two-column model panel has been replaced with a full-width model
+scene occupying the available page height. It has no viewport background, border
+or card chrome. The case page uses #181818, matching the existing offline frame
+background pixels; live surfaces use a genuinely transparent WebGL clear. Other
+inspector consumers retain their original solid background by default.
+
+Annotations appear in280ms and alternate across the page; the model shifts
+slightly to make room. On phones the large model stays above its floating notes.
+Reduced motion cancels both CSS and active Web Animations. Progress still comes
+from the rendered pose rather than the requested seek. This revision has72 notes
+across16 projects, including seven readings for bilateral steering.
+
+The main-site steering page now uses the same live controller as its studio
+counterpart. Both follow a14-second neutral→−90°→neutral→+90°→neutral sequence
+with dwell periods. The steering scroll distance is six model-heights; other
+mechanisms retain four. Other main-site projects retain their existing frame
+packs and avoid loading Three.js. No source mesh, image or motion binary changes.
+
+Signed motion is computed from immutable source binds in studio-steering-motion.js.
+Its nominal Cardan phase is clearance-qualified against the supplied forks, not
+a measured trunnion calibration. The source omits cross pins/internal rack teeth
+and includes existing internal fit overlaps.433-pose checks found no new contact
+pairs; upper-yoke penetration stayed at the neutral baseline, lower yokes stayed
+clear. Existing shaft/bearing and concealed rack/housing depth variation is
+recorded in ../.codex/steering-bilateral-20260930/. Do not call the entire assembly
+zero-penetration or manufacturing validated. One common illustrative rack ratio
+is used in both directions, within the original travel envelope.
+
+An analytic envelope covering125,469 decoded source vertices is available to the
+initial and full controllers before camera fitting. Browser GPU tests check
+transparent RGBA-zero background pixels, default opaque behavior, unchanged
+source camera between surface modes, exact±90° extremes and neutral restoration.
+Current implementation/evidence and release backup are in
+../.codex/page-integration-20260930/. Older sections below document the first guide.
+
 Built from release `2e2096f`. The motion guide follows the observed interaction
 of [Rowan Jansens’ Lamp page](https://rjansens.com/projects/Lamp/lamp.html): native
 page scrolling holds a model in view and scrubs forward/backward through its

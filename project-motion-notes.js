@@ -3,21 +3,24 @@
  * Engineering context: case-study-data.js, project-data.js and supplements.
  * Motion source: assets/studio-motion/index.json -> source.motionReport.
  *
- * Boundaries follow the source controllers: steering/gantries peak at .5;
+ * Steering uses the bilateral runtime's neutral/extreme reading holds; gantries peak at .5.
  * Pool holds .64–.72 and releases .72–.84; tensile rupture starts at .74.
  * AURA/FTC/Education use their manifest stage order. Continuous growth, heat,
  * cloth placement, flow and turntable notes are inspection points, not tests.
  */
 export const projectMotionNotes = {
   steering: {
-    title: 'From wheel to rack',
-    summary: 'Follow the steering input through the angled column and into linear rack travel.',
-    note: 'Illustrated stroke: neutral to −90° and back. Rack travel is illustrative; the CAD omits internal teeth and separate joint cross pins.',
+    title: 'Both directions, one linkage',
+    summary: 'Turn through both directions and follow the same input, joints and rack back to centre.',
+    note: 'Illustrative ±90° steering cycle. Rack travel is not a calibrated displacement test.',
     steps: [
-      { at: 0, title: 'The input at the wheel', body: 'The wheel and upper shaft begin at neutral. Bearings and mounts hold the column in place while its rotating parts carry the driver’s input through the cockpit.' },
-      { at: 0.22, title: 'Two bends, one steering path', body: 'Watch the yokes turn about their own shaft axes. Matched joint bends and careful phasing were central to packaging the column while managing rotational speed variation.' },
-      { at: 0.5, title: 'Rotation becomes translation', body: 'At the midpoint, the wheel reaches the illustrated 90° turn and the rack reaches its largest displacement. The tie-rod ends move with the rack as the frame stays fixed.' },
-      { at: 0.78, title: 'Back toward neutral', body: 'The wheel, joints, and rack retrace the same coupled motion. Follow the fixed bearing cages to distinguish the rotating shafts from the structure that supports them.' }
+      { at: 0, title: 'Start at the wheel', body: 'The column starts at neutral. Fixed bearing supports locate the rotating shafts and keep the steering path anchored to the chassis.', side:'right' },
+      { at: .08, title: 'One input starts the motion', body: 'The steering wheel turns with the upper shaft. Watch that rotation pass into the first universal joint, while its support stays in place.', side:'right' },
+      { at: .22, title: 'Follow the angled shafts', body: 'At the first 90° turn, the motion pauses. The two joints carry rotation through the angled column; the lower shaft drives the rack in one direction.', side:'left' },
+      { at: .32, title: 'Back through the centre', body: 'The wheel and rack return to neutral. The fixed bearing cages make it easier to see which components rotate and which provide support.', side:'right' },
+      { at: .54, title: 'Now turn the other way', body: 'Reversing the wheel reverses the coupled shafts and rack. The linkage follows the same path through the two joints without rotating the mounting structure.', side:'left' },
+      { at: .68, title: 'A second 90° turn', body: 'The opposite steering extreme holds for a closer look. Follow the lower shaft and tie-rod ends to see how a rotary input becomes rack travel.', side:'right' },
+      { at: .78, title: 'Return to neutral', body: 'All moving parts return to their starting pose. Scroll back to retrace either direction, or explore the assembly freely from another angle.', side:'left' }
     ]
   },
   vineRobot: {

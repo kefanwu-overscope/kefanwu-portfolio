@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { createProjectResourceCache, fetchProjectBuffer, abortError } from './studio-inspector-loader.js';
-import { clampProgress, readBufferView, createSampledMotion } from './studio-motion-runtime.js';
+import { clampProgress, readBufferView, createSampledMotion } from './studio-motion-runtime.js?v=page-integrated-20260930';
 import { installSourceMaterial } from './studio-inspector-materials.js';
 import { fitCameraEnvelope } from './studio-inspector-camera.js';
 
@@ -194,8 +194,12 @@ function buildResource(key, manifest, geometryBuffer, motionBuffer, { initial = 
     // needed to frame a complete assembly/explosion without clipping.
     const bounds = new THREE.Box3();
     for (const node of new Set(nodes)) if (!node.userData.presentationHidden) bounds.expandByObject(node);
-    if (manifest.bounds?.motion && key !== 'ansysCfd') {
-      const { min, max } = manifest.bounds.motion;
+    // Analytic mechanisms can extend beyond the archived one-sided samples.
+    // Their initial controller exposes the same envelope as full motion, so
+    // camera fitting is complete before the first visible source pose.
+    const motionBounds = motion.bounds || manifest.bounds?.motion;
+    if (motionBounds && key !== 'ansysCfd') {
+      const { min, max } = motionBounds;
       for (const x of [min[0], max[0]]) for (const y of [min[1], max[1]]) for (const z of [min[2], max[2]]) bounds.expandByPoint(toWorld([x, y, z]));
     }
     let motionController = null, motionRequest = null, closed = false;
@@ -253,15 +257,18 @@ export function createStudioInspector({
   onPartSelect = () => {},
   manifestUrl,
   quality = 'auto',
+  transparentBackground = false,
 } = {}) {
   if (!canvas) throw new Error('The project workbench needs a canvas.');
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: transparentBackground, powerPreference: 'high-performance' });
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
-  renderer.setClearColor(0x191919, 1);
+  renderer.setClearColor(0x191919, transparentBackground ? 0 : 1);
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x191919);
+  // Let the page supply the surrounding surface without changing the source
+  // material, environment lighting or initial camera/pose.
+  scene.background = transparentBackground ? null : new THREE.Color(0x191919);
   let environmentTarget;
   function rebuildEnvironment() {
     environmentTarget?.dispose();
@@ -696,6 +703,7 @@ export function createStudioInspector({
   };
   const restored = () => {
     contextLost = false;
+    renderer.setClearColor(0x191919, transparentBackground ? 0 : 1);
     rebuildEnvironment();
     controls.enabled = active;
     emitStatus(resource ? 'ready' : 'idle', { message: '3D view restored.', ...(resource ? { manifest: resource.manifest, motionReady: resource.motionReady, motionError } : {}) });
@@ -734,6 +742,7 @@ export function createStudioInspector({
     setQuality(value) { quality = ['auto', 'low', 'high'].includes(value) ? value : 'auto'; resize(); },
     getState() {
       return { key: selectedKey, state, progress, playing, direction, active, quality, motionReady: !!resource?.motionReady, motionError, reducedMotion: reducedMotion.matches,
+        motionPose: resource?.motion?.pose || null, motionDuration: resource?.motion?.duration || null,
         cache: cache.stats(), objects: { ...renderer.info.memory }, drawCalls: renderer.info.render.calls, renderedFrames,
         camera: captureView(),
         sourceShaders: resource ? [...new Set(resource.nodes.flatMap((object) => Array.isArray(object.material) ? object.material : [object.material]))]
