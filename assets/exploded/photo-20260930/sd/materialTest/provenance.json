@@ -1,0 +1,32 @@
+{
+  "project": "materialTest",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "photo-20260930",
+  "palette": "studio-photo-materials.js",
+  "background": "#181818",
+  "sourceManifest": "materialTest/manifest.c781882d09d49302.json",
+  "camera": {
+    "position": [
+      5.58113718032837,
+      6.190881252288817,
+      9.487800598144533
+    ],
+    "target": [
+      0.0063457489013671875,
+      1.3965611457824707,
+      0.01065349578857444
+    ],
+    "up": [
+      -0.20265238652933804,
+      0.9166490062782604,
+      -0.3445092299533372
+    ],
+    "zoom": 1,
+    "frameWidth": 5.550699710845947,
+    "frameAspect": 1.4988290398126465
+  },
+  "frameCount": 145,
+  "width": 640,
+  "height": 427,
+  "bytes": 912006
+}

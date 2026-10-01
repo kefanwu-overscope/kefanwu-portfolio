@@ -1,0 +1,32 @@
+{
+  "project": "steering",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "photo-20260930",
+  "palette": "studio-photo-materials.js",
+  "background": "#181818",
+  "sourceManifest": "steering/manifest.58205faed00ee856.json",
+  "camera": {
+    "position": [
+      5.688638687133791,
+      6.244581222534176,
+      9.365671157836916
+    ],
+    "target": [
+      -0.16391944885253906,
+      1.2281055450439453,
+      0.16879463195800803
+    ],
+    "up": [
+      -0.22443523578674512,
+      0.9084287710088637,
+      -0.3526839845253447
+    ],
+    "zoom": 1,
+    "frameWidth": 8.000280263699034,
+    "frameAspect": 1.4988290398126465
+  },
+  "frameCount": 121,
+  "width": 640,
+  "height": 427,
+  "bytes": 642858
+}

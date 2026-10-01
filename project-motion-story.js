@@ -1,3 +1,5 @@
+import { renderPressureLegend } from './project-pressure-legend.js';
+import { projectMotionLabels } from './project-motion-labels.js';
 import { projectMotionNotes } from './project-motion-notes.js?v=page-integrated-20260930';
 
 const clamp = value => Math.max(0, Math.min(1, Number(value) || 0));
@@ -9,7 +11,9 @@ export function noteAt(steps, progress) {
 }
 
 export function attachMotionStory(story) {
-  const notes = projectMotionNotes[story.dataset.motionProject];
+  const baseNotes = projectMotionNotes[story.dataset.motionProject];
+  const labels = projectMotionLabels[story.dataset.motionProject];
+  const notes = baseNotes && { ...baseNotes, steps: baseNotes.steps.map((step, index) => ({ ...step, ...labels?.[index] })) };
   const host = story.querySelector('.case-animation-host');
   if (!notes || !host || story.dataset.storyMounted) return null;
   story.dataset.storyMounted = 'true';
@@ -26,6 +30,43 @@ export function attachMotionStory(story) {
   let inView = false, disposed = false, suspended = false, lightbox = false, free = false, pinned = true, activeNote = -1;
   let pendingMeasure = false, sent = -1, annotationRequested = false, noteAnimation = null;
   const annotation = story.querySelector('.motion-notes');
+  const leader = story.querySelector('.motion-leader-line');
+  let lastAnchor = null, frameAnchors = null;
+  function placeAnchor(point) {
+    lastAnchor = point;
+    if (!point || !leader) { story.dataset.anchorVisible = 'false'; noteAnimation?.cancel(); return; }
+    const box = pin.getBoundingClientRect(), surface = media.getBoundingClientRect();
+    let width = surface.width, height = surface.height, left = surface.left - box.left, top = surface.top - box.top;
+    if (host.dataset.motionLive !== 'true') {
+      const aspect = frameAnchors?.aspect || 1.5;
+      const scale = Math.min(width / aspect, height);
+      left += (width - scale * aspect) / 2; top += (height - scale) / 2;
+      width = scale * aspect; height = scale;
+    }
+    const x = left + point.x * width, y = top + point.y * height;
+    const compact = box.width <= 700, labelWidth = compact ? 150 : 190;
+    const onLeft = point.x < .5;
+    const lx = compact ? (onLeft ? 24 : box.width - labelWidth - 24) : (onLeft ? Math.max(28, box.width * .06) : box.width - labelWidth - Math.max(28, box.width * .06));
+    const labelHeight = annotation?.getBoundingClientRect?.().height || 80;
+    const ly = compact ? box.height - 82 - labelHeight : Math.max(82, Math.min(box.height - 148, y - 72));
+    story.style.setProperty('--label-x', `${lx}px`); story.style.setProperty('--label-y', `${ly}px`);
+    const startX = lx + (onLeft ? labelWidth : 0), startY = ly + 23;
+    const elbow = startX + (onLeft ? 16 : -16);
+    leader.setAttribute('d', `M${startX.toFixed(1)},${startY.toFixed(1)} L${elbow.toFixed(1)},${startY.toFixed(1)} L${x.toFixed(1)},${y.toFixed(1)}`);
+    story.dataset.anchorVisible = String(x >= 0 && x <= box.width && y > 30 && y < box.height - 40);
+    if (story.dataset.anchorVisible !== 'true') noteAnimation?.cancel();
+  }
+  if (host.dataset.motionLive !== 'true' && leader) {
+    fetch('assets/exploded/photo-20260930/anchors.json', { signal: events.signal }).then(response => {
+      if (!response.ok) throw new Error('Annotation coordinates unavailable');
+      return response.json();
+    }).then(data => { if (disposed) return; frameAnchors = data[story.dataset.motionProject];
+      if (frameAnchors?.legend) {
+        const legend = document.createElement('div'); legend.id = 'case-3d-legend'; legend.className = 'case-3d-legend';
+        host.append(legend); renderPressureLegend(legend, frameAnchors.legend);
+      }
+      paint(shown); }).catch(() => {});
+  }
   const active = () => !disposed && !suspended && !document.hidden && !lightbox && inView;
   const label = index => `${String(index + 1).padStart(2, '0')} / ${String(notes.steps.length).padStart(2, '0')}`;
   function paint(progress) {
@@ -35,12 +76,13 @@ export function attachMotionStory(story) {
       activeNote = index; title.textContent = step.title; body.textContent = step.body; count.textContent = label(index);
       story.dataset.noteSide = step.side || (index % 2 ? 'left' : 'right');
       noteAnimation?.cancel();
-      if (!reduced.matches && shown > .015 && annotation?.animate) {
-        noteAnimation = annotation.animate([{ opacity:0,translate:`0 ${innerWidth <= 700 ? 8 : 18}px` },{ opacity:1,translate:'0 0' }],
-          { duration:280,easing:'cubic-bezier(.22,1,.36,1)' });
+      if (!reduced.matches && shown > .015 && story.dataset.anchorVisible === 'true' && annotation?.animate) {
+        noteAnimation = annotation.animate([{ opacity:0 },{ opacity:1 }],
+          { duration:160,easing:'ease-out' });
       }
       [...buttons.children].forEach((button, i) => button.setAttribute('aria-pressed', String(i === index)));
     }
+    if (frameAnchors) placeAnchor(frameAnchors.points[Math.round(shown * (frameAnchors.points.length - 1))]);
     const percent = Math.round(shown * 100);
     output.value = `${percent}%`; output.textContent = `${percent}%`;
     range.setAttribute('aria-valuetext', `${percent} percent — ${step.title}`);
@@ -98,7 +140,7 @@ export function attachMotionStory(story) {
         : 'Scroll down to explore; scroll back to reverse. The notes follow the model. Choose a numbered stage or use the slider at any time.';
     if (reduced.matches || !pinned) { eased = target; reflectTarget(); emit(target, true); }
     else readScroll();
-    paint(shown);
+    paint(shown); placeAnchor(lastAnchor);
   }
   function choose(progress) {
     annotationRequested = true;
@@ -138,6 +180,7 @@ export function attachMotionStory(story) {
   story.classList.add('is-enhanced');
   listen(range, 'input', () => choose(Number(range.value) / 1000));
   if (mode) listen(mode, 'click', () => setFree(!free));
+  listen(host, 'case-motion-anchor', event => placeAnchor(event.detail?.point));
   listen(host, 'case-motion-progress', event => { paint(event.detail?.progress); if (free) { target = shown; reflectTarget(); } });
   listen(host, 'case-motion-ready', () => { sent = -1; measure(); if (active() && !free) emit(eased, true); schedule(); });
   listen(window, 'scroll', readScroll, { passive: true });

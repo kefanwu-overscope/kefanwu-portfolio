@@ -27,7 +27,7 @@ import { AdaptiveQuality, GpuFrameTimer } from "./experience-quality.js?v=exp-ad
 import { createAdvancedRenderer } from "./experience-advanced.js?v=workbench-live-20260930";
 import { createAdaptiveShadows } from "./experience-shadow-budget.js?v=advanced-render-20260930";
 import { buildDetailedPrinter, buildDetailedPegboardTools, refineWorkbenchInstruments } from "./experience-workbench-details.js?v=room-detail-20260926";
-import { ROOM_EXHIBITS, prepareRoomExhibit } from "./experience-exhibits.js?v=room-detail-20260926";
+import { ROOM_EXHIBITS, prepareRoomExhibit } from "./experience-exhibits.js?v=photo-20260930";
 import { addStudioRealism } from "./experience-realism.js?v=studio-realism-20260907";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";

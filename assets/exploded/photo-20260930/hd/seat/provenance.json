@@ -1,0 +1,32 @@
+{
+  "project": "seat",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "photo-20260930",
+  "palette": "studio-photo-materials.js",
+  "background": "#181818",
+  "sourceManifest": "seat/manifest.23366eabc26a4356.json",
+  "camera": {
+    "position": [
+      -8.406200408935545,
+      7.022267341613769,
+      6.0778002738952654
+    ],
+    "target": [
+      -0.01738739013671875,
+      0.9636826515197754,
+      0.01921510696411155
+    ],
+    "up": [
+      0.4096032329563161,
+      0.8629675995101193,
+      -0.29582446441678195
+    ],
+    "zoom": 1,
+    "frameWidth": 7.314802845510959,
+    "frameAspect": 1.4988290398126465
+  },
+  "frameCount": 121,
+  "width": 1280,
+  "height": 854,
+  "bytes": 1901760
+}

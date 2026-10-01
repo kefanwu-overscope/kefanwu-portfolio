@@ -950,7 +950,7 @@ window.caseStudyData = {
     },
     "cover": {
       "src": "assets/editorial/neutral-20260915/materialTest-wide-1800.webp?v=068925b08a8d",
-      "alt": "Orange tensile specimen held between silver grips before stretching.",
+      "alt": "Charcoal fabric specimen held between silver grips before stretching.",
       "caption": "The tensile-testing apparatus used to illustrate specimen loading.",
       "kind": "Display reconstruction",
       "srcset": "assets/editorial/neutral-20260915/materialTest-wide-480.webp?v=4f1b6bd5723c 480w, assets/editorial/neutral-20260915/materialTest-wide-960.webp?v=19302d4e4b56 960w, assets/editorial/neutral-20260915/materialTest-wide-1800.webp?v=068925b08a8d 1800w",

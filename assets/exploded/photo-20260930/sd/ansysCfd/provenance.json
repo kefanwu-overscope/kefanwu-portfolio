@@ -1,0 +1,32 @@
+{
+  "project": "ansysCfd",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "photo-20260930",
+  "palette": "studio-photo-materials.js",
+  "background": "#181818",
+  "sourceManifest": "ansysCfd/manifest.cf5210b57d16cd5a.json",
+  "camera": {
+    "position": [
+      -3.1613278388977046,
+      5.09205913543701,
+      7.22268533706665
+    ],
+    "target": [
+      0.47062110900878906,
+      1.0410399436950684,
+      -0.041210651397704856
+    ],
+    "up": [
+      0.1996205643208707,
+      0.8948508703192947,
+      -0.3992412180487104
+    ],
+    "zoom": 1,
+    "frameWidth": 5.52702631136689,
+    "frameAspect": 1.4988290398126465
+  },
+  "frameCount": 121,
+  "width": 640,
+  "height": 427,
+  "bytes": 3312438
+}

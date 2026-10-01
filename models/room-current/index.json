@@ -86,10 +86,10 @@
       }
     },
     "scanner": {
-      "url": "models/room-current/scanner.41ecb17165900906.glb.gz",
-      "sha256": "41ecb171659009064750ef0e7c16009b8b901bb0fd102c6715d86a13acb16448",
-      "bytes": 331997,
-      "glbBytes": 660080,
+      "url": "models/room-current/scanner.391aeb377d55270c.glb.gz",
+      "sha256": "391aeb377d55270c90193ef4f2339bedf56a9376fa2fc1ca787f57f9c0eab161",
+      "bytes": 332784,
+      "glbBytes": 661460,
       "compression": "gzip",
       "triangles": 21946,
       "bounds": {

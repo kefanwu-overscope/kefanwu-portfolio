@@ -1,550 +1,550 @@
 {
   "version": 1,
-  "revision": "neutral-20260915",
+  "revision": "photo-20260930",
   "projects": {
     "steering": {
-      "src": "assets/editorial/neutral-20260915/steering-wide-1800.webp?v=1dc33b0efc43",
-      "srcset": "assets/editorial/neutral-20260915/steering-wide-480.webp?v=6db6807f9bf0 480w, assets/editorial/neutral-20260915/steering-wide-960.webp?v=14b1d151b82a 960w, assets/editorial/neutral-20260915/steering-wide-1800.webp?v=1dc33b0efc43 1800w",
+      "src": "assets/editorial/photo-20260930/steering-wide-1800.webp?v=884eb5fde351",
+      "srcset": "assets/editorial/photo-20260930/steering-wide-480.webp?v=53c10dda2291 480w, assets/editorial/photo-20260930/steering-wide-960.webp?v=b7b24e087e9c 960w, assets/editorial/photo-20260930/steering-wide-1800.webp?v=884eb5fde351 1800w",
       "alt": "Steering wheel, column, universal joints and rack in their neutral position.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/neutral-20260915/steering-wide-480.webp",
+          "src": "assets/editorial/photo-20260930/steering-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "6db6807f9bf087f4575389201c55e14ca88fcd644b9b5c126ed78f57818888f5",
-          "bytes": 3964
+          "sha256": "53c10dda2291f39433fbabceb37e86ed250dcf41b76b8a415573da7103dc2cb6",
+          "bytes": 3776
         },
         {
-          "src": "assets/editorial/neutral-20260915/steering-wide-960.webp",
+          "src": "assets/editorial/photo-20260930/steering-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "14b1d151b82af49ce41f295d812b896be174fa061e947bf3df3d77d7e195cd6e",
-          "bytes": 9512
+          "sha256": "b7b24e087e9cd26abb487a8266edea0fea63cf71bdb582feb4ee6e84f0a003ef",
+          "bytes": 12374
         },
         {
-          "src": "assets/editorial/neutral-20260915/steering-wide-1800.webp",
+          "src": "assets/editorial/photo-20260930/steering-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "1dc33b0efc4308eaef3907b42218e4ddaca6ad9e1a643ab006130179a5c7b7f2",
-          "bytes": 24808
+          "sha256": "884eb5fde3513994f4d1dbe821b4511baa1b052f6bcec3281d27d29acf8b4b72",
+          "bytes": 29450
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/neutral-20260915/sd/steering/00.webp?v=a1d833ecd027",
-      "sourceFrameSha256": "a1d833ecd0276820bf0f9b4fa89a62150e74bd659d8b656d744afec763e3ac9f",
-      "provenance": "assets/editorial/neutral-20260915/steering-provenance.json?v=6cc2753a29aa"
+      "sourceFrame": "assets/exploded/photo-20260930/sd/steering/00.webp?v=6016662007f0",
+      "sourceFrameSha256": "6016662007f0e6e385d6d849ab5a26f103862b1c909e213031de00247fea3bed",
+      "provenance": "assets/exploded/photo-20260930/sd/steering/provenance.json"
     },
     "vineRobot": {
-      "src": "assets/editorial/neutral-20260915/vineRobot-wide-1800.webp?v=883f0f7423bf",
-      "srcset": "assets/editorial/neutral-20260915/vineRobot-wide-480.webp?v=6e95ec264865 480w, assets/editorial/neutral-20260915/vineRobot-wide-960.webp?v=ad5c38b9ce84 960w, assets/editorial/neutral-20260915/vineRobot-wide-1800.webp?v=883f0f7423bf 1800w",
+      "src": "assets/editorial/photo-20260930/vineRobot-wide-1800.webp?v=4a8b98552353",
+      "srcset": "assets/editorial/photo-20260930/vineRobot-wide-480.webp?v=b8a88ac41af1 480w, assets/editorial/photo-20260930/vineRobot-wide-960.webp?v=8a42089f8881 960w, assets/editorial/photo-20260930/vineRobot-wide-1800.webp?v=4a8b98552353 1800w",
       "alt": "Vine robot pressure vessel with its translucent tube retracted.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/neutral-20260915/vineRobot-wide-480.webp",
+          "src": "assets/editorial/photo-20260930/vineRobot-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "6e95ec264865685e67bcbd0c796925403e5089208e94cf5f0d36cd41f7dda3c6",
-          "bytes": 9908
+          "sha256": "b8a88ac41af1c191d925e5225b9feefa3989426f0ee97824b392c87ad41ffd26",
+          "bytes": 7684
         },
         {
-          "src": "assets/editorial/neutral-20260915/vineRobot-wide-960.webp",
+          "src": "assets/editorial/photo-20260930/vineRobot-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "ad5c38b9ce848c3d9e0138e904600bbcf134f6db4bc4031a59db29368fcde7c4",
-          "bytes": 22570
+          "sha256": "8a42089f8881d7ea30946be45eef1dd34050f188f1cb08c35dc65be250c7c3a3",
+          "bytes": 24946
         },
         {
-          "src": "assets/editorial/neutral-20260915/vineRobot-wide-1800.webp",
+          "src": "assets/editorial/photo-20260930/vineRobot-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "883f0f7423bf1861af7d97183f62b83b292ec3aecfb604dce987c32b325962be",
-          "bytes": 58648
+          "sha256": "4a8b9855235352d564d2d0224f0ba50f46519403d261de447f6db1cc7edecf29",
+          "bytes": 51624
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/neutral-20260915/sd/vineRobot/00.webp?v=6704d2b0aa23",
-      "sourceFrameSha256": "6704d2b0aa234ff04bc6585afe7daca7f104a643a7750643e73f720ad529a2c9",
-      "provenance": "assets/editorial/neutral-20260915/vineRobot-provenance.json?v=204ccc5c91fa"
+      "sourceFrame": "assets/exploded/photo-20260930/sd/vineRobot/00.webp?v=e1419428cff2",
+      "sourceFrameSha256": "e1419428cff2bd6ac55d7674f68265bfc4c568758768b59eb6c162ec96825699",
+      "provenance": "assets/exploded/photo-20260930/sd/vineRobot/provenance.json"
     },
     "javelin": {
-      "src": "assets/editorial/neutral-20260915/javelin-wide-1800.webp?v=0a01908c1725",
-      "srcset": "assets/editorial/neutral-20260915/javelin-wide-480.webp?v=115fac6ef051 480w, assets/editorial/neutral-20260915/javelin-wide-960.webp?v=5e4ed14637b7 960w, assets/editorial/neutral-20260915/javelin-wide-1800.webp?v=0a01908c1725 1800w",
+      "src": "assets/editorial/photo-20260930/javelin-wide-1800.webp?v=90fe22d06a57",
+      "srcset": "assets/editorial/photo-20260930/javelin-wide-480.webp?v=f1e7190ff465 480w, assets/editorial/photo-20260930/javelin-wide-960.webp?v=b94097b9264f 960w, assets/editorial/photo-20260930/javelin-wide-1800.webp?v=90fe22d06a57 1800w",
       "alt": "Javelin airframe suspended above the studio floor with four propellers.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/neutral-20260915/javelin-wide-480.webp",
+          "src": "assets/editorial/photo-20260930/javelin-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "115fac6ef05109eede6941dfc6f5e4c3d182344c6628888e0532cf328913e6f8",
-          "bytes": 3706
+          "sha256": "f1e7190ff465c8011c46a35bf038cbdc19fa2906be7d26d15f04e420989174ff",
+          "bytes": 3300
         },
         {
-          "src": "assets/editorial/neutral-20260915/javelin-wide-960.webp",
+          "src": "assets/editorial/photo-20260930/javelin-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "5e4ed14637b7e7aaad6704d6e302e99531a75f12a019047a88a47670d6f88937",
-          "bytes": 8792
+          "sha256": "b94097b9264f2c66d7bffee6617018e66e142774240138e1c2165a0a2f208765",
+          "bytes": 11062
         },
         {
-          "src": "assets/editorial/neutral-20260915/javelin-wide-1800.webp",
+          "src": "assets/editorial/photo-20260930/javelin-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "0a01908c172548414bab0f2a5f695062e1727280b0a8968d0d6c2f9dd285668c",
-          "bytes": 24110
+          "sha256": "90fe22d06a5767aae52104c73e40f42472623100fcbf16c01f6ae4b6e31f506e",
+          "bytes": 26908
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/neutral-20260915/sd/javelin/00.webp?v=4de2d8bbc2a0",
-      "sourceFrameSha256": "4de2d8bbc2a02ac0226422f7426b83774190df662f4d50a0a5b4dde8cb877dd8",
-      "provenance": "assets/editorial/neutral-20260915/javelin-provenance.json?v=dc54a382d1b6"
+      "sourceFrame": "assets/exploded/photo-20260930/sd/javelin/00.webp?v=f33096fb4a05",
+      "sourceFrameSha256": "f33096fb4a0579bb5aa472fa8475b340067b866f563a6ef5cf10be798535c921",
+      "provenance": "assets/exploded/photo-20260930/sd/javelin/provenance.json"
     },
     "brakeSim": {
-      "src": "assets/editorial/neutral-20260915/brakeSim-wide-1800.webp?v=261a7772793d",
-      "srcset": "assets/editorial/neutral-20260915/brakeSim-wide-480.webp?v=e231b920e798 480w, assets/editorial/neutral-20260915/brakeSim-wide-960.webp?v=ea2678e77ff1 960w, assets/editorial/neutral-20260915/brakeSim-wide-1800.webp?v=261a7772793d 1800w",
+      "src": "assets/editorial/photo-20260930/brakeSim-wide-1800.webp?v=aef1abbd5a0c",
+      "srcset": "assets/editorial/photo-20260930/brakeSim-wide-480.webp?v=1917a0bcba91 480w, assets/editorial/photo-20260930/brakeSim-wide-960.webp?v=5c8da3351106 960w, assets/editorial/photo-20260930/brakeSim-wide-1800.webp?v=aef1abbd5a0c 1800w",
       "alt": "Perforated cast-iron brake rotor before heating.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/neutral-20260915/brakeSim-wide-480.webp",
+          "src": "assets/editorial/photo-20260930/brakeSim-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "e231b920e7980f1573d5d135c8fd170453eda4111de302d9ec6e738abc190171",
-          "bytes": 19360
+          "sha256": "1917a0bcba91f954748604e7e935cfdc1689ca32a11d33b4c004d449edf91e18",
+          "bytes": 18816
         },
         {
-          "src": "assets/editorial/neutral-20260915/brakeSim-wide-960.webp",
+          "src": "assets/editorial/photo-20260930/brakeSim-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "ea2678e77ff18afcbe3708092042f0fc9f52e8a58ce144b5dba740d9a9fb32e4",
-          "bytes": 44580
+          "sha256": "5c8da335110674070bfdc0896baf16be98678b12f62e18fc1472827f85172727",
+          "bytes": 59366
         },
         {
-          "src": "assets/editorial/neutral-20260915/brakeSim-wide-1800.webp",
+          "src": "assets/editorial/photo-20260930/brakeSim-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "261a7772793d39e431a1498719276e9397fb6c899d55d752bcf55d4cb46f1b21",
-          "bytes": 103344
+          "sha256": "aef1abbd5a0cf312823729caa84bd85e513aabf04f053b4c94bbeb48231391b4",
+          "bytes": 119330
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/neutral-20260915/sd/brakeSim/00.webp?v=d0a8cbbb6d14",
-      "sourceFrameSha256": "d0a8cbbb6d146c54f673aa0449fc70e635f73a7264a7208ab263497aba2bca2e",
-      "provenance": "assets/editorial/neutral-20260915/brakeSim-provenance.json?v=52d319287150"
+      "sourceFrame": "assets/exploded/photo-20260930/sd/brakeSim/00.webp?v=a40b55b8f916",
+      "sourceFrameSha256": "a40b55b8f916892594c0d4cd8513d5dfe7301204b0ae4476afcaded701396c49",
+      "provenance": "assets/exploded/photo-20260930/sd/brakeSim/provenance.json"
     },
     "aura": {
-      "src": "assets/editorial/neutral-20260915/aura-wide-1800.webp?v=6033855dcc5f",
-      "srcset": "assets/editorial/neutral-20260915/aura-wide-480.webp?v=e0be22136f68 480w, assets/editorial/neutral-20260915/aura-wide-960.webp?v=18b57246c239 960w, assets/editorial/neutral-20260915/aura-wide-1800.webp?v=6033855dcc5f 1800w",
+      "src": "assets/editorial/photo-20260930/aura-wide-1800.webp?v=bc24dd79c975",
+      "srcset": "assets/editorial/photo-20260930/aura-wide-480.webp?v=36aadd259e87 480w, assets/editorial/photo-20260930/aura-wide-960.webp?v=69bc3787da0d 960w, assets/editorial/photo-20260930/aura-wide-1800.webp?v=bc24dd79c975 1800w",
       "alt": "Assembled AURA swerve module with its wheel, motors and metal structure.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/neutral-20260915/aura-wide-480.webp",
+          "src": "assets/editorial/photo-20260930/aura-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "e0be22136f6814290bd478453edbcdf5d9be046f5f0c81c9908274787a0fb2e9",
-          "bytes": 5646
+          "sha256": "36aadd259e87d2c07ba742c6c601905e07ccdd2a53573d430cec861224ac3a0c",
+          "bytes": 2796
         },
         {
-          "src": "assets/editorial/neutral-20260915/aura-wide-960.webp",
+          "src": "assets/editorial/photo-20260930/aura-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "18b57246c239bdeb39f1485d0f7e14a21d409b92e6118600d619dfa07474c111",
-          "bytes": 12764
+          "sha256": "69bc3787da0d424180802cd423fabb30078992c10a439f0cd721ff032efa60c6",
+          "bytes": 8626
         },
         {
-          "src": "assets/editorial/neutral-20260915/aura-wide-1800.webp",
+          "src": "assets/editorial/photo-20260930/aura-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "6033855dcc5f9f5e621c596df7d455870cdb5183228d22b92f0a871e1fa2a9f1",
-          "bytes": 32728
+          "sha256": "bc24dd79c975fdc4cf1c28ec853e1e4f386af5931fb99caec6e54058e4070b60",
+          "bytes": 19786
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/neutral-20260915/sd/aura/00.webp?v=f6bfbe40382b",
-      "sourceFrameSha256": "f6bfbe40382bbccb74e4f921188678d10b02c62b09cf34dd4dacb4c3a34ddab0",
-      "provenance": "assets/editorial/neutral-20260915/aura-provenance.json?v=8101769f2344"
+      "sourceFrame": "assets/exploded/photo-20260930/sd/aura/00.webp?v=448a50cf93a8",
+      "sourceFrameSha256": "448a50cf93a8261b0604f1ff2921425cc4270389b05d20e75fdca6b35747c86d",
+      "provenance": "assets/exploded/photo-20260930/sd/aura/provenance.json"
     },
     "scanner": {
-      "src": "assets/editorial/neutral-20260915/scanner-wide-1800.webp?v=ffd3ab3e99cd",
-      "srcset": "assets/editorial/neutral-20260915/scanner-wide-480.webp?v=0ac2fcfffca5 480w, assets/editorial/neutral-20260915/scanner-wide-960.webp?v=d6ba17ad1cb8 960w, assets/editorial/neutral-20260915/scanner-wide-1800.webp?v=ffd3ab3e99cd 1800w",
+      "src": "assets/editorial/photo-20260930/scanner-wide-1800.webp?v=5a0ecc77f43d",
+      "srcset": "assets/editorial/photo-20260930/scanner-wide-480.webp?v=c5ff5d38ce7b 480w, assets/editorial/photo-20260930/scanner-wide-960.webp?v=d87543008023 960w, assets/editorial/photo-20260930/scanner-wide-1800.webp?v=5a0ecc77f43d 1800w",
       "alt": "LiDAR scanner with blue printed mounts, guide rods and a plywood base.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/neutral-20260915/scanner-wide-480.webp",
+          "src": "assets/editorial/photo-20260930/scanner-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "0ac2fcfffca54982dbd9abad02da6f078ed38a10d658bc00bd8693226fd2b2c9",
-          "bytes": 13970
+          "sha256": "c5ff5d38ce7b68776e95fbdc75cf64648ee26071f44daa5744a7ddf61f020a21",
+          "bytes": 11124
         },
         {
-          "src": "assets/editorial/neutral-20260915/scanner-wide-960.webp",
+          "src": "assets/editorial/photo-20260930/scanner-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "d6ba17ad1cb89d08f0b9d50e068aa8bda4f6e4621578d87fbbe352d6d3bc43cd",
-          "bytes": 32874
+          "sha256": "d87543008023c21122522d52b703473a2adeb6c0f5ea5f7e5462407d4458663d",
+          "bytes": 35376
         },
         {
-          "src": "assets/editorial/neutral-20260915/scanner-wide-1800.webp",
+          "src": "assets/editorial/photo-20260930/scanner-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "ffd3ab3e99cd27c92ee908825a024d9349539cca5d8d6a6dcfb4682e0713de2e",
-          "bytes": 81374
+          "sha256": "5a0ecc77f43de0124111ea9d91246cd3e7287a9ec6384ec22c1c1f40ae6df1d7",
+          "bytes": 75340
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/neutral-20260915/sd/scanner/00.webp?v=0046b9958ded",
-      "sourceFrameSha256": "0046b9958dede6d6e1e65f9d96fc027d038b42ee6c7fc5ed339c8154ee6e0af2",
-      "provenance": "assets/editorial/neutral-20260915/scanner-provenance.json?v=7405f572fbe4"
+      "sourceFrame": "assets/exploded/photo-20260930/sd/scanner/00.webp?v=775d9ce1d3ca",
+      "sourceFrameSha256": "775d9ce1d3ca36dee9c904a8aeed2752d95677e05d33f8cc4bc7f7848646126a",
+      "provenance": "assets/exploded/photo-20260930/sd/scanner/provenance.json"
     },
     "seat": {
-      "src": "assets/editorial/neutral-20260915/seat-wide-1800.webp?v=ad9330bcc20e",
-      "srcset": "assets/editorial/neutral-20260915/seat-wide-480.webp?v=d59c63530faf 480w, assets/editorial/neutral-20260915/seat-wide-960.webp?v=808ba2b7e914 960w, assets/editorial/neutral-20260915/seat-wide-1800.webp?v=ad9330bcc20e 1800w",
+      "src": "assets/editorial/photo-20260930/seat-wide-1800.webp?v=48dec83c634b",
+      "srcset": "assets/editorial/photo-20260930/seat-wide-480.webp?v=7cdf1ef87470 480w, assets/editorial/photo-20260930/seat-wide-960.webp?v=8ed61415e99b 960w, assets/editorial/photo-20260930/seat-wide-1800.webp?v=48dec83c634b 1800w",
       "alt": "Folded and perforated aluminum driver seat.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/neutral-20260915/seat-wide-480.webp",
+          "src": "assets/editorial/photo-20260930/seat-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "d59c63530fafc9e645ceb2a4f2acaa68a70a00fc5bf4c8d367689fb280a78fbf",
-          "bytes": 7068
+          "sha256": "7cdf1ef8747010189cf6f9597a2fa86d4a7631f38891d316cdcd36c270ee7911",
+          "bytes": 5398
         },
         {
-          "src": "assets/editorial/neutral-20260915/seat-wide-960.webp",
+          "src": "assets/editorial/photo-20260930/seat-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "808ba2b7e914daaded365c9b94689c7a1a794539c54958f5a1e4a313b9e68c13",
-          "bytes": 14914
+          "sha256": "8ed61415e99bbf2485b3ccb3a303e68e0aae8cf74a4beec532f999ee576a1f8c",
+          "bytes": 14846
         },
         {
-          "src": "assets/editorial/neutral-20260915/seat-wide-1800.webp",
+          "src": "assets/editorial/photo-20260930/seat-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "ad9330bcc20eaff3d971f8acab0b1fbb597aa31e62918819e09d72aa5a0ea5d7",
-          "bytes": 33088
+          "sha256": "48dec83c634b7c501bf2b78ebf41239fd6bdea57e3ebfbf8bc3b7862053cfc24",
+          "bytes": 32312
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/neutral-20260915/sd/seat/00.webp?v=61d7ae2190c4",
-      "sourceFrameSha256": "61d7ae2190c4c5cda72b8ba1ace0670bb7640cfd8fb009c1dd383729eb9eebf6",
-      "provenance": "assets/editorial/neutral-20260915/seat-provenance.json?v=688676a306bf"
+      "sourceFrame": "assets/exploded/photo-20260930/sd/seat/00.webp?v=c1e95ac6660a",
+      "sourceFrameSha256": "c1e95ac6660a81cae556f2616e3d79a448ee86482feee6c9a7c337a5b838e51b",
+      "provenance": "assets/exploded/photo-20260930/sd/seat/provenance.json"
     },
     "materialTest": {
-      "src": "assets/editorial/neutral-20260915/materialTest-wide-1800.webp?v=068925b08a8d",
-      "srcset": "assets/editorial/neutral-20260915/materialTest-wide-480.webp?v=4f1b6bd5723c 480w, assets/editorial/neutral-20260915/materialTest-wide-960.webp?v=19302d4e4b56 960w, assets/editorial/neutral-20260915/materialTest-wide-1800.webp?v=068925b08a8d 1800w",
-      "alt": "Orange tensile specimen held between silver grips before stretching.",
+      "src": "assets/editorial/photo-20260930/materialTest-wide-1800.webp?v=52323406e234",
+      "srcset": "assets/editorial/photo-20260930/materialTest-wide-480.webp?v=2c5c668ca5cb 480w, assets/editorial/photo-20260930/materialTest-wide-960.webp?v=12a8f5919a0b 960w, assets/editorial/photo-20260930/materialTest-wide-1800.webp?v=52323406e234 1800w",
+      "alt": "Charcoal fabric specimen held between silver grips before stretching.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/neutral-20260915/materialTest-wide-480.webp",
+          "src": "assets/editorial/photo-20260930/materialTest-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "4f1b6bd5723ca0846c1a7e529d3ec6524d95de29d3fbeb09948b16085f54dc34",
-          "bytes": 4804
+          "sha256": "2c5c668ca5cbdd092169427d06103ea709dd703ce6fa6d04b8fe675090e0242c",
+          "bytes": 4560
         },
         {
-          "src": "assets/editorial/neutral-20260915/materialTest-wide-960.webp",
+          "src": "assets/editorial/photo-20260930/materialTest-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "19302d4e4b560803c460f45dd05edeabbbc87dfe380999de5a5c6ae447f85e96",
-          "bytes": 11410
+          "sha256": "12a8f5919a0b396f30c4727c47920b3095c4ff1d6e2d6ff642c8571b386b196c",
+          "bytes": 14950
         },
         {
-          "src": "assets/editorial/neutral-20260915/materialTest-wide-1800.webp",
+          "src": "assets/editorial/photo-20260930/materialTest-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "068925b08a8d2488b6cf435220506dfd07f1156b4ea6cca0b8c97815278b9fb0",
-          "bytes": 29968
+          "sha256": "52323406e234530d17813839a78efa71462918d1e7333bf2a9b0e3bafeb0762a",
+          "bytes": 33436
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/neutral-20260915/sd/materialTest/00.webp?v=9cb889211618",
-      "sourceFrameSha256": "9cb8892116189bb94826149f206f954c45ef5d7bbb19817064d5bf281d99850c",
-      "provenance": "assets/editorial/neutral-20260915/materialTest-provenance.json?v=55d9aea0c6b5"
+      "sourceFrame": "assets/exploded/photo-20260930/sd/materialTest/00.webp?v=0ff5c6c25818",
+      "sourceFrameSha256": "0ff5c6c258182e44affef5d7ae63cfa59e7f1952b30e321ab0f025fb6789de95",
+      "provenance": "assets/exploded/photo-20260930/sd/materialTest/provenance.json"
     },
     "ansysCfd": {
-      "src": "assets/editorial/neutral-20260915/ansysCfd-wide-1800.webp?v=4939c9fb3c04",
-      "srcset": "assets/editorial/neutral-20260915/ansysCfd-wide-480.webp?v=f4355c0a3fd6 480w, assets/editorial/neutral-20260915/ansysCfd-wide-960.webp?v=d8e7f9aab982 960w, assets/editorial/neutral-20260915/ansysCfd-wide-1800.webp?v=4939c9fb3c04 1800w",
+      "src": "assets/editorial/photo-20260930/ansysCfd-wide-1800.webp?v=a3506f040dcb",
+      "srcset": "assets/editorial/photo-20260930/ansysCfd-wide-480.webp?v=1a6090caaa7b 480w, assets/editorial/photo-20260930/ansysCfd-wide-960.webp?v=029cb80bc4de 960w, assets/editorial/photo-20260930/ansysCfd-wide-1800.webp?v=a3506f040dcb 1800w",
       "alt": "Javelin pressure field and numerical flow paths at the beginning of the flow sequence.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/neutral-20260915/ansysCfd-wide-480.webp",
+          "src": "assets/editorial/photo-20260930/ansysCfd-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "f4355c0a3fd695be929600e72b9adea401ee44b0e3c9e36a0bfbec655facb77c",
-          "bytes": 16664
+          "sha256": "1a6090caaa7b5a5340d6cb9dc4f455e3e82dab463bcf5c4350bb006db058b3fc",
+          "bytes": 17582
         },
         {
-          "src": "assets/editorial/neutral-20260915/ansysCfd-wide-960.webp",
+          "src": "assets/editorial/photo-20260930/ansysCfd-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "d8e7f9aab982df5e102f8e28ca0a153562c9ad4748b9d7df3da3f38abcae96ce",
-          "bytes": 48934
+          "sha256": "029cb80bc4de4e34b21be1f138bee1bd6e95ad2370576ed71a26eb45402ae64a",
+          "bytes": 69882
         },
         {
-          "src": "assets/editorial/neutral-20260915/ansysCfd-wide-1800.webp",
+          "src": "assets/editorial/photo-20260930/ansysCfd-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "4939c9fb3c049923e63b48ef9a2c532e37a7327c796ee8cd95b82d40d42807ff",
-          "bytes": 139948
+          "sha256": "a3506f040dcbde9fefa620cdff728061eaad62315f89227c61f0dffa8f379d4c",
+          "bytes": 176090
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/neutral-20260915/sd/ansysCfd/00.webp?v=5ebabcb8e3a8",
-      "sourceFrameSha256": "5ebabcb8e3a88d6b9aea0a9e76d29aaf8f664e382a287988b801ef8e83d40067",
-      "provenance": "assets/editorial/neutral-20260915/ansysCfd-provenance.json?v=628f63e72be4"
+      "sourceFrame": "assets/exploded/photo-20260930/sd/ansysCfd/00.webp?v=bed263ca4e31",
+      "sourceFrameSha256": "bed263ca4e31d2db9d54de7ac581b394aec43cba93d40b31572fe89596ca7044",
+      "provenance": "assets/exploded/photo-20260930/sd/ansysCfd/provenance.json"
     },
     "pool": {
-      "src": "assets/editorial/neutral-20260915/pool-wide-1800.webp?v=0e639426ec12",
-      "srcset": "assets/editorial/neutral-20260915/pool-wide-480.webp?v=600b76931736 480w, assets/editorial/neutral-20260915/pool-wide-960.webp?v=59971dff9b28 960w, assets/editorial/neutral-20260915/pool-wide-1800.webp?v=0e639426ec12 1800w",
+      "src": "assets/editorial/photo-20260930/pool-wide-1800.webp?v=6891795ebacb",
+      "srcset": "assets/editorial/photo-20260930/pool-wide-480.webp?v=89f748958fd6 480w, assets/editorial/photo-20260930/pool-wide-960.webp?v=4578ab717ef0 960w, assets/editorial/photo-20260930/pool-wide-1800.webp?v=6891795ebacb 1800w",
       "alt": "Pool Sniper launcher with its cue extended before retraction.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/neutral-20260915/pool-wide-480.webp",
+          "src": "assets/editorial/photo-20260930/pool-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "600b76931736392a4ceb3d9068615c58e2e0ceff4a22296cdd8edf75984aec15",
-          "bytes": 9222
+          "sha256": "89f748958fd64a7b7945de763f0c5f45cf06084743661899b5223361904c65db",
+          "bytes": 7116
         },
         {
-          "src": "assets/editorial/neutral-20260915/pool-wide-960.webp",
+          "src": "assets/editorial/photo-20260930/pool-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "59971dff9b2882c4b5525677b496404cfdc90b7596e05995fc46afe2c882dde7",
-          "bytes": 21072
+          "sha256": "4578ab717ef09c9c6c7ceb347e9bc75f0b9870bb654e291073e8713626876c09",
+          "bytes": 23784
         },
         {
-          "src": "assets/editorial/neutral-20260915/pool-wide-1800.webp",
+          "src": "assets/editorial/photo-20260930/pool-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "0e639426ec12e0865183879d9658247c7fc774cc6c16d9da5855fbdf5c54ea35",
-          "bytes": 53606
+          "sha256": "6891795ebacbc3a6717d483df1adf17ea66e568fc65a9ab8f2922cfc9004f43b",
+          "bytes": 51864
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/neutral-20260915/sd/pool/00.webp?v=613da4f89557",
-      "sourceFrameSha256": "613da4f895574fdb56e348301ed67820dc60928f40c39a8e509cf1a09a1021d1",
-      "provenance": "assets/editorial/neutral-20260915/pool-provenance.json?v=794bcd71f3e4"
+      "sourceFrame": "assets/exploded/photo-20260930/sd/pool/00.webp?v=657a0bbb1a37",
+      "sourceFrameSha256": "657a0bbb1a37f1f80b9c427b10726ddf043a933add6798309fc96666a807d278",
+      "provenance": "assets/exploded/photo-20260930/sd/pool/provenance.json"
     },
     "lineFollower": {
-      "src": "assets/editorial/neutral-20260915/lineFollower-wide-1800.webp?v=245156d8b639",
-      "srcset": "assets/editorial/neutral-20260915/lineFollower-wide-480.webp?v=e22c538f6809 480w, assets/editorial/neutral-20260915/lineFollower-wide-960.webp?v=ca5b7d605a88 960w, assets/editorial/neutral-20260915/lineFollower-wide-1800.webp?v=245156d8b639 1800w",
+      "src": "assets/editorial/photo-20260930/lineFollower-wide-1800.webp?v=2627e893af2e",
+      "srcset": "assets/editorial/photo-20260930/lineFollower-wide-480.webp?v=a1edc3eccfab 480w, assets/editorial/photo-20260930/lineFollower-wide-960.webp?v=7d2675991525 960w, assets/editorial/photo-20260930/lineFollower-wide-1800.webp?v=2627e893af2e 1800w",
       "alt": "Line-following robot with orange wheels and a teal circuit board.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/neutral-20260915/lineFollower-wide-480.webp",
+          "src": "assets/editorial/photo-20260930/lineFollower-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "e22c538f6809887b706de1b69b6951175b0dbb9591269067d8fa5825121283fb",
-          "bytes": 10616
+          "sha256": "a1edc3eccfabb77ff349269bf6cd7bff3630ac4da6c1dc8a41ab8af60ddcdeb5",
+          "bytes": 9198
         },
         {
-          "src": "assets/editorial/neutral-20260915/lineFollower-wide-960.webp",
+          "src": "assets/editorial/photo-20260930/lineFollower-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "ca5b7d605a88ae05b660d6ef65509d9f090477b3e9235989673f6aef8c603073",
-          "bytes": 26654
+          "sha256": "7d2675991525121fffc60bbafe2c071bd4292ec6b7141809b7bc333c62c8f888",
+          "bytes": 32436
         },
         {
-          "src": "assets/editorial/neutral-20260915/lineFollower-wide-1800.webp",
+          "src": "assets/editorial/photo-20260930/lineFollower-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "245156d8b6393130978e6d138cf08577b3f9d35d0e59225bb75f3387dbd88bcd",
-          "bytes": 71360
+          "sha256": "2627e893af2e36b9de03013fab7517ff8794c5233f1bb1eddb5deae776ecad42",
+          "bytes": 73450
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/neutral-20260915/sd/lineFollower/00.webp?v=df6c54919c3e",
-      "sourceFrameSha256": "df6c54919c3e4bcb70ac7b2e2f146269079d7e028ef0e2a3bf2b25e925b6d941",
-      "provenance": "assets/editorial/neutral-20260915/lineFollower-provenance.json?v=e773c2ebdd67"
+      "sourceFrame": "assets/exploded/photo-20260930/sd/lineFollower/00.webp?v=706fc0ccdb55",
+      "sourceFrameSha256": "706fc0ccdb550d877350c2d106bf2add1e20b37164d19eea856b426a6911dc64",
+      "provenance": "assets/exploded/photo-20260930/sd/lineFollower/provenance.json"
     },
     "formlabs": {
-      "src": "assets/editorial/neutral-20260915/formlabs-wide-1800.webp?v=8ee38bc86fde",
-      "srcset": "assets/editorial/neutral-20260915/formlabs-wide-480.webp?v=1e2e276204d5 480w, assets/editorial/neutral-20260915/formlabs-wide-960.webp?v=e0b45afb0739 960w, assets/editorial/neutral-20260915/formlabs-wide-1800.webp?v=8ee38bc86fde 1800w",
+      "src": "assets/editorial/photo-20260930/formlabs-wide-1800.webp?v=81e5c38bd4de",
+      "srcset": "assets/editorial/photo-20260930/formlabs-wide-480.webp?v=c48351bf9231 480w, assets/editorial/photo-20260930/formlabs-wide-960.webp?v=f48a2ca12a23 960w, assets/editorial/photo-20260930/formlabs-wide-1800.webp?v=81e5c38bd4de 1800w",
       "alt": "Smelly perfume mixer with its white structure and steel guide rods.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/neutral-20260915/formlabs-wide-480.webp",
+          "src": "assets/editorial/photo-20260930/formlabs-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "1e2e276204d5b9019b8bfb4a4d866a1cfdb4853cdaae4c9b395106678ce6c3e4",
-          "bytes": 9446
+          "sha256": "c48351bf923152818190e0b4d4992887653d3e17bcb45cc421cf9423c61f2f88",
+          "bytes": 7632
         },
         {
-          "src": "assets/editorial/neutral-20260915/formlabs-wide-960.webp",
+          "src": "assets/editorial/photo-20260930/formlabs-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "e0b45afb07395117f90bd8be558d690b913302a1dc53ffd9c1bc01579e7871ed",
-          "bytes": 22742
+          "sha256": "f48a2ca12a23cf8c717b4868b2a818b313356aa1391d467d97c465e4ef55f130",
+          "bytes": 23404
         },
         {
-          "src": "assets/editorial/neutral-20260915/formlabs-wide-1800.webp",
+          "src": "assets/editorial/photo-20260930/formlabs-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "8ee38bc86fdeefa4640ef0931d78335b01b5fff9de98522983f8047f896d341e",
-          "bytes": 60698
+          "sha256": "81e5c38bd4deab49fcb6102bd60c07de5facff4336a98162e31b17b2bd76c613",
+          "bytes": 50504
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/neutral-20260915/sd/formlabs/00.webp?v=b57473555c26",
-      "sourceFrameSha256": "b57473555c26bf68c3a73a336f24f7587b4b54bbac53ae3e6c12b06f488e0067",
-      "provenance": "assets/editorial/neutral-20260915/formlabs-provenance.json?v=531fa4325118"
+      "sourceFrame": "assets/exploded/photo-20260930/sd/formlabs/00.webp?v=c7e476b11a78",
+      "sourceFrameSha256": "c7e476b11a7833a79dd039378db965f46fbf86f1191e7303c9081dd269120723",
+      "provenance": "assets/exploded/photo-20260930/sd/formlabs/provenance.json"
     },
     "education": {
-      "src": "assets/editorial/neutral-20260915/education-wide-1800.webp?v=b73dd2720c2e",
-      "srcset": "assets/editorial/neutral-20260915/education-wide-480.webp?v=da4195e24743 480w, assets/editorial/neutral-20260915/education-wide-960.webp?v=750b95301d9b 960w, assets/editorial/neutral-20260915/education-wide-1800.webp?v=b73dd2720c2e 1800w",
+      "src": "assets/editorial/photo-20260930/education-wide-1800.webp?v=b3962f884f01",
+      "srcset": "assets/editorial/photo-20260930/education-wide-480.webp?v=fcf8a1531ba4 480w, assets/editorial/photo-20260930/education-wide-960.webp?v=5ad308605552 960w, assets/editorial/photo-20260930/education-wide-1800.webp?v=b3962f884f01 1800w",
       "alt": "Separated guitar education kit before assembly.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/neutral-20260915/education-wide-480.webp",
+          "src": "assets/editorial/photo-20260930/education-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "da4195e247437eaf11448a38c2c0ecadfdd07aec038277791c1a192bfec29611",
-          "bytes": 3198
+          "sha256": "fcf8a1531ba4a63574a3c23defb12670e1b6c48867c8d5f7ec4e33c350448e31",
+          "bytes": 3674
         },
         {
-          "src": "assets/editorial/neutral-20260915/education-wide-960.webp",
+          "src": "assets/editorial/photo-20260930/education-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "750b95301d9bf7324ddc36560a1cec257c5f3ccb1d5b5719cd443bbe2c363b50",
-          "bytes": 7988
+          "sha256": "5ad30860555292578d90bac91f4568eb5f2d3f70b0c9b26330581e30ff9edf2c",
+          "bytes": 11822
         },
         {
-          "src": "assets/editorial/neutral-20260915/education-wide-1800.webp",
+          "src": "assets/editorial/photo-20260930/education-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "b73dd2720c2e875d8669a0d2d1db177f8d3753f4be75ba1012c6c1527d537ef1",
-          "bytes": 20344
+          "sha256": "b3962f884f011aa92ae454715843122c2290258e4b8878cc3c706d2271b7e5d0",
+          "bytes": 28794
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/neutral-20260915/sd/education/00.webp?v=6f35287dd76e",
-      "sourceFrameSha256": "6f35287dd76ed79c3c538ed26e94a418c875ffc4bdc36f0194bd66a56094a898",
-      "provenance": "assets/editorial/neutral-20260915/education-provenance.json?v=9566e31c218e"
+      "sourceFrame": "assets/exploded/photo-20260930/sd/education/00.webp?v=5d22d879c3a5",
+      "sourceFrameSha256": "5d22d879c3a5e5eb4a226d8c4443a534c44bb278137d9819a54514a2b547aba5",
+      "provenance": "assets/exploded/photo-20260930/sd/education/provenance.json"
     },
     "ftc": {
-      "src": "assets/editorial/neutral-20260915/ftc-wide-1800.webp?v=131cc1ffd5e2",
-      "srcset": "assets/editorial/neutral-20260915/ftc-wide-480.webp?v=b9fae292b6aa 480w, assets/editorial/neutral-20260915/ftc-wide-960.webp?v=e864f3f2bbd7 960w, assets/editorial/neutral-20260915/ftc-wide-1800.webp?v=131cc1ffd5e2 1800w",
+      "src": "assets/editorial/photo-20260930/ftc-wide-1800.webp?v=45673c934662",
+      "srcset": "assets/editorial/photo-20260930/ftc-wide-480.webp?v=e8cb9f81f242 480w, assets/editorial/photo-20260930/ftc-wide-960.webp?v=72fd3998331c 960w, assets/editorial/photo-20260930/ftc-wide-1800.webp?v=45673c934662 1800w",
       "alt": "Assembled FTC robot with an aluminum lift, red panels and mecanum wheels.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/neutral-20260915/ftc-wide-480.webp",
+          "src": "assets/editorial/photo-20260930/ftc-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "b9fae292b6aa41767dc8be338d291b2fa14dc5cc4909802cb4ad8089df8f51b7",
-          "bytes": 10300
+          "sha256": "e8cb9f81f242edc649aded178a31247e7c7bbd0a5e0845cf2548784439327b23",
+          "bytes": 7088
         },
         {
-          "src": "assets/editorial/neutral-20260915/ftc-wide-960.webp",
+          "src": "assets/editorial/photo-20260930/ftc-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "e864f3f2bbd72c4f9cea16e8c1701c131566518c44b91470508d832b79b56f24",
-          "bytes": 27888
+          "sha256": "72fd3998331cfe617a97f87137a5b30f15fe40b5a240f385ef81b8e8e6d79b57",
+          "bytes": 25072
         },
         {
-          "src": "assets/editorial/neutral-20260915/ftc-wide-1800.webp",
+          "src": "assets/editorial/photo-20260930/ftc-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "131cc1ffd5e20796b7f82d750df71eb8bf671030f3ce02fd53c466a6f489cbc5",
-          "bytes": 73770
+          "sha256": "45673c934662450409f1578e09c6c910faa5ccab1316c2037ea3983b8b1ee51c",
+          "bytes": 60186
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/neutral-20260915/sd/ftc/00.webp?v=9c83c456829c",
-      "sourceFrameSha256": "9c83c456829c5ce5057802406f81b74798904e9c2f461470287c0bd58089f9b0",
-      "provenance": "assets/editorial/neutral-20260915/ftc-provenance.json?v=7d135ee212a2"
+      "sourceFrame": "assets/exploded/photo-20260930/sd/ftc/00.webp?v=29dea2e7ad6a",
+      "sourceFrameSha256": "29dea2e7ad6a0f5143c6cd68c440e3fd3c1efae267474ed1d65bbf0e0be04dc1",
+      "provenance": "assets/exploded/photo-20260930/sd/ftc/provenance.json"
     },
     "telecaster": {
-      "src": "assets/editorial/neutral-20260915/telecaster-wide-1800.webp?v=878b56f5406b",
-      "srcset": "assets/editorial/neutral-20260915/telecaster-wide-480.webp?v=f3f6071661ee 480w, assets/editorial/neutral-20260915/telecaster-wide-960.webp?v=9b8c76bead9c 960w, assets/editorial/neutral-20260915/telecaster-wide-1800.webp?v=878b56f5406b 1800w",
+      "src": "assets/editorial/photo-20260930/telecaster-wide-1800.webp?v=b41330e79bd8",
+      "srcset": "assets/editorial/photo-20260930/telecaster-wide-480.webp?v=4c31fa3d92da 480w, assets/editorial/photo-20260930/telecaster-wide-960.webp?v=aafe3adb9dd0 960w, assets/editorial/photo-20260930/telecaster-wide-1800.webp?v=b41330e79bd8 1800w",
       "alt": "Finished Telecaster-style guitar at the start of its full rotation.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/neutral-20260915/telecaster-wide-480.webp",
+          "src": "assets/editorial/photo-20260930/telecaster-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "f3f6071661eef47254c9854171798bfc5059e2d65d01ddb4ca9d3f65b1816ff9",
-          "bytes": 3788
+          "sha256": "4c31fa3d92da5f6d68e9e416ba5ec99b2e61f888fc2f12e52a660ba41f83a17b",
+          "bytes": 4682
         },
         {
-          "src": "assets/editorial/neutral-20260915/telecaster-wide-960.webp",
+          "src": "assets/editorial/photo-20260930/telecaster-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "9b8c76bead9c83c987849d37749e7998b24b37cc405bf64cede656cbbc7b586d",
-          "bytes": 10008
+          "sha256": "aafe3adb9dd0b41e42f7a28f6809ec42dcd30fa2d66eff018bcdb3712596c5fe",
+          "bytes": 16392
         },
         {
-          "src": "assets/editorial/neutral-20260915/telecaster-wide-1800.webp",
+          "src": "assets/editorial/photo-20260930/telecaster-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "878b56f5406bcd8908e4bd6196791a89aad33c60883daa1b4dd7da28a804e097",
-          "bytes": 29146
+          "sha256": "b41330e79bd8f95e2fcb0ce4e74503e92f97f01260a753d015af4f3d9e1852c5",
+          "bytes": 40764
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/neutral-20260915/sd/telecaster/00.webp?v=088ef37d7ed7",
-      "sourceFrameSha256": "088ef37d7ed7416e4d3f4949130a0816a92940e3936cea11998fe57674e2e94d",
-      "provenance": "assets/editorial/neutral-20260915/telecaster-provenance.json?v=3d5b508657b0"
+      "sourceFrame": "assets/exploded/photo-20260930/sd/telecaster/00.webp?v=6b3f3c9b53f7",
+      "sourceFrameSha256": "6b3f3c9b53f70054190dd81634354aa9f61a79b0086291a2d2ccc8e4b675b8aa",
+      "provenance": "assets/exploded/photo-20260930/sd/telecaster/provenance.json"
     },
     "carbonSeat": {
-      "src": "assets/editorial/neutral-20260915/carbonSeat-wide-1800.webp?v=9947d45e1ef7",
-      "srcset": "assets/editorial/neutral-20260915/carbonSeat-wide-480.webp?v=79b769fb52aa 480w, assets/editorial/neutral-20260915/carbonSeat-wide-960.webp?v=0326964b222e 960w, assets/editorial/neutral-20260915/carbonSeat-wide-1800.webp?v=9947d45e1ef7 1800w",
+      "src": "assets/editorial/photo-20260930/carbonSeat-wide-1800.webp?v=c9cb67a2a7ce",
+      "srcset": "assets/editorial/photo-20260930/carbonSeat-wide-480.webp?v=d10510259388 480w, assets/editorial/photo-20260930/carbonSeat-wide-960.webp?v=a5a1a5daab23 960w, assets/editorial/photo-20260930/carbonSeat-wide-1800.webp?v=c9cb67a2a7ce 1800w",
       "alt": "Carbon-fiber seat layup at the beginning of the fabrication sequence.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/neutral-20260915/carbonSeat-wide-480.webp",
+          "src": "assets/editorial/photo-20260930/carbonSeat-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "79b769fb52aa26b6beae9b3065f3cbaa2501cf2469c2f37eb683fb0a2340bdd4",
-          "bytes": 3292
+          "sha256": "d10510259388cc00a4b95b01d54ed00244c88b20d917f6c7ae9d5aaa79961efe",
+          "bytes": 2606
         },
         {
-          "src": "assets/editorial/neutral-20260915/carbonSeat-wide-960.webp",
+          "src": "assets/editorial/photo-20260930/carbonSeat-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "0326964b222e831e5e1f46eba91b2d70449fad02f26f11fc0d8e3757ff92c3c3",
-          "bytes": 10890
+          "sha256": "a5a1a5daab2387dbb67ef39cc0f8251ab378bf4a2ebc2ae16010b7ce20ba5164",
+          "bytes": 12244
         },
         {
-          "src": "assets/editorial/neutral-20260915/carbonSeat-wide-1800.webp",
+          "src": "assets/editorial/photo-20260930/carbonSeat-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "9947d45e1ef78ddeb424e5e19b0f0d974a869f7c6c05bd62c419abfcab2f7b59",
-          "bytes": 63098
+          "sha256": "c9cb67a2a7ce3a5b4f8ed232bc7dbb2d8c75a6dba75347cb0746894fc06ec695",
+          "bytes": 61544
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/neutral-20260915/sd/carbonSeat/00.webp?v=e60373cb8faf",
-      "sourceFrameSha256": "e60373cb8faf40baead50560d446748484ef0f70f2d1bd83a4cd890a9839406c",
-      "provenance": "assets/editorial/neutral-20260915/carbonSeat-provenance.json?v=0f8104f88273"
+      "sourceFrame": "assets/exploded/photo-20260930/sd/carbonSeat/00.webp?v=06da5e459b4b",
+      "sourceFrameSha256": "06da5e459b4b290102b9c229ec701e0e183eb2b1c412d443daeb698f8f48df2a",
+      "provenance": "assets/exploded/photo-20260930/sd/carbonSeat/provenance.json"
     }
   }
 }

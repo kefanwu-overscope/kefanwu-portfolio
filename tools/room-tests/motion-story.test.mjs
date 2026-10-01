@@ -3,9 +3,10 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import vm from 'node:vm';
 
-const [source, notesSource, frameSource] = await Promise.all([
+const [source, notesSource, labelsSource, frameSource] = await Promise.all([
   readFile(new URL('../../project-motion-story.js', import.meta.url), 'utf8'),
   readFile(new URL('../../project-motion-notes.js', import.meta.url), 'utf8'),
+  readFile(new URL('../../project-motion-labels.js', import.meta.url), 'utf8'),
   readFile(new URL('../../exploded.js', import.meta.url), 'utf8'),
 ]);
 
@@ -54,7 +55,7 @@ function setup({ reducedMotion = false, scroll = 923, width = 1280, height = 900
   const nodes = Object.fromEntries([
     '#preview-title', '.motion-note-body', '.motion-step-count', '.motion-evidence-note',
     '.motion-step-buttons', '#motion-story-progress', '.motion-story-timeline output',
-    '.motion-explore', '#preview-instructions', '.motion-notes', '.motion-story-footer',
+    '.motion-explore', '#preview-instructions', '.motion-notes', '.motion-story-footer', '.motion-leader-line',
   ].map(selector => [selector, new Element()]));
   for (const [selector, node] of Object.entries(nodes)) story.selectors.set(selector, node);
   story.selectors.set('.case-animation-host', host); story.selectors.set('.case-motion-pin', pin);
@@ -67,15 +68,17 @@ function setup({ reducedMotion = false, scroll = 923, width = 1280, height = 900
   document.createElement = () => new Element();
   const geometry = { top: storyTop, mediaHeight, pinHeight: 540 };
   story.getBoundingClientRect = () => ({ top: geometry.top - window.scrollY });
-  media.getBoundingClientRect = () => ({ height: geometry.mediaHeight });
+  media.getBoundingClientRect = () => ({ left: 0, top: pin.getBoundingClientRect().top + 36,
+    width: context.innerWidth, height: geometry.mediaHeight });
   pin.getBoundingClientRect = () => {
     const natural = geometry.top - window.scrollY;
     const stickyTop = Number.parseFloat(story.properties.get('--story-top') || 77);
     const travel = Number.parseFloat(story.properties.get('--story-travel') || 1200);
     const top = reduced.matches || story.classList.contains('is-unpinned') ? natural : Math.min(Math.max(natural, stickyTop), natural + travel);
-    return { top, bottom: top + geometry.pinHeight, height: geometry.pinHeight };
+    return { left: 0, width: context.innerWidth, top, bottom: top + geometry.pinHeight, height: geometry.pinHeight };
   };
   const frames = new Map(), requests = [], modes = [], scrolls = [], intersections = [], resizes = [];
+  const fetches = [];
   let frameID = 0, time = 0;
   window.scrollTo = options => { scrolls.push(options); window.scrollY = options.top; window.emit('scroll'); };
   host.addEventListener('case-motion-request', event => requests.push(event.detail));
@@ -90,6 +93,7 @@ function setup({ reducedMotion = false, scroll = 923, width = 1280, height = 900
     CustomEvent: class { constructor(type, { detail } = {}) { this.type = type; this.detail = detail; } },
     requestAnimationFrame: callback => { const id = ++frameID; frames.set(id, callback); return id; },
     cancelAnimationFrame: id => frames.delete(id),
+    fetch: (url, options) => new Promise((resolve, reject) => fetches.push({ url, options, resolve, reject })),
     IntersectionObserver: class {
       constructor(callback) { this.callback = callback; this.disconnected = false; intersections.push(this); }
       observe(element) { this.element = element; }
@@ -101,18 +105,25 @@ function setup({ reducedMotion = false, scroll = 923, width = 1280, height = 900
       disconnect() { this.disconnected = true; }
     },
   };
-  const runnable = `${notesSource.replace(/^export /gm, '')}\n${source.replace(/^import[^\n]+\n/, '').replace(/^export /gm, '')}\n` +
-    'globalThis.attach = attachMotionStory; globalThis.notes = projectMotionNotes;';
+  const runnable = `${notesSource.replace(/^export /gm, '')}\n${labelsSource.replace(/^export /gm, '')}\n` +
+    `${source.replace(/^import[^\n]+\n/gm, '').replace(/^export /gm, '')}\n` +
+    'globalThis.attach = attachMotionStory; globalThis.notes = projectMotionNotes; globalThis.labels = projectMotionLabels;';
   vm.runInNewContext(runnable, context);
   const controller = context.attach(story);
   const app = { window, document, story, host, pin, nodes, frames, requests, modes, scrolls, geometry,
-    controller, context, notes: context.notes[project], intersections, resizes,
+    controller, context, notes: { ...context.notes[project], steps: context.notes[project].steps.map((step, i) => ({ ...step, ...context.labels[project][i] })) },
+    intersections, resizes, fetches,
     tick() { time += 17; const callbacks = [...frames.values()]; frames.clear(); callbacks.forEach(callback => callback(time)); },
     drain() { for (let i = 0; frames.size && i < 120; i++) this.tick(); assert.equal(frames.size, 0, 'Easing must settle without continuous polling'); },
     scrollToProgress(progress) {
       const { start, travel } = controller.getState(); window.scrollY = start + progress * travel; window.emit('scroll');
     },
     show(progress) { host.emit('case-motion-progress', { progress }); },
+    anchor(point) { host.emit('case-motion-anchor', { point }); },
+    async resolveAnchors(data) {
+      fetches.at(-1).resolve({ ok: true, json: async () => data });
+      for (let i = 0; i < 5; i++) await Promise.resolve();
+    },
     ready() { host.emit('case-motion-ready'); },
     hidden(value) { document.hidden = value; document.emit('visibilitychange'); },
     reduce(value) { reduced.matches = value; reduced.emit('change'); },
@@ -120,6 +131,8 @@ function setup({ reducedMotion = false, scroll = 923, width = 1280, height = 900
     choose(index) { nodes['.motion-step-buttons'].children[index].emit('click'); },
   };
   app.drain(); requests.length = 0;
+  // A live renderer's initial neutral frame supplies its anchor before later poses.
+  if (host.dataset.motionLive === 'true') app.anchor({ x: .5, y: .5 });
   return app;
 }
 
@@ -171,7 +184,7 @@ test('Annotations appear from the displayed pose and animate only actual stage c
   assert.equal(h.story.dataset.notesVisible, 'true');
   assert.equal(annotation.getAttribute('aria-hidden'), 'false');
   const firstEntrance = annotation.animations[0];
-  assert.equal(firstEntrance.options.duration, 280);
+  assert.equal(firstEntrance.options.duration, 160);
   h.show(.15);
   assert.equal(annotation.animations.length, 1, 'Progress inside a stage must not restart the entrance');
   h.show(.68);
@@ -433,6 +446,57 @@ test('Short viewports use explicit stages without a tall sticky scroll section',
   h.choose(2);
   assert.equal(h.scrolls.length, 0);
   assert.equal(h.requests.at(-1).progress, h.notes.steps[2].at); assert.equal(h.requests.at(-1).immediate, true);
+});
+
+test('Live leaders follow projected model points without seeking or moving the model', () => {
+  const h = setup(), leader = h.nodes['.motion-leader-line'];
+  h.show(.22); h.requests.length = 0;
+  h.anchor({ x: .25, y: .5 });
+  assert.equal(h.story.dataset.anchorVisible, 'true');
+  assert.match(leader.getAttribute('d'), /L320\.0,186\.0$/);
+  assert.equal(h.controller.getState().shown, .22);
+  assert.equal(h.requests.length, 0, 'Projection must not create a seek feedback loop');
+  h.anchor({ x: .75, y: .3 });
+  assert.match(leader.getAttribute('d'), /L960\.0,126\.0$/);
+  h.anchor(null);
+  assert.equal(h.story.dataset.anchorVisible, 'false');
+});
+
+test('Missing or offscreen targets cannot run an opacity animation over hidden labels', () => {
+  const h = setup(), annotation = h.nodes['.motion-notes'];
+  h.anchor(null); h.show(.22);
+  assert.equal(annotation.animations?.length || 0, 0);
+  h.anchor({ x: .5, y: .5 }); h.show(.54);
+  const entrance = annotation.animations.at(-1);
+  assert.equal(entrance.playState, 'running');
+  h.anchor({ x: 2, y: .5 });
+  assert.equal(h.story.dataset.anchorVisible, 'false');
+  assert.equal(entrance.playState, 'idle', 'WAAPI must not override the hidden target CSS guard');
+});
+
+test('Offline leaders use the decoded frame and preserve contain-fit letterboxing after resize', async () => {
+  const h = setup({ project: 'materialTest' }), leader = h.nodes['.motion-leader-line'];
+  assert.equal(h.fetches.length, 1);
+  assert.match(h.fetches[0].url, /anchors\.json$/);
+  const points = Array.from({ length: 101 }, (_, i) => ({ x: i / 100, y: .5 }));
+  h.scrollToProgress(.9); h.drain(); h.show(.25);
+  await h.resolveAnchors({ materialTest: { aspect: 1.5, points } });
+  assert.equal(h.controller.getState().shown, .25);
+  assert.match(leader.getAttribute('d'), /L527\.5,186\.0$/, '450px contained frame is centered in the 1280px media surface');
+  h.geometry.mediaHeight = 200; h.context.innerWidth = 390; h.window.emit('resize'); h.drain();
+  assert.match(leader.getAttribute('d'), /L120\.0,136\.0$/, '300px contained frame is centered in the 390px media surface');
+  assert.equal(h.story.properties.get('--label-x'), '24px');
+  assert.equal(h.controller.getState().shown, .25, 'Resize must not advance the displayed frame');
+});
+
+test('Disposal rejects an already-resolving offline anchor response', async () => {
+  const h = setup({ project: 'materialTest' }), leader = h.nodes['.motion-leader-line'];
+  h.show(.5); h.controller.dispose();
+  const before = leader.getAttribute('d');
+  await h.resolveAnchors({ materialTest: { aspect: 1.5, points: [{ x: .5, y: .5 }] } });
+  assert.equal(leader.getAttribute('d'), before, 'Late fetch completion cannot alter the disposed annotation');
+  assert.equal(h.story.dataset.anchorVisible, 'false');
+  assert.equal(h.controller.getState().disposed, true);
 });
 
 test('The actual image renderer republishes an identical cached pose after resetting to its cover', () => {

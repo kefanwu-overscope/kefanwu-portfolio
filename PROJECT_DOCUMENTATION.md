@@ -1,5 +1,23 @@
 # Portfolio Website Project Documentation
 
+## Stable annotated project presentation · follow-up to d97015c
+
+User requested no lateral whole-model movement, small technical labels with
+arrows, and photo-matched finishes. CSS model translation is removed. The 72
+stages now use 10–12px component labels and SVG arrows, projected from exact
+source nodes (live) or exported with the actual displayed frame (main-site
+sequences). Preserve native scroll, +/-90 degree steering and retained room
+navigation. Labels must never move the model to make room.
+
+Read tools/studio-tests/photo-material-review.md for evidence, approximations
+and unchanged materials. studio-photo-materials.js is shared with room exhibits.
+The scanner PSU has a separate metallic material before static merging. Original
+photos/source geometry/motion/bakes remain unchanged; derived covers and SD/HD
+frames are regenerated through the same material/camera pipeline as live 3D.
+Main steering remains live; the other15 main pages keep compressed frame packs.
+Evidence and exact release/backup records: ../.codex/photo-fidelity-20260930/.
+
+
 ## Engineering design loops and adaptive rendering · 2026-09-30
 
 Current work builds on6059b1b, retaining accepted room assets, baked lighting,

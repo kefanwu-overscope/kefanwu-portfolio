@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { createProjectResourceCache, fetchProjectBuffer, abortError } from './studio-inspector-loader.js';
 import { clampProgress, readBufferView, createSampledMotion } from './studio-motion-runtime.js?v=page-integrated-20260930';
+import { applyPhotoFinish, applyPhotoPart } from './studio-photo-materials.js';
 import { installSourceMaterial } from './studio-inspector-materials.js';
 import { fitCameraEnvelope } from './studio-inspector-camera.js';
 
@@ -28,7 +29,7 @@ function disposeObject(root) {
   for (const texture of textures) texture.dispose();
 }
 
-function createMaterial(source) {
+function createMaterial(source, key) {
   const base = source.baseColor || [0.35, 0.35, 0.35, 1];
   const opacity = source.opacity ?? base[3] ?? 1;
   const settings = {
@@ -51,6 +52,7 @@ function createMaterial(source) {
     depthWrite: settings.depthWrite, toneMapped: false }) : new THREE.MeshPhysicalMaterial(settings);
   if (source.emissive && material.emissive) material.emissive.fromArray(source.emissive);
   material.emissiveIntensity = source.emissiveIntensity ?? 1;
+  source = applyPhotoFinish(key, material, source);
   material.userData.source = source;
   material.userData.motionUniforms = {};
   installSourceMaterial(material, source);
@@ -89,7 +91,7 @@ function batchRigidParts(key, manifest, root, nodes) {
     if (Array.isArray(material) || material.transparent || material.transmission > 0 || object.userData.presentationHidden ||
         Object.keys(source.tracks || {}).some((name) => !['position', 'quaternion', 'scale', 'visible'].includes(name))) continue;
     const attributes = Object.entries(object.geometry.attributes).map(([name, attribute]) => [name, attribute.itemSize, attribute.array.constructor.name]);
-    const id = JSON.stringify([source.materialIndices, source.transform, source.visible, source.tracks, attributes]);
+    const id = JSON.stringify([material.uuid, source.materialIndices, source.transform, source.visible, source.tracks, attributes]);
     if (!groups.has(id)) groups.set(id, []);
     groups.get(id).push(index);
   }
@@ -138,14 +140,15 @@ function buildResource(key, manifest, geometryBuffer, motionBuffer, { initial = 
   const root = new THREE.Group();
   root.name = key;
   root.quaternion.copy(WORLD_ROTATION);
-  const materials = manifest.materials.map(createMaterial);
+  const materials = manifest.materials.map(source => createMaterial(source, key));
   const geometries = new Map();
   const nodes = [];
+  const anchors = [];
   const sharedDynamic = new Map();
   try {
     for (const source of manifest.nodes) {
       const dynamic = !!(source.tracks?.deformationPosition || source.tracks?.attributeRoughness);
-      const assigned = (source.materialIndices || [0]).map((index) => materials[index]);
+      const assigned = (source.materialIndices || [0]).map((index) => applyPhotoPart(key, source.name, materials[index]));
       const sourceCoordinates = assigned.some((material) => ['carbon', 'noise'].includes(material.userData.source.procedural?.type));
       const id = JSON.stringify(source.geometry);
       // The exporter certifies that this group has at most one visible cloth
@@ -185,6 +188,15 @@ function buildResource(key, manifest, geometryBuffer, motionBuffer, { initial = 
       if (dynamic) object.frustumCulled = false;
       root.add(object);
       nodes.push(object);
+      const positions = geometry.attributes.position;
+      const center = geometry.boundingBox.getCenter(new THREE.Vector3());
+      let nearest = 0, distance = Infinity;
+      const point = new THREE.Vector3();
+      for (let i = 0; i < positions.count; i++) {
+        const d = point.fromBufferAttribute(positions, i).distanceToSquared(center);
+        if (d < distance) { distance = d; nearest = i; }
+      }
+      anchors.push(dynamic ? { positions, vertex: nearest } : { point: new THREE.Vector3().fromBufferAttribute(positions, nearest).toArray() });
     }
     batchRigidParts(key, manifest, root, nodes);
     const motion = createSampledMotion({ manifest, buffer: motionBuffer, nodes, materials, initial });
@@ -204,7 +216,7 @@ function buildResource(key, manifest, geometryBuffer, motionBuffer, { initial = 
     }
     let motionController = null, motionRequest = null, closed = false;
     const entry = {
-      key, root, manifest, motion, nodes, bounds, motionReady: !initial,
+      key, root, manifest, motion, nodes, anchors, bounds, motionReady: !initial,
       get byteLength() {
         let gpuBytes = 0;
         const buffers = new Set(entry.motion.buffers);
@@ -255,6 +267,7 @@ export function createStudioInspector({
   onProgress = () => {},
   onPlaybackChange = () => {},
   onPartSelect = () => {},
+  onFrame = () => {},
   manifestUrl,
   quality = 'auto',
   transparentBackground = false,
@@ -456,6 +469,7 @@ export function createStudioInspector({
       const started = performance.now();
       renderer.render(scene, camera);
       renderedFrames += 1;
+      onFrame({ progress });
       frameSamples.push(performance.now() - started);
       if (frameSamples.length > 120) frameSamples.shift();
       dirty = false;
@@ -732,7 +746,26 @@ export function createStudioInspector({
   canvas.addEventListener('pointerup', pointerEnd);
   resize();
 
+  function projectAnchor(selector) {
+    if (!resource || !selector) return null;
+    resource.root.updateMatrixWorld(true);
+    camera.updateMatrixWorld(true);
+    const candidates = [];
+    resource.manifest.nodes.forEach((source, index) => {
+      if (selector.name ? source.name !== selector.name : source.group !== selector.group) return;
+      const object = resource.nodes[index], anchor = resource.anchors[index];
+      if (!object.visible || object.userData.presentationHidden) return;
+      const point = (anchor.positions ? new THREE.Vector3().fromBufferAttribute(anchor.positions, anchor.vertex) : new THREE.Vector3().fromArray(anchor.point)).applyMatrix4(object.matrixWorld).project(camera);
+      if (point.z < -1 || point.z > 1) return;
+      candidates.push({ x: (point.x + 1) / 2, y: (1 - point.y) / 2, z: point.z, name: source.name });
+    });
+    // Closest source part in the requested group, never a screen-space guess.
+    candidates.sort((a, b) => a.z - b.z);
+    return candidates[0] || null;
+  }
+
   return {
+    projectAnchor,
     selectProject, setProgress, play, pause, resize, setView, setActive, retryMotion,
     whenMotionReady: () => motionCompletion,
     reset({ camera: resetCamera = true } = {}) {

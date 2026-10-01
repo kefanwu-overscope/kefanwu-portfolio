@@ -1,0 +1,32 @@
+{
+  "project": "formlabs",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "photo-20260930",
+  "palette": "studio-photo-materials.js",
+  "background": "#181818",
+  "sourceManifest": "formlabs/manifest.7b0fe642931dab3e.json",
+  "camera": {
+    "position": [
+      5.618419170379639,
+      5.600563526153564,
+      9.513915061950684
+    ],
+    "target": [
+      0.043627262115478516,
+      0.8062429428100585,
+      0.03676700592041027
+    ],
+    "up": [
+      -0.20265238652933804,
+      0.9166490062782604,
+      -0.3445092299533372
+    ],
+    "zoom": 1,
+    "frameWidth": 5.134132284807658,
+    "frameAspect": 1.4988290398126465
+  },
+  "frameCount": 121,
+  "width": 640,
+  "height": 427,
+  "bytes": 1291440
+}

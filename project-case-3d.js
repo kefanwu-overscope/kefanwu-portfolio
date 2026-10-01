@@ -1,3 +1,6 @@
+import { renderPressureLegend } from './project-pressure-legend.js';
+import { projectMotionLabels } from './project-motion-labels.js';
+import { projectMotionNotes } from './project-motion-notes.js?v=page-integrated-20260930';
 import { getStudioProject } from './studio-catalog.js?v=studio-20260919';
 
 const clamp = (value) => Math.max(0, Math.min(1, Number(value) || 0));
@@ -219,40 +222,9 @@ function mount() {
   }
 
   function updatePressureLegend(manifest) {
-    if (legendManifest === manifest) return;
+    if (legendManifest === manifest || key !== 'ansysCfd') return;
     legendManifest = manifest;
-    const report = manifest?.source?.motionReport;
-    const scale = report?.pressureColorNormalization;
-    if (key !== 'ansysCfd' || !scale?.linearRgbAnchors || !report.pressureRangePa) return;
-    const srgb = (channel) => Math.round(255 * (channel <= 0.0031308 ? 12.92 * channel : 1.055 * channel ** (1 / 2.4) - 0.055));
-    // Preserve the solved field's linear-RGB transfer and nonlinear ticks.
-    const gradient = Array.from({ length: 65 }, (_, i) => {
-      const position = i / 64;
-      const end = Math.min(scale.positions.length - 1, Math.max(1, scale.positions.findIndex((entry) => entry >= position)));
-      const start = end - 1;
-      const mix = (position - scale.positions[start]) / (scale.positions[end] - scale.positions[start]);
-      const color = scale.linearRgbAnchors[start].slice(0, 3).map((channel, j) => channel + mix * (scale.linearRgbAnchors[end][j] - channel));
-      return `rgb(${color.map(srgb).join(',')}) ${position * 100}%`;
-    });
-    const heading = document.createElement('p');
-    heading.textContent = 'Gauge pressure · Pa';
-    const bar = document.createElement('div');
-    bar.className = 'case-3d-legend-bar';
-    bar.style.background = `linear-gradient(90deg,${gradient.join(',')})`;
-    const labels = document.createElement('div');
-    labels.className = 'case-3d-legend-ticks';
-    const [minimum, maximum] = report.pressureRangePa;
-    for (const pressure of scale.legendTicksPa) {
-      const normalized = pressure < 0 ? .5 - .5 * Math.asinh(-pressure / scale.scalePa) / Math.asinh(-minimum / scale.scalePa) : .5 + .5 * Math.asinh(pressure / scale.scalePa) / Math.asinh(maximum / scale.scalePa);
-      const label = document.createElement('span');
-      label.style.left = `${normalized * 100}%`;
-      label.textContent = Math.round(pressure).toLocaleString('en-US');
-      labels.append(label);
-    }
-    const note = document.createElement('small');
-    note.textContent = 'Nonlinear scale · Steady solved field';
-    legend.replaceChildren(heading, bar, labels, note);
-    legend.hidden = false;
+    renderPressureLegend(legend, manifest?.source?.motionReport);
   }
 
   function receiveStatus(status) {
@@ -313,11 +285,19 @@ function mount() {
     receiveStatus({ state: 'loading' });
     const current = () => ticket === generation && !disposed && !suspended;
     try {
-      const { createStudioInspector } = await import('./studio-inspector.js?v=page-integrated-20260930');
+      const { createStudioInspector } = await import('./studio-inspector.js?v=photo-20260930');
       if (!current() || signal.aborted) return;
       inspector = createStudioInspector({
         canvas,
         transparentBackground: true,
+        onFrame: ({ progress: applied }) => {
+          if (!current() || !inspector) return;
+          const steps = projectMotionNotes[key]?.steps || [];
+          let index = 0;
+          for (let i = 1; i < steps.length; i++) if (applied + .00001 >= steps[i].at) index = i;
+          const point = inspector.projectAnchor(projectMotionLabels[key]?.[index]?.target);
+          host.dispatchEvent(new CustomEvent('case-motion-anchor', { detail: { point } }));
+        },
         onStatus: (status) => { if (current()) receiveStatus(status); },
         onProgress: (next) => {
           if (!current()) return;

@@ -1,3 +1,4 @@
+import { applyPhotoFinish } from './studio-photo-materials.js';
 import { installSourceMaterial } from './studio-inspector-materials.js';
 
 // Static source sample zero, with geometry/material provenance recorded in
@@ -60,8 +61,8 @@ export const ROOM_EXHIBITS = Object.freeze({
     "frontYaw": 1.3258176636680326
   },
   "scanner": {
-    "url": "models/room-current/scanner.41ecb17165900906.glb.gz",
-    "bytes": 331997,
+    "url": "models/room-current/scanner.391aeb377d55270c.glb.gz",
+    "bytes": 332784,
     "triangles": 21946,
     "bounds": {
       "min": [
@@ -315,8 +316,9 @@ export function prepareRoomExhibit(root, key) {
     for (const material of Array.isArray(object.material) ? object.material : [object.material]) {
       if (!material || prepared.has(material)) continue;
       prepared.add(material);
-      const source = material.userData.roomSourceMaterial;
+      let source = material.userData.roomSourceMaterial;
       if (!source) throw new Error(`Missing source material for room exhibit ${key || root.name}.`);
+      source = applyPhotoFinish(key, material, source);
       material.userData.source = source;
       material.userData.motionUniforms = {};
       if (source.depthWrite !== undefined) material.depthWrite = source.depthWrite;

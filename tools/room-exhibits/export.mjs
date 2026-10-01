@@ -4,7 +4,8 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { gunzipSync, gzipSync } from 'node:zlib';
 import assert from 'node:assert/strict';
-import { Matrix4, Matrix3, Quaternion, Vector3 } from '../../vendor/three/0.185.0/build/three.module.js';
+import { Matrix4, Matrix3, Quaternion, Vector3, MeshPhysicalMaterial } from '../../vendor/three/0.185.0/build/three.module.js';
+import { applyPhotoPart } from '../../studio-photo-materials.js';
 import { readBufferView } from '../../studio-motion-runtime.js';
 import { MeshoptSimplifier as simplify } from '../lod/vendor/meshopt_simplifier.mjs';
 import { Builder, readGLB, accessor, bounds } from '../lod/glb.mjs';
@@ -232,6 +233,16 @@ for (const [key, entry] of Object.entries(INDEX.projects)) {
   const geometryBuffer = buffer(path.join(directory, manifest.buffers.geometry.url), manifest.buffers.geometry);
   const motion = buffer(path.join(directory, manifest.buffers.initialMotion.url), manifest.buffers.initialMotion);
   const materials = sourceMaterials(manifest, motion);
+  // Preserve a distinct physical finish before merging by shared CAD material.
+  for (const node of manifest.nodes) {
+    const original = materials[node.materialIndices?.[0]];
+    if (!original || key !== 'scanner' || node.name !== 'mat_printed_part_4') continue;
+    const probe = new MeshPhysicalMaterial();
+    const finish = applyPhotoPart(key, node.name, probe);
+    materials.push({ ...original, name: finish.name, baseColor: [...finish.color.toArray(), 1], metalness: finish.metalness, roughness: finish.roughness });
+    node.materialIndices = [materials.length - 1];
+    finish.dispose(); probe.dispose();
+  }
   const generated = geometry(manifest, geometryBuffer, motion, materials);
   const parts = mergeParts(generated.parts, materials);
   const source = { manifest: `assets/studio-motion/${entry.manifest}`, manifestSha256: entry.sha256, geometrySha256: manifest.buffers.geometry.sha256, initialMotionSha256: manifest.buffers.initialMotion.sha256 };

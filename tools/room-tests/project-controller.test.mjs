@@ -2,9 +2,11 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import vm from 'node:vm';
 import { readFile } from 'node:fs/promises';
+import { projectMotionLabels } from '../../project-motion-labels.js';
+import { projectMotionNotes } from '../../project-motion-notes.js';
 
 const source = (await readFile(new URL('../../project-case-3d.js', import.meta.url), 'utf8'))
-  .replace(/^import[^\n]+\n/, '')
+  .replace(/^import[^\n]+\n/gm, '')
   .replace(/import\('\.\/studio-inspector\.js[^']*'\)/, 'loadInspectorModule()');
 
 class Element {
@@ -75,9 +77,12 @@ async function setup({ offscreen = false, deferredImport = false, scrollDriven =
       if (!state.active || disposed || document.hidden) return;
       if (pendingPose !== null) { callbacks.onProgress(pendingPose); pendingPose = null; }
       state.renderedFrames++;
+      callbacks.onFrame?.({ progress: state.progress });
     };
     const api = {
       callbacks, state, disposeCount: 0, retryCount: 0, signal: null,
+      anchorQueries: [],
+      projectAnchor(target) { api.anchorQueries.push(target); return target ? { x: .4, y: .6, name: target.name || target.group } : null; },
       getState: () => state,
       async selectProject(key, { signal }) {
         api.signal = signal; callbacks.onStatus({ key, state: 'loading' });
@@ -104,7 +109,7 @@ async function setup({ offscreen = false, deferredImport = false, scrollDriven =
   }
   const module = { createStudioInspector };
   const context = {
-    window, document, AbortController, console,
+    window, document, AbortController, console, projectMotionLabels, projectMotionNotes,
     CustomEvent: class { constructor(type, { detail } = {}) { this.type = type; this.detail = detail; } },
     getStudioProject: key => key === project ? { name: project, motionLabel: 'Project motion' } : null,
     loadInspectorModule: () => { imports.push('inspector'); return deferredImport ? new Promise(resolve => importResolve = resolve) : Promise.resolve(module); },
@@ -148,6 +153,24 @@ test('Pages without an explicit live-motion flag never import or mount the WebGL
     assert.equal(app.find('canvas'), null);
     assert.equal(app.document.body.dataset.caseMode, caseMode || undefined);
   }
+});
+
+test('Rendered frames publish the exact active component anchor without preempting the visible pose', async () => {
+  const app = await setup({ scrollDriven: true, deferredPose: true });
+  const viewer = app.inspectors[0], anchors = [];
+  app.host.addEventListener('case-motion-anchor', event => anchors.push(event.detail.point));
+  viewer.ready(true); app.drain();
+  assert.deepEqual(viewer.anchorQueries.at(-1), projectMotionLabels.steering[0].target);
+  const before = anchors.length;
+  viewer.setProgress(.68);
+  assert.equal(anchors.length, before, 'A requested pose cannot publish a projected anchor before rendering');
+  app.drain();
+  assert.deepEqual(viewer.anchorQueries.at(-1), projectMotionLabels.steering[5].target);
+  assert.equal(anchors.at(-1).name, projectMotionLabels.steering[5].target.group);
+  app.window.emit('studio-project-dispose');
+  const disposedCount = anchors.length;
+  viewer.callbacks.onFrame({ progress: .1 });
+  assert.equal(anchors.length, disposedCount, 'A retired inspector cannot publish late frame anchors');
 });
 
 test('Retained-frame disposal stops playback and releases the inspector exactly once', async () => {

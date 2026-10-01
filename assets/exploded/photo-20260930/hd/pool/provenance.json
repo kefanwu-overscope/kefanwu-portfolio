@@ -1,0 +1,32 @@
+{
+  "project": "pool",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "photo-20260930",
+  "palette": "studio-photo-materials.js",
+  "background": "#181818",
+  "sourceManifest": "pool/manifest.f517eeb94c59f232.json",
+  "camera": {
+    "position": [
+      5.836684703826904,
+      5.153820037841796,
+      9.32570743560791
+    ],
+    "target": [
+      0.2618927955627441,
+      0.35949945449829096,
+      -0.1514406204223632
+    ],
+    "up": [
+      -0.20265238652933804,
+      0.9166490062782604,
+      -0.3445092299533372
+    ],
+    "zoom": 1,
+    "frameWidth": 3.0593515604068053,
+    "frameAspect": 1.4988290398126465
+  },
+  "frameCount": 145,
+  "width": 1280,
+  "height": 854,
+  "bytes": 3319578
+}
