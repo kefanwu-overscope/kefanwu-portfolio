@@ -160,15 +160,16 @@ function reindex(attributes, sourceTracks, motionBuffer) {
   return { chosen, remap, originalCount: count };
 }
 
-function optimizeProject(key) {
+function optimizeProject(key, options = {}) {
+  const readSource = options.readSource || original;
   const relative = `assets/studio-motion/${key}`;
-  const sourceManifestBytes = original(`${relative}/manifest.json`);
+  const sourceManifestBytes = readSource(`${relative}/manifest.json`);
   // Older open pages request this stable URL when switching projects. Their
   // decoder understands only the canonical float32 package, so leave its
   // manifest and stable binary URLs pinned to the original release.
-  assert.deepEqual(fs.readFileSync(path.join(ASSETS, key, 'manifest.json')), sourceManifestBytes, 'legacy manifest must remain byte-identical to source');
+  if (!options.readSource) assert.deepEqual(fs.readFileSync(path.join(ASSETS, key, 'manifest.json')), sourceManifestBytes, 'legacy manifest must remain byte-identical to source');
   const source = JSON.parse(sourceManifestBytes);
-  const input = Object.fromEntries(Object.entries(source.buffers).map(([name, info]) => [name, zlib.gunzipSync(original(`${relative}/${info.url}`))]));
+  const input = Object.fromEntries(Object.entries(source.buffers).map(([name, info]) => [name, zlib.gunzipSync(readSource(`${relative}/${info.url}`))]));
   const manifest = copy(source);
   const geometry = new PackedBuffer(), motion = new PackedBuffer(), initial = new PackedBuffer();
   const reindexCache = new Map();
@@ -281,14 +282,14 @@ function optimizeProject(key) {
     metrics.exclusiveDeformationGroup = { name: 'carbon-cloth', nodes: indices.length, maximumVisible: 1, checkedSamples: source.sampleCount };
   }
 
-  const directory = path.join(ASSETS, key);
+  const directory = options.directory || path.join(ASSETS, key);
   const output = {
     geometry: geometry.finish(directory, 'geometry'), motion: motion.finish(directory, 'motion'),
     initialMotion: initial.finish(directory, 'initial-motion'),
   };
   manifest.buffers = Object.fromEntries(Object.entries(output).map(([name, value]) => [name, value.info]));
   manifest.encoding = {
-    version: 2, sourceCommit: SOURCE, sourceManifestSha256: hash(sourceManifestBytes),
+    version: 2, sourceCommit: Object.hasOwn(options, 'sourceCommit') ? options.sourceCommit : SOURCE, sourceManifestSha256: hash(sourceManifestBytes),
     topology: 'all-source-triangles', reindexing: 'exact-live-attributes-and-complete-trajectory-identity',
     quantization: 'uint16-per-component-affine', carbonSurfacePositions: 'source-float32',
     integerStorage: 'adaptive-raw-or-component-delta-and-little-endian-byte-planes',
@@ -384,7 +385,7 @@ function optimizeProject(key) {
   metrics.firstPoseReductionPercent = (1 - metrics.firstPoseCompressedBytes / metrics.sourceCompressedBytes) * 100;
   metrics.status = 'passed';
   console.log(`${key}: ${metrics.sourceCompressedBytes} -> ${metrics.compressedBytes} bytes (${metrics.reductionPercent.toFixed(1)}% smaller); first pose ${metrics.firstPoseCompressedBytes}; vertices ${metrics.sourceVertices} -> ${metrics.optimizedVertices}`);
-  return { metrics, index: { manifest: `${key}/${filename}`, sha256: manifestSha256 } };
+  return { metrics, index: { manifest: `${options.indexPrefix || key}/${filename}`, sha256: manifestSha256 } };
 }
 
 function main() {
@@ -416,4 +417,4 @@ function main() {
 }
 
 if (require.main === module) main();
-module.exports = { view, quantize, reindex, smallestInteger };
+module.exports = { view, quantize, reindex, smallestInteger, optimizeProject };

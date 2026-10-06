@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "revision": "refined-20260930",
+  "revision": "brake-dr-20261005",
   "projects": {
     "steering": {
       "mode": "steering",
@@ -2542,836 +2542,794 @@
       "label": "Brake heating",
       "width": 640,
       "height": 427,
-      "poster": "assets/exploded/refined-20260930/sd/brakeSim/00.webp?v=57ea512717e5",
+      "poster": "assets/exploded/brake-dr-20261005/sd/brakeSim/00.webp?v=5cd266c1b7c1",
       "frames": [
-        "assets/exploded/refined-20260930/sd/brakeSim/00.webp?v=57ea512717e5",
-        "assets/exploded/refined-20260930/sd/brakeSim/01.webp?v=bd35700f4c5c",
-        "assets/exploded/refined-20260930/sd/brakeSim/02.webp?v=2ed2e24c88ce",
-        "assets/exploded/refined-20260930/sd/brakeSim/03.webp?v=cf805f204000",
-        "assets/exploded/refined-20260930/sd/brakeSim/04.webp?v=97cd0be71713",
-        "assets/exploded/refined-20260930/sd/brakeSim/05.webp?v=2024de9001bf",
-        "assets/exploded/refined-20260930/sd/brakeSim/06.webp?v=be3df7cc6f9d",
-        "assets/exploded/refined-20260930/sd/brakeSim/07.webp?v=2a656a7afd0f",
-        "assets/exploded/refined-20260930/sd/brakeSim/08.webp?v=d2438f7381d4",
-        "assets/exploded/refined-20260930/sd/brakeSim/09.webp?v=afd20cfe6396",
-        "assets/exploded/refined-20260930/sd/brakeSim/10.webp?v=fdfb4da38968",
-        "assets/exploded/refined-20260930/sd/brakeSim/11.webp?v=04e42ceaf794",
-        "assets/exploded/refined-20260930/sd/brakeSim/12.webp?v=39d921c6182b",
-        "assets/exploded/refined-20260930/sd/brakeSim/13.webp?v=65dbd28dde7b",
-        "assets/exploded/refined-20260930/sd/brakeSim/14.webp?v=a9fce8e6241d",
-        "assets/exploded/refined-20260930/sd/brakeSim/15.webp?v=c6dbf6d726e8",
-        "assets/exploded/refined-20260930/sd/brakeSim/16.webp?v=c971d568f809",
-        "assets/exploded/refined-20260930/sd/brakeSim/17.webp?v=e7e69b2a2a03",
-        "assets/exploded/refined-20260930/sd/brakeSim/18.webp?v=9632ce8c3bdd",
-        "assets/exploded/refined-20260930/sd/brakeSim/19.webp?v=0e3ce926e5e5",
-        "assets/exploded/refined-20260930/sd/brakeSim/20.webp?v=308da1dde9aa",
-        "assets/exploded/refined-20260930/sd/brakeSim/21.webp?v=cefe7bfad225",
-        "assets/exploded/refined-20260930/sd/brakeSim/22.webp?v=92c3059d2340",
-        "assets/exploded/refined-20260930/sd/brakeSim/23.webp?v=f8b9d9bd0255",
-        "assets/exploded/refined-20260930/sd/brakeSim/24.webp?v=f6d1a83a1fc7",
-        "assets/exploded/refined-20260930/sd/brakeSim/25.webp?v=c99968211b0e",
-        "assets/exploded/refined-20260930/sd/brakeSim/26.webp?v=69822ffe74a6",
-        "assets/exploded/refined-20260930/sd/brakeSim/27.webp?v=91d7f4b653e4",
-        "assets/exploded/refined-20260930/sd/brakeSim/28.webp?v=b61d6730e3e8",
-        "assets/exploded/refined-20260930/sd/brakeSim/29.webp?v=cd0725a2fb5a",
-        "assets/exploded/refined-20260930/sd/brakeSim/30.webp?v=f5f3ff1b7674",
-        "assets/exploded/refined-20260930/sd/brakeSim/31.webp?v=906ddd08b9e7",
-        "assets/exploded/refined-20260930/sd/brakeSim/32.webp?v=f23f5895dd1b",
-        "assets/exploded/refined-20260930/sd/brakeSim/33.webp?v=1da25fd345bc",
-        "assets/exploded/refined-20260930/sd/brakeSim/34.webp?v=60d2c72688e2",
-        "assets/exploded/refined-20260930/sd/brakeSim/35.webp?v=51d0da681a87",
-        "assets/exploded/refined-20260930/sd/brakeSim/36.webp?v=4136b0958e1f",
-        "assets/exploded/refined-20260930/sd/brakeSim/37.webp?v=2f88262fbe52",
-        "assets/exploded/refined-20260930/sd/brakeSim/38.webp?v=f36278e8bbbd",
-        "assets/exploded/refined-20260930/sd/brakeSim/39.webp?v=26c2c2c9f691",
-        "assets/exploded/refined-20260930/sd/brakeSim/40.webp?v=02d4c0724748",
-        "assets/exploded/refined-20260930/sd/brakeSim/41.webp?v=43759b9c13ae",
-        "assets/exploded/refined-20260930/sd/brakeSim/42.webp?v=d623a1899306",
-        "assets/exploded/refined-20260930/sd/brakeSim/43.webp?v=8e46c672a5ff",
-        "assets/exploded/refined-20260930/sd/brakeSim/44.webp?v=4496e2ba7350",
-        "assets/exploded/refined-20260930/sd/brakeSim/45.webp?v=0756ad40a81a",
-        "assets/exploded/refined-20260930/sd/brakeSim/46.webp?v=6c322822d867",
-        "assets/exploded/refined-20260930/sd/brakeSim/47.webp?v=21c431c0c668",
-        "assets/exploded/refined-20260930/sd/brakeSim/48.webp?v=53a42407344d",
-        "assets/exploded/refined-20260930/sd/brakeSim/49.webp?v=1ae478492de1",
-        "assets/exploded/refined-20260930/sd/brakeSim/50.webp?v=3024f42306a4",
-        "assets/exploded/refined-20260930/sd/brakeSim/51.webp?v=18e0e793e32a",
-        "assets/exploded/refined-20260930/sd/brakeSim/52.webp?v=6617e1b95787",
-        "assets/exploded/refined-20260930/sd/brakeSim/53.webp?v=09438da0c296",
-        "assets/exploded/refined-20260930/sd/brakeSim/54.webp?v=07ad7f02f419",
-        "assets/exploded/refined-20260930/sd/brakeSim/55.webp?v=26c32400e759",
-        "assets/exploded/refined-20260930/sd/brakeSim/56.webp?v=8e1e40486907",
-        "assets/exploded/refined-20260930/sd/brakeSim/57.webp?v=6f7e87bc576b",
-        "assets/exploded/refined-20260930/sd/brakeSim/58.webp?v=af0423bee59d",
-        "assets/exploded/refined-20260930/sd/brakeSim/59.webp?v=b829f21088bb",
-        "assets/exploded/refined-20260930/sd/brakeSim/60.webp?v=bdb25934791f",
-        "assets/exploded/refined-20260930/sd/brakeSim/61.webp?v=72eb92dd578d",
-        "assets/exploded/refined-20260930/sd/brakeSim/62.webp?v=b21a04e89ce2",
-        "assets/exploded/refined-20260930/sd/brakeSim/63.webp?v=d4c256e3aba3",
-        "assets/exploded/refined-20260930/sd/brakeSim/64.webp?v=00bc07ca9427",
-        "assets/exploded/refined-20260930/sd/brakeSim/65.webp?v=26701f59ed86",
-        "assets/exploded/refined-20260930/sd/brakeSim/66.webp?v=08dd9d4dbc19",
-        "assets/exploded/refined-20260930/sd/brakeSim/67.webp?v=b617803d0741",
-        "assets/exploded/refined-20260930/sd/brakeSim/68.webp?v=b7627c8a195e",
-        "assets/exploded/refined-20260930/sd/brakeSim/69.webp?v=94900ca2c4da",
-        "assets/exploded/refined-20260930/sd/brakeSim/70.webp?v=5abc035cc3ca",
-        "assets/exploded/refined-20260930/sd/brakeSim/71.webp?v=f2701c9ae364",
-        "assets/exploded/refined-20260930/sd/brakeSim/72.webp?v=6f9923b5958d",
-        "assets/exploded/refined-20260930/sd/brakeSim/73.webp?v=d242c37bd55d",
-        "assets/exploded/refined-20260930/sd/brakeSim/74.webp?v=d1eadbfb0791",
-        "assets/exploded/refined-20260930/sd/brakeSim/75.webp?v=46d805354832",
-        "assets/exploded/refined-20260930/sd/brakeSim/76.webp?v=6cbba30f4c3c",
-        "assets/exploded/refined-20260930/sd/brakeSim/77.webp?v=aa597f7a135b",
-        "assets/exploded/refined-20260930/sd/brakeSim/78.webp?v=eb8c6e0a2df4",
-        "assets/exploded/refined-20260930/sd/brakeSim/79.webp?v=db181e5aad81",
-        "assets/exploded/refined-20260930/sd/brakeSim/80.webp?v=049f1f9b2531",
-        "assets/exploded/refined-20260930/sd/brakeSim/81.webp?v=dc22c7c0e5fe",
-        "assets/exploded/refined-20260930/sd/brakeSim/82.webp?v=c1c837820887",
-        "assets/exploded/refined-20260930/sd/brakeSim/83.webp?v=a725e8f4000f",
-        "assets/exploded/refined-20260930/sd/brakeSim/84.webp?v=6ec0e9180f52",
-        "assets/exploded/refined-20260930/sd/brakeSim/85.webp?v=682c889fd326",
-        "assets/exploded/refined-20260930/sd/brakeSim/86.webp?v=e71abdf8aead",
-        "assets/exploded/refined-20260930/sd/brakeSim/87.webp?v=3ca6456bdecd",
-        "assets/exploded/refined-20260930/sd/brakeSim/88.webp?v=bee4625da003",
-        "assets/exploded/refined-20260930/sd/brakeSim/89.webp?v=5784c5d696da",
-        "assets/exploded/refined-20260930/sd/brakeSim/90.webp?v=8277da916740",
-        "assets/exploded/refined-20260930/sd/brakeSim/91.webp?v=afdfd74e1686",
-        "assets/exploded/refined-20260930/sd/brakeSim/92.webp?v=c92868b4133b",
-        "assets/exploded/refined-20260930/sd/brakeSim/93.webp?v=6582f8646a70",
-        "assets/exploded/refined-20260930/sd/brakeSim/94.webp?v=489ffb32cf88",
-        "assets/exploded/refined-20260930/sd/brakeSim/95.webp?v=78cc41096e8b",
-        "assets/exploded/refined-20260930/sd/brakeSim/96.webp?v=4bdd7793b6cd",
-        "assets/exploded/refined-20260930/sd/brakeSim/97.webp?v=61c59cc0e1e0",
-        "assets/exploded/refined-20260930/sd/brakeSim/98.webp?v=2eb5584636f6",
-        "assets/exploded/refined-20260930/sd/brakeSim/99.webp?v=e626902ddfa9",
-        "assets/exploded/refined-20260930/sd/brakeSim/100.webp?v=d0fd4f92d59e",
-        "assets/exploded/refined-20260930/sd/brakeSim/101.webp?v=2749a87301da",
-        "assets/exploded/refined-20260930/sd/brakeSim/102.webp?v=4f9f7777a9c4",
-        "assets/exploded/refined-20260930/sd/brakeSim/103.webp?v=940951f417d7",
-        "assets/exploded/refined-20260930/sd/brakeSim/104.webp?v=44719cba6321",
-        "assets/exploded/refined-20260930/sd/brakeSim/105.webp?v=653af7eaba17",
-        "assets/exploded/refined-20260930/sd/brakeSim/106.webp?v=7cf466615152",
-        "assets/exploded/refined-20260930/sd/brakeSim/107.webp?v=edeb166f80a0",
-        "assets/exploded/refined-20260930/sd/brakeSim/108.webp?v=58e47bfe771c",
-        "assets/exploded/refined-20260930/sd/brakeSim/109.webp?v=70dd4b00b46a",
-        "assets/exploded/refined-20260930/sd/brakeSim/110.webp?v=8a785cfcef0e",
-        "assets/exploded/refined-20260930/sd/brakeSim/111.webp?v=f71a38ea587c",
-        "assets/exploded/refined-20260930/sd/brakeSim/112.webp?v=ed63734598a7",
-        "assets/exploded/refined-20260930/sd/brakeSim/113.webp?v=5c42c5a9081b",
-        "assets/exploded/refined-20260930/sd/brakeSim/114.webp?v=4a8ce6d6d9e7",
-        "assets/exploded/refined-20260930/sd/brakeSim/115.webp?v=b40e48512776",
-        "assets/exploded/refined-20260930/sd/brakeSim/116.webp?v=114b3ae00730",
-        "assets/exploded/refined-20260930/sd/brakeSim/117.webp?v=0559eea9352e",
-        "assets/exploded/refined-20260930/sd/brakeSim/118.webp?v=bb64a3c7915b",
-        "assets/exploded/refined-20260930/sd/brakeSim/119.webp?v=c4e4e4154752",
-        "assets/exploded/refined-20260930/sd/brakeSim/120.webp?v=63bcde597845"
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/00.webp?v=5cd266c1b7c1",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/01.webp?v=0c5c13d119b7",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/02.webp?v=6b535600dc4f",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/03.webp?v=8202f1a60bfe",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/04.webp?v=6b6f3a7ad4f0",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/05.webp?v=04a89f634f58",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/06.webp?v=19c2f36ab688",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/07.webp?v=259718b7aa04",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/08.webp?v=7c09f013255a",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/09.webp?v=374b3892608b",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/10.webp?v=c9ff49cf1100",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/11.webp?v=7368b13eaae2",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/12.webp?v=9ef8147150c8",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/13.webp?v=1d42f1e37108",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/14.webp?v=3aa4bd9d920f",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/15.webp?v=54d18f59780c",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/16.webp?v=8c9ce0c2767b",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/17.webp?v=8e5f49db7de0",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/18.webp?v=afa5ac852a07",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/19.webp?v=974d733294d8",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/20.webp?v=d158a04184cc",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/21.webp?v=95fbef2de4de",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/22.webp?v=af9d7c09fdc7",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/23.webp?v=3a18f30791fa",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/24.webp?v=cc3ded5257ba",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/25.webp?v=59b4cd119a4c",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/26.webp?v=de0444edb6a0",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/27.webp?v=462757b3c3ae",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/28.webp?v=8b529642e0ac",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/29.webp?v=e9819ecffdf5",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/30.webp?v=bde94c79f1ce",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/31.webp?v=17ff32db3c11",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/32.webp?v=7b9b4dcf69a0",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/33.webp?v=8d38c5d5eac3",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/34.webp?v=a60043d084ff",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/35.webp?v=50294bfc906d",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/36.webp?v=81ae5ba67c0e",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/37.webp?v=01f0a678eae5",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/38.webp?v=a381debd0c60",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/39.webp?v=3120c63419ce",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/40.webp?v=649e2f3fb6e9",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/41.webp?v=5fc3e0d77454",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/42.webp?v=c884e876f873",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/43.webp?v=761ba2a4df97",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/44.webp?v=b11574523e1e",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/45.webp?v=4fe8ef0a5396",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/46.webp?v=052766013fd5",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/47.webp?v=d4541d8f62bc",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/48.webp?v=97c06235065b",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/49.webp?v=f61bb7e746bc",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/50.webp?v=8b56789b7342",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/51.webp?v=c280db9eee7c",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/52.webp?v=234102a749da",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/53.webp?v=737431e1303a",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/54.webp?v=9855123b055c",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/55.webp?v=9fb56c09981b",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/56.webp?v=845e885448e2",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/57.webp?v=66a2c7b49876",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/58.webp?v=5062a989d9b9",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/59.webp?v=32992463b2ba",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/60.webp?v=e46ca0cd1bf4",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/61.webp?v=25a723525fdb",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/62.webp?v=00dda2d84e12",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/63.webp?v=7b9b0d2c9d42",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/64.webp?v=6c5638cf8e3e",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/65.webp?v=c1ac584e3acf",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/66.webp?v=68a27696dcad",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/67.webp?v=7a11f297c916",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/68.webp?v=65dcd47bf9f0",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/69.webp?v=7f1fef6e49d2",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/70.webp?v=c11b2ef58e3b",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/71.webp?v=39ec8a6a0db7",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/72.webp?v=d1fc7a67625a",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/73.webp?v=27485031de8a",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/74.webp?v=3338be84b17e",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/75.webp?v=be37309de575",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/76.webp?v=e23b896acc29",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/77.webp?v=54fda67a9e89",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/78.webp?v=0aec8f1dea43",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/79.webp?v=a4384bc96fb5",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/80.webp?v=076c8ccc3b4c",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/81.webp?v=5c1b838ee809",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/82.webp?v=07cc69d10678",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/83.webp?v=8957e23e93ff",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/84.webp?v=d9f1376a63cf",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/85.webp?v=2496d37abf49",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/86.webp?v=7afb063b17fc",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/87.webp?v=a2f48d63c073",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/88.webp?v=e955e3098f6c",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/89.webp?v=7f7110f0d61d",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/90.webp?v=eb16d2829580",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/91.webp?v=a42eb2b707fb",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/92.webp?v=c2542ce7c940",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/93.webp?v=6732013bf61b",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/94.webp?v=881c6b3b6ab5",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/95.webp?v=4e19ff557c3b",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/96.webp?v=cc9354bfac17",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/97.webp?v=81d2e5f9a26c",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/98.webp?v=893f2c11ce9b",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/99.webp?v=ad7080f15d67",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/100.webp?v=13776273c4c5",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/101.webp?v=c50869f8c0cf",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/102.webp?v=b9fb75713312",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/103.webp?v=fe276abb04a7",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/104.webp?v=9e78b262f27f",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/105.webp?v=a61b28c57e6f",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/106.webp?v=acefb06c26a2",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/107.webp?v=dcb0e8b93824",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/108.webp?v=a011c24972c1",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/109.webp?v=39eb333543bf",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/110.webp?v=1a7f56297641",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/111.webp?v=e8e777ab08d6",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/112.webp?v=b19048f5c848",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/113.webp?v=891d8beddee3",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/114.webp?v=133ea9a9f045",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/115.webp?v=afb90104047d",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/116.webp?v=e9e8c65363aa",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/117.webp?v=23d63e6acc12",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/118.webp?v=b01bcd947285",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/119.webp?v=c5e36ebbc1a2",
+        "assets/exploded/brake-dr-20261005/sd/brakeSim/120.webp?v=3b41421b68fb"
       ],
-      "provenance": "assets/exploded/refined-20260930/sd/brakeSim/provenance.json",
-      "bytes": 3669130,
+      "provenance": "assets/exploded/brake-dr-20261005/sd/brakeSim/provenance.json",
+      "bytes": 1973688,
       "chunks": [
         {
-          "url": "assets/exploded/refined-20260930/sd/chunks/brakeSim/000.bin?v=dbc767a7e187",
-          "bytes": 107940,
+          "url": "assets/exploded/brake-dr-20261005/sd/chunks/brakeSim/000.bin?v=3723febe3025",
+          "bytes": 52196,
           "frames": [
             {
               "index": 0,
               "offset": 0,
-              "length": 26990
+              "length": 13076
             },
             {
               "index": 1,
-              "offset": 26990,
-              "length": 26974
+              "offset": 13076,
+              "length": 13062
             },
             {
               "index": 2,
-              "offset": 53964,
-              "length": 26990
+              "offset": 26138,
+              "length": 13038
             },
             {
               "index": 3,
-              "offset": 80954,
-              "length": 26986
+              "offset": 39176,
+              "length": 13020
             }
           ]
         },
         {
-          "url": "assets/exploded/refined-20260930/sd/chunks/brakeSim/001.bin?v=12ef632b0e3f",
-          "bytes": 242380,
+          "url": "assets/exploded/brake-dr-20261005/sd/chunks/brakeSim/001.bin?v=ffede50fcfb5",
+          "bytes": 205984,
           "frames": [
             {
               "index": 4,
               "offset": 0,
-              "length": 26958
+              "length": 13054
             },
             {
               "index": 5,
-              "offset": 26958,
-              "length": 27016
+              "offset": 13054,
+              "length": 13028
             },
             {
               "index": 6,
-              "offset": 53974,
-              "length": 26956
+              "offset": 26082,
+              "length": 13030
             },
             {
               "index": 7,
-              "offset": 80930,
-              "length": 27004
+              "offset": 39112,
+              "length": 12894
             },
             {
               "index": 8,
-              "offset": 107934,
-              "length": 26970
+              "offset": 52006,
+              "length": 12840
             },
             {
               "index": 9,
-              "offset": 134904,
-              "length": 26948
+              "offset": 64846,
+              "length": 12884
             },
             {
               "index": 10,
-              "offset": 161852,
-              "length": 26862
+              "offset": 77730,
+              "length": 12884
             },
             {
               "index": 11,
-              "offset": 188714,
-              "length": 26830
+              "offset": 90614,
+              "length": 12836
             },
             {
               "index": 12,
-              "offset": 215544,
-              "length": 26836
-            }
-          ]
-        },
-        {
-          "url": "assets/exploded/refined-20260930/sd/chunks/brakeSim/002.bin?v=9493096fe862",
-          "bytes": 241682,
-          "frames": [
+              "offset": 103450,
+              "length": 12820
+            },
             {
               "index": 13,
-              "offset": 0,
-              "length": 26902
+              "offset": 116270,
+              "length": 12830
             },
             {
               "index": 14,
-              "offset": 26902,
-              "length": 26934
+              "offset": 129100,
+              "length": 12788
             },
             {
               "index": 15,
-              "offset": 53836,
-              "length": 26934
+              "offset": 141888,
+              "length": 12768
             },
             {
               "index": 16,
-              "offset": 80770,
-              "length": 26862
+              "offset": 154656,
+              "length": 12836
             },
             {
               "index": 17,
-              "offset": 107632,
-              "length": 26794
+              "offset": 167492,
+              "length": 12806
             },
             {
               "index": 18,
-              "offset": 134426,
-              "length": 26758
+              "offset": 180298,
+              "length": 12884
             },
             {
               "index": 19,
-              "offset": 161184,
-              "length": 26794
-            },
+              "offset": 193182,
+              "length": 12802
+            }
+          ]
+        },
+        {
+          "url": "assets/exploded/brake-dr-20261005/sd/chunks/brakeSim/002.bin?v=3238a4dabe28",
+          "bytes": 213222,
+          "frames": [
             {
               "index": 20,
-              "offset": 187978,
-              "length": 26802
+              "offset": 0,
+              "length": 12902
             },
             {
               "index": 21,
-              "offset": 214780,
-              "length": 26902
-            }
-          ]
-        },
-        {
-          "url": "assets/exploded/refined-20260930/sd/chunks/brakeSim/003.bin?v=15fef7179090",
-          "bytes": 245676,
-          "frames": [
+              "offset": 12902,
+              "length": 12852
+            },
             {
               "index": 22,
-              "offset": 0,
-              "length": 26912
+              "offset": 25754,
+              "length": 12924
             },
             {
               "index": 23,
-              "offset": 26912,
-              "length": 27092
+              "offset": 38678,
+              "length": 12870
             },
             {
               "index": 24,
-              "offset": 54004,
-              "length": 27138
+              "offset": 51548,
+              "length": 12970
             },
             {
               "index": 25,
-              "offset": 81142,
-              "length": 27248
+              "offset": 64518,
+              "length": 13024
             },
             {
               "index": 26,
-              "offset": 108390,
-              "length": 27240
+              "offset": 77542,
+              "length": 13226
             },
             {
               "index": 27,
-              "offset": 135630,
-              "length": 27332
+              "offset": 90768,
+              "length": 13274
             },
             {
               "index": 28,
-              "offset": 162962,
-              "length": 27424
+              "offset": 104042,
+              "length": 13372
             },
             {
               "index": 29,
-              "offset": 190386,
-              "length": 27524
+              "offset": 117414,
+              "length": 13418
             },
             {
               "index": 30,
-              "offset": 217910,
-              "length": 27766
-            }
-          ]
-        },
-        {
-          "url": "assets/exploded/refined-20260930/sd/chunks/brakeSim/004.bin?v=7d6833a8da17",
-          "bytes": 254434,
-          "frames": [
+              "offset": 130832,
+              "length": 13494
+            },
             {
               "index": 31,
-              "offset": 0,
-              "length": 27836
+              "offset": 144326,
+              "length": 13576
             },
             {
               "index": 32,
-              "offset": 27836,
-              "length": 27916
+              "offset": 157902,
+              "length": 13630
             },
             {
               "index": 33,
-              "offset": 55752,
-              "length": 28014
+              "offset": 171532,
+              "length": 13778
             },
             {
               "index": 34,
-              "offset": 83766,
-              "length": 28046
+              "offset": 185310,
+              "length": 13898
             },
             {
               "index": 35,
-              "offset": 111812,
-              "length": 28146
-            },
+              "offset": 199208,
+              "length": 14014
+            }
+          ]
+        },
+        {
+          "url": "assets/exploded/brake-dr-20261005/sd/chunks/brakeSim/003.bin?v=43089481fbe6",
+          "bytes": 239358,
+          "frames": [
             {
               "index": 36,
-              "offset": 139958,
-              "length": 28380
+              "offset": 0,
+              "length": 14070
             },
             {
               "index": 37,
-              "offset": 168338,
-              "length": 28604
+              "offset": 14070,
+              "length": 14250
             },
             {
               "index": 38,
-              "offset": 196942,
-              "length": 28688
+              "offset": 28320,
+              "length": 14384
             },
             {
               "index": 39,
-              "offset": 225630,
-              "length": 28804
-            }
-          ]
-        },
-        {
-          "url": "assets/exploded/refined-20260930/sd/chunks/brakeSim/005.bin?v=42873d34fec2",
-          "bytes": 235796,
-          "frames": [
+              "offset": 42704,
+              "length": 14492
+            },
             {
               "index": 40,
-              "offset": 0,
-              "length": 29100
+              "offset": 57196,
+              "length": 14638
             },
             {
               "index": 41,
-              "offset": 29100,
-              "length": 29160
+              "offset": 71834,
+              "length": 14798
             },
             {
               "index": 42,
-              "offset": 58260,
-              "length": 29310
+              "offset": 86632,
+              "length": 14868
             },
             {
               "index": 43,
-              "offset": 87570,
-              "length": 29512
+              "offset": 101500,
+              "length": 15006
             },
             {
               "index": 44,
-              "offset": 117082,
-              "length": 29656
+              "offset": 116506,
+              "length": 15166
             },
             {
               "index": 45,
-              "offset": 146738,
-              "length": 29742
+              "offset": 131672,
+              "length": 15082
             },
             {
               "index": 46,
-              "offset": 176480,
-              "length": 29608
+              "offset": 146754,
+              "length": 15152
             },
             {
               "index": 47,
-              "offset": 206088,
-              "length": 29708
-            }
-          ]
-        },
-        {
-          "url": "assets/exploded/refined-20260930/sd/chunks/brakeSim/006.bin?v=2e1910cfe4aa",
-          "bytes": 242044,
-          "frames": [
+              "offset": 161906,
+              "length": 15276
+            },
             {
               "index": 48,
-              "offset": 0,
-              "length": 29836
+              "offset": 177182,
+              "length": 15372
             },
             {
               "index": 49,
-              "offset": 29836,
-              "length": 29960
+              "offset": 192554,
+              "length": 15506
             },
             {
               "index": 50,
-              "offset": 59796,
-              "length": 30092
+              "offset": 208060,
+              "length": 15604
             },
             {
               "index": 51,
-              "offset": 89888,
-              "length": 30232
-            },
+              "offset": 223664,
+              "length": 15694
+            }
+          ]
+        },
+        {
+          "url": "assets/exploded/brake-dr-20261005/sd/chunks/brakeSim/004.bin?v=6a5a10699172",
+          "bytes": 246384,
+          "frames": [
             {
               "index": 52,
-              "offset": 120120,
-              "length": 30390
+              "offset": 0,
+              "length": 15838
             },
             {
               "index": 53,
-              "offset": 150510,
-              "length": 30496
+              "offset": 15838,
+              "length": 15946
             },
             {
               "index": 54,
-              "offset": 181006,
-              "length": 30598
+              "offset": 31784,
+              "length": 16056
             },
             {
               "index": 55,
-              "offset": 211604,
-              "length": 30440
-            }
-          ]
-        },
-        {
-          "url": "assets/exploded/refined-20260930/sd/chunks/brakeSim/007.bin?v=07848504b7c0",
-          "bytes": 248000,
-          "frames": [
+              "offset": 47840,
+              "length": 16180
+            },
             {
               "index": 56,
-              "offset": 0,
-              "length": 30554
+              "offset": 64020,
+              "length": 16082
             },
             {
               "index": 57,
-              "offset": 30554,
-              "length": 30730
+              "offset": 80102,
+              "length": 16162
             },
             {
               "index": 58,
-              "offset": 61284,
-              "length": 30846
+              "offset": 96264,
+              "length": 16292
             },
             {
               "index": 59,
-              "offset": 92130,
-              "length": 30944
+              "offset": 112556,
+              "length": 16428
             },
             {
               "index": 60,
-              "offset": 123074,
-              "length": 31110
+              "offset": 128984,
+              "length": 16508
             },
             {
               "index": 61,
-              "offset": 154184,
-              "length": 31188
+              "offset": 145492,
+              "length": 16614
             },
             {
               "index": 62,
-              "offset": 185372,
-              "length": 31312
+              "offset": 162106,
+              "length": 16674
             },
             {
               "index": 63,
-              "offset": 216684,
-              "length": 31316
-            }
-          ]
-        },
-        {
-          "url": "assets/exploded/refined-20260930/sd/chunks/brakeSim/008.bin?v=90bb45b6ca9d",
-          "bytes": 253282,
-          "frames": [
+              "offset": 178780,
+              "length": 16764
+            },
             {
               "index": 64,
-              "offset": 0,
-              "length": 31368
+              "offset": 195544,
+              "length": 16866
             },
             {
               "index": 65,
-              "offset": 31368,
-              "length": 31490
+              "offset": 212410,
+              "length": 16966
             },
             {
               "index": 66,
-              "offset": 62858,
-              "length": 31564
-            },
+              "offset": 229376,
+              "length": 17008
+            }
+          ]
+        },
+        {
+          "url": "assets/exploded/brake-dr-20261005/sd/chunks/brakeSim/005.bin?v=30656a2cc8f3",
+          "bytes": 245964,
+          "frames": [
             {
               "index": 67,
-              "offset": 94422,
-              "length": 31628
+              "offset": 0,
+              "length": 17080
             },
             {
               "index": 68,
-              "offset": 126050,
-              "length": 31766
+              "offset": 17080,
+              "length": 17194
             },
             {
               "index": 69,
-              "offset": 157816,
-              "length": 31746
+              "offset": 34274,
+              "length": 17286
             },
             {
               "index": 70,
-              "offset": 189562,
-              "length": 31804
+              "offset": 51560,
+              "length": 17280
             },
             {
               "index": 71,
-              "offset": 221366,
-              "length": 31916
-            }
-          ]
-        },
-        {
-          "url": "assets/exploded/refined-20260930/sd/chunks/brakeSim/009.bin?v=ab077c1ee4c7",
-          "bytes": 257744,
-          "frames": [
+              "offset": 68840,
+              "length": 17354
+            },
             {
               "index": 72,
-              "offset": 0,
-              "length": 32016
+              "offset": 86194,
+              "length": 17424
             },
             {
               "index": 73,
-              "offset": 32016,
-              "length": 32058
+              "offset": 103618,
+              "length": 17512
             },
             {
               "index": 74,
-              "offset": 64074,
-              "length": 32102
+              "offset": 121130,
+              "length": 17650
             },
             {
               "index": 75,
-              "offset": 96176,
-              "length": 32180
+              "offset": 138780,
+              "length": 17654
             },
             {
               "index": 76,
-              "offset": 128356,
-              "length": 32296
+              "offset": 156434,
+              "length": 17768
             },
             {
               "index": 77,
-              "offset": 160652,
-              "length": 32298
+              "offset": 174202,
+              "length": 17820
             },
             {
               "index": 78,
-              "offset": 192950,
-              "length": 32380
+              "offset": 192022,
+              "length": 17962
             },
             {
               "index": 79,
-              "offset": 225330,
-              "length": 32414
+              "offset": 209984,
+              "length": 17992
+            },
+            {
+              "index": 80,
+              "offset": 227976,
+              "length": 17988
             }
           ]
         },
         {
-          "url": "assets/exploded/refined-20260930/sd/chunks/brakeSim/010.bin?v=bb70e50ea1f7",
-          "bytes": 259076,
+          "url": "assets/exploded/brake-dr-20261005/sd/chunks/brakeSim/006.bin?v=7bc734c8f724",
+          "bytes": 259136,
           "frames": [
             {
-              "index": 80,
-              "offset": 0,
-              "length": 32512
-            },
-            {
               "index": 81,
-              "offset": 32512,
-              "length": 32556
+              "offset": 0,
+              "length": 18108
             },
             {
               "index": 82,
-              "offset": 65068,
-              "length": 32192
+              "offset": 18108,
+              "length": 18164
             },
             {
               "index": 83,
-              "offset": 97260,
-              "length": 32248
+              "offset": 36272,
+              "length": 18228
             },
             {
               "index": 84,
-              "offset": 129508,
-              "length": 32358
+              "offset": 54500,
+              "length": 18280
             },
             {
               "index": 85,
-              "offset": 161866,
-              "length": 32354
+              "offset": 72780,
+              "length": 18340
             },
             {
               "index": 86,
-              "offset": 194220,
-              "length": 32380
+              "offset": 91120,
+              "length": 18420
             },
             {
               "index": 87,
-              "offset": 226600,
-              "length": 32476
-            }
-          ]
-        },
-        {
-          "url": "assets/exploded/refined-20260930/sd/chunks/brakeSim/011.bin?v=0103fe088c64",
-          "bytes": 260266,
-          "frames": [
+              "offset": 109540,
+              "length": 18508
+            },
             {
               "index": 88,
-              "offset": 0,
-              "length": 32318
+              "offset": 128048,
+              "length": 18554
             },
             {
               "index": 89,
-              "offset": 32318,
-              "length": 32514
+              "offset": 146602,
+              "length": 18622
             },
             {
               "index": 90,
-              "offset": 64832,
-              "length": 32384
+              "offset": 165224,
+              "length": 18706
             },
             {
               "index": 91,
-              "offset": 97216,
-              "length": 32582
+              "offset": 183930,
+              "length": 18732
             },
             {
               "index": 92,
-              "offset": 129798,
-              "length": 32602
+              "offset": 202662,
+              "length": 18786
             },
             {
               "index": 93,
-              "offset": 162400,
-              "length": 32612
+              "offset": 221448,
+              "length": 18794
             },
             {
               "index": 94,
-              "offset": 195012,
-              "length": 32720
-            },
-            {
-              "index": 95,
-              "offset": 227732,
-              "length": 32534
+              "offset": 240242,
+              "length": 18894
             }
           ]
         },
         {
-          "url": "assets/exploded/refined-20260930/sd/chunks/brakeSim/012.bin?v=d70956762069",
-          "bytes": 261230,
+          "url": "assets/exploded/brake-dr-20261005/sd/chunks/brakeSim/007.bin?v=9633104cea34",
+          "bytes": 250814,
           "frames": [
             {
-              "index": 96,
+              "index": 95,
               "offset": 0,
-              "length": 32574
+              "length": 18902
+            },
+            {
+              "index": 96,
+              "offset": 18902,
+              "length": 18996
             },
             {
               "index": 97,
-              "offset": 32574,
-              "length": 32638
+              "offset": 37898,
+              "length": 19026
             },
             {
               "index": 98,
-              "offset": 65212,
-              "length": 32662
+              "offset": 56924,
+              "length": 19132
             },
             {
               "index": 99,
-              "offset": 97874,
-              "length": 32694
+              "offset": 76056,
+              "length": 19162
             },
             {
               "index": 100,
-              "offset": 130568,
-              "length": 32626
+              "offset": 95218,
+              "length": 19204
             },
             {
               "index": 101,
-              "offset": 163194,
-              "length": 32612
+              "offset": 114422,
+              "length": 19340
             },
             {
               "index": 102,
-              "offset": 195806,
-              "length": 32658
+              "offset": 133762,
+              "length": 19322
             },
             {
               "index": 103,
-              "offset": 228464,
-              "length": 32766
-            }
-          ]
-        },
-        {
-          "url": "assets/exploded/refined-20260930/sd/chunks/brakeSim/013.bin?v=332b55d917bd",
-          "bytes": 261788,
-          "frames": [
+              "offset": 153084,
+              "length": 19424
+            },
             {
               "index": 104,
-              "offset": 0,
-              "length": 32702
+              "offset": 172508,
+              "length": 19480
             },
             {
               "index": 105,
-              "offset": 32702,
-              "length": 32828
+              "offset": 191988,
+              "length": 19550
             },
             {
               "index": 106,
-              "offset": 65530,
-              "length": 32810
+              "offset": 211538,
+              "length": 19600
             },
             {
               "index": 107,
-              "offset": 98340,
-              "length": 32786
-            },
+              "offset": 231138,
+              "length": 19676
+            }
+          ]
+        },
+        {
+          "url": "assets/exploded/brake-dr-20261005/sd/chunks/brakeSim/008.bin?v=57cad2301f8c",
+          "bytes": 260630,
+          "frames": [
             {
               "index": 108,
-              "offset": 131126,
-              "length": 32894
+              "offset": 0,
+              "length": 19702
             },
             {
               "index": 109,
-              "offset": 164020,
-              "length": 32520
+              "offset": 19702,
+              "length": 19790
             },
             {
               "index": 110,
-              "offset": 196540,
-              "length": 32610
+              "offset": 39492,
+              "length": 19830
             },
             {
               "index": 111,
-              "offset": 229150,
-              "length": 32638
-            }
-          ]
-        },
-        {
-          "url": "assets/exploded/refined-20260930/sd/chunks/brakeSim/014.bin?v=8f9f33724c6d",
-          "bytes": 231040,
-          "frames": [
+              "offset": 59322,
+              "length": 19876
+            },
             {
               "index": 112,
-              "offset": 0,
-              "length": 32770
+              "offset": 79198,
+              "length": 19898
             },
             {
               "index": 113,
-              "offset": 32770,
-              "length": 32782
+              "offset": 99096,
+              "length": 19940
             },
             {
               "index": 114,
-              "offset": 65552,
-              "length": 32982
+              "offset": 119036,
+              "length": 20088
             },
             {
               "index": 115,
-              "offset": 98534,
-              "length": 32976
+              "offset": 139124,
+              "length": 20134
             },
             {
               "index": 116,
-              "offset": 131510,
-              "length": 33078
+              "offset": 159258,
+              "length": 20144
             },
             {
               "index": 117,
-              "offset": 164588,
-              "length": 33210
+              "offset": 179402,
+              "length": 20264
             },
             {
               "index": 118,
-              "offset": 197798,
-              "length": 33242
-            }
-          ]
-        },
-        {
-          "url": "assets/exploded/refined-20260930/sd/chunks/brakeSim/015.bin?v=d9021029abb9",
-          "bytes": 66752,
-          "frames": [
+              "offset": 199666,
+              "length": 20256
+            },
             {
               "index": 119,
-              "offset": 0,
-              "length": 33316
+              "offset": 219922,
+              "length": 20294
             },
             {
               "index": 120,
-              "offset": 33316,
-              "length": 33436
+              "offset": 240216,
+              "length": 20414
             }
           ]
         }
       ],
-      "chunkBytes": 3669130,
+      "chunkBytes": 1973688,
       "chunkVersion": 1
     },
     "aura": {
@@ -13402,8 +13360,8 @@
     "frameIndexBase": 0,
     "projectCount": 16,
     "frameCount": 2032,
-    "chunkCount": 160,
-    "bytes": 21586176,
+    "chunkCount": 153,
+    "bytes": 19890734,
     "contentByteOverhead": 0
   }
 }

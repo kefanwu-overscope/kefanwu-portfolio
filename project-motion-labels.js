@@ -34,10 +34,34 @@ export const projectMotionLabels = {
     { title: 'Rigid base', body: 'Base supports guides beneath the moving assembly.', target: { name: 'mat_wood_part_0' } }
   ],
   brakeSim: [
-    { title: 'Brake rotor', body: 'Braking energy stored as rotor heat.', target: { name: 'mat_steel' } },
-    { title: 'Rotor surface', body: 'Braking heat; displayed color change is qualitative.', target: { name: 'mat_steel' } },
-    { title: 'Perforated geometry', body: 'Perforations change rotor mass and cooling area.', target: { name: 'mat_steel' } },
-    { title: 'Thermal response', body: 'Separate model: conduction, convection and radiation.', target: { name: 'mat_steel' } }
+    {
+      "title": "Cast-iron rotor",
+      "body": "Cast iron stores braking energy as heat.",
+      "target": {
+        "name": "mat_steel"
+      }
+    },
+    {
+      "title": "Heat input",
+      "body": "Braking converts kinetic energy into rotor heat.",
+      "target": {
+        "name": "mat_steel"
+      }
+    },
+    {
+      "title": "Cooling paths",
+      "body": "Conduction, convection and radiation cool the rotor.",
+      "target": {
+        "name": "mat_steel"
+      }
+    },
+    {
+      "title": "Thermal illustration",
+      "body": "Color is illustrative; temperatures come from plots.",
+      "target": {
+        "name": "mat_steel"
+      }
+    }
   ],
   aura: [
     { title: 'Steering motor', body: 'Wheel heading controlled independently from traction.', target: { group: 'steering_motor' } },

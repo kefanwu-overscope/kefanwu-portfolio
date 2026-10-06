@@ -57,14 +57,30 @@ export const projectMotionNotes = {
     ]
   },
   brakeSim: {
-    title: 'Seeing the heat-storage tradeoff',
-    summary: 'Use the warming rotor to connect material, geometry and the thermal sizing study.',
-    note: 'The red glow is qualitative. It is not a temperature map, calibrated color scale or playback of the MATLAB thermal solution.',
-    steps: [
-      { at: 0, title: 'The intact rotor', body: 'Start with the complete metal geometry. Rotor mass stores braking energy as heat, while exposed surfaces provide paths for cooling; removing material changes both sides of that balance.' },
-      { at: 0.25, title: 'Heat enters the system', body: 'The surface begins to warm visually. In the documented model, braking work supplies the heat input, divided between the rotor and pad according to the study’s stated assumptions.' },
-      { at: 0.55, title: 'Cooling competes with heating', body: 'As the glow grows, inspect the rotor’s exposed area. The thermal study accounts for hub conduction, radiation, and speed-dependent convection between braking events.' },
-      { at: 0.84, title: 'A visual cue, a separate calculation', body: 'The brightest pose emphasizes heat buildup while the rotor remains intact. Use the archived plots for predicted temperatures; the final 7.4 in hardware needs its own thermal validation.' }
+    "title": "Geometry, heat storage and cooling",
+    "summary": "Follow the rotor’s heat-storage tradeoff, then compare the design-review results below.",
+    "note": "The warming color is an illustration. Temperature histories and working-range percentages come from the design-review plots.",
+    "steps": [
+      {
+        "at": 0,
+        "title": "The rotor stores heat",
+        "body": "Rotor mass absorbs braking energy. The Mk.8 review balances lower mass and inertia against the temperature needed by the pad."
+      },
+      {
+        "at": 0.25,
+        "title": "Braking supplies heat",
+        "body": "The model converts lost braking kinetic energy into heat. Repeated braking and cooling produce the endurance temperature history."
+      },
+      {
+        "at": 0.55,
+        "title": "Cooling removes heat",
+        "body": "Convection, radiation and conduction compete with heat input. The review compares radiation and conduction with published cooling curves; convection validation remains limited."
+      },
+      {
+        "at": 0.84,
+        "title": "Read the modeled result",
+        "body": "After three warm-up laps, the front rotor is predicted to spend 90.75% of the time at 350–450°C. Rear-rotor cooling remains an integration issue."
+      }
     ]
   },
   aura: {

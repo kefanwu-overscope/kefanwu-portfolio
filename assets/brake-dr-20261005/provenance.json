@@ -1,0 +1,33 @@
+{
+  "presentationId": "1orhUsJPe5ssAuhbjYn1FMEqdGCs8-4Xmxa8L9I7TWK0",
+  "revision": "-088OhLGU32BAA",
+  "modifiedTime": "2026-10-05T23:32:30.594Z",
+  "reviewedSlides": [
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35
+  ],
+  "achievementPolicy": "Only the supplied DR supports project outcomes. OEM sources support model formulation and provenance, not additional achievement claims.",
+  "geometry": {
+    "sourceStepSha256": "358fcb7bae7686556526e9ffc241932f02924fac6bca8c15c7f3db527f1034a3",
+    "thicknessMm": 5.08,
+    "nominalDiameterMm": 190.5,
+    "holes": 72,
+    "holeDiameterMm": 10.16,
+    "outerWaves": 24,
+    "mountingSeats": 6,
+    "sourceTriangles": 56404
+  },
+  "modelVersionNote": "The current display follows the 0.200-inch CAD; the saved thermal study used 4.7498 mm. Review numbers are reported rather than recomputed from the display geometry.",
+  "refreshVerification": "Brake-section text and30 embedded source-image hashes unchanged in the150-slide revision."
+}

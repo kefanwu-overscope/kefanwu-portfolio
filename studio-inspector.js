@@ -7,7 +7,7 @@ import { applyPhotoFinish, applyPhotoPart } from './studio-photo-materials.js?v=
 import { installSourceMaterial } from './studio-inspector-materials.js?v=refined-20260930';
 import { fitCameraEnvelope } from './studio-inspector-camera.js';
 
-const RELEASE = 'studio-packed-20260919';
+const RELEASE = 'brake-dr-20261005';
 const ASSET_ROOT = new URL('./assets/studio-motion/', import.meta.url);
 const WORLD_ROTATION = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
 const toWorld = (point) => new THREE.Vector3().fromArray(point).applyQuaternion(WORLD_ROTATION);

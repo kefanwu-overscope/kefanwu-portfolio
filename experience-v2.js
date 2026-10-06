@@ -1,5 +1,5 @@
 import { createStudioUI } from './studio-ui.js?v=performance-20260919';
-import { getStudioProject } from './studio-catalog.js?v=studio-20260919';
+import { getStudioProject } from './studio-catalog.js?v=brake-dr-20261005';
 
 let inspector = null;
 let inspectorPromise = null;

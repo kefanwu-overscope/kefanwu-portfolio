@@ -414,81 +414,109 @@ const projectData = {
     ]
   },
   brakeSim: {
-    "kicker": "Formula SAE / MATLAB / brake thermal model",
-    "title": "FSAE Brake Sim",
-    "image": "assets/oem-brake-fea.webp",
-    summary: "Developed a 22-lap, 25-segment thermal model to evaluate a 25% Mk.8 rotor mass-reduction target. Balanced heat capacity and cooling against unsprung and rotational mass, selected cast iron, and compared assumptions with Mk.7 and peer-team data. The final rotor diameter is 7.4 in; historical thermal calculations retain their original geometry.",
+    "kicker": "Formula SAE / Brake design / Thermal & structural analysis",
+    "title": "FSAE Racecar Brake",
+    "image": "assets/editorial/brake-dr-20261005/brakeSim-wide-1800.webp?v=8aba11208295",
+    "summary": "Designed a lighter Mk.8 brake rotor around its endurance temperature range. The design review reports 23% less mass and 19% less rotational inertia than Mk.7, with the front rotor predicted to spend 90.75% of the time after three warm-up laps at 350–450°C. Thermal modeling, structural FEA and reference fatigue analysis guide the design; fabrication and rear-rotor cooling remain the next steps.",
     "highlights": [
-      "Modeled a 22-lap FSAE endurance cycle with 25 track segments of varying velocity and brake demand.",
-      "Predicted rotor temperature using heat input, hub conduction, radiation, and velocity-dependent convection.",
-      "Used brake-bias assumptions and high-load course zones to locate critical temperature peaks.",
-      "Selected cast iron ASTM A48 Class 40 rotors over exotic materials for conductivity, cost, and manufacturability.",
-      "Linked results to Wilwood GP200 calipers, BP-28 pads, AN3 service disconnects, a 25 percent rotor mass-reduction target, and a 3.0 structural FEA safety factor."
+      "Reduced the design mass from 1.39 to 1.07 lb and rotational inertia from 11.55 to 9.35 lb·in²: 23% and 19% below Mk.7, respectively.",
+      "Predicted 90.75% front-rotor time at 350–450°C after three warm-up laps, exceeding the 80% design target in the simulation.",
+      "Connected braking-energy input to speed-dependent convection, radiation and finite conduction paths in a lumped thermal model of the endurance cycle.",
+      "Compared cooling behavior with a published FSAE brake study to check radiation and conduction; convection remained outside that validation.",
+      "Carried thermal histories into structural and reference fatigue analysis. The review reports 0.52 mm maximum deformation and a minimum reference equivalent life of 5.561 × 22 km endurances."
     ],
     "tools": [
       "MATLAB",
       "Thermal modeling",
-      "Track segmentation",
-      "FEA",
-      "Brake bias",
-      "Wilwood BP-28 data"
+      "Rotor CAD",
+      "Structural FEA",
+      "Reference fatigue analysis",
+      "Brake-system integration"
     ],
     "details": [
       {
-        "title": "Model objective",
+        "title": "Requirements and design objective",
         "points": [
-          "Modeled how much rotor mass could be removed while keeping pad and rotor temperatures within usable ranges.",
-          "Simulated repeated thermal loading over 22 endurance laps, with 25 track segments defining heat input and cooling windows.",
-          "Repeated thermal loading supports FSAE reliability decisions, where heat soak and repeatability matter."
+          "Keep the front rotor at 350–450°C for at least 80% of endurance after warm-up, while reducing rotor mass and rotational inertia.",
+          "Use simple geometry and retain serviceable Mk.6 hardware where possible. The review requires simultaneous wheel lock and two independent hydraulic circuits.",
+          "Pair the rotor with Wilwood BP28 pads, whose 0.47–0.48 target friction coefficient motivates the selected temperature range."
         ]
       },
       {
-        "title": "Thermal implementation",
+        "title": "Thermal model and assumptions",
         "points": [
-          "Split the course into braking and cooling zones with varying velocity, deceleration, and heat transfer.",
-          "Estimated braking-work heat input and distributed it using front/rear bias assumptions.",
-          "Included hub conduction, radiation, and speed-dependent convection."
+          "Track segments from Michigan 2024 define braking and cooling periods. The design-review temperature plot covers 22 simulated laps.",
+          "Separate lumped rotor, paired-pad, hub and caliper nodes store heat. The energy balance includes speed-dependent convection, radiation evaluated in kelvin, and finite conductive links between the components.",
+          "The modeled scenario uses on/off braking, no trail braking, no aerodynamic drag and no regenerative braking. These assumptions define the scope of the predicted temperatures."
         ]
       },
       {
-        "title": "Hardware decisions",
+        "title": "Mk.7-to-Mk.8 design comparison",
         "points": [
-          "Favored cast iron for conductivity above 52 W/m-K, friction pairing, cost, and manufacturability.",
-          "Linked the model to Wilwood GP200 calipers and BP-28 pads, whose 0.46-0.48 high-temperature friction coefficient set the target operating range.",
-          "Considered AN3 quick-disconnects for faster brake-line replacement."
+          "The revised perforated, scalloped rotor is specified in ASTM A48 Class 40 cast iron.",
+          "The design review compares 1.39 lb and 11.55 lb·in² for Mk.7 with 1.07 lb and 9.35 lb·in² for Mk.8: reported reductions of 23% in mass and 19% in inertia.",
+          "The front-rotor prediction reaches 90.75% time in the 350–450°C band after the three-lap warm-up. The rear rotor remains substantially colder, leaving a separate airflow and thermal-integration issue."
         ]
       },
       {
-        "title": "Validation and tradeoffs",
+        "title": "Verification and limits",
         "points": [
-          "Checked against Mk.7 and peer-team data because brake thermal models are sensitive to assumptions.",
-          "Balanced surface area and thermal mass against rotational inertia and unsprung mass.",
-          "Provided a defensible rotor-sizing baseline balancing a 25 percent mass reduction target with a 3.0 structural factor of safety."
+          "The review compares cooling curves with Luis Alberto Mora’s 2018 MIT FSAE braking-system study. It uses matching component and material context to check radiation and conduction, with convection explicitly excluded from that validation.",
+          "The structural load case uses 14.93 kN brake-pad force derived from a 2 kN pedal load, 1,517.96 N·m brake torque, and 450°C. The review reports a 2.455 factor of safety and 0.52 mm maximum deformation.",
+          "The reported safety factor has not been independently verified: the displayed von Mises maximum and stated tensile strength do not establish its failure criterion.",
+          "Reference fatigue analysis combines thermal histories and calculated brake forces. It reports 53.95% maximum reference damage and 5.561 equivalent 22 km endurances minimum reference life against a goal above three endurances (66 laps). These are predictions."
         ]
       },
       {
-        "title": "Final rotor geometry",
+        "title": "Fabrication and integration next steps",
         "points": [
-          "Final rotor diameter: 7.4 in.",
-          "The thermal-model source records retain their original dimensions; those historical calculations have not been rerun for this update."
+          "Waterjet the rotor, surface-grind the friction faces, and rebuild the retained calipers.",
+          "Inspect the Mk.6 brake-line hardware for reuse and complete line routing and service access.",
+          "Resolve the cold rear-rotor condition with the aerodynamics team. Vehicle measurements would then test the modeled thermal behavior."
         ]
       }
     ],
     "gallery": [
       {
-        "src": "assets/oem-brake-fea.webp",
-        "alt": "Brake rotor finite element analysis result",
-        "caption": "Rotor FEA"
+        "src": "assets/brake-dr-20261005/slide32-image1.png",
+        "alt": "Mk.8 rotor with a scalloped outer edge, inner mounting profile and perforations",
+        "caption": "Mk.8 rotor design · DR 32"
       },
       {
-        "src": "assets/fsae-mk8-live-1.webp",
-        "alt": "Brake rotor and pad temperature over endurance laps",
-        "caption": "Track-based thermal model"
+        "src": "assets/brake-dr-20261005/slide-h471572ebb20adb45_19_0.png",
+        "alt": "Design-review energy balance showing braking heat input, convection, radiation and conduction",
+        "caption": "Thermal energy balance · DR 29"
       },
       {
-        "src": "assets/fsae-mk8-live-3.webp",
-        "alt": "Perforated brake rotor CAD pattern",
-        "caption": "Rotor geometry"
+        "src": "assets/brake-dr-20261005/slide32-image3.png",
+        "alt": "Full thermal figure embedded in the review, with front and rear rotor histories and final-lap comparison",
+        "caption": "Thermal prediction · full figure from DR 32"
+      },
+      {
+        "src": "assets/brake-dr-20261005/slide-h34fe89c1a74b9e38_0_7.png",
+        "alt": "Reference fatigue analysis showing maximum damage of 53.95 percent and minimum life of 5.561 endurances",
+        "caption": "Reference fatigue prediction · DR 34"
+      },
+      {
+        "src": "assets/brake-dr-20261005/slide32-image2.png",
+        "alt": "Mk.7 baseline rotor with a circular perimeter and earlier perforation pattern",
+        "caption": "Mk.7 baseline geometry · DR 32"
+      },
+      {
+        "src": "assets/brake-dr-20261005/slide31-image1.png",
+        "alt": "Published MIT rotor cooling curves and exponential fits reproduced in the design review",
+        "caption": "MIT cooling-curve reference · DR 31"
+      },
+      {
+        "src": "assets/brake-dr-20261005/slide-h34fe89c1a74b9e38_0_2.png",
+        "alt": "Structural FEA slide with loading assumptions, stress and deformation plots, and reported factor of safety",
+        "caption": "Structural analysis as reported · DR 33"
+      }
+    ],
+    "sources": [
+      {
+        "label": "Brake design review · slides 23–35",
+        "href": "https://docs.google.com/presentation/d/1orhUsJPe5ssAuhbjYn1FMEqdGCs8-4Xmxa8L9I7TWK0/edit#slide=id.h1c191cab97b816b8_0_0"
       }
     ]
   },

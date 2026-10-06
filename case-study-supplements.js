@@ -574,52 +574,161 @@ window.caseStudySupplements = {
     ]
   },
   "brakeSim": {
+    "media": {
+      "assets/brake-dr-20261005/slide32-image1.png": {
+        "kind": "cad",
+        "width": 545,
+        "height": 540
+      },
+      "assets/brake-dr-20261005/slide-h471572ebb20adb45_19_0.png": {
+        "kind": "diagram",
+        "width": 1600,
+        "height": 900
+      },
+      "assets/brake-dr-20261005/slide32-image2.png": {
+        "kind": "cad",
+        "width": 527,
+        "height": 506
+      },
+      "assets/brake-dr-20261005/slide-h34fe89c1a74b9e38_0_7.png": {
+        "kind": "document",
+        "width": 1600,
+        "height": 900
+      },
+      "assets/brake-dr-20261005/slide32-image3.png": {
+        "kind": "plot",
+        "width": 1600,
+        "height": 762
+      },
+      "assets/brake-dr-20261005/slide31-image1.png": {
+        "kind": "plot",
+        "width": 952,
+        "height": 671
+      },
+      "assets/brake-dr-20261005/slide-h34fe89c1a74b9e38_0_2.png": {
+        "kind": "document",
+        "width": 1600,
+        "height": 900
+      }
+    },
     "sections": [
       {
         "id": "brakeSim-documented-model-inputs",
-        "title": "Documented thermal-model inputs",
+        "title": "Thermal-model scope in the design review",
         "items": [
           {
-            "id": "brakeSim-vehicle-input",
-            "label": "Vehicle input",
-            "value": "The report models a 220 kg Mk.8 vehicle with a 50:50 static front/rear weight distribution."
+            "id": "brakeSim-duty-cycle",
+            "label": "Duty cycle",
+            "value": "The design-review result covers 22 simulated laps, with the first three laps excluded from the working-temperature assessment."
           },
           {
             "id": "brakeSim-energy-partition",
-            "label": "Energy partition",
-            "value": "The model assumes 72% front brake bias and a fixed heat split of 90% to the rotor and 10% to the pads."
+            "label": "Heat input and losses",
+            "value": "Separate rotor, paired-pad, hub and caliper nodes store heat. Braking power enters the network; speed-dependent convection, radiation evaluated in kelvin and finite conductive links between components remove or redistribute it."
           },
           {
-            "id": "brakeSim-time-integration",
-            "label": "Time integration",
-            "value": "The 28 April MATLAB version uses a nominal 0.01 s integration step and a 296.15 K initial temperature."
+            "id": "brakeSim-model-assumptions",
+            "label": "Simplifications",
+            "value": "On/off braking with no trail braking, no aerodynamic drag and no regenerative braking. The driving model uses a point-mass cornering calculation with an assumed downforce contribution."
+          },
+          {
+            "id": "brakeSim-result-configuration",
+            "label": "Published plot inputs",
+            "value": "The DR 32 chart identifies 295 kg including driver and aero, no regenerative braking, 72/28 front/rear brake heat, rotor emissivity 0.32, 72 holes of 0.400 in and a 2.99 mm shallow wave. These are the labels of the published result."
+          },
+          {
+            "id": "brakeSim-validation-scope",
+            "label": "Cooling comparison",
+            "value": "The review cites Luis Alberto Mora, Design of a FSAE Braking System (MIT, June 2018). It compares radiation and conduction against cooling-curve behavior and explicitly excludes convection from that validation."
+          },
+          {
+            "id": "brakeSim-model-version",
+            "label": "Track and geometry versions",
+            "value": "The DR method slide states 25 track segments; the saved MATLAB implementation contains 26. The published thermal history uses a 4.7498 mm rotor thickness; the displayed native CAD uses 5.08 mm, matching the DR’s 0.2 in specification. The review’s temperature and mass results have not been recalculated from the displayed CAD. The DR text omits linear-speed effects; the saved implementation combines vehicle and rotor-edge speed for effective airflow. These version-dependent boundary assumptions are not experimentally calibrated."
           }
         ]
       },
       {
         "id": "brakeSim-hardware-context",
-        "title": "Hardware named in the design records",
+        "title": "Hardware selected in the design review",
         "items": [
           {
-            "id": "brakeSim-tire-specification",
-            "label": "Tire specification",
-            "value": "The report identifies Hoosier FSAE 18.0×6.0-10 R20 tires as the vehicle context for brake-bias calculations."
+            "id": "brakeSim-calipers-pads",
+            "label": "Calipers and pads",
+            "value": "Wilwood GP200 calipers: two new and two planned for rebuilding. Wilwood BP28 pads."
           },
           {
             "id": "brakeSim-hydraulic-selection",
-            "label": "Hydraulic hardware selection",
-            "value": "The design-lock model lists Tilton 78-Series master cylinders and a 1.25-inch piston diameter for the Wilwood GP200 calipers."
+            "label": "Hydraulic hardware",
+            "value": "Tilton 78-625 master cylinder with a ⅝ in bore, Tilton 77-262 bias bar and Autobahn 88 AN3 quick-disconnect coupler."
+          },
+          {
+            "id": "brakeSim-rotor-material",
+            "label": "Rotor material",
+            "value": "ASTM A48 Class 40 cast iron. The design review specifies a 3.75 in radius and 0.2 in thickness; the displayed native CAD has a 190.5 mm outer diameter and 5.08 mm thickness."
+          },
+          {
+            "id": "brakeSim-sensing-retention",
+            "label": "Sensing and retention",
+            "value": "GS1005 wheel-speed sensor with a stated 3 mm minimum gap; RCV FSAE brake-rotor pins and snap rings."
           }
         ]
       },
       {
-        "id": "brakeSim-confirmed-build",
-        "title": "Final rotor geometry",
+        "id": "brakeSim-design-results",
+        "title": "Design comparison and thermal prediction",
         "items": [
           {
-            "id": "brakeSim-final-rotor-diameter",
-            "label": "Final rotor diameter",
-            "value": "7.4 in. This is the final hardware diameter; the historical thermal-model inputs below have not been recomputed."
+            "id": "brakeSim-design-comparison",
+            "label": "Mk.7 → Mk.8",
+            "value": "DR design comparison: mass 1.39 → 1.07 lb (−23%); rotational inertia 11.55 → 9.35 lb·in² (−19%)."
+          },
+          {
+            "id": "brakeSim-temperature-result",
+            "label": "Front-rotor working range",
+            "value": "DR prediction: 90.75% of time at 350–450°C after three warm-up laps, against an 80% target."
+          }
+        ]
+      },
+      {
+        "id": "brakeSim-analysis-results",
+        "title": "Reported structural and fatigue results",
+        "items": [
+          {
+            "id": "brakeSim-structural-loads",
+            "label": "Structural load case",
+            "value": "14.93 kN pad force calculated from a 2 kN pedal force; 1,517.96 N·m brake torque; 450°C; stated minimum tensile strength 276 MPa."
+          },
+          {
+            "id": "brakeSim-fea-results",
+            "label": "Reported FEA result",
+            "value": "Factor of safety 2.455 and maximum deformation 0.52 mm. The displayed stress plot has a 1.124 × 10⁹ Pa von Mises maximum. The review does not establish the failure criterion needed to reconcile that plot with the stated factor of safety; independent verification remains open."
+          },
+          {
+            "id": "brakeSim-fatigue-results",
+            "label": "Reference fatigue result",
+            "value": "Maximum reference damage: 53.95%. Minimum reference equivalent life: 5.561 × 22 km endurances. The review separately sets a goal above three endurances (66 laps); its 22-lap thermal history spans 27.72 km. These block definitions must not be treated as an independently verified fatigue pass or measured service life."
+          }
+        ]
+      },
+      {
+        "id": "brakeSim-fabrication-next-steps",
+        "title": "Fabrication and integration next steps",
+        "items": [
+          {
+            "id": "brakeSim-fabrication",
+            "label": "Rotor and calipers",
+            "value": "Waterjet the rotor, surface-grind the friction faces and rebuild the retained calipers."
+          },
+          {
+            "id": "brakeSim-brake-lines",
+            "label": "Brake-line reuse",
+            "value": "Inspect Mk.6 components for reuse and consider CAD routing of the brake lines."
+          },
+          {
+            "id": "brakeSim-rear-cooling",
+            "label": "Rear thermal behavior",
+            "value": "The design review identifies cold rear rotors and asks the aerodynamics team to consider reducing rear airflow. This remains an integration question."
           }
         ]
       }

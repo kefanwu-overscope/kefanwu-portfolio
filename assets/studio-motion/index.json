@@ -1,6 +1,6 @@
 {
   "schema": "studio-motion-index-v1",
-  "release": "studio-packed-20260919",
+  "release": "brake-dr-20261005",
   "projects": {
     "steering": {
       "manifest": "steering/manifest.58205faed00ee856.json",
@@ -19,8 +19,8 @@
       "sha256": "871477ce65e6213f3c9636b3808a8ae9743eb89d2b5389969ee92427627d4549"
     },
     "brakeSim": {
-      "manifest": "brakeSim/manifest.f6b37bc3ff99110c.json",
-      "sha256": "f6b37bc3ff99110cb6faadb73cf825b7b57f15f4a1e227845a1a776d1e3e08a1"
+      "manifest": "brake-dr-20261005/manifest.e56b939e20fccf16.json",
+      "sha256": "e56b939e20fccf168bd7bd75f8d9613ac695ec08f3add2444d227c6084d8d5ea"
     },
     "aura": {
       "manifest": "aura/manifest.04a5825a491acd77.json",

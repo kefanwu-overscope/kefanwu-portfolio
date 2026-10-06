@@ -460,118 +460,128 @@ window.caseStudyData = {
   },
   brakeSim: {
     "number": "05",
-    "title": "Brake thermal model.",
-    "label": "Formula SAE / MATLAB & FEA",
-    deck: "Evaluate the thermal cost of a lighter brake rotor.",
-    description: "An endurance-cycle model connects a 25% mass-reduction target to heat input, cooling, friction hardware, and structural analysis.",
-    engineering: {
-      "goal": "Identify how rotor mass can be reduced without losing the thermal capacity required for repeated braking.",
+    "title": "FSAE Racecar Brake",
+    "label": "Formula SAE / Thermal & structural design",
+    "deck": "Reduce rotor mass while keeping the brakes in their working temperature range.",
+    "description": "A Mk.7-to-Mk.8 rotor redesign connects an endurance thermal model to lighter geometry, structural analysis, reference fatigue life and brake-system integration.",
+    "engineering": {
+      "goal": "Reduce rotor mass and rotational inertia while keeping the front rotor at 350–450°C for at least 80% of endurance after warm-up.",
       "constraints": [
-        "22 endurance laps, 25 track segments, brake-bias assumptions, and speed-dependent cooling.",
-        "Friction pairing, cost, manufacturability, and the distinction between historical model geometry and the final 7.4 in rotor."
+        "Two independent hydraulic circuits, simultaneous wheel lock, chassis clearance and reuse of serviceable Mk.6 hardware.",
+        "Simple rotor geometry, ASTM A48 Class 40 cast iron, Wilwood GP200 calipers and BP28 pads.",
+        "Repeated braking across the endurance cycle, limited convection validation, and a rear rotor that remains colder than desired."
       ],
       "checks": [
         [
-          "Endurance temperature behavior",
-          "Transient model of braking input, hub conduction, convection, and radiation",
-          "Temperature histories identify repeated-load peaks under the stated model assumptions.",
+          "Rotor mass and inertia",
+          "Mk.7-to-Mk.8 design comparison",
+          "Mass: 1.39 → 1.07 lb (−23%). Inertia: 11.55 → 9.35 lb·in² (−19%).",
+          "DR design comparison"
+        ],
+        [
+          "Front-rotor working range",
+          "22-lap thermal prediction; evaluate after the first three laps",
+          "90.75% of the remaining time at 350–450°C, against an 80% target.",
           "Simulated"
         ],
         [
-          "Structural margin",
-          "Rotor structural FEA",
-          "Design record reports a 3.0 safety factor alongside the 25% mass-reduction target.",
-          "Simulated"
+          "Cooling-model plausibility",
+          "Reproduce the component and cooling-curve conditions of the cited MIT study",
+          "Radiation and conduction compared with the reference; convection remained outside the validation.",
+          "Reference comparison"
         ],
         [
-          "Model plausibility",
-          "Comparison with Mk.7 and peer-team data",
-          "Supports a sizing baseline; physical endurance temperatures remain a separate validation.",
-          "Engineering comparison"
+          "Structural response",
+          "14.93 kN pad force, 1,517.96 N·m torque and 450°C load case",
+          "The design review reports a factor of safety of 2.455 and maximum deformation of 0.52 mm.",
+          "DR-reported FEA"
         ],
         [
-          "Final geometry consistency",
-          "Compare final hardware with archived model inputs",
-          "Final diameter is 7.4 in; the historical thermal model has not been rerun for that update.",
-          "Configuration check"
+          "Repeated-load life",
+          "Thermal histories and calculated brake forces used for fatigue analysis",
+          "DR-reported reference life: 5.561 equivalent 22 km endurances; damage: 53.95%. The separate target is more than three endurances (66 laps); physical life is not demonstrated.",
+          "Reference prediction"
         ]
       ],
-      "iteration": "The analysis supports the mass-versus-heat tradeoff. Updating the thermal inputs to final geometry and comparing against instrumented endurance temperatures would close the remaining model-to-hardware loop."
+      "iteration": "The review advances the lighter rotor to planned waterjet cutting and surface grinding, with caliper rebuilding and brake-line inspection still ahead. The cold rear rotor keeps airflow integration open; measured vehicle temperatures would complete the model-to-hardware comparison."
     },
     "cover": {
-      "src": "assets/editorial/neutral-20260915/brakeSim-wide-1800.webp?v=261a7772793d",
-      "alt": "Perforated cast-iron brake rotor before heating.",
-      "caption": "The brake rotor represented in the thermal and structural study.",
+      "src": "assets/editorial/brake-dr-20261005/brakeSim-wide-1800.webp?v=8aba11208295",
+      "alt": "Mk.8 scalloped cast-iron brake rotor with 72 through holes before illustrative heating.",
+      "caption": "Rotor geometry connects braking heat storage with mass and inertia.",
       "kind": "Project CAD render",
-      "srcset": "assets/editorial/neutral-20260915/brakeSim-wide-480.webp?v=e231b920e798 480w, assets/editorial/neutral-20260915/brakeSim-wide-960.webp?v=ea2678e77ff1 960w, assets/editorial/neutral-20260915/brakeSim-wide-1800.webp?v=261a7772793d 1800w",
+      "srcset": "assets/editorial/brake-dr-20261005/brakeSim-wide-480.webp?v=1ff94cc7ef6c 480w, assets/editorial/brake-dr-20261005/brakeSim-wide-960.webp?v=52a14279cd8a 960w, assets/editorial/brake-dr-20261005/brakeSim-wide-1800.webp?v=8aba11208295 1800w",
       "width": 1800,
       "height": 1200
-    },
-    summary: [
+},
+    "summary": [
       [
         "Scope",
-        "MATLAB rotor/pad thermal modeling, hardware selection, and comparison with structural FEA."
+        "Rotor design, endurance thermal modeling, structural FEA and reference fatigue analysis."
       ],
       [
-        "Design target",
-        "Reduce rotor mass by 25% while retaining usable pad/rotor temperatures through endurance."
+        "Design result",
+        "23% less mass and 19% less rotational inertia than Mk.7, as reported in the design review."
       ],
       [
-        "Result",
-        "A sizing model and 3.0 structural FEA safety factor; final hardware diameter is 7.4 in."
+        "Thermal result",
+        "90.75% front-rotor time at 350–450°C after three warm-up laps, versus an 80% target; simulated."
       ]
     ],
-    chapters: [
+    "chapters": [
       {
         "id": "constraint",
         "label": "Requirements",
-        "title": "Reduce inertia\nwithout losing heat capacity.",
+        "title": "A lighter rotor\nstill has to store heat.",
         "paragraphs": [
-          "The rotor study targets a 25% mass reduction. Removing material lowers rotational and unsprung mass, but also reduces the energy the rotor can absorb before its temperature rises.",
-          "I modeled 22 endurance laps using 25 track segments with varying velocity and brake demand. Cooling between braking zones matters because the design has to tolerate cumulative heating across the event."
+          "The design starts with a temperature requirement: keep the front rotor at 350–450°C for at least 80% of endurance after warm-up. That range supports the BP28 pad’s target friction coefficient of 0.47–0.48. Mass and rotational inertia should fall while the geometry stays practical to make.",
+          "The brake system also needs two independent hydraulic circuits, simultaneous wheel lock and clearance above the lower chassis surface. Reusing serviceable Mk.6 parts keeps the rotor redesign connected to the existing car."
         ],
-        "image": 2,
-        "evidence": "Rotor geometry CAD",
-        "note": "Perforated rotor geometry considered alongside thermal mass."
+        "image": 0,
+        "evidence": "Mk.8 rotor geometry · DR 32",
+        "note": "A perforated, scalloped cast-iron rotor developed around the thermal and manufacturing requirements."
       },
       {
         "id": "decisions",
-        "label": "Model",
-        "title": "Expose the assumptions\nbehind each temperature.",
+        "label": "Thermal model",
+        "title": "Account for heat in,\nheat out and model limits.",
         "paragraphs": [
-          "Braking work provides the heat input. The model uses front/rear brake bias and a rotor/pad heat split, then removes energy through hub conduction, radiation, and velocity-dependent convection.",
-          "The documented inputs include a 220 kg vehicle, 72% front bias, and 90% of brake heat entering the rotor. These assumptions make the plots useful for comparing design choices while defining the conditions under which the predictions apply."
+          "Track segments from Michigan 2024 turn speed changes and braking demand into heat input. Separate lumped rotor, pad, hub and caliper nodes store heat; speed-dependent convection, radiation and conduction to adjacent components remove it. The design-review plot spans 22 simulated laps.",
+          "The scenario uses on/off braking, no trail braking, no aerodynamic drag and no regenerative braking. Radiation uses absolute temperature, while finite conduction links let the neighboring hardware warm with the rotor.",
+          "Cooling curves from a published MIT FSAE brake study provide the comparison for radiation and conduction. The review explicitly leaves convection outside that validation, so this comparison does not establish measured endurance performance."
         ],
         "image": 1,
-        "evidence": "Thermal simulation",
-        "note": "Predicted rotor and pad temperatures over the endurance cycle."
+        "evidence": "Energy balance and heat-transfer paths · DR 29",
+        "note": "The thermal network links rotor temperature to heat capacity and three cooling mechanisms."
       },
       {
         "id": "hardware",
-        "label": "Tradeoffs",
-        "title": "Choose material and\nfriction hardware together.",
+        "label": "Design result",
+        "title": "Less mass and inertia.\nA defined thermal result.",
         "paragraphs": [
-          "ASTM A48 Class 40 cast iron was favored over exotic materials for conductivity, friction pairing, cost, and manufacturability. Rotor mass and exposed area have to be balanced together because they influence heat storage and cooling differently.",
-          "The study connects that choice to Wilwood GP200 calipers and BP-28 pads. AN3 quick-disconnects were considered for service access, extending the design review beyond the rotor alone."
+          "The Mk.8 design moves from 1.39 to 1.07 lb and from 11.55 to 9.35 lb·in² of rotational inertia: reductions of 23% and 19% relative to Mk.7. The review pairs ASTM A48 Class 40 cast iron with Wilwood GP200 calipers and BP28 pads.",
+          "The front rotor is predicted to spend 90.75% of the time after three warm-up laps in the 350–450°C band, exceeding the 80% target. That gives the lighter geometry a specific thermal criterion rather than a mass result alone.",
+          "The rear rotor remains much colder in the same plot. Rear airflow and brake-system integration remain open design work."
         ],
         "image": 2,
-        "evidence": "Hardware sizing geometry",
-        "note": "The rotor pattern is one part of a coupled mass, cooling, and hardware decision."
+        "evidence": "Thermal result · DR 32",
+        "note": "The review reports 90.75%; the plot title displays 90.7%. Both refer to the front rotor after lap three."
       },
       {
         "id": "validation",
-        "label": "Validation",
-        "title": "Separate the sizing study\nfrom the final hardware.",
+        "label": "Checks & next steps",
+        "title": "Carry the duty cycle\ninto strength and life checks.",
         "paragraphs": [
-          "Mk.7 and peer-team data provided comparison points for the thermal assumptions. Structural FEA reported a 3.0 safety factor; the mass reduction remained a 25% design target.",
-          "The final rotor diameter is 7.4 inches. The archived thermal calculations retain their original dimensions, so a rerun for final geometry and measured endurance temperatures are the remaining steps for validating that hardware against the thermal model."
+          "The structural case uses 14.93 kN pad force from a 2 kN pedal load, 1,517.96 N·m torque and 450°C. The design review reports a 2.455 factor of safety and 0.52 mm maximum deformation.",
+          "Thermal histories and calculated brake forces feed the reference fatigue analysis. The DR reports 5.561 equivalent 22 km endurances and 53.95% maximum reference damage. These reference outputs do not establish physical fatigue life or a demonstrated pass of the separate three-endurance / 66-lap target.",
+          "The next steps are waterjet cutting, surface grinding, caliper rebuilding and inspection of the brake lines for reuse. Resolving rear-rotor cooling and comparing vehicle temperatures with the model would complete the remaining design loop."
         ],
-        "image": 0,
-        "evidence": "Structural FEA",
-        "note": "The original rotor analysis; the stated safety factor is a simulation result."
+        "image": 3,
+        "evidence": "Reference fatigue analysis · DR 34",
+        "note": "Damage and life are reference predictions from the reported analysis; fabrication remains a next step in the review."
       }
     ],
-    "recordNote": "The 25% figure is a design target. The source record does not report a measured final rotor mass reduction or a full instrumented endurance-temperature validation.",
+    "recordNote": "Results follow the current brake design review. Mass and inertia are design comparisons; temperature, strength and fatigue figures are analytical predictions. Model-version and verification limits are recorded below.",
     "next": "aura"
   },
   aura: {

@@ -5,7 +5,14 @@ const presentation = {
   vineRobot: ['robotics analysis fabrication', 'Vine eversion', ['vineRobot-pressure-levels', 'vineRobot-load-levels']],
   javelin: ['robotics analysis fabrication', 'Flight motion', ['javelin-prop-use-cases', 'javelin-prop-study-assumptions']],
   scanner: ['robotics product fabrication', 'Gantry scan', ['SC-01', 'SC-06']],
-  brakeSim: ['motorsport analysis', 'Illustrative heat cycle', ['brakeSim-final-rotor-diameter', 'brakeSim-time-integration']],
+  brakeSim: [
+    "motorsport analysis",
+    "Illustrative heat cycle",
+    [
+      "brakeSim-design-comparison",
+      "brakeSim-temperature-result"
+    ]
+  ],
   aura: ['robotics product fabrication', 'Assembly sequence', ['aura-initial-payload', 'aura-tested-payload', 'aura-drive-model']],
   carbonSeat: ['motorsport product fabrication', 'Illustrative layup stages', ['carbonSeat-resin', 'carbonSeat-main-layup', 'carbonSeat-local-reinforcement']],
   seat: ['motorsport product fabrication', 'Sheet-metal folding', ['seat-vehicle', 'seat-responsibility']],

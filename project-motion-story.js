@@ -1,7 +1,7 @@
 import { layoutAnnotation, maskRegions } from './project-annotation-layout.js';
 import { renderPressureLegend } from './project-pressure-legend.js';
-import { projectMotionLabels } from './project-motion-labels.js';
-import { projectMotionNotes } from './project-motion-notes.js?v=page-integrated-20260930';
+import { projectMotionLabels } from './project-motion-labels.js?v=brake-dr-20261005';
+import { projectMotionNotes } from './project-motion-notes.js?v=brake-dr-20261005';
 
 const clamp = value => Math.max(0, Math.min(1, Number(value) || 0));
 export function progressFromScroll(scroll, start, distance) { return clamp((scroll - start) / Math.max(1, distance)); }
@@ -91,7 +91,7 @@ export function attachMotionStory(story) {
     else revealAnnotation();
   }
   if (leader) {
-    fetch('assets/exploded/refined-20260930/anchors.json', { signal: events.signal }).then(response => {
+    fetch('assets/exploded/brake-dr-20261005/anchors.json', { signal: events.signal }).then(response => {
       if (!response.ok) throw new Error('Annotation coordinates unavailable');
       return response.json();
     }).then(data => { if (disposed) return; frameAnchors = data[story.dataset.motionProject]; placement = null; occupancyKey = '';

@@ -370,9 +370,9 @@ def export_ftc_room(objects, folder):
     return result
 
 
-def export(key, namespace, sample_count=None):
+def export(key, namespace, sample_count=None, output_folder=None):
     started = time.monotonic()
-    folder = ROOT/'assets/studio-motion'/key
+    folder = Path(output_folder) if output_folder else ROOT/'assets/studio-motion'/key
     folder.mkdir(parents=True,exist_ok=True)
     print('STUDIO_BUILD',key,flush=True)
     motion, parts, originals, ground = namespace['render'](key)

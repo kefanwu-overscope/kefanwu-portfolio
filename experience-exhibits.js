@@ -79,22 +79,22 @@ export const ROOM_EXHIBITS = Object.freeze({
     "frontYaw": -0.5317240057171826
   },
   "brakeSim": {
-    "url": "models/room-current/brakeSim.529756e9c1f80320.glb.gz",
-    "bytes": 110314,
-    "triangles": 9946,
+    "url": "models/room-current/brakeSim.904b7ecb3f82b278.glb.gz",
+    "bytes": 89567,
+    "triangles": 6768,
     "bounds": {
       "min": [
-        -0.03490666672587395,
+        -0.03733333200216293,
         0,
         -1.399999976158142
       ],
       "max": [
-        0.03490666672587395,
-        2.7994019985198975,
+        0.03733333200216293,
+        2.799999952316284,
         1.399999976158142
       ]
     },
-    "frontYaw": -1.2924967906561051
+    "frontYaw": -1.2924967077927758
   },
   "aura": {
     "url": "models/room-current/aura.45e33a70c105e6e6.glb.gz",
@@ -328,6 +328,6 @@ export function prepareRoomExhibit(root, key) {
     }
   });
   root.userData.roomExhibit = key;
-  root.userData.roomExhibitSource = 'studio-packed-20260919/sample-0';
+  root.userData.roomExhibitSource = 'studio-motion-index/sample-0';
   return root;
 }

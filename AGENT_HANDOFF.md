@@ -1,5 +1,23 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## FSAE Racecar Brake — DR source update, 2026-10-05
+
+Based on96f47b7a. The stablekey brakeSim now uses the name FSAE Racecar Brake.
+All outcome figures come from the user-supplied DR23–35. OEM files support only
+technical formulation and source-version notes. Read tools/brake-dr/README.md
+and ../.codex/brake-dr-20261005/UPDATE_REVIEW.md before revising these claims.
+The72-hole scalloped5.08mm CAD display is distinct from the historical4.7498mm
+thermal-study geometry. Do not silently recompute published DR outcomes from
+newer CAD. Fatigue5.561 refers to equivalent22km blocks, not verified physical
+life or a proved66lap requirement. FEA FoS2.455 stays explicitly DR-reported.
+
+New files use brake-dr-20261005 paths; other15 project packages and previews are
+unchanged. The stable original brakeSim package is retained for legacy pages.
+A new optional local-source path on the existing Blender exporter/optimizer
+creates the derivative without modifying native CAD. Original DR, URLs and OEM
+audit records remain outside the public repository. No cloud document is edited.
+
+
 ## Refined surfaces and nearby animated annotations · follow-up to465eb59e
 
 Models stay fixed in the page. Small callouts now choose nearby free space using

@@ -86,7 +86,7 @@
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 3000);
     try {
-      const response = await fetch('assets/editorial/animation-covers.json?v=refined-20260930', { signal: controller.signal, cache: 'force-cache' });
+      const response = await fetch('assets/editorial/animation-covers.json?v=brake-dr-20261005', { signal: controller.signal, cache: 'force-cache' });
       if (!response.ok) throw new Error('Cover catalog unavailable');
       const catalog = await response.json();
       const cover = catalog.version === 1 && catalog.projects?.[key];
@@ -143,6 +143,12 @@
     const downloads = [...(project.downloads || []), ...(editorial.downloads || [])];
     return downloads.length ? `<div class="project-downloads"><h3>Project files</h3>${downloads.map((download) =>
       `<a class="text-link" href="${escape(download.href)}" download>${escape(download.label)} <span aria-hidden="true">↓</span></a>`).join('')}</div>` : '';
+  }
+
+  function sourceLinks() {
+    const sources = project.sources || [];
+    return sources.length ? `<div class="project-downloads"><h3>Project sources</h3>${sources.map(source =>
+      `<a class="text-link" href="${escape(source.href)}" target="_blank" rel="noopener">${escape(source.label)} <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>`).join('')}</div>` : '';
   }
 
   function documentedDetails() {
@@ -232,7 +238,7 @@
     <section class="record-section wrap" id="record" aria-labelledby="record-title">
       <div class="section-heading"><div><p class="eyebrow">For the technical conversation</p><h2 id="record-title">The engineering record.</h2></div></div>
       <p class="record-intro">Original project notes, methods, and results.${editorial.recordNote ? ` ${escape(editorial.recordNote)}` : ''}</p>
-      <div class="record-layout"><aside aria-label="Project tools and context"><h3>Tools & methods</h3><ul class="tool-list">${(project.tools || []).map((tool) => `<li>${escape(tool)}</li>`).join('')}</ul>${sourceSpec()}${downloadLinks()}</aside>
+      <div class="record-layout"><aside aria-label="Project tools and context"><h3>Tools & methods</h3><ul class="tool-list">${(project.tools || []).map((tool) => `<li>${escape(tool)}</li>`).join('')}</ul>${sourceSpec()}${downloadLinks()}${sourceLinks()}</aside>
         <div class="source-details">${documentedDetails()}<details><summary>Project overview & highlights</summary><div class="source-detail-body"><p>${escape(project.summary)}</p><ul>${(project.highlights || []).map((item) => `<li>${escape(item)}</li>`).join('')}</ul></div></details>${originalDetails()}</div>
       </div>
     </section>

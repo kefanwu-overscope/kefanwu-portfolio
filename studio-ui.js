@@ -1,4 +1,4 @@
-import { studioProjects, studioCategories, getStudioProject } from './studio-catalog.js?v=studio-20260919';
+import { studioProjects, studioCategories, getStudioProject } from './studio-catalog.js?v=brake-dr-20261005';
 
 const escape = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 const clamp = (value) => Math.max(0, Math.min(1, Number(value) || 0));

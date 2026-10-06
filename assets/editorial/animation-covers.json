@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "revision": "refined-20260930",
+  "revision": "brake-dr-20261005",
   "projects": {
     "steering": {
       "src": "assets/editorial/refined-20260930/steering-wide-1800.webp?v=3417db4df001",
@@ -105,38 +105,38 @@
       "provenance": "assets/exploded/refined-20260930/sd/javelin/provenance.json"
     },
     "brakeSim": {
-      "src": "assets/editorial/refined-20260930/brakeSim-wide-1800.webp?v=6382a2342856",
-      "srcset": "assets/editorial/refined-20260930/brakeSim-wide-480.webp?v=df7ff8e1999b 480w, assets/editorial/refined-20260930/brakeSim-wide-960.webp?v=21a7b71fe7ee 960w, assets/editorial/refined-20260930/brakeSim-wide-1800.webp?v=6382a2342856 1800w",
-      "alt": "Perforated cast-iron brake rotor before heating.",
+      "src": "assets/editorial/brake-dr-20261005/brakeSim-wide-1800.webp?v=8aba11208295",
+      "srcset": "assets/editorial/brake-dr-20261005/brakeSim-wide-480.webp?v=1ff94cc7ef6c 480w, assets/editorial/brake-dr-20261005/brakeSim-wide-960.webp?v=52a14279cd8a 960w, assets/editorial/brake-dr-20261005/brakeSim-wide-1800.webp?v=8aba11208295 1800w",
+      "alt": "Mk.8 scalloped cast-iron brake rotor with 72 through holes before illustrative heating.",
       "width": 1800,
       "height": 1200,
       "variants": [
         {
-          "src": "assets/editorial/refined-20260930/brakeSim-wide-480.webp",
+          "src": "assets/editorial/brake-dr-20261005/brakeSim-wide-480.webp",
           "width": 480,
           "height": 320,
-          "sha256": "df7ff8e1999bf8553fc1dbee4c2ea32bba8120575388a956a7d444ff6f660397",
-          "bytes": 18398
+          "sha256": "1ff94cc7ef6c04208b4ed9e622ac9e40ea4cdd8ca8e5267e0bb67185b9d97bf2",
+          "bytes": 9534
         },
         {
-          "src": "assets/editorial/refined-20260930/brakeSim-wide-960.webp",
+          "src": "assets/editorial/brake-dr-20261005/brakeSim-wide-960.webp",
           "width": 960,
           "height": 640,
-          "sha256": "21a7b71fe7eeba4c68efbe0e3f31e232899a6991578ebb6dd4c29ab097eaf5fc",
-          "bytes": 43708
+          "sha256": "52a14279cd8a15b08c64bdbd9534043faac98cfa9572e6fb4bdb40d9ccc5d251",
+          "bytes": 21210
         },
         {
-          "src": "assets/editorial/refined-20260930/brakeSim-wide-1800.webp",
+          "src": "assets/editorial/brake-dr-20261005/brakeSim-wide-1800.webp",
           "width": 1800,
           "height": 1200,
-          "sha256": "6382a234285623b230d7dce03c6f9d2172d8e955308d1b29eee60fe1f8469fd8",
-          "bytes": 124550
+          "sha256": "8aba112082952706b00224a6b73cb97cd98b38c86a79363a2ada02495bc15a83",
+          "bytes": 61522
         }
       ],
       "coverProgress": 0.0,
-      "sourceFrame": "assets/exploded/refined-20260930/sd/brakeSim/00.webp?v=57ea512717e5",
-      "sourceFrameSha256": "57ea512717e588f2cea244d2fae545a713e3a05b7c09775bcc4d6aa53abb171b",
-      "provenance": "assets/exploded/refined-20260930/sd/brakeSim/provenance.json"
+      "sourceFrame": "assets/exploded/brake-dr-20261005/sd/brakeSim/00.webp?v=5cd266c1b7c1",
+      "sourceFrameSha256": "5cd266c1b7c1a9c49490530e240894723e433868396e1563f0a2f2797a125a95",
+      "provenance": "assets/exploded/brake-dr-20261005/sd/brakeSim/provenance.json"
     },
     "aura": {
       "src": "assets/editorial/refined-20260930/aura-wide-1800.webp?v=ae9524d5de10",

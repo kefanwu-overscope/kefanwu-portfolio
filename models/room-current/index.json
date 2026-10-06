@@ -1,7 +1,7 @@
 {
   "schema": "room-exhibits-v1",
-  "sourceRelease": "studio-packed-20260919",
-  "sourceIndexSha256": "a4392f8e555ef2c8641994cc263d4625fe8eecdd575f617c90b6291ab3e75a2d",
+  "sourceRelease": "brake-dr-20261005",
+  "sourceIndexSha256": "7daf7e94e0ec24f97706a7760287cfd668b731ef64b29f4fb0ecf16a11af6162",
   "sample": 0,
   "projects": {
     "steering": {
@@ -113,29 +113,29 @@
       }
     },
     "brakeSim": {
-      "url": "models/room-current/brakeSim.529756e9c1f80320.glb.gz",
-      "sha256": "529756e9c1f80320436d4a5fe51ebd38336cc18f8e656acab33a0cb021793ee4",
-      "bytes": 110314,
-      "glbBytes": 248888,
+      "url": "models/room-current/brakeSim.904b7ecb3f82b278.glb.gz",
+      "sha256": "904b7ecb3f82b2789a624072a34d170e007c1739edffdf99613c76054909c586",
+      "bytes": 89567,
+      "glbBytes": 199004,
       "compression": "gzip",
-      "triangles": 9946,
+      "triangles": 6768,
       "bounds": {
         "min": [
-          -0.03490666672587395,
+          -0.03733333200216293,
           0,
           -1.399999976158142
         ],
         "max": [
-          0.03490666672587395,
-          2.7994019985198975,
+          0.03733333200216293,
+          2.799999952316284,
           1.399999976158142
         ]
       },
-      "frontYaw": -1.2924967906561051,
+      "frontYaw": -1.2924967077927758,
       "source": {
-        "manifest": "assets/studio-motion/brakeSim/manifest.f6b37bc3ff99110c.json",
-        "manifestSha256": "f6b37bc3ff99110cb6faadb73cf825b7b57f15f4a1e227845a1a776d1e3e08a1",
-        "geometrySha256": "4181f8a44a9ce53322891777238ef59122a6443ea2ced935c9be730724da6d6e",
+        "manifest": "assets/studio-motion/brake-dr-20261005/manifest.e56b939e20fccf16.json",
+        "manifestSha256": "e56b939e20fccf168bd7bd75f8d9613ac695ec08f3add2444d227c6084d8d5ea",
+        "geometrySha256": "6ffd34bf4cf3d095e6b3bef6708b21a6705016c4a642ecb413419383fbbd28a6",
         "initialMotionSha256": "4d6015c3dc9fc41f6ac8bf53c208a68863d149d965096d1729770f4a623ee11f"
       }
     },
