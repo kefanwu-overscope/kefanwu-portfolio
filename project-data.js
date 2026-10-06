@@ -483,9 +483,9 @@ const projectData = {
         "caption": "Mk.8 rotor design · DR 32"
       },
       {
-        "src": "assets/brake-dr-20261005/slide-h471572ebb20adb45_19_0.png",
-        "alt": "Design-review energy balance showing braking heat input, convection, radiation and conduction",
-        "caption": "Thermal energy balance · DR 29"
+        "src": "assets/brake-figures-20261005/energy-balance.png",
+        "alt": "Original energy-balance equation relating heat input, convection, radiation and conduction to temperature change",
+        "caption": "Rotor energy balance · DR 29"
       },
       {
         "src": "assets/brake-dr-20261005/slide32-image3.png",
@@ -493,9 +493,9 @@ const projectData = {
         "caption": "Thermal prediction · full figure from DR 32"
       },
       {
-        "src": "assets/brake-dr-20261005/slide-h34fe89c1a74b9e38_0_7.png",
-        "alt": "Reference fatigue analysis showing maximum damage of 53.95 percent and minimum life of 5.561 endurances",
-        "caption": "Reference fatigue prediction · DR 34"
+        "src": "assets/brake-figures-20261005/fatigue-damage.png",
+        "alt": "Original rotor fatigue-damage map with complete percentage legend and a maximum of 53.95 percent",
+        "caption": "Reference fatigue damage · DR 34"
       },
       {
         "src": "assets/brake-dr-20261005/slide32-image2.png",
@@ -508,9 +508,19 @@ const projectData = {
         "caption": "MIT cooling-curve reference · DR 31"
       },
       {
-        "src": "assets/brake-dr-20261005/slide-h34fe89c1a74b9e38_0_2.png",
-        "alt": "Structural FEA slide with loading assumptions, stress and deformation plots, and reported factor of safety",
-        "caption": "Structural analysis as reported · DR 33"
+        "src": "assets/brake-figures-20261005/stress-von-mises.png",
+        "alt": "Original von Mises stress map with full N/m² legend, applied loads and constraints",
+        "caption": "Von Mises stress · DR 33"
+      },
+      {
+        "src": "assets/brake-figures-20261005/displacement.png",
+        "alt": "Original resultant-displacement map with full millimeter legend and a maximum of 0.52 mm",
+        "caption": "Resultant displacement · DR 33"
+      },
+      {
+        "src": "assets/brake-figures-20261005/fatigue-life.png",
+        "alt": "Original reference-life map with full legend in equivalent 22 km endurances and a minimum of 5.561",
+        "caption": "Reference equivalent life · DR 34"
       }
     ],
     "sources": [

@@ -580,35 +580,45 @@ window.caseStudySupplements = {
         "width": 545,
         "height": 540
       },
-      "assets/brake-dr-20261005/slide-h471572ebb20adb45_19_0.png": {
+      "assets/brake-figures-20261005/energy-balance.png": {
         "kind": "diagram",
-        "width": 1600,
-        "height": 900
-      },
-      "assets/brake-dr-20261005/slide32-image2.png": {
-        "kind": "cad",
-        "width": 527,
-        "height": 506
-      },
-      "assets/brake-dr-20261005/slide-h34fe89c1a74b9e38_0_7.png": {
-        "kind": "document",
-        "width": 1600,
-        "height": 900
+        "width": 1003,
+        "height": 133
       },
       "assets/brake-dr-20261005/slide32-image3.png": {
         "kind": "plot",
         "width": 1600,
         "height": 762
       },
+      "assets/brake-figures-20261005/fatigue-damage.png": {
+        "kind": "plot",
+        "width": 1600,
+        "height": 810
+      },
+      "assets/brake-dr-20261005/slide32-image2.png": {
+        "kind": "cad",
+        "width": 527,
+        "height": 506
+      },
       "assets/brake-dr-20261005/slide31-image1.png": {
         "kind": "plot",
         "width": 952,
         "height": 671
       },
-      "assets/brake-dr-20261005/slide-h34fe89c1a74b9e38_0_2.png": {
-        "kind": "document",
+      "assets/brake-figures-20261005/stress-von-mises.png": {
+        "kind": "plot",
+        "width": 764,
+        "height": 521
+      },
+      "assets/brake-figures-20261005/displacement.png": {
+        "kind": "plot",
+        "width": 705,
+        "height": 512
+      },
+      "assets/brake-figures-20261005/fatigue-life.png": {
+        "kind": "plot",
         "width": 1600,
-        "height": 900
+        "height": 789
       }
     },
     "sections": [

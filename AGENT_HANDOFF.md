@@ -1,5 +1,9 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## DR 原图修正 · 2026-10-05
+
+按用户澄清，移除刹车项目中三张整页 DR 截图的显示引用。热平衡改用原公式图；结构分析拆为原始应力图和位移图；疲劳分析拆为损伤图和等效寿命图。五张新增图均逐字节复制自 DR 嵌入图，保留完整色标、单位、约束和标签；重复疲劳图只用一次。其余四张原图继续使用，共九张。主站和 3D 项目页共享更新，工程数据、模型和动画不变。源元素ID与SHA256见 assets/brake-figures-20261005/provenance.json。
+
 ## FSAE Racecar Brake — DR source update, 2026-10-05
 
 Based on96f47b7a. The stablekey brakeSim now uses the name FSAE Racecar Brake.

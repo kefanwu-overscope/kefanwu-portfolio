@@ -1,0 +1,51 @@
+{
+  "presentationId": "1orhUsJPe5ssAuhbjYn1FMEqdGCs8-4Xmxa8L9I7TWK0",
+  "revision": "-088OhLGU32BAA",
+  "figures": [
+    {
+      "file": "energy-balance.png",
+      "sourceElementId": "h471572ebb20adb45_19_3",
+      "sourceFile": "slide29-image1.png",
+      "sha256": "1db228a100e4051e9f347bdaac0cf9eacd7af18ad8f41a0ef546a1f2a3a25596",
+      "width": 1003,
+      "height": 133,
+      "operation": "Byte-for-byte copy of embedded DR image; no slide screenshot, crop or repaint."
+    },
+    {
+      "file": "stress-von-mises.png",
+      "sourceElementId": "h1bcaee67a9fadb73_0_21",
+      "sourceFile": "slide33-image1.png",
+      "sha256": "f48904c52db78c82b7130b5d986012b3460424ee0d303c46f35917382b54363b",
+      "width": 764,
+      "height": 521,
+      "operation": "Byte-for-byte copy of embedded DR image; no slide screenshot, crop or repaint."
+    },
+    {
+      "file": "displacement.png",
+      "sourceElementId": "h1bcaee67a9fadb73_0_23",
+      "sourceFile": "slide33-image2.png",
+      "sha256": "87c05c5311f9e27d13ac88bd6c1f54afbf2ef92628b3faf4938914e8e731f4a7",
+      "width": 705,
+      "height": 512,
+      "operation": "Byte-for-byte copy of embedded DR image; no slide screenshot, crop or repaint."
+    },
+    {
+      "file": "fatigue-damage.png",
+      "sourceElementId": "h1c8a01229e089f27_0_0",
+      "sourceFile": "slide34-image1.png",
+      "sha256": "d5c253d46e5dda8e75bea920d53575df95c4d38c791d87e3fc4f52192fbc3406",
+      "width": 1600,
+      "height": 810,
+      "operation": "Byte-for-byte copy of embedded DR image; no slide screenshot, crop or repaint."
+    },
+    {
+      "file": "fatigue-life.png",
+      "sourceElementId": "h1c8a01229e089f27_0_2",
+      "sourceFile": "slide34-image3.png",
+      "sha256": "20fc22b1d34cd6542d2cd30b9ef07fc8a2bb6fd55757504fccb1923e1e54e441",
+      "width": 1600,
+      "height": 789,
+      "operation": "Byte-for-byte copy of embedded DR image; no slide screenshot, crop or repaint."
+    }
+  ]
+}

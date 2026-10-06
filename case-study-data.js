@@ -551,8 +551,8 @@ window.caseStudyData = {
           "Cooling curves from a published MIT FSAE brake study provide the comparison for radiation and conduction. The review explicitly leaves convection outside that validation, so this comparison does not establish measured endurance performance."
         ],
         "image": 1,
-        "evidence": "Energy balance and heat-transfer paths · DR 29",
-        "note": "The thermal network links rotor temperature to heat capacity and three cooling mechanisms."
+        "evidence": "Rotor energy balance · DR 29",
+        "note": "The original equation relates net heat flow to thermal storage; convection, radiation and conduction provide the cooling terms."
       },
       {
         "id": "hardware",
@@ -577,8 +577,8 @@ window.caseStudyData = {
           "The next steps are waterjet cutting, surface grinding, caliper rebuilding and inspection of the brake lines for reuse. Resolving rear-rotor cooling and comparing vehicle temperatures with the model would complete the remaining design loop."
         ],
         "image": 3,
-        "evidence": "Reference fatigue analysis · DR 34",
-        "note": "Damage and life are reference predictions from the reported analysis; fabrication remains a next step in the review."
+        "evidence": "Reference fatigue damage · DR 34",
+        "note": "The original damage map reports a 53.95% maximum. The separate equivalent-life map is available in the image archive; both are reference predictions."
       }
     ],
     "recordNote": "Results follow the current brake design review. Mass and inertia are design comparisons; temperature, strength and fatigue figures are analytical predictions. Model-version and verification limits are recorded below.",
