@@ -125,6 +125,44 @@
     return width && height ? ` style="--media-ratio:${width / height}"` : '';
   }
 
+  function chapterLayout(chapter) {
+    if (chapter.image === null) return ' chapter-text-only';
+    const view = presentation(gallery[chapter.image]);
+    if (view.kind === 'diagram' && view.width / view.height > 3) return ' chapter-equation';
+    return ['plot', 'document'].includes(view.kind) ? ' chapter-wide' : '';
+  }
+
+  function chapterRecords() {
+    return editorial.chapters.filter(chapter => chapter.detailParagraphs?.length).map(chapter =>
+      `<details class="chapter-record" id="record-chapter-${escape(chapter.id)}">
+        <summary>${escape(chapter.title.replace(/\s+/g, ' ').trim())} — full account</summary>
+        <div class="source-detail-body">${chapter.detailParagraphs.map(text => `<p>${escape(text)}</p>`).join('')}</div>
+      </details>`).join('');
+  }
+
+  // Native chapter links and retained-room history use the same disclosure.
+  // Open ancestors before scrolling, including a freshly recreated iframe.
+  function revealAnchor(value) {
+    let id = String(value || '').replace(/^#/, '');
+    try { id = decodeURIComponent(id); } catch {}
+    const target = document.getElementById(id);
+    if (!target || !root.contains(target)) return null;
+    for (let node = target; node && node !== root; node = node.parentElement) {
+      if (node.tagName === 'DETAILS') node.open = true;
+    }
+    return target;
+  }
+  window.addEventListener('case-reveal-anchor', event => revealAnchor(event.detail?.id));
+  window.addEventListener('hashchange', () => {
+    const target = revealAnchor(location.hash);
+    if (target?.tagName === 'DETAILS') target.scrollIntoView({ behavior: 'instant', block: 'start' });
+  });
+  root.addEventListener('click', event => {
+    if (event.defaultPrevented || event.button !== 0 || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    const link = event.target.closest?.('a[href^="#"]');
+    if (link) revealAnchor(link.getAttribute('href'));
+  });
+
   function originalDetails() {
     return (project.details || []).map((detail) => `<details>
       <summary>${escape(detail.title)}</summary>
@@ -186,10 +224,10 @@
     if (!engineering?.checks?.length) return '';
     return `<section class="requirements-review wrap" id="verification" aria-labelledby="verification-title">
       <div class="section-heading"><div><p class="eyebrow">Close the design loop</p><h2 id="verification-title">Requirements &amp; evidence.</h2></div></div>
-      <div class="verification-table-wrap" role="region" aria-labelledby="verification-title" tabindex="0"><table class="verification-table">
+      <div class="verification-table-wrap" role="region" aria-labelledby="verification-title"><table class="verification-table" role="table">
         <caption class="sr-only">Each project criterion, how it was checked, and the resulting evidence.</caption>
-        <thead><tr><th scope="col">Criterion</th><th scope="col">Method / evidence</th><th scope="col">Finding</th></tr></thead>
-        <tbody>${engineering.checks.map(([criterion, method, result, basis]) => `<tr><th scope="row">${escape(criterion)}</th><td>${escape(method)}</td><td><span class="evidence-basis">${escape(basis)}</span>${escape(result)}</td></tr>`).join('')}</tbody>
+        <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Criterion</th><th scope="col" role="columnheader">Method / evidence</th><th scope="col" role="columnheader">Finding</th></tr></thead>
+        <tbody role="rowgroup">${engineering.checks.map(([criterion, method, result, basis]) => `<tr role="row"><th scope="row" role="rowheader"><span class="verification-cell-label" aria-hidden="true">Criterion</span>${escape(criterion)}</th><td role="cell"><span class="verification-cell-label" aria-hidden="true">Method / evidence</span>${escape(method)}</td><td role="cell"><span class="verification-cell-label" aria-hidden="true">Finding</span><span class="evidence-basis">${escape(basis)}</span>${escape(result)}</td></tr>`).join('')}</tbody>
       </table></div>
       <div class="iteration-takeaway"><h3>What the review changes</h3><p>${escape(engineering.iteration)}</p></div>
     </section>`;
@@ -202,6 +240,11 @@
         <h1 id="case-title">${escape(editorial.title)}</h1>
         <div class="hero-deck"><h2>${escape(editorial.deck)}</h2><p>${escape(editorial.description)}</p></div>
       </div>
+      <nav class="case-reading-actions" aria-label="Choose how to explore this project">
+        <a class="reading-primary" href="${engineering ? '#brief' : `#${escape(chapters[0].id)}`}">Read case study <span aria-hidden="true">↓</span></a>
+        ${engineering?.checks?.length ? '<a href="#verification">View results <span aria-hidden="true">↓</span></a>' : ''}
+        <a href="#motion">Explore model <span aria-hidden="true">↓</span></a>
+      </nav>
       <dl class="case-summary" aria-label="Case study in 30 seconds">${editorial.summary.map(([label, text]) => `<div><dt>${escape(label)}</dt><dd>${escape(text)}</dd></div>`).join('')}</dl>
     </section>
       <section class="case-motion-story" id="motion" aria-labelledby="preview-title" data-motion-project="${escape(key)}">
@@ -225,8 +268,8 @@
       <a href="#evidence">Image archive</a>${supplement.bom ? '<a href="#bom">BOM</a>' : ''}<a href="#record">Technical record</a>
     </div></nav>
     ${designBrief()}
-    <div class="wrap">${chapters.map((chapter, index) => `<section class="chapter${chapter.image !== null ? '' : ' chapter-text-only'}" id="${escape(chapter.id)}" aria-labelledby="${escape(chapter.id)}-title">
-      <div class="chapter-copy"><p class="eyebrow">${number(index + 1)} / ${escape(chapter.label)}</p><h2 id="${escape(chapter.id)}-title">${escape(chapter.title)}</h2>${chapter.paragraphs.map((text) => `<p>${escape(text)}</p>`).join('')}</div>
+    <div class="wrap">${chapters.map((chapter, index) => `<section class="chapter${chapterLayout(chapter)}" id="${escape(chapter.id)}" aria-labelledby="${escape(chapter.id)}-title">
+      <div class="chapter-copy"><p class="eyebrow">${number(index + 1)} / ${escape(chapter.label)}</p><h2 id="${escape(chapter.id)}-title">${escape(chapter.title)}</h2>${chapter.paragraphs.map((text, paragraphIndex) => `<p${paragraphIndex === 0 ? ' class="chapter-lead"' : ''}>${escape(text)}</p>`).join('')}${chapter.detailParagraphs?.length ? `<a class="chapter-detail-link" href="#record-chapter-${escape(chapter.id)}">Full engineering detail <span aria-hidden="true">↗</span><span class="sr-only">: ${escape(chapter.title)}</span></a>` : ''}</div>
       ${chapter.image !== null ? `<figure class="chapter-figure ${mediaClass(gallery[chapter.image])}"${mediaStyle(gallery[chapter.image])}>${imageButton(gallery[chapter.image], chapter.image)}<figcaption><span class="evidence-type">${escape(chapter.evidence)}</span>${escape(chapter.note)}</figcaption></figure>` : ''}
     </section>`).join('')}</div>
     ${requirementsReview()}
@@ -239,7 +282,7 @@
       <div class="section-heading"><div><p class="eyebrow">For the technical conversation</p><h2 id="record-title">The engineering record.</h2></div></div>
       <p class="record-intro">Original project notes, methods, and results.${editorial.recordNote ? ` ${escape(editorial.recordNote)}` : ''}</p>
       <div class="record-layout"><aside aria-label="Project tools and context"><h3>Tools & methods</h3><ul class="tool-list">${(project.tools || []).map((tool) => `<li>${escape(tool)}</li>`).join('')}</ul>${sourceSpec()}${downloadLinks()}${sourceLinks()}</aside>
-        <div class="source-details">${documentedDetails()}<details><summary>Project overview & highlights</summary><div class="source-detail-body"><p>${escape(project.summary)}</p><ul>${(project.highlights || []).map((item) => `<li>${escape(item)}</li>`).join('')}</ul></div></details>${originalDetails()}</div>
+        <div class="source-details">${chapterRecords()}${documentedDetails()}<details><summary>Project overview & highlights</summary><div class="source-detail-body"><p>${escape(project.summary)}</p><ul>${(project.highlights || []).map((item) => `<li>${escape(item)}</li>`).join('')}</ul></div></details>${originalDetails()}</div>
       </div>
     </section>
     <section class="next-section" aria-label="Continue exploring"><div class="next-inner wrap">
@@ -374,7 +417,7 @@
   }
 
   // Dynamic content must honor a shared chapter URL after the sections exist.
-  const hashTarget = document.getElementById(location.hash.slice(1));
+  const hashTarget = revealAnchor(location.hash);
   if (hashTarget && root.contains(hashTarget)) {
     const requestedHash = location.hash;
     requestAnimationFrame(() => {

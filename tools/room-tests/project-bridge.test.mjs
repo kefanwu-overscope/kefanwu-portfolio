@@ -45,6 +45,7 @@ function harness({ embedded = true, url = 'https://portfolio.test/project-3d.htm
   vm.runInNewContext(source, {
     window, document, location, history, URL, AbortController,
     Event: class { constructor(type) { this.type = type; } },
+    CustomEvent: class { constructor(type, options = {}) { this.type = type; this.detail = options.detail; } },
     setTimeout(callback, delay) { const id = ++nextTimer; timers.set(id, { callback, delay }); return id; },
     clearTimeout(id) { timers.delete(id); },
   });

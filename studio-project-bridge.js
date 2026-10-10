@@ -28,6 +28,12 @@
   function applyLocation() {
     if (!pendingLocation || disposed) return;
     const { url, scrollY } = pendingLocation;
+    let id;
+    try { id = decodeURIComponent(url.hash.slice(1)); }
+    catch { id = url.hash.slice(1); }
+    // replaceState does not emit hashchange. Restore disclosures before either
+    // an anchor jump or a saved scroll offset in the recreated project frame.
+    if (id) window.dispatchEvent(new CustomEvent('case-reveal-anchor', { detail: { id } }));
     if (typeof scrollY === 'number' && Number.isFinite(scrollY)) {
       window.scrollTo({ top: Math.max(0, scrollY), left: 0, behavior: 'instant' });
       return;
@@ -36,9 +42,6 @@
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       return;
     }
-    let id;
-    try { id = decodeURIComponent(url.hash.slice(1)); }
-    catch { id = url.hash.slice(1); }
     document.getElementById(id)?.scrollIntoView({ behavior: 'instant', block: 'start' });
   }
 

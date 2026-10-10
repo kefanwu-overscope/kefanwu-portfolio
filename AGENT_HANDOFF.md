@@ -1,5 +1,22 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## Shared case-study readability · 2026-10-09
+
+Based on5fa2eb78; see CASE_READING.md. Main and3D retain one renderer/data source.
+All64 chapters now have technical titles and concise conclusion-first paragraphs;
+all131 original paragraphs remain verbatim in chapter.detailParagraphs and render
+as linked/openable full accounts in the engineering record. Preserve that archive
+when editing future chapter summaries. Source records,100 gallery references,
+59 evidence rows,35 BOM items, downloads and all model/motion files remain.
+
+Desktop body18px, narrow17px; photos/CAD use pairs, technical plots use full-width
+sections, mobile evidence rows stack without losing table semantics. Hero reading
+shortcuts precede the model; chapter navigation remains after it so the model pin
+and labels keep their original viewport. The retained bridge emits
+case-reveal-anchor before anchor/numeric-scroll restoration to reopen disclosures.
+New version tag case-reading-20261009 is shared by both detail HTML entries.
+Verification/release/backup evidence: ../.codex/case-reading-20261009/.
+
 ## Game-style studio budgets and staged detail · 2026-10-09
 
 Based on997c31f. Read STUDIO_GAME_PERFORMANCE.md for the current loading and

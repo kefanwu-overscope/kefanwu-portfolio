@@ -1,5 +1,14 @@
 # Portfolio Website Project Documentation
 
+## Shared project reading layout · 2026-10-09
+
+See CASE_READING.md for the current main-site/3D detail presentation: compact
+technical chapter titles, conclusion-first short copy, verbatim full accounts,
+18px/17px body text, content-aware image layouts, early reading links and stacked
+mobile evidence rows. Chapter IDs, model guides, source records and all engineering
+assets remain shared. The original chapter narrative is retained in detailParagraphs;
+do not treat the shorter visible copy as the only preserved technical account.
+
 ## Studio loading and game-style frame budgets · 2026-10-09
 
 The existing room now separates first-visible project content from four later
