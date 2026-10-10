@@ -23,7 +23,7 @@ export function createAdvancedRenderer({renderer,scene,camera,composer,gtao,key,
  let width=1,height=1,dpr=1,inputScale=1,started=false,disposed=false,moving=true,previousMoving=true,dirty=true;
  let idleSince=0,revision=0,captureToken=0,geometryGeneration=0,geometryDirty=true,geometryBuilding=false;
  let snapshot=null,rayCaptured=false,capturing=false,lastLight='',lastAttention='',lastClusterUploads=-1,rayQueued=false;
- let frameRenders=0,cachedFrames=0,registrations=0,lastError=null,rayFailed=false,ambientFrames=0,lastReactiveRects=0;
+ let frameRenders=0,cachedFrames=0,registrations=0,lastError=null,rayFailed=false,ambientFrames=0,lastReactiveRects=0,lodPixelError=.65;
  const previousRects=new WeakMap();
  const reactiveMeshes=[],bbox=new THREE.Box3(),point=new THREE.Vector3();
  const tracer=createStationaryRayTracer({deviceProvider:()=>getGpuDevice({disabled:!computeEnabled}),maxPixels:65536,targetSamples:24,tilePixels:8192,
@@ -51,21 +51,24 @@ export function createAdvancedRenderer({renderer,scene,camera,composer,gtao,key,
    if(Math.abs(desired-inputScale)<.001)return;
    inputScale=desired;composer.setPixelRatio(dpr*desired);composer.setSize(width,height);dirty=true;
  }
- function update({now,moving:isMoving,scale=1,geometryChanged=false,lightStamp='',attentionKey='',attentionPosition=null,reactive=false,ambientChanged=false}){
+ function update({now,moving:isMoving,scale=1,geometryChanged=false,lightStamp='',attentionKey='',attentionPosition=null,reactive=false,ambientChanged=false,streaming=false}){
    moving=!!isMoving;previousMoving!==moving && temporal.invalidate(moving?'motion':'settled');
    if(moving){idleSince=now;if(rayCaptured||snapshot||capturing)invalidate('motion',{history:false});}
    if(previousMoving&&!moving)idleSince=now;previousMoving=moving;
-   if(geometryChanged){install();invalidate('geometry',{geometry:true});if(started)register();}
+   if(geometryChanged){install();invalidate('geometry',{geometry:true});if(started&&!streaming)register();}
    if(lightStamp!==lastLight){lastLight=lightStamp;invalidate('lighting');}
    if(attentionKey!==lastAttention){lastAttention=attentionKey;dirty=true;rayCaptured=false;temporal.invalidate('attention');}
    setScale(scale);
-   if(!started&&!moving&&now-idleSince>450){started=true;register();if(computeEnabled)void tracer.initialize();}
+   if(!started&&!streaming&&!moving&&now-idleSince>450){started=true;register();if(computeEnabled)void tracer.initialize();}
+   // Existing source-bound cluster LOD follows the dynamic pixel budget;
+   // selected objects keep the cluster renderer's tighter attention policy.
+   lodPixelError=moving?1.4/Math.max(.7,Math.min(1,scale)):.65;
    if(started&&(moving||dirty||!temporal.converged)){
      const gaze=attentionPosition?point.copy(attentionPosition).project(camera):null;
-     clusters.update(camera,{viewportHeight:height*dpr,attentionKey,pixelError:moving?1.4:.65,gaze:gaze?{x:gaze.x,y:gaze.y}:undefined});
+     clusters.update(camera,{viewportHeight:height*dpr,attentionKey,pixelError:lodPixelError,gaze:gaze?{x:gaze.x,y:gaze.y}:undefined});
      const uploads=clusters.getStats().indexUploads;if(uploads!==lastClusterUploads){lastClusterUploads=uploads;dirty=true;}
    }
-   if(started&&computeEnabled&&!rayFailed&&!moving&&now-idleSince>450){
+   if(started&&!streaming&&computeEnabled&&!rayFailed&&!moving&&now-idleSince>450){
      if(geometryDirty&&!geometryBuilding&&tracer.stats.available){
        geometryBuilding=true;const gen=geometryGeneration;
        scheduler.schedule(async()=>{try{const ok=await tracer.setGeometry(scene,{exclude,generation:gen});if(ok&&gen===geometryGeneration)geometryDirty=false;}
@@ -134,7 +137,7 @@ export function createAdvancedRenderer({renderer,scene,camera,composer,gtao,key,
    refresh(reason='raster-update'){dirty=true;temporal.invalidate(reason);},
    prewarm(root,identity){if(!root)return;bridge.install(root);return scheduleShaderPrewarm(scheduler,{renderer,root,scene,camera,renderTarget:composer.readBuffer,key:`shader:${identity}`}).catch(e=>{lastError=e.message;});},
    schedule:measure=>scheduler.tick(measure),
-   getStats:()=>({moving,inputScale,frameRenders,cachedFrames,ambientFrames,lastReactiveRects,registrations,revision,geometryDirty,geometryBuilding,capturing,lastError,
+   getStats:()=>({moving,inputScale,lodPixelError,frameRenders,cachedFrames,ambientFrames,lastReactiveRects,registrations,revision,geometryDirty,geometryBuilding,capturing,lastError,
      temporal:temporal.getStats(),compute:getGpuDeviceStats(),raytrace:tracer.stats,materials:bridge.stats,clusters:clusters.getStats(),scheduler:scheduler.getStats()}),
    dispose(){disposed=true;captureToken++;scheduler.dispose();tracer.dispose();clusters.dispose();temporal.dispose();capture.dispose();for(const target of sceneDepthTargets){target.depthTexture?.dispose();target.depthTexture=null;}bridge.dispose();}};
 }

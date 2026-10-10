@@ -13,7 +13,7 @@ const deferred = () => { let resolve; const promise = new Promise(r => { resolve
 const checks = [];
 let sequence = 0;
 
-async function setup({ lowTier = false } = {}) {
+async function setup({ lowTier = false, streaming = false } = {}) {
   const env = { geometry: [], captures: [], begins: [], publications: [], disposed: [], invalidations: [],
     clusterUpdates: 0, captureCreations: 0, captureRenders: 0, resolves: [], depthDisposals: [], targetDisposals: [0, 0] };
   let tracerOptions, temporalConverged = true;
@@ -95,7 +95,7 @@ async function setup({ lowTier = false } = {}) {
     frame: { width: 1, height: 1, normalDepth: new Float32Array([0, 0, 1, 3]),
       cameraWorld: new THREE.Matrix4().elements, inverseProjection: camera.projectionMatrixInverse.elements },
   });
-  env.update(0); instance.render(); env.update(1000); env.tick(); await flush();
+  env.update(0, { streaming }); instance.render(); env.update(1000, { streaming }); env.tick(); await flush();
   return env;
 }
 async function readyGeometry(env) {
@@ -208,6 +208,29 @@ async function main() {
   assert.deepEqual(env.targetDisposals, [1, 1], 'Teardown does not dispose the borrowed composer targets');
   assert(env.targets.every(target => target.depthTexture === null));
   checks.push('Mobile reuses both composer depth targets, follows buffer swaps, avoids a capture pass and disposes only its owned textures');
+}
+{
+  const env = await setup({ streaming: true });
+  assert.equal(env.instance.getStats().registrations, 0);
+  assert.equal(env.geometry.length, 0);
+  env.update(1400, { streaming: true, geometryChanged: true }); env.tick(); await flush();
+  assert.equal(env.instance.getStats().registrations, 0, 'Late source props do not rebuild incomplete cluster trees');
+  env.update(1600, { streaming: false }); env.tick(); await flush();
+  assert.equal(env.instance.getStats().registrations, 1);
+  assert.equal(env.geometry.length, 1, 'The complete latest scene enters refinement once streaming settles');
+  env.instance.dispose();
+  checks.push('Streaming keeps real raster content available while delaying cluster/BVH work until all base props settle');
+}
+{
+  const env = await setup({ lowTier: true });
+  env.update(1300, { moving: true, scale: .70 });
+  assert(Math.abs(env.instance.getStats().inputScale - .56) < 1e-12);
+  assert.equal(env.instance.getStats().lodPixelError, 2);
+  env.update(1700, { moving: false, scale: .70 });
+  assert.equal(env.instance.getStats().inputScale, 1, 'Stationary mobile returns to native pixels despite the previous moving floor');
+  assert.equal(env.instance.getStats().lodPixelError, .65);
+  env.instance.dispose();
+  checks.push('Motion scales input resolution and cluster error together, then restores stationary native detail');
 }
 console.log(JSON.stringify({ status: 'passed', checks }, null, 2));
 }

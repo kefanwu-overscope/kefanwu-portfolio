@@ -11,14 +11,15 @@
  * try { composer.render(); } finally { gpu.end(); }
  * const cpuMs = performance.now() - start;
  * const scale = quality.sample({
- *   now: performance.now(), moving: frameClock.fps === 120,
+ *   now: performance.now(), moving: frameClock.isMoving,
  *   frameMs: Math.max(cpuMs, gpuMs ?? 0),
+ *   frameBudgetMs: frameClock.frameBudgetMs,
  * });
  * // Only if scale changed: update renderer/composer/GTAO together, then gpu.reset().
  * // The runtime owns base DPR, render sizes and the existing 180ms motion settle.
  *
  * frameMs is measured render work, NEVER rAF delta / observed FPS / refresh rate.
- * A continuous 400ms run above the 120fps budget lowers one step. A valid sample
+ * A continuous 400ms run above the moving cadence budget lowers one step. A valid sample
  * at/below budget, an invalid sample, or a >100ms sample gap breaks the run.
  * Drops are >=700ms apart. Only becoming stationary bypasses this limit to return
  * immediately to 1. No upgrades while moving, to avoid resolution oscillation.
@@ -33,8 +34,9 @@
  * Spec: https://registry.khronos.org/webgl/extensions/EXT_disjoint_timer_query_webgl2/
  */
 
-const SCALES = Object.freeze([1, 0.96, 0.92, 0.88]);
+const SCALES = Object.freeze([1, 0.96, 0.92, 0.88, 0.80, 0.70]);
 const BUDGET_MS = 1000 / 120;
+const MIN_BUDGET_MS = 1000 / 240;
 const OVERLOAD_MS = 400;
 const CHANGE_INTERVAL_MS = 700;
 const MAX_SAMPLE_GAP_MS = 100;
@@ -43,6 +45,8 @@ export class AdaptiveQuality {
   constructor() {
     this.reset();
   }
+
+  get minimumScale() { return SCALES[SCALES.length - 1]; }
 
   reset() {
     this.level = 0;
@@ -57,7 +61,9 @@ export class AdaptiveQuality {
   }
 
   sample({ now, moving, frameMs, frameBudgetMs = BUDGET_MS } = {}) {
-    this.budgetMs = Number.isFinite(frameBudgetMs) && frameBudgetMs > 0 ? Math.max(BUDGET_MS, frameBudgetMs) : BUDGET_MS;
+    const budgetMs = Number.isFinite(frameBudgetMs) && frameBudgetMs > 0 ? Math.max(MIN_BUDGET_MS, frameBudgetMs) : BUDGET_MS;
+    if (Math.abs(budgetMs - this.budgetMs) > 0.01) this.overloadSince = null;
+    this.budgetMs = budgetMs;
     // Idle restoration must work even when no render measurement was taken.
     if (!moving) {
       if (this.level !== 0) {
@@ -105,6 +111,8 @@ export class AdaptiveQuality {
   getStats() {
     return {
       scale: SCALES[this.level],
+      minimumScale: this.minimumScale,
+      atMinimumScale: this.level === SCALES.length - 1,
       budgetMs: this.budgetMs,
       overloadMs: OVERLOAD_MS,
       changeIntervalMs: CHANGE_INTERVAL_MS,

@@ -1,5 +1,24 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## Game-style studio budgets and staged detail · 2026-10-09
+
+Based on997c31f. Read STUDIO_GAME_PERFORMANCE.md for the current loading and
+cadence policy. All16 project exhibits remain first-frame content; only the
+tire, two helmets and chair stream after reveal. Direct hashed room/exhibit
+URLs bypass the legacy LOD lookup. Late geometry invalidates shadows/history;
+cluster/BVH refinement waits for all base details to settle. Never make model
+attachment wait for optional shader work: a busy/lost GPU must not strand loading.
+
+The rAF clock now tracks native refresh (cap240, whole refresh divisors), uses
+explicit isMoving, and lowers cadence only after sustained measured overload at
+the .70 logical resolution floor. Temporal input may reach .56; rest restores
+native/supersampled quality. Source models, materials, motion, scientific colors,
+all project content and retained-room navigation remain unchanged. New runtime
+cache version is game-performance-20261009. Local matched10Mbps/40ms sample:
+room reveal14.585→11.602s, pre-reveal16.802→13.134MB; complete download is not22%
+smaller. Evidence, exact deployed commit and reversible delta chain are in
+../.codex/game-performance-20261009/. Preserve every base/overlay dependency.
+
 ## DR 原图修正 · 2026-10-05
 
 按用户澄清，移除刹车项目中三张整页 DR 截图的显示引用。热平衡改用原公式图；结构分析拆为原始应力图和位移图；疲劳分析拆为损伤图和等效寿命图。五张新增图均逐字节复制自 DR 嵌入图，保留完整色标、单位、约束和标签；重复疲劳图只用一次。其余四张原图继续使用，共九张。主站和 3D 项目页共享更新，工程数据、模型和动画不变。源元素ID与SHA256见 assets/brake-figures-20261005/provenance.json。

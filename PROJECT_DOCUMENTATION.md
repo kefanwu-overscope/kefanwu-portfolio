@@ -1,5 +1,15 @@
 # Portfolio Website Project Documentation
 
+## Studio loading and game-style frame budgets · 2026-10-09
+
+The existing room now separates first-visible project content from four later
+decorative models. Refresh-aware frame pacing, measured dynamic resolution and
+the existing cluster LOD cooperate under load; stationary fidelity and source
+geometry are preserved. See STUDIO_GAME_PERFORMANCE.md for controls, exact
+limits, current measurements and reproduction. Historical fixed120 FPS and
+.88 minimum-scale descriptions below are superseded by that document. This
+revision changes no project narrative, scientific result, gallery or asset bytes.
+
 ## FSAE Racecar Brake — DR source update, 2026-10-05
 
 Based on96f47b7a. The stablekey brakeSim now uses the name FSAE Racecar Brake.

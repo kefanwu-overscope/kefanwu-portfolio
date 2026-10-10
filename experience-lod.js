@@ -95,6 +95,9 @@ export class ModelLODLoader {
     this.disposed = false;
     this.allowUpgrades = false;
     this.records = [];
+    this.deferredReleased = false;
+    this.deferredStarts = new Map();
+    this.pendingBases = new Map();
     this.targetKey = targetKey;
     this.attentionKey = null;
     this.selectedKey = null;
@@ -124,6 +127,17 @@ export class ModelLODLoader {
     })();
   }
   start() { this.queue.start(); }
+  // Registration is separate from admission: deferred props must not hold an
+  // initial manager token, a transfer slot or the serialized preparation slot.
+  releaseDeferred() {
+    if (this.disposed) return;
+    this.deferredReleased = true;
+    for (const start of this.deferredStarts.values()) start();
+    this.deferredStarts.clear();
+  }
+  // Call after construction has registered its models. This snapshot includes
+  // deferred base loads and failures/cancellation, but never later LOD upgrades.
+  whenAllReady() { return Promise.all(this.records.map((record) => record.done)); }
   // Attention changes waiting work only; transfers and parses already in flight
   // are kept, avoiding duplicate downloads or discarded readiness callbacks.
   setAttention(key = null) {
@@ -142,6 +156,7 @@ export class ModelLODLoader {
     return level === "base" ? 10 : 20;
   }
   async fetchGLB(url, onProgress) {
+    if (this.disposed) throw new DOMException("Room closed", "AbortError");
     // Abort the actual transfer (including the body), so a stalled asset cannot
     // permanently occupy the single preparation slot. Existing fallback paths
     // handle the rejection and late network data can never mount a model.
@@ -153,6 +168,7 @@ export class ModelLODLoader {
       const response = await fetch(url, { signal: abort.signal });
       if (!response.ok) throw new Error(`HTTP ${response.status}: ${url}`);
       data = await response.arrayBuffer();
+      if (this.disposed) throw new DOMException("Room closed", "AbortError");
       if (onProgress) onProgress({ loaded: data.byteLength, total: data.byteLength, lengthComputable: true });
     } catch (error) {
       if (this.disposed) throw new DOMException("Room closed", "AbortError");
@@ -185,93 +201,139 @@ export class ModelLODLoader {
   async loadGLB(url, onProgress, priority = 10) {
     return this.parseGLB(await this.network.add(() => this.fetchGLB(url, onProgress), priority));
   }
-  load(url, onLoad, onProgress, onError, prepare = null, key = null) {
+  load(url, onLoad, onProgress, onError, prepare = null, key = null, { deferred = false, direct = false, beforeMount = null } = {}) {
     const token = `base-model:${this.records.length}:${url}`;
-    this.manager.itemStart(token); // includes jobs still waiting for the queue
+    // Deferred work deliberately never enters the initial manager, including
+    // after release: late props cannot restart startup progress or onLoad.
+    const tracked = !deferred;
+    if (tracked) this.manager.itemStart(token);
+    let resolveDone, settled = false, started = false;
     const record = {
-      key, url, currentLevel: "pending", highLoaded: false, loading: "base",
+      key, url, deferred: !!deferred, direct: !!direct,
+      currentLevel: "pending", highLoaded: false, loading: deferred ? "deferred" : "base",
       visible: false, projectedFraction: 0, distance: null, lowTriangles: null,
       highTriangles: null, attempts: 0, nextRetryAt: 0, wantedHigh: false,
-      baseStatus: "queued", error: null, holder: null, low: null, high: null,
+      baseStatus: deferred ? "deferred" : "queued", error: null, holder: null, low: null, high: null,
+      done: new Promise((resolve) => { resolveDone = resolve; }),
     };
     this.records.push(record);
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      this.pendingBases.delete(record);
+      this.deferredStarts.delete(record);
+      try { if (tracked) this.manager.itemEnd(token); }
+      finally { resolveDone(record); }
+    };
+    this.pendingBases.set(record, () => {
+      record.baseStatus = "cancelled";
+      record.loading = null;
+      record.error = "Room closed";
+      finish();
+    });
     const priority = () => this.priority(record);
-    const downloaded = this.network.add(async () => {
-      const models = await this.manifest;
-      const entry = models[url];
-      record.entry = entry && typeof entry.low === "string" && entry.low.startsWith("models/lod/") && validBounds(entry.sourceBounds) ? entry : null;
-      record.highURL = record.entry?.high?.startsWith("models/optimized/") ? record.entry.high : url;
-      record.baseStatus = "loading";
-      let source;
-      if (record.entry) {
-        try { source = await this.fetchGLB(record.entry.low, onProgress); }
-        catch (error) {
-          // A missing/broken derivative must never leave an exhibit empty.
-          console.warn(`[experience] low model failed; falling back to ${url}`, error);
-          record.error = "Low model unavailable; using original";
-        }
-      }
-      const isLow = !!source;
-      if (!source) {
+    const start = () => {
+      if (started || settled || this.disposed) return;
+      started = true;
+      record.baseStatus = "queued";
+      record.loading = "base";
+      const downloaded = this.network.add(async () => {
         if (this.disposed) throw new DOMException("Room closed", "AbortError");
-        try { source = await this.fetchGLB(record.highURL, onProgress); }
-        catch (error) {
-          if (this.disposed || record.highURL === url) throw error;
-          record.highURL = url;
-          source = await this.fetchGLB(url, onProgress);
+        // Current content-addressed exhibits and baked geometry already name
+        // their exact source. They do not depend on the legacy LOD catalogue.
+        const entry = direct ? null : (await this.manifest)[url];
+        if (this.disposed) throw new DOMException("Room closed", "AbortError");
+        record.entry = entry && typeof entry.low === "string" && entry.low.startsWith("models/lod/") && validBounds(entry.sourceBounds) ? entry : null;
+        record.highURL = record.entry?.high?.startsWith("models/optimized/") ? record.entry.high : url;
+        record.baseStatus = "loading";
+        let source;
+        if (record.entry) {
+          try { source = await this.fetchGLB(record.entry.low, onProgress); }
+          catch (error) {
+            // A missing/broken derivative must never leave an exhibit empty.
+            console.warn(`[experience] low model failed; falling back to ${url}`, error);
+            record.error = "Low model unavailable; using original";
+          }
         }
-      }
-      return { source, isLow };
-    }, priority);
-    // The preparation queue starts after construction; attach a rejection
-    // handler now so a failed early download is not an unhandled rejection.
-    downloaded.catch(() => {});
-    // Queue preparation only when bytes exist. A slow background transfer must
-    // not reserve the sole CPU slot ahead of a downloaded, attended exhibit.
-    downloaded.then((download) => this.queue.add(async () => {
-      let { source, isLow } = download;
-      let gltf;
-      if (source) {
-        try { gltf = await this.parseGLB(source); }
-        catch (error) {
-          if (this.disposed) throw error;
-          record.error = "Low model unavailable; using original";
+        const isLow = !!source;
+        if (!source) {
+          if (this.disposed) throw new DOMException("Room closed", "AbortError");
+          try { source = await this.fetchGLB(record.highURL, onProgress); }
+          catch (error) {
+            if (this.disposed || record.highURL === url) throw error;
+            record.highURL = url;
+            source = await this.fetchGLB(url, onProgress);
+          }
         }
-      }
-      if (!gltf) { isLow = false; gltf = await this.loadHigh(record, onProgress); }
-      await yieldToBrowser();
-      if (this.disposed) throw new DOMException("Room closed", "AbortError");
-      if (prepare) prepare(gltf.scene);
-      const triangles = prepareGeometry(gltf.scene);
-      const holder = new THREE.Group();
-      holder.name = `lod:${url}`;
-      holder.add(gltf.scene);
-      if (record.entry) {
-        holder.userData.lodSourceBounds = new THREE.Box3(
-          new THREE.Vector3().fromArray(record.entry.sourceBounds.min),
-          new THREE.Vector3().fromArray(record.entry.sourceBounds.max));
-      }
-      record.holder = holder;
-      record.currentLevel = isLow ? "low" : "high";
-      record.highLoaded = !isLow;
-      if (isLow) { record.low = gltf.scene; record.lowTriangles = triangles; }
-      else { record.high = gltf.scene; record.highTriangles = triangles; }
-      record.prepare = prepare;
-      onLoad({ ...gltf, scene: holder }); // only once: stable pivot / proxies / animation
-      holder.updateWorldMatrix(true, true);
-      // LOD bounds exclude hover markers and click proxies, and follow parent animation.
-      record.bounds = holder.userData.lodSourceBounds?.clone() ||
-        new THREE.Box3().setFromObject(holder).applyMatrix4(holder.matrixWorld.clone().invert());
-      record.baseStatus = "ready";
-      record.loading = null;
-    }, priority)).catch((error) => {
-      record.baseStatus = "failed";
-      record.loading = null;
-      record.error = String(error.message || error);
-      this.manager.itemError(token);
-      console.warn(`[experience] failed to load ${url}`, error);
-      if (!this.disposed && onError) onError(error);
-    }).finally(() => this.manager.itemEnd(token));
+        return { source, isLow };
+      }, priority);
+      // The preparation queue starts after construction; attach a rejection
+      // handler now so a failed early download is not an unhandled rejection.
+      downloaded.catch(() => {});
+      // Queue preparation only when bytes exist. A slow background transfer must
+      // not reserve the sole CPU slot ahead of a downloaded, attended exhibit.
+      downloaded.then((download) => this.queue.add(async () => {
+        let { source, isLow } = download;
+        let gltf;
+        if (source) {
+          try { gltf = await this.parseGLB(source); }
+          catch (error) {
+            if (this.disposed) throw error;
+            record.error = "Low model unavailable; using original";
+          }
+        }
+        if (!gltf) { isLow = false; gltf = await this.loadHigh(record, onProgress); }
+        await yieldToBrowser();
+        if (this.disposed) throw new DOMException("Room closed", "AbortError");
+        if (prepare) prepare(gltf.scene);
+        const triangles = prepareGeometry(gltf.scene);
+        const prepareMount = beforeMount || this.beforeMount;
+        if (prepareMount) await prepareMount(gltf.scene, record);
+        if (this.disposed) throw new DOMException("Room closed", "AbortError");
+        const holder = new THREE.Group();
+        holder.name = `lod:${url}`;
+        holder.add(gltf.scene);
+        if (record.entry) {
+          holder.userData.lodSourceBounds = new THREE.Box3(
+            new THREE.Vector3().fromArray(record.entry.sourceBounds.min),
+            new THREE.Vector3().fromArray(record.entry.sourceBounds.max));
+        }
+        record.holder = holder;
+        record.currentLevel = isLow ? "low" : "high";
+        record.highLoaded = !isLow;
+        if (isLow) { record.low = gltf.scene; record.lowTriangles = triangles; }
+        else { record.high = gltf.scene; record.highTriangles = triangles; }
+        record.prepare = prepare;
+        onLoad({ ...gltf, scene: holder }); // only once: stable pivot / proxies / animation
+        if (this.disposed) throw new DOMException("Room closed", "AbortError");
+        holder.updateWorldMatrix(true, true);
+        // LOD bounds exclude hover markers and click proxies, and follow parent animation.
+        record.bounds = holder.userData.lodSourceBounds?.clone() ||
+          new THREE.Box3().setFromObject(holder).applyMatrix4(holder.matrixWorld.clone().invert());
+        record.baseStatus = "ready";
+        record.loading = null;
+        // Notification follows placement and bounds. A consumer's optional
+        // refinement failure must not turn a mounted base into a failed load.
+        try {
+          Promise.resolve(this.onBaseLoaded?.(record)).catch((error) => {
+            console.warn(`[experience] base-load notification failed: ${url}`, error);
+          });
+        } catch (error) { console.warn(`[experience] base-load notification failed: ${url}`, error); }
+      }, priority)).catch((error) => {
+        if (settled) return;
+        record.baseStatus = this.disposed ? "cancelled" : "failed";
+        record.loading = null;
+        record.error = String(error.message || error);
+        if (this.disposed) return;
+        if (tracked) this.manager.itemError(token);
+        console.warn(`[experience] failed to load ${url}`, error);
+        try { onError?.(error); }
+        catch (callbackError) { console.warn(`[experience] model error callback failed: ${url}`, callbackError); }
+      }).finally(finish);
+    };
+    if (this.disposed) this.pendingBases.get(record)();
+    else if (deferred && !this.deferredReleased) this.deferredStarts.set(record, start);
+    else start();
     return record;
   }
   measure(record) {
@@ -371,6 +433,8 @@ export class ModelLODLoader {
     this.network.cancel();
     this.queue.cancel();
     for (const controller of this.controllers) controller.abort();
+    for (const cancel of this.pendingBases.values()) cancel();
+    this.deferredStarts.clear();
   }
   getStats() {
     return {
@@ -379,6 +443,15 @@ export class ModelLODLoader {
       queue: { active: this.queue.active, pending: this.queue.jobs.length, concurrency: this.queue.concurrency },
       network: { active: this.network.active, pending: this.network.jobs.length, concurrency: this.network.concurrency },
       allowUpgrades: this.allowUpgrades, disposed: this.disposed,
+      deferred: {
+        released: this.deferredReleased,
+        total: this.records.filter((r) => r.deferred).length,
+        pending: this.records.filter((r) => r.deferred && r.baseStatus === "deferred").length,
+        loading: this.records.filter((r) => r.deferred && ["queued", "loading"].includes(r.baseStatus)).length,
+        ready: this.records.filter((r) => r.deferred && r.baseStatus === "ready").length,
+        failed: this.records.filter((r) => r.deferred && r.baseStatus === "failed").length,
+        cancelled: this.records.filter((r) => r.deferred && r.baseStatus === "cancelled").length,
+      },
       thresholds: { enterFraction: 0.24, exitFraction: 0.17, enterDistance: 2.2, exitDistance: 2.8, maxHighAttempts: 3 },
       models: this.records.map((r) => ({
         key: r.key, url: r.url, lowURL: r.entry?.low || null, highURL: r.highURL || r.url,
@@ -387,7 +460,7 @@ export class ModelLODLoader {
         lowTriangles: r.lowTriangles, highTriangles: r.highTriangles,
         sourceTriangles: r.entry?.sourceTriangles ?? null,
         currentTriangles: r.currentLevel === "low" ? r.lowTriangles : r.highTriangles,
-        baseStatus: r.baseStatus, highAttempts: r.attempts, error: r.error,
+        baseStatus: r.baseStatus, deferred: r.deferred, direct: r.direct, highAttempts: r.attempts, error: r.error,
       })),
     };
   }

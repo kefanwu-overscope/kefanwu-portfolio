@@ -13,8 +13,8 @@ import * as THREE from "three";
 import { createStudioNavigation } from "./studio-navigation.js?v=motion-story-20260930";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
-import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=advanced-render-20260930";
-import { AdaptiveFrameClock, frameAlpha } from "./experience-timing.js?v=room-performance-20260919";
+import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=game-performance-20261009";
+import { AdaptiveFrameClock, frameAlpha } from "./experience-timing.js?v=game-performance-20261009";
 import { AmbientClock, ambientScreenRect } from "./experience-ambient.js?v=workbench-live-20260930";
 import { ROOM_LIGHT_GRADE } from "./experience-light-grade.js?v=workbench-live-20260930";
 import { batchStaticRoom } from "./experience-batching.js?v=room-performance-20260919";
@@ -23,8 +23,8 @@ import { loadRGBMLightmap, installBakedDiffuse } from "./experience-baked-materi
 import { ROOM_BAKE } from "./experience-baked-assets.js?v=room-detail-20260926";
 import { createStudioLoader } from "./experience-loader.js?v=exp-adaptive-20260907";
 import { createHDRService, createHDRTexture } from "./experience-hdr.js?v=exp-adaptive-20260907";
-import { AdaptiveQuality, GpuFrameTimer } from "./experience-quality.js?v=exp-adaptive-20260907";
-import { createAdvancedRenderer } from "./experience-advanced.js?v=workbench-live-20260930";
+import { AdaptiveQuality, GpuFrameTimer } from "./experience-quality.js?v=game-performance-20261009";
+import { createAdvancedRenderer } from "./experience-advanced.js?v=game-performance-20261009";
 import { createAdaptiveShadows } from "./experience-shadow-budget.js?v=advanced-render-20260930";
 import { buildDetailedPrinter, buildDetailedPegboardTools, refineWorkbenchInstruments } from "./experience-workbench-details.js?v=room-detail-20260926";
 import { ROOM_EXHIBITS, prepareRoomExhibit } from "./experience-exhibits.js?v=brake-dr-20261005";
@@ -422,7 +422,8 @@ async function initScene(canvas) {
   manager.itemStart("scene-bootstrap");
   let markAssetsReady;
   const assetsReady = new Promise((resolve) => { markAssetsReady = resolve; });
-  const readiness = { construction: false, assets: false, prepared: false, firstFrame: false, revealed: false, failures: [], timings: { started: performance.now() } };
+  const readiness = { construction: false, assets: false, prepared: false, firstFrame: false, revealed: false,
+    detailsSettled: false, detailFailures: [], failures: [], timings: { started: performance.now() } };
   let batchingStats = null;
   manager.onError = (url) => { readiness.failures.push(url); };
   let deepLinkKey = "";
@@ -431,6 +432,14 @@ async function initScene(canvas) {
   }
   const loader = new ModelLODLoader(manager, { targetKey: deepLinkKey });
   loader.onLevelLoaded = record => { ANISO_DIRTY = true; assetGeometryChanged = true; advanced?.prewarm(record?.high, record?.key || record?.url); };
+  // Decoration reuses the warmed room material variants. Extra compilation is
+  // opportunistic: an overloaded/lost GPU must never block the loader queue.
+  loader.onBaseLoaded = record => {
+    if (!record.deferred) return;
+    ANISO_DIRTY = true;
+    assetGeometryChanged = true;
+    advanced?.prewarm(record.low || record.high, record.url);
+  };
   const barEl = loaderEl ? loaderEl.querySelector(".exp-loader__bar i") : null;
   const txtEl = loaderEl ? loaderEl.querySelector(".exp-loader__text") : null;
   manager.onProgress = (url, loaded, total) => {
@@ -447,6 +456,9 @@ async function initScene(canvas) {
     readiness.timings.revealed = performance.now();
     loader.enabled = true;
     startupUI.complete();
+    // The first real frame is already painted. Optional props retain their
+    // source geometry and load through the same bounded network/CPU queues.
+    loader.releaseDeferred();
     if (loaderEl) {
       const hideStatus = () => {
         loaderEl.setAttribute("aria-hidden", "true");
@@ -1559,20 +1571,20 @@ async function initScene(canvas) {
       scene.add(bakedRoot);
       activateBakedRoom();
       ANISO_DIRTY = true;
-    }, undefined, restoreProceduralRoom);
+    }, undefined, restoreProceduralRoom, null, null, { direct: true });
   }
 
   // real ergonomic mesh task chair (CC BY 4.0 — see ATTRIBUTIONS.txt);
   // replaces the old procedural buildErgoChair() stand-in
   loadModel(loader, scene, "models/ergonomic_mesh_office_chair/ergonomic_mesh_office_chair.glb", {
     // the GLB's intrinsic front is +x, so 1.34 rad turns it to face the desk
-    name: "chair", targetSize: 0.95, axis: "y", pos: [-0.25, 0, 1.05], rotY: 1.34,
+    name: "chair", targetSize: 0.95, axis: "y", pos: [-0.25, 0, 1.05], rotY: 1.34, deferred: true,
   });
 
   /* ---------- resize ---------- */
   const adaptiveQuality = new AdaptiveQuality();
   let gpuTimer = new GpuFrameTimer(renderer.getContext());
-  let resolutionScale = 1, pendingResolutionScale = 1;
+  let resolutionScale = 1, pendingResolutionScale = 1, gpuWasMoving = false;
   let displayDpr = window.devicePixelRatio;
   let displayWidth = window.screen.width, displayHeight = window.screen.height;
   function onResize() {
@@ -1592,6 +1604,7 @@ async function initScene(canvas) {
     renderer.setSize(w, h);
     if (advanced) advanced.resize(w, h, renderer.getPixelRatio());
     else { composer.setPixelRatio(renderer.getPixelRatio()); composer.setSize(w, h); }
+    gpuTimer.reset();
   }
   window.addEventListener("resize", onResize);
   onResize(); // S13: apply the portrait fov on a phone's very first frame too
@@ -1675,7 +1688,7 @@ async function initScene(canvas) {
     renderer.domElement.focus();
   });
 
-  const frameClock = new AdaptiveFrameClock({ idleFps: prefersReducedMotion ? 1 : 30 });
+  const frameClock = new AdaptiveFrameClock({ idleFps: prefersReducedMotion ? 1 : 30, movingFps: 240 });
   const shadowClock = new AdaptiveFrameClock({ idleFps: 12, movingFps: 12, settleMs: 0 });
   const renderStats = { frames: 0, shadowFrames: 0, deskShadowFrames: 0, calls: 0, triangles: 0, cpuMs: 0 };
   const adaptiveShadows = createAdaptiveShadows({ renderer, key, resumeSpot, lowTier: LOW_TIER });
@@ -1689,8 +1702,6 @@ async function initScene(canvas) {
   const lastCameraQuaternion = camera.quaternion.clone();
   const baseDamping = controls.dampingFactor;
   let rafStamp = null, refreshBudget = 1000 / 60;
-  const rafDeltas = [];
-  let rafSamples = 0;
   controls.addEventListener("start", () => frameClock.noteMotion(performance.now()));
   controls.addEventListener("change", () => frameClock.noteMotion(performance.now()));
   let projectPageOpen = false;
@@ -1736,7 +1747,6 @@ async function initScene(canvas) {
     pendingResolutionScale = adaptiveQuality.reset();
     gpuTimer.reset();
     rafStamp = null;
-    rafDeltas.length = 0;
     tickLast = null;
     suspendAmbient(document.hidden ? 'hidden' : 'resuming'); ambientVisibilityAt = -Infinity;
     advanced.invalidate('visibility');
@@ -1760,19 +1770,13 @@ async function initScene(canvas) {
   // named + exposed (see window.__exp.pump) so QA can hand-step frames with
   // synthetic timestamps in a backgrounded tab, where rAF never fires
   const tick = (t, forced) => {
-    // Estimate the display's available cadence from raw (ungated) callbacks.
-    // A 60 Hz display must not lose resolution chasing unattainable 120 Hz.
+    // Browser rAF supplies vertical synchronization. Infer display cadence
+    // from ungated callbacks; render work is measured separately below.
     if (!forced) {
       const delta = rafStamp === null ? 0 : t - rafStamp;
       rafStamp = t;
-      if (delta >= 3 && delta <= 40) {
-        rafDeltas.push(delta);
-        if (rafDeltas.length > 90) rafDeltas.shift();
-        if (++rafSamples % 30 === 0 && rafDeltas.length >= 12 && frameClock.fps === frameClock.idleFps) {
-          const sorted = [...rafDeltas].sort((a, b) => a - b);
-          refreshBudget = Math.max(1000 / 120, sorted[Math.floor(sorted.length * 0.15)]);
-        }
-      }
+      frameClock.setDisplayInterval(delta);
+      refreshBudget = frameClock.frameBudgetMs;
     }
     if (!readiness.assets || !readiness.construction || !readiness.prepared) return;
     if (renderer.getContext().isContextLost()) return;
@@ -1783,14 +1787,19 @@ async function initScene(canvas) {
     const interactionMotion = !!flight || cameraMoved || !!paperMotion || lightFadeActive || bootTakeover;
     if (cameraMoved || flight) lastCameraMotion = t;
     if (!forced && !frameClock.accept(t, interactionMotion)) return;
-    const animateDecorations = !prefersReducedMotion && frameClock.fps === frameClock.movingFps;
+    const animateDecorations = !prefersReducedMotion && frameClock.isMoving;
     const dtms = tickLast === null ? 1000 / 60 : Math.min(100, Math.max(0, t - tickLast));
     tickLast = t;
     controls.dampingFactor = frameAlpha(baseDamping, dtms);
-    const scale = frameClock.fps === frameClock.idleFps ? 1 : pendingResolutionScale;
+    const scale = frameClock.isMoving ? pendingResolutionScale : 1;
+    if (gpuWasMoving !== frameClock.isMoving) {
+      gpuWasMoving = frameClock.isMoving;
+      gpuTimer.reset(); // prior native/supersampled work is not a moving sample
+    }
     if (scale !== resolutionScale) {
       resolutionScale = scale;
-      onResize(); // resize before drawing, never blank an already-drawn frame
+      // The temporal renderer resizes only its input targets. The native
+      // output canvas must not be reset on each dynamic-resolution step.
       gpuTimer.reset();
     }
     // A monitor/DPI change need not dispatch a resize event.
@@ -2072,20 +2081,21 @@ async function initScene(canvas) {
     paperWasMoving = movingPaper; assetGeometryChanged = false;
     const attentionKey = hovered?.userData.hotspot?.key || '';
     const attentionPosition = hovered?.userData.hotspot?.center || null;
-    const shadowState = adaptiveShadows.update({ camera, moving: frameClock.fps === frameClock.movingFps, attentionKey, attentionPosition,
+    const shadowState = adaptiveShadows.update({ camera, moving: frameClock.isMoving, attentionKey, attentionPosition,
       geometryDirty: geometryChanged, movingCasters, movingPaper, now: t });
     if (shadowState.changed) advanced.refresh('shadow-budget');
     if (key.shadow.needsUpdate) renderStats.shadowFrames++;
     if (resumeSpot.castShadow && resumeSpot.shadow.needsUpdate) renderStats.deskShadowFrames++;
     shadowsDirty = false;
-    const renderNeeded = advanced.update({ now: t, moving: frameClock.fps === frameClock.movingFps,
+    const renderNeeded = advanced.update({ now: t, moving: frameClock.isMoving,
       scale: pendingResolutionScale, geometryChanged, attentionKey, attentionPosition,
+      streaming: !readiness.detailsSettled,
       lightStamp: `${lightsOn}:${appliedQuality}:${lmMix.value.toFixed(4)}`,
       ambientChanged,
       reactive: !!paperMotion || !!bokeh?.enabled });
     lastCameraPosition.copy(camera.position); lastCameraQuaternion.copy(camera.quaternion);
     if (!renderNeeded && !renderer.shadowMap.needsUpdate && !forced) {
-      advanced.schedule({ moving: false, frameMs: 0, frameBudgetMs: refreshBudget });
+      advanced.schedule({ moving: false, frameMs: 0, frameBudgetMs: 1000 / frameClock.idleFps });
       return;
     }
     const gpuMs = gpuTimer.poll();
@@ -2098,13 +2108,16 @@ async function initScene(canvas) {
     renderStats.triangles = renderer.info.render.triangles;
     renderStats.cpuMs = performance.now() - renderStart;
     renderStats.gpuMs = gpuMs;
-    advanced.schedule({ moving: frameClock.fps === frameClock.movingFps,
-      frameMs: Math.max(renderStats.cpuMs, gpuMs || 0), frameBudgetMs: refreshBudget });
+    advanced.schedule({ moving: frameClock.isMoving,
+      frameMs: Math.max(renderStats.cpuMs, gpuMs || 0),
+      frameBudgetMs: frameClock.isMoving ? refreshBudget : 1000 / frameClock.idleFps });
     pendingResolutionScale = adaptiveQuality.sample({
-      now: performance.now(), moving: frameClock.fps === 120,
-      frameMs: Math.max(performance.now() - renderStart, gpuMs ?? 0),
+      now: performance.now(), moving: frameClock.isMoving,
+      frameMs: Math.max(renderStats.cpuMs, gpuMs ?? 0),
       frameBudgetMs: refreshBudget,
     });
+    frameClock.sampleWork({ now: performance.now(), frameMs: Math.max(renderStats.cpuMs, gpuMs ?? 0),
+      resolutionScale, minimumScale: adaptiveQuality.minimumScale });
     lastCameraPosition.copy(camera.position);
     lastCameraQuaternion.copy(camera.quaternion);
     if (!readiness.revealed && !revealPending && !renderer.getContext().isContextLost()) {
@@ -3116,6 +3129,13 @@ async function initScene(canvas) {
   };
   readiness.construction = true;
   readiness.timings.construction = performance.now();
+  void loader.whenAllReady().then(records => {
+    if (loader.disposed) return;
+    readiness.detailsSettled = true;
+    readiness.detailFailures = records.filter(record => record.baseStatus !== "ready").map(record => record.url);
+    readiness.timings.details = performance.now();
+    advanced.refresh('details-settled');
+  });
   loader.start();
   manager.itemEnd("scene-bootstrap");
   await assetsReady;
@@ -3358,7 +3378,8 @@ function loadModel(loader, scene, url, opts, onPlaced) {
     url,
     (gltf) => placeRoot(gltf.scene, scene, opts, onPlaced),
     undefined,
-    (err) => console.warn(`[experience] failed to load ${url}`, err)
+    (err) => console.warn(`[experience] failed to load ${url}`, err),
+    null, null, { deferred: !!opts.deferred }
   );
 }
 
@@ -3371,7 +3392,7 @@ function loadCurrentExhibit(loader, scene, key, opts) {
       label: window.projectData?.[key]?.title || key,
     });
     ANISO_DIRTY = true;
-  }, undefined, undefined, (root) => prepareRoomExhibit(root, key), key);
+  }, undefined, undefined, (root) => prepareRoomExhibit(root, key), key, { direct: true });
 }
 
 /* ============================================================
@@ -4607,7 +4628,7 @@ function buildHoosierTire(loader) {
     });
     g.add(tire);
     ANISO_DIRTY = true; // sweep the paint texture (sharp lettering at grazing angles)
-  });
+  }, undefined, undefined, null, null, { deferred: true });
   // steel wall bracket: slim plate hidden behind the tire band + two cradle
   // arms UNDER the tire with lips in front of the sidewall
   const brMat = new THREE.MeshStandardMaterial({ color: 0x2a2d33, roughness: 0.45, metalness: 0.75 });
@@ -4661,7 +4682,7 @@ function buildWallHelmet(loader, url, wallDz, yaw, neckPoint) {
     });
     g.add(h);
     ANISO_DIRTY = true;
-  });
+  }, undefined, undefined, null, null, { deferred: true });
   return g;
 }
 
