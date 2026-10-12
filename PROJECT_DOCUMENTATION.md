@@ -1,5 +1,13 @@
 # Portfolio Website Project Documentation
 
+## Top skills / information cards · 2026-10-12
+
+The existing skills marquee now precedes the hero name. A standalone dated
+module restores photo/description cards with hover, focus and click access,
+bounded positioning and pause/dismissal behavior. Original project data and
+model presentation are unchanged. Capture, interaction checks, source notes,
+aesthetic review and release/backup evidence: ../.codex/skills-top-20261012/.
+
 ## White portfolio presentation — 2026-10-11
 
 See WHITE_STYLE_PREVIEW.md for the white presentation, original

@@ -83,10 +83,33 @@ html:has(.white-home) {
 .white-home .hero-scroll { color: #303b44; font-size: 11px; }
 .white-home .scroll-mark { width: 36px; height: 36px; border-color: #b7bdc3; border-radius: 0; }
 .white-home .hero-scroll:hover .scroll-mark { background: #ecedef; }
-.white-home .hero-skill-strip { width: 100%; margin: 0; border-block-color: #e6e8ea; opacity: 1; background: #ffffffc7; }
-.white-home .hero-skill-track { padding-block: 16px; }
-.white-home .hero-skill-track span { padding-inline: 25px; color: #687078; font: 400 10px/1 var(--font-mono); letter-spacing: .1em; -webkit-text-stroke: 0; }
+.white-home .hero-skill-strip { position: relative; z-index: 3; width: 100%; margin: 0; border-block-color: #e6e8ea; opacity: 1; background: #ffffffc7; }
+.white-home .hero-skill-track { padding-block: 15px; }
+.white-home .hero-skill-track span { padding: 5px 25px; color: #505b66; font: 500 13px/1.25 var(--font-mono); letter-spacing: .075em; -webkit-text-stroke: 0; cursor: pointer; }
 .white-home .hero-skill-track span:hover { color: #111316; -webkit-text-stroke: 0; }
+.white-home .hero-skill-strip.is-skill-active .hero-skill-track,
+.white-home .hero-skill-strip:hover .hero-skill-track,
+.white-home .hero-skill-strip:focus-within .hero-skill-track { animation-play-state: paused!important; }
+.white-home .hero-skill-track span:focus-visible { outline: 2px solid #245cab; outline-offset: -2px; }
+.white-home .hero-skill-strip.is-skill-keyboard { overflow-x: auto; mask-image: none; -webkit-mask-image: none; }
+.white-home .hero-skill-strip.is-skill-keyboard .hero-skill-track { animation: none; transform: none; }
+.white-home .hero-skill-strip.is-skill-keyboard .hero-skill-track[aria-hidden=true] { display: none; }
+.white-home .skill-glass-card {
+  width: min(360px, calc(100vw - 24px)); min-height: 0; overflow-y: auto;
+  padding: 10px; border: 1px solid #d4dce3; border-radius: 8px;
+  background: #fffffff5; box-shadow: 0 12px 32px #25364a1c;
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+}
+.white-home .skill-glass-card.is-visible { pointer-events: auto; }
+.white-home .skill-glass-card::before, .white-home .skill-glass-card::after { display: none; }
+.white-home .skill-card-inner { grid-template-columns: 100px 1fr; gap: 15px; min-height: 145px; padding: 0; }
+.white-home .skill-card-media { background: #f4f6f8; border: 0; border-radius: 3px; }
+.white-home .skill-card-media::after { display: none; }
+.white-home .skill-card-media img { opacity: 1; filter: none; }
+.white-home .skill-card-media.is-technical img { object-fit: contain; }
+.white-home .skill-card-kicker { color: #617180; font-size: 10px; line-height: 1.5; letter-spacing: .055em; }
+.white-home .skill-card-content h2 { color: #111b24; font-size: 18px; line-height: 1.15; text-transform: none; }
+.white-home .skill-card-text { color: #43515d; font-size: 13px; line-height: 1.6; margin-top: 8px; }
 
 .white-home .section-kicker { color: #69717a; font-size: 11px; letter-spacing: .12em; margin-bottom: 22px; }
 .white-home .section-head { margin-bottom: 38px; }
@@ -211,7 +234,7 @@ html:has(.white-home) {
   .white-home .hero-rule { width: 22px; }
   .white-home .hero h1 { font-size: clamp(88px, 25.2vw, 134px); line-height: .83; }
   .white-home .hero h1 > span + span { margin-top: 7px; }
-  .white-home .hero-media { inset: clamp(260px, 51vw, 345px) 0 auto; height: clamp(315px, 68vw, 435px); mask-image: linear-gradient(180deg, transparent 0%, #0000001a 6%, #0006 12%, #000c 20%, #000 28%, #000 82%, #000c 88%, #0004 94%, transparent 100%); -webkit-mask-image: linear-gradient(180deg, transparent 0%, #0000001a 6%, #0006 12%, #000c 20%, #000 28%, #000 82%, #000c 88%, #0004 94%, transparent 100%); }
+  .white-home .hero-media { inset: calc(clamp(260px, 51vw, 345px) + 72px) 0 auto; height: clamp(315px, 68vw, 435px); mask-image: linear-gradient(180deg, transparent 0%, #0000001a 6%, #0006 12%, #000c 20%, #000 28%, #000 82%, #000c 88%, #0004 94%, transparent 100%); -webkit-mask-image: linear-gradient(180deg, transparent 0%, #0000001a 6%, #0006 12%, #000c 20%, #000 28%, #000 82%, #000c 88%, #0004 94%, transparent 100%); }
   .white-home .hero-media img { object-position: 62% center; filter: none; }
   .white-home .hero-shade { background: none; }
   .white-home .hero-copy { margin: clamp(239px, 43vw, 310px) 0 20px; padding: 0; color: #4d555e; font-size: 15px; line-height: 1.7; }
@@ -223,8 +246,9 @@ html:has(.white-home) {
   .white-home .hero-role { gap: 5px; }
   .white-home .hero-location { display: none; }
   .white-home .hero-scroll { flex-shrink: 0; }
-  .white-home .hero-skill-track { padding-block: 16px; }
-  .white-home .hero-skill-track span { font-size: 9px; padding-inline: 20px; }
+  .white-home .hero-skill-track { padding-block: 2px; }
+  .white-home .hero-skill-track span { display: inline-flex; align-items: center; min-height: 44px; font-size: 11px; padding-inline: 20px; }
+  .white-home .hero-skill-strip { margin-bottom: 23px; }
   .white-home .section-kicker { font-size: 10px; margin-bottom: 18px; }
   .white-home .section-head { margin-bottom: 30px; }
   .white-home .section-head h2 { font-size: clamp(42px, 8.4vw, 58px); }
@@ -274,6 +298,7 @@ html:has(.white-home) {
   .white-home .studio-entry-caption { font-size: 8px; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .white-home .skill-glass-card { transition: none; }
   .white-home .hero-content, .white-home .hero-media img, .white-home .hero-skill-track { animation: none; transform: none; }
   .white-home .hero-skill-strip { overflow-x: auto; mask-image: none; -webkit-mask-image: none; }
   .white-home .hero-skill-track[aria-hidden="true"] { display: none; }

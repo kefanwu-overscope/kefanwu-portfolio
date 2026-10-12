@@ -1,5 +1,21 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## Top skills and restored information cards · 2026-10-12
+
+Based on3823e714. The existing14-skill, two-track marquee is above the hero
+name again. skills-card-20261012.js restores the historical card interaction
+from e5ea5c68 (removed during b59c0e83 homepage restructuring), with white
+photo/description cards, hover retention, keyboard access, Escape/outside
+dismissal, reduced-motion handling and bounded phone layouts. Main motion,
+case content, models, animation frames and room navigation remain unchanged.
+
+Existing skill images are reused; FEA instead uses the current original DR
+stress figure. Technical images use contain, full color and no image filters.
+Analysis descriptions respect existing simulation/validation boundaries;
+leadership copy follows the current30-engineer/four-subteam homepage record.
+Evidence, aesthetic recommendations and exact release/backup records:
+../.codex/skills-top-20261012/. Other design suggestions were not implemented.
+
 ## White visual revision — publication authorized, 2026-10-11
 
 Based on f83d3641. The user reviewed the local preview, requested a more natural
