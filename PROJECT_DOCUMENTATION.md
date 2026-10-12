@@ -1,5 +1,15 @@
 # Portfolio Website Project Documentation
 
+## Featured work and process photographs · 2026-10-12
+
+User approved publication of the three October12 aesthetic recommendations.
+Read HOMEPAGE_PRESENTATION.md for hero hierarchy, three featured presentations,
+the complete16-project directory, source-linked real process photos and motion
+maintenance. Featured content is generated from existing directory nodes; the
+loader registers by host without changing model/frame assets or case data.
+Local UI, content preservation, online byte verification and complete backup-chain
+records: ../.codex/aesthetic-20261012/.
+
 ## Top skills / information cards · 2026-10-12
 
 The existing skills marquee now precedes the hero name. A standalone dated

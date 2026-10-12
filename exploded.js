@@ -8,6 +8,7 @@
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const states = new Map();
+  const statesByHost = new WeakMap();
   const cache = new Map();
   const loadingEntries = new Set();
   const LOAD_CONCURRENCY = 3;
@@ -689,7 +690,7 @@
 
   const visibilityObserver = new IntersectionObserver((entries) => {
     entries.forEach(({ target, isIntersecting }) => {
-      const state = states.get(target.dataset.project);
+      const state = statesByHost.get(target);
       if (!state) return;
       state.visible = isIntersecting;
       if (!isIntersecting) resetState(state);
@@ -745,8 +746,10 @@
     const media = card.querySelector(".card-media");
     const poster = media?.querySelector("img");
     if (!media || !poster) return;
-    const key = card.dataset.project;
-    const title = card.dataset.previewTitle || card.querySelector("h3")?.textContent.trim() || key;
+    // A featured preview and its directory entry share source URLs, but own
+    // separate controls and image nodes within the same bounded lazy loader.
+    const key = `${card.dataset.project}:${states.size}`;
+    const title = card.dataset.previewTitle || card.querySelector("h3")?.textContent.trim() || card.dataset.project;
     const { label, hint, description } = MODES[config.mode];
     const stage = document.createElement("div");
     stage.className = "card-explode-stage";
@@ -781,6 +784,7 @@
       visible: rect.bottom > 0 && rect.top < innerHeight, owner: null, pointerInside: false, dragging: false,
       failed: false, loadJob: null, waitingIndex: null };
     states.set(key, state);
+    statesByHost.set(card, state);
     reflectProgress(state);
     visibilityObserver.observe(card);
 
@@ -853,7 +857,7 @@
   reducedMotion.addEventListener("change", resetAll);
 
   window.cardExplosions = {
-    reset(card, immediate = false) { resetState(states.get(card?.dataset.project), immediate); },
+    reset(card, immediate = false) { resetState(statesByHost.get(card), immediate); },
     resetAll(immediate = false) {
       states.forEach((state) => resetState(state, immediate));
     },
@@ -863,7 +867,7 @@
     if (!previewProjects) return;
     document.querySelectorAll(hostSelector).forEach((card) => {
       if (card.dataset.motionLive === 'true') return;
-      if (states.has(card.dataset.project)) return;
+      if (statesByHost.has(card)) return;
       try {
         const config = normalizeConfig(previewProjects[card.dataset.project]);
         if (config) setupCard(card, config);

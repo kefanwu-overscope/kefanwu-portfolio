@@ -1,5 +1,19 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## Approved homepage aesthetic improvements · 2026-10-12
+
+Based on6d7bd303. User approved all three aesthetic recommendations and publication.
+Read HOMEPAGE_PRESENTATION.md. Hero auxiliary type/spacing is more consistent;
+three featured previews (steering/vineRobot/scanner) precede the full16 directory;
+Approach displays existing fabricated hardware, physical prototype and bending-test
+photos with factual captions. Engineering source content and all original assets
+are unchanged. Featured markup reads existing directory media/body nodes and must
+run before exploded.js. The shared loader now registers separate host elements;
+filter counts, lazy loading and160MiB decoding budgets stay bounded. Vine cover
+and frames receive the same modest scale within the full-pose mask envelope.
+Main/3D case records and retained-room navigation remain shared. Validation,
+exact publication and recoverable overlay evidence: ../.codex/aesthetic-20261012/.
+
 ## Top skills and restored information cards · 2026-10-12
 
 Based on3823e714. The existing14-skill, two-track marquee is above the hero
