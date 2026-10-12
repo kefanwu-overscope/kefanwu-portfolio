@@ -1,5 +1,15 @@
 # Portfolio Website Project Documentation
 
+## White portfolio presentation — 2026-10-11
+
+See WHITE_STYLE_PREVIEW.md for the white presentation, original
+race-car hero integration, synchronized white covers/offline/live animations,
+photo-material evidence, validation and local preview command. Based on
+f83d3641; the user approved publication after requesting gentler fades and
+tighter car framing. Exact release/online/backup evidence is recorded under
+../.codex/white-release-20261011/.
+Do not overwrite old immutable assets or remove backup-chain dependencies.
+
 ## Shared project reading layout · 2026-10-09
 
 See CASE_READING.md for the current main-site/3D detail presentation: compact

@@ -16,7 +16,9 @@ const sources = Object.fromEntries(await Promise.all(files.map(async name => [na
 const renderer = await read('case-study.js');
 const bridge = await read('studio-project-bridge.js');
 const pages = Object.fromEntries(await Promise.all(['case-study.html', 'project-3d.html'].map(async name => [name, await read(name)])));
-const coverCatalog = JSON.parse(await read('assets/editorial/animation-covers.json'));
+const coverPath = renderer.match(/fetch\('(assets\/editorial\/[^']+\.json)(?:\?[^']*)?'/)?.[1];
+assert(coverPath, 'Renderer supplies an existing same-origin cover catalog');
+const coverCatalog = JSON.parse(await read(coverPath));
 const plain = (value) => JSON.parse(JSON.stringify(value));
 const normalize = (value) => String(value).replace(/\s+/g, ' ').trim();
 const decode = (value) => String(value).replace(/&(?:amp|lt|gt|quot|#39|#\d+|#x[\da-f]+);/gi, entity => {
@@ -176,7 +178,7 @@ async function render(key, { studio = false, hash = '', embedded = false, legacy
     cancelAnimationFrame(id) { frames.delete(id); },
     setTimeout(fn, delay) { const id = ++handle; timers.set(id, { fn, delay }); return id; },
     clearTimeout(id) { timers.delete(id); },
-    fetch: async url => { assert.match(url, /^assets\/editorial\/animation-covers\.json\?/); return { ok: true, json: async () => coverCatalog }; },
+    fetch: async url => { assert.equal(url.split('?')[0], coverPath); return { ok: true, json: async () => coverCatalog }; },
   });
   Object.assign(window, { requestAnimationFrame: context.requestAnimationFrame, cancelAnimationFrame: context.cancelAnimationFrame });
   for (const file of files) vm.runInContext(sources[file], context, { filename: file });
@@ -225,10 +227,13 @@ await check('16 projects / 64 chapter archives preserve the exact baseline parag
   for (const name of ['projectData', 'caseStudySupplements', 'caseStudyMedia']) assert.deepEqual(current[name], original[name], `${name} preserved in full`);
 });
 
-await check('Cover catalog and tracked model / scientific-image / animation assets are untouched', async () => {
-  assert.deepEqual(coverCatalog, JSON.parse(git('cat-file', 'blob', `${baseline}:assets/editorial/animation-covers.json`)));
-  const changed = git('diff', '--no-ext-diff', '--name-only', baseline, '--', 'models', 'assets').trim();
-  assert.equal(changed, '', `Tracked asset changes are outside readability scope:\n${changed}`);
+await check('Original cover catalog and tracked model / scientific-image / animation assets are untouched', async () => {
+  assert.deepEqual(JSON.parse(await read('assets/editorial/animation-covers.json')), JSON.parse(git('cat-file', 'blob', `${baseline}:assets/editorial/animation-covers.json`)));
+  const changed = git('diff', '--no-ext-diff', '--name-only', '-z', baseline, '--', 'models', 'assets').split('\0').filter(Boolean);
+  const presentationAssets = name => name.startsWith('assets/exploded/white-20261011/') ||
+    name.startsWith('assets/editorial/white-20261011/') ||
+    ['assets/exploded/manifest-white-20261011.json', 'assets/exploded/manifest-detail-white-20261011.json'].includes(name);
+  assert.deepEqual(changed.filter(name => !presentationAssets(name)), [], 'Original source geometry, scientific figures and immutable assets remain unchanged');
 });
 
 const rendered = new Map();

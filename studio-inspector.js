@@ -274,22 +274,23 @@ export function createStudioInspector({
   manifestUrl,
   quality = 'auto',
   transparentBackground = false,
+  backgroundColor = 0x191919,
 } = {}) {
   if (!canvas) throw new Error('The project workbench needs a canvas.');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: transparentBackground, powerPreference: 'high-performance' });
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
-  renderer.setClearColor(0x191919, transparentBackground ? 0 : 1);
+  renderer.setClearColor(backgroundColor, transparentBackground ? 0 : 1);
   if (renderer.shadowMap) {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.shadowMap.autoUpdate = false;
   }
   const scene = new THREE.Scene();
-  // Let the page supply the surrounding surface without changing the source
-  // material, environment lighting or initial camera/pose.
-  scene.background = transparentBackground ? null : new THREE.Color(0x191919);
+  // An opaque page-matched backdrop also participates in the transmission
+  // pass, so clear acrylic refracts the same surface shown behind the model.
+  scene.background = transparentBackground ? null : new THREE.Color(backgroundColor);
   let environmentTarget;
   function rebuildEnvironment() {
     environmentTarget?.dispose();
@@ -748,7 +749,7 @@ export function createStudioInspector({
   };
   const restored = () => {
     contextLost = false;
-    renderer.setClearColor(0x191919, transparentBackground ? 0 : 1);
+    renderer.setClearColor(backgroundColor, transparentBackground ? 0 : 1);
     if (renderer.shadowMap) renderer.shadowMap.needsUpdate = true;
     rebuildEnvironment();
     controls.enabled = active;

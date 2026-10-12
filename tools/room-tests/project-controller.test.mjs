@@ -129,10 +129,11 @@ async function setup({ offscreen = false, deferredImport = false, scrollDriven =
   };
 }
 
-test('Main steering mounts the live transparent surface without changing its navigation mode', async () => {
+test('Main steering mounts the page-matched white surface without changing its navigation mode', async () => {
   const app = await setup({ caseMode: null, scrollDriven: true });
   assert.equal(app.inspectors.length, 1);
-  assert.equal(app.inspectors[0].callbacks.transparentBackground, true);
+  assert.equal(app.inspectors[0].callbacks.transparentBackground, false);
+  assert.equal(app.inspectors[0].callbacks.backgroundColor, 0xffffff);
   assert.equal(app.document.body.dataset.caseMode, undefined);
   assert.equal(app.viewport.dataset.status, 'loading');
   app.inspectors[0].ready(true);

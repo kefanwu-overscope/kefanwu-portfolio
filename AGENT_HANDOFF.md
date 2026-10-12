@@ -1,5 +1,30 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## White visual revision — publication authorized, 2026-10-11
+
+Based on f83d3641. The user reviewed the local preview, requested a more natural
+fade and tighter race-car framing, then explicitly authorized publication.
+Read WHITE_STYLE_PREVIEW.md and tools/white-studio/README.md. Exact release
+commit, online byte verification and recoverable overlay are recorded in
+../.codex/white-release-20261011/; this supersedes the earlier local-only status.
+
+Homepage keeps the real full-bleed car/driver photo blended into white, with
+black type and white editorial sections. Main/studio cases share a final white
+CSS override and cover catalog. All48 covers and4,064 frames are newly rendered
+through the current inspector into fresh white-20261011 paths;385 transport
+chunks, source motion/cameras and all2,032 anchors/72 masks are preserved.
+White is opaque inside transmission, with the inspector's dark default retained
+for room callers. Geometry, photo-supported materials, original scientific
+figures and all engineering content remain unchanged.
+
+Asset integrity,74 regressions,21 content groups and64 desktop/mobile detail
+layouts passed. Actual animations, reduced-motion steps, full original stress
+figure and retained-room return were checked. Return preserves scene/document,
+camera/lights/quality and adds no room-model request. Evidence/local backup:
+../.codex/white-studio-20261011/. Final wide-screen photo cropping reduces empty
+track at right; shorter/smoother fades preserve the body and tire detail. Phone
+car framing stays complete. New dated assets receive immutable cache headers.
+
 ## Shared case-study readability · 2026-10-09
 
 Based on5fa2eb78; see CASE_READING.md. Main and3D retain one renderer/data source.

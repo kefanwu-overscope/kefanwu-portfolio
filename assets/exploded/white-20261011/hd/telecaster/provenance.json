@@ -1,0 +1,55 @@
+{
+  "project": "telecaster",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "white-20261011",
+  "palette": "studio-photo-materials.js",
+  "background": "#ffffff",
+  "backgroundComposition": "Opaque white scene background participates in physical transmission; native WebGL antialiasing; no pixel filtering.",
+  "sourceManifest": "telecaster/manifest.cda86ee072af36e7.json",
+  "sourceManifestSha256": "cda86ee072af36e7b754bf37c1de166c309cfc0f2f4d9fede91fa32d86c64b62",
+  "camera": {
+    "position": [
+      5.587418079376221,
+      6.20474672317505,
+      9.477091789245605
+    ],
+    "target": [
+      0.012626171112060556,
+      1.410426139831545,
+      -5.626678466774672e-05
+    ],
+    "up": [
+      -0.20265238652933804,
+      0.9166490062782604,
+      -0.3445092299533372
+    ],
+    "zoom": 1,
+    "frameWidth": 4.929925169335695,
+    "frameAspect": 1.4988290398126465
+  },
+  "coverCamera": {
+    "position": [
+      5.587418079376221,
+      6.20474672317505,
+      9.477091789245605
+    ],
+    "target": [
+      0.012626171112060552,
+      1.4104261398315445,
+      -5.626678466774671e-05
+    ],
+    "up": [
+      -0.20265238652933804,
+      0.9166490062782604,
+      -0.3445092299533372
+    ],
+    "zoom": 1,
+    "frameWidth": 4.929925169335695,
+    "frameAspect": 1.4988290398126465
+  },
+  "coverProgress": 0,
+  "frameCount": 121,
+  "width": 1280,
+  "height": 854,
+  "bytes": 1159570
+}

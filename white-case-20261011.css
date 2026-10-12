@@ -1,0 +1,74 @@
+/* Shared white presentation for main-site and retained-studio case studies. */
+:root {
+  color-scheme: light;
+  --bg: #fff;
+  --surface: #f5f6f7;
+  --ink: #111315;
+  --muted: #565e66;
+  --line: #dce0e3;
+  --accent: #145ca4;
+}
+::selection { background: #d5e7fa; color: #111315; }
+.site-header { background: #fffffff5; }
+.nav-back { color: var(--ink); background: #fff; border-color: #bac2c9; }
+.nav-back:hover { background: #f2f5f7; border-color: #68747f; }
+.case-summary dd, .brief-goal { color: #30383f; }
+.case-reading-actions a { border-bottom-color: #bcc6ce; }
+.case-reading-actions .reading-primary { color: var(--accent); border-bottom-color: var(--accent); }
+.chapter-copy > p:not(.eyebrow), .source-detail-body { color: #444d55; }
+.chapter-copy > p.chapter-lead { color: #1a2025; }
+.chapter-detail-link { border-bottom-color: #aebfce; }
+.image-affordance { color: #161d23; background: #fffffff0; border-color: #a9b3bd; }
+.image-open:hover .image-affordance { background: #e9f1f8; }
+.gallery-browse, .text-link { border-bottom-color: #aeb9c2; }
+.next-section { background: #f5f6f7; }
+.studio-invitation { border-left-color: var(--line); }
+.lightbox { background: #fff; border-color: #d0d7de; }
+.lightbox::backdrop { background: #1c2736a8; }
+.icon-button { border-color: #b8c1ca; }
+.icon-button:hover { background: #edf2f6; }
+.case-animation-host .card-media,
+.case-mode-studio .case-animation-host .card-media,
+.case-3d-viewport > img { background: #fff; }
+.case-3d-status { background: #fffffff0; border-color: var(--line); color: var(--muted); }
+.case-3d-controls button,
+.case-3d-status button,
+.case-3d-controls select { background: #fff; border-color: #bdc6ce; color: var(--ink); }
+.case-3d-controls button[aria-pressed=true] { background: #18232c; border-color: #18232c; color: #fff; }
+#case-3d-annotation { background: #fffffff0; border-color: var(--line); }
+#case-3d-progress { background: linear-gradient(to right, var(--accent) 0 var(--progress), #cbd2d8 var(--progress) 100%) center / 100% 4px no-repeat; }
+.case-motion-story .motion-notes {
+  border-left-color: #8b99a6;
+  background: linear-gradient(110deg, #fffffff5, #ffffffe8 76%, #fff0);
+  text-shadow: 0 1px 6px #fff, 0 0 12px #fff;
+}
+.motion-story-heading .eyebrow,
+.motion-skip,
+.motion-scroll-cue,
+.case-motion-story .case-3d-status { color: #5c6670; }
+.motion-story-heading .eyebrow span { color: #97a1aa; }
+.motion-step-count { color: #426580; }
+.case-motion-story .motion-notes h2 { color: #17232d; }
+.case-motion-story .motion-notes .motion-note-body { color: #465660; }
+.motion-leader path { stroke: #50687b; }
+.motion-leader marker path { stroke: #38556b; }
+.motion-leader-target { fill: #fff; stroke: #38556b; }
+.motion-step-buttons button { color: #68747f; }
+.motion-step-buttons button[aria-pressed=true] { color: #15232f; border-color: #15232f; }
+.motion-story-timeline input {
+  background: linear-gradient(to right, #436f95 var(--motion-progress, 0%), #c6cfd6 var(--motion-progress, 0%)) center / 100% 1px no-repeat;
+  accent-color: #436f95;
+}
+.motion-story-timeline input::-webkit-slider-thumb { background: #436f95; }
+.motion-story-timeline input::-moz-range-thumb { background: #436f95; }
+.motion-story-timeline output { color: #5b6873; }
+.case-motion-story .preview-links .text-link { color: #3d596f; }
+.case-motion-story .preview-links .text-link:hover { color: #111315; }
+.case-motion-story #case-3d-legend { color: #394650; }
+.case-animation-host .card-explode-label { background: #fffffff0; color: #35434f; }
+.case-animation-host .card-explode-controls::before { color: #35434f; text-shadow: none; }
+.case-animation-host .card-explode-controls input { accent-color: #436f95; }
+@media print {
+  .site-header { background: #fff; }
+  .chapter-copy > p:not(.eyebrow), .source-detail-body { color: #333; }
+}

@@ -1,0 +1,55 @@
+{
+  "project": "brakeSim",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "white-20261011",
+  "palette": "studio-photo-materials.js",
+  "background": "#ffffff",
+  "backgroundComposition": "Opaque white scene background participates in physical transmission; native WebGL antialiasing; no pixel filtering.",
+  "sourceManifest": "brake-dr-20261005/manifest.e56b939e20fccf16.json",
+  "sourceManifestSha256": "e56b939e20fccf168bd7bd75f8d9613ac695ec08f3add2444d227c6084d8d5ea",
+  "camera": {
+    "position": [
+      11.020412445068358,
+      4.966976165771486,
+      3.1486892700195317
+    ],
+    "target": [
+      0,
+      1.42500114440918,
+      4.76837158203125e-07
+    ],
+    "up": [
+      -0.2838972587121988,
+      0.9554176782923456,
+      -0.0811135408064681
+    ],
+    "zoom": 1,
+    "frameWidth": 4.944589138031006,
+    "frameAspect": 1.4988290398126465
+  },
+  "coverCamera": {
+    "position": [
+      11.020412445068358,
+      4.966976165771486,
+      3.1486892700195317
+    ],
+    "target": [
+      0,
+      1.42500114440918,
+      4.76837158203125e-07
+    ],
+    "up": [
+      -0.2838972587121988,
+      0.9554176782923456,
+      -0.0811135408064681
+    ],
+    "zoom": 1,
+    "frameWidth": 4.944589138031006,
+    "frameAspect": 1.4988290398126465
+  },
+  "coverProgress": 0,
+  "frameCount": 121,
+  "width": 1280,
+  "height": 854,
+  "bytes": 4977092
+}

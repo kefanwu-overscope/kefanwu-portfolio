@@ -285,11 +285,12 @@ function mount() {
     receiveStatus({ state: 'loading' });
     const current = () => ticket === generation && !disposed && !suspended;
     try {
-      const { createStudioInspector } = await import('./studio-inspector.js?v=brake-dr-20261005');
+      const { createStudioInspector } = await import('./studio-inspector.js?v=white-20261011');
       if (!current() || signal.aborted) return;
       inspector = createStudioInspector({
         canvas,
-        transparentBackground: true,
+        transparentBackground: false,
+        backgroundColor: 0xffffff,
         onFrame: ({ progress: applied }) => {
           if (!current() || !inspector || freeExploration) return;
           const steps = projectMotionNotes[key]?.steps || [];

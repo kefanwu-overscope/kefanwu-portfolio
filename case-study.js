@@ -86,13 +86,21 @@
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 3000);
     try {
-      const response = await fetch('assets/editorial/animation-covers.json?v=brake-dr-20261005', { signal: controller.signal, cache: 'force-cache' });
+      const response = await fetch('assets/editorial/white-20261011/animation-covers.json', { signal: controller.signal, cache: 'force-cache' });
       if (!response.ok) throw new Error('Cover catalog unavailable');
       const catalog = await response.json();
       const cover = catalog.version === 1 && catalog.projects?.[key];
       if (!cover || !cover.src || new URL(cover.src, document.baseURI).origin !== location.origin) throw new Error('Invalid cover');
       return { ...editorial.cover, ...cover };
-    } catch { return editorial.cover; }
+    } catch {
+      // The catalog may time out, but its fallback must use the same white
+      // initial pose as the live viewer and streamed animation.
+      const directory = 'assets/editorial/white-20261011/';
+      return { ...editorial.cover,
+        src: `${directory}${key}-wide-1800.webp`,
+        srcset: [480, 960, 1800].map(width => `${directory}${key}-wide-${width}.webp ${width}w`).join(', '),
+      };
+    }
     finally { clearTimeout(timeout); }
   }
   const cover = await resolveCover();

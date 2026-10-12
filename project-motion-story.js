@@ -91,7 +91,7 @@ export function attachMotionStory(story) {
     else revealAnnotation();
   }
   if (leader) {
-    fetch('assets/exploded/brake-dr-20261005/anchors.json', { signal: events.signal }).then(response => {
+    fetch('assets/exploded/white-20261011/anchors.json', { signal: events.signal }).then(response => {
       if (!response.ok) throw new Error('Annotation coordinates unavailable');
       return response.json();
     }).then(data => { if (disposed) return; frameAnchors = data[story.dataset.motionProject]; placement = null; occupancyKey = '';

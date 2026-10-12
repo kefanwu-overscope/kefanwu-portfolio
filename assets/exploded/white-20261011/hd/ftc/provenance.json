@@ -1,0 +1,55 @@
+{
+  "project": "ftc",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "white-20261011",
+  "palette": "studio-photo-materials.js",
+  "background": "#ffffff",
+  "backgroundComposition": "Opaque white scene background participates in physical transmission; native WebGL antialiasing; no pixel filtering.",
+  "sourceManifest": "ftc/manifest.b301848c585dff0c.json",
+  "sourceManifestSha256": "b301848c585dff0c0b0235aa7bc5ba1f8a4b550be9ff93cd2ffcc19dad4cacfd",
+  "camera": {
+    "position": [
+      5.796556472778321,
+      6.174357891082762,
+      9.369441986083986
+    ],
+    "target": [
+      0.2217650413513183,
+      1.380037784576416,
+      -0.10770511627197243
+    ],
+    "up": [
+      -0.20265238652933804,
+      0.9166490062782604,
+      -0.3445092299533372
+    ],
+    "zoom": 1,
+    "frameWidth": 7.020569393438901,
+    "frameAspect": 1.4988290398126465
+  },
+  "coverCamera": {
+    "position": [
+      5.796556472778321,
+      6.174357891082762,
+      9.369441986083986
+    ],
+    "target": [
+      0.2217650413513183,
+      1.380037784576416,
+      -0.10770511627197243
+    ],
+    "up": [
+      -0.20265238652933804,
+      0.9166490062782604,
+      -0.3445092299533372
+    ],
+    "zoom": 1,
+    "frameWidth": 7.020569393438901,
+    "frameAspect": 1.4988290398126465
+  },
+  "coverProgress": 0,
+  "frameCount": 121,
+  "width": 1280,
+  "height": 854,
+  "bytes": 3749902
+}

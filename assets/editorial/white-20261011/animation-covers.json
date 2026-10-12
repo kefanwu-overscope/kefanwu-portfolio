@@ -1,0 +1,550 @@
+{
+  "version": 1,
+  "revision": "white-20261011",
+  "projects": {
+    "steering": {
+      "src": "assets/editorial/white-20261011/steering-wide-1800.webp?v=faaacf3dd653",
+      "srcset": "assets/editorial/white-20261011/steering-wide-480.webp?v=6a765086e869 480w, assets/editorial/white-20261011/steering-wide-960.webp?v=b9c0772ceaaa 960w, assets/editorial/white-20261011/steering-wide-1800.webp?v=faaacf3dd653 1800w",
+      "alt": "Steering wheel, column, universal joints and rack in their neutral position.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/white-20261011/steering-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "6a765086e86998acec20bb155c1ab8ab1ee8b2ab22d9a58401d461db19101694",
+          "bytes": 4316
+        },
+        {
+          "src": "assets/editorial/white-20261011/steering-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "b9c0772ceaaa893d86f724149a1c699f67b43373c64c10322e84383ee61db75a",
+          "bytes": 9872
+        },
+        {
+          "src": "assets/editorial/white-20261011/steering-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "faaacf3dd653acc8a1711a158a6bffd07e28042a8e5bdf931f92f29d93cd9a0b",
+          "bytes": 34560
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/white-20261011/sd/steering/00.webp?v=32a50c9fb620",
+      "sourceFrameSha256": "32a50c9fb62026cf6f41c7e570be69c2dce4a585adc0536c71e9629fdbd5488d",
+      "provenance": "assets/exploded/white-20261011/sd/steering/provenance.json"
+    },
+    "vineRobot": {
+      "src": "assets/editorial/white-20261011/vineRobot-wide-1800.webp?v=2d2d1e019851",
+      "srcset": "assets/editorial/white-20261011/vineRobot-wide-480.webp?v=c7f7e122d815 480w, assets/editorial/white-20261011/vineRobot-wide-960.webp?v=7e0714e0c65c 960w, assets/editorial/white-20261011/vineRobot-wide-1800.webp?v=2d2d1e019851 1800w",
+      "alt": "Vine robot pressure vessel with its translucent tube retracted.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/white-20261011/vineRobot-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "c7f7e122d81589ac39a3a835b9314c70f516a8884e0d8bad6d9ebd19c4e03ab7",
+          "bytes": 8136
+        },
+        {
+          "src": "assets/editorial/white-20261011/vineRobot-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "7e0714e0c65c3b6dc1c0237f9571d6512c9922f9458a1826561a856b2cae840e",
+          "bytes": 18580
+        },
+        {
+          "src": "assets/editorial/white-20261011/vineRobot-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "2d2d1e019851f510331ee0f44dc08e4ef21927624537bfb1d946e543d784efcd",
+          "bytes": 56892
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/white-20261011/sd/vineRobot/00.webp?v=2cbb3133dffd",
+      "sourceFrameSha256": "2cbb3133dffdaf5b82e48cb97529b41c0284753c2008f80f40c64d5ea435ff9b",
+      "provenance": "assets/exploded/white-20261011/sd/vineRobot/provenance.json"
+    },
+    "javelin": {
+      "src": "assets/editorial/white-20261011/javelin-wide-1800.webp?v=34aa1d776c32",
+      "srcset": "assets/editorial/white-20261011/javelin-wide-480.webp?v=611e7292bc38 480w, assets/editorial/white-20261011/javelin-wide-960.webp?v=785e39383727 960w, assets/editorial/white-20261011/javelin-wide-1800.webp?v=34aa1d776c32 1800w",
+      "alt": "Javelin airframe suspended above the studio floor with four propellers.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/white-20261011/javelin-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "611e7292bc38bdde0303e27a7b3bc792bf5a3252f6e34c4218cd3b19a8b9c75d",
+          "bytes": 4832
+        },
+        {
+          "src": "assets/editorial/white-20261011/javelin-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "785e39383727f40a6ab718cd2e8e350e11b6f1eef084664de6f750d8177f239a",
+          "bytes": 11210
+        },
+        {
+          "src": "assets/editorial/white-20261011/javelin-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "34aa1d776c32b22f05f564b9c456ccc4bea53db0c5d55133b134c22538fdf54b",
+          "bytes": 35002
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/white-20261011/sd/javelin/00.webp?v=77c3ae3c0d12",
+      "sourceFrameSha256": "77c3ae3c0d12a641055674d3b3935f3a61a5ede3be8cbee871fdc1659678d99d",
+      "provenance": "assets/exploded/white-20261011/sd/javelin/provenance.json"
+    },
+    "brakeSim": {
+      "src": "assets/editorial/white-20261011/brakeSim-wide-1800.webp?v=df33e58609d2",
+      "srcset": "assets/editorial/white-20261011/brakeSim-wide-480.webp?v=09c623b1d06b 480w, assets/editorial/white-20261011/brakeSim-wide-960.webp?v=b9bc539abd28 960w, assets/editorial/white-20261011/brakeSim-wide-1800.webp?v=df33e58609d2 1800w",
+      "alt": "Mk.8 scalloped cast-iron brake rotor with 72 through holes before illustrative heating.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/white-20261011/brakeSim-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "09c623b1d06b315ec1cc87049138a5b95260470c73bf3fd8c8e63ad3efe0ec1e",
+          "bytes": 11046
+        },
+        {
+          "src": "assets/editorial/white-20261011/brakeSim-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "b9bc539abd2865fddc48d192a48c8cc5ae48568bc4a3fc414891d828dfcb7070",
+          "bytes": 23574
+        },
+        {
+          "src": "assets/editorial/white-20261011/brakeSim-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "df33e58609d2a750d539db80588591f37ecb7251f5b56ef5c9813b0ecc4843ac",
+          "bytes": 66134
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/white-20261011/sd/brakeSim/00.webp?v=8403f65a4a2a",
+      "sourceFrameSha256": "8403f65a4a2aa8149d3f2d99d3ee84c94f7622f449f057279b116da1291058d0",
+      "provenance": "assets/exploded/white-20261011/sd/brakeSim/provenance.json"
+    },
+    "aura": {
+      "src": "assets/editorial/white-20261011/aura-wide-1800.webp?v=6d3e405d563c",
+      "srcset": "assets/editorial/white-20261011/aura-wide-480.webp?v=9e25e90edf54 480w, assets/editorial/white-20261011/aura-wide-960.webp?v=5559fe2a1834 960w, assets/editorial/white-20261011/aura-wide-1800.webp?v=6d3e405d563c 1800w",
+      "alt": "Assembled AURA swerve module with its wheel, motors and metal structure.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/white-20261011/aura-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "9e25e90edf544214567130b526b2750a9dc02c2526e10581220007f4a1cd6193",
+          "bytes": 2938
+        },
+        {
+          "src": "assets/editorial/white-20261011/aura-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "5559fe2a1834ace3ed23e4f74b1246610b53245d627304917d44e367143b6f6f",
+          "bytes": 6588
+        },
+        {
+          "src": "assets/editorial/white-20261011/aura-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "6d3e405d563c2a611735b5b5ff7993b3e21bf6a069e7e8b6e67177900ada9935",
+          "bytes": 21732
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/white-20261011/sd/aura/00.webp?v=c197cb9c862f",
+      "sourceFrameSha256": "c197cb9c862fa98309db81d93c22be0d4397328b8aa2e1244a1c231f2208dc4b",
+      "provenance": "assets/exploded/white-20261011/sd/aura/provenance.json"
+    },
+    "scanner": {
+      "src": "assets/editorial/white-20261011/scanner-wide-1800.webp?v=c2ada020ce38",
+      "srcset": "assets/editorial/white-20261011/scanner-wide-480.webp?v=99f2b6cb759b 480w, assets/editorial/white-20261011/scanner-wide-960.webp?v=6f8399768516 960w, assets/editorial/white-20261011/scanner-wide-1800.webp?v=c2ada020ce38 1800w",
+      "alt": "LiDAR scanner with blue printed mounts, guide rods and a plywood base.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/white-20261011/scanner-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "99f2b6cb759b1b1ba3dfa477675626bc95be6634524c930d62ad5257156797da",
+          "bytes": 10310
+        },
+        {
+          "src": "assets/editorial/white-20261011/scanner-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "6f83997685168ebd499deb16cfe2c67b3ca0af6a2ea4ee381cd1471168c6a45a",
+          "bytes": 23194
+        },
+        {
+          "src": "assets/editorial/white-20261011/scanner-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "c2ada020ce384db2035fdc6a573f37faababb12d843aaba0ebc8083c7f31087d",
+          "bytes": 77636
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/white-20261011/sd/scanner/00.webp?v=20730881ae21",
+      "sourceFrameSha256": "20730881ae218f8ff272eb20cff4bb52b2bf9a5cf574f6cff966771adffc3e56",
+      "provenance": "assets/exploded/white-20261011/sd/scanner/provenance.json"
+    },
+    "seat": {
+      "src": "assets/editorial/white-20261011/seat-wide-1800.webp?v=ca529c8e9c20",
+      "srcset": "assets/editorial/white-20261011/seat-wide-480.webp?v=ebee606e5a0e 480w, assets/editorial/white-20261011/seat-wide-960.webp?v=ed5557800229 960w, assets/editorial/white-20261011/seat-wide-1800.webp?v=ca529c8e9c20 1800w",
+      "alt": "Folded and perforated aluminum driver seat.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/white-20261011/seat-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "ebee606e5a0ec8b7338b7c3e7df5012aaf38837147e3625891018cdf6dbcc747",
+          "bytes": 4100
+        },
+        {
+          "src": "assets/editorial/white-20261011/seat-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "ed55578002298227d97a63af88805b2214343e01de3a1018dfe5812629e46b99",
+          "bytes": 8764
+        },
+        {
+          "src": "assets/editorial/white-20261011/seat-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "ca529c8e9c20faacf5658ac8085a740070c1f7c5828cc9a369917ddb228de3a8",
+          "bytes": 27116
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/white-20261011/sd/seat/00.webp?v=eef861141973",
+      "sourceFrameSha256": "eef86114197315d02be5342b87040c2395b37d209bef9bfc9a22d6706ecbf817",
+      "provenance": "assets/exploded/white-20261011/sd/seat/provenance.json"
+    },
+    "materialTest": {
+      "src": "assets/editorial/white-20261011/materialTest-wide-1800.webp?v=77d55b114382",
+      "srcset": "assets/editorial/white-20261011/materialTest-wide-480.webp?v=aa0bda30ab7e 480w, assets/editorial/white-20261011/materialTest-wide-960.webp?v=96021d7e6cd3 960w, assets/editorial/white-20261011/materialTest-wide-1800.webp?v=77d55b114382 1800w",
+      "alt": "Charcoal fabric specimen held between silver grips before stretching.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/white-20261011/materialTest-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "aa0bda30ab7e150fd3f02a1e1f31353e1f8de363b649bfb3f985671c22309821",
+          "bytes": 4620
+        },
+        {
+          "src": "assets/editorial/white-20261011/materialTest-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "96021d7e6cd3fbfbc3d2e77f43e644dce2712ebe4dfbc9cf82c0afb2e861d3f0",
+          "bytes": 11180
+        },
+        {
+          "src": "assets/editorial/white-20261011/materialTest-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "77d55b1143824fba0e9dab0d5917f396ac7c8bd6089d64a2273148702a92f896",
+          "bytes": 39036
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/white-20261011/sd/materialTest/00.webp?v=70fd64ee24a7",
+      "sourceFrameSha256": "70fd64ee24a7f775d3b41f05f1f80ab43c871d12fe0dc8fec008f8f1462880c0",
+      "provenance": "assets/exploded/white-20261011/sd/materialTest/provenance.json"
+    },
+    "ansysCfd": {
+      "src": "assets/editorial/white-20261011/ansysCfd-wide-1800.webp?v=32900c8b41cd",
+      "srcset": "assets/editorial/white-20261011/ansysCfd-wide-480.webp?v=334698f7b248 480w, assets/editorial/white-20261011/ansysCfd-wide-960.webp?v=0b478ec0f46f 960w, assets/editorial/white-20261011/ansysCfd-wide-1800.webp?v=32900c8b41cd 1800w",
+      "alt": "Javelin pressure field and numerical flow paths at the beginning of the flow sequence.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/white-20261011/ansysCfd-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "334698f7b248b8eb6576f9596c537dcf13f483681da9a52e304d9662b970d1f7",
+          "bytes": 16208
+        },
+        {
+          "src": "assets/editorial/white-20261011/ansysCfd-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "0b478ec0f46f9f7c9fab8e1b98f69f93a4b7e5f9fb7897e209496aaf45e0893c",
+          "bytes": 45658
+        },
+        {
+          "src": "assets/editorial/white-20261011/ansysCfd-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "32900c8b41cd5508c01ab0313d498d23e3160c863b7ceadaa1a66fcf689fd5be",
+          "bytes": 159412
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/white-20261011/sd/ansysCfd/00.webp?v=4b90c6974d44",
+      "sourceFrameSha256": "4b90c6974d4460ee8e1949a8ed2280cc7f5a20d6e2fcd37c282fcb8d12b6d40e",
+      "provenance": "assets/exploded/white-20261011/sd/ansysCfd/provenance.json"
+    },
+    "pool": {
+      "src": "assets/editorial/white-20261011/pool-wide-1800.webp?v=80003fdd3444",
+      "srcset": "assets/editorial/white-20261011/pool-wide-480.webp?v=a3fa62d0dcb2 480w, assets/editorial/white-20261011/pool-wide-960.webp?v=7b729fc8ed4c 960w, assets/editorial/white-20261011/pool-wide-1800.webp?v=80003fdd3444 1800w",
+      "alt": "Pool Sniper launcher with its cue extended before retraction.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/white-20261011/pool-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "a3fa62d0dcb2fe3dbccff56919c6e09cd6de7b270f18dd718fbe7cd5a05db6d6",
+          "bytes": 7390
+        },
+        {
+          "src": "assets/editorial/white-20261011/pool-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "7b729fc8ed4c3625a902b6af5531a17d31371f662cde30b3ec7d4c9aafe70349",
+          "bytes": 17064
+        },
+        {
+          "src": "assets/editorial/white-20261011/pool-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "80003fdd34449bb0ddcdd19eca1592b4beb49e5d521854452417684066cba970",
+          "bytes": 63706
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/white-20261011/sd/pool/00.webp?v=25e370965236",
+      "sourceFrameSha256": "25e3709652369209bf0140374f695f2268db3d6b30ddc533514c216ff747dbc0",
+      "provenance": "assets/exploded/white-20261011/sd/pool/provenance.json"
+    },
+    "lineFollower": {
+      "src": "assets/editorial/white-20261011/lineFollower-wide-1800.webp?v=bda02183cada",
+      "srcset": "assets/editorial/white-20261011/lineFollower-wide-480.webp?v=e25e4b492cac 480w, assets/editorial/white-20261011/lineFollower-wide-960.webp?v=d99b98a5b877 960w, assets/editorial/white-20261011/lineFollower-wide-1800.webp?v=bda02183cada 1800w",
+      "alt": "Line-following robot with orange wheels and a teal circuit board.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/white-20261011/lineFollower-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "e25e4b492cac656f0ebcd193b3a533792422881dfcc4acf3eb315bfa7bb0fa46",
+          "bytes": 10224
+        },
+        {
+          "src": "assets/editorial/white-20261011/lineFollower-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "d99b98a5b8777c765a74061213cfb800a2fb42b57250d13b0b7572b88e71cff9",
+          "bytes": 24444
+        },
+        {
+          "src": "assets/editorial/white-20261011/lineFollower-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "bda02183cadac6b069d5dc5d0fe62a35d61068799c86eab4dd7c570caf9c4b5f",
+          "bytes": 88154
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/white-20261011/sd/lineFollower/00.webp?v=ff8dd435e71a",
+      "sourceFrameSha256": "ff8dd435e71ac784b1e65357b0314ee3ebd948ac4246f9b8304e0b9f2a6ec7d0",
+      "provenance": "assets/exploded/white-20261011/sd/lineFollower/provenance.json"
+    },
+    "formlabs": {
+      "src": "assets/editorial/white-20261011/formlabs-wide-1800.webp?v=f3012d350f39",
+      "srcset": "assets/editorial/white-20261011/formlabs-wide-480.webp?v=51912ea93fe5 480w, assets/editorial/white-20261011/formlabs-wide-960.webp?v=8f81ab3db3d6 960w, assets/editorial/white-20261011/formlabs-wide-1800.webp?v=f3012d350f39 1800w",
+      "alt": "Smelly perfume mixer with its white structure and steel guide rods.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/white-20261011/formlabs-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "51912ea93fe5130b15db3cd274eff5ddfcff875043909f43a1e26371d4efdddd",
+          "bytes": 5744
+        },
+        {
+          "src": "assets/editorial/white-20261011/formlabs-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "8f81ab3db3d6d8cbacd0d0262137c4809208a23992f96daa0de2398dd1647088",
+          "bytes": 13598
+        },
+        {
+          "src": "assets/editorial/white-20261011/formlabs-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "f3012d350f398841656dc3b2a5b2c0eb3ae4e6a9cafee604b5c7a5700e88c33a",
+          "bytes": 44834
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/white-20261011/sd/formlabs/00.webp?v=ce3d49d55f23",
+      "sourceFrameSha256": "ce3d49d55f23ce7d1d1266fe97bb09b01de1d8e93e6072cf4de43b22f8996b03",
+      "provenance": "assets/exploded/white-20261011/sd/formlabs/provenance.json"
+    },
+    "education": {
+      "src": "assets/editorial/white-20261011/education-wide-1800.webp?v=39802da7f47b",
+      "srcset": "assets/editorial/white-20261011/education-wide-480.webp?v=939792ff0c0b 480w, assets/editorial/white-20261011/education-wide-960.webp?v=449bf5ed6e40 960w, assets/editorial/white-20261011/education-wide-1800.webp?v=39802da7f47b 1800w",
+      "alt": "Separated guitar education kit before assembly.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/white-20261011/education-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "939792ff0c0b55eced4264374673edcfdd358741f2e97ce4ecf9be8c08c33b76",
+          "bytes": 3126
+        },
+        {
+          "src": "assets/editorial/white-20261011/education-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "449bf5ed6e4058f213222fcbb4ae07f5fa6390a7fd29dd39de891391de29b74a",
+          "bytes": 6884
+        },
+        {
+          "src": "assets/editorial/white-20261011/education-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "39802da7f47b84d608caf5cc0153c29e50b161ea74e9d87615b23a0c43d17723",
+          "bytes": 23566
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/white-20261011/sd/education/00.webp?v=018b432f4055",
+      "sourceFrameSha256": "018b432f40553f1133b1ba549499a3e965762cbac7f123fdfe6478a92ca884ea",
+      "provenance": "assets/exploded/white-20261011/sd/education/provenance.json"
+    },
+    "ftc": {
+      "src": "assets/editorial/white-20261011/ftc-wide-1800.webp?v=b3b02785c4f6",
+      "srcset": "assets/editorial/white-20261011/ftc-wide-480.webp?v=747c9fc0f9a4 480w, assets/editorial/white-20261011/ftc-wide-960.webp?v=d8254c32f6cb 960w, assets/editorial/white-20261011/ftc-wide-1800.webp?v=b3b02785c4f6 1800w",
+      "alt": "Assembled FTC robot with an aluminum lift, red panels and mecanum wheels.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/white-20261011/ftc-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "747c9fc0f9a4cc49bc111b2bfe4e0db780837760e1b30b98639950596440317a",
+          "bytes": 7782
+        },
+        {
+          "src": "assets/editorial/white-20261011/ftc-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "d8254c32f6cb6fb1087733e8f84b53a40296332e910b908921ef318bd32e9e3d",
+          "bytes": 20048
+        },
+        {
+          "src": "assets/editorial/white-20261011/ftc-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "b3b02785c4f6452b9d480c2448d63b38ee51d2d29cd580507c49495057bac87a",
+          "bytes": 66318
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/white-20261011/sd/ftc/00.webp?v=e4e04386c5af",
+      "sourceFrameSha256": "e4e04386c5af571bcb3384e738f3d10df30f84b568a5e411775b91dfbcd43b5b",
+      "provenance": "assets/exploded/white-20261011/sd/ftc/provenance.json"
+    },
+    "telecaster": {
+      "src": "assets/editorial/white-20261011/telecaster-wide-1800.webp?v=55ea248c3f8f",
+      "srcset": "assets/editorial/white-20261011/telecaster-wide-480.webp?v=3ac74b666541 480w, assets/editorial/white-20261011/telecaster-wide-960.webp?v=a376bf44f447 960w, assets/editorial/white-20261011/telecaster-wide-1800.webp?v=55ea248c3f8f 1800w",
+      "alt": "Finished Telecaster-style guitar at the start of its full rotation.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/white-20261011/telecaster-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "3ac74b666541cbc908590bf09f6f50ccf2050163993886949e8a4d403c95ee0c",
+          "bytes": 3850
+        },
+        {
+          "src": "assets/editorial/white-20261011/telecaster-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "a376bf44f44717c547c9054390b058bd0c1f8e4bc6fb7baecd1df78c6ce580c3",
+          "bytes": 10150
+        },
+        {
+          "src": "assets/editorial/white-20261011/telecaster-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "55ea248c3f8f02d14450adc39e106d47208402929a8116e90ed3aa9284040b1c",
+          "bytes": 36850
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/white-20261011/sd/telecaster/00.webp?v=b0e74cc7bb3c",
+      "sourceFrameSha256": "b0e74cc7bb3c85c7f4e9dfe94998aab26c425bf35e8c66bc6e963f55d8407e43",
+      "provenance": "assets/exploded/white-20261011/sd/telecaster/provenance.json"
+    },
+    "carbonSeat": {
+      "src": "assets/editorial/white-20261011/carbonSeat-wide-1800.webp?v=f71ff7f82f3d",
+      "srcset": "assets/editorial/white-20261011/carbonSeat-wide-480.webp?v=e4afe3603428 480w, assets/editorial/white-20261011/carbonSeat-wide-960.webp?v=f6d8522df6bf 960w, assets/editorial/white-20261011/carbonSeat-wide-1800.webp?v=f71ff7f82f3d 1800w",
+      "alt": "Carbon-fiber seat layup at the beginning of the fabrication sequence.",
+      "width": 1800,
+      "height": 1200,
+      "variants": [
+        {
+          "src": "assets/editorial/white-20261011/carbonSeat-wide-480.webp",
+          "width": 480,
+          "height": 320,
+          "sha256": "e4afe36034288312e28644b74e8212f5c5c85a6a9706aeb386165a137dc120e0",
+          "bytes": 3600
+        },
+        {
+          "src": "assets/editorial/white-20261011/carbonSeat-wide-960.webp",
+          "width": 960,
+          "height": 640,
+          "sha256": "f6d8522df6bf76af245a5867f72c2a786e054c629e57550e7f0b09798ec4ea22",
+          "bytes": 8598
+        },
+        {
+          "src": "assets/editorial/white-20261011/carbonSeat-wide-1800.webp",
+          "width": 1800,
+          "height": 1200,
+          "sha256": "f71ff7f82f3d3f6940d8dd8a37dd22f098e158dd75b796c1e21c7ea18c496c17",
+          "bytes": 69534
+        }
+      ],
+      "coverProgress": 0.0,
+      "sourceFrame": "assets/exploded/white-20261011/sd/carbonSeat/00.webp?v=b7137e244cad",
+      "sourceFrameSha256": "b7137e244cad8dbb5620587da9a9ad546a194d09d1fe7571f21696f67b1db84d",
+      "provenance": "assets/exploded/white-20261011/sd/carbonSeat/provenance.json"
+    }
+  }
+}
