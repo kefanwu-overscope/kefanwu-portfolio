@@ -1,5 +1,26 @@
 # Homepage presentation
 
+## Preserve fine hardware from the original photo · 2026-10-13
+
+The user's rear-suspension feedback supersedes the per-component silhouette
+mask. That earlier SVG approximated narrow links, allowing real pixels outside
+the traced shapes to fall into the faded background. Overall framing checks
+did not catch this pixel-level detail loss.
+
+The active foreground now reveals two overlapping continuous original-photo
+zones covering the complete car and driver/cage context. It does not trace
+parts or cut holes between them. The protected source regions stay fully opaque;
+all original links, hardware, gaps and contact shadows there retain the original
+photograph. Soft transitions occur outside these broad regions. No sharpening,
+generated parts or raster photo edits are used. Source/crop/scale and the current
+racetrack background settings remain unchanged.
+
+The new immutable directory is `assets/hero-fsae-context-20261013/`; source hashes
+and method are in provenance.json. The old immutable SVG remains stored but is
+not used by the homepage. Never restore its per-part tracing or edit either
+published mask in place. Pixel checks,3× detail comparison, layouts and exact
+release/restore records: `../.codex/hero-detail-preservation-20261013/`.
+
 ## Clearer track / gentler white transition · 2026-10-13
 
 The latest request makes track context stronger while keeping the whole real

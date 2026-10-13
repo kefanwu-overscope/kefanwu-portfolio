@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-13",
+  "source": "Existing public Formula SAE hero photograph",
+  "sourceFiles": [
+    {
+      "file": "assets/hero-fsae-track-960.webp",
+      "sha256": "30ecc26ccec873b94428aecb36304071acd009ab42f41418eab7ca6b4831f66f",
+      "bytes": 93190
+    },
+    {
+      "file": "assets/hero-fsae-track-1440.webp",
+      "sha256": "a7102610d0b3218c0c7f87afc472a6c34b0bb0aaba6554f83e07198f73b02b0d",
+      "bytes": 220770
+    },
+    {
+      "file": "assets/hero-fsae-track-2200.webp",
+      "sha256": "29159c8b770699ad6b5243db395256c051372e86d50f4145bd6d87cd0b36dedd",
+      "bytes": 472240
+    }
+  ],
+  "mask": "context-mask.svg",
+  "viewBox": [
+    0,
+    0,
+    2200,
+    1238
+  ],
+  "method": "Two overlapping continuous original-photo regions; soft alpha transition occurs only outside those regions. No individual component outlines or holes.",
+  "opaqueSourceRegions": [
+    [
+      900,
+      590,
+      1800,
+      960
+    ],
+    [
+      1360,
+      375,
+      1640,
+      710
+    ]
+  ],
+  "purpose": "Preserve original suspension links, chassis, driver, wheels, gaps and source contact shadows without part-by-part clipping.",
+  "validation": "Native browser raster check: protected regions are alpha255 throughout; source photo pixels and old immutable assets are unchanged.",
+  "limits": "Region coordinates are photo presentation coordinates, not vehicle dimensions or engineering measurements. No generated/reconstructed parts or sharpening."
+}

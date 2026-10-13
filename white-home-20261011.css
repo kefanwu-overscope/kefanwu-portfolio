@@ -80,8 +80,8 @@ html:has(.white-home) {
   }
   .white-home .hero-media .hero-subject {
     display: block;
-    mask-image: url("assets/hero-fsae-20261013/subject-mask.svg");
-    -webkit-mask-image: url("assets/hero-fsae-20261013/subject-mask.svg");
+    mask-image: url("assets/hero-fsae-context-20261013/context-mask.svg");
+    -webkit-mask-image: url("assets/hero-fsae-context-20261013/context-mask.svg");
     mask-size: cover;
     -webkit-mask-size: cover;
     mask-position: var(--hero-photo-position);

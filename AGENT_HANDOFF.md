@@ -1,5 +1,19 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## Fine rear hardware preserved / no component tracing · 2026-10-13
+
+Based on2d37cd9c. User found rear-suspension detail clipping. The old per-part
+SVG tracing faded omitted/misaligned dark hardware despite the whole car fitting
+the frame. The active foreground mask now preserves two continuous source-photo
+zones, not contours/holes. Native raster validation finds alpha255 throughout
+both protected regions, zero newly lost old opaque dark subject pixels, and
+zero faded dark pixels in the inspected rear region. Original WebPs/source
+colors, framing and background remain unchanged. No invented parts/sharpening.
+New mask/provenance uses assets/hero-fsae-context-20261013/ with immutable caching;
+the old published mask is preserved but inactive. Read HOMEPAGE_PRESENTATION.md.
+3× comparison, source/pixel/layout checks and release/restore:
+../.codex/hero-detail-preservation-20261013/.
+
 ## Stronger track / natural white fade · 2026-10-13
 
 Based oncae7e642. User requested a more visible track, gentler fade, clear

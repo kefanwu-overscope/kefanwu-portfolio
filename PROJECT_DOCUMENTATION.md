@@ -1,5 +1,14 @@
 # Portfolio Website Project Documentation
 
+## Continuous original-photo hardware detail · 2026-10-13
+
+The rear-detail fix replaces active per-part tracing with two overlapping,
+fully opaque original-photo protection zones. Real fine hardware and the spaces
+around it remain continuous; transitions are outside those zones. Frame position,
+source photos and engineering data are unchanged. New dated mask/provenance is
+immutable. Current notes: HOMEPAGE_PRESENTATION.md; native pixel and zoom review,
+responsive layouts, production and restore: ../.codex/hero-detail-preservation-20261013/.
+
 ## Stronger real track / softer white fade · 2026-10-13
 
 User feedback increases the authentic background's visibility and uses a longer
