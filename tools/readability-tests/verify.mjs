@@ -34,6 +34,7 @@ function data(source) {
 const original = data(oldSources);
 const current = data(sources);
 const keys = Object.keys(original.caseStudyData);
+const homepageOrder = [...(await read('index.html')).matchAll(/<article class="project-card"[^>]*data-project="([^"]+)"/g)].map(match => match[1]);
 let checks = 0;
 async function check(name, run) {
   try { await run(); checks++; console.log(`ok ${checks} - ${name}`); }
@@ -208,8 +209,14 @@ function galleryFor(key) { return [...(current.projectData[key].gallery || []), 
 await check('16 projects / 64 chapter archives preserve the exact baseline paragraphs and all other data', () => {
   assert.equal(keys.length, 16); let chapterCount = 0; let paragraphCount = 0;
   assert.deepEqual(Object.keys(current.caseStudyData), keys);
+  assert.equal(homepageOrder.length, 16);
+  assert.deepEqual([...homepageOrder].sort(), [...keys].sort());
   for (const key of keys) {
     const before = original.caseStudyData[key]; const after = plain(current.caseStudyData[key]);
+    const position = homepageOrder.indexOf(key);
+    assert.equal(after.number, String(position + 1).padStart(2, '0'), `${key}: case number follows homepage`);
+    assert.equal(after.next, homepageOrder[(position + 1) % homepageOrder.length], `${key}: next route follows homepage`);
+    after.number = before.number; after.next = before.next;
     assert.equal(after.chapters.length, before.chapters.length, key);
     for (const [index, chapter] of after.chapters.entries()) {
       chapterCount++; const old = before.chapters[index];

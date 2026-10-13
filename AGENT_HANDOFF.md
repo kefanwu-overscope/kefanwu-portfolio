@@ -1,5 +1,14 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## Project gallery order / synchronized case navigation · 2026-10-13
+
+User swaps Javelin and FSAE Racecar Brake and moves Material property testing
+immediately before AURA. The homepage moves existing complete card blocks only.
+Shared case numbers/next links follow the new order in both main and 3D detail
+pages, with fresh data cache tokens. Engineering copy, media, animations and
+the physical studio layout are unchanged. Release/restore/QA:
+../.codex/project-order-20261013/.
+
 ## Fine rear hardware preserved / no component tracing · 2026-10-13
 
 Based on2d37cd9c. User found rear-suspension detail clipping. The old per-part

@@ -264,10 +264,10 @@ window.caseStudyData = {
         "note": "Guide rods constrain the load shape; the scale measures the force reaching the body."
       }
     ],
-    next: 'javelin'
+    next: 'brakeSim'
   },
   javelin: {
-    "number": "03",
+    "number": "05",
     "title": "Javelin VTOL.",
     "label": "Aerospace / Airframe & integration",
     deck: "Translate a speed target into an integrated airframe.",
@@ -395,7 +395,7 @@ window.caseStudyData = {
         "note": "Javelin resting outdoors; this image is not a flight-test result."
       }
     ],
-    "next": "scanner"
+    "next": "materialTest"
   },
   scanner: {
     number: '04',
@@ -520,10 +520,10 @@ window.caseStudyData = {
         "note": "The test object and its scan plot, preserved from the project record."
       }
     ],
-    next: 'brakeSim'
+    next: 'javelin'
   },
   brakeSim: {
-    "number": "05",
+    "number": "03",
     "title": "FSAE Racecar Brake",
     "label": "Formula SAE / Thermal & structural design",
     "deck": "Reduce rotor mass while keeping the brakes in their working temperature range.",
@@ -662,10 +662,10 @@ window.caseStudyData = {
       }
     ],
     "recordNote": "Results follow the current brake design review. Mass and inertia are design comparisons; temperature, strength and fatigue figures are analytical predictions. Model-version and verification limits are recorded below.",
-    "next": "aura"
+    "next": "scanner"
   },
   aura: {
-    "number": "06",
+    "number": "07",
     "title": "AURA swerve drive.",
     "label": "Autonomous luggage robot / Mechanical lead",
     deck: "Carry the payload and preserve steering authority.",
@@ -796,7 +796,7 @@ window.caseStudyData = {
     "next": "carbonSeat"
   },
   carbonSeat: {
-    "number": "07",
+    "number": "08",
     "title": "Carbon seat shell.",
     "label": "Formula SAE / Composites & serviceability",
     deck: "Turn cockpit support needs into a manufacturable composite shell.",
@@ -922,7 +922,7 @@ window.caseStudyData = {
     "next": "seat"
   },
   seat: {
-    "number": "08",
+    "number": "09",
     "title": "Mk.7 driver seat.",
     "label": "Formula SAE / Mk.7 seat fabrication",
     deck: "Translate the Mk.7 seat geometry into a cockpit component.",
@@ -1044,10 +1044,10 @@ window.caseStudyData = {
         "note": "Original supporting analysis image; no numerical result is reported."
       }
     ],
-    "next": "materialTest"
+    "next": "ansysCfd"
   },
   materialTest: {
-    "number": "09",
+    "number": "06",
     "title": "Material measurements.",
     "label": "Olin Vine Robotics Lab / Instron testing",
     deck: "Replace assumed stiffness with measured model inputs.",
@@ -1176,7 +1176,7 @@ window.caseStudyData = {
       }
     ],
     "recordNote": "The tensile gauge length was adapted to the available grips; the rod tests use a documented repeatable fixture and fitting procedure. The animated deformation is illustrative. The original per-rod EI / E plot is retained as a historical calculation: with 5.79–6.33 mm confirmed as diameter, its E conversion requires review. No corrected modulus is reported; force–deflection stiffness and EI remain the direct bending-test results.",
-    "next": "ansysCfd"
+    "next": "aura"
   },
   ansysCfd: {
     "number": "10",
