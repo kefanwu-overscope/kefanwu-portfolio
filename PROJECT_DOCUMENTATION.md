@@ -1,5 +1,13 @@
 # Portfolio Website Project Documentation
 
+## Racetrack context retained · 2026-10-13
+
+The latest feedback increases only the real-photo background layer's visibility
+and reveal area, retaining some asphalt/grass with a soft white transition.
+Foreground, source/mask assets, layouts and engineering data are unchanged.
+Current maintenance notes: HOMEPAGE_PRESENTATION.md; validation/release/backup:
+../.codex/hero-track-context-20261013/.
+
 ## Real car hero integrated with white · 2026-10-13
 
 The approved hero revision separates original-photo foreground from softly

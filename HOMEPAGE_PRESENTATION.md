@@ -1,5 +1,14 @@
 # Homepage presentation
 
+## Retained racetrack context · 2026-10-13
+
+Latest user feedback keeps more of the real track. Background opacity is now
+.52 with saturation .78 and a broader soft radial reveal, retaining readable
+asphalt texture and a little grass around the car. It still fades into white
+near the name/page edges. Subject colors, source photograph, immutable mask,
+responsive placement and all interactions are unchanged. Exact verification
+and restoration evidence: `../.codex/hero-track-context-20261013/`.
+
 ## Real race-car hero composition · 2026-10-13
 
 The user clarified the abrupt cover means the homepage race-car photo and

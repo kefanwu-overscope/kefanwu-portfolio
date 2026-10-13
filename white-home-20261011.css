@@ -73,10 +73,10 @@ html:has(.white-home) {
   .white-home .hero-media { z-index: -1; inset-block-start: 28px; }
   .white-home .hero-shade { display: none; }
   .white-home .hero-media .hero-photo-background {
-    opacity: .3;
-    filter: saturate(.58);
-    mask-image: radial-gradient(ellipse 52% 34% at 72% 60%, #000 0%, #000b 36%, #0003 70%, transparent 100%);
-    -webkit-mask-image: radial-gradient(ellipse 52% 34% at 72% 60%, #000 0%, #000b 36%, #0003 70%, transparent 100%);
+    opacity: .52;
+    filter: saturate(.78);
+    mask-image: radial-gradient(ellipse 56% 44% at 72% 56%, #000 0%, #000b 42%, #0003 70%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 56% 44% at 72% 56%, #000 0%, #000b 42%, #0003 70%, transparent 100%);
   }
   .white-home .hero-media .hero-subject {
     display: block;

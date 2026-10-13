@@ -1,5 +1,15 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## More visible racetrack background · 2026-10-13
+
+Based on75c61e0a. User asked to keep some track instead of fading nearly all
+context away. Only the background layer's opacity/saturation/radial spread
+changes: visible asphalt and a little grass, with a soft white perimeter.
+The clear authentic subject, source photos and immutable mask remain unchanged;
+tablet/phone framing and original16-gallery/skills/motion remain. CSS revision
+token is hero-track-context-20261013. Evidence and recoverable release overlay:
+../.codex/hero-track-context-20261013/.
+
 ## Authentic race-car hero / white fusion · 2026-10-13
 
 Based on47757cec. User clarified homepage race-car cover and approved stronger
