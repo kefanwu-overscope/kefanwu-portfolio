@@ -51,8 +51,8 @@ html:has(.white-home) {
 .white-home button:focus-visible,
 .white-home input:focus-visible { outline-color: #245cab; }
 
-/* One continuous photographic background: the car remains unaltered.
-   White falls away towards the driver's side, then returns at the page edge. */
+/* Authentic subject and background share the same source pixels/crop.
+   Only background context fades; the subject mask preserves the original car. */
 .white-home .cinematic-hero {
   min-height: 760px;
   height: 100svh;
@@ -61,12 +61,35 @@ html:has(.white-home) {
   gap: 0;
   background: #fff;
 }
-.white-home .hero-media { inset: 0 -14% 0 0; mask-image: none; -webkit-mask-image: none; }
-.white-home .hero-media img { object-position: 58% 61%; filter: none; animation: none; transform: none; }
+.white-home .hero-media { --hero-photo-position: 62% 60%; inset: 0 -8% 0 0; mask-image: none; -webkit-mask-image: none; }
+.white-home .hero-media img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--hero-photo-position); filter: none; animation: none; transform: none; }
+.white-home .hero-media .hero-subject { display: none; }
 .white-home .hero-shade {
   background:
     linear-gradient(90deg, #fff 0%, #fffffffc 16%, #ffffffed 24%, #ffffffcc 30%, #ffffff9c 35%, #ffffff59 40%, #ffffff1f 45%, #fff0 51%),
     linear-gradient(180deg, #fff 0%, #ffffffe6 7%, #ffffffa6 13%, #ffffff47 21%, #ffffff10 29%, #fff0 35%, #fff0 74%, #ffffff22 83%, #ffffff94 91%, #ffffffe8 97%, #fff 100%);
+}
+@supports (mask-image: linear-gradient(#000, #000)) or (-webkit-mask-image: linear-gradient(#000, #000)) {
+  .white-home .hero-media { z-index: -1; inset-block-start: 28px; }
+  .white-home .hero-shade { display: none; }
+  .white-home .hero-media .hero-photo-background {
+    opacity: .3;
+    filter: saturate(.58);
+    mask-image: radial-gradient(ellipse 52% 34% at 72% 60%, #000 0%, #000b 36%, #0003 70%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 52% 34% at 72% 60%, #000 0%, #000b 36%, #0003 70%, transparent 100%);
+  }
+  .white-home .hero-media .hero-subject {
+    display: block;
+    mask-image: url("assets/hero-fsae-20261013/subject-mask.svg");
+    -webkit-mask-image: url("assets/hero-fsae-20261013/subject-mask.svg");
+    mask-size: cover;
+    -webkit-mask-size: cover;
+    mask-position: var(--hero-photo-position);
+    -webkit-mask-position: var(--hero-photo-position);
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-mode: alpha;
+  }
 }
 .white-home .hero-content { padding-block: 32px; justify-content: center; }
 .white-home .hero .eyebrow { margin: 0 0 24px; color: #444c55; letter-spacing: .09em; font-size: 12px; line-height: 1.5; }
@@ -249,7 +272,7 @@ html:has(.white-home) {
   .white-home .hero-baseline { min-height: 83px; padding-block: 17px; }
 }
 @media (max-width: 1100px) {
-  .white-home .hero-media { inset: 0; }
+  .white-home .hero-media { inset-inline: 0; }
   .white-home .section-shell { width: calc(100% - 72px); }
   .white-home .site-header,
   .white-home .site-header.is-scrolled,
@@ -274,11 +297,14 @@ html:has(.white-home) {
 }
 @media (min-width: 721px) and (max-width: 900px) {
   .white-home .hero h1 { font-size: 110px; }
-  .white-home .hero-media img { object-position: 65% 61%; }
+  .white-home .hero-media { --hero-photo-position: 50% center; inset-block: 128px auto; height: 570px; }
   .white-home .hero-copy { max-width: 30ch; }
-  .white-home .hero-actions { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .white-home .hero-actions { flex-direction: row; align-items: center; gap: 20px; }
   .white-home .hero-baseline { flex-wrap: wrap; }
   .white-home .hero-location { display: none; }
+}
+@media (min-width: 721px) and (max-width: 1100px) {
+  .white-home .hero-media { --hero-photo-position: 50% center; inset-block: clamp(128px, calc(50% - 315px), 235px) auto; height: 570px; }
 }
 @media (max-width: 720px) {
   .white-home .section-shell { width: calc(100% - 40px); }
@@ -295,10 +321,9 @@ html:has(.white-home) {
   .white-home .hero-rule { width: 22px; }
   .white-home .hero h1 { font-size: clamp(88px, 25.2vw, 134px); line-height: .83; }
   .white-home .hero h1 > span + span { margin-top: 7px; }
-  .white-home .hero-media { inset: calc(clamp(260px, 51vw, 345px) + 72px) 0 auto; height: clamp(315px, 68vw, 435px); mask-image: linear-gradient(180deg, transparent 0%, #0000001a 6%, #0006 12%, #000c 20%, #000 28%, #000 82%, #000c 88%, #0004 94%, transparent 100%); -webkit-mask-image: linear-gradient(180deg, transparent 0%, #0000001a 6%, #0006 12%, #000c 20%, #000 28%, #000 82%, #000c 88%, #0004 94%, transparent 100%); }
-  .white-home .hero-media img { object-position: 62% center; filter: none; }
+  .white-home .hero-media { --hero-photo-position: 72% center; inset: clamp(250px, 65vw, 280px) 0 auto; height: clamp(350px, 100vw, 430px); mask-image: none; -webkit-mask-image: none; }
   .white-home .hero-shade { background: none; }
-  .white-home .hero-copy { margin: clamp(239px, 43vw, 310px) 0 20px; padding: 0; color: #4d555e; font-size: 15px; line-height: 1.7; }
+  .white-home .hero-copy { margin: clamp(172px, 48vw, 220px) 0 20px; padding: 0; color: #4d555e; font-size: 15px; line-height: 1.7; }
   .white-home .hero-actions { gap: 15px 22px; flex-direction: row; flex-wrap: wrap; align-items: center; }
   .white-home .hero-actions .button { min-height: 46px; padding: 15px 17px; font-size: 12px; gap: 22px; }
   .white-home .hero-actions .text-link { min-height: 44px; font-size: 12px; gap: 10px; }
@@ -369,10 +394,17 @@ html:has(.white-home) {
   .white-home .hero-copy { font-size: 14px; }
   .white-home .hero-role strong { font-size: 12px; }
   .white-home .hero-role > span { font-size: 10px; }
-  .white-home .hero-media img { object-position: 60% center; }
+  .white-home .hero-media { --hero-photo-position: 72% center; }
   .white-home .hero-baseline { gap: 8px; }
   .white-home .studio-entry h2 { font-size: 44px; }
   .white-home .studio-entry-caption { font-size: 8px; }
+}
+@supports not ((mask-image: linear-gradient(#000, #000)) or (-webkit-mask-image: linear-gradient(#000, #000))) {
+  @media (max-width: 720px) {
+    .white-home .hero-media { inset-block-start: calc(clamp(260px, 51vw, 345px) + 72px); height: clamp(315px, 68vw, 435px); }
+    .white-home .hero-shade { inset: calc(clamp(260px, 51vw, 345px) + 72px) 0 auto; height: clamp(315px, 68vw, 435px); background: linear-gradient(180deg, #fff 0%, #fff0 28%, #fff0 76%, #fff 100%); }
+    .white-home .hero-copy { margin-top: clamp(239px, 43vw, 310px); }
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .white-home .skill-glass-card { transition: none; }

@@ -2,6 +2,10 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "headers": [
     {
+      "source": "/assets/hero-fsae-20261013/:path*",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
       "source": "/models/lod/ergonomic_mesh_office_chair/ergonomic_mesh_office_chair.6ecdeb3f402e.glb",
       "headers": [
         {

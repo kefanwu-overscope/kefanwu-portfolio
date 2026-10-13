@@ -1,5 +1,16 @@
 # Portfolio Website Project Documentation
 
+## Real car hero integrated with white · 2026-10-13
+
+The approved hero revision separates original-photo foreground from softly
+faded background with an alpha SVG, keeping source pixels/colors and a complete
+driver/car silhouette. Both layers share responsive crops; phone/tablet layouts
+are recomposed with a readable fallback and decorative foreground semantics.
+No project or3D presentation data changes. Sources, caching and maintenance:
+HOMEPAGE_PRESENTATION.md and assets/hero-fsae-20261013/provenance.json.
+Fresh screenshot audit, desktop/mobile checks, publication and recoverable
+backup evidence: ../.codex/hero-fusion-20261013/.
+
 ## Original gallery / refined animation control · 2026-10-12
 
 Latest user feedback restores the original16-project gallery, removes extra

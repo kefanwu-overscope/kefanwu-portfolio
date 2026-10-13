@@ -1,5 +1,22 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## Authentic race-car hero / white fusion · 2026-10-13
+
+Based on47757cec. User clarified homepage race-car cover and approved stronger
+integration with the white page. index uses two aligned copies of the same
+existing responsive photograph: faded background plus a clear real subject
+revealed by the new6.3KB alpha SVG. Source photo colors/pixels are preserved;
+no generated scene or vehicle geometry. CSS-only composition retains the real
+roll hoop, driver, suspension gaps, tires and softly tapered contact shadow.
+Keep mask-size:cover and mask-position equal to shared object-position. Phone
+field preserves the whole subject without a visible photo band; tablet framing
+avoids text overlap. Foreground is aria-hidden, background retains alt/high
+priority, and unsupported masking gets a single-image fallback. New dated
+mask/provenance paths are immutable; never overwrite them after publication.
+Original16-card gallery, fine slider, skills, all engineering data/models and
+3D return remain. Read HOMEPAGE_PRESENTATION.md; exact audit/release/backup
+evidence: ../.codex/hero-fusion-20261013/.
+
 ## Original16-project gallery and fine controls · 2026-10-12
 
 Based onb185954e; the user's latest feedback supersedes the featured-three

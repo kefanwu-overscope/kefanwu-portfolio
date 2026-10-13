@@ -232,6 +232,7 @@ await check('Original cover catalog and tracked model / scientific-image / anima
   const changed = git('diff', '--no-ext-diff', '--name-only', '-z', baseline, '--', 'models', 'assets').split('\0').filter(Boolean);
   const presentationAssets = name => name.startsWith('assets/exploded/white-20261011/') ||
     name.startsWith('assets/editorial/white-20261011/') ||
+    ['assets/hero-fsae-20261013/subject-mask.svg', 'assets/hero-fsae-20261013/provenance.json'].includes(name) ||
     ['assets/exploded/manifest-white-20261011.json', 'assets/exploded/manifest-detail-white-20261011.json'].includes(name);
   assert.deepEqual(changed.filter(name => !presentationAssets(name)), [], 'Original source geometry, scientific figures and immutable assets remain unchanged');
 });

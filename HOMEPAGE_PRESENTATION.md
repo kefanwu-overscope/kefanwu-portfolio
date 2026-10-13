@@ -1,4 +1,34 @@
-# Homepage presentation · 2026-10-12
+# Homepage presentation
+
+## Real race-car hero composition · 2026-10-13
+
+The user clarified the abrupt cover means the homepage race-car photo and
+approved preserving the clear subject while fading background context. The
+hero now layers two copies of the same existing responsive photograph. An
+alpha-only SVG reveals the real car/driver with its original color and contrast;
+the background alone receives a gentle radial fade and reduced saturation.
+The subject keeps the helmet, roll hoop, suspension gaps, tires and original
+contact shadow. No image-generation or invented vehicle geometry is used.
+
+Both images share absolute sizing, source/srcset/sizes and object-position.
+The SVG mask uses the same cover scale and position through one responsive
+CSS variable. The foreground is decorative/aria-hidden; the original image
+supplies alt text and high-priority loading. Equal URLs share browser caching.
+Mask support enables the new composition; unsupported browsers retain a
+single-photo fallback. The scene has no runtime JS or new animation loop.
+
+Phone composition preserves the full vehicle and driver in a shallow transparent
+field, positioned close to the name. Its background fades to white without
+a photographic band. Tablet framing keeps the car clear of the text/buttons.
+The original16-project gallery, fine range controls,14 skills, case data and
+3D return stay unchanged.
+
+Source hashes/method: `assets/hero-fsae-20261013/provenance.json`. The three
+original hero WebPs are byte-identical to47757cec. Only the small vector mask
+is a new visual asset; its dated directory receives immutable caching. Use a
+fresh version path for future mask edits after publication. Audit screenshots,
+responsive measurements, exact deployment and restoration chain:
+`../.codex/hero-fusion-20261013/`.
 
 ## Current presentation: original16-project gallery
 

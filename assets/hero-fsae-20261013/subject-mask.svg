@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1238" viewBox="0 0 2200 1238">
+  <!-- Alpha-only reveal for hero-fsae-track-2200.webp. No photograph pixels
+       are stored here. Traced in a 2x inspection view of the original image. -->
+  <defs>
+    <filter id="edge" x="-2%" y="-2%" width="104%" height="104%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="0.8"/>
+    </filter>
+    <filter id="ground" x="-12%" y="-45%" width="124%" height="190%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="13"/>
+    </filter>
+    <mask id="subject" maskUnits="userSpaceOnUse" x="0" y="0" width="1740" height="1100" style="mask-type:luminance">
+      <g fill="white" filter="url(#edge)">
+        <!-- Original nose, side panel, driver and seat. -->
+        <path d="M 134,776 C 231,684 419,566 565,515 L 636,496 L 687,480 Q 743,470 782,480 L 889,508 L 899,486 L 917,461 L 939,447 L 972,445 L 976,419 Q 970,398 978,374 L 979,361 C 982,328 1002,303 1028,291 Q 1062,278 1096,298 Q 1117,313 1124,334 L 1122,297 Q 1142,294 1180,304 L 1192,315 L 1197,444 L 1220,453 L 1245,474 L 1258,529 L 1243,610 L 1255,688 L 1247,719 L 1227,754 L 1195,782 L 1168,783 L 1132,805 L 1086,819 L 1038,841 L 960,859 L 880,881 L 807,904 Q 733,933 646,953 Q 552,972 473,973 Q 396,961 326,939 Q 276,920 233,902 L 183,877 Q 149,855 140,824 Q 131,795 134,776 Z"/>
+        <!-- A small far wheel is visible above the nose. -->
+        <path d="M 490,542 Q 511,514 542,510 Q 567,507 592,513 L 558,525 Z"/>
+        <!-- Backplate, preserving the empty triangle outside its real edge. -->
+        <path d="M 1234,326 L 1288,337 L 1290,367 L 1259,515 L 1245,495 Z"/>
+        <!-- Real roll-hoop tubes and mounted equipment, with open background between. -->
+        <g fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M 1036,293 L 1077,160 Q 1093,102 1138,99 Q 1186,96 1201,155 L 1205,170" stroke-width="10"/>
+          <path d="M 1078,166 L 1100,216 L 1120,245 L 1154,295" stroke-width="8"/>
+          <path d="M 1116,243 L 1189,252" stroke-width="4"/>
+          <path d="M 1206,169 L 1234,247 L 1291,337 L 1338,439 L 1390,541" stroke-width="10"/>
+          <path d="M 1290,341 L 1258,506" stroke-width="4"/>
+          <path d="M 1340,434 L 1354,429" stroke-width="4"/>
+          <path d="M 1139,99 L 1142,65" stroke-width="9"/>
+        </g>
+        <path d="M 1119,46 L 1137,41 L 1143,46 L 1156,45 L 1154,68 L 1125,70 Z"/>
+        <path d="M 1085,135 Q 1098,129 1121,131 L 1153,129 Q 1177,131 1186,140 L 1185,167 Q 1182,182 1168,182 L 1097,179 Q 1083,177 1083,162 Z"/>
+        <path d="M 1094,126 Q 1118,105 1146,106 Q 1175,107 1184,130 L 1151,128 L 1139,135 L 1117,131 Z"/>
+        <path d="M 1037,199 L 1074,209 L 1052,280 L 1014,295 Z"/>
+        <path d="M 1083,215 L 1102,211 L 1120,223 L 1116,240 L 1095,245 L 1079,234 Z"/>
+        <path d="M 1194,166 L 1207,165 L 1218,226 L 1200,229 Z"/>
+        <path d="M 1184,227 L 1225,224 L 1254,526 L 1238,539 L 1219,495 Z"/>
+        <path d="M 1228,232 L 1240,226 L 1245,235 L 1237,250 Z"/>
+        <!-- Electronics and the densely occupied central rear assembly. -->
+        <path d="M 1266,440 L 1302,430 L 1330,440 L 1342,504 L 1328,523 L 1282,539 L 1255,529 Z"/>
+        <path d="M 1262,532 L 1295,548 L 1327,543 L 1350,565 L 1376,581 L 1360,604 L 1380,640 L 1382,671 L 1374,704 L 1354,721 L 1324,738 L 1299,741 L 1271,732 L 1259,719 L 1266,712 L 1250,677 L 1243,660 L 1240,610 L 1244,546 Z"/>
+        <!-- Individual suspension links leave asphalt visible through their gaps. -->
+        <g fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M 1245,535 L 1394,553 L 1429,547 L 1433,570 L 1484,594" stroke-width="8"/>
+          <path d="M 1323,563 L 1433,553" stroke-width="8"/>
+          <path d="M 1293,584 L 1493,620" stroke-width="5"/>
+          <path d="M 1333,611 L 1466,617" stroke-width="5"/>
+          <path d="M 1306,626 L 1464,640" stroke-width="5"/>
+          <path d="M 1331,653 L 1463,676" stroke-width="5"/>
+          <path d="M 1319,675 L 1457,731" stroke-width="5"/>
+          <path d="M 1317,718 L 1453,735" stroke-width="6"/>
+          <path d="M 1389,552 L 1419,690 L 1386,703 L 1355,688 L 1426,568" stroke-width="5"/>
+          <path d="M 1351,635 L 1431,704 L 1479,659" stroke-width="5"/>
+          <path d="M 1318,740 L 1448,718" stroke-width="5"/>
+          <path d="M 1212,784 L 1323,742 L 1350,725" stroke-width="11"/>
+          <path d="M 1187,773 L 1229,758 L 1250,713" stroke-width="6"/>
+          <path d="M 799,890 L 895,918 L 938,895" stroke-width="5"/>
+          <path d="M 817,883 L 888,901 L 915,855" stroke-width="5"/>
+          <path d="M 877,747 L 930,769 L 917,814 L 855,799" stroke-width="5"/>
+        </g>
+        <!-- Front and rear tires, including their actual contact edges. -->
+        <path d="M 902,886 Q 900,821 923,778 Q 949,728 987,709 Q 1012,694 1046,701 Q 1092,708 1136,740 Q 1178,769 1188,812 Q 1196,860 1176,908 Q 1156,959 1128,986 Q 1108,1010 1079,1019 Q 1045,1034 1005,1020 L 951,1001 Q 921,985 909,952 Q 899,924 902,886 Z"/>
+        <path d="M 1456,687 Q 1458,629 1480,594 Q 1496,567 1524,557 Q 1551,547 1588,553 Q 1625,554 1648,576 Q 1675,600 1677,635 Q 1679,680 1662,724 Q 1650,760 1627,783 Q 1609,795 1583,798 Q 1545,799 1506,782 Q 1477,768 1466,742 Q 1454,718 1456,687 Z"/>
+      </g>
+      <!-- Open areas are omitted from the silhouette, leaving actual alpha
+           transparency between the cage and suspension tubes. -->
+    </mask>
+  </defs>
+  <!-- This transform maps the unchanged 2048x1152 inspection rendering,
+       viewed at 2x from x=800,y=350, onto the 2200x1238 original. -->
+  <g transform="matrix(.537109375 0 0 .537326388889 859.375 376.128472222)">
+    <g fill="white" opacity=".55" filter="url(#ground)">
+      <path d="M 207,882 Q 155,905 89,951 Q 66,964 82,985 Q 91,1008 149,1008 L 336,1000 Q 556,992 699,951 L 853,900 L 930,909 L 995,950 L 1100,984 Q 1147,1006 1121,1022 Q 1041,1060 948,1039 Q 857,1026 824,987 Q 808,969 837,952 L 891,921 L 811,892 Z"/>
+      <path d="M 1469,724 Q 1413,730 1384,753 Q 1363,771 1404,787 Q 1466,815 1540,801 L 1608,786 L 1591,752 Z"/>
+    </g>
+    <rect width="1740" height="1100" fill="white" mask="url(#subject)"/>
+  </g>
+</svg>
