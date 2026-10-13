@@ -1,5 +1,15 @@
 # Portfolio Website Project Documentation
 
+## Original gallery / refined animation control · 2026-10-12
+
+Latest user feedback restores the original16-project gallery, removes extra
+featured cards and title-side arrows, and refines homepage native sliders to
+2px tracks/8px thumbs with44px input targets. The active page no longer loads
+the historical featured module. Original cover framing, caption scale and
+all motion/source data are preserved. Hero/skills and real process photographs
+remain. HOMEPAGE_PRESENTATION.md documents the active and historical states;
+validation, publication and backup evidence: ../.codex/gallery-refinement-20261012/.
+
 ## Featured work and process photographs · 2026-10-12
 
 User approved publication of the three October12 aesthetic recommendations.

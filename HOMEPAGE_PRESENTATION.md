@@ -1,5 +1,21 @@
 # Homepage presentation · 2026-10-12
 
+## Current presentation: original16-project gallery
+
+The user's later feedback supersedes the featured-three presentation below.
+The homepage again opens directly into the original16-project grid with its
+original metadata/summary sizes. No extra featured section or featured script
+is loaded. The original Vine framing is restored. Title-side decorative arrows
+are removed; full-card links, downloads, search and filtering remain usable.
+Gallery range controls retain native keyboard/scroll/touch semantics with a
+2px neutral track,8px thumb and44px transparent input target. Focus is visible
+inside the media boundary. Cover pixels, model poses, scientific figures and
+case data are unchanged. Hero refinements, top skills and real process photos
+from the previous update remain. Verification/release/backup evidence is in
+`../.codex/gallery-refinement-20261012/`.
+
+## Previous featured presentation (superseded)
+
 The user approved all three recommendations from the October 12 aesthetic
 review, including publication. This continues the white portfolio at6d7bd303.
 

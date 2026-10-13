@@ -144,24 +144,19 @@ html:has(.white-home) {
 .white-home .filter::after { content: none; }
 .white-home .project-search input { width: 190px; min-height: 42px; padding: 10px 0 10px 14px; border: 0; border-left: 1px solid #d7dce0; border-radius: 0; background: #fff; color: #20252b; font-size: 14px; }
 .white-home .project-search input::placeholder { color: #707880; }
-.white-home .project-count { color: #69717a; font-size: 12px; margin-bottom: 28px; letter-spacing: .025em; }
+.white-home .project-count { color: #69717a; font-size: 10px; margin-bottom: 28px; letter-spacing: .035em; }
 .white-home .project-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 44px 28px; }
 .white-home .project-card:not(.project-card--studio) { border-bottom-color: #dfe2e5; background: transparent; }
 .white-home .project-card .card-media { border-radius: 0; background: #fff; }
 .white-home .project-body { padding: 21px 0 24px; gap: 10px; }
-.white-home .project-body .project-meta { color: #69717a; font-size: 11px; letter-spacing: .08em; }
-.white-home .project-body h3 { font-size: clamp(21px, 1.8vw, 27px); line-height: 1.12; letter-spacing: -.035em; padding-right: 24px; }
-.white-home .project-body p.project-sub { color: #626971; font-size: 16px; line-height: 1.65; }
+.white-home .project-body .project-meta { color: #737b83; font-size: 10px; letter-spacing: .1em; }
+.white-home .project-body h3 { font-size: clamp(21px, 1.8vw, 27px); line-height: 1.12; letter-spacing: -.035em; padding-right: 0; }
+.white-home .project-body p.project-sub { color: #626971; font-size: 14px; line-height: 1.7; }
 .white-home .project-card .card-media { aspect-ratio: 640 / 427; }
-/* Use the whole source frame in every pose. Vine's conservative full-sequence
-   envelope leaves enough margin for the same modest scale on cover and frames. */
+/* Retain the original cover framing and the complete source frame in every pose. */
 .white-home :is(.project-card, .featured-project) .card-media > img,
 .white-home :is(.project-card, .featured-project) .card-media .card-explode-frame { object-fit: contain; transform: none !important; }
-.white-home :is(.project-card, .featured-project)[data-project="vineRobot"] .card-media > img,
-.editorial.white-home :is(.project-card, .featured-project)[data-project="vineRobot"] .card-media > .card-explode-poster,
-.white-home :is(.project-card, .featured-project)[data-project="vineRobot"] .card-media .card-explode-frame { transform: translateX(5.2%) scale(1.12) !important; }
-.white-home .project-card .card-open::after { color: #6d757e; right: 2px; font-size: 16px; }
-.white-home .project-card:hover .card-open::after { color: #245cab; }
+.white-home .project-card .card-open::after { content: none; }
 .white-home .project-card:has(.card-open:focus-visible) { outline-color: #245cab; }
 .white-home .project-download { background: #f2f4f5; border-color: #d6dbe0; color: #303943; box-shadow: none; }
 .white-home .project-download:hover { color: #245cab; background: #e8edf4; border-color: #b6c8df; }
@@ -169,7 +164,36 @@ html:has(.white-home) {
 .white-home .cover-note { color: #707780; }
 .white-home .card-explode-label { color: #535e69; background: #fffffff0; border-radius: 0; }
 .white-home .card-explode-controls::before { color: #5d6873; text-shadow: none; }
-.white-home .card-explode-controls input { accent-color: #245cab; }
+/* Fine visual control, generous input target. Native range semantics retain
+   keyboard seeking and touch interaction; both engines keep their existing poses. */
+.white-home .card-explode-controls input {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 44px;
+  min-height: 44px;
+  background: transparent;
+  accent-color: #6b7782;
+}
+.white-home .card-explode-controls input::-webkit-slider-runnable-track {
+  height: 2px;
+  border: 0;
+  border-radius: 2px;
+  background: linear-gradient(to right, #6b7782 0 var(--explode-progress, 0%), #dfe4e8 var(--explode-progress, 0%) 100%);
+}
+.white-home .card-explode-controls input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 8px;
+  height: 8px;
+  margin-top: -3px;
+  border: 0;
+  border-radius: 50%;
+  background: #6b7782;
+}
+.white-home .card-explode-controls input::-moz-range-track { height: 2px; border: 0; border-radius: 2px; background: #dfe4e8; }
+.white-home .card-explode-controls input::-moz-range-progress { height: 2px; border: 0; border-radius: 2px; background: #6b7782; }
+.white-home .card-explode-controls input::-moz-range-thumb { width: 8px; height: 8px; border: 0; border-radius: 50%; background: #6b7782; }
+.white-home .card-explode-controls input:focus-visible { outline: 1px solid #6b7782; outline-offset: -2px; }
 
 /* The actual workshop remains dark within an otherwise white editorial spread. */
 .white-home .studio-entry { padding-block: 58px 100px; }
@@ -311,7 +335,7 @@ html:has(.white-home) {
   .white-home .project-grid { gap: 32px 20px; }
   .white-home .project-body { padding-block: 20px 24px; }
   .white-home .project-body h3 { font-size: 24px; }
-  .white-home .project-body p.project-sub { font-size: 15px; }
+  .white-home .project-body p.project-sub { font-size: 14px; }
   .white-home .studio-entry { padding-block: 40px 72px; }
   .white-home .studio-entry-link { grid-template-columns: 1fr; }
   .white-home .studio-entry-copy { padding: 36px 0; }

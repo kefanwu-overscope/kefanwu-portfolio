@@ -1,5 +1,17 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## Original16-project gallery and fine controls · 2026-10-12
+
+Based onb185954e; the user's latest feedback supersedes the featured-three
+presentation. Homepage removes the extra featured section/script and returns
+to the original16-card grid, original caption scale and Vine framing. Decorative
+title arrows are hidden while full-card links/downloads work. The gallery uses
+a2px neutral track/8px thumb with44px input and inset keyboard focus. Native
+seeking and the shared frame loader are unchanged. Hero/skills/process photos,
+original assets, engineering records and3D return remain. Do not revive the
+historical featured module without a new user request. Read current notes in
+HOMEPAGE_PRESENTATION.md. Release evidence: ../.codex/gallery-refinement-20261012/.
+
 ## Approved homepage aesthetic improvements · 2026-10-12
 
 Based on6d7bd303. User approved all three aesthetic recommendations and publication.
