@@ -1,5 +1,15 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+## Stronger track / natural white fade · 2026-10-13
+
+Based oncae7e642. User requested a more visible track, gentler fade, clear
+driver/car and no deliberate vehicle cropping. Background-only changes use
+.78 opacity/.94 saturation and a broad seven-stop radial fade. Subject framing,
+scale, source photos and immutable SVG remain unchanged. Complete-car bounds
+and image alignment pass at320/430/768/1024/1280/1920px; layout and source data
+are preserved. CSS token: hero-track-natural-20261013. Evidence/release/backup:
+../.codex/hero-track-natural-20261013/.
+
 ## More visible racetrack background · 2026-10-13
 
 Based on75c61e0a. User asked to keep some track instead of fading nearly all

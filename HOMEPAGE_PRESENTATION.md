@@ -1,5 +1,15 @@
 # Homepage presentation
 
+## Clearer track / gentler white transition · 2026-10-13
+
+The latest request makes track context stronger while keeping the whole real
+car/person. Background opacity .78 and saturation .94 retain more natural
+road/grass color. A broad seven-stop fade keeps the scene clear near the car
+and eases into white across a longer distance. No subject crop, scale, camera
+position, mask path or source pixels change. Complete subject bounds were checked
+at320/430/768/1024/1280/1920px. Evidence/release/restore:
+`../.codex/hero-track-natural-20261013/`.
+
 ## Retained racetrack context · 2026-10-13
 
 Latest user feedback keeps more of the real track. Background opacity is now

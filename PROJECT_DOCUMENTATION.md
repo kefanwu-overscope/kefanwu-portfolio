@@ -1,5 +1,13 @@
 # Portfolio Website Project Documentation
 
+## Stronger real track / softer white fade · 2026-10-13
+
+User feedback increases the authentic background's visibility and uses a longer
+seven-stop transition into white. The whole vehicle/driver retain their existing
+framing, source pixels and clear foreground; no extra subject crop or zoom.
+HOMEPAGE_PRESENTATION.md documents the current settings. Validation, production
+and recoverable backup evidence: ../.codex/hero-track-natural-20261013/.
+
 ## Racetrack context retained · 2026-10-13
 
 The latest feedback increases only the real-photo background layer's visibility
