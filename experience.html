@@ -7,24 +7,29 @@
       name="description"
       content="Explore Kefan Wu’s engineering projects in an interactive 3D studio. Browse exhibits, inspect models, and read the case studies."
     />
-    <!-- The static homepage is the canonical, crawlable surface. -->
-    <link rel="canonical" href="https://www.kefanwu.com/" />
+    <link rel="canonical" href="https://www.kefanwu.com/experience.html" />
     <meta property="og:title" content="Kefan Wu — Interactive 3D Studio" />
     <meta
       property="og:description"
       content="An interactive 3D engineering studio: click the resume on the desk, click project models for case studies."
     />
-    <meta property="og:image" content="assets/studio-hover.webp" />
-    <meta property="og:image:width" content="1280" />
-    <meta property="og:image:height" content="800" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.kefanwu.com/experience.html" />
+    <meta property="og:site_name" content="Kefan Wu" />
+    <!-- Captured from the live renderer (both cabinets and the desk, night lighting, HUD hidden). -->
+    <meta property="og:image" content="https://www.kefanwu.com/assets/og/studio-20261022.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Kefan Wu’s interactive 3D studio: two lit display cabinets holding his engineering projects behind a desk with his résumé." />
+    <meta name="twitter:card" content="summary_large_image" />
     <title>Kefan Wu | Interactive 3D Studio</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="assets/favicon_custom.png" sizes="any" />
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/Inter-400.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/InterTight-700.woff2" crossorigin />
     <link rel="stylesheet" href="fonts.css?v=studio-polish-20260907" />
-    <link rel="stylesheet" href="experience.css?v=resume-full-20260926" />
+    <link rel="stylesheet" href="experience.css?v=resume-full-20261022" />
     <link rel="stylesheet" href="studio-navigation.css?v=motion-story-20260930" />
     <noscript><style>.exp-loader, .exp-stage { display: none; }</style></noscript>
 
@@ -39,6 +44,68 @@
     </script>
     <link rel="modulepreload" href="vendor/three/0.185.0/build/three.core.js" />
     <link rel="modulepreload" href="vendor/three/0.185.0/build/three.module.js" />
+    <!-- The room's whole static module graph (experience.js and every module it
+         imports), so it loads in parallel instead of one import level at a time. Each href
+         must equal its import specifier, ?v label included, or the module is
+         fetched twice; tools/room-tests/experience-modulepreload-20261022.test.mjs
+         checks the list against the imports. -->
+    <link rel="modulepreload" href="experience.js?v=game-performance-20261022" />
+    <link rel="modulepreload" href="studio-navigation.js?v=motion-story-20260930" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/controls/OrbitControls.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/loaders/HDRLoader.js" />
+    <link rel="modulepreload" href="experience-lod.js?v=game-performance-20261009" />
+    <link rel="modulepreload" href="experience-timing.js?v=game-performance-20261009" />
+    <link rel="modulepreload" href="experience-ambient.js?v=workbench-live-20260930" />
+    <link rel="modulepreload" href="experience-light-grade.js?v=workbench-live-20260930" />
+    <link rel="modulepreload" href="experience-batching.js?v=room-performance-20260919" />
+    <link rel="modulepreload" href="experience-warmup.js?v=room-performance-20260919" />
+    <link rel="modulepreload" href="experience-baked-material.js?v=realism-20260925" />
+    <link rel="modulepreload" href="experience-baked-assets.js?v=room-detail-20260926" />
+    <link rel="modulepreload" href="experience-loader.js?v=exp-adaptive-20261022" />
+    <link rel="modulepreload" href="experience-hdr.js?v=exp-adaptive-20260907" />
+    <link rel="modulepreload" href="experience-quality.js?v=game-performance-20261022" />
+    <link rel="modulepreload" href="experience-advanced.js?v=game-performance-20261009" />
+    <link rel="modulepreload" href="experience-shadow-budget.js?v=advanced-render-20260930" />
+    <link rel="modulepreload" href="experience-workbench-details.js?v=room-detail-20260926" />
+    <link rel="modulepreload" href="experience-exhibits.js?v=brake-dr-20261005" />
+    <link rel="modulepreload" href="experience-realism.js?v=studio-realism-20260907" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/geometries/RoundedBoxGeometry.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/postprocessing/EffectComposer.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/postprocessing/RenderPass.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/postprocessing/UnrealBloomPass.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/lights/RectAreaLightUniformsLib.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/postprocessing/GTAOPass.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/postprocessing/BokehPass.js" />
+    <link rel="modulepreload" href="experience-data.js?v=resume-20261022" />
+    <link rel="modulepreload" href="experience-resume.js?v=resume-full-20261022" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/loaders/GLTFLoader.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/utils/BufferGeometryUtils.js" />
+    <link rel="modulepreload" href="experience-gpu-device.js?v=advanced-render-20260930" />
+    <link rel="modulepreload" href="experience-temporal.js?v=advanced-render-20260930" />
+    <link rel="modulepreload" href="experience-raytrace.js?v=advanced-render-20260930" />
+    <link rel="modulepreload" href="experience-raytrace-capture.js?v=advanced-render-20260930" />
+    <link rel="modulepreload" href="experience-ray-material.js?v=advanced-render-20260930" />
+    <link rel="modulepreload" href="experience-clusters.js?v=advanced-render-20260930" />
+    <link rel="modulepreload" href="experience-frame-budget.js?v=advanced-render-20260930" />
+    <link rel="modulepreload" href="studio-photo-materials.js?v=refined-20260930" />
+    <link rel="modulepreload" href="studio-inspector-materials.js?v=refined-20260930" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/shaders/CopyShader.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/postprocessing/ShaderPass.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/postprocessing/MaskPass.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/postprocessing/Pass.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/shaders/LuminosityHighPassShader.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/lights/RectAreaLightTexturesLib.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/shaders/GTAOShader.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/shaders/PoissonDenoiseShader.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/math/SimplexNoise.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/shaders/BokehShader.js" />
+    <link rel="modulepreload" href="experience-resume-assets.js?v=resume-20261022" />
+    <link rel="modulepreload" href="experience-resume-content.js?v=resume-20261022" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/utils/SkeletonUtils.js" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/postprocessing/OutputPass.js" />
+    <link rel="modulepreload" href="experience-clusters-core.js?v=advanced-render-20260930" />
+    <link rel="modulepreload" href="experience-clusters-gpu.js?v=advanced-render-20260930" />
+    <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/shaders/OutputShader.js" />
   </head>
   <body>
     <!-- Always-visible, keyboard-focusable escape hatch to the classic site -->
@@ -108,10 +175,12 @@
       <span class="exp-draghint__text">Select an exhibit to explore</span>
     </div>
 
-    <!-- The 3D scene -->
-    <div class="exp-stage">
-      <canvas id="exp-canvas" tabindex="0" role="application" aria-label="Interactive 3D studio. Use arrow keys to browse exhibits, Enter to open, Escape to close."></canvas>
-    </div>
+    <!-- The 3D scene (the page's main landmark) -->
+    <main class="exp-main">
+      <div class="exp-stage">
+        <canvas id="exp-canvas" tabindex="0" role="application" aria-label="Interactive 3D studio. Use arrow keys to browse exhibits, Enter to open, Escape to close."></canvas>
+      </div>
+    </main>
 
     <nav class="exp-dock" id="exp-dock" aria-label="Studio navigation" hidden>
       <div class="exp-dock__intro"><span class="exp-dock__dot" aria-hidden="true"></span>Explore the work</div>
@@ -119,8 +188,18 @@
       <select id="exp-project-select"><option value="">Choose an exhibit</option></select>
       <button id="exp-reset-view" type="button" aria-label="Reset studio view" title="Reset view">Reset view <span aria-hidden="true">↺</span></button>
       <button id="exp-skip-intro" type="button" hidden>Skip intro</button>
-      <p class="exp-dock__hint">Drag to orbit · Scroll to zoom</p>
+      <p class="exp-dock__hint">
+        <span class="exp-dock__hint-fine">Drag to orbit · Scroll to zoom</span>
+        <span class="exp-dock__hint-touch">Drag to look · Tap an exhibit</span>
+      </p>
     </nav>
+
+    <!-- Offered after reveal only when this device renders the room very slowly. -->
+    <div class="exp-slowbar" id="exp-slowbar" role="status" hidden>
+      <p class="exp-slowbar__text" data-slowbar-text></p>
+      <a class="exp-slowbar__link" href="index.html#work">View the portfolio</a>
+      <button class="exp-slowbar__close" type="button" aria-label="Dismiss this notice"><span aria-hidden="true">&times;</span></button>
+    </div>
 
     <!-- Accessible heading (visually hidden; the experience is the canvas) -->
     <h1 class="sr-only">Kefan Wu — interactive 3D engineering studio</h1>
@@ -149,6 +228,11 @@
               <span class="exp-loader__title-failed">Studio<br /> unavailable.</span>
             </h2>
             <p class="exp-loader__text" id="exp-loader-text" role="status" aria-live="polite" aria-atomic="true">Loading studio resources</p>
+            <!-- Shown only when the studio cannot run (CSS: failed / no-WebGL state). -->
+            <div class="exp-loader__actions">
+              <a class="exp-loader__action exp-loader__action--primary" href="index.html#work">View all 16 projects</a>
+              <a class="exp-loader__action" href="assets/kefan-wu-resume.pdf?v=84eb031f4903" target="_blank" rel="noopener">Read résumé (PDF)<span class="sr-only"> (opens in a new tab)</span></a>
+            </div>
           </div>
         </div>
         <div class="exp-loader__progress">
@@ -179,7 +263,7 @@
       </div>
     </noscript>
 
-    <script src="project-data.js?v=brake-figures-20261005"></script>
-    <script type="module" src="experience-entry.js?v=game-performance-20261009"></script>
+    <script src="project-data.js?v=brake-figures-20261022"></script>
+    <script type="module" src="experience-entry.js?v=game-performance-20261022"></script>
   </body>
 </html>

@@ -4,6 +4,9 @@
  * Targets use exact names/groups from the index-selected studio-motion manifests.
  * Details follow project-data.js, case-study-supplements.js and source motion reports.
  * Unified rotor, seat, carbon-shell and specimen meshes share a component target.
+ * The static rotor and carbon shell also name one documented feature per step:
+ * point is in the part's source coordinates (live camera) and framePoint is the
+ * same point in the landscape detail frames, both from the source export camera.
  */
 export const projectMotionLabels = {
   steering: [
@@ -38,49 +41,59 @@ export const projectMotionLabels = {
       "title": "Cast-iron rotor",
       "body": "Cast iron stores braking energy as heat.",
       "target": {
-        "name": "mat_steel"
-      }
+        "name": "mat_steel",
+        "point": [0.0373, 0.8973, 1.8734]
+      },
+      "framePoint": { "x": 0.67656, "y": 0.35129 }
     },
     {
       "title": "Heat input",
       "body": "Braking converts kinetic energy into rotor heat.",
       "target": {
-        "name": "mat_steel"
-      }
+        "name": "mat_steel",
+        "point": [0.0373, -1.1356, 1.4193]
+      },
+      "framePoint": { "x": 0.28125, "y": 0.53279 }
     },
     {
       "title": "Cooling paths",
       "body": "Conduction, convection and radiation cool the rotor.",
       "target": {
-        "name": "mat_steel"
-      }
+        "name": "mat_steel",
+        "point": [0.0373, 0.0496, 2.7621]
+      },
+      "framePoint": { "x": 0.51172, "y": 0.11475 }
     },
     {
       "title": "Thermal illustration",
       "body": "Color is illustrative; temperatures come from plots.",
       "target": {
-        "name": "mat_steel"
-      }
+        "name": "mat_steel",
+        "point": [0.0373, -0.2356, 0.3927]
+      },
+      "framePoint": { "x": 0.45625, "y": 0.80796 }
     }
   ],
   aura: [
     { title: 'Steering motor', body: 'Wheel heading controlled independently from traction.', target: { group: 'steering_motor' } },
     { title: 'Bearing fastener', body: 'Four fasteners retain the upper bearing assembly.', target: { name: 'mat_steel_part_11' } },
     { title: 'Bearing cover', body: 'Closes the compact steering bearing stack.', target: { name: 'mat_paint_gray_part_3' } },
-    { title: 'Inner bearing ring', body: 'Concentric rings define the steering axis.', target: { name: 'mat_steel_part_7' } },
+    // The ring's centre-nearest vertex falls in its bore; this point sits on the front of the ring face.
+    { title: 'Inner bearing ring', body: 'Concentric rings define the steering axis.', target: { name: 'mat_steel_part_7', point: [0.0266, -0.0097, 1.6557] } },
     { title: 'Lower mount plate', body: 'Module mount below the bearing stack.', target: { name: 'mat_paint_gray_part_4' } }
   ],
   carbonSeat: [
-    { title: 'Carbon shell', body: 'Continuous shell joins pan, back and sides.', target: { name: 'mat_carbon' } },
-    { title: 'Twill reinforcement', body: '20 main plies; 3K 200 g/m² twill.', target: { name: 'mat_carbon' } },
-    { title: 'Curved support surface', body: 'Cloth follows curves from pan to back.', target: { name: 'mat_carbon' } },
-    { title: 'Epoxy laminate', body: 'EL2 resin binds cloth; local patches reinforce.', target: { name: 'mat_carbon' } }
+    // Side wall, seat pan, upper-back curve, then the shell's centre anchor.
+    { title: 'Carbon shell', body: 'Continuous shell joins pan, back and sides.', target: { name: 'mat_carbon', point: [0.6084, 1.0357, 1.8946] }, framePoint: { x: 0.625, y: 0.38642 } },
+    { title: 'Twill reinforcement', body: '20 main plies; 3K 200 g/m² twill.', target: { name: 'mat_carbon', point: [-0.3825, -0.1058, 0.3925] }, framePoint: { x: 0.46094, y: 0.65574 } },
+    { title: 'Curved support surface', body: 'Cloth follows curves from pan to back.', target: { name: 'mat_carbon', point: [-0.813, 1.0298, 2.0291] }, framePoint: { x: 0.48438, y: 0.31616 } },
+    { title: 'Epoxy laminate', body: 'EL2 resin binds cloth; local patches reinforce.', target: { name: 'mat_carbon', point: [-0.0039, 0.4752, 1.0096] }, framePoint: { x: 0.53203, y: 0.53747 } }
   ],
   seat: [
-    { title: 'Perforated aluminum seat', body: 'Formed pan, back and folded sides.', target: { name: 'Driver seat continuous unfolding surface with two corner relief' } },
-    { title: 'Folded seat shell', body: 'Connected edges show the sidewall folds.', target: { name: 'Driver seat continuous unfolding surface with two corner relief' } },
-    { title: 'Continuous sheet', body: 'Curved joins keep panels and perforations connected.', target: { name: 'Driver seat continuous unfolding surface with two corner relief' } },
-    { title: 'Developed sheet', body: 'Illustrative flat view; bend allowances unspecified.', target: { name: 'Driver seat continuous unfolding surface with two corner relief' } }
+    { title: 'Perforated seat', body: 'Pan, back and folded sides.', target: { name: 'Driver seat continuous unfolding surface with two corner relief' } },
+    { title: 'Seat shell', body: 'Connected edges join the sides to pan and back.', target: { name: 'Driver seat continuous unfolding surface with two corner relief' } },
+    { title: 'Continuous surface', body: 'Curved joins keep panels and perforations connected.', target: { name: 'Driver seat continuous unfolding surface with two corner relief' } },
+    { title: 'Flat outline', body: 'Illustrative flat view of the connected geometry.', target: { name: 'Driver seat continuous unfolding surface with two corner relief' } }
   ],
   materialTest: [
     { title: 'Lower grip', body: 'Fixed grip retains the lower specimen end.', target: { name: 'MaterialTest_grip_top_bridge.001' } },

@@ -1,0 +1,193 @@
+{
+  "date": "2026-10-22",
+  "source": "Existing public Formula SAE hero photograph",
+  "supersedes": "assets/hero-fsae-context-20261013/context-mask.svg (kept unchanged; immutable path)",
+  "sourceFiles": [
+    {
+      "file": "assets/hero-fsae-track-960.webp",
+      "sha256": "30ecc26ccec873b94428aecb36304071acd009ab42f41418eab7ca6b4831f66f",
+      "bytes": 93190
+    },
+    {
+      "file": "assets/hero-fsae-track-1440.webp",
+      "sha256": "a7102610d0b3218c0c7f87afc472a6c34b0bb0aaba6554f83e07198f73b02b0d",
+      "bytes": 220770
+    },
+    {
+      "file": "assets/hero-fsae-track-2200.webp",
+      "sha256": "29159c8b770699ad6b5243db395256c051372e86d50f4145bd6d87cd0b36dedd",
+      "bytes": 472240
+    }
+  ],
+  "viewBox": [
+    0,
+    0,
+    2200,
+    1238
+  ],
+  "masks": [
+    {
+      "file": "context-mask.svg",
+      "use": "Default: laptops and desktops wider than 1140px (the two hero text links sit on a second row under the button, on the white side of the fade).",
+      "leftFeatherSigma": 85,
+      "leftFeatherEndsAtX": 645,
+      "bottomFeatherSigma": 80,
+      "bottomFeatherEndsAtY": 1200,
+      "rightFeatherSigma": 80,
+      "rightFeatherEndsAtX": 2040,
+      "featherAt1440x900CssPx": {
+        "left": 180,
+        "bottom": 170
+      }
+    },
+    {
+      "file": "context-mask-band.png",
+      "use": "721-1140px wide (except tall tablets 721-1100px at 900px+ high): the copy and single CTA row reach the car's front corner. Axis-aligned SVG feathers read as a rectangular asphalt slab at 1024x768 and 1100x800, so this band uses a hull-based fall-off instead.",
+      "format": "1100x619 PNG (white + 8-bit alpha), the 2200x1238 photo frame at half scale; same aspect, so mask-size: cover and mask-position line up with the photo exactly as the SVG masks do.",
+      "sha256": "fdddf34c417fecca5df1347aef6808867e374b853609e2176368917578ec4698",
+      "bytes": 29673,
+      "method": "Alpha 255 inside one broad convex hull around the car, driver and roll hoop (photo coordinates below) plus a margin, then a Gaussian fall-off with distance from the hull. Sigma is short (sigS) inside the copy/CTA corner box left of and below the nose and above the hoop, long (sigB) elsewhere, blended with smoothsteps; alpha reaches 0 before the photo's last row. The hull is one continuous region, not component contours, and has no holes.",
+      "hull": [
+        [
+          1462,
+          372
+        ],
+        [
+          1512,
+          374
+        ],
+        [
+          1586,
+          556
+        ],
+        [
+          1662,
+          636
+        ],
+        [
+          1722,
+          650
+        ],
+        [
+          1782,
+          686
+        ],
+        [
+          1794,
+          760
+        ],
+        [
+          1788,
+          818
+        ],
+        [
+          1700,
+          830
+        ],
+        [
+          1566,
+          862
+        ],
+        [
+          1506,
+          948
+        ],
+        [
+          1300,
+          958
+        ],
+        [
+          1150,
+          938
+        ],
+        [
+          918,
+          928
+        ],
+        [
+          882,
+          882
+        ],
+        [
+          900,
+          790
+        ],
+        [
+          958,
+          732
+        ],
+        [
+          1100,
+          668
+        ],
+        [
+          1296,
+          606
+        ],
+        [
+          1384,
+          512
+        ],
+        [
+          1416,
+          488
+        ]
+      ],
+      "params": {
+        "res": 0.5,
+        "margin": 14,
+        "sigS": 34,
+        "sigB": 95,
+        "corner": [
+          0,
+          770,
+          1180,
+          1238
+        ],
+        "cornerBlend": 360,
+        "topY0": 400,
+        "topY1": 600,
+        "botY0": 1040,
+        "botY1": 1230
+      },
+      "pairedCss": "Background layer in the same band: opacity .9, no filter (elsewhere .82 / saturate(.97))."
+    },
+    {
+      "file": "context-mask-soft.svg",
+      "use": "Tablets 721-1100px wide and at least 900px tall, where the copy and CTAs sit well below the car.",
+      "leftFeatherSigma": 100,
+      "leftFeatherEndsAtX": 600,
+      "bottomFeatherSigma": 90,
+      "bottomFeatherEndsAtY": 1230,
+      "rightFeatherSigma": 80,
+      "rightFeatherEndsAtX": 2040
+    },
+    {
+      "file": "context-mask-compact.svg",
+      "use": "Phones (720px and below), where the tagline starts just below the car.",
+      "leftFeatherSigma": 100,
+      "leftFeatherEndsAtX": 600,
+      "bottomFeatherSigma": 30,
+      "bottomFeatherEndsAtY": 1050,
+      "rightRamp": "unchanged 2026-10-13 ramp, 1800-1900"
+    }
+  ],
+  "method": "Same two overlapping continuous original-photo regions as the 2026-10-13 mask. The car region feathers outward from its left, bottom and (except the compact mask) right edges with a Gaussian fall-off (truncated at 3 sigma, ending inside the photo). The top ramp and the driver region are unchanged from 2026-10-13. No individual component outlines or holes.",
+  "opaqueSourceRegions": [
+    [
+      900,
+      590,
+      1800,
+      960
+    ],
+    [
+      1360,
+      375,
+      1640,
+      710
+    ]
+  ],
+  "purpose": "Soften the rectangular 'asphalt slab' edge left of, below and right of the car (audit H10/rec 8: 140-180 CSS px feather at 1440) while preserving the original suspension links, chassis, driver, wheels, gaps and source contact shadows without part-by-part clipping. Narrower layouts keep shorter left/bottom feathers so the hero copy and CTAs keep at least 4.5:1 contrast.",
+  "validation": "Chrome canvas raster check for all four masks: minimum alpha 255 inside both protected regions; alpha 0 on the photo's last row and first column. Hero text-link contrast measured against the photo with the text hidden (median, 10th percentile) at 768-2560px widths: every link and arrow has p10 >= 5.5:1 at widths of 1024px and above. Source photo pixels and the 2026-10-13 mask are unchanged. Band PNG: alpha 255 everywhere inside the hull; alpha 0 on the first and last columns and the last row. Hero link/copy contrast (p10, text hidden) at 1024x768, 1100x800, 1112x834, 1133x744 and 1140x800 was measured for every link (e.g. Resume link 1024x768: 6.3:1).",
+  "limits": "Region coordinates are photo presentation coordinates, not vehicle dimensions or engineering measurements. No generated/reconstructed parts or sharpening. Only mask alpha changed; the CSS background layer moved from opacity .78/saturate .94 to .82/.97 (.9/no filter in the 721-1140px band)."
+}

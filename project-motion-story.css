@@ -6,9 +6,11 @@
 .case-motion-story.is-enhanced > .case-motion-pin { position:sticky; top:var(--story-top); }
 .case-motion-story.is-unpinned > .case-motion-pin { position:relative; top:0; }
 .motion-story-heading { position:absolute; top:18px; left:var(--gutter); right:var(--gutter); z-index:3; display:flex; align-items:center; justify-content:space-between; gap:24px; pointer-events:none; }
-.motion-story-heading .eyebrow { font-size:10px; color:#989c9f; letter-spacing:.08em; }
+.motion-story-heading .eyebrow { min-width:0; font-size:11px; color:#989c9f; letter-spacing:.08em; }
 .motion-story-heading .eyebrow span { margin-inline:10px; color:#53595e; }
-.motion-skip { pointer-events:auto; font-size:11px; color:#aaaeb1; white-space:nowrap; }
+.motion-story-heading .eyebrow .motion-heading-mode { margin:0; color:inherit; }
+/* Small visual links keep 44px touch targets without moving the layout. */
+.motion-skip { pointer-events:auto; display:inline-block; padding:12px 0; margin:-12px 0; font-size:13px; line-height:20px; color:#aaaeb1; white-space:nowrap; }
 .motion-skip:hover { color:var(--ink); }
 .case-motion-story .case-preview-layout { position:absolute; inset:0; display:block; max-width:none; width:100%; padding:0; margin:0; }
 .case-motion-story .case-preview-figure { position:absolute; inset:36px 0 42px; margin:0; }
@@ -17,11 +19,11 @@
 .case-motion-story .card-media > img,.case-motion-story .card-explode-frame { object-fit:contain!important; background:transparent!important; }
 .case-motion-story .card-media > img { width:100%; height:100%; }
 .case-motion-story .card-explode-ui,.case-motion-story .cover-caption { display:none; }
-.case-motion-story .motion-notes { position:absolute; left:var(--label-x,65%); top:var(--label-y,26%); width:184px; max-width:calc(100% - 40px); padding:10px 12px; border-left:1px solid #75808880; background:linear-gradient(110deg,#181818f0,#181818d9 76%,#18181800); z-index:3; pointer-events:none; opacity:0; transition:opacity 160ms ease; text-shadow:0 1px 6px #181818,0 0 12px #181818; }
+.case-motion-story .motion-notes { position:absolute; left:var(--label-x,65%); top:var(--label-y,26%); width:var(--label-w,240px); max-width:calc(100% - 40px); padding:10px 12px; border-left:1px solid #75808880; background:linear-gradient(110deg,#181818f0,#181818d9 76%,#18181800); z-index:3; pointer-events:none; opacity:0; transition:opacity 160ms ease; text-shadow:0 1px 6px #181818,0 0 12px #181818; }
 .case-motion-story[data-notes-visible=true][data-anchor-visible=true] .motion-notes { opacity:1; }
-.motion-step-count { display:block; margin:0 0 6px; color:#93a5b2; font:9px/1 var(--font-mono); letter-spacing:.08em; }
-.case-motion-story .motion-notes h2 { font:500 12px/1.4 var(--font-mono); letter-spacing:0; margin:0 0 5px; color:#f0f0ec; }
-.case-motion-story .motion-notes .motion-note-body { font:11px/1.5 var(--font-mono); max-width:none; min-height:0; margin:0; color:#bbc0c3; }
+.motion-step-count { display:block; margin:0 0 7px; color:#93a5b2; font:11px/1 var(--font-mono); letter-spacing:.08em; }
+.case-motion-story .motion-notes h2 { font:600 15px/1.3 "Inter", sans-serif; letter-spacing:0; margin:0 0 5px; color:#f0f0ec; }
+.case-motion-story .motion-notes .motion-note-body { font:400 14px/1.45 "Inter", sans-serif; max-width:none; min-height:0; margin:0; color:#bbc0c3; }
 .case-motion-story .motion-notes .motion-evidence-note { display:none; }
 .motion-leader { position:absolute; inset:0; width:100%; height:100%; z-index:2; pointer-events:none; overflow:visible; opacity:0; transition:opacity 160ms ease; }
 .motion-leader path { fill:none; stroke:#acbcc7; stroke-width:.85; stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke; }
@@ -31,58 +33,81 @@
 .case-motion-story[data-label-pending=true] .motion-leader { opacity:0; }
 .case-motion-story[data-notes-visible=true][data-anchor-visible=true] .motion-leader { opacity:.8; }
 .case-motion-story.is-free .motion-leader { display:none; }
-.motion-scroll-cue { position:absolute; bottom:72px; left:50%; transform:translateX(-50%); z-index:3; color:#afb4b8; font:10px var(--font-mono); letter-spacing:.06em; transition:opacity 180ms; }
+.motion-scroll-cue { position:absolute; bottom:72px; left:50%; transform:translateX(-50%); z-index:3; color:#afb4b8; font:11px var(--font-mono); letter-spacing:.06em; transition:opacity 180ms; }
 .motion-scroll-cue span { display:block; text-align:center; margin-top:8px; font-size:18px; }
 .case-motion-story[data-notes-visible=true] .motion-scroll-cue,.case-motion-story.is-free .motion-scroll-cue { opacity:0; pointer-events:none; }
-.motion-story-footer { position:absolute; z-index:4; left:var(--gutter); right:var(--gutter); bottom:13px; display:flex; gap:25px; align-items:center; justify-content:space-between; padding:0; border:0; }
-.motion-step-buttons { display:flex; align-items:center; gap:7px; margin:0; }
-.motion-step-buttons button { width:30px; height:34px; padding:0; border:0; border-bottom:1px solid transparent; border-radius:0; background:none; color:#7f888f; font:10px var(--font-mono); }
+.motion-story-footer { position:absolute; z-index:4; left:var(--gutter); right:var(--gutter); bottom:8px; display:flex; gap:25px; align-items:center; justify-content:space-between; padding:0; border:0; }
+/* 44px stage targets; the visible mark stays a short numeral underline. */
+.motion-step-buttons { display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0,44px); align-items:center; gap:0; margin:0 0 0 -15px; }
+.motion-step-buttons button { position:relative; width:100%; height:44px; padding:0; border:0; border-radius:0; background:none; color:#7f888f; font:11px var(--font-mono); }
+.motion-step-buttons button::after { content:""; position:absolute; left:50%; bottom:7px; width:22px; height:1px; transform:translateX(-50%); background:currentColor; opacity:0; }
 .motion-step-buttons button[aria-pressed=true] { color:#f4f4f2; border-color:#f4f4f2; }
+.motion-step-buttons button[aria-pressed=true]::after { opacity:1; }
+/* Inset focus rings stay inside the clipped stage. */
+.motion-skip:focus-visible,.motion-step-buttons button:focus-visible,.case-motion-story .preview-links .text-link:focus-visible { outline-offset:-2px; }
 .motion-story-timeline { display:flex; align-items:center; gap:12px; width:min(26vw,290px); }
 .motion-story-timeline input { appearance:none; min-width:0; width:100%; height:30px; margin:0; background:linear-gradient(to right,#b9c9d4 var(--motion-progress,0%),#3d4449 var(--motion-progress,0%)) center/100% 1px no-repeat; accent-color:#bdcbd6; cursor:ew-resize; }
 .motion-story-timeline input::-webkit-slider-thumb { appearance:none; width:7px; height:7px; border-radius:50%; background:#c6d3dc; }
 .motion-story-timeline input::-moz-range-thumb { width:7px; height:7px; border:0; border-radius:50%; background:#c6d3dc; }
-.motion-story-timeline output { min-width:4ch; text-align:right; font:10px var(--font-mono); color:#9099a0; }
+.motion-story-timeline output { min-width:4ch; text-align:right; font:11px var(--font-mono); color:#9099a0; }
 .case-motion-story .preview-links { display:flex; align-items:center; }
-.case-motion-story .preview-links .text-link { display:block; margin:0; padding:6px 0; background:none; border:0; font-size:11px; color:#b9c4cb; }
+.case-motion-story .preview-links .text-link { display:block; margin:-12px 0; padding:12px 0; background:none; border:0; font-size:13px; line-height:20px; color:#b9c4cb; }
 .case-motion-story .preview-links .text-link:hover { color:white; }
 .case-motion-story:not(.is-free) #case-3d-canvas { pointer-events:none; touch-action:pan-y; }
 .case-motion-story:not(.is-free) .case-3d-controls { display:none; }
 .case-motion-story .case-3d-viewport > img { background:transparent; }
 .case-motion-story .case-3d-status { border:0; background:none; color:#afb4b8; bottom:25px; left:50%; transform:translateX(-50%); font-size:11px; }
-.case-motion-story #case-3d-legend { position:absolute; z-index:3; bottom:38px; left:var(--gutter); width:min(280px,30vw); display:grid; grid-template-columns:1fr; padding:0; border:0; background:none; font-size:9px; }
-.case-motion-story #case-3d-legend p { margin:0; font-size:9px; line-height:12px; }
+/* The solved pressure scale keeps its values, ramp and nonlinear-scale note. */
+.case-motion-story #case-3d-legend { position:absolute; z-index:3; bottom:38px; left:var(--gutter); width:min(340px,calc(100% - 2 * var(--gutter))); display:grid; grid-template-columns:1fr; padding:0; border:0; background:none; font-size:11px; }
+.case-motion-story #case-3d-legend p { margin:0; font-size:11px; line-height:14px; }
 .case-motion-story #case-3d-legend .case-3d-legend-bar { height:4px; margin-top:5px; }
-.case-motion-story #case-3d-legend .case-3d-legend-ticks { height:16px; margin-top:4px; font-size:8px; }
-.case-motion-story #case-3d-legend small { display:none; }
+.case-motion-story #case-3d-legend .case-3d-legend-ticks { height:16px; margin-top:4px; font-size:11px; line-height:16px; }
+.case-motion-story #case-3d-legend small { display:block; margin-top:2px; font-size:10px; line-height:13px; }
 .case-motion-story.is-free .motion-notes,.case-motion-story.is-free .motion-step-buttons,.case-motion-story.is-free .motion-story-timeline { display:none; }
 .case-motion-story.is-free .motion-story-footer { justify-content:flex-end; }
 .case-motion-story.is-free .case-preview-figure { inset:32px 0 130px; transform:none; }
 .case-motion-story.is-free .case-3d-controls { position:absolute; left:50%; bottom:-98px; transform:translateX(-50%); width:min(580px,calc(100% - 44px)); padding:0; border:0; background:none; }
 .case-motion-story .case-3d-hint { display:none; }
+/* Free exploration names its two gestures once, under the model. */
+.case-motion-story.is-free .case-preview-figure::after { content:"Drag to rotate \b7  Scroll to zoom"; position:absolute; left:var(--gutter); right:var(--gutter); bottom:4px; z-index:3; text-align:center; font:11px/1.4 var(--font-mono); letter-spacing:.04em; color:var(--muted); pointer-events:none; transition:opacity 240ms ease; }
+/* The hint has done its job once the visitor rotates or zooms the model. */
+.case-motion-story.is-free.is-free-moved .case-preview-figure::after { opacity:0; }
+@media(hover:none) and (pointer:coarse) { .case-motion-story.is-free .case-preview-figure::after { content:"Drag to rotate \b7  Pinch to zoom"; } }
+/* Portrait screens magnify the project's whole-timeline footprint; one
+   transform (set by project-motion-story.js) holds for every frame. */
+.case-motion-story[data-portrait-fit=true] .case-preview-figure .case-animation-host .card-media > img,
+.case-motion-story[data-portrait-fit=true] .case-preview-figure .case-animation-host.has-explode .card-media > img,
+.case-motion-story[data-portrait-fit=true] .case-preview-figure .case-animation-host .card-media .card-explode-frame { transform-origin:0 0; transform:var(--motion-fit)!important; }
 @media(max-width:700px) {
  .case-motion-story { scroll-margin-top:calc(var(--story-top) - 160px); }
  .case-motion-pin { min-height:520px; }
  .motion-story-heading { top:14px; gap:12px; }
- .motion-story-heading .eyebrow { font-size:8px; letter-spacing:.02em; max-width:58%; }
- .motion-story-heading .eyebrow span { margin-inline:4px; color:#53595e; }
- .motion-skip { font-size:9px; }
- .case-motion-story .case-preview-figure { inset:35px 0 115px; }
- .case-motion-story .motion-notes { width:164px; padding:8px 10px; }
- .motion-step-count { font-size:8px; margin-bottom:5px; }
- .case-motion-story .motion-notes h2 { font-size:11px; }
- .case-motion-story .motion-notes .motion-note-body { font-size:10px; }
- .motion-scroll-cue { bottom:80px; white-space:nowrap; }
- .motion-story-footer { bottom:10px; gap:12px; flex-wrap:wrap; }
- .motion-step-buttons { gap:2px; }
- .motion-step-buttons button { width:24px; height:28px; font-size:9px; }
- .motion-story-timeline { position:absolute; bottom:35px; width:100%; gap:8px; }
- .motion-story-timeline input { height:16px; }
- .motion-story-timeline output { font-size:8px; }
- .case-motion-story .preview-links .text-link { font-size:10px; }
- .case-motion-story #case-3d-legend { top:25px; bottom:auto; left:calc(var(--gutter) + 6vw); width:190px; }
- .case-motion-story.is-free .case-preview-figure { inset:30px 0 150px; }
- .case-motion-story.is-free .case-3d-controls { bottom:-118px; }
+ .motion-story-heading .eyebrow { overflow:hidden; font-size:11px; letter-spacing:.02em; white-space:nowrap; text-overflow:ellipsis; }
+ .motion-story-heading .eyebrow .motion-heading-mode { display:none; }
+ .case-motion-story .case-preview-figure { inset:35px 0 96px; }
+ .case-motion-story .motion-notes { width:var(--label-w,min(240px,62vw)); padding:8px 10px; }
+ .motion-step-count { font-size:11px; margin-bottom:6px; }
+ .case-motion-story .motion-notes h2 { font-size:14px; }
+ .case-motion-story .motion-notes .motion-note-body { font-size:13px; }
+ .motion-scroll-cue { bottom:84px; white-space:nowrap; }
+ /* Timeline and model link share the first row; every stage gets a full-width second row. */
+ .motion-story-footer { bottom:2px; display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-areas:"timeline links" "steps steps"; gap:0 14px; }
+ .motion-step-buttons { grid-area:steps; margin-left:-15px; }
+ .motion-story-timeline { grid-area:timeline; width:auto; gap:8px; }
+ .motion-story-timeline input { height:30px; }
+ .case-motion-story .preview-links { grid-area:links; }
+ .case-motion-story #case-3d-legend { top:25px; bottom:auto; left:var(--gutter); width:calc(100% - 2 * var(--gutter)); }
+ .case-motion-story #case-3d-legend .case-3d-legend-ticks { font-size:10px; }
+ .case-motion-story.is-free .case-preview-figure { inset:30px 0 156px; }
+ .case-motion-story.is-free .case-3d-controls { bottom:-124px; }
+ /* Seven stages keep 44px targets: the row may run into the right gutter. */
+ .motion-step-buttons { margin-right:calc(-1 * var(--gutter)); }
+}
+/* Below 371px the view menu wraps to its own row; the model gives up that
+   row so the gesture hint stays clear above the taller controls. */
+@media(max-width:370px) {
+ .case-motion-story.is-free .case-preview-figure { inset:30px 0 206px; }
+ .case-motion-story.is-free .case-3d-controls { bottom:-174px; }
 }
 @media(prefers-reduced-motion:reduce) {
  .case-motion-story.is-enhanced > .case-motion-pin { position:relative; top:0; }

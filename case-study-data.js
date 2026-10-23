@@ -58,12 +58,12 @@ window.caseStudyData = {
         "Cockpit-side design, shaft sizing, and fabrication of every steering part; later vehicle integration as Mechanical Lead."
       ],
       [
-        "Design change",
+        "Result",
         "Wheel 3.5 in closer to the driver; bearing cages 0.9 kg lighter than Mk.7."
       ],
       [
-        "Result",
-        "Installed and operating without reported issues. Kinematic and structural predictions remain distinct from operating observations."
+        "Status",
+        "Installed and operating without reported issues; joint ripple and shaft loads remain model predictions."
       ]
     ],
     chapters: [
@@ -144,14 +144,14 @@ window.caseStudyData = {
     engineering: {
       "goal": "Evert interchangeable vine bodies and measure how cross-section, pressure, and contact load change their shape.",
       "constraints": [
-        "34 kPa (5 psi) containment target; bodies up to 571 mm circumference; more than 15 daily swaps targeted.",
+        "34 kPa (5 psi) design pressure, about 3.3× the 1.5 psi (10.3 kPa) maximum working pressure; bodies up to 571 mm circumference; more than 15 daily swaps targeted.",
         "Limited sheet-metal tooling and budget, visible eversion, and sealing against printed surfaces."
       ],
       "checks": [
         [
           "Pressure containment",
           "Initial physical test and subsequent reinforcement FEA",
-          "First vessel held 1.2 psi with substantial deformation. Reinforcement at 500 lbf per face predicts 6.524 mm displacement and 0.2339 GPa peak stress.",
+          "First vessel held 1.2 psi with substantial deformation. Reinforcement at 500 lbf per face predicts 6.524 mm displacement and 0.2339 GPa peak stress; this FEA, not a pressure test, backs the 5 psi design pressure.",
           "Tested, then simulated"
         ],
         [
@@ -173,7 +173,7 @@ window.caseStudyData = {
           "Completed experiment"
         ]
       ],
-      "iteration": "Observed wall deformation, coupling release, spool-joint failure, and leaks determined the reinforcement work. A physical proof of the reinforced 5 psi target is a separate verification from its FEA and the lower-pressure research runs."
+      "iteration": "Observed wall deformation, coupling release, spool-joint failure, and leaks determined the reinforcement work. The reinforced vessel is designed for 5 psi on the strength of FEA; it has not been pressure-tested at 5 psi, and the research runs stay at or below the 1.5 psi maximum working pressure."
     },
     "cover": {
       "src": "assets/editorial/neutral-20260915/vineRobot-wide-1800.webp?v=883f0f7423bf",
@@ -190,12 +190,12 @@ window.caseStudyData = {
         "Summer research assistant owning eversion hardware, reinforcement, and the 45-run experiment."
       ],
       [
-        "Key revision",
-        "Initial deformation and connection failures led to a reinforced vessel, revised lid, and retained viewing cutouts."
+        "Result",
+        "45 runs across three body types. The first vessel held 1.2 psi but deformed substantially, so it was reinforced."
       ],
       [
-        "Result",
-        "Three body types tested across 45 conditions. The 5 psi value is a design target; reinforcement evidence includes FEA."
+        "Status",
+        "Reinforced vessel designed for 5 psi with FEA, about 3.3× the 1.5 psi max working pressure; not pressure-tested at 5 psi."
       ]
     ],
     chapters: [
@@ -205,7 +205,7 @@ window.caseStudyData = {
         "title": "Interchangeable vine bodies",
         "paragraphs": [
           "A transparent 19 L polypropylene pail provided visible eversion and flat mounting faces within the available tooling and budget. The platform accepted bodies up to 571 mm circumference, with frequent swaps between three cross-sections.",
-          "Containment targeted 34 kPa (5 psi). Choosing the pail also introduced a stiffness problem exposed by the first pressure test."
+          "The vessel is designed for 34 kPa (5 psi), about 3.3× the 1.5 psi maximum working pressure. Choosing the pail also introduced a stiffness problem exposed by the first pressure test."
         ],
         "detailParagraphs": [
           "The lab needed circular, three-partition, and stick-reinforced vine bodies for deformation research. The platform targeted 34 kPa (5 psi), accepted body circumferences up to 571 mm, and needed frequent swaps without hiding eversion faults.",
@@ -317,16 +317,16 @@ window.caseStudyData = {
     },
     summary: [
       [
-        "Scope",
-        "Airframe, structure, propulsion packaging, avionics integration, and design requirements."
-      ],
-      [
-        "Design target",
-        "300 km/h forward flight and vertical takeoff using four motors without moving control surfaces."
+        "My role",
+        "Individual project — designed and built the airframe and propulsion packaging and integrated the avionics, from a 26-item requirements matrix."
       ],
       [
         "Result",
-        "Airframe and CAD complete, electronics integrated. Flight performance remains to be demonstrated."
+        "Airframe and CAD complete, electronics integrated; 23 of 26 requirements met in the April 2026 review."
+      ],
+      [
+        "Status",
+        "300 km/h is a design target, not flight-validated; fail-safe behavior, differential-thrust tuning, and flight testing are the recorded next steps."
       ]
     ],
     chapters: [
@@ -446,12 +446,12 @@ window.caseStudyData = {
         "Gantry design and assembly, LiDAR calibration, and electrical architecture with Jacob Likins."
       ],
       [
-        "Key decision",
-        "Use a Cartesian gantry for repeatable coordinates after the servo pan/tilt concept proved less accurate."
-      ],
-      [
         "Result",
         "2,206 readings over 140 × 165 mm. Below roughly 3% calibrated distance error in the stable sensor range."
+      ],
+      [
+        "Status",
+        "Built and demonstrated end to end in one week; full point-cloud accuracy has not been independently checked."
       ]
     ],
     chapters: [
@@ -580,16 +580,16 @@ window.caseStudyData = {
 },
     "summary": [
       [
-        "Scope",
-        "Rotor design, endurance thermal modeling, structural FEA and reference fatigue analysis."
+        "My role",
+        "Individual project — rotor design, endurance thermal modeling, structural FEA, and reference fatigue analysis."
       ],
       [
-        "Design result",
-        "23% less mass and 19% less rotational inertia than Mk.7, as reported in the design review."
+        "Result",
+        "23% less mass and 19% less inertia than Mk.7; front rotor predicted at 350–450°C for 90.75% of the time after three warm-up laps (target 80%)."
       ],
       [
-        "Thermal result",
-        "90.75% front-rotor time at 350–450°C after three warm-up laps, versus an 80% target; simulated."
+        "Status",
+        "Design review complete. Temperature, strength, and fatigue figures are predictions, not vehicle data."
       ]
     ],
     "chapters": [
@@ -667,7 +667,7 @@ window.caseStudyData = {
   aura: {
     "number": "07",
     "title": "AURA swerve drive.",
-    "label": "Autonomous luggage robot / Mechanical lead",
+    "label": "Autonomous luggage robot / Mechanical Engineer",
     deck: "Carry the payload and preserve steering authority.",
     description: "Front-wheel swerve modules developed through chain, clearance, and steering revisions; the robot carried 300 lb against a 200 lb target.",
     engineering: {
@@ -716,15 +716,15 @@ window.caseStudyData = {
     summary: [
       [
         "My role",
-        "Front-wheel swerve mechanics: steering, drive reduction, shafts, bearings, and fabricated mounts."
+        "Mechanical Engineer — front-wheel swerve mechanics: steering, drive reduction, shafts, bearings, and fabricated mounts."
       ],
       [
-        "Target → test",
-        "200 lb initial payload target → 300 lb carried in testing."
+        "Result",
+        "Carried 300 lb in testing, against a 200 lb initial payload target."
       ],
       [
-        "Key tradeoff",
-        "Chain-skipping improvements reduced steering speed; DC steering with absolute feedback was identified for a future redesign."
+        "Status",
+        "Built and load-tested. Chain-skipping fixes slowed steering; DC steering with absolute encoders is the identified redesign."
       ]
     ],
     chapters: [
@@ -840,16 +840,16 @@ window.caseStudyData = {
     },
     summary: [
       [
-        "Scope",
-        "Composite support geometry, layup planning, fabrication, trimming, and service access."
-      ],
-      [
-        "Design decision",
-        "20 main carbon-cloth plies with 5–10 additional local patch plies where reinforcement was needed."
+        "My role",
+        "Individual project — support geometry, layup planning, fabrication, trimming, and service access."
       ],
       [
         "Result",
-        "Cured, demolded, and trimmed Mk.8 shell, documented through tooling and fabrication photographs."
+        "Cured, demolded, and trimmed Mk.8 shell: EL2 resin, 20 main plies of 3K twill, plus 5–10 local patch plies."
+      ],
+      [
+        "Status",
+        "Fabricated. Driver fit, support under load, and removal access remain open checks."
       ]
     ],
     chapters: [
@@ -924,21 +924,21 @@ window.caseStudyData = {
   seat: {
     "number": "09",
     "title": "Mk.7 driver seat.",
-    "label": "Formula SAE / Mk.7 seat fabrication",
-    deck: "Translate the Mk.7 seat geometry into a cockpit component.",
-    description: "A fabrication-focused project connecting the supplied aluminum seat design, folded-panel geometry, and the surrounding vehicle package.",
+    "label": "Formula SAE / Mk.7 seat design & fabrication",
+    deck: "Design the Mk.7 seat geometry and make it a cockpit component.",
+    description: "A design-and-fabrication project connecting the Mk.7 seat’s folded-panel geometry to the surrounding vehicle package.",
     engineering: {
-      "goal": "Produce the Mk.7 aluminum driver seat from the supplied geometry for the vehicle build.",
+      "goal": "Design and produce the Mk.7 driver seat for the vehicle build.",
       "constraints": [
         "Perforated pan and back with folded side panels.",
         "The surrounding chassis and cockpit hardware define the installation space."
       ],
       "checks": [
         [
-          "Seat fabrication",
-          "Confirmed personal responsibility for the Mk.7 build",
-          "The seat was fabricated for Mk.7.",
-          "Fabrication scope"
+          "Seat design and fabrication",
+          "Confirmed personal responsibility for the Mk.7 seat",
+          "The seat was designed and fabricated for Mk.7.",
+          "Design + fabrication scope"
         ],
         [
           "Geometry and interfaces",
@@ -953,11 +953,11 @@ window.caseStudyData = {
           "Supporting analysis"
         ]
       ],
-      "iteration": "This case centers on making an existing seat design. The useful fabrication review compares the finished geometry and cockpit interfaces with that input, with process choices and any rework attributed only when confirmed."
+      "iteration": "This case covers both designing the seat and making it. The useful review compares the finished geometry and cockpit interfaces with the design intent, with process choices, inspection, and any rework attributed only when confirmed."
     },
     "cover": {
       "src": "assets/editorial/neutral-20260915/seat-wide-1800.webp?v=ad9330bcc20e",
-      "alt": "Folded and perforated aluminum driver seat.",
+      "alt": "Folded and perforated Mk.7 driver seat.",
       "caption": "The Mk.7 driver-seat geometry.",
       "kind": "Project CAD render",
       "srcset": "assets/editorial/neutral-20260915/seat-wide-480.webp?v=d59c63530faf 480w, assets/editorial/neutral-20260915/seat-wide-960.webp?v=808ba2b7e914 960w, assets/editorial/neutral-20260915/seat-wide-1800.webp?v=ad9330bcc20e 1800w",
@@ -967,29 +967,29 @@ window.caseStudyData = {
     summary: [
       [
         "My role",
-        "Fabrication of the Mk.7 aluminum driver seat."
+        "Designed and fabricated the Mk.7 driver seat."
       ],
       [
-        "Task",
-        "Make the perforated pan, back, and folded-side geometry into the car’s seat component."
+        "Result",
+        "Perforated pan and back with folded side panels, made as the Mk.7 car’s seat."
       ],
       [
-        "Evidence",
-        "Seat CAD, supporting analysis, and Mk.7 cockpit and vehicle photographs."
+        "Status",
+        "Built for Mk.7. No numerical structural result or driver-fit trial is claimed."
       ]
     ],
     chapters: [
       {
         "id": "constraint",
         "label": "Requirements",
-        "title": "Mk.7 seat fabrication scope",
+        "title": "Mk.7 seat design and fabrication",
         "paragraphs": [
-          "I made the aluminum driver seat for the Mk.7 Formula SAE car from supplied geometry: a perforated pan and back with folded side panels.",
-          "The contribution presented here is fabrication. Design authorship and numerical validation require evidence separate from the work of making the cockpit component."
+          "I designed and made the Mk.7 driver seat for the Formula SAE car: a perforated pan and back with folded side panels.",
+          "The contribution covers the seat design and its fabrication. Numerical structural validation would require evidence separate from the build."
         ],
         "detailParagraphs": [
-          "My responsibility was making the aluminum driver seat for the Mk.7 Formula SAE car. The input geometry includes a perforated pan and back with folded side panels.",
-          "That defines a fabrication task: carry the seat form into a physical component for the cockpit. Design authorship and numerical validation of the seat are separate from the fabrication scope presented here."
+          "My responsibility was designing and making the driver seat for the Mk.7 Formula SAE car. The seat geometry includes a perforated pan and back with folded side panels.",
+          "That defines a design-and-fabrication task: develop the seat form and carry it into a physical component for the cockpit. Numerical validation of the seat is separate from the scope presented here."
         ],
         "image": 0,
         "evidence": "Seat CAD",
@@ -998,14 +998,14 @@ window.caseStudyData = {
       {
         "id": "fit",
         "label": "Fabrication",
-        "title": "Formed seat in the cockpit",
+        "title": "The seat in the cockpit",
         "paragraphs": [
-          "The supplied Mk.7 geometry became a physical cockpit component, retaining the folded sides and perforated surfaces visible in the design record.",
-          "The cockpit photograph places that fabrication beside the surrounding frame and controls, showing the installation context for the formed aluminum part."
+          "The Mk.7 seat design became a physical cockpit component, retaining the folded sides and perforated surfaces visible in the design record.",
+          "The cockpit photograph places the finished seat beside the surrounding frame and controls, showing its installation context."
         ],
         "detailParagraphs": [
           "The work translated the Mk.7 seat geometry into the physical cockpit component. The folded sides and perforated surfaces are the principal features visible in the design record.",
-          "The cockpit photograph shows the surrounding frame and controls, giving the fabrication a vehicle context rather than presenting it as an isolated sheet-metal part."
+          "The cockpit photograph shows the surrounding frame and controls, giving the fabrication a vehicle context rather than presenting it as an isolated part."
         ],
         "image": 2,
         "evidence": "Mk.7 cockpit",
@@ -1020,7 +1020,7 @@ window.caseStudyData = {
           "Vehicle photographs preserve those interfaces for inspection. They support that discussion without importing driver-fit trials or dimensions from a different car."
         ],
         "detailParagraphs": [
-          "The seat occupies space shared with chassis tubes, steering hardware, and other cockpit components. Those neighboring parts explain why the supplied seat shape and its installation context belong in the same review.",
+          "The seat occupies space shared with chassis tubes, steering hardware, and other cockpit components. Those neighboring parts explain why the seat shape and its installation context belong in the same review.",
           "The vehicle photographs retain that relationship for inspection. They support discussion of geometry and access without assigning driver-fit trials or dimensions from a different car."
         ],
         "image": 3,
@@ -1030,13 +1030,13 @@ window.caseStudyData = {
       {
         "id": "validation",
         "label": "Review",
-        "title": "Fabrication and supporting evidence",
+        "title": "Design, fabrication, and supporting evidence",
         "paragraphs": [
-          "The documented contribution is Mk.7 seat fabrication, supported by CAD, cockpit context, and vehicle photographs. The original seat-support analysis image records related engineering work.",
-          "The build record establishes manufacturing responsibility. Numerical structural results and a detailed rework history still require their own confirmed evidence."
+          "The documented contribution is the Mk.7 seat’s design and fabrication, supported by CAD, cockpit context, and vehicle photographs. The original seat-support analysis image records related engineering work.",
+          "The build record establishes design and manufacturing responsibility. Numerical structural results and a detailed rework history still require their own confirmed evidence."
         ],
         "detailParagraphs": [
-          "The delivered contribution is Mk.7 seat fabrication. The gallery combines the CAD, cockpit context, vehicle photographs, and the original seat-support analysis image.",
+          "The delivered contribution is Mk.7 seat design and fabrication. The gallery combines the CAD, cockpit context, vehicle photographs, and the original seat-support analysis image.",
           "The analysis image helps explain the surrounding engineering work, while the build record establishes my manufacturing responsibility. Numerical structural results and a detailed rework history require their own confirmed evidence."
         ],
         "image": 1,
@@ -1101,12 +1101,12 @@ window.caseStudyData = {
         "Specimen preparation, Instron testing, stiffness fitting, and material inputs for the cross-section model."
       ],
       [
-        "Test coverage",
-        "30 membrane tensile specimens across four groups; three-point bending on 11 bamboo rods."
+        "Result",
+        "30 membrane specimens and 11 bamboo rods: directional fabric stiffness and rod EI = 0.672 ± 0.063 N·m²."
       ],
       [
-        "Result",
-        "Directional fabric stiffness and rod EI = 0.672 ± 0.063 N·m², with fit quality and geometry limits retained."
+        "Status",
+        "Stiffness inputs measured; the historical rod modulus awaits a diameter-convention recheck."
       ]
     ],
     chapters: [
@@ -1229,16 +1229,16 @@ window.caseStudyData = {
     },
     summary: [
       [
-        "Scope",
-        "PyFluent workflow, reference scripts, solver checks, failure recovery, and credibility reporting."
-      ],
-      [
-        "Key revision",
-        "Replace a wrap-mesh approach that lost surface fidelity with a conforming multi-region workflow."
+        "My role",
+        "Individual project — PyFluent workflow, reference scripts, solver checks, failure recovery, and credibility reporting."
       ],
       [
         "Result",
-        "Reusable teaching package covering 11 observed failures. CFD evidence is labeled by its actual verification level."
+        "Reusable teaching package covering 11 observed failures and a conforming-mesh fix for lost surface fidelity."
+      ],
+      [
+        "Status",
+        "Process demonstration complete; results are process-validation level, not design-grade aerodynamics."
       ]
     ],
     chapters: [
@@ -1367,16 +1367,16 @@ window.caseStudyData = {
     },
     summary: [
       [
-        "My contribution",
+        "My role",
         "Pool cue and cue-base fabrication within the team launcher project."
       ],
       [
-        "Design objective",
-        "Adjustable shot strength, break-shot capability, and accessible aiming in a compact package."
+        "Result",
+        "Working cue-loading and release mechanism with laser aiming and adjustable shot strength."
       ],
       [
-        "Result",
-        "Working mechanism after machining and fit revisions. Accessibility and shot repeatability remain separate user/performance checks."
+        "Status",
+        "Working prototype. Shot repeatability and use by the intended users remain separate checks."
       ]
     ],
     chapters: [
@@ -1455,7 +1455,7 @@ window.caseStudyData = {
     deck: "Use track behavior to revise sensing, mass, and control.",
     description: "A two-week robot build that widened its sensor spacing, reduced mass by 33.6%, and recorded an 18-second lap against an under-15-second target.",
     engineering: {
-      "goal": "Complete the team’s Spa-Francorchamps-inspired line course in under 15 seconds.",
+      "goal": "Complete a Spa-Francorchamps-inspired line course in under 15 seconds.",
       "constraints": [
         "Two-week build, palm-size packaging, sharp turns, and accessible wiring for repeated tuning.",
         "Sensor coverage, mass, available battery power, and the balance between forward speed and steering correction."
@@ -1463,7 +1463,7 @@ window.caseStudyData = {
       "checks": [
         [
           "Lap-time target",
-          "Recorded run on the team’s course",
+          "Recorded run on the course",
           "18 s best recorded lap; under-15-second target not reached.",
           "Measured"
         ],
@@ -1499,16 +1499,16 @@ window.caseStudyData = {
     },
     summary: [
       [
-        "Scope",
-        "Compact mechanical packaging, power, reflectance sensing, motor integration, and controller tuning."
-      ],
-      [
-        "Key revisions",
-        "4 → 8 mm sensor pitch; battery/chassis changes reduced mass from 428 g to 284 g."
+        "My role",
+        "Individual project — compact packaging, power, reflectance sensing, motor integration, and controller tuning."
       ],
       [
         "Result",
-        "Best recorded lap: 18 s. The original under-15-second target was not reached."
+        "Best recorded lap: 18 s, after widening sensor pitch from 4 to 8 mm and cutting mass from 428 g to 284 g."
+      ],
+      [
+        "Status",
+        "Built and run on the course; the original under-15-second target was not reached."
       ]
     ],
     chapters: [
@@ -1521,7 +1521,7 @@ window.caseStudyData = {
           "An Arduino Mega, motor drivers, battery, and two-wheel drivetrain fit within a small chassis, with access retained for sensor and controller tuning."
         ],
         "detailParagraphs": [
-          "The two-week build targeted a lap below 15 seconds on the team’s Spa-Francorchamps-inspired course. An Arduino Mega, motor drivers, battery, and two-wheel drive had to fit within a small chassis and remain accessible for tuning.",
+          "The two-week build targeted a lap below 15 seconds on a Spa-Francorchamps-inspired course. An Arduino Mega, motor drivers, battery, and two-wheel drive had to fit within a small chassis and remain accessible for tuning.",
           "Straight-line speed alone could not satisfy the goal. The sensor layout and controller had to detect sharp turns soon enough for the drivetrain to follow them."
         ],
         "image": 2,
@@ -1549,11 +1549,11 @@ window.caseStudyData = {
         "label": "Sensing & control",
         "title": "Sensor coverage and feedback tuning",
         "paragraphs": [
-          "The team chose 8 mm sensor spacing over 4 mm for wider sharp-turn coverage. Fourteen channels form two arrays mounted 6 mm above the floor.",
+          "8 mm sensor spacing replaced 4 mm for wider sharp-turn coverage. Fourteen channels form two arrays mounted 6 mm above the floor.",
           "Off-center feedback separates base and steering speeds: the outermost sensors detect sharp turns, while the inner 12 follow ordinary curves. Serial Kp adjustment shortened controller tuning."
         ],
         "detailParagraphs": [
-          "The team compared 4 mm and 8 mm sensor spacing, choosing 8 mm to expand line-detection coverage in sharp turns. Fourteen channels form two seven-sensor arrays, mounted 6 mm above the floor.",
+          "I compared 4 mm and 8 mm sensor spacing, choosing 8 mm to expand line-detection coverage in sharp turns. Fourteen channels form two seven-sensor arrays, mounted 6 mm above the floor.",
           "The successful controller used off-center feedback with separate base and steering speeds. The two outermost sensors identify sharp turns, while the inner 12 handle ordinary line following; serial Kp adjustment shortened the tuning loop."
         ],
         "image": 1,
@@ -1628,12 +1628,12 @@ window.caseStudyData = {
         "Mechanical gantry and linear-actuator design/fabrication for Team Scent-A-Tubbies."
       ],
       [
-        "Constraints",
-        "Six fragrance bases, dispensing actuation, and full-machine integration within 2.5 days."
+        "Result",
+        "Gantry and actuators built in 2.5 days; continuous operation overheated the stepper lead-screw actuator."
       ],
       [
-        "Test finding",
-        "Continuous operation overheated the stepper lead-screw actuator, exposing a duty-cycle limitation."
+        "Status",
+        "Hackathon prototype; continuous dispensing is not claimed without a revised actuator and a repeat run."
       ]
     ],
     chapters: [
@@ -1753,12 +1753,12 @@ window.caseStudyData = {
         "Walnut-body preparation, ShopBot machining, drilling fixtures, finishing, and electronics installation."
       ],
       [
-        "Key decision",
-        "Glue smaller walnut pieces into a blank and use templates to control drilling after CNC."
+        "Result",
+        "Raw walnut to instrument: glued blank, ShopBot-routed pockets, and template-checked drilling after CNC."
       ],
       [
-        "Result",
-        "Finished, strung, playable guitar with working Fender Deluxe Drive pickups, controls, and output jack."
+        "Status",
+        "Complete: strung and playable, with working Fender Deluxe Drive pickups, controls, and output jack."
       ]
     ],
     chapters: [
@@ -1880,16 +1880,16 @@ window.caseStudyData = {
     },
     summary: [
       [
-        "Scope",
-        "Kit hardware, assembly instructions, cost exploration, and student/parent/educator research."
+        "My role",
+        "Individual project — kit hardware, instructions, cost exploration, and student/parent/educator research."
       ],
       [
-        "Measured examples",
-        "About $80 prototype build cost; roughly 45-minute body assembly by two 15-year-old participants."
+        "Result",
+        "About $80 prototype build cost against a roughly $100 goal; two 15-year-olds assembled the body in about 45 minutes."
       ],
       [
-        "Key revision",
-        "Clarify wiring and setup guidance while retaining a meaningful challenge for middle and high school students."
+        "Status",
+        "Prototype tested in small user trials; broader classroom trials are needed for repeatable timing."
       ]
     ],
     chapters: [
@@ -2007,15 +2007,15 @@ window.caseStudyData = {
     summary: [
       [
         "My role",
-        "Senior Mechanical Engineer, Pioneer Robotics FTC Team 12589, during the 2022–2023 season."
+        "Senior Mechanical Engineer, Pioneer Robotics FTC Team 12589 (2022–2023); contributed to intake, extension, lift, deposit, and drive."
       ],
       [
-        "Engineering scope",
-        "Contributions across intake, extension, lift, deposit, and drivetrain integration."
+        "Result",
+        "Team result: Massachusetts Championship Tournament Winning Alliance, plus Motivate and Gracious Professionalism awards."
       ],
       [
-        "Team result",
-        "Massachusetts Championship Tournament Winning Alliance, plus Motivate and Gracious Professionalism awards."
+        "Status",
+        "Built and competed through the 2022–2023 season."
       ]
     ],
     chapters: [

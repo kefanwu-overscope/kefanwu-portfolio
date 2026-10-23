@@ -59,6 +59,10 @@ Returning to the studio restores room browsing without a forced camera tour.
 
 ## Modules and assets
 
+2026-10-22: the unused Studio v2 runtime files (`experience-v2.js`,
+`studio-ui.js`, `studio-ui.css`, `studio-room.css`, `studio-room-bridge.js`)
+were removed; nothing referenced them. The notes below are history.
+
 - `experience-v2.js` owns project routing, cancellation and workbench activation.
   `experience-entry.js` preserves old project links or imports the restored room.
   Workbench and room now use separate documents; the room bridge is inactive.

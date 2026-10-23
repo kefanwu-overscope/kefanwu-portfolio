@@ -39,9 +39,9 @@
 #case-3d-legend .case-3d-legend-ticks span:last-child { transform:translateX(-100%); }
 #case-3d-legend small { color:var(--muted); font-size:9px; }
 @media(max-width:700px) {
-  .case-mode-studio .nav-links { gap:16px; font-size:11px; }
   .case-3d-controls { padding:12px; }
-  .case-3d-controls button,.case-3d-controls select { min-height:38px; padding:8px 9px; font-size:11px; }
+  /* 44px touch targets; the free-explore insets in project-motion-story.css allow for them. */
+  .case-3d-controls button,.case-3d-controls select { min-height:44px; padding:8px 9px; font-size:11px; }
   #case-3d-progress { height:32px; }
   #case-3d-play { min-width:54px; }
   #case-3d-reverse { min-width:61px; }

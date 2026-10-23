@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1238" viewBox="0 0 2200 1238">
+  <!-- Same two continuous photo zones as the 2026-10-13 mask; the car zone
+       feathers outward with a Gaussian fall-off on its left, bottom and right
+       edges. No component contours, tube traces, or holes are drawn. -->
+  <defs>
+    <linearGradient id="car-horizontal" gradientUnits="userSpaceOnUse" x1="600" y1="0" x2="2040" y2="0">
+      <stop offset="0" stop-color="white" stop-opacity="0"/>
+      <stop offset="0.017361" stop-color="white" stop-opacity="0.0228"/>
+      <stop offset="0.034722" stop-color="white" stop-opacity="0.0439"/>
+      <stop offset="0.052083" stop-color="white" stop-opacity="0.0796"/>
+      <stop offset="0.069444" stop-color="white" stop-opacity="0.1353"/>
+      <stop offset="0.086806" stop-color="white" stop-opacity="0.2163"/>
+      <stop offset="0.104167" stop-color="white" stop-opacity="0.3247"/>
+      <stop offset="0.121528" stop-color="white" stop-opacity="0.4578"/>
+      <stop offset="0.138889" stop-color="white" stop-opacity="0.6065"/>
+      <stop offset="0.15625" stop-color="white" stop-opacity="0.7548"/>
+      <stop offset="0.173611" stop-color="white" stop-opacity="0.8825"/>
+      <stop offset="0.190972" stop-color="white" stop-opacity="0.9692"/>
+      <stop offset="0.208333" stop-color="white"/>
+      <stop offset="0.833333" stop-color="white"/>
+      <stop offset="0.847222" stop-color="white" stop-opacity="0.9692"/>
+      <stop offset="0.861111" stop-color="white" stop-opacity="0.8825"/>
+      <stop offset="0.875" stop-color="white" stop-opacity="0.7548"/>
+      <stop offset="0.888889" stop-color="white" stop-opacity="0.6065"/>
+      <stop offset="0.902778" stop-color="white" stop-opacity="0.4578"/>
+      <stop offset="0.916667" stop-color="white" stop-opacity="0.3247"/>
+      <stop offset="0.930556" stop-color="white" stop-opacity="0.2163"/>
+      <stop offset="0.944444" stop-color="white" stop-opacity="0.1353"/>
+      <stop offset="0.958333" stop-color="white" stop-opacity="0.0796"/>
+      <stop offset="0.972222" stop-color="white" stop-opacity="0.0439"/>
+      <stop offset="0.986111" stop-color="white" stop-opacity="0.0228"/>
+      <stop offset="1" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="car-vertical" gradientUnits="userSpaceOnUse" x1="0" y1="510" x2="0" y2="1230">
+      <stop offset="0" stop-color="white" stop-opacity="0"/>
+      <stop offset="0.027778" stop-color="white" stop-opacity="0.1500"/>
+      <stop offset="0.076389" stop-color="white" stop-opacity="0.6500"/>
+      <stop offset="0.111111" stop-color="white"/>
+      <stop offset="0.625" stop-color="white"/>
+      <stop offset="0.65625" stop-color="white" stop-opacity="0.9692"/>
+      <stop offset="0.6875" stop-color="white" stop-opacity="0.8825"/>
+      <stop offset="0.71875" stop-color="white" stop-opacity="0.7548"/>
+      <stop offset="0.75" stop-color="white" stop-opacity="0.6065"/>
+      <stop offset="0.78125" stop-color="white" stop-opacity="0.4578"/>
+      <stop offset="0.8125" stop-color="white" stop-opacity="0.3247"/>
+      <stop offset="0.84375" stop-color="white" stop-opacity="0.2163"/>
+      <stop offset="0.875" stop-color="white" stop-opacity="0.1353"/>
+      <stop offset="0.90625" stop-color="white" stop-opacity="0.0796"/>
+      <stop offset="0.9375" stop-color="white" stop-opacity="0.0439"/>
+      <stop offset="0.96875" stop-color="white" stop-opacity="0.0228"/>
+      <stop offset="1" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="driver-horizontal" gradientUnits="userSpaceOnUse" x1="1260" y1="0" x2="1740" y2="0">
+      <stop offset="0" stop-color="white" stop-opacity="0"/>
+      <stop offset=".0625" stop-color="white" stop-opacity=".15"/>
+      <stop offset=".145833" stop-color="white" stop-opacity=".65"/>
+      <stop offset=".208333" stop-color="white"/>
+      <stop offset=".791667" stop-color="white"/>
+      <stop offset=".854167" stop-color="white" stop-opacity=".65"/>
+      <stop offset=".9375" stop-color="white" stop-opacity=".15"/>
+      <stop offset="1" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="driver-vertical" gradientUnits="userSpaceOnUse" x1="0" y1="285" x2="0" y2="800">
+      <stop offset="0" stop-color="white" stop-opacity="0"/>
+      <stop offset=".048544" stop-color="white" stop-opacity=".15"/>
+      <stop offset=".116505" stop-color="white" stop-opacity=".65"/>
+      <stop offset=".174757" stop-color="white"/>
+      <stop offset=".825243" stop-color="white"/>
+      <stop offset=".883495" stop-color="white" stop-opacity=".65"/>
+      <stop offset=".951456" stop-color="white" stop-opacity=".15"/>
+      <stop offset="1" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+    <mask id="car-fade" maskUnits="userSpaceOnUse" x="0" y="0" width="2200" height="1238" style="mask-type:alpha">
+      <rect width="2200" height="1238" fill="url(#car-vertical)"/>
+    </mask>
+    <mask id="driver-fade" maskUnits="userSpaceOnUse" x="0" y="0" width="2200" height="1238" style="mask-type:alpha">
+      <rect width="2200" height="1238" fill="url(#driver-vertical)"/>
+    </mask>
+  </defs>
+  <rect width="2200" height="1238" fill="url(#car-horizontal)" mask="url(#car-fade)"/>
+  <rect width="2200" height="1238" fill="url(#driver-horizontal)" mask="url(#driver-fade)"/>
+</svg>

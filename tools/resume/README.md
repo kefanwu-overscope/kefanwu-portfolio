@@ -1,19 +1,25 @@
 # Desk résumé source
 
 The desk, pickup and fitted reader share a lossless render of the current
-one-page `assets/kefan-wu-resume.pdf`. The PDF itself is unchanged. The source
+one-page `assets/kefan-wu-resume.pdf`. On 2026-10-22 the PDF was rebuilt from
+the editable HTML source `WEBSITE/releases/resume-20261022/resume-source.html`
+(outside the repo), exported with Chrome/Skia, with extractable text. The source
 hash is in `assets/resume/manifest.json`; `experience-resume-assets.js` contains
 the same generated asset record.
 
 Run `python tools/resume/render-preview.py` with Poppler, Pillow and pypdf
-available. It renders the complete 612×792-point Letter page at 2040×2640,
+available. Poppler/pdftoppm is not installed on the current machine, so the
+2026-10-22 preview `resume.bcce93bcc67b1ae9.webp` (PDF sha256 `84eb031f…`) was rendered with pdf.js
+5.6.205 in headless Chrome instead (pdfium output compressed 75% larger). The
+script still writes evidence into `../.codex/`; point it at
+`WEBSITE/releases/<topic>-<date>/` before rerunning it. It renders the complete 612×792-point Letter page at 2040×2640,
 verifies a lossless WebP pixel roundtrip, and writes a content-hashed preview.
 Update `experience-resume-content.js` against the actual rendered page whenever
 the PDF changes; it is the complete, non-interactive accessible text equivalent.
 Do not infer new dates, rewrite targets as measured results, or silently edit
 the downloadable document while updating this visual surface.
 
-The current preview is 201,524 bytes. It uses about 20.5 MiB of RGBA pixels,
+The current preview is 201,388 bytes. It uses about 20.5 MiB of RGBA pixels,
 roughly 27.4 MiB with mipmaps; this is a fidelity tradeoff, not a GPU-memory
 reduction. One texture and one reader image are retained, and the old repeated
 character-range layout/rasterization is removed. Add an immutable Vercel cache
@@ -45,7 +51,8 @@ The room does not render while the full reader is stationary. The same image,
 texture, original PDF and transcript are retained; no additional asset loads.
 
 Run `node --test tools/room-tests/resume-reader.test.mjs` for source integrity,
-geometry, zoom/pan and disposal checks. Browser QA belongs in
+geometry, zoom/pan and disposal checks. Earlier browser QA is in
 `../.codex/resume-desk-20260926/` for source fidelity, and
 `../.codex/resume-full-20260926/` for full-window behavior, mobile typography,
-interrupted transitions and scene/texture preservation.
+interrupted transitions and scene/texture preservation. New evidence belongs in
+`WEBSITE/releases/<topic>-<YYYYMMDD>/`.

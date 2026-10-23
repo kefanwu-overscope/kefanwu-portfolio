@@ -12,6 +12,7 @@ const index = JSON.parse(await readFile(new URL('../../assets/studio-motion/inde
 const manifests = Object.fromEntries(await Promise.all(Object.entries(index.projects).map(async ([key, value]) => [
   key, JSON.parse(await readFile(new URL(`../../assets/studio-motion/${value.manifest}`, import.meta.url), 'utf8')),
 ])));
+const frameAnchors = JSON.parse(await readFile(new URL('../../assets/exploded/aura-reframe-20261022/anchors.json', import.meta.url), 'utf8'));
 
 test('Every concise reading retains its source step and resolves an exact component target', () => {
   assert.deepEqual(Object.keys(projectMotionLabels).sort(), Object.keys(projectMotionNotes).sort());
@@ -22,7 +23,9 @@ test('Every concise reading retains its source step and resolves an exact compon
       assert(!Object.hasOwn(label, 'at'), `${key}/${i}: timing remains owned by the motion notes`);
       assert(label.title.trim().split(/\s+/).length <= 4, `${key}/${i}: concise title`);
       assert(label.body.trim().split(/\s+/).length <= 14, `${key}/${i}: concise detail`);
-      assert.equal(Object.keys(label.target).length, 1);
+      assert.equal(Object.keys(label.target).filter(name => name !== 'point').length, 1);
+      // A static unified part names one frame position; a moving part's point is baked into every detail frame's anchor.
+      if (label.target.point) assert(label.target.point.length === 3 && label.target.point.every(Number.isFinite) && (label.framePoint || frameAnchors[key]?.points?.length > 0 && frameAnchors[key].points.every(Boolean)), `${key}/${i}: feature point and its frame position`);
       assert(manifests[key].nodes.some(node => label.target.name ? node.name === label.target.name : node.group === label.target.group),
         `${key}/${i}: target must exist in the currently indexed source manifest`);
       total++;

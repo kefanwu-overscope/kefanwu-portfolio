@@ -1,0 +1,143 @@
+{
+  "date": "2026-10-22",
+  "purpose": "1200w step for the homepage project-card srcsets (DPR-3 phones no longer need the 1800w file).",
+  "method": "Lanczos resample of the published white-20261011 1800w frame-0 cover; pixels with every channel >= 252 snapped to the published #FFFFFF background (removes +-2 lossy noise from the 1800w source); WebP q90 method 6. No new content, no retouching.",
+  "files": {
+    "steering": {
+      "src": "assets/editorial/white-20261022/steering-wide-1200.webp",
+      "width": 1200,
+      "height": 800,
+      "bytes": 13678,
+      "sha256": "a18128a9ab98ea57b6a04a10612c0fb4c52db77bdd2d2c3df2bc958fd767fead",
+      "source": "assets/editorial/white-20261011/steering-wide-1800.webp",
+      "sourceSha256": "faaacf3dd653acc8a1711a158a6bffd07e28042a8e5bdf931f92f29d93cd9a0b"
+    },
+    "vineRobot": {
+      "src": "assets/editorial/white-20261022/vineRobot-wide-1200.webp",
+      "width": 1200,
+      "height": 800,
+      "bytes": 25412,
+      "sha256": "ae34f2e7785c86ab7761a29a041711e611533b7de1519faa6caf079c069ef0bd",
+      "source": "assets/editorial/white-20261011/vineRobot-wide-1800.webp",
+      "sourceSha256": "2d2d1e019851f510331ee0f44dc08e4ef21927624537bfb1d946e543d784efcd"
+    },
+    "brakeSim": {
+      "src": "assets/editorial/white-20261022/brakeSim-wide-1200.webp",
+      "width": 1200,
+      "height": 800,
+      "bytes": 31592,
+      "sha256": "4abecad6226f3ba4d0b32c19b9b2d341923d5b573a2e8ef49ebbddcb3bf9cf75",
+      "source": "assets/editorial/white-20261011/brakeSim-wide-1800.webp",
+      "sourceSha256": "df33e58609d2a750d539db80588591f37ecb7251f5b56ef5c9813b0ecc4843ac"
+    },
+    "scanner": {
+      "src": "assets/editorial/white-20261022/scanner-wide-1200.webp",
+      "width": 1200,
+      "height": 800,
+      "bytes": 31522,
+      "sha256": "06e84506877cf530ee0d0ec7516bff0ce2398e44128aa079a5c8c97d53ea8941",
+      "source": "assets/editorial/white-20261011/scanner-wide-1800.webp",
+      "sourceSha256": "c2ada020ce384db2035fdc6a573f37faababb12d843aaba0ebc8083c7f31087d"
+    },
+    "javelin": {
+      "src": "assets/editorial/white-20261022/javelin-wide-1200.webp",
+      "width": 1200,
+      "height": 800,
+      "bytes": 15014,
+      "sha256": "943df6974f6430c85ce1a8dc35c29a47ea6a7120abe7c49056cac39ec8b344c9",
+      "source": "assets/editorial/white-20261011/javelin-wide-1800.webp",
+      "sourceSha256": "34aa1d776c32b22f05f564b9c456ccc4bea53db0c5d55133b134c22538fdf54b"
+    },
+    "materialTest": {
+      "src": "assets/editorial/white-20261022/materialTest-wide-1200.webp",
+      "width": 1200,
+      "height": 800,
+      "bytes": 14570,
+      "sha256": "acf07c6585e1ac2711df179ce01c89a2bffb4e33c39a131227c5aece0a41d2ba",
+      "source": "assets/editorial/white-20261011/materialTest-wide-1800.webp",
+      "sourceSha256": "77d55b1143824fba0e9dab0d5917f396ac7c8bd6089d64a2273148702a92f896"
+    },
+    "carbonSeat": {
+      "src": "assets/editorial/white-20261022/carbonSeat-wide-1200.webp",
+      "width": 1200,
+      "height": 800,
+      "bytes": 17308,
+      "sha256": "1be58b9ee8b71b558a092d4a3de29828a7bfc430197796c8f4e1fad300f5dc74",
+      "source": "assets/editorial/white-20261011/carbonSeat-wide-1800.webp",
+      "sourceSha256": "f71ff7f82f3d3f6940d8dd8a37dd22f098e158dd75b796c1e21c7ea18c496c17"
+    },
+    "seat": {
+      "src": "assets/editorial/white-20261022/seat-wide-1200.webp",
+      "width": 1200,
+      "height": 800,
+      "bytes": 11658,
+      "sha256": "f0ad8625fe7939478956f46bca0ac954f2afe265539c8cfffdb9c8376a2d4071",
+      "source": "assets/editorial/white-20261011/seat-wide-1800.webp",
+      "sourceSha256": "ca529c8e9c20faacf5658ac8085a740070c1f7c5828cc9a369917ddb228de3a8"
+    },
+    "ansysCfd": {
+      "src": "assets/editorial/white-20261022/ansysCfd-wide-1200.webp",
+      "width": 1200,
+      "height": 800,
+      "bytes": 61524,
+      "sha256": "9fbb21b38dacf0d24edba21fd6c2d49153ab1d00ad4f0b9fe3644975c6685d7a",
+      "source": "assets/editorial/white-20261011/ansysCfd-wide-1800.webp",
+      "sourceSha256": "32900c8b41cd5508c01ab0313d498d23e3160c863b7ceadaa1a66fcf689fd5be"
+    },
+    "pool": {
+      "src": "assets/editorial/white-20261022/pool-wide-1200.webp",
+      "width": 1200,
+      "height": 800,
+      "bytes": 24272,
+      "sha256": "ee178ce2a6007dffd81a8e85cdff486c0f8205466f79bba23ad1a10d83c06480",
+      "source": "assets/editorial/white-20261011/pool-wide-1800.webp",
+      "sourceSha256": "80003fdd34449bb0ddcdd19eca1592b4beb49e5d521854452417684066cba970"
+    },
+    "lineFollower": {
+      "src": "assets/editorial/white-20261022/lineFollower-wide-1200.webp",
+      "width": 1200,
+      "height": 800,
+      "bytes": 34062,
+      "sha256": "99b8f8fbe2b2ce10ff1f02b88b58c464e2ba45b5cdd14aeef4514372ffb87393",
+      "source": "assets/editorial/white-20261011/lineFollower-wide-1800.webp",
+      "sourceSha256": "bda02183cadac6b069d5dc5d0fe62a35d61068799c86eab4dd7c570caf9c4b5f"
+    },
+    "formlabs": {
+      "src": "assets/editorial/white-20261022/formlabs-wide-1200.webp",
+      "width": 1200,
+      "height": 800,
+      "bytes": 19282,
+      "sha256": "a06ccd7fc65db661d3ec40ef0fe2b53ce35fc1029f04c4b7f0a2fe48ec628462",
+      "source": "assets/editorial/white-20261011/formlabs-wide-1800.webp",
+      "sourceSha256": "f3012d350f398841656dc3b2a5b2c0eb3ae4e6a9cafee604b5c7a5700e88c33a"
+    },
+    "telecaster": {
+      "src": "assets/editorial/white-20261022/telecaster-wide-1200.webp",
+      "width": 1200,
+      "height": 800,
+      "bytes": 14158,
+      "sha256": "5405e12b45c3bbb0a52076b740fd149af453e2ac40fe0382fbc6e0f87936642c",
+      "source": "assets/editorial/white-20261011/telecaster-wide-1800.webp",
+      "sourceSha256": "55ea248c3f8f02d14450adc39e106d47208402929a8116e90ed3aa9284040b1c"
+    },
+    "education": {
+      "src": "assets/editorial/white-20261022/education-wide-1200.webp",
+      "width": 1200,
+      "height": 800,
+      "bytes": 9016,
+      "sha256": "de5029d11ca831af10b2771d96ade904bc9eeb88560a5d1fe3f4132a741dcdf3",
+      "source": "assets/editorial/white-20261011/education-wide-1800.webp",
+      "sourceSha256": "39802da7f47b84d608caf5cc0153c29e50b161ea74e9d87615b23a0c43d17723"
+    },
+    "ftc": {
+      "src": "assets/editorial/white-20261022/ftc-wide-1200.webp",
+      "width": 1200,
+      "height": 800,
+      "bytes": 28454,
+      "sha256": "b01045ce5b98dc424e51cc2efa802b177d2e432041a61ada8984db545819028e",
+      "source": "assets/editorial/white-20261011/ftc-wide-1800.webp",
+      "sourceSha256": "b3b02785c4f6452b9d480c2448d63b38ee51d2d29cd580507c49495057bac87a"
+    }
+  },
+  "validation": "All four corners and a 6 px border are pure #FFFFFF after decode."
+}

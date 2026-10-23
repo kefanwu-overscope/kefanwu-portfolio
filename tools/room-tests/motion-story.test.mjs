@@ -329,7 +329,7 @@ test('Lightbox close replays the same target after the visible frame was reset t
 
 test('Free exploration follows displayed progress and resumes the document-driven guide explicitly', () => {
   const h = setup();
-  assert.equal(h.nodes['.motion-explore'].textContent, 'Explore freely ↗');
+  assert.equal(h.nodes['.motion-explore'].textContent, 'Explore freely');
   h.scrollToProgress(.22); h.drain();
   h.nodes['.motion-explore'].emit('click');
   assert.equal(h.controller.getState().free, true); assert.equal(h.modes.at(-1).free, true);
@@ -342,7 +342,7 @@ test('Free exploration follows displayed progress and resumes the document-drive
   assert.equal(h.nodes['#motion-story-progress'].value, '780');
   h.nodes['.motion-explore'].emit('click'); h.drain();
   assert.equal(h.controller.getState().free, false); assert.equal(h.modes.at(-1).free, false);
-  assert.equal(h.nodes['.motion-explore'].textContent, 'Explore freely ↗');
+  assert.equal(h.nodes['.motion-explore'].textContent, 'Explore freely');
   assertScrollBoundary(h, .78);
   assert.equal(h.requests.at(-1).progress, h.controller.getState().target);
 });
@@ -410,21 +410,21 @@ test('Viewport changes remeasure scroll distance without advancing displayed ann
   const h = setup();
   h.scrollToProgress(.5); h.drain(); h.show(.5);
   h.geometry.mediaHeight = 200; h.context.innerWidth = 390; h.window.emit('resize'); h.drain();
-  assert.equal(h.controller.getState().travel, 1200);
+  assert.equal(h.controller.getState().travel, 3150, 'Seven stages at half of a 900px phone viewport each');
   assert.equal(h.story.properties.get('--story-top'), '77px');
   assert.equal(h.controller.getState().shown, .5);
   assertNoteAt(h, .5);
 });
 
-test('Model travel leaves room for both steering directions and pins directly below the header', () => {
+test('Scroll travel scales with the annotated stages and pins directly below the header', () => {
   const steering = setup({ mediaHeight: 600 });
-  assert.equal(steering.controller.getState().travel, 3600);
+  assert.equal(steering.controller.getState().travel, 3465);
   assert.equal(steering.controller.getState().start, 923);
   assert.equal(steering.story.properties.get('--story-top'), '77px');
   const offline = setup({ project: 'materialTest', mediaHeight: 600 });
-  assert.equal(offline.controller.getState().travel, 2400);
+  assert.equal(offline.controller.getState().travel, 2475);
   const compact = setup({ mediaHeight: 140 });
-  assert.equal(compact.controller.getState().travel, 1000);
+  assert.equal(compact.controller.getState().travel, 3465, 'Travel no longer depends on the rendered model height');
 });
 
 test('Resizing into explicit short-screen mode reveals the current note without a new pose event', () => {

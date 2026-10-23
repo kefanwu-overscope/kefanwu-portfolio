@@ -21,9 +21,9 @@ import { batchStaticRoom } from "./experience-batching.js?v=room-performance-202
 import { prepareRoomShaders } from "./experience-warmup.js?v=room-performance-20260919";
 import { loadRGBMLightmap, installBakedDiffuse } from "./experience-baked-material.js?v=realism-20260925";
 import { ROOM_BAKE } from "./experience-baked-assets.js?v=room-detail-20260926";
-import { createStudioLoader } from "./experience-loader.js?v=exp-adaptive-20260907";
+import { createStudioLoader } from "./experience-loader.js?v=exp-adaptive-20261022";
 import { createHDRService, createHDRTexture } from "./experience-hdr.js?v=exp-adaptive-20260907";
-import { AdaptiveQuality, GpuFrameTimer } from "./experience-quality.js?v=game-performance-20261009";
+import { AdaptiveQuality, GpuFrameTimer } from "./experience-quality.js?v=game-performance-20261022";
 import { createAdvancedRenderer } from "./experience-advanced.js?v=game-performance-20261009";
 import { createAdaptiveShadows } from "./experience-shadow-budget.js?v=advanced-render-20260930";
 import { buildDetailedPrinter, buildDetailedPegboardTools, refineWorkbenchInstruments } from "./experience-workbench-details.js?v=room-detail-20260926";
@@ -36,14 +36,23 @@ import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js"
 import { RectAreaLightUniformsLib } from "three/addons/lights/RectAreaLightUniformsLib.js";
 import { GTAOPass } from "three/addons/postprocessing/GTAOPass.js";
 import { BokehPass } from "three/addons/postprocessing/BokehPass.js";
-import { RESUME } from "./experience-data.js";
-import { RESUME_ASSET, RESUME_PAPER, resumeHTML, attachResumeReader } from "./experience-resume.js?v=resume-full-20260926";
+import { RESUME } from "./experience-data.js?v=resume-20261022";
+import { RESUME_ASSET, RESUME_PAPER, resumeHTML, attachResumeReader } from "./experience-resume.js?v=resume-full-20261022";
 
 document.documentElement.classList.add("exp-js");
 
 // low tier: phones / coarse pointers get a lighter pipeline
 const LOW_TIER =
   window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 820;
+// Touch devices on the low tier read the night/day lightmaps at 1K. Same native
+// Cycles float bake and the same area-downsample + RGBM8 lossless PNG encoder
+// (tools/bake/encode_realism.py) that reproduces the shipped 2K files exactly;
+// about 3.2x fewer bytes. Desktop windows keep 2K/4K and the quality picker.
+const COMPACT_LIGHTMAPS = LOW_TIER && !window.matchMedia("(pointer: fine)").matches;
+const ROOM_BAKE_COMPACT = Object.freeze({
+  off2k: "models/baked/lowtier-20261022/lightmap-off-1k.rgbm.e547c3ab99ff4f82.png",
+  on2k: "models/baked/lowtier-20261022/lightmap-on-1k.rgbm.aa4ec9593aa87dba.png",
+});
 
 // baked lighting (Blender/Cycles, tools/bake/): swap the architecture layer
 // for a lightmapped GLB; false = fully procedural fallback
@@ -334,14 +343,86 @@ async function initScene(canvas) {
   renderer.info.autoReset = false;
   MAXA = renderer.capabilities.getMaxAnisotropy();
 
+  // Slow-device notice: after reveal, a software rasterizer (SwiftShader,
+  // llvmpipe, Microsoft Basic Render) or a median render cost above 80ms held
+  // for 3s offers a dismissible way to the portfolio. A capable GPU with a
+  // single hitch never sees it; it is never shown before the first frame.
+  const slowNotice = (() => {
+    const el = document.getElementById("exp-slowbar");
+    const SOFTWARE = /SwiftShader|llvmpipe|softpipe|Basic Render/i;
+    const WINDOW_MS = 3000, SLOW_MS = 80;
+    let rendererName = "";
+    try {
+      const gl = renderer.getContext();
+      rendererName = String(gl.getParameter(gl.RENDERER) || "");
+      // Chrome reports a generic RENDERER; its unmasked name needs the extension.
+      if (/^(WebKit WebGL|Mozilla)$/i.test(rendererName)) {
+        const info = gl.getExtension("WEBGL_debug_renderer_info");
+        if (info) rendererName = String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL) || rendererName);
+      }
+    } catch {}
+    const software = SOFTWARE.test(rendererName);
+    const samples = [];
+    let reason = "", dismissed = false, slowSince = null, medianMs = 0;
+    const show = (why) => {
+      if (reason || dismissed || !el) return;
+      reason = why;
+      el.hidden = false;
+      // Fill the live region once it is exposed so assistive tech announces it.
+      requestAnimationFrame(() => {
+        const text = el.querySelector("[data-slowbar-text]");
+        if (text) text.textContent = "This device is drawing the 3D studio slowly.";
+      });
+    };
+    el?.querySelector(".exp-slowbar__close")?.addEventListener("click", () => {
+      dismissed = true;
+      el.hidden = true;
+      renderer.domElement.focus();
+    });
+    return {
+      onReveal() { if (software) show("software-renderer"); },
+      sample(now, frameMs) {
+        if (reason || dismissed || !Number.isFinite(now) || !Number.isFinite(frameMs)) return;
+        samples.push([now, frameMs]);
+        while (samples.length && now - samples[0][0] > WINDOW_MS) samples.shift();
+        const sorted = samples.map((item) => item[1]).sort((a, b) => a - b);
+        medianMs = sorted[sorted.length >> 1];
+        if (medianMs <= SLOW_MS) { slowSince = null; return; }
+        if (slowSince === null) slowSince = now;
+        if (now - slowSince >= WINDOW_MS) show("frame-time");
+      },
+      snapshot: () => ({ rendererName, software, shown: !!reason, reason, dismissed, medianMs, samples: samples.length }),
+    };
+  })();
+
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(COL.bg);
   scene.fog = new THREE.Fog(COL.bg, 7, 18);
 
-  // rest pose: pulled back + raised so the full cabinet, desk and a hint of
-  // both side walls read at once (invites orbiting)
-  const REST_POS = new THREE.Vector3(1.55, 1.58, 2.6);
-  const REST_TARGET = new THREE.Vector3(0, 1.08, -0.1);
+  // Rest pose, chosen per screen shape (the room layout is unchanged).
+  // Landscape keeps the owner-confirmed first-entry view (restored 2026-09-19:
+  // desk right, workbench corner, 42 deg); a pure yaw toward the right-wall
+  // cabinet was tried 2026-10-22 and brought none of its exhibits fully into
+  // view. Short landscape (phones on their side) lifts the target and widens
+  // to 46 deg so the desk résumé clears the dock and the top shelf clears the
+  // topbar. Portrait: the full 3x3 main cabinet spans the width (9 in view,
+  // was 6). All stay inside the orbit limits below; onResize() re-picks.
+  const REST_POSES = {
+    landscape: { position: [1.55, 1.58, 2.6], target: [0, 1.08, -0.1], fov: 42 },
+    shortLandscape: { position: [1.55, 1.58, 2.6], target: [0, 1.14, -0.1], fov: 46 },
+    portrait: { position: [1.2, 1.7, 2.2], target: [0.2, 1.0, -0.6] },
+  };
+  const SHORT_LANDSCAPE_HEIGHT = 500;
+  const REST_POS = new THREE.Vector3();
+  const REST_TARGET = new THREE.Vector3();
+  const restPoseFor = (w, h) => w < h ? REST_POSES.portrait
+    : h < SHORT_LANDSCAPE_HEIGHT ? REST_POSES.shortLandscape : REST_POSES.landscape;
+  const applyRestPose = (w, h) => {
+    const pose = restPoseFor(w, h);
+    REST_POS.fromArray(pose.position);
+    REST_TARGET.fromArray(pose.target);
+  };
+  applyRestPose(window.innerWidth, window.innerHeight);
   const FLY_POS = new THREE.Vector3(2.1, 1.8, 2.9);
 
   const camera = new THREE.PerspectiveCamera(
@@ -456,6 +537,7 @@ async function initScene(canvas) {
     readiness.timings.revealed = performance.now();
     loader.enabled = true;
     startupUI.complete();
+    slowNotice.onReveal();
     // The first real frame is already painted. Optional props retain their
     // source geometry and load through the same bounded network/CPU queues.
     loader.releaseDeferred();
@@ -590,6 +672,19 @@ async function initScene(canvas) {
     scene.add(spot.target);
     spot.userData.gradeBaseIntensity = spot.intensity; displaySpots.push(spot);
   });
+  // 2026-10-22: the grey perforated brake rotor (right bay, middle row) nearly
+  // vanished against the grey veneer behind it. One narrow exhibit-local spot
+  // lifts its metal face from the front so the disc and its holes read; the
+  // rotor material and the baked room are unchanged. Graded like the others.
+  {
+    const rotor = new THREE.Vector3(CAB.bays[2], CAB.rows[1] + 0.14, CAB.frontZ);
+    const spot = new THREE.SpotLight(0xe8ecf4, 2.6, 2.6, 0.17, 0.8, 1.6);
+    spot.position.set(rotor.x + 0.35, rotor.y + 0.45, rotor.z + 1.25);
+    spot.target.position.copy(rotor);
+    scene.add(spot);
+    scene.add(spot.target);
+    spot.userData.gradeBaseIntensity = spot.intensity; displaySpots.push(spot);
+  }
   // real strip lights: one RectAreaLight per shelf row, sitting exactly at
   // each row's LED strip and washing DOWN into the bay — the light visibly
   // originates from the strips, not from the case center
@@ -1360,7 +1455,7 @@ async function initScene(canvas) {
       return Promise.reject(new Error("Lighting resource unavailable; please try again later"));
     }
     const isProbe = key.startsWith("probe");
-    const url = ROOM_BAKE[key];
+    const url = (COMPACT_LIGHTMAPS && ROOM_BAKE_COMPACT[key]) || ROOM_BAKE[key];
     // HDR probes use the bounded worker; compact lightmaps decode off-thread
     // as straight-alpha ImageBitmaps. GPU upload still shares the paced queue.
     const decoded = isProbe ? decodeLighting(url, false).then(async pixels =>
@@ -1587,15 +1682,23 @@ async function initScene(canvas) {
   let resolutionScale = 1, pendingResolutionScale = 1, gpuWasMoving = false;
   let displayDpr = window.devicePixelRatio;
   let displayWidth = window.screen.width, displayHeight = window.screen.height;
+  const PORTRAIT_HALF_TAN = 0.2818; // tan(half horizontal fov) that fits the main cabinet
+  function fovFor(w, h) {
+    const pose = restPoseFor(w, h);
+    if (pose.fov) return pose.fov;
+    return THREE.MathUtils.clamp(THREE.MathUtils.radToDeg(2 * Math.atan(PORTRAIT_HALF_TAN * h / w)), 42, 70);
+  }
   function onResize() {
     const w = window.innerWidth;
     const h = window.innerHeight;
     const a = w / h;
     camera.aspect = a;
-    // S13: portrait phones — a fixed 42° vertical fov collapses horizontal
-    // fov to ~20° and hides 9 of the 16 exhibits at the rest pose; widen
-    // vertically as the aspect drops, and let the user pinch farther out
-    camera.fov = a < 1 ? Math.min(64, 42 / Math.pow(a, 0.42)) : 42;
+    // S13 / 2026-10-22: landscape screens use the rest pose's own vertical
+    // fov (42 deg, 46 when short); portrait fits the 3x3 cabinet width (about
+    // 63 deg on a 390x844 phone). Users can still pinch farther out on
+    // portrait screens.
+    applyRestPose(w, h);
+    camera.fov = fovFor(w, h);
     controls.maxDistance = a < 1 ? 4.0 : 3.2;
     camera.updateProjectionMatrix();
     displayDpr = window.devicePixelRatio;
@@ -2116,6 +2219,7 @@ async function initScene(canvas) {
       frameMs: Math.max(renderStats.cpuMs, gpuMs ?? 0),
       frameBudgetMs: refreshBudget,
     });
+    if (readiness.revealed) slowNotice.sample(performance.now(), Math.max(renderStats.cpuMs, gpuMs ?? 0));
     frameClock.sampleWork({ now: performance.now(), frameMs: Math.max(renderStats.cpuMs, gpuMs ?? 0),
       resolutionScale, minimumScale: adaptiveQuality.minimumScale });
     lastCameraPosition.copy(camera.position);
@@ -2215,10 +2319,12 @@ async function initScene(canvas) {
     document.body.append(ring, dot);
     let cx = -100, cy = -100, rx = -100, ry = -100;
     let ringScale = 1, wantScale = 1, down = false, hot = false, shown = false;
+    let wakeRing = () => {};
     const applyState = () => {
       wantScale = down ? 0.82 : hot ? 1.55 : 1;
       ring.classList.toggle("is-hot", hot);
       dot.classList.toggle("is-hot", hot);
+      wakeRing();
     };
     const show = (v) => {
       if (shown === v) return;
@@ -2233,20 +2339,27 @@ async function initScene(canvas) {
       if (prefersReducedMotion) {
         rx = cx; ry = cy;
         ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) scale(${wantScale})`;
-      }
+      } else wakeRing();
     }, { passive: true });
     window.addEventListener("pointerdown", () => { down = true; applyState(); });
     window.addEventListener("pointerup", () => { down = false; applyState(); });
     window.addEventListener("blur", () => show(false));
     document.documentElement.addEventListener("pointerleave", () => show(false));
     if (!prefersReducedMotion) {
+      // The ring eases toward the pointer, then idles until the pointer or its
+      // hover/press state changes (no perpetual rAF while the room is still).
+      let ringFrame = 0;
       const tick = () => {
+        ringFrame = 0;
         rx += (cx - rx) * 0.3;
         ry += (cy - ry) * 0.3;
         ringScale += (wantScale - ringScale) * 0.22;
+        const settled = Math.abs(cx - rx) < 0.1 && Math.abs(cy - ry) < 0.1 && Math.abs(wantScale - ringScale) < 0.002;
+        if (settled) { rx = cx; ry = cy; ringScale = wantScale; }
         ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) scale(${ringScale})`;
-        requestAnimationFrame(tick);
+        if (!settled) ringFrame = requestAnimationFrame(tick);
       };
+      wakeRing = () => { if (!ringFrame) ringFrame = requestAnimationFrame(tick); };
       tick();
     }
     setCursorHover = (on) => { hot = on; applyState(); };
@@ -2351,9 +2464,9 @@ async function initScene(canvas) {
         } else {
           labelEl.classList.remove("exp-label--wide");
           const sub = hs.action === "resume"
-            ? "Click to read"
+            ? (FINE_POINTER ? "Click to read" : "Tap to read")
             : hs.action === "lamp"
-              ? "Click to toggle the lights"
+              ? (FINE_POINTER ? "Click to toggle the lights" : "Tap to toggle the lights")
               : (window.projectData && window.projectData[hs.key] && window.projectData[hs.key].kicker) || "";
           labelEl.innerHTML = `<b>${hs.label}</b>` + (sub ? `<span>${sub}</span>` : "");
         }
@@ -2525,10 +2638,16 @@ async function initScene(canvas) {
     }
   }
 
-  // fixed tour order for prev/next navigation (matches cabinet layout)
+  // Spatial tour order for arrow keys and prev/next (matches the cabinet layout:
+  // main cabinet row by row, then the right-wall cabinet, then the bench).
   const PROJECT_ORDER = ["carbonSeat", "aura", "scanner", "javelin", "steering", "brakeSim",
     "materialTest", "ansysCfd", "vineRobot", "seat", "ftc", "formlabs", "pool", "telecaster",
     "lineFollower", "education"];
+  // Case order for the exhibit list: the homepage order and case numbers
+  // (case-study-data.js "number"). Keep the two orders in sync with the site.
+  const CASE_ORDER = ["steering", "vineRobot", "brakeSim", "scanner", "javelin", "materialTest",
+    "aura", "carbonSeat", "seat", "ansysCfd", "pool", "lineFollower", "formlabs", "telecaster",
+    "education", "ftc"];
   let currentProjectKey = null;
   // set for the duration of a stepProject() → openPanel() call so openPanel
   // knows to cross-fade the content swap instead of hard-cutting it (the
@@ -2811,7 +2930,8 @@ async function initScene(canvas) {
   }
   function restoreFocus(target, fallback = renderer.domElement) {
     const usable = target?.isConnected && target.tabIndex >= 0 && !target.disabled &&
-      !target.closest("[inert]") && target.getClientRects().length > 0;
+      !target.closest("[inert]") && target.getClientRects().length > 0 &&
+      getComputedStyle(target).visibility !== "hidden";
     (usable ? target : fallback)?.focus({ preventScroll: true });
   }
   function activeDialog() {
@@ -2854,8 +2974,11 @@ async function initScene(canvas) {
     focusedPivot = null;
     sndWhoosh(0.4);
     rootClass.remove("exp-panel-open");
-    restoreFocus(panelReturnFocus);
+    // Every branch below drops the overlay classes synchronously; return focus
+    // after them, or a dock control (hidden under .exp-paper-active) can't take it.
+    const returnFocusTo = panelReturnFocus;
     panelReturnFocus = null;
+    queueMicrotask(() => { if (!panelOpen) restoreFocus(returnFocusTo); });
 
     const returnToRoom = () => {
       if (pendingDragHintOnClose) { pendingDragHintOnClose = false; showDragHint(); }
@@ -3114,6 +3237,7 @@ async function initScene(canvas) {
       spoolAngle: MODELS.activeSpool?.rotation.x, scopeTextureVersion: MODELS.scope?.tex.version }),
     getBootStats: () => ({ ...bootStatus, active: bootTakeover }),
     getCameraIntroStats: () => ({ ...cameraIntro }),
+    getSlowNoticeStats: () => slowNotice.snapshot(),
     getRealismStats: () => ({ ...studioRealism.stats }),
     getHDRStats: () => ({ ...hdrService.getStats(), fallback: hdrFallback }),
     getQualityStats: () => ({ ...adaptiveQuality.getStats(), appliedScale: resolutionScale, gpuTiming: gpuTimer.supported, displayBudgetMs: refreshBudget }),
@@ -3150,17 +3274,32 @@ async function initScene(canvas) {
   const dock = document.getElementById("exp-dock");
   const exhibitSelect = document.getElementById("exp-project-select");
   if (dock && exhibitSelect) {
-    for (const key of PROJECT_ORDER) {
-      const pivot = HOTSPOTS.find((h) => h.userData.hotspot.key === key);
-      if (!pivot || !window.projectData?.[key]) continue;
+    // The résumé comes first: it opens the same in-room reader as the desk paper.
+    const resumePivot = HOTSPOTS.find((h) => h.userData.hotspot.action === "resume");
+    if (resumePivot) {
       const option = document.createElement("option");
-      option.value = key;
-      option.textContent = window.projectData[key].title;
+      option.value = "resume";
+      option.textContent = "Résumé";
       exhibitSelect.appendChild(option);
     }
+    const projectGroup = document.createElement("optgroup");
+    projectGroup.label = "Projects";
+    CASE_ORDER.forEach((key, index) => {
+      const pivot = HOTSPOTS.find((h) => h.userData.hotspot.key === key);
+      if (!pivot || !window.projectData?.[key]) return;
+      const option = document.createElement("option");
+      option.value = key;
+      option.textContent = `${String(index + 1).padStart(2, "0")} ${window.projectData[key].title}`;
+      projectGroup.appendChild(option);
+    });
+    exhibitSelect.appendChild(projectGroup);
     exhibitSelect.addEventListener("change", () => {
-      const pivot = HOTSPOTS.find((h) => h.userData.hotspot.key === exhibitSelect.value);
-      if (!readiness.revealed || !pivot || panelOpen || paperReturning) return;
+      const value = exhibitSelect.value;
+      const pivot = value === "resume" ? resumePivot : HOTSPOTS.find((h) => h.userData.hotspot.key === value);
+      if (!readiness.revealed || !pivot || panelOpen || paperReturning) {
+        if (value === "resume") exhibitSelect.value = "";
+        return;
+      }
       dismissDragHint();
       focusHotspot(pivot);
     });
@@ -3191,20 +3330,33 @@ async function initScene(canvas) {
       for (const value of Object.values(material)) if (value?.isTexture && textureReady(value)) textures.add(value);
     }
   });
+  // Steps: one per texture upload, then two named stages that have no
+  // measurable progress of their own (the loader shimmers while they run).
+  const preparationTotal = textures.size + 2;
   let prepared = 0;
   for (const texture of textures) {
     if (document.hidden) await waitForVisible();
     renderer.initTexture(texture);
     prepared++;
-    startupUI.update({ phase: "preparing", loaded: prepared, total: textures.size + 1 });
+    startupUI.update({ phase: "preparing", loaded: prepared, total: preparationTotal });
     if (prepared % 4 === 0) await yieldToBrowser();
   }
-  if (document.hidden) await waitForVisible();
+  // Each stage label is painted before its (possibly main-thread-heavy) work
+  // starts, so the visible stage is always the one actually running.
+  const paintStage = async () => {
+    if (document.hidden) await waitForVisible();
+    await new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 0)));
+  };
+  startupUI.update({ phase: "preparing", activity: "compiling" });
+  await paintStage();
   await prepareRoomShaders(renderer, scene, camera, composer, { gtao, bokeh });
+  startupUI.update({ phase: "preparing", activity: "lighting", loaded: textures.size + 1, total: preparationTotal });
+  await paintStage();
   await advanced.warmup();
-  startupUI.update({ phase: "preparing", loaded: textures.size + 1, total: textures.size + 1 });
+  startupUI.update({ phase: "preparing", activity: null, loaded: preparationTotal, total: preparationTotal });
   await yieldToBrowser();
-  startupUI.setPhase("first-frame");
+  startupUI.setPhase("first-frame"); // "Drawing first frame" until a real frame completes
+  await paintStage();
   readiness.prepared = true;
   readiness.timings.prepared = performance.now();
   console.info(`[experience] base assets prepared — ${HOTSPOTS.length} hotspots; awaiting first frame`);
@@ -5191,12 +5343,15 @@ function projectHTML(p) {
 /* ============================================================
    bootstrap
    ============================================================ */
+// Failure copy names only controls that exist: the loader's two exit links.
+// The dead canvas leaves the tab order so keyboard users reach them first.
+const retireCanvas = () => { canvas?.setAttribute("tabindex", "-1"); canvas?.setAttribute("aria-hidden", "true"); };
 if (!canvas || !webglSupported()) {
   document.documentElement.classList.add("exp-no-webgl");
+  retireCanvas();
   console.warn("[experience] WebGL unavailable — static fallback in use");
   if (loaderEl) {
-    const txt = loaderEl.querySelector(".exp-loader__text");
-    startupUI.fail("WebGL unavailable — use View classic site");
+    startupUI.fail("This browser can't run the 3D studio.");
     const bar = loaderEl.querySelector(".exp-loader__bar");
     if (bar) bar.style.display = "none";
   }
@@ -5204,7 +5359,7 @@ if (!canvas || !webglSupported()) {
   initScene(canvas).catch((error) => {
     console.error("[experience] initialization failed", error);
     document.documentElement.classList.add("exp-no-webgl");
-    const text = loaderEl?.querySelector(".exp-loader__text");
-    startupUI.fail("Studio unavailable — use View classic site");
+    retireCanvas();
+    startupUI.fail("The 3D studio couldn't start on this device.");
   });
 }

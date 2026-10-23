@@ -207,10 +207,17 @@
     }
   }
 
+  // One tab stop for the whole strip (roving tabindex): Left/Right/Home/End move
+  // between chips, Enter/Space pins the card, Escape closes it.
+  const focusable = items.filter((item) => item.closest(".hero-skill-track").getAttribute("aria-hidden") !== "true");
+  strip.setAttribute("role", "toolbar");
+  function setTabStop(item) {
+    focusable.forEach((chip) => { chip.tabIndex = chip === item ? 0 : -1; });
+  }
+  setTabStop(focusable[0]);
+
   items.forEach((item) => {
-    const duplicate = item.closest(".hero-skill-track").getAttribute("aria-hidden") === "true";
-    if (!duplicate) {
-      item.tabIndex = 0;
+    if (focusable.includes(item)) {
       item.setAttribute("role", "button");
       item.setAttribute("aria-controls", card.id);
       item.setAttribute("aria-expanded", "false");
@@ -228,6 +235,7 @@
     });
     item.addEventListener("focus", () => {
       dismissedItem = null;
+      if (focusable.includes(item)) setTabStop(item);
       if (modality === "touch") return;
       if (modality === "keyboard") revealKeyboardItem(item);
       show(item);
@@ -250,6 +258,18 @@
       }
     });
     item.addEventListener("keydown", (event) => {
+      const index = focusable.indexOf(item);
+      const target = {
+        ArrowRight: focusable[(index + 1) % focusable.length],
+        ArrowLeft: focusable[(index - 1 + focusable.length) % focusable.length],
+        Home: focusable[0],
+        End: focusable[focusable.length - 1]
+      }[event.key];
+      if (index !== -1 && target) {
+        event.preventDefault();
+        target.focus();
+        return;
+      }
       if (event.key !== "Enter" && event.key !== " ") return;
       event.preventDefault();
       item.click();

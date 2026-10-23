@@ -32,6 +32,29 @@ function data(source) {
   return plain(context.window);
 }
 const original = data(oldSources);
+// Owner-approved content edits since the baseline (2026-10-22): first-screen My role / Result / Status
+// summaries, card-matching project names, AURA title, Mk.7 seat role, Vine design-pressure wording and
+// lineFollower attribution. Edits never touch chapter archives and only replace existing baseline fields.
+const approvedEdits = JSON.parse(await read('tools/readability-tests/approved-edits-20261022.json'));
+for (const { path, value } of approvedEdits.edits) {
+  assert(!path.includes('chapters'), `Approved edits never touch chapter archives: ${path.join('.')}`);
+  const parent = path.slice(0, -1).reduce((node, key) => node?.[key], original);
+  // A new caseStudyData.<key>.recordNote is the one approved addition.
+  assert(parent && (Object.hasOwn(parent, path.at(-1)) || (path.length === 3 && path[0] === 'caseStudyData' && path[2] === 'recordNote')), `Approved edit path exists in the baseline: ${path.join('.')}`);
+  parent[path.at(-1)] = plain(value);
+}
+// Archive corrections replace single baseline chapter sentences that contradict a 2026-10-22 owner fact
+// (Mk.7 seat authorship and unconfirmed material/process; lineFollower as an individual project).
+// Each names the exact baseline sentence it replaces and a reason; every other archive sentence stays verbatim.
+for (const { path, from, value, reason } of approvedEdits.archiveCorrections || []) {
+  assert(path.length === 6 && path[0] === 'caseStudyData' && path[2] === 'chapters' && path[4] === 'paragraphs'
+    && Number.isInteger(path[3]) && Number.isInteger(path[5]), `Archive correction targets one chapter paragraph: ${path.join('.')}`);
+  assert(typeof reason === 'string' && reason.includes('Owner fact'), `Archive correction cites an owner fact: ${path.join('.')}`);
+  const paragraphs = path.slice(0, 5).reduce((node, key) => node?.[key], original);
+  assert(Array.isArray(paragraphs) && paragraphs[path[5]] === from, `Archive correction replaces the exact baseline sentence: ${path.join('.')}`);
+  assert(typeof value === 'string' && value.trim() && value !== from, `Archive correction supplies replacement text: ${path.join('.')}`);
+  paragraphs[path[5]] = value;
+}
 const current = data(sources);
 const keys = Object.keys(original.caseStudyData);
 const homepageOrder = [...(await read('index.html')).matchAll(/<article class="project-card"[^>]*data-project="([^"]+)"/g)].map(match => match[1]);
@@ -216,6 +239,7 @@ await check('16 projects / 64 chapter archives preserve the exact baseline parag
     const position = homepageOrder.indexOf(key);
     assert.equal(after.number, String(position + 1).padStart(2, '0'), `${key}: case number follows homepage`);
     assert.equal(after.next, homepageOrder[(position + 1) % homepageOrder.length], `${key}: next route follows homepage`);
+    assert.deepEqual(after.summary.map(([label]) => label), ['My role', 'Result', 'Status'], `${key}: first-screen summary labels`);
     after.number = before.number; after.next = before.next;
     assert.equal(after.chapters.length, before.chapters.length, key);
     for (const [index, chapter] of after.chapters.entries()) {
@@ -241,7 +265,13 @@ await check('Original cover catalog and tracked model / scientific-image / anima
     name.startsWith('assets/editorial/white-20261011/') ||
     ['assets/hero-fsae-20261013/subject-mask.svg', 'assets/hero-fsae-20261013/provenance.json'].includes(name) ||
     ['assets/hero-fsae-context-20261013/context-mask.svg', 'assets/hero-fsae-context-20261013/provenance.json'].includes(name) ||
-    ['assets/exploded/manifest-white-20261011.json', 'assets/exploded/manifest-detail-white-20261011.json'].includes(name);
+    ['assets/exploded/manifest-white-20261011.json', 'assets/exploded/manifest-detail-white-20261011.json'].includes(name) ||
+    // 2026-10-22: corrected public résumé, its desk preview, and new dated presentation variants.
+    ['assets/kefan-wu-resume.pdf', 'assets/resume/manifest.json', 'assets/resume/resume.bcce93bcc67b1ae9.webp'].includes(name) ||
+    ['assets/exploded/manifest-white-20261022.json', 'assets/exploded/manifest-detail-white-20261022.json'].includes(name) ||
+    ['assets/editorial/white-20261022/', 'assets/method-20261022/', 'assets/og/', 'assets/hero-fsae-context-20261022/',
+      'assets/studio-teaser-20261022/', 'models/baked/lowtier-20261022/',
+      'assets/exploded/aura-reframe-20261022/', 'assets/editorial/aura-reframe-20261022/'].some(prefix => name.startsWith(prefix));
   assert.deepEqual(changed.filter(name => !presentationAssets(name)), [], 'Original source geometry, scientific figures and immutable assets remain unchanged');
 });
 

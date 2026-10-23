@@ -1,12 +1,13 @@
-// Generated from the unchanged public PDF by tools/resume/render-preview.py.
+// Generated from the public PDF (rebuilt 2026-10-22 with extractable text) by the
+// tools/resume/render-preview.py procedure; rendered with pdf.js in Chrome, lossless WebP.
 export const RESUME_ASSET = {
   "source": "assets/kefan-wu-resume.pdf",
-  "sourceSha256": "e1902c160b0dfe3358074803bfa5017f16d6b26b717d790ec2f28c6977aa7fdf",
-  "preview": "assets/resume/resume.0a9665589d93d97b.webp",
-  "sha256": "0a9665589d93d97b155a0c2527199dd1d17e8b8b718d3d2d97d1a2b3856d3b7e",
+  "sourceSha256": "84eb031f4903a17e01c9f7bbdc8c42fb03fb1731ed7739962bd3ae5f74b1cc0a",
+  "preview": "assets/resume/resume.bcce93bcc67b1ae9.webp",
+  "sha256": "bcce93bcc67b1ae9e95bbd8242c8ae9a0b1ba09b5b0b31809c9ecf021a3c452f",
   "width": 2040,
   "height": 2640,
-  "bytes": 201524,
+  "bytes": 201388,
   "pagePoints": [
     612,
     792

@@ -20,7 +20,10 @@
  *
  * frameMs is measured render work, NEVER rAF delta / observed FPS / refresh rate.
  * A continuous 400ms run above the moving cadence budget lowers one step. A valid sample
- * at/below budget, an invalid sample, or a >100ms sample gap breaks the run.
+ * at/below budget, an invalid sample, or a >100ms sample gap breaks the run. A sample whose
+ * own work exceeds 100ms explains its gap: it is overload, not an interruption, so a GPU
+ * that needs >100ms per frame still steps down, one step per heavy frame (>=700ms apart).
+ * A single heavy hitch followed by in-budget work changes nothing.
  * Drops are >=700ms apart. Only becoming stationary bypasses this limit to return
  * immediately to 1. No upgrades while moving, to avoid resolution oscillation.
  * reset() returns 1 and clears history; use on startup/visibility discontinuities.
@@ -85,7 +88,10 @@ export class AdaptiveQuality {
       this.overloadSince = null;
       return SCALES[this.level];
     }
-    if (this.lastNow === null || now - this.lastNow > MAX_SAMPLE_GAP_MS) {
+    // A frame that itself took longer than the gap limit is sustained overload
+    // (slow/software GPUs): its long gap must not reset the overload run.
+    const heavy = frameMs > MAX_SAMPLE_GAP_MS;
+    if (this.lastNow === null || (!heavy && now - this.lastNow > MAX_SAMPLE_GAP_MS)) {
       this.overloadSince = null;
     }
     this.lastNow = now;
@@ -101,7 +107,8 @@ export class AdaptiveQuality {
       if (sustained && cooledDown && this.level < SCALES.length - 1) {
         this.level++;
         this.lastChangeAt = now;
-        this.overloadSince = null;
+        // A heavy frame keeps the run alive: the next one steps down again.
+        this.overloadSince = heavy ? now : null;
         this.changes++;
       }
     }

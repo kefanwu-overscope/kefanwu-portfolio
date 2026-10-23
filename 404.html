@@ -5,19 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
     <title>404 — Kefan Wu</title>
-    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
-    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <!-- root-absolute paths: Vercel serves this page at any missing (possibly nested) URL -->
+    <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/InterTight-600.woff2" crossorigin />
+    <link rel="stylesheet" href="/fonts.css?v=studio-polish-20260907" />
     <style>
+      /* white homepage tokens (white-home-20261011.css) */
       :root {
-        --ink: #f5f5f7;
-        --muted: #9a9aa5;
-        --accent: #3f8cff;
-        --bg: #000000;
+        --bg: #ffffff;
+        --bg-elevated: #f5f6f7;
+        --ink: #111316;
+        --ink-hover: #34383e;
+        --muted: #60666d;
+        --quiet: #69717a;
+        --line: #e4e6e8;
+        --line-mid: #d7dadd;
+        --blue: #245cab;
+        --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+        --font-display: "Inter Tight", var(--font-body);
+        --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
       }
 
       * {
@@ -32,116 +38,230 @@
 
       body {
         min-height: 100vh;
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
         background: var(--bg);
         color: var(--ink);
-        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+        font-family: var(--font-body);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      a:focus-visible {
+        outline: 2px solid var(--blue);
+        outline-offset: 3px;
+      }
+
+      .site-header {
         display: flex;
         align-items: center;
-        justify-content: center;
-        padding: 24px;
+        justify-content: space-between;
+        gap: 24px;
+        min-height: 80px;
+        padding: 17px 64px;
+        border-bottom: 1px solid #171a1e12;
+        background: var(--bg);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 11px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.075em;
+        text-transform: uppercase;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 31px;
+        height: 31px;
+        place-items: center;
+        background: var(--ink);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .site-nav {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        color: #50565c;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .site-nav a {
+        padding: 4px 0;
+        border-bottom: 1px solid transparent;
+      }
+
+      .site-nav a:hover {
+        color: var(--ink);
+        border-bottom-color: var(--ink);
+      }
+
+      main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        width: calc(100% - 128px);
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 96px 0 120px;
       }
 
       .wrap {
-        max-width: 560px;
-        width: 100%;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 18px;
+        max-width: 760px;
       }
 
       .kicker {
-        font-family: "IBM Plex Mono", "Courier New", monospace;
+        display: block;
+        margin: 0 0 22px;
+        color: var(--quiet);
+        font-family: var(--font-mono);
         font-size: 12px;
-        letter-spacing: 0.16em;
+        font-weight: 500;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: var(--accent);
       }
 
       h1 {
-        font-family: "Inter Tight", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        font-size: clamp(28px, 5vw, 40px);
-        line-height: 1.15;
         margin: 0;
-        color: var(--ink);
+        font-family: var(--font-display);
+        font-size: clamp(44px, 6.2vw, 88px);
+        /* homepage display system: Inter Tight 600, display tracking eased to
+           -0.03em so r-o and r-n stay apart at the 44px phone size */
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: -0.03em;
       }
 
       p {
-        margin: 0;
+        margin: 26px 0 0;
         color: var(--muted);
-        font-size: 15px;
+        font-size: 17px;
         line-height: 1.6;
       }
 
       .actions {
-        margin-top: 12px;
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
-        justify-content: center;
+        margin-top: 40px;
       }
 
       .btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 12px 22px;
-        border-radius: 999px;
-        font-size: 14px;
-        font-weight: 600;
-        text-decoration: none;
-        transition: transform 0.15s ease, opacity 0.15s ease;
-        border: 1px solid transparent;
+        gap: 12px;
+        min-height: 48px;
+        padding: 16px 21px;
+        border: 1px solid var(--line-mid);
+        background: var(--bg);
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
       }
 
       .btn:hover {
-        transform: translateY(-1px);
+        border-color: var(--ink);
       }
 
       .btn-primary {
-        background: var(--accent);
-        color: #04070d;
+        background: var(--ink);
+        border-color: var(--ink);
+        color: #fff;
       }
 
       .btn-primary:hover {
-        opacity: 0.9;
+        background: var(--ink-hover);
+        border-color: var(--ink-hover);
       }
 
-      .btn-secondary {
-        background: transparent;
-        color: var(--ink);
-        border-color: rgba(245, 245, 247, 0.24);
-      }
+      @media (max-width: 1100px) {
+        .site-header {
+          padding-inline: 36px;
+        }
 
-      .btn-secondary:hover {
-        border-color: var(--accent);
-        color: var(--accent);
+        main {
+          width: calc(100% - 72px);
+        }
       }
 
       @media (max-width: 720px) {
+        .site-header {
+          min-height: 66px;
+          padding: 12px 20px;
+        }
+
+        .brand {
+          font-size: 12px;
+        }
+
+        /* the three page actions below repeat these links */
+        .site-nav {
+          display: none;
+        }
+
+        main {
+          width: calc(100% - 40px);
+          align-items: flex-start;
+          padding: 72px 0 80px;
+        }
+
+        p {
+          font-size: 16px;
+        }
+
         .actions {
           flex-direction: column;
-          width: 100%;
+          margin-top: 32px;
         }
 
         .btn {
           width: 100%;
         }
       }
+
+      @media (prefers-reduced-motion: reduce) {
+        .btn {
+          transition: none;
+        }
+      }
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <span class="kicker">ERR 404 / PAGE NOT FOUND</span>
-      <h1>This page took a wrong turn.</h1>
-      <p>The link may be broken or the page may have moved.</p>
-      <div class="actions">
-        <a class="btn btn-primary" href="index.html#work">View projects</a>
-        <a class="btn btn-secondary" href="experience.html">Enter the 3D Studio</a>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Kefan Wu home"><span class="brand-mark" aria-hidden="true">KW</span><span>Kefan Wu</span></a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="/index.html#work">Projects</a><a href="/index.html#contact">Contact</a><a href="/assets/kefan-wu-resume.pdf?v=84eb031f4903" target="_blank" rel="noopener">Resume</a>
+      </nav>
+    </header>
+    <main>
+      <div class="wrap">
+        <span class="kicker">ERR 404 / PAGE NOT FOUND</span>
+        <h1>This page took a wrong turn.</h1>
+        <p>The link may be broken or the page may have moved.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="/index.html#work">View projects</a>
+          <a class="btn" href="/assets/kefan-wu-resume.pdf?v=84eb031f4903" target="_blank" rel="noopener">Resume (PDF) <span aria-hidden="true">↗</span></a>
+          <a class="btn" href="/index.html#contact">Contact</a>
+        </div>
       </div>
-    </div>
+    </main>
   </body>
 </html>

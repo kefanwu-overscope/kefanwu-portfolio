@@ -38,7 +38,9 @@
   transition: opacity 140ms ease;
 }
 :is(.editorial, .case-animation-host) .card-explode-ui[hidden] { display: none; }
-:is(.editorial .project-card, .case-animation-host):is(:hover, :focus-within, .is-explode-active) .card-explode-ui { opacity: 1; }
+/* Shown once the wheel will scrub (a deliberate pointer move), not when a card
+   merely scrolls under a still cursor. */
+:is(.editorial .project-card, .case-animation-host):is(:focus-within, .is-explode-armed, .is-explode-playing) .card-explode-ui { opacity: 1; }
 :is(.editorial, .case-animation-host) .card-explode-label {
   position: absolute;
   top: 9px;
@@ -47,7 +49,7 @@
   border-radius: 3px;
   background: #090c10d9;
   color: #ccd5df;
-  font: 10px/1.35 var(--font-mono);
+  font: 11px/1.35 var(--font-mono);
   letter-spacing: .015em;
 }
 :is(.editorial, .case-animation-host) .card-explode-controls {
@@ -65,7 +67,7 @@
   content: attr(data-hint);
   flex: 0 0 auto;
   color: #ccd5df;
-  font: 10px/1.3 var(--font-mono);
+  font: 11px/1.3 var(--font-mono);
   text-shadow: 0 1px 3px #000, 0 0 8px #000;
   pointer-events: none;
 }
@@ -84,8 +86,8 @@
   touch-action: pan-y;
 }
 :is(.editorial, .case-animation-host) .card-explode-controls input:focus-visible {
-  outline: 2px solid #aacbff;
-  outline-offset: 2px;
+  outline: 2px solid #245cab;
+  outline-offset: -2px;
   border-radius: 3px;
 }
 :is(.editorial .is-explode-loading, .case-animation-host.is-explode-loading) .card-explode-controls::before { content: "Loading preview"; }
@@ -97,7 +99,7 @@
 .editorial .project-card:is([data-explode-mode="assembling"], [data-explode-mode="flow"]) .card-explode-controls::before { display: none; }
 @media (hover: none), (pointer: coarse) {
   :is(.editorial, .case-animation-host) .card-explode-ui { opacity: 1; }
-  :is(.editorial, .case-animation-host) .card-explode-label { top: 6px; left: 6px; font-size: 9px; }
+  :is(.editorial, .case-animation-host) .card-explode-label { top: 6px; left: 6px; }
   :is(.editorial, .case-animation-host) .card-explode-controls { left: 8px; right: 8px; min-height: 44px; }
   :is(.editorial, .case-animation-host) .card-explode-controls input { min-height: 44px; }
   :is(.editorial, .case-animation-host) .card-explode-controls::before { display: none; }

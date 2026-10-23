@@ -41,6 +41,27 @@ observeAmbientMotion(document.querySelector(".hero"), [
   ...document.querySelectorAll(".hero-media img, .hero-skill-track"),
 ]);
 
+// Slow first visits: a white veil (CSS) over both hero photo layers lifts once
+// they decode, instead of a hard cut. Cached photos and reduced motion skip it;
+// the photo pixels and the LCP image paint are untouched.
+const heroMedia = document.querySelector(".white-home .hero-media");
+const heroPhotos = heroMedia ? [...heroMedia.querySelectorAll("img")] : [];
+if (heroPhotos.length && !reducedMotion.matches
+  && !heroPhotos.every((img) => img.complete && img.naturalWidth > 0)) {
+  heroMedia.classList.add("is-photo-pending");
+  let revealed = false;
+  const revealHero = () => {
+    if (revealed) return;
+    revealed = true;
+    requestAnimationFrame(() => {
+      heroMedia.classList.add("is-photo-ready");
+      heroMedia.classList.remove("is-photo-pending");
+    });
+  };
+  Promise.all(heroPhotos.map((img) => img.decode().catch(() => {}))).then(revealHero);
+  setTimeout(revealHero, 4000); // never leave the photo hidden on a stalled decode
+}
+
 window.addEventListener("load", () => body.classList.add("is-loaded"));
 // Fallback in case load already fired or assets stall.
 setTimeout(() => body.classList.add("is-loaded"), 900);
@@ -306,7 +327,11 @@ function applyProjectFilter(button) {
     if (!show) window.cardExplosions?.reset(card, true);
   });
   const shown = realProjectCards.filter((card) => !card.classList.contains("is-hidden")).length;
-  if (filterStatus) filterStatus.textContent = `Showing ${shown} of ${realProjectCards.length} projects`;
+  if (filterStatus) {
+    filterStatus.textContent = `Showing ${shown} of ${realProjectCards.length} projects`;
+    // Visible only while a category or search narrows the grid; always announced.
+    filterStatus.classList.toggle("is-idle", filter === "all" && !query);
+  }
   if (searchEmpty) searchEmpty.hidden = shown !== 0;
   scheduleScrollEffects();
 }

@@ -1,5 +1,14 @@
 # Kefan Wu Portfolio Site
 
+## Current state · 2026-10-13 (c71e1b8b)
+
+White homepage with the real race-car hero blended into white (assets/hero-fsae-context-20261013/),
+a 14-skill ticker with hover cards above the name, and the original 16-project gallery in this order:
+steering, vineRobot, brakeSim, scanner, javelin, materialTest, aura, carbonSeat, seat, ansysCfd, pool,
+lineFollower, formlabs, telecaster, education, ftc. White SD/HD frames and covers live in
+assets/exploded/white-20261011/ and assets/editorial/white-20261011/. Current homepage rules:
+HOMEPAGE_PRESENTATION.md; release log: 更新.md and AGENT_HANDOFF.md. Sections below are dated history.
+
 ## Current 3D room · 2026-09-26
 
 The original room now has 16 source-aligned project exhibits, including the
@@ -34,13 +43,13 @@ for current assets. Old renderers remain historical reproduction tools. Evidence
 `../.codex/neutral-studio-20260915/`. Exact release, checked backup and online
 status: `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-15-neutral-studio/release-metadata.json`.
 
-## Current media presentation delivery · 2026-09-13
+## Historical media presentation delivery · 2026-09-13
 
 Prepared against production `a67a49ad080364590494793ce5641066dc399ffc`;
 page cache revision `media-polish-20260913`. Evidence belongs in
 `../.codex/media-polish-20260913/`; `acceptance.json` and `browser-local.json`
-must report `status: passed` before release. Acceptance and publication remain
-pending. The planned backup is
+must report `status: passed` before release. It shipped as e2a8945 on 2026-09-13 (21:28 EDT).
+The planned backup is
 `C:/Users/oc/Desktop/kefanwu-portfolio-backup-2026-09-13-media-polish`;
 its release metadata and deployment verification establish the final commit and online status.
 
@@ -71,9 +80,8 @@ a framework or build step. GitHub `main` deploys to Vercel.
   All 16 stories have four chapters, a gallery of remaining source images, technical
   records, and a next-project link. Homepage cards use ordinary links; they no
   longer open a project modal. Image zoom remains available in each case page.
-- **`experience.html`** is the existing interactive 3D studio. Its 15 project
-  exhibits remain available; the Education case links to the general studio
-  because that kit has no current exhibit.
+- **`experience.html`** is the existing interactive 3D studio. It shows 16 project
+  exhibits; returning from a project keeps the room loaded.
 
 `project-data.js` preserves the shared source records and 93 gallery images.
 `case-study-data.js` adds editorial structure for the 16 pages. The original

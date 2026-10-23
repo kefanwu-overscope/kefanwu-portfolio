@@ -1,6 +1,8 @@
 /* Accessible text equivalent of the canonical printed résumé.
- * Source: assets/kefan-wu-resume.pdf, visually transcribed from its page render.
- * PDF SHA-256: E1902C160B0DFE3358074803BFA5017F16D6B26B717D790EC2F28C6977AA7FDF
+ * Source: assets/kefan-wu-resume.pdf (rebuilt 2026-10-22), checked against its extracted text.
+ * PDF SHA-256: 84EB031F4903A17E01C9F7BBDC8C42FB03FB1731ED7739962BD3AE5F74B1CC0A (links use ?v=84eb031f4903)
+ * Page preview: assets/resume/resume.bcce93bcc67b1ae9.webp
+ *   (SHA-256 BCCE93BCC67B1AE9E95BBD8242C8AE9A0B1BA09B5B0B31809C9ECF021A3C452F; see assets/resume/manifest.json)
  * Keep this text synchronized with the PDF-derived page image. Dates, targets,
  * measurements, and wording are preserved from that source, not inferred.
  * The caller supplies screen-reader-only styling; this contains no controls.
@@ -28,7 +30,7 @@ const motorsportsRoles = [
     title: "Cockpit Lead",
     dates: "Jun 2025 – May 2026",
     points: [
-      "Developed a track-based brake thermal model; cut brake rotor mass 25% at a 3.0 FEA factor of safety",
+      "Developed a track-based brake thermal model; cut brake rotor mass 23% at a 2.455 FEA factor of safety",
       "Engineered the steering column around matched 27.5° dual U-joints providing linear steering; lightweighted steering bearing cages, saving 0.9 kg against last year's design",
       "Led the cockpit subteam: machined parts on lathe, mill, and waterjet; TIG-welded chassis tabs; laid up a carbon fiber seat",
     ],
@@ -43,7 +45,7 @@ const motorsportsRoles = [
 ];
 
 const researchPoints = [
-  "Built a vine-everting robot capable of holding 5 psi with reinforced structure",
+  "Built a vine-everting robot; reinforced vessel designed for 5 psi via FEA, 3.3x its 1.5 psi max working pressure",
   "Determined material properties with 30 Instron tests across TPU-coated fabric and LDPE (ASTM D882 standard)",
   "Designed a testing rig with minimized buckling to validate a cross-section strain model against the data",
 ];

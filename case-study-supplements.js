@@ -30,7 +30,7 @@ window.caseStudySupplements = {
           {
             "id": "lineFollower-best-recorded-lap",
             "label": "Best recorded lap",
-            "value": "18 s on the team’s Spa-Francorchamps-inspired track; the original under-15-second target was not reached."
+            "value": "18 s on the Spa-Francorchamps-inspired track; the original under-15-second target was not reached."
           }
         ]
       },
@@ -51,7 +51,7 @@ window.caseStudySupplements = {
           {
             "id": "lineFollower-pitch-comparison",
             "label": "Pitch comparison",
-            "value": "The team tested 4 mm sensor spacing, then selected 8 mm spacing to increase the usable line-detection range in sharp turns."
+            "value": "4 mm sensor spacing was tested first; 8 mm spacing was then selected to increase the usable line-detection range in sharp turns."
           }
         ]
       },
@@ -541,7 +541,7 @@ window.caseStudySupplements = {
           {
             "id": "vineRobot-pressure-levels",
             "label": "Pressure levels",
-            "value": "3.4, 6.9 and 10.3 kPa (0.5, 1.0 and 1.5 psi) define the three experimental pressure settings."
+            "value": "3.4, 6.9 and 10.3 kPa (0.5, 1.0 and 1.5 psi) define the three experimental pressure settings; 1.5 psi is the maximum working pressure."
           },
           {
             "id": "vineRobot-load-levels",
@@ -748,7 +748,7 @@ window.caseStudySupplements = {
     "sections": [
       {
         "id": "seat-confirmed-build",
-        "title": "Confirmed fabrication scope",
+        "title": "Confirmed design and fabrication scope",
         "items": [
           {
             "id": "seat-vehicle",
@@ -758,7 +758,7 @@ window.caseStudySupplements = {
           {
             "id": "seat-responsibility",
             "label": "My responsibility",
-            "value": "Fabrication of the driver seat."
+            "value": "Design and fabrication of the driver seat."
           }
         ]
       }

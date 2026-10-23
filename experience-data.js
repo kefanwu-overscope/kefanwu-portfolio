@@ -15,8 +15,8 @@ export const RESUME = {
     "Mechanical engineering student leading 30 mechanical engineers at Olin Electric Motorsports, building tested hardware across motorsport, robotics, and fabrication — from load cases and CAD to machined, welded, and validated parts.",
   highlights: [
     "Mechanical Lead directing 30 mechanical engineers across 4 subteams on an 85 kW FSAE electric racecar, from design reviews to fabrication and vehicle integration.",
-    "Cut brake rotor mass 25% at a 3.0 FEA factor of safety; steering on matched 27.5° dual U-joints with bearing cages 0.9 kg lighter.",
-    "Summer research at the Olin Vine Robotics Lab: a 5 psi pressure-vessel robot plus 30 ASTM D882 tensile tests feeding a deformation model.",
+    "Cut brake rotor mass 23% and inertia 19% at a 2.455 design-review factor of safety; steering on matched 27.5° dual U-joints with bearing cages 0.9 kg lighter.",
+    "Summer research at the Olin Vine Robotics Lab: a pressure-vessel robot designed for 5 psi by FEA (3.3x its 1.5 psi max working pressure), plus 30 ASTM D882 tensile tests feeding a deformation model.",
     "Comfortable from kinematics and FEA/CFD to lathe, waterjet, CNC, TIG, and composites.",
   ],
   skills: [
@@ -30,6 +30,6 @@ export const RESUME = {
   contact: [
     { label: "kwu@olin.edu",           href: "mailto:kwu@olin.edu" },
     { label: "LinkedIn",               href: "https://www.linkedin.com/in/kefan-wu-olin/" },
-    { label: "Download resume (PDF)",  href: "assets/kefan-wu-resume.pdf" },
+    { label: "Download resume (PDF)",  href: "assets/kefan-wu-resume.pdf?v=84eb031f4903" },
   ],
 };

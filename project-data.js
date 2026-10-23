@@ -101,7 +101,7 @@ const projectData = {
   },
   javelin: {
     "kicker": "Aerospace / VTOL / differential thrust",
-    "title": "Javelin high-speed VTOL drone",
+    "title": "Javelin VTOL drone",
     "image": "assets/javelin-3q.webp",
     summary: "Designed and built a four-motor tail-sitter VTOL concept targeting 300 km/h through differential thrust without moving control surfaces. A 26-item requirements matrix guided structure, thermal packaging, sensing, and service access. The airframe and electronics are integrated; flight control, fail-safe verification, and demonstrated speed remain open in the project record.",
     "highlights": [
@@ -268,27 +268,26 @@ const projectData = {
     ]
   },
   seat: {
-    "kicker": "Formula SAE / Mk.7 / seat fabrication",
+    "kicker": "Formula SAE / Mk.7 / seat design & fabrication",
     "title": "Mk.7 driver seat",
     "image": "assets/cover-aluminum-seat.webp",
-    summary: "Fabricated the aluminum driver seat for the Mk.7 Formula SAE car, working from the seat geometry. The project connects a perforated pan, back, and folded sides to their cockpit context; fabrication ownership is distinct from the supporting CAD and analysis.",
+    summary: "Designed and fabricated the driver seat for the Mk.7 Formula SAE car. The project connects a perforated pan, back, and folded sides to their cockpit context; the supporting analysis image is retained without a numerical result.",
     "highlights": [
-      "Owned fabrication of the Mk.7 driver seat.",
-      "Worked from the Mk.7 seat geometry, with perforated sheet-metal panels and folded sides.",
+      "Designed and fabricated the Mk.7 driver seat.",
+      "The Mk.7 seat geometry uses perforated panels and folded sides.",
       "The project gallery brings together the seat CAD, an analysis image, and Mk.7 vehicle context."
     ],
     "tools": [
+      "Seat design",
       "Seat fabrication",
-      "Sheet metal",
-      "CAD reference",
       "Cockpit integration"
     ],
     "details": [
       {
         "title": "My role",
         "points": [
-          "I was responsible for making the Mk.7 driver seat.",
-          "The work presented here is seat fabrication for the Mk.7 car."
+          "I designed and made the Mk.7 driver seat.",
+          "The work presented here covers the seat’s design and its fabrication for the Mk.7 car."
         ]
       },
       {
@@ -532,7 +531,7 @@ const projectData = {
   },
   scanner: {
     kicker: "LiDAR / motion control / data capture",
-    title: "3D scanner",
+    title: "LiDAR scanner",
     image: "assets/scanner-live-7.webp",
     summary: "Co-built a one-week LiDAR scanner, replacing a less accurate pan/tilt concept with Cartesian gantry motion. Calibrated TFmini-S readings at 14 distances, selected its stable range, and reduced electrical noise. The integrated system captured 2,206 readings over 140 × 165 mm; distance-calibration error was below roughly 3% in the stable range.",
     highlights: [
@@ -579,7 +578,7 @@ const projectData = {
       }
     ],
     gallery: [
-      { src: "assets/scanner-live-7.webp", alt: "Physical gantry-based 3D scanner prototype", caption: "3D-Scanner" },
+      { src: "assets/scanner-live-7.webp", alt: "Physical gantry-based 3D scanner prototype", caption: "LiDAR scanner" },
       { src: "assets/scanner-live-5.webp", alt: "CAD model of the gantry-based 3D scanner", caption: "Gantry CAD" },
       { src: "assets/scanner-live-1.webp", alt: "LiDAR calibration curve and formula", caption: "Calibration curve" },
       { src: "assets/scanner-live-2.webp", alt: "LiDAR percentage error before and after calibration", caption: "Calibration result" },
@@ -666,7 +665,7 @@ const projectData = {
         ["45", "Experiment runs"],
       ],
     },
-    summary: "Built an eversion platform for three soft-vine body geometries, targeting 34 kPa (5 psi) containment and frequent specimen changes. Initial testing reached 1.2 psi with deformation and connection failures, prompting aluminum and steel reinforcement evaluated in FEA. The platform supported a 45-run experiment with directly measured contact force.",
+    summary: "Built an eversion platform for three soft-vine body geometries and frequent specimen changes. Initial testing reached 1.2 psi with deformation and connection failures, prompting aluminum and steel reinforcement. The reinforced vessel is designed for 34 kPa (5 psi), backed by FEA rather than a 5 psi pressure test: about 3.3× the 1.5 psi maximum working pressure. The platform supported a 45-run experiment with directly measured contact force.",
     highlights: [
       "Bolted the lid against the underside of the pail flange with 39 Grade 12.9 M4x30 bolts, carrying the ~2,304 N (518 lbf) blow-off load in tension instead of a snap fit.",
       "Printed TPU 85A gaskets (0.5-3 mm) for five seal families; the soft durometer conforms to FDM layer lines under bolt preload, making the printed vessel sealable.",
@@ -691,7 +690,7 @@ const projectData = {
         title: "Role and requirements",
         points: [
           "Full-time summer research assistant, Olin Vine Robotics Lab (May - Aug 2026); owned the robot everting vine bodies for cross-section deformation experiments.",
-          "Targets: hold 34 kPa (5 psi), a 3.33 factor of safety over the 10.3 kPa test maximum; accept up to 571 mm (22.5 in) body circumference; swap bodies for more than 15 daily trials.",
+          "Targets: a 34 kPa (5 psi) design pressure, a 3.33 factor of safety over the 10.3 kPa (1.5 psi) maximum working pressure; accept up to 571 mm (22.5 in) body circumference; swap bodies for more than 15 daily trials.",
           "Required three cross-sections (circular, 3-partition, stick-reinforced) and enough transparency to debug eversion faults externally.",
         ],
       },
@@ -716,7 +715,7 @@ const projectData = {
         points: [
           "Lab high-pressure testing held 1.2 psi versus the 0.71 psi wall-yield hand calculation, with significant deformation, TPU coupler decoupling, vine-to-spool connection failure, and minor leaks.",
           "PLA-welded leaks; added 6061 plates to both sides, back, and bottom, an aluminum replacement lid, three C-shaped A36 steel brackets, and PETG connection brackets. Open cutouts preserved debugging visibility.",
-          "Reinforcement FEA at 500 lbf per face (5.8 psi): 6.524 mm maximum deformation and 0.2339 GPa maximum stress versus A36 steel's 0.25 GPa yield. The vine outlet remains weakest.",
+          "Reinforcement FEA at 500 lbf per face (5.8 psi): 6.524 mm maximum deformation and 0.2339 GPa maximum stress versus A36 steel's 0.25 GPa yield. The vine outlet remains weakest. This FEA backs the 5 psi design pressure; the reinforced vessel has not been pressure-tested at 5 psi.",
         ],
       },
       {
@@ -892,7 +891,7 @@ const projectData = {
   },
   aura: {
     "kicker": "Autonomous luggage robot / swerve drive / 2025",
-    "title": "AURA swerve drive system",
+    "title": "AURA swerve drive",
     "image": "assets/aura-swerve.jpeg",
     "scrub": {
       "base": "assets/aura_explode/frame_",
@@ -902,7 +901,7 @@ const projectData = {
       "meta": [
         [
           "Role",
-          "Mechanical lead"
+          "Mechanical Engineer"
         ],
         [
           "Process",
@@ -1025,7 +1024,7 @@ const projectData = {
     kicker: "Robotics / compact embedded build",
     title: "LineFollower robot",
     image: "assets/line-follower-cover.webp",
-    summary: "Built and iterated a two-week line-following robot around an Arduino Mega and 14 reflectance channels. Switched from 4 mm to 8 mm sensor pitch, revised feedback control, and reduced mass from 428 g to 284 g. The best recorded lap was 18 s on the team’s track, short of the under-15-second target.",
+    summary: "Built and iterated a two-week line-following robot around an Arduino Mega and 14 reflectance channels. Switched from 4 mm to 8 mm sensor pitch, revised feedback control, and reduced mass from 428 g to 284 g. The best recorded lap was 18 s on the course, short of the under-15-second target.",
     highlights: [
       "Packaged an Arduino Mega, motor drivers, battery, sensors, and drive into a palm-size chassis.",
       "Ran stable low-speed line tracking with front-mounted sensing and a compact two-wheel differential drive.",

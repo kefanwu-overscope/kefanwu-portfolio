@@ -1,5 +1,75 @@
 # Homepage presentation
 
+## Design-audit fixes · 2026-10-22
+
+Owner-approved audit changes; these rules supersede older entries below.
+
+- Hero: four new dated masks in `assets/hero-fsae-context-20261022/`, all
+  continuous regions with no per-part outline: `context-mask.svg` above 1140px
+  wide (σL60/σB50); `context-mask-band.png`, a hull-shaped halo, at 721–1140px
+  (background layer .9, no filter); `context-mask-soft.svg` for tall tablets
+  (721–1100px wide, ≥900px tall; σL100/σB90); `context-mask-compact.svg` at
+  ≤720px (σL100/σB30). Both protected regions keep alpha 255 and photo pixels
+  are unchanged. Elsewhere the background layer is .82 opacity / .97
+  saturation. A page-white veil over `.hero-media` lifts over 450ms on slow
+  first loads only (skipped for cached loads and reduced motion, 4s failsafe);
+  the photo itself is never hidden.
+- Hero actions gain "Resume (PDF) ↗". From 721px up the two text links sit on
+  a second row under the button; on near-square windows (≥1101px, aspect
+  ≤5/4) the résumé link takes a third row, so every link stays on the white
+  side of the fade. Short windows (≤760px tall, or ≥1101px and ≤880px tall)
+  tighten the hero rhythm. The hero-role strong line is 18px (16px on phones,
+  14px at ≤370px); phone hero padding-top is 76px. No availability line in the
+  hero (owner, 2026-10-22); the #contact line stays.
+- Cards: meta is "Context · Role" in 12px (11px at 1280–1439px and ≤370px),
+  one line at ≥1280px and stacked below. javelin, brakeSim, carbonSeat,
+  ansysCfd, lineFollower and education read "Individual project"; AURA reads
+  "Mechanical Engineer". Titles are weight 600. Subtitles state only verified
+  results (brakeSim "Design review: 23% less rotor mass, 19% less inertia.";
+  seat "Designed and fabricated the Mk.7 driver seat."). Every card has
+  `id="project-<key>"` with scroll-margin-top 104px (88px at ≤720px) so case
+  pages can return to it; `#project-directory` uses the same offset. Covers
+  gain a 1200w step (`assets/editorial/white-20261022/`). The download icon
+  has a 44px hit box.
+- AURA's cover and animation frames are reframed:
+  `assets/editorial/aura-reframe-20261022/` (cover srcset and the case-page
+  cover catalog) and `assets/exploded/aura-reframe-20261022/` (SD/HD frames,
+  anchors). The homepage loads `assets/exploded/manifest-white-20261022.json`
+  and case pages `manifest-detail-white-20261022.json`.
+- A card scrubs on wheel only after the pointer has really moved onto it (or
+  rested on it 350ms when the browser reports no movement); a card scrolling
+  under a still cursor never holds the page, and at either end the rest of the
+  gesture goes back to the page. Wheel travel is 380px per full scrub. Card
+  label/hint are 11px; the slider focus ring is 2px #245cab.
+- The grid section note names the real control: "Hover over a project and
+  scroll to see it move." on fine pointers, "Drag a project’s slider to see it
+  move." on touch (same `(hover: none), (pointer: coarse)` query as
+  exploded.css); both read two lines. Section heads share one layout (title
+  left, note right; stacked at ≤1100px); display heads track at -.035em, the
+  contact head at -.01em so no glyph pairs touch.
+- The "Showing N of 16" count shows only while a filter or search is active
+  (it stays in the live region).
+- The leadership block moved from How I work to right after the project grid.
+  Page order: Work → Leadership → Studio → How I work → Contact.
+- Nav CTA reads "Enter the 3D Studio ↗" in Inter 13px; on tablets and coarse
+  pointers it and the nav links are 44px tall. On wide screens the header
+  aligns with the 1440px content edges. The skill card is square with no shadow
+  or blur; the skill strip is one tab stop with arrow keys.
+- No text in white-home CSS is below 11px; muted grey is #60666d. At ≤370px,
+  mono labels keep 11px and trim letter-spacing instead; labels that still
+  cannot fit break only at a "·" separator (nowrap phrase groups, `&nbsp;·`).
+  Card subtitles keep number-unit pairs together ("300&nbsp;km/h").
+- How I work: each column pins its link to the bottom so the three share a
+  baseline. Footer links are 44px tall.
+- Studio teaser: `assets/studio-teaser-20261022/studio-{800,1600}.webp`, a night
+  capture from the live renderer (HUD hidden). The old `assets/studio-teaser.webp`
+  stays published but unused by the homepage.
+- How I work photos and the Mk.7 photo gain 800w/1200w variants in
+  `assets/method-20261022/`. The U-joint photo is only 800w and is unchanged.
+- Social preview: `assets/og/home-20261022.jpg` (1200×630 crop of the published
+  hero photo, no retouching). 404.html is rebuilt in the white theme (headline
+  Inter Tight 600, -0.03em).
+
 ## Preserve fine hardware from the original photo · 2026-10-13
 
 The user's rear-suspension feedback supersedes the per-component silhouette

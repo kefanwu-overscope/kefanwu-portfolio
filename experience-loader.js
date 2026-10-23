@@ -8,9 +8,11 @@
  * loader.update({ phase: "loading", activity: null }); // decode settles; restore asset label
  * loader.setPhase("preparing"); // only after startup assets have settled
  * loader.update({ loaded: prepared, total: preparationTotal, phase: "preparing" });
+ * loader.update({ phase: "preparing", activity: "compiling" }); // shader compilation starts
+ * loader.update({ phase: "preparing", activity: "lighting" }); // post/lighting warmup starts
  * loader.setPhase("first-frame"); // scene preparation has actually finished
  * loader.complete(); // ONLY after the real scene's first frame has rendered
- * // On a fatal startup/WebGL failure: loader.fail("WebGL unavailable. View the classic site.");
+ * // On a fatal startup/WebGL failure: loader.fail("This browser can't run the 3D studio.");
  *
  * Counts are finite, nonnegative work-unit counts WITHIN the specified phase.
  * Omit total (or pass zero) when the amount of work is unknown; no progress is invented.
@@ -19,11 +21,15 @@
  * Phase order and displayed percentages never go backwards, even if totals grow.
  * Advancing a phase asserts all previous phases are finished. Late events from an
  * earlier phase are ignored. Supply phase on asynchronous count updates.
- * Optional activity is "decoding" or null. It changes only the current phase's
- * status label, never its counts or percentage. Omission preserves the activity;
- * null restores the normal phase label. Advancing a phase clears it automatically.
- * Decoding is accepted during loading/preparing, never after the first-frame gate.
- * Drive this label from actual decode lifecycle events, not individual worker chunks.
+ * Optional activity is a named stage ("decoding", "compiling", "lighting") or null.
+ * It changes only the current phase's status label, never its counts or percentage.
+ * Omission preserves the activity; null restores the normal phase label. Advancing a
+ * phase clears it automatically. Decoding is accepted during loading/preparing;
+ * compiling and lighting only during preparing; none after the first-frame gate.
+ * Drive these labels from the actual awaited work, not individual worker chunks.
+ * A stage with no measurable progress (named stages, the first-frame wait, or a
+ * phase without counts) sets data-indeterminate so the bar shimmers instead of
+ * looking frozen. The percentage itself never moves for unmeasured work.
  * complete() and fail() settle this startup; subsequent progress calls do nothing.
  * fail() may override completion if a fatal failure occurs during reveal.
  *
@@ -46,10 +52,18 @@ const PHASES = [
   },
   {
     id: "first-frame", start: 95, end: 99,
-    text: "Waiting for the first frame", active: "Rendering",
+    text: "Drawing first frame", active: "Drawing",
     detail: "The studio opens after its first frame", unit: "render steps complete",
   },
 ];
+
+// Named stages inside a phase. None reports partial progress of its own.
+const ACTIVITIES = {
+  decoding: { phases: [0, 1], text: "Decoding studio lighting", step: "Decoding", detail: "Decoding the lighting environment" },
+  compiling: { phases: [1], text: "Compiling materials", step: "Compiling", detail: "Compiling materials for this GPU" },
+  lighting: { phases: [1], text: "Preparing lighting", step: "Lighting", detail: "Preparing lighting and post-processing" },
+};
+const FAILED_TEXT = "This browser can't run the 3D studio.";
 
 const controllers = new WeakMap();
 const noop = () => {};
@@ -79,7 +93,13 @@ export function createStudioLoader(element) {
   const setAttribute = (node, name, text) => {
     if (node && node.getAttribute(name) !== text) node.setAttribute(name, text);
   };
-  const phaseText = () => activity === "decoding" ? "Decoding studio lighting" : PHASES[phaseIndex].text;
+  const phaseText = () => ACTIVITIES[activity]?.text || PHASES[phaseIndex].text;
+  // Unmeasured work shimmers; the stored percentage stays where real counts left it.
+  const renderIndeterminate = () => {
+    const unmeasured = !terminal && (!!activity || !counts);
+    if (unmeasured) setAttribute(element, "data-indeterminate", "");
+    else element.removeAttribute("data-indeterminate");
+  };
 
   function renderProgress() {
     const phase = PHASES[phaseIndex];
@@ -97,8 +117,9 @@ export function createStudioLoader(element) {
       : `${hasProgress ? `${progress}% startup progress` : "Progress not yet available"}. ${phaseText()}.`);
     setText(detail, finished ? "First frame rendered" : counts
       ? `${counts.loaded.toLocaleString("en-US")} / ${counts.total.toLocaleString("en-US")} ${phase.unit}`
-      : activity === "decoding" ? "Decoding the lighting environment" : phase.detail);
+      : ACTIVITIES[activity]?.detail || phase.detail);
     setAttribute(element, "data-state", terminal || (counts ? "loading" : "waiting"));
+    renderIndeterminate();
   }
 
   function renderPhase() {
@@ -116,7 +137,7 @@ export function createStudioLoader(element) {
       step.classList.toggle("is-done", done);
       if (active) setAttribute(step, "aria-current", "step");
       else step.removeAttribute("aria-current");
-      setText(step.querySelector("[data-loader-step-state]"), done ? "Ready" : active ? (activity === "decoding" ? "Decoding" : phase.active) : "Waiting");
+      setText(step.querySelector("[data-loader-step-state]"), done ? "Ready" : active ? (ACTIVITIES[activity]?.step || phase.active) : "Waiting");
     }
   }
 
@@ -136,8 +157,10 @@ export function createStudioLoader(element) {
       progress = Math.max(progress, PHASES[phaseIndex].start);
       statusChanged = true;
     }
-    if ((input.activity === null || input.activity === "decoding") && phaseIndex < 2 && input.activity !== activity) {
-      activity = input.activity;
+    const nextActivity = input.activity === null ? null : ACTIVITIES[input.activity] ? input.activity : undefined;
+    if (nextActivity !== undefined && (nextActivity === null || ACTIVITIES[nextActivity].phases.includes(phaseIndex)) &&
+      nextActivity !== activity) {
+      activity = nextActivity;
       statusChanged = true;
     }
     if (statusChanged) renderPhase();
@@ -175,11 +198,10 @@ export function createStudioLoader(element) {
     if (terminal === "failed") return;
     terminal = "failed";
     activity = null;
-    const text = typeof message === "string" && message.trim()
-      ? message.trim()
-      : "The 3D studio could not start. View the classic site.";
+    const text = typeof message === "string" && message.trim() ? message.trim() : FAILED_TEXT;
     setAttribute(element, "data-state", "failed");
     element.removeAttribute("data-activity");
+    element.removeAttribute("data-indeterminate");
     element.removeAttribute("aria-hidden");
     setText(status, text);
     bar?.removeAttribute("aria-valuenow");

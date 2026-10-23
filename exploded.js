@@ -18,14 +18,19 @@
   const STREAM_BLOB_MEMORY_LIMIT = 16 * 1024 * 1024;
   let streamingDecodedBytes = 0;
   let cacheClock = 0;
-  const WHEEL_DISTANCE = 960;
+  const WHEEL_DISTANCE = 380;
+  // Wheel scrubbing waits for deliberate intent: a real pointer move inside a card,
+  // or, when the browser reports no movement, a rest on it that no scroll interrupts.
+  const INTENT_DWELL = 350;
+  // Quiet time that ends one wheel gesture, trackpad momentum included.
+  const WHEEL_STREAM_GAP = 240;
   const MODES = {
     assembly: { label: "Assembly view", hint: "Scroll to separate", progress: "separated" },
     reconstruction: { label: "Assembly view", hint: "Scroll to separate", progress: "separated" },
     visualization: { label: "Display layers", hint: "Scroll to separate", progress: "separated" },
     heat: { label: "Brake heating", hint: "Scroll to heat", progress: "heating",
       description: "Scroll forward to heat the metal to red; reverse to cool it." },
-    unfold: { label: "Sheet metal unfold", hint: "Scroll to unfold", progress: "unfolded",
+    unfold: { label: "Seat unfold", hint: "Scroll to unfold", progress: "unfolded",
       description: "Scroll forward to unfold the seat panels; reverse to fold them." },
     layup: { label: "Carbon layup", hint: "Scroll to lay up", progress: "laid up",
       description: "An illustration of cloth placement. Reverse to rewind the layup." },
@@ -52,6 +57,9 @@
   let animationFrame = 0;
   let lastTime = 0;
   let previewProjects = null;
+  let pointerScreen = null;
+  let lastScrollTime = -Infinity;
+  const wheelStream = { last: -Infinity, owner: null };
 
   const allowed = (state) => state.visible && !state.card.classList.contains("is-hidden")
     && !document.hidden && !document.body.classList.contains("modal-open")
@@ -169,6 +177,7 @@
     state.waitingIndex = null;
     state.owner = null;
     state.dragging = false;
+    if (state.armed || state.dwellTimer) disarm(state);
     state.card.classList.remove("is-explode-playing", "is-explode-active");
     if (state.external) {
       state.index = -1;
@@ -668,6 +677,49 @@
     requestFrames(state);
   }
 
+  function arm(state) {
+    if (!finePointer.matches || state.external) return;
+    if (active !== state) activate(state, "wheel");
+    if (active !== state || !allowed(state)) return;
+    if (state.dwellTimer) clearTimeout(state.dwellTimer);
+    state.dwellTimer = 0;
+    // The scroll listener disarms a card as soon as it moves, so an armed card's
+    // recorded position is still current.
+    if (state.armed) return;
+    state.armed = true;
+    state.armedTop = state.card.getBoundingClientRect().top;
+    state.card.classList.add("is-explode-armed");
+  }
+
+  function disarm(state) {
+    if (state.dwellTimer) clearTimeout(state.dwellTimer);
+    state.dwellTimer = 0;
+    state.armed = false;
+    state.card.classList.remove("is-explode-armed");
+    if (wheelStream.owner === state) wheelStream.owner = null;
+  }
+
+  // An armed card that has moved since has scrolled under a still cursor.
+  function stillArmed(state) {
+    if (state.armed && Math.abs(state.card.getBoundingClientRect().top - state.armedTop) > 1) disarm(state);
+    return state.armed;
+  }
+
+  function dwell(state, since) {
+    if (state.armed || state.dwellTimer || since - lastScrollTime < INTENT_DWELL) return;
+    const top = state.card.getBoundingClientRect().top;
+    state.dwellTimer = setTimeout(() => {
+      state.dwellTimer = 0;
+      if (state.pointerInside && lastScrollTime < since
+        && Math.abs(state.card.getBoundingClientRect().top - top) <= 1) arm(state);
+    }, INTENT_DWELL);
+  }
+
+  const hostState = (target) => {
+    const host = target instanceof Element ? target.closest(hostSelector) : null;
+    return host ? statesByHost.get(host) : undefined;
+  };
+
   // A .card-open pseudo-element may stretch across the card. It is intentionally
   // allowed here; actual sliders, downloads and other independent controls are not.
   function isIndependentControl(target) {
@@ -678,11 +730,18 @@
     if (!finePointer.matches || !allowed(state) || event.ctrlKey || event.metaKey
       || !event.cancelable || isIndependentControl(event.target)
       || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
-    if (active !== state) activate(state, "wheel");
-    if (!cache.get(state.key)?.frames[Math.round(state.progress * (state.config.frames.length - 1))]?.ready) return;
+    // Never hold the page for a gesture that began elsewhere, or for a card that
+    // has scrolled under a still cursor since it was armed.
+    if (wheelStream.owner !== state || !stillArmed(state)) return;
     const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? state.media.clientHeight : 1;
     const next = clamp(state.target + event.deltaY * unit / WHEEL_DISTANCE);
-    if (next === state.target) return;
+    // At either end, or before a pose is decoded, hand the rest of this gesture
+    // (momentum included) back to the page at once.
+    if (next === state.target
+      || !cache.get(state.key)?.frames[Math.round(state.progress * (state.config.frames.length - 1))]?.ready) {
+      wheelStream.owner = null;
+      return;
+    }
     event.preventDefault();
     state.owner = "wheel";
     setProgress(state, next);
@@ -782,7 +841,7 @@
     const rect = card.getBoundingClientRect();
     const state = { key, config, card, media, poster, stage, ui, range, badge, target: 0, progress: 0, index: -1, external: card.dataset.scrollDriven === 'true',
       visible: rect.bottom > 0 && rect.top < innerHeight, owner: null, pointerInside: false, dragging: false,
-      failed: false, loadJob: null, waitingIndex: null };
+      armed: false, armedTop: 0, dwellTimer: 0, failed: false, loadJob: null, waitingIndex: null };
     states.set(key, state);
     statesByHost.set(card, state);
     reflectProgress(state);
@@ -815,6 +874,7 @@
       // must not erase the slider's value or abort the preview it just requested.
       if (event.pointerType === "touch") return;
       state.pointerInside = false;
+      disarm(state);
       if (!state.dragging) resetState(state);
     });
     card.addEventListener("pointercancel", () => {
@@ -844,6 +904,33 @@
     state.dragging = false;
     if (event.pointerType !== "touch" && finePointer.matches && !state.pointerInside) resetState(state);
   });
+  // A card that scrolls under a still cursor only receives boundary events, or a
+  // synthetic move at an unchanged screen position, so it is never armed by them.
+  addEventListener("pointermove", (event) => {
+    if (event.pointerType === "touch") return;
+    const known = pointerScreen !== null;
+    const moved = Boolean(event.movementX || event.movementY)
+      || (known && (event.screenX !== pointerScreen.x || event.screenY !== pointerScreen.y));
+    pointerScreen = { x: event.screenX, y: event.screenY };
+    const state = hostState(event.target);
+    if (!state || state.external || !state.pointerInside) return;
+    if (moved) arm(state);
+    // The first move after load can report no movement; a short rest decides it.
+    else if (!known) dwell(state, event.timeStamp);
+  }, { capture: true, passive: true });
+  addEventListener("scroll", (event) => {
+    lastScrollTime = event.timeStamp;
+    if (active?.armed) stillArmed(active);
+  }, { passive: true });
+  // One wheel gesture (notches in quick succession, or a trackpad swipe and its
+  // momentum) may scrub only a card that was already armed when it began.
+  addEventListener("wheel", (event) => {
+    if (event.timeStamp - wheelStream.last > WHEEL_STREAM_GAP) {
+      const state = hostState(event.target);
+      wheelStream.owner = state && !state.external && stillArmed(state) ? state : null;
+    }
+    wheelStream.last = event.timeStamp;
+  }, { capture: true, passive: true });
   addEventListener("blur", () => {
     // An ordinary focus change must not rewind a scroll-guided case study.
     states.forEach(state => { if (!state.external) resetState(state); });

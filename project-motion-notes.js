@@ -107,14 +107,14 @@ export const projectMotionNotes = {
     ]
   },
   seat: {
-    title: 'From folded seat to sheet',
-    summary: 'Unfold the connected seat to see how its perforated panels relate to one sheet-metal form.',
-    note: 'Visual development of the Mk.7 CAD, with two small display-only corner reliefs. The flattened pose is not a manufacturing blank or bend-allowance specification.',
+    title: 'Seat unfold',
+    summary: 'Unfold the connected seat surfaces to see how its perforated panels relate to one continuous outline.',
+    note: 'Visual development of the Mk.7 CAD, with two small display-only corner reliefs. The flat pose is a geometric illustration, not a fabrication drawing.',
     steps: [
-      { at: 0, title: 'Start with the formed seat', body: 'The perforated pan, back, and folded sides form one connected seat. The opening motion begins at the back sidewalls, revealing how the support surfaces meet along bends.' },
-      { at: 0.24, title: 'Open the pan sides', body: 'The pan sidewalls open after the back sidewalls begin clearing them. Following the connected edges makes the folding relationships easier to see than an exploded set of panels.' },
-      { at: 0.5, title: 'Develop the remaining bends', body: 'The broader form opens as curved bend regions straighten between rigid panels. The perforations stay with their original panels, linking the flat outline to the formed seat.' },
-      { at: 0.85, title: 'Read the connected blank', body: 'The sheet approaches its flat pose and levels out. This view explains the fabrication geometry; material-specific bend allowances and production tooling require a separate manufacturing layout.' }
+      { at: 0, title: 'Start with the assembled seat', body: 'The perforated pan, back, and side panels form one connected seat. The opening motion begins at the back side panels, revealing where the support surfaces meet.' },
+      { at: 0.24, title: 'Open the pan sides', body: 'The pan side panels open after the back side panels begin clearing them. Following the connected edges makes the panel relationships easier to see than an exploded set of parts.' },
+      { at: 0.5, title: 'Open the remaining joins', body: 'The broader form opens as the curved joins straighten between panels. The perforations stay with their original panels, linking the flat outline to the assembled seat.' },
+      { at: 0.85, title: 'Read the flat outline', body: 'The connected surfaces approach a flat pose and level out. This view illustrates the geometry only; it is not a fabrication drawing.' }
     ]
   },
   materialTest: {

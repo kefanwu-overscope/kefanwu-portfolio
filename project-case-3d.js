@@ -1,7 +1,7 @@
 import { renderPressureLegend } from './project-pressure-legend.js';
-import { projectMotionLabels } from './project-motion-labels.js?v=brake-dr-20261005';
-import { projectMotionNotes } from './project-motion-notes.js?v=brake-dr-20261005';
-import { getStudioProject } from './studio-catalog.js?v=brake-dr-20261005';
+import { projectMotionLabels } from './project-motion-labels.js?v=brake-dr-20261022';
+import { projectMotionNotes } from './project-motion-notes.js?v=seat-truth-20261022';
+import { getStudioProject } from './studio-catalog.js?v=seat-truth-20261022';
 
 const clamp = (value) => Math.max(0, Math.min(1, Number(value) || 0));
 const steeringParts = {
@@ -285,12 +285,14 @@ function mount() {
     receiveStatus({ state: 'loading' });
     const current = () => ticket === generation && !disposed && !suspended;
     try {
-      const { createStudioInspector } = await import('./studio-inspector.js?v=white-20261011');
+      const { createStudioInspector } = await import('./studio-inspector.js?v=white-20261022');
       if (!current() || signal.aborted) return;
       inspector = createStudioInspector({
         canvas,
         transparentBackground: false,
         backgroundColor: 0xffffff,
+        // Match the re-framed AURA frames and covers shown on this page.
+        derivativeFrames: true,
         onFrame: ({ progress: applied }) => {
           if (!current() || !inspector || freeExploration) return;
           const steps = projectMotionNotes[key]?.steps || [];

@@ -14,6 +14,8 @@
   let disposed = false;
   let pendingLocation = null;
   let scrollTimer = null;
+  // A restored position awaiting the motion story's final layout (see below).
+  let settleRestore = null;
 
   function canonicalURL(value) {
     const url = new URL(value, location.href);
@@ -36,13 +38,12 @@
     if (id) window.dispatchEvent(new CustomEvent('case-reveal-anchor', { detail: { id } }));
     if (typeof scrollY === 'number' && Number.isFinite(scrollY)) {
       window.scrollTo({ top: Math.max(0, scrollY), left: 0, behavior: 'instant' });
-      return;
-    }
-    if (!url.hash) {
+    } else if (!url.hash) {
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-      return;
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'instant', block: 'start' });
     }
-    document.getElementById(id)?.scrollIntoView({ behavior: 'instant', block: 'start' });
+    armSettle();
   }
 
   document.addEventListener('click', (event) => {
@@ -100,6 +101,44 @@
       send('scroll', { scrollY: window.scrollY });
     }, 150);
   }, { passive: true, signal: events.signal });
+
+  // The pinned motion story lengthens the page once its model is ready, after
+  // the first restore; scroll anchoring then carried the reader ~2,000px past
+  // the saved offset. Re-apply the same location once, after that final layout
+  // (the event does not bubble, so listen in the capture phase). The restore
+  // only corrects layout shift: any position the reader chose wins. Input
+  // events cancel it, and so does any scroll the page height does not explain
+  // (scrollbar drag, find-in-page, screen-reader navigation). That check runs
+  // on scroll events only: an anchoring adjustment happens in the layout that
+  // changed the height, so its scroll event already sees the new height. No
+  // per-frame polling runs while the reader waits.
+  const SETTLE_MS = 10000, SETTLE_SLOP = 4;
+  const pageHeight = () => document.documentElement?.scrollHeight ?? 0;
+  function cancelSettle() { settleRestore = null; }
+  function armSettle() {
+    settleRestore = { until: Date.now() + SETTLE_MS, height: pageHeight(), y: window.scrollY };
+  }
+  function checkSettle() {
+    const settle = settleRestore;
+    if (!settle || disposed) return;
+    if (Date.now() > settle.until) { settleRestore = null; return; }
+    const height = pageHeight(), y = window.scrollY;
+    if (height !== settle.height) { settle.height = height; settle.y = y; }
+    else if (Math.abs(y - settle.y) > SETTLE_SLOP) settleRestore = null;
+  }
+  window.addEventListener('scroll', checkSettle, { passive: true, signal: events.signal });
+  for (const type of ['wheel', 'touchstart', 'pointerdown', 'keydown']) {
+    window.addEventListener(type, cancelSettle, { capture: true, passive: true, signal: events.signal });
+  }
+  window.addEventListener('case-motion-ready', () => {
+    if (!settleRestore || disposed || typeof requestAnimationFrame !== 'function') return;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (!settleRestore || disposed || Date.now() > settleRestore.until) return;
+      cancelSettle();
+      applyLocation();
+      cancelSettle(); // once per restore: later layout never moves the reader again
+    }));
+  }, { capture: true, signal: events.signal });
 
   window.addEventListener('project-previews-ready', () => {
     send('title', { title: document.title });

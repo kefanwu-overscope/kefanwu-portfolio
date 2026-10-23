@@ -1,5 +1,124 @@
 # Agent Handoff - Kefan Wu Portfolio
 
+> Project rules for agents live in ../CLAUDE.md. Entries below are a dated log, newest first; when entries disagree, the newest one wins.
+
+## Design-audit fixes (15 recommendations) · 2026-10-22
+
+Based on c71e1b8b. The owner approved all 15 recommendations of the
+2026-10-22 design audit (homepage, case studies, 3D studio). This entry
+supersedes older notes where they disagree.
+
+Owner facts confirmed 2026-10-22 (use these everywhere):
+- Brake (Design Review): rotor mass -23%, inertia -19%, FEA factor of safety
+  2.455. No "25%" or "3.0" remains anywhere.
+- Vine reinforced vessel: designed for 5 psi (34 kPa) with FEA, not
+  pressure-tested at 5 psi; 1.5 psi max working pressure (about 3.3x); the
+  first vessel reached 1.2 psi.
+- AURA: role is "Mechanical Engineer".
+- Mk.7 driver seat (`seat`): Kefan designed and fabricated it. Material,
+  thickness, process and inspection are unknown, so the site states none (the
+  3D motion is labelled "Seat unfold", a geometric illustration only).
+- javelin, brakeSim, carbonSeat, ansysCfd, lineFollower and education are
+  individual projects ("Individual project" in card meta and My role).
+- No new availability line anywhere: "Summer 2027" stays only in #contact.
+
+What ships, by audit recommendation:
+1. Résumé: `assets/kefan-wu-resume.pdf` rebuilt with Chrome/Skia from
+   `../releases/resume-20261022/resume-source.html` (outside git): one page,
+   real extractable text (ToUnicode fonts, tagged). Corrections only: brake 23%
+   at 2.455 FoS, Vine "designed for 5 psi via FEA, 3.3x its 1.5 psi max working
+   pressure", AURA Mechanical Engineer, Mk.7 "Designed and built". SHA-256
+   `84eb031f4903a17e01c9f7bbdc8c42fb03fb1731ed7739962bd3ae5f74b1cc0a`; every
+   link uses `?v=84eb031f4903`. Desk reader: `assets/resume/manifest.json` and
+   preview `assets/resume/resume.bcce93bcc67b1ae9.webp`;
+   `experience-resume-content.js` matches the PDF text. The Job App résumé
+   master was not touched; the owner has to sync it.
+2. Cards no longer swallow page scroll: `exploded.js` arms a card only after
+   real pointer movement (350 ms dwell fallback), never a card scrolling under a
+   still cursor; at either end the gesture goes back to the page. Full scrub is
+   380 px of wheel travel.
+3. Contact exits: every case page (both modes) ends with
+   "kwu@olin.edu · LinkedIn · Resume (PDF)". `404.html` is rebuilt in the white
+   theme with self-hosted fonts and View projects / Resume / Contact.
+4. Detail first screen: all 16 summaries are My role / Result / Status. Phones
+   get a one-row 57 px header, and the deck moves below the summary.
+5. Type floor and contrast: nothing on the homepage is below 11 px, muted grey
+   is #60666d (AA); studio HUD text is 11-12 px with the dock hint on a dark
+   pill; 44 px touch targets for nav, footer, skill chips and studio buttons.
+6. Motion story: notes in Inter (15/14 px desktop, 14/13 px phone), 44 px stage
+   buttons, CFD legend note visible again, shorter scroll tour (stage travel
+   clamp(0.55 x viewport, 380-560 px)), exact seek unchanged. On phones the
+   lightbox pans wide figures instead of shrinking them.
+7. Rule fixes: favicon links on case pages (no favicon 404), Javelin next-case
+   title no longer overflows at 320 px, contact email arrow aligned, header
+   aligned to the 1440 px content edges.
+8. Hero: "Resume (PDF)" link in the hero actions; new dated masks in
+   `assets/hero-fsae-context-20261022/` (continuous regions only, photo pixels
+   unchanged, protected regions alpha 255); background layer .82 opacity / .97
+   saturation; a white veil lifts on slow first loads only. The leadership block
+   moved to right after the project grid. Landscape-phone hero (H16) deferred.
+9. Cards and names: meta is "Context · Role"; captions state only verified
+   results; one name per project everywhere (cards, project-data titles,
+   document.title, noscript lists, studio chooser), e.g. "LiDAR scanner",
+   "Javelin VTOL drone", "AURA swerve drive".
+10. Link previews: absolute og:image (`assets/og/home-20261022.jpg`, a crop of
+    the published hero photo; `assets/og/studio-20261022.jpg`), og/twitter tags
+    on all pages, runtime og:title/description and canonical per project
+    (project-3d canonicalises to case-study). `sitemap.xml` lists / plus the 16
+    case-study URLs. New homepage studio teaser:
+    `assets/studio-teaser-20261022/` (live-renderer capture, HUD hidden).
+11. Case loading: no stale "Selected work" flash (neutral skeleton, noscript
+    list in current order), no footer jump (CLS about 0), back links return to
+    `index.html#project-<key>`, chapters end with "Back to chapter", and the
+    retained room still survives project -> studio.
+12. Studio: honest loader stages (Compiling materials / Preparing lighting /
+    Drawing first frame), no-WebGL and init-failure screens with exits to the
+    projects and résumé, a dismissible slow-device notice, governor steps down on
+    heavy frames, touch wording ("Tap to read"), résumé first in the exhibit
+    chooser followed by 01-16 in canonical order. project-3d standalone header
+    reads "All projects" / "Enter the 3D Studio"; inside the studio frame it reads
+    "Back to studio".
+13. Framing: on portrait phones the detail-page model is enlarged to fill the
+    stage (camera view offset / CSS transform only; no material, pose or camera
+    direction change). Free explore fits the visible parts. brakeSim and
+    carbonSeat leaders use documented feature points; seat and AURA leader
+    targets corrected. AURA cover and frames are reframed in
+    `assets/editorial/aura-reframe-20261022/` and
+    `assets/exploded/aura-reframe-20261022/`; pages load the new manifests
+    `assets/exploded/manifest-white-20261022.json` (home) and
+    `manifest-detail-white-20261022.json` (detail). Studio: the portrait-phone
+    rest pose shows 9 exhibits (was 6) and short landscape has its own pose; a
+    narrow exhibit-local spotlight makes the brake rotor readable. The desktop
+    (landscape) rest pose is unchanged from c71e1b8b; the landing view still
+    shows 10 of 16 exhibits.
+14. Typography: display tracking relaxed so glyphs no longer touch, card titles
+    weight 600, no one-word widows in card subtitles, the skill strip is a
+    single-tab-stop toolbar, the skill card is square with no shadow.
+15. Bytes and dead code: 1200w cover step (`assets/editorial/white-20261022/`),
+    800/1200w method photos (`assets/method-20261022/`), lossless 1K lightmaps
+    for low-tier touch devices (`models/baked/lowtier-20261022/`), modulepreload
+    of the studio module graph, PCFShadowMap (0 pixel difference). Studio v2 dead
+    files deleted: `experience-v2.js`, `studio-room-bridge.js`,
+    `studio-room.css`, `studio-ui.css`, `studio-ui.js`.
+
+All new asset directories have immutable rules in `vercel.json`; no published
+immutable file was overwritten. Cache labels are dated 2026-10-22 in every
+importing HTML/JS.
+
+Deferred / not changed: the studio's main-thread long task right after reveal
+(pre-existing at c71e1b8b); the desktop studio rest pose (kept); the Job App
+résumés (not touched); the sharper U-joint photo (needs the original); the
+landscape-phone hero. Owner questions still open: Telecaster context (team or
+individual), plus the CLAUDE.md fact list.
+
+Verification: node --check on all changed JS; node --test room and
+readability tests 186/186; readability verify 21/21; room verify;
+advanced-render tests 4/4; lod validate; headless Chrome on 16 case and 16
+project-3d pages, index, experience (window.__exp present) and 404 at
+320-1920 px with 0 console errors and no horizontal overflow; reduced motion.
+Release record, restore chain and live byte checks:
+../releases/design-audit-20261022/.
+
 ## Project gallery order / synchronized case navigation · 2026-10-13
 
 User swaps Javelin and FSAE Racecar Brake and moves Material property testing
@@ -3033,18 +3152,11 @@ studio. Everything below is LIVE.
 
 ## Verification Commands
 
-Syntax check:
-
-```powershell
-cd C:\Users\oc\Desktop\WEBSITE\portfolio-site
-& 'C:\Users\oc\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' --check script.js
 ```
+Syntax check (Node is not on PATH; use the Codex-installed runtime):
+& 'C:\Users\oc\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' --check <file>.js
 
-Local preview:
-
-```powershell
-cd C:\Users\oc\Desktop\WEBSITE\portfolio-site
-& 'C:\Users\oc\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -m http.server 4173 --bind 127.0.0.1
+Local preview: Claude Code preview config "portfolio" (../.claude/launch.json → ../serve.ps1, http://localhost:4173/).
 ```
 
 Check local:
@@ -3328,7 +3440,9 @@ an `assert s < e` ORDER check, then rewrite the file with
   the `ASSEMBLIES` array. This is the pending "A" task for the six
   right-cabinet exhibits (currently procedural approximations).
 
-## Direct Prompt For A New Agent
+## Direct Prompt For A New Agent (historical, superseded 2026-10-19)
+
+> Superseded by ../CLAUDE.md. Specifically outdated: the GPT-6 Astra subagent rule (Codex only), the black/blue #3f8cff design language (white theme since 2026-10-11), and "always push without asking" (local-preview requests are an exception).
 
 Paste the block below to hand the project to another agent.
 

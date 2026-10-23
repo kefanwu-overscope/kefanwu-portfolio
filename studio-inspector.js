@@ -260,6 +260,11 @@ function buildResource(key, manifest, geometryBuffer, motionBuffer, { initial = 
   }
 }
 
+// Re-framed frame derivatives (assets/exploded/aura-reframe-20261022). A page
+// that shows those frames passes derivativeFrames:true so its live view keeps
+// the same composition; every other caller keeps the source framing.
+const derivativeFraming = Object.freeze({ aura: Object.freeze({ scale: 1.38, x: .5, y: .433 }) });
+
 /**
  * Independent project workbench. The host hides/suspends its room renderer
  * while active; this renderer never schedules work for the hidden room.
@@ -275,6 +280,8 @@ export function createStudioInspector({
   quality = 'auto',
   transparentBackground = false,
   backgroundColor = 0x191919,
+  derivativeFrames = false,
+  framing = derivativeFrames ? derivativeFraming : {},
 } = {}) {
   if (!canvas) throw new Error('The project workbench needs a canvas.');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: transparentBackground, powerPreference: 'high-performance' });
@@ -284,7 +291,8 @@ export function createStudioInspector({
   renderer.setClearColor(backgroundColor, transparentBackground ? 0 : 1);
   if (renderer.shadowMap) {
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    // r185 replaced PCFSoftShadowMap with this type (same filtering, no warning).
+    renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.shadowMap.autoUpdate = false;
   }
   const scene = new THREE.Scene();
@@ -580,7 +588,54 @@ export function createStudioInspector({
       camera.bottom = -viewHeight / 2;
     } else camera.aspect = width / height;
     camera.updateProjectionMatrix();
+    applyViewCrop(width, height);
     invalidate();
+  }
+
+  // A host page may magnify the fixed source framing, as a portrait story does
+  // for a project's whole-timeline footprint. data-view-crop="scale x y" maps a
+  // canvas point p to (x, y) * size + scale * p. It is a pure view offset: the
+  // camera direction, fitted envelope, poses and materials stay unchanged.
+  function applyViewCrop(width, height) {
+    const [scale, x, y] = (canvas.dataset?.viewCrop || '').split(' ').map(Number);
+    if (scale > 1 && Number.isFinite(x) && Number.isFinite(y)) camera.setViewOffset(width, height, -x * width / scale, -y * height / scale, width / scale, height / scale);
+    else if (camera.view?.enabled) camera.clearViewOffset();
+  }
+
+  // Free exploration starts from the visible pose: keep the current viewing
+  // direction and fit the bounds of the parts shown now, plus a margin.
+  function fitPose({ margin = 1.15 } = {}) {
+    if (!resource || disposed) return false;
+    resource.root.updateMatrixWorld(true);
+    const forward = controls.target.clone().sub(camera.position).normalize();
+    const right = forward.clone().cross(camera.up).normalize(), up = right.clone().cross(forward).normalize();
+    const min = new THREE.Vector3(Infinity, Infinity, Infinity), max = new THREE.Vector3(-Infinity, -Infinity, -Infinity);
+    const point = new THREE.Vector3(), local = new THREE.Vector3();
+    for (const object of new Set(resource.nodes)) {
+      if (!object.visible || object.userData.presentationHidden) continue;
+      // Deforming cloth and membranes only know their current extent.
+      if (!object.frustumCulled) object.geometry.computeBoundingBox();
+      const bounds = object.geometry.boundingBox;
+      for (const x of [bounds.min.x, bounds.max.x]) for (const y of [bounds.min.y, bounds.max.y]) for (const z of [bounds.min.z, bounds.max.z]) {
+        point.set(x, y, z).applyMatrix4(object.matrixWorld);
+        local.set(point.dot(right), point.dot(up), point.dot(forward));
+        min.min(local); max.max(local);
+      }
+    }
+    if (!Number.isFinite(min.x)) return false;
+    const box = canvas.getBoundingClientRect();
+    const aspect = Math.max(0.2, box.width / Math.max(1, box.height));
+    const extent = max.clone().sub(min), middle = min.clone().add(max).multiplyScalar(.5);
+    const target = right.clone().multiplyScalar(middle.x).addScaledVector(up, middle.y).addScaledVector(forward, middle.z);
+    const width = Math.max(extent.x, extent.y * aspect, radius * .02) * margin;
+    let distance = Math.max(camera.position.distanceTo(controls.target), extent.z + radius * .2);
+    if (!camera.isOrthographicCamera) {
+      const tangent = Math.tan((camera.fov || 38) * Math.PI / 360);
+      distance = extent.z / 2 + width / 2 / (tangent * aspect);
+    }
+    const position = target.clone().addScaledVector(forward, -distance);
+    applyView({ position: position.toArray(), target: target.toArray(), up: camera.up.toArray(), zoom: 1, frameWidth: width, frameAspect: aspect });
+    return true;
   }
 
   function captureView() {
@@ -653,6 +708,17 @@ export function createStudioInspector({
     const fitted = fitCameraEnvelope({ bounds, position: sourcePosition, target, up, sourceAspect, aspect, fov: camera.fov || 38, orthoScale: frameWidth });
     if (orthographic) frameWidth = fitted.frameWidth;
     else sourcePosition.copy(target).addScaledVector(fitted.forward, -fitted.distance);
+    // A dated frame derivative may re-frame one small project. Its centre (x, y,
+    // fractions of the fitted landscape source frame, y down) moves to the
+    // middle, then the orthographic width shrinks by its scale. The direction,
+    // envelope fit, poses and materials are unchanged, so every page that
+    // shows those frames passes the same entry to its live view.
+    const reframe = framing[entry.key];
+    if (orthographic && reframe?.scale > 1) {
+      const right = fitted.forward.clone().cross(up).normalize(), cameraUp = right.clone().cross(fitted.forward).normalize();
+      const shift = right.multiplyScalar((reframe.x - .5) * frameWidth).addScaledVector(cameraUp, (.5 - reframe.y) * frameWidth / frameAspect);
+      target.add(shift); sourcePosition.add(shift); frameWidth /= reframe.scale;
+    }
     sourceView = { position: sourcePosition.toArray(), target: target.toArray(), up: up.toArray(), zoom: 1, frameWidth, frameAspect };
     resize();
     applyView(sourceView);
@@ -777,6 +843,12 @@ export function createStudioInspector({
   };
   canvas.addEventListener('pointerdown', pointerStart);
   canvas.addEventListener('pointerup', pointerEnd);
+  // Hosts that do not hold this instance (the page's motion story) address
+  // its canvas: re-read data-view-crop, or fit the current pose to explore.
+  const viewCrop = () => resize();
+  const viewFit = (event) => fitPose(event.detail || {});
+  canvas.addEventListener('studio-view-crop', viewCrop);
+  canvas.addEventListener('studio-view-fit', viewFit);
   resize();
 
   function projectAnchor(selector) {
@@ -788,13 +860,25 @@ export function createStudioInspector({
       if (selector.name ? source.name !== selector.name : source.group !== selector.group) return;
       const object = resource.nodes[index], anchor = resource.anchors[index];
       if (!object.visible || object.userData.presentationHidden) return;
-      const point = (anchor.positions ? new THREE.Vector3().fromBufferAttribute(anchor.positions, anchor.vertex) : new THREE.Vector3().fromArray(anchor.point)).applyMatrix4(object.matrixWorld).project(camera);
+      // An optional point (the part's source coordinates) names one documented
+      // feature of a unified mesh, such as a rotor's scalloped edge.
+      const point = (selector.point ? new THREE.Vector3().fromArray(selector.point) : anchor.positions ? new THREE.Vector3().fromBufferAttribute(anchor.positions, anchor.vertex) : new THREE.Vector3().fromArray(anchor.point)).applyMatrix4(object.matrixWorld).project(camera);
       if (point.z < -1 || point.z > 1) return;
       candidates.push({ x: (point.x + 1) / 2, y: (1 - point.y) / 2, z: point.z, name: source.name });
     });
     // Closest source part in the requested group, never a screen-space guess.
     candidates.sort((a, b) => a.z - b.z);
     return candidates[0] || null;
+  }
+
+  // Export/QA only: the source part and its local point under a canvas
+  // position (0-1), used to author feature points for unified meshes.
+  function pickPoint(x, y) {
+    if (!resource) return null;
+    resource.root.updateMatrixWorld(true); camera.updateMatrixWorld(true);
+    raycaster.setFromCamera(new THREE.Vector2(x * 2 - 1, 1 - y * 2), camera);
+    const hit = raycaster.intersectObjects(resource.nodes, false).find((result) => result.object.visible && !result.object.userData.presentationHidden);
+    return hit ? { name: hit.object.userData.sourceName, point: hit.object.worldToLocal(hit.point.clone()).toArray() } : null;
   }
 
   // Export/QA only. Callout placement uses these baked per-phase occupancy
@@ -824,8 +908,8 @@ export function createStudioInspector({
   }
 
   return {
-    projectAnchor, projectRegions,
-    selectProject, setProgress, play, pause, resize, setView, setActive, retryMotion,
+    projectAnchor, projectRegions, pickPoint,
+    selectProject, setProgress, play, pause, resize, setView, setActive, retryMotion, fitPose,
     whenMotionReady: () => motionCompletion,
     reset({ camera: resetCamera = true } = {}) {
       if (motionTask) motionTask.restoreProgress = 0;
@@ -858,6 +942,8 @@ export function createStudioInspector({
       canvas.removeEventListener('webglcontextrestored', restored);
       canvas.removeEventListener('pointerdown', pointerStart);
       canvas.removeEventListener('pointerup', pointerEnd);
+      canvas.removeEventListener('studio-view-crop', viewCrop);
+      canvas.removeEventListener('studio-view-fit', viewFit);
       reducedMotion.removeEventListener('change', reducedChange);
       controls.dispose();
       cache.dispose();

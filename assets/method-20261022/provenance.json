@@ -1,0 +1,102 @@
+{
+  "date": "2026-10-22",
+  "purpose": "800w/1200w srcset steps for the How I work photographs and the Mk.7 track photograph.",
+  "method": "Lanczos downscale of the published photograph; WebP q80 method 6. Never upscaled; no retouching or generated pixels.",
+  "files": {
+    "vine-body-3partition": {
+      "source": "assets/vine-body-3partition.webp",
+      "sourceSize": [
+        1400,
+        1050
+      ],
+      "sourceBytes": 120006,
+      "sourceSha256": "e8f0877f7241a3558f0fbb3bd4a2dbc6641cc1543098f72cb1f7c0309d8f3317",
+      "variants": [
+        {
+          "src": "assets/method-20261022/vine-body-3partition-800.webp",
+          "width": 800,
+          "height": 600,
+          "bytes": 62264,
+          "sha256": "52ffa68870c9d2920da46a3671d8a1d436698d921076405106a5abfeece5186c"
+        },
+        {
+          "src": "assets/method-20261022/vine-body-3partition-1200.webp",
+          "width": 1200,
+          "height": 900,
+          "bytes": 101096,
+          "sha256": "049d1fc0b0027131e2953f68bda9dbf2a9f3e3f26d83874ecc2406ce3883f390"
+        }
+      ]
+    },
+    "material-bending-fixture": {
+      "source": "assets/material-bending-fixture.webp",
+      "sourceSize": [
+        1400,
+        1050
+      ],
+      "sourceBytes": 84052,
+      "sourceSha256": "d3f5cbde4ae5d6f8fb847f39d7803afaeae3eaed2d961062cb290de466eaa0de",
+      "variants": [
+        {
+          "src": "assets/method-20261022/material-bending-fixture-800.webp",
+          "width": 800,
+          "height": 600,
+          "bytes": 35232,
+          "sha256": "a7a96a0f5cba079f53ee993af474e4af18b109eaea81c999f8ec337bdd19ecb9"
+        },
+        {
+          "src": "assets/method-20261022/material-bending-fixture-1200.webp",
+          "width": 1200,
+          "height": 900,
+          "bytes": 61820,
+          "sha256": "c29b70614a614c143940fc8a8e30d0971b980467eed6b89875fb8e4b37813cb7"
+        }
+      ]
+    },
+    "fsae-mk7-track": {
+      "source": "assets/fsae-mk7-track.webp",
+      "sourceSize": [
+        1800,
+        1125
+      ],
+      "sourceBytes": 385106,
+      "sourceSha256": "8cbe26878c596160fea6dd96bb40f92352c4d5c7c471b1b5aa2b10410e15b8de",
+      "variants": [
+        {
+          "src": "assets/method-20261022/fsae-mk7-track-800.webp",
+          "width": 800,
+          "height": 500,
+          "bytes": 65172,
+          "sha256": "430153d5cc1ba399235180e1734cb662d3234972674a0ddecf6f0fb2c8c10195"
+        },
+        {
+          "src": "assets/method-20261022/fsae-mk7-track-1200.webp",
+          "width": 1200,
+          "height": 750,
+          "bytes": 148548,
+          "sha256": "ee2bb16f0ac565ae3e0b1ec8b1e8d4a41bc5d2edf00168f997783b075645f103"
+        }
+      ]
+    },
+    "linkedin-u-joint": {
+      "source": "assets/linkedin-u-joint.webp",
+      "sourceSize": [
+        800,
+        598
+      ],
+      "sourceBytes": 53728,
+      "sourceSha256": "be74ddc1835fe96b65be277c4de5ff66f322544d3e6a057777ee05aa4feaacb3",
+      "variants": [
+        {
+          "width": 800,
+          "skipped": "source is only 800px wide; never upscale"
+        },
+        {
+          "width": 1200,
+          "skipped": "source is only 800px wide; never upscale"
+        }
+      ]
+    }
+  },
+  "limits": "linkedin-u-joint.webp is only 800 px wide, so no variant was made; a sharper version needs the original photo from the owner."
+}

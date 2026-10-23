@@ -64,6 +64,13 @@ export function layoutAnnotation({ anchor, width, height, labelWidth, labelHeigh
     candidates.push({ ...constrain(anchor.x - size.width / 2, anchor.y - gap - size.height), side: 'above' });
     candidates.push({ ...constrain(anchor.x - size.width / 2, anchor.y + gap), side: 'below' });
   }
+  // Edge positions find a free band when an enlarged model fills the stage
+  // around its part; the longer leader is weighed against any overlap. The top
+  // band starts below the heading's reserved strip and its 8px clearance.
+  for (const y of [anchor.y - size.height / 2, 70, height - 88 - size.height]) {
+    candidates.push({ ...constrain(margin, y), side: 'left' }, { ...constrain(width - margin - size.width, y), side: 'right' });
+  }
+  candidates.push({ ...constrain(anchor.x - size.width / 2, 70), side: 'above' }, { ...constrain(anchor.x - size.width / 2, height - 88 - size.height), side: 'below' });
   let best;
   for (const rect of candidates) {
     const line = leaderPath(rect, anchor), occupied = collision(rect), blocked = forbidden(rect);

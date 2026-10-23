@@ -1,0 +1,62 @@
+{
+  "project": "aura",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "aura-reframe-20261022",
+  "palette": "studio-photo-materials.js",
+  "background": "#ffffff",
+  "backgroundComposition": "Opaque white scene background participates in physical transmission; native WebGL antialiasing; no pixel filtering.",
+  "sourceManifest": "aura/manifest.04a5825a491acd77.json",
+  "sourceManifestSha256": "04a5825a491acd77d00ae0caa78caf677b381ec310eab9881eada95d78203f3d",
+  "framing": {
+    "scale": 1.38,
+    "x": 0.5,
+    "y": 0.433,
+    "policy": "studio-inspector.js framing option: the centre (x, y; fractions of the fitted white-20261011 landscape source frame, y down) moves to the middle and the orthographic width shrinks by scale. Camera direction, envelope fit, sampled poses, materials and lights are unchanged; the white-20261011 frames remain published."
+  },
+  "supersedes": "assets/exploded/white-20261011/sd/aura/provenance.json",
+  "camera": {
+    "position": [
+      5.53917971300454,
+      6.060945272850445,
+      9.293004240008825
+    ],
+    "target": [
+      -0.03561124158530296,
+      1.2666256431812573,
+      -0.18414190867281607
+    ],
+    "up": [
+      -0.20265238652933804,
+      0.9166490062782604,
+      -0.3445092299533372
+    ],
+    "zoom": 1,
+    "frameWidth": 6.930733171223483,
+    "frameAspect": 1.4988290398126465
+  },
+  "coverCamera": {
+    "position": [
+      5.53917971300454,
+      6.060945272850445,
+      9.293004240008825
+    ],
+    "target": [
+      -0.03561124158530296,
+      1.2666256431812573,
+      -0.18414190867281607
+    ],
+    "up": [
+      -0.20265238652933804,
+      0.9166490062782604,
+      -0.3445092299533372
+    ],
+    "zoom": 1,
+    "frameWidth": 6.930733171223483,
+    "frameAspect": 1.4988290398126465
+  },
+  "coverProgress": 0,
+  "frameCount": 145,
+  "width": 640,
+  "height": 427,
+  "bytes": 976500
+}

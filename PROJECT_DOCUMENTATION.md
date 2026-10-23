@@ -348,20 +348,19 @@ The homepage metrics are intentionally broad portfolio signals:
 
 - Number of engineering projects shown.
 - Number of technical skills represented across the portfolio.
-- Team leadership experience, currently framed as leading a team of more than 30 engineers.
+- Team leadership experience, currently framed as "Leading 30 mechanical engineers" (Mechanical Lead, Olin Electric Motorsports).
 - Current Mechanical Lead role at Olin Electric Motorsports.
 
 Project-specific numbers are kept inside the relevant case studies instead of being used as headline resume metrics.
 
 ## Design Direction
 
-The visual direction is dark, high-contrast, quiet, and precise:
+The visual direction is white, quiet and precise (since 2026-10-11; the earlier dark/Liquid Glass look is retired):
 
-- Large editorial hero area with real engineering imagery.
-- Minimal copy with strong technical nouns.
-- Compact recruiter-friendly project cards.
-- Thin borders, restrained surfaces, and small-radius UI.
-- Liquid Glass-inspired controls and cards: translucent functional layers, soft edge highlights, backdrop blur, and hover or focus sheen animation.
+- Real race-car hero photo blended into white, with a sharp car/driver and a soft natural fade.
+- Minimal copy with strong technical nouns; readable type sizes.
+- The original 16-card project gallery with neutral 2 px animation sliders.
+- Thin rules, restrained surfaces and small-radius UI; no purple and no decorative gradient blobs.
 - Project details inside native case pages with chapters, source records and image zoom.
 - No marketing-style hero cards or decorative gradient blobs.
 
@@ -379,6 +378,7 @@ The intended feel is closer to a professional engineering product page than a pe
 - `assets/` contains optimized image assets used by the deployable site.
 - `README.md` contains local preview and deployment instructions.
 - `AGENT_HANDOFF.md` contains implementation notes for future agents.
+- white-home-20261011.css and white-case-20261011.css provide the white theme; skills-card-20261012.js drives the skill cards; project-3d.html shows the same case content in studio mode.
 
 ## Key Sections
 
@@ -386,14 +386,12 @@ The intended feel is closer to a professional engineering product page than a pe
 
 The hero communicates the current role, engineering focus, and broad portfolio signals. It should stay concise and should not become a full biography.
 
-The top skill ticker should run full-viewport from left to right above the `Kefan Wu` title. The scroll cue is a slim vertical bar on the right side of the hero, not a centered mouse indicator.
+The 14-skill ticker runs above the hero name; hovering, focusing or tapping a skill opens its information card (skills-card-20261012.js). See HOMEPAGE_PRESENTATION.md for the current hero rules.
 
 ### Selected Work
 
 The selected work grid links to all 16 native case pages. Preserve homepage order
-in case numbering and next-project navigation: Steering, Vine, Javelin, Scanner,
-Brake Sim, AURA, Carbon Seat, Driver Seat, Material Testing, CFD, Pool Sniper,
-LineFollower, Smelly, Telecaster, Education, and FTC.
+in case numbering and next-project navigation: Steering, Vine Robot, FSAE Racecar Brake, LiDAR Scanner, Javelin, Material Testing, AURA, Carbon Seat, Driver Seat, CFD, Pool Sniper, LineFollower, Smelly, Telecaster, Education, and FTC (order since 2026-10-13).
 
 ### Flagship Program
 
@@ -427,36 +425,11 @@ The contact section should keep actions simple: email, LinkedIn, and resume or p
 
 ## Local Preview
 
-Run the static server from the project folder:
-
-```powershell
-cd C:\Users\oc\Desktop\WEBSITE\portfolio-site
-python -m http.server 4173
-```
-
-If Python is not on PATH, use the bundled runtime:
-
-```powershell
-& 'C:\Users\oc\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -m http.server 4173
-```
-
-Then open:
-
-```text
-http://localhost:4173
-```
+See LOCAL_PREVIEW.md (Claude Code preview config "portfolio" → ../serve.ps1, http://localhost:4173/).
 
 ## Deployment
 
-This is a static site. Deploy the contents of `portfolio-site` to a static host such as:
-
-- Vercel
-- Netlify
-- Cloudflare Pages
-- GitHub Pages
-- Squarespace custom code or static file hosting, if supported by the chosen plan
-
-After deployment, point `kefanwu.com` to the deployed site according to the hosting provider's DNS instructions.
+Production is Vercel, deployed automatically from GitHub kefanwu-overscope/kefanwu-portfolio branch main; www.kefanwu.com is primary and the apex redirects to it. Release steps: ../.claude/skills/website-release/SKILL.md.
 
 ## QA Checklist
 
@@ -484,8 +457,8 @@ Before deployment, verify:
 > Source facts and galleries live in **`project-data.js`**. Editorial structure
 > lives in **`case-study-data.js`**; media types and dimensions live in
 > **`case-study-media.js`**. Native pages combine these without replacing
-> the original records. The studio still has 15 project exhibits; Education
-> routes to the general studio. See `AGENT_HANDOFF.md` for integration details.
+> the original records. The studio has 16 project exhibits (Education included since 2026-09-26).
+> See `AGENT_HANDOFF.md` for integration details.
 
 Most content updates should happen in `project-data.js` inside the `projectData` object.
 

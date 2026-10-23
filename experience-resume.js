@@ -1,5 +1,5 @@
-import { RESUME_ASSET } from './experience-resume-assets.js';
-import { resumeAccessibleHTML } from './experience-resume-content.js';
+import { RESUME_ASSET } from './experience-resume-assets.js?v=resume-20261022';
+import { resumeAccessibleHTML } from './experience-resume-content.js?v=resume-20261022';
 export { RESUME_ASSET };
 export const RESUME_PAPER = Object.freeze({ width: .234, height: .234 * 22 / 17, thickness: .00025, bottom: .76695 });
 
