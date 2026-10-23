@@ -759,6 +759,11 @@ window.caseStudySupplements = {
             "id": "seat-responsibility",
             "label": "My responsibility",
             "value": "Design and fabrication of the driver seat."
+          },
+          {
+            "id": "seat-material",
+            "label": "Material",
+            "value": "5052-H32 aluminum."
           }
         ]
       }

@@ -15,7 +15,7 @@ const presentation = {
   ],
   aura: ['robotics product fabrication', 'Assembly sequence', ['aura-initial-payload', 'aura-tested-payload', 'aura-drive-model']],
   carbonSeat: ['motorsport product fabrication', 'Illustrative layup stages', ['carbonSeat-resin', 'carbonSeat-main-layup', 'carbonSeat-local-reinforcement']],
-  seat: ['motorsport product fabrication', 'Seat unfold', ['seat-vehicle', 'seat-responsibility']],
+  seat: ['motorsport product fabrication', 'Seat unfold', ['seat-vehicle', 'seat-responsibility', 'seat-material']],
   materialTest: ['analysis', 'Illustrative tensile test', ['materialTest-load-transducer', 'materialTest-bamboo-diameter']],
   ansysCfd: ['analysis software', 'Computed flow paths', []],
   pool: ['robotics product fabrication', 'Load and release', ['pool-contribution', 'pool-rack-support']],

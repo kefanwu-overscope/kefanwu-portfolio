@@ -2,6 +2,55 @@
 
 > Project rules for agents live in ../CLAUDE.md. Entries below are a dated log, newest first; when entries disagree, the newest one wins.
 
+## Owner-confirmed project facts and résumé refresh · 2026-10-23
+
+Based on 002fe827. The owner asked on 2026-10-23 for the résumé to carry the
+latest data and supplied these facts (use them everywhere, together with the
+2026-10-22 facts below):
+- Mk.7 driver seat (`seat`): 5052-H32 aluminum; Kefan designed and fabricated
+  it. Thickness, forming process and inspection are still unknown, so the site
+  states none of them.
+- Telecaster (`telecaster`): solo build (individual project); walnut body,
+  Fender Deluxe Drive pickups.
+- Carbon fiber seat (`carbonSeat`, Mk.8 shell): complete. No load-test,
+  driver-fit or quality result is claimed.
+- Javelin (`javelin`): in progress; 300 km/h is a design target, not
+  flight-validated.
+- Individual projects are now javelin, brakeSim, carbonSeat, ansysCfd,
+  lineFollower, education and telecaster.
+
+What changed on the site:
+- Mk.7: card subtitle and image alt, case summary, specs, figure alt/caption
+  and detail paragraphs name 5052-H32 aluminum; a "Material" supplement field
+  (`seat-material`) is shown in both case modes.
+- Telecaster: card meta reads "Individual project"; summary and My role say
+  solo build.
+- Carbon seat: status "Complete"; load and driver-fit results are stated as not
+  reported (design intent, not test evidence).
+- Javelin: status "In progress"; speed remains a design target.
+- Cache tokens: `project-data.js`, `case-study-data.js`,
+  `case-study-supplements.js`, `project-case-3d.js`, `studio-catalog.js` use
+  `?v=owner-facts-20261023`; studio/résumé modules use `?v=resume-20261023`.
+- Readability approved-edit fixtures and `verify.mjs` updated for the new text.
+
+Résumé:
+- `assets/kefan-wu-resume.pdf` updated (Mk.7 line names 5052-H32 aluminum;
+  Javelin marked "(in progress)"). SHA-256
+  `a3404e1cb73eb69360a88b7bf804d375f9cfb0a4db7d1f30fe23b7aaa58df759`; every
+  link uses `?v=a3404e1cb73e`.
+- Desk reader texture: new immutable path
+  `assets/resume/resume.6e2237ad0f315510.webp` (lossless WebP, SHA-256
+  `6e2237ad0f315510cea0cdd3c505f192233d3dd3aab7b3f3b4dc41cbaae8a0f8`), with
+  an immutable rule in `vercel.json`; `assets/resume/manifest.json` and
+  `experience-resume-assets.js` point to it, and
+  `experience-resume-content.js` matches the PDF text. The previous
+  `resume.bcce93bcc67b1ae9.webp` was not overwritten.
+- The Job App application résumés (1-page and 2-page with availability) were
+  updated outside this repo; see
+  `C:\Users\oc\Desktop\Job App\RESUME_UPDATE_20261023.md`.
+
+Release record and restore chain: `../releases/facts-update-20261023/`.
+
 ## Design-audit fixes (15 recommendations) · 2026-10-22
 
 Based on c71e1b8b. The owner approved all 15 recommendations of the

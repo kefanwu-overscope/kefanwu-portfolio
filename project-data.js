@@ -271,7 +271,7 @@ const projectData = {
     "kicker": "Formula SAE / Mk.7 / seat design & fabrication",
     "title": "Mk.7 driver seat",
     "image": "assets/cover-aluminum-seat.webp",
-    summary: "Designed and fabricated the driver seat for the Mk.7 Formula SAE car. The project connects a perforated pan, back, and folded sides to their cockpit context; the supporting analysis image is retained without a numerical result.",
+    summary: "Designed and fabricated the 5052-H32 aluminum driver seat for the Mk.7 Formula SAE car. The project connects a perforated pan, back, and folded sides to their cockpit context; the supporting analysis image is retained without a numerical result.",
     "highlights": [
       "Designed and fabricated the Mk.7 driver seat.",
       "The Mk.7 seat geometry uses perforated panels and folded sides.",
@@ -293,7 +293,7 @@ const projectData = {
       {
         "title": "Geometry and fabrication",
         "points": [
-          "The CAD shows a perforated seat with folded side panels.",
+          "The CAD shows a perforated 5052-H32 aluminum seat with folded side panels.",
           "Making the seat connects that geometry to the physical component in the cockpit."
         ]
       },
@@ -339,7 +339,7 @@ const projectData = {
     "kicker": "Formula SAE / composites / support",
     "title": "Carbon fiber seat",
     "image": "assets/cover-carbon-fiber-seat.webp",
-    summary: "Developed and fabricated a Mk.8 carbon cockpit-support shell to address shoulder and hip support, layup practicality, and service access. Used EL2 resin, 20 main plies of 3K 200 g/m² twill, and 5–10 local patch plies. The documented result is a cured, demolded, and trimmed shell; support and repairability remain design objectives.",
+    summary: "Developed and fabricated a Mk.8 carbon cockpit-support shell to address shoulder and hip support, layup practicality, and service access. Used EL2 resin, 20 main plies of 3K 200 g/m² twill, and 5–10 local patch plies. The seat is complete: a cured, demolded, and trimmed shell; support and repairability are design objectives without reported test results.",
     "highlights": [
       "Added a carbon shoulder- and hip-support shell above the seat pan for retention under cornering load.",
       "Chose the carbon-fiber layup for stiffness-to-weight where driver retention mattered more than a metal pan.",
@@ -384,7 +384,7 @@ const projectData = {
       {
         "title": "Status",
         "points": [
-          "Laid up and trimmed the shell over the seat mold for the Mk.8 cockpit; gallery shows layup and weave.",
+          "Complete: laid up, cured, and trimmed over the seat mold for the Mk.8 cockpit; gallery shows layup and weave.",
           "Designed for removal, repair, and reassembly within a race weekend, addressing Mk.7 service issues."
         ]
       }
@@ -1177,7 +1177,7 @@ const projectData = {
     "kicker": "CNC / finishing / electronics integration",
     "title": "Telecaster guitar",
     "image": "assets/cover-telecaster.webp",
-    summary: "Built a playable walnut-body Telecaster-style guitar from raw stock. Glued smaller pieces into an affordable blank, CNC-routed pockets and wiring channels, and used laser-cut templates to check post-CNC drilling. Multi-coat finishing and Fender Deluxe Drive installation completed the manufacturing and integration sequence.",
+    summary: "Built a playable walnut-body Telecaster-style guitar from raw stock as a solo project. Glued smaller pieces into an affordable blank, CNC-routed pockets and wiring channels, and used laser-cut templates to check post-CNC drilling. Multi-coat finishing and Fender Deluxe Drive installation completed the manufacturing and integration sequence.",
     "highlights": [
       "Glued smaller walnut pieces into a blank, controlling cost while preserving material quality.",
       "ShopBot CNC-routed body pockets and wiring channels after planning toolpaths and hold-downs.",

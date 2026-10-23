@@ -1,7 +1,7 @@
 import { renderPressureLegend } from './project-pressure-legend.js';
 import { projectMotionLabels } from './project-motion-labels.js?v=brake-dr-20261022';
 import { projectMotionNotes } from './project-motion-notes.js?v=seat-truth-20261022';
-import { getStudioProject } from './studio-catalog.js?v=seat-truth-20261022';
+import { getStudioProject } from './studio-catalog.js?v=owner-facts-20261023';
 
 const clamp = (value) => Math.max(0, Math.min(1, Number(value) || 0));
 const steeringParts = {

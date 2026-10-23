@@ -1,8 +1,8 @@
 /* Accessible text equivalent of the canonical printed résumé.
- * Source: assets/kefan-wu-resume.pdf (rebuilt 2026-10-22), checked against its extracted text.
- * PDF SHA-256: 84EB031F4903A17E01C9F7BBDC8C42FB03FB1731ED7739962BD3AE5F74B1CC0A (links use ?v=84eb031f4903)
- * Page preview: assets/resume/resume.bcce93bcc67b1ae9.webp
- *   (SHA-256 BCCE93BCC67B1AE9E95BBD8242C8AE9A0B1BA09B5B0B31809C9ECF021A3C452F; see assets/resume/manifest.json)
+ * Source: assets/kefan-wu-resume.pdf (rebuilt 2026-10-22, updated 2026-10-23), checked against its extracted text.
+ * PDF SHA-256: A3404E1CB73EB69360A88B7BF804D375F9CFB0A4DB7D1F30FE23B7AAA58DF759 (links use ?v=a3404e1cb73e)
+ * Page preview: assets/resume/resume.6e2237ad0f315510.webp
+ *   (SHA-256 6E2237AD0F315510CEA0CDD3C505F192233D3DD3AAB7B3F3B4DC41CBAAE8A0F8; see assets/resume/manifest.json)
  * Keep this text synchronized with the PDF-derived page image. Dates, targets,
  * measurements, and wording are preserved from that source, not inferred.
  * The caller supplies screen-reader-only styling; this contains no controls.
@@ -39,7 +39,7 @@ const motorsportsRoles = [
     title: "Drivetrain & Cockpit Engineer",
     dates: "Sep 2024 – Jun 2025",
     points: [
-      "Designed and built the Mk.7 driver seat and FEA-validated motor-controller mounts",
+      "Designed and built the 5052-H32 aluminum Mk.7 driver seat and FEA-validated motor-controller mounts",
     ],
   },
 ];
@@ -57,7 +57,7 @@ const auraPoints = [
 ];
 
 const selectedProjects = [
-  "Javelin VTOL drone — tail-sitter, no control surfaces, 300 km/h design target; differential-thrust attitude control, avionics integrated; seeking FAA clearance to fly past the 100 mph UAS limit",
+  "Javelin VTOL drone (in progress) — tail-sitter, no control surfaces, 300 km/h design target; differential-thrust attitude control, avionics integrated; seeking FAA clearance to fly past the 100 mph UAS limit",
   "Agent-based CFD — automated Ansys Fluent via PyFluent with AI agents; drove Javelin VTOL aerodynamics design inspiration; documented 11 failure modes with recovery procedures",
   "LiDAR 3D scanner — two-axis ESP32 gantry (NEMA 17, DRV8825) captured 2,206 points; a 14-point calibration cut range error below 3%, plus copper-foil EMI shielding",
 ];

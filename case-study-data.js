@@ -300,7 +300,7 @@ window.caseStudyData = {
         [
           "300 km/h and flight control",
           "Flight tests after control and fail-safe work",
-          "Speed remains a target. The recorded project status is pre-flight.",
+          "In progress. Speed remains a design target, not flight-validated.",
           "Open verification"
         ]
       ],
@@ -326,7 +326,7 @@ window.caseStudyData = {
       ],
       [
         "Status",
-        "300 km/h is a design target, not flight-validated; fail-safe behavior, differential-thrust tuning, and flight testing are the recorded next steps."
+        "In progress. 300 km/h is a design target, not flight-validated; fail-safe behavior, differential-thrust tuning, and flight testing are the recorded next steps."
       ]
     ],
     chapters: [
@@ -812,7 +812,7 @@ window.caseStudyData = {
           "Manufacturable shell geometry",
           "Male mold, cloth placement, cure, demolding, and trimming",
           "A physical trimmed shell was produced for the Mk.8 cockpit.",
-          "Fabricated"
+          "Complete"
         ],
         [
           "Specified reinforcement",
@@ -827,7 +827,7 @@ window.caseStudyData = {
           "Design intent"
         ]
       ],
-      "iteration": "Mk.7 fabrication experience drove the Mk.8 support and service requirements. The completed shell establishes manufacturability; driver-fit, load-response, and removal checks are the next evidence needed to evaluate those functional objectives."
+      "iteration": "Mk.7 fabrication experience drove the Mk.8 support and service requirements. The completed seat establishes manufacturability; driver-fit, load-response, and removal results are not reported here, so those functional objectives are stated as design intent."
     },
     "cover": {
       "src": "assets/editorial/neutral-20260915/carbonSeat-wide-1800.webp?v=9947d45e1ef7",
@@ -849,7 +849,7 @@ window.caseStudyData = {
       ],
       [
         "Status",
-        "Fabricated. Driver fit, support under load, and removal access remain open checks."
+        "Complete. Load and driver-fit results are not reported."
       ]
     ],
     chapters: [
@@ -904,14 +904,14 @@ window.caseStudyData = {
       {
         "id": "service",
         "label": "Review",
-        "title": "Manufactured shell and fit checks",
+        "title": "Completed shell and functional evidence",
         "paragraphs": [
           "The completed, trimmed shell demonstrates that the geometry and layup could be manufactured. Race-weekend removal, repair, and reassembly informed its surrounding interfaces.",
-          "Driver fit, support under load, and removal access remain functional checks to address. Successful fabrication alone does not close those original cockpit requirements."
+          "The seat is complete. Driver-fit, load-response, and removal-access results are not reported, so those cockpit requirements stand as design intent rather than test evidence."
         ],
         "detailParagraphs": [
           "The completed, trimmed shell establishes that the geometry and layup could be manufactured. Removal, repair, and reassembly within a race weekend informed the surrounding interfaces.",
-          "The next functional questions concern driver fit, support under load, and access during removal. Keeping those checks distinct from successful fabrication preserves the connection between the original cockpit needs and the evidence required to close them."
+          "Driver fit, support under load, and access during removal are not reported as test results. Keeping those checks distinct from successful fabrication preserves the connection between the original cockpit needs and the evidence required to verify them."
         ],
         "image": 3,
         "evidence": "Finished fabrication",
@@ -930,7 +930,7 @@ window.caseStudyData = {
     engineering: {
       "goal": "Design and produce the Mk.7 driver seat for the vehicle build.",
       "constraints": [
-        "Perforated pan and back with folded side panels.",
+        "5052-H32 aluminum; perforated pan and back with folded side panels.",
         "The surrounding chassis and cockpit hardware define the installation space."
       ],
       "checks": [
@@ -957,8 +957,8 @@ window.caseStudyData = {
     },
     "cover": {
       "src": "assets/editorial/neutral-20260915/seat-wide-1800.webp?v=ad9330bcc20e",
-      "alt": "Folded and perforated Mk.7 driver seat.",
-      "caption": "The Mk.7 driver-seat geometry.",
+      "alt": "Folded and perforated 5052-H32 aluminum Mk.7 driver seat.",
+      "caption": "The Mk.7 driver seat in 5052-H32 aluminum.",
       "kind": "Project CAD render",
       "srcset": "assets/editorial/neutral-20260915/seat-wide-480.webp?v=d59c63530faf 480w, assets/editorial/neutral-20260915/seat-wide-960.webp?v=808ba2b7e914 960w, assets/editorial/neutral-20260915/seat-wide-1800.webp?v=ad9330bcc20e 1800w",
       "width": 1800,
@@ -971,7 +971,7 @@ window.caseStudyData = {
       ],
       [
         "Result",
-        "Perforated pan and back with folded side panels, made as the Mk.7 car’s seat."
+        "Perforated 5052-H32 aluminum pan and back with folded side panels, made as the Mk.7 car’s seat."
       ],
       [
         "Status",
@@ -984,11 +984,11 @@ window.caseStudyData = {
         "label": "Requirements",
         "title": "Mk.7 seat design and fabrication",
         "paragraphs": [
-          "I designed and made the Mk.7 driver seat for the Formula SAE car: a perforated pan and back with folded side panels.",
+          "I designed and made the Mk.7 driver seat for the Formula SAE car in 5052-H32 aluminum: a perforated pan and back with folded side panels.",
           "The contribution covers the seat design and its fabrication. Numerical structural validation would require evidence separate from the build."
         ],
         "detailParagraphs": [
-          "My responsibility was designing and making the driver seat for the Mk.7 Formula SAE car. The seat geometry includes a perforated pan and back with folded side panels.",
+          "My responsibility was designing and making the 5052-H32 aluminum driver seat for the Mk.7 Formula SAE car. The seat geometry includes a perforated pan and back with folded side panels.",
           "That defines a design-and-fabrication task: develop the seat form and carry it into a physical component for the cockpit. Numerical validation of the seat is separate from the scope presented here."
         ],
         "image": 0,
@@ -1750,7 +1750,7 @@ window.caseStudyData = {
     summary: [
       [
         "My role",
-        "Walnut-body preparation, ShopBot machining, drilling fixtures, finishing, and electronics installation."
+        "Individual project — solo build covering walnut-body preparation, ShopBot machining, drilling fixtures, finishing, and electronics installation."
       ],
       [
         "Result",
