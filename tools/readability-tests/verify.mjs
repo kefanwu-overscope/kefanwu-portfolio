@@ -267,7 +267,9 @@ await check('Original cover catalog and tracked model / scientific-image / anima
     ['assets/hero-fsae-context-20261013/context-mask.svg', 'assets/hero-fsae-context-20261013/provenance.json'].includes(name) ||
     ['assets/exploded/manifest-white-20261011.json', 'assets/exploded/manifest-detail-white-20261011.json'].includes(name) ||
     // 2026-10-22: corrected public résumé, its desk preview, and new dated presentation variants.
-    ['assets/kefan-wu-resume.pdf', 'assets/resume/manifest.json', 'assets/resume/resume.bcce93bcc67b1ae9.webp', 'assets/resume/resume.6e2237ad0f315510.webp'].includes(name) ||
+    ['assets/kefan-wu-resume.pdf', 'assets/resume/manifest.json', 'assets/resume/resume.bcce93bcc67b1ae9.webp', 'assets/resume/resume.6e2237ad0f315510.webp',
+      // 2026-10-23: seat wording aligned to the Job App October résumé.
+      'assets/resume/resume.89405880a231552a.webp'].includes(name) ||
     ['assets/exploded/manifest-white-20261022.json', 'assets/exploded/manifest-detail-white-20261022.json'].includes(name) ||
     ['assets/editorial/white-20261022/', 'assets/method-20261022/', 'assets/og/', 'assets/hero-fsae-context-20261022/',
       'assets/studio-teaser-20261022/', 'models/baked/lowtier-20261022/',

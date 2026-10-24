@@ -30,6 +30,6 @@ export const RESUME = {
   contact: [
     { label: "kwu@olin.edu",           href: "mailto:kwu@olin.edu" },
     { label: "LinkedIn",               href: "https://www.linkedin.com/in/kefan-wu-olin/" },
-    { label: "Download resume (PDF)",  href: "assets/kefan-wu-resume.pdf?v=a3404e1cb73e" },
+    { label: "Download resume (PDF)",  href: "assets/kefan-wu-resume.pdf?v=8aef14b9d874" },
   ],
 };

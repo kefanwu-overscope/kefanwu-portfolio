@@ -2,6 +2,27 @@
 
 > Project rules for agents live in ../CLAUDE.md. Entries below are a dated log, newest first; when entries disagree, the newest one wins.
 
+## Résumé wording aligned with the Job App résumé · 2026-10-23
+
+Based on 2c032a90. The owner asked on 2026-10-23 for the website résumé to use
+the same wording as the Job App application résumé:
+- Mk.7 line: "Designed and fabricated the 5052-H32 aluminum Mk.7 driver seat"
+  (was "Designed and built").
+- Cockpit line: "completed a carbon fiber seat" (was "laid up a carbon fiber
+  seat").
+Nothing else in the résumé changed; text remains extractable.
+
+- `assets/kefan-wu-resume.pdf` SHA-256
+  `8aef14b9d874bc846b23f14b7a226220fa9784501e28de8e0f6c6c4f3d038138`; every
+  link uses `?v=8aef14b9d874`. Export source:
+  ../releases/resume-align-20261023/resume-source.html.
+- Desk texture: new path `assets/resume/resume.89405880a231552a.webp`
+  (SHA-256 `89405880a231552ab601747f9f80c98be3ddc3ed2eb3e5ccdbc004fe8633ef7d`,
+  lossless WebP) with an immutable rule in `vercel.json`; `manifest.json`,
+  `experience-resume-assets.js` and `experience-resume-content.js` match the PDF.
+- Cache tokens: studio/résumé modules use `?v=resume-align-20261023`.
+- Release record and restore chain: ../releases/resume-align-20261023/.
+
 ## Owner-confirmed project facts and résumé refresh · 2026-10-23
 
 Based on 002fe827. The owner asked on 2026-10-23 for the résumé to carry the

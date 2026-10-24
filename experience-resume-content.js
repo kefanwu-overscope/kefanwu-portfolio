@@ -1,8 +1,8 @@
 /* Accessible text equivalent of the canonical printed résumé.
- * Source: assets/kefan-wu-resume.pdf (rebuilt 2026-10-22, updated 2026-10-23), checked against its extracted text.
- * PDF SHA-256: A3404E1CB73EB69360A88B7BF804D375F9CFB0A4DB7D1F30FE23B7AAA58DF759 (links use ?v=a3404e1cb73e)
- * Page preview: assets/resume/resume.6e2237ad0f315510.webp
- *   (SHA-256 6E2237AD0F315510CEA0CDD3C505F192233D3DD3AAB7B3F3B4DC41CBAAE8A0F8; see assets/resume/manifest.json)
+ * Source: assets/kefan-wu-resume.pdf (rebuilt 2026-10-22, updated 2026-10-23; seat wording aligned to the Job App October résumé 2026-10-23), checked against its extracted text.
+ * PDF SHA-256: 8AEF14B9D874BC846B23F14B7A226220FA9784501E28DE8E0F6C6C4F3D038138 (links use ?v=8aef14b9d874)
+ * Page preview: assets/resume/resume.89405880a231552a.webp
+ *   (SHA-256 89405880A231552AB601747F9F80C98BE3DDC3ED2EB3E5CCDBC004FE8633EF7D; see assets/resume/manifest.json)
  * Keep this text synchronized with the PDF-derived page image. Dates, targets,
  * measurements, and wording are preserved from that source, not inferred.
  * The caller supplies screen-reader-only styling; this contains no controls.
@@ -32,14 +32,14 @@ const motorsportsRoles = [
     points: [
       "Developed a track-based brake thermal model; cut brake rotor mass 23% at a 2.455 FEA factor of safety",
       "Engineered the steering column around matched 27.5° dual U-joints providing linear steering; lightweighted steering bearing cages, saving 0.9 kg against last year's design",
-      "Led the cockpit subteam: machined parts on lathe, mill, and waterjet; TIG-welded chassis tabs; laid up a carbon fiber seat",
+      "Led the cockpit subteam: machined parts on lathe, mill, and waterjet; TIG-welded chassis tabs; completed a carbon fiber seat",
     ],
   },
   {
     title: "Drivetrain & Cockpit Engineer",
     dates: "Sep 2024 – Jun 2025",
     points: [
-      "Designed and built the 5052-H32 aluminum Mk.7 driver seat and FEA-validated motor-controller mounts",
+      "Designed and fabricated the 5052-H32 aluminum Mk.7 driver seat and FEA-validated motor-controller mounts",
     ],
   },
 ];
