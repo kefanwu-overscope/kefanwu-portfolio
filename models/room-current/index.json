@@ -1,7 +1,7 @@
 {
   "schema": "room-exhibits-v1",
   "sourceRelease": "brake-dr-20261005",
-  "sourceIndexSha256": "7daf7e94e0ec24f97706a7760287cfd668b731ef64b29f4fb0ecf16a11af6162",
+  "sourceIndexSha256": "3755f14e665f91b04232d9e6ac4f94dd5944e226aad5408a8b16fc24187b82dd",
   "sample": 0,
   "projects": {
     "steering": {
@@ -86,12 +86,12 @@
       }
     },
     "scanner": {
-      "url": "models/room-current/scanner.391aeb377d55270c.glb.gz",
-      "sha256": "391aeb377d55270c90193ef4f2339bedf56a9376fa2fc1ca787f57f9c0eab161",
-      "bytes": 332784,
-      "glbBytes": 661460,
+      "url": "models/room-current/scanner.fa233fb3c1c58551.glb.gz",
+      "sha256": "fa233fb3c1c585511ace7f5e34165bf068b58d8507371ba6bc39d4b18e717ff4",
+      "bytes": 332109,
+      "glbBytes": 662076,
       "compression": "gzip",
-      "triangles": 21946,
+      "triangles": 21956,
       "bounds": {
         "min": [
           -1.399999976158142,
@@ -106,8 +106,8 @@
       },
       "frontYaw": -0.5317240057171826,
       "source": {
-        "manifest": "assets/studio-motion/scanner/manifest.871477ce65e6213f.json",
-        "manifestSha256": "871477ce65e6213f3c9636b3808a8ae9743eb89d2b5389969ee92427627d4549",
+        "manifest": "assets/studio-motion/scanner-color-20261024/manifest.a1cc555f640dade9.json",
+        "manifestSha256": "a1cc555f640dade9fa72cc82a2cc46d8f91d2cd60a379b4b03d1acef2785f5df",
         "geometrySha256": "7ea7d419e6703eeba93ae167c5e194b188490e617580cc23d68c1b984aa25356",
         "initialMotionSha256": "d77850f2a898c5c1ba223cc21ebdec3d623d0082a7da75e42a32981d0cc34fee"
       }

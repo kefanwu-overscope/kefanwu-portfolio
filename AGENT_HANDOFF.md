@@ -2,6 +2,100 @@
 
 > Project rules for agents live in ../CLAUDE.md. Entries below are a dated log, newest first; when entries disagree, the newest one wins.
 
+## Aesthetic batch 1 · 2026-10-26
+
+Based on 65c23eba. The owner approved the release on 2026-10-26 after three
+pre-release fixes: the 500–720px full-width CTA, the residual post-reveal stall
+(#1 item c), and hover labels placed above the exhibit as approved. The scanner's
+red E-stop cap and top truss were deliberately left unchanged.
+
+Measured in headless Chrome (ANGLE D3D11, RTX 5080, KHR_parallel_shader_compile).
+Local = working tree on a static server; live = www.kefanwu.com before release.
+
+- Studio intro (#1 a, b, d + c), `experience.js`, `experience-warmup.js`:
+  - Deferred props (chair, tyre, two helmets) mount only after their programs
+    are compiled (`prepareRootShaders`).
+  - Intro flight and light boot advance at most 50ms per frame
+    (`MOTION_STEP_MAX_MS`), so a hitch pauses the camera instead of cutting.
+  - `renderer.debug.checkShaderErrors` is off in production; `?shaders=check`
+    turns it back on.
+  - (c): the transmission pass's BackSide program variants for glass, acrylic
+    and other transmissive materials are prebuilt (`compileTransmissionBackfaces`),
+    and startup waits for every new program to link (`whenProgramsLinked`).
+  - Long tasks over 100ms within 8s of reveal: live 1440 had 769/1172/1532/1215ms
+    and live 390 had 1688/658/500ms. Local had 0 at 1440 (3 runs), at 1920, at 390
+    (2 runs) and under reduced motion; at 390 one 145ms task ends 147ms before
+    reveal. With parallel compile disabled, one 108ms task remains.
+  - Largest per-frame camera step: live 39.4°/1.10m (1440) and 72.4°/1.74m (390);
+    local 0.85–1.5°/0.019–0.029m. All 4 deferred props are ready 1.3–3.3s after
+    reveal. The intro ends at +5.13s.
+- Studio interaction (#3 M3, M5, T11), `experience.js`, `experience.css`,
+  `studio-navigation.css/js`:
+  - M3: the project panel and frame are white, so room to project is one rising
+    fade. "Opening project…" appears only if the page is still not ready after
+    400ms. On return, only a white curtain fades off the retained room. Brightness
+    moves one way (worst reversal 0.1 luma).
+  - Camera pose after open and back is exact (position, target and quaternion
+    delta 0) for steering, scanner and AURA at 1440 and 390, after history.go(-3)
+    and on BFCache restores.
+  - T11: the hover label docks 8px above the exhibit's projected box (and its
+    marker), centred and clamped inside the viewport. It goes below only when the
+    top-right controls block the space above; it never sits beside the exhibit,
+    does not follow the pointer and fades in over 120ms (no fade under reduced
+    motion). At 1440, 34 of 36 placements are above with a 7.3–8.2px gap; scanner
+    and FTC go below. None covers its own exhibit. At 1920, 36 of 36 are above.
+  - M5: when a keyboard stop leaves a 10% safe frame, the camera orbits about the
+    fixed target to the nearest azimuth that fits (600ms easeInOutCubic). At 1440,
+    ArrowRight ×18 keeps all 18 exhibits and labels in view, with the largest turn
+    2.25° per frame. Enter on Pool opens it, and returning restores the camera
+    exactly with focus on the canvas.
+  - Accepted limitation (owner): on phone portrait, keyboard stops 10–15 (right
+    wall cabinet) are framed from inside the cabinet's end panel.
+- Hero (#2 step 1), `index.html`, `white-home-20261011.css`:
+  - `.hero-copy` is `width: fit-content`. Optional turns after "Race-car
+    systems." (721–1279px) and after "Designed, built," (721–819px).
+  - The halo is an exact-reach gradient mask instead of a blur, so it no longer
+    lifts the car's nose. Car pixels lifted by the halo at iPad portrait went from
+    5,572 to 0, and from 230–9,674 to 0 across 721–1280px.
+  - `.hero-content` has `animation: none` (name creep 19.5px to 0).
+  - The full-width studio button applies only at ≤499px, with the two text links
+    sharing the next row. From 500px the single row stays (button 178px wide at
+    500–720px).
+  - `tools/hero-tests/hero-halo-20261024.cjs` checks lift and glyph contrast.
+- Card and skill motion (#4 M6, M7, M16, M19), `exploded.js`,
+  `skills-card-20261012.js`, `styles.css`, `script.js`:
+  - M6: leaving a playing card cuts to the frame-0 cover (ghost samples 207 to 0).
+  - M7: the skill card first appears at its chip (4px rise; was flying in from
+    2231px off target). Text and image swap together after decode.
+  - M16: critically damped wheel follow (omega 15, cap 1/0.6s). It settles 455ms
+    after a 4-notch flick (was 1545ms); a full sweep still takes about 0.8s and
+    never skips undecoded frames.
+  - M19: filters apply on click.
+- Scanner material pilot (#7):
+  - Colours sampled from the build photo. The end carriages, base motor mounts
+    and E-stop mount use the existing royal-blue print material; the plywood
+    base is #999181. No geometry was added.
+  - New dated asset dirs `assets/exploded/scanner-color-20261024/`,
+    `assets/editorial/scanner-color-20261024/` and
+    `assets/studio-motion/scanner-color-20261024/`, plus
+    `models/room-current/scanner.fa233fb3c1c58551.glb.gz`, all with immutable
+    rules. Catalogs: `manifest-white-20261024.json` and
+    `manifest-detail-white-20261024.json`.
+  - Cover vs frame 0 mean difference: 1.10/255 (SD) and 0.73/255 (HD).
+  - Still open: the red E-stop cap (not in the CAD export) and the top truss
+    (unconfirmed in photos). The studio teaser and og share image still show the
+    old scanner colours.
+- Cache tokens: `?v=aesthetic-batch1-20261024`, and `?v=aesthetic-batch1-20261026`
+  for experience.js, experience-warmup.js, experience-entry.js, experience.css and
+  white-home-20261011.css. The studio-motion RELEASE is `aesthetic-batch1-20261024`.
+- Verification:
+  - `node --check`, `node --test` 194/194, readability 21/21, room verify,
+    advanced-render 4/4, lod validate.
+  - 9 pages × 6 widths: no overflow, 0 console errors, 0 failed requests,
+    `window.__exp` present. Reduced motion and keyboard checked. No real-device
+    test.
+- Release record and restore chain: ../releases/aesthetic-batch1-20261024/.
+
 ## Résumé wording aligned with the Job App résumé · 2026-10-23
 
 Based on 2c032a90. The owner asked on 2026-10-23 for the website résumé to use

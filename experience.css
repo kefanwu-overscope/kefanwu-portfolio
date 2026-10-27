@@ -687,10 +687,16 @@ a {
 .exp-label[hidden] {
   display: none;
 }
+/* 2026-10-24 (T11, rule approved 2026-10-26): docked by experience.js 8px
+   above the hovered exhibit's projected box (and its marker), centred on it
+   and clamped inside the viewport; below the box only when there is no room
+   above, never beside it. A translate3d from the top-left corner, not at the
+   pointer; it fades in over 120ms there. */
 .exp-label {
   position: fixed;
+  left: 0;
+  top: 0;
   z-index: 75;
-  transform: translate(-50%, -110%);
   pointer-events: none;
   display: grid;
   gap: 0.14rem;
@@ -701,14 +707,15 @@ a {
   border-radius: var(--radius);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  white-space: nowrap;
+  /* docked from left:0, it is only ever as wide as its text (no wrap) until
+     a phone's screen is narrower than that; then it wraps instead of
+     running off screen */
+  max-width: calc(100vw - 16px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  animation: exp-label-in 160ms var(--ease-out);
 }
-/* replays on every un-hide (transitions can't fire off the hidden attr) */
-@keyframes exp-label-in {
-  from { opacity: 0; translate: 0 4px; }
-  to { opacity: 1; translate: 0 0; }
+/* keyboard: held back while an orbit brings the stop into view */
+.exp-label--pending {
+  opacity: 0;
 }
 .exp-label b {
   font-family: var(--font-display);

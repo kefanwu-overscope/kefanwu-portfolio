@@ -3,11 +3,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { createProjectResourceCache, fetchProjectBuffer, abortError } from './studio-inspector-loader.js';
 import { clampProgress, readBufferView, createSampledMotion } from './studio-motion-runtime.js?v=page-integrated-20260930';
-import { applyPhotoFinish, applyPhotoPart } from './studio-photo-materials.js?v=refined-20260930';
+import { applyPhotoFinish, applyPhotoPart } from './studio-photo-materials.js?v=aesthetic-batch1-20261024';
 import { installSourceMaterial } from './studio-inspector-materials.js?v=refined-20260930';
 import { fitCameraEnvelope } from './studio-inspector-camera.js';
 
-const RELEASE = 'brake-dr-20261005';
+const RELEASE = 'aesthetic-batch1-20261024';
 const ASSET_ROOT = new URL('./assets/studio-motion/', import.meta.url);
 const WORLD_ROTATION = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
 const toWorld = (point) => new THREE.Vector3().fromArray(point).applyQuaternion(WORLD_ROTATION);

@@ -140,18 +140,19 @@
 
   // Render at once with the same white initial pose as the live viewer and
   // streamed animation. The catalog may refine the poster afterwards.
-  // AURA uses its re-framed derivative set, which carries all four widths.
-  const coverDirectory = key === 'aura' ? 'assets/editorial/aura-reframe-20261022/' : 'assets/editorial/white-20261011/';
+  // AURA and the recoloured scanner use their own dated derivative sets,
+  // which carry all four widths.
+  const coverDirectory = key === 'aura' ? 'assets/editorial/aura-reframe-20261022/' : key === 'scanner' ? 'assets/editorial/scanner-color-20261024/' : 'assets/editorial/white-20261011/';
   const cover = { ...editorial.cover,
     src: `${coverDirectory}${key}-wide-1800.webp`,
     // The 1200w step was added later under its own dated directory.
-    srcset: [480, 960, 1200, 1800].map(width => `${width === 1200 && key !== 'aura' ? 'assets/editorial/white-20261022/' : coverDirectory}${key}-wide-${width}.webp ${width}w`).join(', '),
+    srcset: [480, 960, 1200, 1800].map(width => `${width === 1200 && key !== 'aura' && key !== 'scanner' ? 'assets/editorial/white-20261022/' : coverDirectory}${key}-wide-${width}.webp ${width}w`).join(', '),
   };
   async function resolveCover() {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 3000);
     try {
-      const response = await fetch('assets/editorial/aura-reframe-20261022/animation-covers.json', { signal: controller.signal, cache: 'force-cache' });
+      const response = await fetch('assets/editorial/scanner-color-20261024/animation-covers.json', { signal: controller.signal, cache: 'force-cache' });
       if (!response.ok) throw new Error('Cover catalog unavailable');
       const catalog = await response.json();
       const entry = catalog.version === 1 && catalog.projects?.[key];

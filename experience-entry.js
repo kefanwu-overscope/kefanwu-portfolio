@@ -9,4 +9,4 @@ function redirectProject() {
 }
 
 window.addEventListener('hashchange', redirectProject);
-if (!redirectProject()) await import('./experience.js?v=resume-align-20261023');
+if (!redirectProject()) await import('./experience.js?v=aesthetic-batch1-20261026');

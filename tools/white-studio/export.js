@@ -4,9 +4,14 @@ import {projectMotionNotes} from '/project-motion-notes.js';
 const canvas=document.querySelector('canvas'),status=document.querySelector('#status'),report=document.querySelector('#report');
 // White must participate in the transmission pass so acrylic refracts the
 // same studio surface as the opaque output; no pixel-color removal is used.
-const inspector=createStudioInspector({canvas,transparentBackground:false,backgroundColor:0xffffff,quality:'high'});
-const output=document.createElement('canvas'),ctx=output.getContext('2d',{alpha:false});
 const params=new URLSearchParams(location.search),only=params.get('only')?.split(',');
+// A focused re-render may name its cover widths and one source manifest
+// (?source=/assets/studio-motion/...); index.json is otherwise authoritative.
+const coverWidths=params.get('covers')?.split(',').map(Number)||[480,960,1800];
+if(!coverWidths.every(width=>Number.isInteger(width)&&width>0&&width%3===0))throw new Error('Cover widths must be multiples of 3');
+const source=params.get('source');
+const inspector=createStudioInspector({canvas,transparentBackground:false,backgroundColor:0xffffff,quality:'high',...(source?{manifestUrl:()=>source}:{})});
+const output=document.createElement('canvas'),ctx=output.getContext('2d',{alpha:false});
 const save=async(name,data)=>{const r=await fetch('/__qa/export/'+name,{method:'POST',body:data});if(!r.ok)throw new Error('Export write failed '+name);};
 async function capture(width,height){
  canvas.style.width=`${width/Math.min(devicePixelRatio||1,2)}px`;
@@ -25,14 +30,14 @@ async function run(proof){
  try{
   const manifest=await(await fetch('/assets/exploded/manifest.json')).json();
   for(const [key,config] of Object.entries(manifest.projects)){
-   if(only&&!only.includes(key)||proof&&!proofKeys.includes(key))continue;
+   if(only?!only.includes(key):proof&&!proofKeys.includes(key))continue;
    const projectStart=performance.now();status.textContent='Loading '+key;
    canvas.style.width='900px';canvas.style.height='600px';
    const loaded=await inspector.selectProject(key);if(!loaded)throw new Error('Model missing '+key);
    await loaded.whenMotionReady;if(!inspector.getState().motionReady)throw new Error('Motion missing '+key);
    inspector.reset({camera:true});inspector.setProgress(0);
    const prefix=proof?'proof/':'',covers={};
-   for(const width of proof?[960]:[480,960,1800]){
+   for(const width of proof?[960]:coverWidths){
     const blob=await capture(width,width*2/3);await save(`${prefix}${key}/cover-${width}.webp`,blob);covers[width]=blob.size;
    }
    const coverState=inspector.getState(),count=config.frames.length,points=[],sizes=[];
@@ -58,7 +63,7 @@ async function run(proof){
    await save(`${prefix}${key}/report.json`,JSON.stringify(results[key],null,2));
    report.textContent=JSON.stringify({done:Object.keys(results),errors,elapsedSeconds:(performance.now()-start)/1000},null,2);
   }
-  const result={proof,started,finished:new Date().toISOString(),elapsedMilliseconds:performance.now()-start,background:'#ffffff',renderer:'Three.js r185',sourceManifest:'/assets/studio-motion/index.json',results,errors};
+  const result={proof,started,finished:new Date().toISOString(),elapsedMilliseconds:performance.now()-start,background:'#ffffff',renderer:'Three.js r185',sourceManifest:source||'/assets/studio-motion/index.json',results,errors};
   await save(proof?'proof/result.json':'result.json',JSON.stringify(result,null,2));
   status.textContent=errors.length?'Finished with annotation errors':`Passed: ${Object.keys(results).length} projects on white; ${Math.round(result.elapsedMilliseconds/1000)} seconds`;
  }catch(error){status.textContent='Failed: '+error.stack;}

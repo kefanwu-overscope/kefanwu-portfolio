@@ -1,0 +1,159 @@
+{
+  "project": "scanner",
+  "renderer": "Three.js r185 WebGL, source geometry and sampled motion",
+  "revision": "scanner-color-20261024",
+  "palette": "studio-photo-materials.js",
+  "background": "#ffffff",
+  "backgroundComposition": "Opaque white scene background participates in physical transmission; native WebGL antialiasing; no pixel filtering.",
+  "sourceManifest": "scanner-color-20261024/manifest.a1cc555f640dade9.json",
+  "sourceManifestSha256": "a1cc555f640dade9fa72cc82a2cc46d8f91d2cd60a379b4b03d1acef2785f5df",
+  "materialReview": {
+    "date": "2026-10-24",
+    "references": [
+      "assets/scanner-live-7.webp (build photograph)",
+      "assets/scanner-live-5.webp (CAD render)"
+    ],
+    "method": "Each source triangle centroid was matched to the nearest triangle centroid of the per-part SolidWorks STL exports (SD_Scanner_Assem - *.STL) after a uniform scale and axis change fitted on the base plate; matched parts sit within 1e-5 model units. Only material slots and index groups change; geometry, normals, motion and all buffers are the published bytes.",
+    "changes": [
+      {
+        "node": "mat_steel_part_3",
+        "stlPart": "Left_shafts_mounting-1",
+        "triangles": 6874,
+        "from": "Satin machined steel",
+        "to": "Royal blue printed components"
+      },
+      {
+        "node": "mat_steel_part_8",
+        "stlPart": "Right_shafts_mounting-1",
+        "triangles": 4966,
+        "from": "Satin machined steel",
+        "to": "Royal blue printed components"
+      },
+      {
+        "node": "mat_dark_part_2",
+        "stlPart": "Estop_Mount-1",
+        "triangles": 1080,
+        "from": "Motor and electronics housings",
+        "to": "Royal blue printed components"
+      },
+      {
+        "node": "mat_dark_part_0",
+        "stlParts": [
+          "Base_Motor_Mount-1",
+          "Nema_17_Stepper_Motor-1"
+        ],
+        "triangles": 5648,
+        "groups": [
+          {
+            "triangles": [
+              0,
+              4728
+            ],
+            "stlPart": "Base_Motor_Mount-1",
+            "to": "Royal blue printed components"
+          },
+          {
+            "triangles": [
+              4728,
+              5648
+            ],
+            "stlPart": "Nema_17_Stepper_Motor-1",
+            "keeps": "Motor and electronics housings"
+          }
+        ]
+      },
+      {
+        "node": "mat_dark_part_1",
+        "stlParts": [
+          "Base_Motor_Mount-2",
+          "Nema_17_Stepper_Motor-2"
+        ],
+        "triangles": 5648,
+        "groups": [
+          {
+            "triangles": [
+              0,
+              4728
+            ],
+            "stlPart": "Base_Motor_Mount-2",
+            "to": "Royal blue printed components"
+          },
+          {
+            "triangles": [
+              4728,
+              5648
+            ],
+            "stlPart": "Nema_17_Stepper_Motor-2",
+            "keeps": "Motor and electronics housings"
+          }
+        ]
+      }
+    ],
+    "unchanged": [
+      "mat_aero_part_1 (Horizonal_stablizer-4, top truss): retained pending the owner; it is not visible in the build photograph.",
+      "Estop_Mount-1 is the only E-stop part in the CAD export; the photographed red E-stop cap has no source geometry and none is added.",
+      "Drive belts are absent from the source geometry and are not added."
+    ],
+    "photoFinish": "studio-photo-materials.js scanner 'Pale plywood base' #999181 (studioOnly), set from scanner-live-7.webp (lit plywood top median #d5cfc5). It applies to these frames, the covers and the live inspector only; the room exhibit keeps the source plywood #cec4ab. The approved change list names carriages, housings, E-stop mount and cap; the base tone is pending the owner's confirmation.",
+    "ownerQuestions": [
+      "The red E-stop cap in scanner-live-7.webp has no source geometry (Estop_Mount-1 is the only E-stop part; EMG_Cover-6 is a 160x140x10 mm fan plate and EMG_Isolation-5 the electronics box). Showing it needs added geometry, a reconstruction like the belts, so it waits for the owner's approval.",
+      "Was the top stabiliser (mat_aero_part_1, Horizonal_stablizer-4) built? It is retained unchanged until the owner answers.",
+      "Is the plywood base tone (#999181 in the white studio) in scope?"
+    ],
+    "approvedNotDelivered": [
+      {
+        "item": "Red E-stop cap (approved #7 change list)",
+        "status": "Not delivered",
+        "reason": "The SolidWorks export has no cap geometry: Estop_Mount-1 (1080 triangles, a box with a round hole) is the only E-stop part; EMG_Cover-6 is the fan plate and EMG_Isolation-5 the electronics box. The frames therefore show the blue mount with an empty hole where scanner-live-7.webp shows a red mushroom cap. Showing the cap needs added, reconstructed geometry, which waits for the owner's approval.",
+        "pendingDecision": "Add a reconstructed red cap, recorded here as a reconstruction with no visible badge (like the optional drive belts), or leave the mount as exported."
+      }
+    ]
+  },
+  "supersedes": "assets/exploded/white-20261011/sd/scanner/provenance.json",
+  "motion": "Camera, sampled poses and frame count are identical to the superseded set; only material colour changes. Step 2 ('Horizontal rail') anchors, frames 24-59, now project an open span of the rail axis (source point [0.55, -0.1875, 1.2277] on mat_steel_part_10, project-motion-labels.js) instead of the vertex nearest the rail's centre, which sits inside the blue right end mount; all other anchors and the occupancy masks are unchanged (assets/exploded/scanner-color-20261024/anchors.json).",
+  "camera": {
+    "position": [
+      5.567635536193848,
+      5.679952621459957,
+      9.546423912048342
+    ],
+    "target": [
+      -0.009478569030761717,
+      0.8836350440979004,
+      0.06532859802246105
+    ],
+    "up": [
+      -0.20265238652933804,
+      0.9166490062782604,
+      -0.3445092299533372
+    ],
+    "zoom": 1,
+    "frameWidth": 4.818753937886044,
+    "frameAspect": 1.4988290398126465
+  },
+  "coverCamera": {
+    "position": [
+      5.567635536193848,
+      5.679952621459957,
+      9.546423912048342
+    ],
+    "target": [
+      -0.009478569030761717,
+      0.8836350440979004,
+      0.06532859802246105
+    ],
+    "up": [
+      -0.20265238652933804,
+      0.9166490062782604,
+      -0.3445092299533372
+    ],
+    "zoom": 1,
+    "frameWidth": 4.818753937886044,
+    "frameAspect": 1.4988290398126465
+  },
+  "coverProgress": 0,
+  "frameCount": 121,
+  "width": 640,
+  "height": 427,
+  "bytes": 1964686
+}

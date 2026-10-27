@@ -1,5 +1,5 @@
 import { renderPressureLegend } from './project-pressure-legend.js';
-import { projectMotionLabels } from './project-motion-labels.js?v=brake-dr-20261022';
+import { projectMotionLabels } from './project-motion-labels.js?v=aesthetic-batch1-20261024';
 import { projectMotionNotes } from './project-motion-notes.js?v=seat-truth-20261022';
 import { getStudioProject } from './studio-catalog.js?v=owner-facts-20261023';
 
@@ -285,7 +285,7 @@ function mount() {
     receiveStatus({ state: 'loading' });
     const current = () => ticket === generation && !disposed && !suspended;
     try {
-      const { createStudioInspector } = await import('./studio-inspector.js?v=white-20261022');
+      const { createStudioInspector } = await import('./studio-inspector.js?v=aesthetic-batch1-20261024');
       if (!current() || signal.aborted) return;
       inspector = createStudioInspector({
         canvas,

@@ -125,17 +125,59 @@ html:has(.white-home) {
   }
 }
 .white-home .hero-content { padding-block: 32px; justify-content: center; }
+/* The name paints where it settles: no 20px rise after first paint (the slow-load
+   veil above still fades the photo in). */
+.white-home .hero-content { animation: none; }
 .white-home .hero .eyebrow { margin: 0 0 24px; color: #444c55; letter-spacing: .09em; font-size: 12px; line-height: 1.5; }
 .white-home .hero-rule { width: 30px; background: #111316; }
 .white-home .hero h1 { color: #111316; font-size: clamp(112px, 12.25vw, 188px); line-height: .82; letter-spacing: -.067em; }
 .white-home .hero h1 > span + span { margin-top: 9px; }
 .white-home .hero-period { color: #111316; }
-.white-home .hero-copy { margin: 32px 0 24px; max-width: 38ch; color: #424951; font-size: 17px; line-height: 1.65; }
+.white-home .hero-copy { width: fit-content; margin: 32px 0 24px; max-width: 38ch; color: #424951; font-size: 17px; line-height: 1.65; }
+/* Optional turns after "Race-car systems." (tablets and small laptops, 721-1279px)
+   and after "Designed, built," (narrow tablets, 721-819px). They keep the longest
+   line clear of the car's nose; the box is as wide as that line, not its max-width. */
+.white-home .hero-copy-turn,
+.white-home .hero-copy-split { display: none; }
 /* Where the tagline reaches the asphalt (small phones, near-square windows), a soft
-   feathered white backdrop and a glyph halo keep body text at 4.5:1 or better.
-   The photo pixels are untouched, and over the white page both are invisible. */
-.white-home .hero-copy { position: relative; isolation: isolate; text-shadow: 0 0 2px #fff, 0 0 6px #fff; }
-.white-home .hero-copy::before { content: ""; position: absolute; z-index: -1; inset: -10px -12px -8px -12px; border-radius: 32px; background: #fff; opacity: .88; filter: blur(12px); pointer-events: none; }
+   white backdrop and a glyph halo keep body text at 4.5:1 or better.
+   The photo pixels are untouched, and over the white page both are invisible.
+   The copy box hugs its lines (fit-content). The backdrop is a mask, not a blur, so
+   each side's reach is exact: it runs --halo-e* past the copy box and fades over
+   --halo-* with a Gaussian (erf) profile, long on the top, left and bottom (56-72px)
+   so it reads as a haze, not a plate. On the right the fade is long where the car
+   is far (72-88px) and held to 30px ending 21px past the longest line where the
+   nose is near (721-900px, near-square windows), which keeps the car's dark pixels
+   unlifted. A third, elliptical layer centred on the longest line (--halo-cy; 28px
+   fade at its far right) pulls the right side's top and bottom in, so the haze has
+   no straight edge or corner.
+   tools/hero-tests/hero-halo-20261024.cjs checks lift and glyph contrast. */
+/* The name paints above the backdrop's top feather, which can reach it on short windows. */
+.white-home .hero h1 { position: relative; z-index: 1; }
+.white-home .hero-copy {
+  --halo-l: 56px; --halo-el: 44px; --halo-r: 48px; --halo-er: 34px; --halo-t: 72px; --halo-et: 42px; --halo-b: 56px; --halo-eb: 38px; --halo-cy: 41%;
+  position: relative; isolation: isolate; text-shadow: 0 0 2px #fff, 0 0 6px #fff;
+}
+/* Beside the nose (721-900px): short right fade. The ellipse sits on the longest line
+   ("Robotics. Real hardware." in four lines; "Designed, built, and tested." in three). */
+@media (min-width: 721px) and (max-width: 819px) { .white-home .hero-copy { --halo-r: 30px; --halo-er: 21px; --halo-cy: 44%; } }
+@media (min-width: 820px) and (max-width: 900px) { .white-home .hero-copy { --halo-r: 30px; --halo-er: 21px; --halo-cy: 68%; } }
+@media (min-width: 901px) and (max-width: 1279px) { .white-home .hero-copy { --halo-r: 72px; --halo-er: 48px; --halo-cy: 68%; } }
+/* The one-line desktop tagline ends 100px+ short of the car. */
+@media (min-width: 1280px) { .white-home .hero-copy { --halo-r: 88px; --halo-er: 56px; } }
+/* Near-square laptop windows bring the nose back beside the longest line. */
+@media (min-width: 1101px) and (max-aspect-ratio: 5/4) { .white-home .hero-copy { --halo-r: 30px; --halo-er: 21px; } }
+.white-home .hero-copy::before {
+  --halo-x: linear-gradient(to right, #0000, #00000006 calc(var(--halo-l) * 0.1), #00000011 calc(var(--halo-l) * 0.2), #00000029 calc(var(--halo-l) * 0.3), #0000004f calc(var(--halo-l) * 0.4), #00000080 calc(var(--halo-l) * 0.5), #000000b0 calc(var(--halo-l) * 0.6), #000000d6 calc(var(--halo-l) * 0.7), #000000ee calc(var(--halo-l) * 0.8), #000000f9 calc(var(--halo-l) * 0.9), #000 var(--halo-l), #000 calc(100% - var(--halo-r)), #000000f9 calc(100% - var(--halo-r) * 0.9), #000000ee calc(100% - var(--halo-r) * 0.8), #000000d6 calc(100% - var(--halo-r) * 0.7), #000000b0 calc(100% - var(--halo-r) * 0.6), #00000080 calc(100% - var(--halo-r) * 0.5), #0000004f calc(100% - var(--halo-r) * 0.4), #00000029 calc(100% - var(--halo-r) * 0.3), #00000011 calc(100% - var(--halo-r) * 0.2), #00000006 calc(100% - var(--halo-r) * 0.1), #0000);
+  --halo-y: linear-gradient(to bottom, #0000, #00000006 calc(var(--halo-t) * 0.1), #00000011 calc(var(--halo-t) * 0.2), #00000029 calc(var(--halo-t) * 0.3), #0000004f calc(var(--halo-t) * 0.4), #00000080 calc(var(--halo-t) * 0.5), #000000b0 calc(var(--halo-t) * 0.6), #000000d6 calc(var(--halo-t) * 0.7), #000000ee calc(var(--halo-t) * 0.8), #000000f9 calc(var(--halo-t) * 0.9), #000 var(--halo-t), #000 calc(100% - var(--halo-b)), #000000f9 calc(100% - var(--halo-b) * 0.9), #000000ee calc(100% - var(--halo-b) * 0.8), #000000d6 calc(100% - var(--halo-b) * 0.7), #000000b0 calc(100% - var(--halo-b) * 0.6), #00000080 calc(100% - var(--halo-b) * 0.5), #0000004f calc(100% - var(--halo-b) * 0.4), #00000029 calc(100% - var(--halo-b) * 0.3), #00000011 calc(100% - var(--halo-b) * 0.2), #00000006 calc(100% - var(--halo-b) * 0.1), #0000);
+  --halo-round: radial-gradient(ellipse 100% 100% at 0% var(--halo-cy), #000 calc(100% - 28px), #000000f9 calc(100% - 25.2px), #000000ee calc(100% - 22.4px), #000000d6 calc(100% - 19.6px), #000000b0 calc(100% - 16.8px), #00000080 calc(100% - 14px), #0000004f calc(100% - 11.2px), #00000029 calc(100% - 8.4px), #00000011 calc(100% - 5.6px), #00000006 calc(100% - 2.8px), #0000 100%);
+  content: ""; position: absolute; z-index: -1; inset: calc(-1 * var(--halo-et)) calc(-1 * var(--halo-er)) calc(-1 * var(--halo-eb)) calc(-1 * var(--halo-el)); background: #fff; opacity: .88; pointer-events: none;
+  -webkit-mask-image: var(--halo-x), var(--halo-y), var(--halo-round); -webkit-mask-composite: source-in, source-in;
+  mask-image: var(--halo-x), var(--halo-y), var(--halo-round); mask-composite: intersect;
+}
+/* From tablets up the copy only grazes the asphalt: the lighter core still holds the
+   glyphs above 5:1 and leaves less of an edge beside the nose. */
+@media (min-width: 721px) { .white-home .hero-copy::before { opacity: .72; } }
 .white-home .hero-actions { gap: 24px; font-size: 14px; }
 .white-home .hero-actions .text-link { color: #202429; border-bottom-color: #89929b; }
 /* Tablets, laptops and desktops: the car's front corner sits beside the CTA row,
@@ -357,6 +399,14 @@ html:has(.white-home) {
   .white-home .hero-copy { margin-block: 20px 14px; }
   .white-home .hero-actions { row-gap: 0; }
 }
+/* Short tablet and small-laptop windows: the tagline's extra turn (721-1279px) costs a
+   line, so the hero rhythm tightens to keep the role baseline inside the first screen. */
+@media (min-width: 721px) and (max-width: 1279px) and (max-height: 880px) {
+  .white-home .hero-content { padding-block: 12px; }
+  .white-home .hero .eyebrow { margin-bottom: 14px; }
+  .white-home .hero-copy { margin-block: 15px 11px; }
+  .white-home .hero-actions { row-gap: 0; }
+}
 @media (min-width: 1280px) and (max-width: 1439px) {
   .white-home .project-body .project-meta { font-size: 11px; }
 }
@@ -392,11 +442,28 @@ html:has(.white-home) {
 @media (min-width: 721px) and (max-width: 900px) {
   .white-home .hero h1 { font-size: 110px; }
   .white-home .hero-media { --hero-photo-position: 50% center; inset-block: 128px auto; height: 570px; }
-  .white-home .hero-copy { max-width: 30ch; }
   .white-home .hero-actions { flex-direction: row; align-items: center; column-gap: 20px; }
   .white-home .hero-baseline { flex-wrap: wrap; }
   .white-home .hero-location { display: none; }
 }
+/* Tablets and small laptops: one long line would end on the car's nose, so the
+   tagline turns after "Race-car systems." (three lines). Measured clear from 820px
+   up; from 1280px the one-line version clears the nose again. */
+@media (min-width: 721px) and (max-width: 1279px) {
+  .white-home .hero-copy { max-width: 24ch; }
+  .white-home .hero-copy-turn { display: inline; }
+}
+/* Narrow tablets: the nose and its shadow reach "Designed, built," too, so that line
+   turns as well (four lines, longest "Robotics. Real hardware."). */
+@media (min-width: 721px) and (max-width: 819px) {
+  .white-home .hero-copy-split { display: inline; }
+}
+@media (min-width: 721px) and (max-width: 767px) {
+  .white-home .hero-copy { max-width: 22ch; }
+}
+/* At 721-739px a 17px "Robotics. Real hardware." reaches the car nose (halo lifts it by up to
+   95 levels at 721px); 16px clears it. From 740px (iPad mini) the live 17px holds. */
+@media (min-width: 721px) and (max-width: 739px) { .white-home .hero-copy { font-size: 16px; } }
 @media (min-width: 721px) and (max-width: 1100px) {
   .white-home .hero-media { --hero-photo-position: 50% center; inset-block: clamp(128px, calc(50% - 315px), 235px) auto; height: 570px; }
 }
@@ -489,6 +556,13 @@ html:has(.white-home) {
   .white-home .contact-email { font-size: 30px; }
   .white-home .contact-actions > div { gap: 23px; }
   .white-home .footer-grid { gap: 0 17px; }
+}
+/* Phones, where the three CTAs no longer fit one row (the row needs about 452px):
+   the studio button spans the column and the two text links share the row under it.
+   From 500px the live single row is kept. */
+@media (max-width: 499px) {
+  .white-home .hero-actions .studio-primary { width: 100%; justify-content: space-between; }
+  .white-home .hero-actions .text-link { flex: none; }
 }
 @media (max-width: 600px) {
   .white-home .project-grid { grid-template-columns: 1fr; gap: 34px; }

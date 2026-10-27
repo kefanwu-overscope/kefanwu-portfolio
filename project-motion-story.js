@@ -1,6 +1,6 @@
 import { layoutAnnotation, maskRegions } from './project-annotation-layout.js?v=design-audit-20261022';
 import { renderPressureLegend } from './project-pressure-legend.js';
-import { projectMotionLabels } from './project-motion-labels.js?v=brake-dr-20261022';
+import { projectMotionLabels } from './project-motion-labels.js?v=aesthetic-batch1-20261024';
 import { projectMotionNotes } from './project-motion-notes.js?v=seat-truth-20261022';
 
 const clamp = value => Math.max(0, Math.min(1, Number(value) || 0));
@@ -174,7 +174,7 @@ export function attachMotionStory(story) {
     else revealAnnotation();
   }
   if (leader) {
-    fetch('assets/exploded/aura-reframe-20261022/anchors.json', { signal: events.signal }).then(response => {
+    fetch('assets/exploded/scanner-color-20261024/anchors.json', { signal: events.signal }).then(response => {
       if (!response.ok) throw new Error('Annotation coordinates unavailable');
       return response.json();
     }).then(data => { if (disposed) return; frameAnchors = data[story.dataset.motionProject]; placement = null; occupancyKey = '';

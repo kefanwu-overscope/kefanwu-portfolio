@@ -68,3 +68,35 @@ bytes are 48,905,572, a combined increase of about 0.166% over the prior catalog
 All animation corners are exact 255 white. Five 1800-pixel covers have one corner
 channel at 253; all other cover corners are exact white. Evidence:
 `../.codex/white-studio-20261011/asset-verification.json` from the repository root.
+
+## Focused scanner colour re-render — 2026-10-24
+
+`serve.mjs` now writes to `../releases/aesthetic-batch1-20261024/work/scanner/`
+(override with `WHITE_STUDIO_OUTPUT`; a path inside `.codex` is refused) on
+`WHITE_STUDIO_PORT` (default 4196). `export.html` also accepts
+`covers=480,960,1200,1800` and `source=/assets/studio-motion/<manifest>`, which
+renders one project from a named source manifest before `index.json` points at
+it. With `only=`, the sample proof renders the named projects.
+
+The scanner run used
+`?only=scanner&covers=480,960,1200,1800&source=/assets/studio-motion/scanner-color-20261024/manifest.a1cc555f640dade9.json`.
+That manifest reuses the published buffers and changes only material slots,
+matched part by part to the SolidWorks STL exports (see its
+`source.materialSlotReview`). A control render from the unchanged index matched
+the published white-20261011 SD frames and covers byte for byte, so every
+difference in `assets/exploded/scanner-color-20261024/` and
+`assets/editorial/scanner-color-20261024/` is the colour change. Packing,
+verification and evidence scripts live with the release work folder.
+
+After the recolour, step 2's "Horizontal rail" leader visibly ended on the blue
+right end mount: its anchor was the rail vertex nearest the mesh centre, which
+sits inside that mount. `project-motion-labels.js` now names an open span of
+the rail axis (`point: [0.55, -0.1875, 1.2277]`), and
+`assets/exploded/scanner-color-20261024/anchors.json` is a copy of
+`aura-reframe-20261022/anchors.json` (immutable) with scanner frames 24-59
+re-projected through `projectAnchor` at 640x427. The same projection reproduces
+every published anchor to 1e-6, and a raycast confirms the new point is the
+first rail surface on all 36 frames. Frames and masks are unchanged.
+
+The plywood base albedo (#999181) is marked `studioOnly`: the room exhibit
+calls `applyPhotoFinish(..., { room: true })` and keeps its source #cec4ab.

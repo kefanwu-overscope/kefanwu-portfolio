@@ -335,7 +335,7 @@ test('Return paints the resumed room beneath the project before fading and dispo
   assert.equal(frame.isConnected, true); assert.equal(h.animationLog.length, 2);
   h.paint();
   const departure = h.animationLog.at(-1);
-  assert.equal(departure.element, panel); assert.equal(departure.options.duration, 200);
+  assert.equal(departure.element, panel); assert.equal(departure.options.duration, 240); // 2026-10-24: eased 240 ms return curtain (M3).
   assert.deepEqual(plain(departure.keyframes), [{ opacity: 1 }, { opacity: 0 }]);
   assert.equal(frame.isConnected, true);
   departure.finish();
@@ -409,8 +409,13 @@ test('Forward recovers a frame whose one-shot ready message arrived during the r
   h.history.go(1);
   assert.equal(h.currentFrame(), frame);
   assert.equal(h.navigation.snapshot().ready, true);
-  assert.equal(h.navigation.snapshot().phase, 'revealing');
+  // 2026-10-24: the ready frame stays transparent until the re-entering
+  // panel's fade ends, then fades in over it ('entering' -> 'revealing').
+  assert.equal(h.navigation.snapshot().phase, 'entering');
+  assert.equal(frame.style.opacity, '0');
   assert.equal(frame.messages.at(-1).url, url('steering'));
+  h.animationLog.find(animation => animation.element === h.panel() && animation.state === 'running').finish();
+  assert.equal(h.navigation.snapshot().phase, 'revealing');
   h.finishAnimations();
   assert.equal(h.navigation.snapshot().phase, 'project');
   assert.equal(h.timers.size, 0); assert.equal(h.disposal.length, 0);

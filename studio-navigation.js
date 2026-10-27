@@ -2,6 +2,15 @@ const PROTOCOL = 'kw-studio-project-v1';
 const STATE = 'studioNavigation';
 const TRANSITION_MS = 200;
 const FRAME_REVEAL_MS = 180;
+// 2026-10-24 (M3): the panel is the detail page's white (studio-navigation.css).
+// Returning hides the page content at once and lifts that plain white curtain
+// off the already-painted room, so the page never double-exposes over it.
+const RETURN_MS = 240;
+const ENTER_EASE = 'cubic-bezier(.22, 1, .36, 1)';
+const RETURN_EASE = 'cubic-bezier(.33, 1, .68, 1)'; // ease-out (cubic)
+// Opening: the room fades to plain white first; a frame that is ready sooner
+// waits (transparent) until the panel's entry fade has finished, then fades
+// in on the opaque white panel, so no frame shows the page over the room.
 
 // The loaded room remains the top-level document during project visits. One
 // disposable frame hosts the existing full project page; only this controller
@@ -14,6 +23,7 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
   let panel = null, frame = null, frameKey = null, ready = false, pendingReady = false, timer = null;
   let savedFocus = null, hiddenElements = [], lastIndex = 0, disposed = false;
   let active = false, returning = false, panelTransition = null, frameTransition = null, returnPaint = null;
+  let frameRevealWaiting = false;
   const motion = window.matchMedia?.('(prefers-reduced-motion: reduce)');
   const current = () => history.state?.[STATE];
   const owned = state => state?.session === session && Number.isInteger(state.index) && state.index >= 0;
@@ -41,11 +51,11 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
     if (active === value) return;
     active = value; onActiveChange(value);
   }
-  function fade(element, from, to, duration, complete = () => {}) {
+  function fade(element, from, to, duration, complete = () => {}, easing = ENTER_EASE) {
     element.style.opacity = String(to);
     if (motion?.matches || document.hidden || !element.animate) { complete(); return null; }
     const animation = element.animate([{ opacity: from }, { opacity: to }], {
-      duration, easing: 'cubic-bezier(.22, 1, .36, 1)', fill: 'both',
+      duration, easing, fill: 'both',
     });
     let settled = false;
     const cancel = () => {
@@ -66,11 +76,18 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
     panelTransition = fade(panel, from, 1, TRANSITION_MS, () => {
       panelTransition = null;
       if (panel && !returning) document.body.classList.add('studio-project-covered');
+      if (frameRevealWaiting && panel && !returning) fadeInFrame();
     });
+  }
+  function fadeInFrame() {
+    frameRevealWaiting = false;
+    if (!frame) return;
+    frameTransition?.cancel();
+    frameTransition = fade(frame, 0, 1, FRAME_REVEAL_MS, () => { frameTransition = null; });
   }
   function releaseFrame() {
     clearTimeout(timer); timer = null;
-    frameTransition?.cancel(); frameTransition = null;
+    frameTransition?.cancel(); frameTransition = null; frameRevealWaiting = false;
     // Synchronous cleanup is deliberate: a queued postMessage can be discarded
     // when its browsing context is removed in the same task.
     try { const child = frame?.contentWindow; child?.dispatchEvent(new child.Event('studio-project-dispose')); } catch {}
@@ -101,15 +118,16 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
     panelTransition?.cancel(); panelTransition = null;
     panel.style.opacity = String(from);
     panel.inert = true;
+    panel.classList.add('is-returning');
     document.title = roomTitle;
     document.body.classList.remove('studio-project-covered');
-    // Resume and paint the retained canvas behind the still-visible project.
+    // Resume and paint the retained canvas behind the still-white curtain.
     // Removing the frame first can expose a blank WebGL buffer for one paint.
     setActive(false);
     const reveal = () => {
       returnPaint = null;
       if (!returning || !panel) return;
-      panelTransition = fade(panel, from, 0, TRANSITION_MS, finishRoom);
+      panelTransition = fade(panel, from, 0, RETURN_MS, finishRoom, RETURN_EASE);
     };
     if (document.hidden || !panel.animate) { reveal(); return; }
     returnPaint = window.requestAnimationFrame(() => {
@@ -126,6 +144,7 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
       if (returning) {
         const from = panel.animate ? panelOpacity() : 1;
         cancelReturnPaint(); returning = false; panel.inert = false;
+        panel.classList.remove('is-returning');
         setActive(true); enterPanel(from);
         (ready ? frame : panel.querySelector('button'))?.focus({ preventScroll: true });
       }
@@ -148,7 +167,11 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
     ready = true; pendingReady = false; clearTimeout(timer); timer = null;
     panel.classList.add('is-ready'); panel.classList.remove('has-error');
     frame.inert = false;
-    frameTransition = fade(frame, 0, 1, FRAME_REVEAL_MS, () => { frameTransition = null; });
+    if (panelTransition || returning) {
+      // is-ready shows the frame at opacity 1; hold it transparent meanwhile.
+      frameRevealWaiting = true;
+      frame.style.opacity = '0';
+    } else fadeInFrame();
     send({ type: 'location', url: state.url, scrollY: state.scrollY });
     frame.focus({ preventScroll: true });
   }
@@ -239,8 +262,8 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
   return {
     openProject: key => navigate(new URL(`project-3d.html?project=${encodeURIComponent(key)}`, roomURL).href),
     snapshot: () => ({ session, open: !!panel, key: frameKey, ready, historyIndex: current()?.index ?? null,
-      phase: !panel ? 'room' : returning ? 'returning' : frameTransition ? 'revealing' : panelTransition ? 'entering' : ready ? 'project' : 'loading',
-      reducedMotion: !!motion?.matches, transitionMs: TRANSITION_MS, frameRevealMs: FRAME_REVEAL_MS }),
+      phase: !panel ? 'room' : returning ? 'returning' : frameTransition ? 'revealing' : panelTransition || frameRevealWaiting ? 'entering' : ready ? 'project' : 'loading',
+      reducedMotion: !!motion?.matches, transitionMs: TRANSITION_MS, frameRevealMs: FRAME_REVEAL_MS, returnMs: RETURN_MS }),
     dispose() {
       disposed = true; showRoom(true);
       window.removeEventListener('message', message); window.removeEventListener('popstate', pop);

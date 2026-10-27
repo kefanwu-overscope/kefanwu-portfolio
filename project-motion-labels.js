@@ -7,6 +7,9 @@
  * The static rotor and carbon shell also name one documented feature per step:
  * point is in the part's source coordinates (live camera) and framePoint is the
  * same point in the landscape detail frames, both from the source export camera.
+ * The scanner rail's point names an open span on its axis, because the vertex
+ * nearest its centre sits inside the blue end mount; the rail moves, so its
+ * frame positions come from the per-frame anchors, not a fixed framePoint.
  */
 export const projectMotionLabels = {
   steering: [
@@ -32,7 +35,7 @@ export const projectMotionLabels = {
   ],
   scanner: [
     { title: 'Vertical guide', body: 'Fixed guide defines gantry travel direction.', target: { name: 'mat_steel_part_0' } },
-    { title: 'Horizontal rail', body: 'Rising rail supports horizontal carriage travel.', target: { name: 'mat_steel_part_10' } },
+    { title: 'Horizontal rail', body: 'Rising rail supports horizontal carriage travel.', target: { name: 'mat_steel_part_10', point: [0.55, -0.1875, 1.2277] } },
     { title: 'LiDAR carriage', body: 'Two coordinated axes locate each distance reading.', target: { group: 'carriage' } },
     { title: 'Rigid base', body: 'Base supports guides beneath the moving assembly.', target: { name: 'mat_wood_part_0' } }
   ],

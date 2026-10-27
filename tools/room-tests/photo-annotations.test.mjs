@@ -12,7 +12,7 @@ const index = JSON.parse(await readFile(new URL('../../assets/studio-motion/inde
 const manifests = Object.fromEntries(await Promise.all(Object.entries(index.projects).map(async ([key, value]) => [
   key, JSON.parse(await readFile(new URL(`../../assets/studio-motion/${value.manifest}`, import.meta.url), 'utf8')),
 ])));
-const frameAnchors = JSON.parse(await readFile(new URL('../../assets/exploded/aura-reframe-20261022/anchors.json', import.meta.url), 'utf8'));
+const frameAnchors = JSON.parse(await readFile(new URL('../../assets/exploded/scanner-color-20261024/anchors.json', import.meta.url), 'utf8'));
 
 test('Every concise reading retains its source step and resolves an exact component target', () => {
   assert.deepEqual(Object.keys(projectMotionLabels).sort(), Object.keys(projectMotionNotes).sort());
@@ -123,6 +123,14 @@ test('Only the scanner PSU receives a separate metal clone from its shared blue 
   assert.equal(applyPhotoPart('scanner', 'mat_printed_part_3', blue), blue);
   assert.equal(applyPhotoPart('vineRobot', 'mat_printed_part_4', blue), blue);
   assert.equal(JSON.stringify(source), before);
+  // The plywood albedo is calibrated for the white studio; the room keeps its source tan.
+  const plywood = manifests.scanner.materials.find(material => material.name === 'Pale plywood base');
+  const studioBase = new THREE.MeshPhysicalMaterial(), roomBase = new THREE.MeshPhysicalMaterial({ color: '#cec4ab' });
+  assert.notEqual(applyPhotoFinish('scanner', studioBase, plywood), plywood);
+  assert.equal(studioBase.color.getHexString(), '999181');
+  assert.equal(applyPhotoFinish('scanner', roomBase, plywood, { room: true }), plywood);
+  assert.equal(roomBase.color.getHexString(), 'cec4ab');
+  studioBase.dispose(); roomBase.dispose();
   blue.dispose(); metal.dispose();
 });
 

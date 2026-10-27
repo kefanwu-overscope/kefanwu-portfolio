@@ -1,4 +1,4 @@
-import { applyPhotoFinish } from './studio-photo-materials.js?v=refined-20260930';
+import { applyPhotoFinish } from './studio-photo-materials.js?v=aesthetic-batch1-20261024';
 import { installSourceMaterial } from './studio-inspector-materials.js?v=refined-20260930';
 
 // Static source sample zero, with geometry/material provenance recorded in
@@ -61,9 +61,9 @@ export const ROOM_EXHIBITS = Object.freeze({
     "frontYaw": 1.3258176636680326
   },
   "scanner": {
-    "url": "models/room-current/scanner.391aeb377d55270c.glb.gz",
-    "bytes": 332784,
-    "triangles": 21946,
+    "url": "models/room-current/scanner.fa233fb3c1c58551.glb.gz",
+    "bytes": 332109,
+    "triangles": 21956,
     "bounds": {
       "min": [
         -1.399999976158142,
@@ -318,7 +318,7 @@ export function prepareRoomExhibit(root, key) {
       prepared.add(material);
       let source = material.userData.roomSourceMaterial;
       if (!source) throw new Error(`Missing source material for room exhibit ${key || root.name}.`);
-      source = applyPhotoFinish(key, material, source);
+      source = applyPhotoFinish(key, material, source, { room: true });
       material.userData.source = source;
       material.userData.motionUniforms = {};
       if (source.depthWrite !== undefined) material.depthWrite = source.depthWrite;

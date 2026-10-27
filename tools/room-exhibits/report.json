@@ -1348,22 +1348,23 @@
       ]
     },
     "scanner": {
-      "url": "models/room-current/scanner.41ecb17165900906.glb.gz",
-      "sha256": "41ecb171659009064750ef0e7c16009b8b901bb0fd102c6715d86a13acb16448",
-      "bytes": 331997,
-      "glbBytes": 660080,
-      "glbSha256": "801963a6b837c967331ca2c672f01ceaccf65f93ae0ef916cec7bdb28769999f",
+      "url": "models/room-current/scanner.fa233fb3c1c58551.glb.gz",
+      "sha256": "fa233fb3c1c585511ace7f5e34165bf068b58d8507371ba6bc39d4b18e717ff4",
+      "bytes": 332109,
+      "glbBytes": 662076,
+      "glbSha256": "15ec43f92d495c767f2c6f326c50f5c7b05930659049cba6924be9776b87ac0c",
       "compression": "gzip",
-      "triangles": 21946,
+      "triangles": 21956,
       "sourceVisibleTriangles": 161359,
-      "meshes": 6,
+      "meshes": 7,
       "materialNames": [
         "Pale plywood base",
         "Royal blue printed components",
         "Motor and electronics housings",
         "Brass fittings",
         "Satin machined steel",
-        "Pale engineering polymer"
+        "Pale engineering polymer",
+        "Scanner satin metal power-supply enclosure"
       ],
       "bounds": {
         "min": [
@@ -1384,8 +1385,8 @@
         -2.9802322387695312e-8
       ],
       "source": {
-        "manifest": "assets/studio-motion/scanner/manifest.871477ce65e6213f.json",
-        "manifestSha256": "871477ce65e6213f3c9636b3808a8ae9743eb89d2b5389969ee92427627d4549",
+        "manifest": "assets/studio-motion/scanner-color-20261024/manifest.a1cc555f640dade9.json",
+        "manifestSha256": "a1cc555f640dade9fa72cc82a2cc46d8f91d2cd60a379b4b03d1acef2785f5df",
         "geometrySha256": "7ea7d419e6703eeba93ae167c5e194b188490e617580cc23d68c1b984aa25356",
         "initialMotionSha256": "d77850f2a898c5c1ba223cc21ebdec3d623d0082a7da75e42a32981d0cc34fee"
       },
@@ -1450,7 +1451,7 @@
         },
         {
           "name": "mat_printed_part_4",
-          "material": "Royal blue printed components",
+          "material": "Scanner satin metal power-supply enclosure",
           "sourceTriangles": 7356,
           "triangles": 1156,
           "appearanceError": 0.007968048565089703
@@ -1499,21 +1500,35 @@
         },
         {
           "name": "mat_dark_part_0",
+          "material": "Royal blue printed components",
+          "sourceTriangles": 4728,
+          "triangles": 642,
+          "appearanceError": 0.007738105952739716
+        },
+        {
+          "name": "mat_dark_part_0",
           "material": "Motor and electronics housings",
-          "sourceTriangles": 5648,
-          "triangles": 814,
-          "appearanceError": 0.007805222645401955
+          "sourceTriangles": 920,
+          "triangles": 170,
+          "appearanceError": 0.00785653293132782
+        },
+        {
+          "name": "mat_dark_part_1",
+          "material": "Royal blue printed components",
+          "sourceTriangles": 4728,
+          "triangles": 660,
+          "appearanceError": 0.00774373859167099
         },
         {
           "name": "mat_dark_part_1",
           "material": "Motor and electronics housings",
-          "sourceTriangles": 5648,
-          "triangles": 824,
-          "appearanceError": 0.007789080962538719
+          "sourceTriangles": 920,
+          "triangles": 176,
+          "appearanceError": 0.007852922193706036
         },
         {
           "name": "mat_dark_part_2",
-          "material": "Motor and electronics housings",
+          "material": "Royal blue printed components",
           "sourceTriangles": 1080,
           "triangles": 242,
           "appearanceError": 0.007981215603649616
@@ -1723,7 +1738,7 @@
         },
         {
           "name": "mat_steel_part_3",
-          "material": "Satin machined steel",
+          "material": "Royal blue printed components",
           "sourceTriangles": 6874,
           "triangles": 686,
           "appearanceError": 0.006870034616440535
@@ -1758,7 +1773,7 @@
         },
         {
           "name": "mat_steel_part_8",
-          "material": "Satin machined steel",
+          "material": "Royal blue printed components",
           "sourceTriangles": 4966,
           "triangles": 534,
           "appearanceError": 0.00790491234511137

@@ -240,7 +240,7 @@ await check('Reflected geometry keeps its original front-face winding', async ()
   assert.deepEqual(group.children, meshes); assert.deepEqual(vertices(scene), before);
 });
 
-const warmup = moduleContext(`${await read('experience-warmup.js')}\nglobalThis.prepare=prepareRoomShaders;`);
+const warmup = moduleContext(`${await read('experience-warmup.js')}\nglobalThis.prepare=prepareRoomShaders; globalThis.prepareRoot=prepareRootShaders;`);
 function shaderHarness({ fail = false } = {}) {
   const scene = new THREE.Scene(), group = meshGroup(); scene.add(group);
   const original = group.children[0].material;
@@ -251,14 +251,30 @@ function shaderHarness({ fail = false } = {}) {
   const fullscreen = new THREE.ShaderMaterial(), outputMaterial = new THREE.RawShaderMaterial();
   const initialTarget = { name: 'original' }, readBuffer = { name: 'linear', texture: {} };
   let target = initialTarget;
-  const compiled = [];
+  const compiled = [], syncCompiled = [], programs = [];
+  // A program links after a few non-blocking polls (KHR_parallel_shader_compile).
+  const program = () => {
+    let polls = 0;
+    const p = { usedTimes: 1, uniformsRead: false, isReady: () => ++polls > 2, getUniforms() { p.uniformsRead = true; } };
+    programs.push(p);
+  };
   const renderer = { outputColorSpace: THREE.SRGBColorSpace, toneMapping: THREE.ACESFilmicToneMapping,
     toneMappingExposure: 1.3, getRenderTarget: () => target, setRenderTarget: (value) => target = value,
+    info: { programs }, extensions: { has: (name) => name === 'KHR_parallel_shader_compile' },
+    getContext: () => ({ isContextLost: () => false }),
+    compile(object, camera, targetScene = null) {
+      const sides = new Map();
+      object.traverse((o) => { if (o.material) for (const m of [o.material].flat()) sides.set(m, m.side); });
+      syncCompiled.push({ target, sides, targetScene });
+      program();
+      return new Set(sides.keys());
+    },
     compileAsync(object) {
       const materials = [], instancing = [];
       object.traverse((o) => { if (o.material) { materials.push(o.material); instancing.push(!!o.isInstancedMesh); } });
       compiled.push({ target, materials, instancing });
       if (fail && materials.includes(normal)) throw Error('Shader failed');
+      program();
       return Promise.resolve();
     } };
   const output = { isOutputPass: true, material: outputMaterial, renderToScreen: false,
@@ -270,7 +286,7 @@ function shaderHarness({ fail = false } = {}) {
     } };
   const gtao = { normalMaterial: normal, gtaoMaterial: fullscreen }, bokeh = { _materialDepth: depth };
   const composer = { readBuffer, writeBuffer: {}, passes: [gtao, bokeh, output] };
-  return { scene, group, original, exempt, instanced, initialTarget, compiled, renderer, composer, gtao, bokeh, output };
+  return { scene, group, original, exempt, instanced, initialTarget, compiled, syncCompiled, programs, renderer, composer, gtao, bokeh, output };
 }
 await check('Shader warmup matches linear, override, instanced and screen-output passes without drawing', async () => {
   const h = shaderHarness();
@@ -285,6 +301,32 @@ await check('Shader warmup matches linear, override, instanced and screen-output
   assert(h.group.children.every((o) => o.material === h.original));
   assert.equal(h.instanced.material, h.original);
   assert.equal(h.renderer.getRenderTarget(), h.initialTarget); assert.equal(h.output.renderToScreen, false);
+  assert.equal(h.syncCompiled.length, 0); // nothing transmissive, no extra pass
+  assert(h.programs.length === 5 && h.programs.every((p) => p.uniformsRead));
+});
+await check('Shader warmup builds the transmission pass BackSide variant, restores DoubleSide and awaits every new program', async () => {
+  const h = shaderHarness();
+  const glass = new THREE.MeshPhysicalMaterial({ transmission: 1, side: THREE.DoubleSide });
+  const frontGlass = new THREE.MeshPhysicalMaterial({ transmission: 1 });
+  h.scene.add(new THREE.Mesh(new THREE.BoxGeometry(), glass), new THREE.Mesh(new THREE.BoxGeometry(), frontGlass));
+  const version = glass.version, frontVersion = frontGlass.version;
+  await warmup.prepare(h.renderer, h.scene, new THREE.PerspectiveCamera(), h.composer, h);
+  assert.equal(h.syncCompiled.length, 1);
+  assert.equal(h.syncCompiled[0].target, h.composer.readBuffer);
+  assert.equal(h.syncCompiled[0].sides.get(glass), THREE.BackSide);
+  assert.equal(h.syncCompiled[0].sides.get(frontGlass), THREE.FrontSide);
+  assert.equal(h.syncCompiled[0].sides.get(h.original), h.original.side);
+  assert.equal(glass.side, THREE.DoubleSide); assert(glass.version > version); assert.equal(frontGlass.version, frontVersion);
+  assert(h.programs.length === 6 && h.programs.every((p) => p.uniformsRead));
+  assert.equal(h.renderer.getRenderTarget(), h.initialTarget);
+
+  const prop = new THREE.Group(), visor = new THREE.MeshPhysicalMaterial({ transmission: .5, side: THREE.DoubleSide });
+  prop.add(new THREE.Mesh(new THREE.BoxGeometry(), visor));
+  await warmup.prepareRoot(h.renderer, prop, h.scene, new THREE.PerspectiveCamera(), h.composer, h);
+  const last = h.syncCompiled.at(-1);
+  assert.equal(h.syncCompiled.length, 2); assert.equal(last.target, h.composer.readBuffer); assert.equal(last.targetScene, h.scene);
+  assert.equal(last.sides.get(visor), THREE.BackSide); assert.equal(visor.side, THREE.DoubleSide);
+  assert(h.programs.every((p) => p.uniformsRead)); assert.equal(h.renderer.getRenderTarget(), h.initialTarget);
 });
 await check('Shader warmup restores materials and target after preparation failure', async () => {
   const h = shaderHarness({ fail: true });

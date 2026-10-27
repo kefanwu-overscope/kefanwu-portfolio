@@ -89,13 +89,13 @@
   card.setAttribute("role", "tooltip");
   card.setAttribute("aria-hidden", "true");
   card.innerHTML = `<div class="skill-card-inner">
-    <div class="skill-card-media"><img alt="" decoding="async" /></div>
+    <div class="skill-card-media"></div>
     <div class="skill-card-content"><p class="skill-card-kicker"></p>
       <h2></h2><p class="skill-card-text"></p></div>
   </div>`;
   document.body.append(card);
 
-  const photo = card.querySelector("img");
+  const media = card.querySelector(".skill-card-media");
   const kicker = card.querySelector(".skill-card-kicker");
   const title = card.querySelector("h2");
   const text = card.querySelector(".skill-card-text");
@@ -108,6 +108,67 @@
   let modality = "keyboard";
   let positionFrame = 0;
   let closeTimer = 0;
+  let shownKey = null;
+  let showTicket = 0;
+  let preloaded = false;
+  let preloadWanted = false;
+  let preloadTimer = 0;
+  const images = new Map();
+  const ready = new Map();
+  const decoded = new Set();
+  // A first show waits this long at most for its picture; a chip-to-chip swap
+  // waits a little longer so text and picture usually change together.
+  const FIRST_SHOW_WAIT = 180;
+  const SWAP_WAIT = 450;
+  const technical = new Set(["fea", "cfd", "matlab", "topology study", "autocad", "solidworks"]);
+  const keyOf = (item) => item.textContent.trim().toLowerCase();
+
+  // One image element per skill, so a swap never shows a picture still decoding.
+  // The hovered picture is requested first, at high priority.
+  function imageFor(key, urgent = false) {
+    let image = images.get(key);
+    if (!image) {
+      image = new Image();
+      image.decoding = "async";
+      if (urgent) image.fetchPriority = "high";
+      image.alt = details[key].alt;
+      image.src = details[key].image;
+      images.set(key, image);
+    }
+    return image;
+  }
+
+  // Settles once the picture is decoded (or failed); a picture that arrives
+  // after its card opened fades in over the neutral media box.
+  function readyFor(key) {
+    let promise = ready.get(key);
+    if (!promise) {
+      const image = imageFor(key);
+      promise = image.decode().catch(() => {}).then(() => {
+        decoded.add(key);
+        image.classList.remove("is-pending");
+      });
+      ready.set(key, promise);
+    }
+    return promise;
+  }
+
+  function preloadRest() {
+    clearTimeout(preloadTimer);
+    preloadTimer = 0;
+    if (preloaded || !preloadWanted) return;
+    preloaded = true;
+    const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 1));
+    idle(() => Object.keys(details).forEach((key) => imageFor(key)), { timeout: 1000 });
+  }
+
+  // Fetch the other pictures once the pointer (or focus) reaches the strip,
+  // but only after the hovered one has arrived, so they never compete with it.
+  function preload() {
+    if (preloaded || preloadWanted) return;
+    preloadWanted = true;
+    preloadTimer = setTimeout(() => { if (!activeItem) preloadRest(); else preloadTimer = 0; }, 400);
+  }
 
   function clearClose() {
     clearTimeout(closeTimer);
@@ -123,7 +184,7 @@
     activeItem = null;
     pinned = false;
     overCard = false;
-    card.classList.remove("is-visible");
+    card.classList.remove("is-visible", "is-following");
     card.setAttribute("aria-hidden", "true");
     strip.classList.remove("is-skill-active");
   }
@@ -164,6 +225,33 @@
     });
   }
 
+  function reveal(key) {
+    if (shownKey !== key) {
+      const detail = details[key];
+      kicker.textContent = detail.meta;
+      title.textContent = detail.title;
+      text.textContent = detail.text;
+      const image = imageFor(key);
+      image.classList.toggle("is-pending", !decoded.has(key));
+      media.replaceChildren(image);
+      media.classList.toggle("is-technical", technical.has(key));
+      shownKey = key;
+    }
+    // A closed card is placed at its chip before it fades in, never flown in
+    // from its previous position; an open card follows to the next chip.
+    const entering = !card.classList.contains("is-visible");
+    if (entering) card.style.transition = "none";
+    card.classList.toggle("is-following", !entering);
+    position();
+    if (entering) {
+      void card.offsetWidth;
+      card.style.removeProperty("transition");
+    }
+    if (!activeItem) return;
+    card.setAttribute("aria-hidden", "false");
+    card.classList.add("is-visible");
+  }
+
   function show(item, pin = false) {
     if (document.hidden || dismissedItem === item) return;
     clearClose();
@@ -171,23 +259,30 @@
       activeItem?.removeAttribute("aria-describedby");
       activeItem?.setAttribute("aria-expanded", "false");
       activeItem = item;
-      const detail = details[item.textContent.trim().toLowerCase()];
-      kicker.textContent = detail.meta;
-      title.textContent = detail.title;
-      text.textContent = detail.text;
-      photo.src = detail.image;
-      photo.alt = detail.alt;
-      card.querySelector(".skill-card-media").classList.toggle("is-technical", ["fea", "cfd", "matlab", "topology study", "autocad", "solidworks"].includes(item.textContent.trim().toLowerCase()));
       pinned = false;
     }
     pinned = pinned || pin;
     item.setAttribute("aria-describedby", card.id);
     item.setAttribute("aria-expanded", "true");
     strip.classList.add("is-skill-active");
-    position();
-    if (!activeItem) return;
-    card.setAttribute("aria-hidden", "false");
-    card.classList.add("is-visible");
+    const key = keyOf(item);
+    const ticket = ++showTicket;
+    if (shownKey === key) {
+      reveal(key);
+      return;
+    }
+    // Text and picture change together once the new picture is decoded, or
+    // after a short cap so a slow link never holds the card back; the picture
+    // then fades in when it arrives.
+    imageFor(key, true);
+    const picture = readyFor(key);
+    picture.then(preloadRest);
+    const cap = new Promise((resolve) => {
+      setTimeout(resolve, card.classList.contains("is-visible") ? SWAP_WAIT : FIRST_SHOW_WAIT);
+    });
+    Promise.race([picture, cap]).then(() => {
+      if (ticket === showTicket && activeItem === item && !document.hidden) reveal(key);
+    });
   }
 
   function scheduleClose() {
@@ -278,7 +373,8 @@
 
   card.addEventListener("pointerenter", () => { overCard = true; clearClose(); });
   card.addEventListener("pointerleave", () => { overCard = false; scheduleClose(); });
-  photo.addEventListener("load", schedulePosition);
+  strip.addEventListener("pointerenter", (event) => { if (event.pointerType !== "touch") preload(); });
+  strip.addEventListener("focusin", () => { if (modality === "keyboard") preload(); });
   document.addEventListener("pointerdown", (event) => {
     modality = event.pointerType;
     if (!strip.contains(event.target) && !card.contains(event.target)) hide();

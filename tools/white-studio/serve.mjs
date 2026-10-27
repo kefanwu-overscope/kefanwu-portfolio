@@ -4,8 +4,11 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 const dir=path.dirname(fileURLToPath(import.meta.url));
 const root=path.resolve(dir,'../..');
-const evidence=path.resolve(root,'../.codex/white-studio-20261011');
-const port=4196,origin=`http://127.0.0.1:${port}`;
+// The 2026-10-11 full run's evidence stays in ../.codex/white-studio-20261011.
+// Later focused renders write to a dated release work folder, never ../.codex.
+const evidence=path.resolve(root,process.env.WHITE_STUDIO_OUTPUT||'../releases/aesthetic-batch1-20261024/work/scanner');
+if(evidence.split(path.sep).includes('.codex'))throw new Error('Export output must stay outside .codex');
+const port=Number(process.env.WHITE_STUDIO_PORT)||4196,origin=`http://127.0.0.1:${port}`;
 const mime={'.html':'text/html; charset=utf-8','.js':'application/javascript','.mjs':'application/javascript','.json':'application/json','.css':'text/css','.glb':'model/gltf-binary','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.svg':'image/svg+xml','.woff2':'font/woff2','.gz':'application/gzip'};
 http.createServer(async(req,res)=>{try{
  const url=new URL(req.url,origin);

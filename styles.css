@@ -473,11 +473,13 @@ button {
     inset 0 -18px 44px rgba(255, 255, 255, 0.035),
     var(--shadow-lg);
   opacity: 0;
-  transform: translate3d(var(--skill-card-x, -120vw), var(--skill-card-y, -120vh), 0) scale(0.94);
+  /* skills-card JS places a closed card at its chip with no transition, so it
+     only fades in and rises 4px. An open card follows to the next chip. */
+  transform: translate3d(var(--skill-card-x, 0px), calc(var(--skill-card-y, 0px) + 4px), 0);
   transform-origin: 50% 0;
   transition:
-    opacity var(--dur-fast) var(--ease-out),
-    transform var(--dur-med) var(--ease-out);
+    opacity 160ms var(--ease-out),
+    transform 160ms var(--ease-out);
   backdrop-filter: blur(26px) saturate(1.35);
   -webkit-backdrop-filter: blur(26px) saturate(1.35);
 }
@@ -507,7 +509,13 @@ button {
 
 .skill-glass-card.is-visible {
   opacity: 1;
-  transform: translate3d(var(--skill-card-x), var(--skill-card-y), 0) scale(1);
+  transform: translate3d(var(--skill-card-x, 0px), var(--skill-card-y, 0px), 0);
+}
+
+.skill-glass-card.is-following {
+  transition:
+    opacity 160ms var(--ease-out),
+    transform var(--dur-med) var(--ease-out);
 }
 
 .skill-card-inner {
@@ -544,6 +552,14 @@ button {
   object-fit: cover;
   opacity: 0.76;
   filter: saturate(0.82) contrast(1.08);
+  transition: opacity 200ms var(--ease-out);
+}
+
+/* skills-card JS opens the card before a slow picture arrives; the media box
+   stays neutral until the picture is decoded, then it fades in. */
+.skill-glass-card .skill-card-media img.is-pending { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .skill-card-media img { transition: none; }
 }
 
 .skill-card-content {
@@ -2370,12 +2386,6 @@ html.js .project-grid .project-card.is-settled {
     border-color var(--dur-fast) var(--ease-out),
     box-shadow var(--dur-fast) var(--ease-out);
   transition-delay: 0ms;
-}
-
-/* graceful fade for filter changes in browsers without View Transitions */
-html.js .project-grid.is-filtering .project-card {
-  opacity: 0;
-  transition: opacity 140ms var(--ease-out);
 }
 
 /* ============ responsive ============ */

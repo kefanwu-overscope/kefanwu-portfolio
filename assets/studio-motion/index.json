@@ -15,8 +15,8 @@
       "sha256": "abd6d43cbbda460eebaeb9b71f78841d4c9a5f3848e267d817e7b7a5e802b3f3"
     },
     "scanner": {
-      "manifest": "scanner/manifest.871477ce65e6213f.json",
-      "sha256": "871477ce65e6213f3c9636b3808a8ae9743eb89d2b5389969ee92427627d4549"
+      "manifest": "scanner-color-20261024/manifest.a1cc555f640dade9.json",
+      "sha256": "a1cc555f640dade9fa72cc82a2cc46d8f91d2cd60a379b4b03d1acef2785f5df"
     },
     "brakeSim": {
       "manifest": "brake-dr-20261005/manifest.e56b939e20fccf16.json",

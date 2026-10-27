@@ -1,5 +1,40 @@
 # Homepage presentation
 
+## Aesthetic batch 1 · 2026-10-26
+
+Owner-approved; these rules supersede the matching items below.
+
+- Hero copy: `.hero-copy` is `width: fit-content` (max 38ch; 24ch at
+  721–1279px; 22ch at 721–767px; 16px type at 721–739px). Optional line turns:
+  `.hero-copy-turn` after "Race-car systems." (shown at 721–1279px) and
+  `.hero-copy-split` after "Designed, built," (shown at 721–819px), so the
+  longest line stays clear of the car's nose.
+- Hero halo: `.hero-copy::before` is a white backdrop shaped by gradient masks
+  with an exact reach on each side (`--halo-*` variables), plus an elliptical
+  layer that rounds off the right side. It has no blur, so no straight edge or
+  corner shows. The right fade is short (30px) beside the nose at 721–900px and
+  on near-square windows. Opacity is .88 on phones and .72 from 721px. The h1
+  paints above it. `tools/hero-tests/hero-halo-20261024.cjs` checks that no
+  dark car pixel is lifted and that glyph contrast holds.
+- `.hero-content` has `animation: none`; the name paints where it settles.
+  The slow-load veil is unchanged. Short windows at 721–1279px (≤880px tall)
+  tighten the hero rhythm.
+- Hero actions: at ≤499px the studio button spans the column and the two text
+  links share the row under it. From 500px the single row is kept.
+- Card motion: leaving a playing card cuts straight to the frame-0 cover (no
+  cross-fade ghost). Wheel scrubbing follows with a critically damped spring
+  (omega 15, speed cap 1/0.6s): about 0.45s to settle after a flick, about 0.8s
+  for a full sweep, and undecoded frames are never skipped. Range and detail
+  seeks stay exact.
+- Skill card: it first appears at its chip with a 160ms fade and 4px rise.
+  Text and image swap together after the image decodes. The 14 images preload
+  on the first fine-pointer entry or keyboard focus. An open card still follows
+  to the next chip over 500ms.
+- Filters apply on click (no 150ms delay).
+- Scanner card: cover `assets/editorial/scanner-color-20261024/`; homepage
+  frames come from `assets/exploded/manifest-white-20261024.json` and case
+  pages from `manifest-detail-white-20261024.json`.
+
 ## Design-audit fixes · 2026-10-22
 
 Owner-approved audit changes; these rules supersede older entries below.

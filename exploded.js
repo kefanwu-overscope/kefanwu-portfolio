@@ -19,6 +19,12 @@
   let streamingDecodedBytes = 0;
   let cacheClock = 0;
   const WHEEL_DISTANCE = 380;
+  // Wheel scrubbing follows its target with a critically damped spring. The
+  // speed cap keeps a full 0-100% flick at about 0.8 s, so every mechanism stage
+  // still passes on screen, and the spring settles about 0.3-0.5 s after the
+  // last notch instead of playing on linearly.
+  const FOLLOW_OMEGA = 15;
+  const FOLLOW_MAX_SPEED = 1 / 0.6;
   // Wheel scrubbing waits for deliberate intent: a real pointer move inside a card,
   // or, when the browser reports no movement, a rest on it that no scroll interrupts.
   const INTENT_DWELL = 350;
@@ -118,11 +124,25 @@
     const state = active;
     const elapsed = lastTime ? Math.min(64, now - lastTime) : 16;
     lastTime = now;
-    const change = (state.target - state.progress) * (1 - Math.exp(-elapsed / 100));
-    // Bound large wheel jumps so intermediate mechanism poses remain visible.
-    const maximumStep = elapsed / 1800;
-    let next = state.progress + Math.max(-maximumStep, Math.min(maximumStep, change));
-    if (Math.abs(state.target - next) < 0.001) next = state.target;
+    const last = state.config.frames.length - 1;
+    const seconds = elapsed / 1000;
+    const offset = state.progress - state.target;
+    // A reversed wheel turns at once rather than coasting on past its pose.
+    if (state.velocity * offset > 0) state.velocity = 0;
+    const impulse = (state.velocity + FOLLOW_OMEGA * offset) * seconds;
+    const decay = Math.exp(-FOLLOW_OMEGA * seconds);
+    let velocity = (state.velocity - FOLLOW_OMEGA * impulse) * decay;
+    let step = state.target + (offset + impulse) * decay - state.progress;
+    const maximumStep = FOLLOW_MAX_SPEED * seconds;
+    if (Math.abs(step) > maximumStep) {
+      step = Math.sign(step) * maximumStep;
+      velocity = Math.sign(velocity) * Math.min(Math.abs(velocity), FOLLOW_MAX_SPEED);
+    }
+    let next = state.progress + step;
+    // Never pass the requested pose (a reversal must not flash poses beyond it),
+    // and finish once the remaining distance is under half a frame.
+    if ((next - state.target) * offset <= 0 || Math.abs(state.target - next) < 0.5 / last) next = state.target;
+    if (next === state.target) velocity = 0;
     const index = Math.round(next * (state.config.frames.length - 1));
     const currentIndex = Math.round(state.progress * (state.config.frames.length - 1));
     const direction = Math.sign(index - currentIndex);
@@ -133,12 +153,14 @@
       // Resume from this pose when it is decoded instead of skipping over it or
       // spending animation frames polling the network.
       state.waitingIndex = needed;
+      state.velocity = 0;
       lastTime = 0;
       if (state.config.streaming) requestFrames(state);
       return;
     }
     state.waitingIndex = null;
     state.progress = next;
+    state.velocity = velocity;
     draw(state);
     if (state.progress !== state.target) animationFrame = requestAnimationFrame(animate);
     else lastTime = 0;
@@ -151,6 +173,7 @@
     if (direct || reducedMotion.matches) {
       stopAnimation();
       state.progress = state.target;
+      state.velocity = 0;
       if (!cache.get(state.key)?.frames[Math.round(state.progress * (state.config.frames.length - 1))]?.ready) {
         state.card.classList.add("is-explode-loading");
         state.range.setAttribute("aria-busy", "true");
@@ -168,17 +191,21 @@
       stopAnimation();
       active = null;
     }
-    if (immediate) {
-      state.poster.style.transition = "none";
-      state.stage.style.transition = "none";
-    }
+    // A pose other than frame 0 must never dissolve over the matching frame-0
+    // cover (two poses at once). Cut the stage away; activate() restores its fade.
+    const posed = state.card.classList.contains("is-explode-playing");
+    if (immediate) state.poster.style.transition = "none";
+    if (immediate || posed) state.stage.style.transition = "none";
     state.target = 0;
     state.progress = 0;
+    state.velocity = 0;
     state.waitingIndex = null;
     state.owner = null;
     state.dragging = false;
     if (state.armed || state.dwellTimer) disarm(state);
     state.card.classList.remove("is-explode-playing", "is-explode-active");
+    // Resolve the cut now, before a re-entry in this same frame restores the fade.
+    if (posed) void state.stage.offsetWidth;
     if (state.external) {
       state.index = -1;
       state.card.dataset.motionProgress = '0';
@@ -839,7 +866,7 @@
     card.classList.add("has-explode");
     card.dataset.explodeMode = config.mode;
     const rect = card.getBoundingClientRect();
-    const state = { key, config, card, media, poster, stage, ui, range, badge, target: 0, progress: 0, index: -1, external: card.dataset.scrollDriven === 'true',
+    const state = { key, config, card, media, poster, stage, ui, range, badge, target: 0, progress: 0, velocity: 0, index: -1, external: card.dataset.scrollDriven === 'true',
       visible: rect.bottom > 0 && rect.top < innerHeight, owner: null, pointerInside: false, dragging: false,
       armed: false, armedTop: 0, dwellTimer: 0, failed: false, loadJob: null, waitingIndex: null };
     states.set(key, state);

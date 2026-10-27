@@ -293,14 +293,11 @@ document.querySelectorAll("[data-count]").forEach((el) => {
   counterObserver.observe(el);
 });
 
-/* ============ filters (bounded grid fade, latest intent wins) ============ */
+/* ============ filters (applied on the click itself) ============ */
 
 const cards = [...document.querySelectorAll(".project-card")];
 const filters = [...document.querySelectorAll(".filter")];
-const projectGrid = document.querySelector(".project-grid");
 
-let pendingFilter = null;
-let filterJob = null;
 let activeFilter = filters.find((button) => button.getAttribute("aria-pressed") === "true") || null;
 const realProjectCards = cards.filter((card) => !card.classList.contains("project-card--studio"));
 const filterStatus = document.getElementById("filter-status");
@@ -336,62 +333,12 @@ function applyProjectFilter(button) {
   scheduleScrollEffects();
 }
 
-function finishFilterJob(job) {
-  if (filterJob !== job) return;
-  clearTimeout(job.timer);
-  projectGrid?.classList.remove("is-filtering");
-  filterJob = null;
-  if (pendingFilter === activeFilter) pendingFilter = null;
-  runPendingFilter();
-}
-
-function applyLatestFilter(job) {
-  if (filterJob !== job) return;
-  const button = pendingFilter || job.button;
-  job.button = button;
-  pendingFilter = null;
-  applyProjectFilter(button);
-}
-
-function runPendingFilter() {
-  if (filterJob || !pendingFilter) return;
-  const job = { button: pendingFilter, timer: 0 };
-  pendingFilter = null;
-  filterJob = job;
-  if (!canAnimatePage()) {
-    applyLatestFilter(job);
-    finishFilterJob(job);
-  } else {
-    // Fade only the grid: a document view-transition overlay can intercept
-    // another native filter click. Further clicks share this 150ms deadline.
-    projectGrid?.classList.add("is-filtering");
-    job.timer = setTimeout(() => {
-      applyLatestFilter(job);
-      finishFilterJob(job);
-    }, 150);
-  }
-}
-
-function flushPendingFilter() {
-  if (!filterJob) return;
-  const job = filterJob;
-  applyLatestFilter(job);
-  finishFilterJob(job);
-}
-motionUpdates.add(() => {
-  if (!canAnimatePage()) flushPendingFilter();
-});
+// The former 150 ms grid fade never ran (editorial.css keeps cards opaque), so
+// it only delayed the change. Apply each click at once; the latest click wins.
 filters.forEach((button) => {
-  button.addEventListener("click", () => {
-    // Retain the latest intent even if that button still appears active
-    // before this fade has applied its first filter (Robotics -> All).
-    pendingFilter = button;
-    runPendingFilter();
-  });
+  button.addEventListener("click", () => applyProjectFilter(button));
 });
 projectSearch?.addEventListener("input", () => {
-  // Flush the latest category before combining it with the current search.
-  flushPendingFilter();
   if (activeFilter) applyProjectFilter(activeFilter);
 });
 

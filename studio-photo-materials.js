@@ -18,6 +18,12 @@ export const photoFinishes = {
   scanner: {
     'Royal blue printed components': { color: '#0b2389', roughness: .49, surface: PRINT_SURFACE },
     'Satin machined steel': { surface: SATIN_METAL },
+    // scanner-live-7.webp: the lit plywood top has median sRGB #d5cfc5. On the
+    // white studio the source tan rendered near white (#eae6de); this albedo
+    // renders the same top face as #d4cfc5 (HD frame 0 median). Calibrated for
+    // the white studio only: the room keeps its source plywood (#cec4ab), which
+    // its lighting already renders closer to the photograph.
+    'Pale plywood base': { color: '#999181', studioOnly: true },
   },
   steering: {
     'Satin machined steel': { surface: SATIN_METAL },
@@ -53,9 +59,9 @@ export function applyPhotoPart(key, name, material) {
   return copy;
 }
 
-export function applyPhotoFinish(key, material, source) {
+export function applyPhotoFinish(key, material, source, { room = false } = {}) {
   const finish = photoFinishes[key]?.[source.name];
-  if (!finish) return source;
+  if (!finish || room && finish.studioOnly) return source;
   if (finish.color) material.color.set(finish.color);
   for (const property of ['roughness', 'metalness', 'transmission', 'opacity', 'clearcoat', 'clearcoatRoughness']) {
     if (finish[property] !== undefined) material[property] = finish[property];

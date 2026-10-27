@@ -271,6 +271,9 @@ await check('Original cover catalog and tracked model / scientific-image / anima
       // 2026-10-23: seat wording aligned to the Job App October résumé.
       'assets/resume/resume.89405880a231552a.webp'].includes(name) ||
     ['assets/exploded/manifest-white-20261022.json', 'assets/exploded/manifest-detail-white-20261022.json'].includes(name) ||
+    // 2026-10-24: scanner recolour pilot repoints its studio-motion source manifest
+    // and the room catalogue to the recoloured scanner exhibit.
+    ['assets/studio-motion/index.json', 'models/room-current/index.json'].includes(name) ||
     ['assets/editorial/white-20261022/', 'assets/method-20261022/', 'assets/og/', 'assets/hero-fsae-context-20261022/',
       'assets/studio-teaser-20261022/', 'models/baked/lowtier-20261022/',
       'assets/exploded/aura-reframe-20261022/', 'assets/editorial/aura-reframe-20261022/'].some(prefix => name.startsWith(prefix));

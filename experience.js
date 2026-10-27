@@ -10,7 +10,7 @@
    ============================================================ */
 
 import * as THREE from "three";
-import { createStudioNavigation } from "./studio-navigation.js?v=motion-story-20260930";
+import { createStudioNavigation } from "./studio-navigation.js?v=aesthetic-batch1-20261024";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
 import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=game-performance-20261009";
@@ -18,7 +18,7 @@ import { AdaptiveFrameClock, frameAlpha } from "./experience-timing.js?v=game-pe
 import { AmbientClock, ambientScreenRect } from "./experience-ambient.js?v=workbench-live-20260930";
 import { ROOM_LIGHT_GRADE } from "./experience-light-grade.js?v=workbench-live-20260930";
 import { batchStaticRoom } from "./experience-batching.js?v=room-performance-20260919";
-import { prepareRoomShaders } from "./experience-warmup.js?v=room-performance-20260919";
+import { prepareRoomShaders, prepareRootShaders } from "./experience-warmup.js?v=aesthetic-batch1-20261026";
 import { loadRGBMLightmap, installBakedDiffuse } from "./experience-baked-material.js?v=realism-20260925";
 import { ROOM_BAKE } from "./experience-baked-assets.js?v=room-detail-20260926";
 import { createStudioLoader } from "./experience-loader.js?v=exp-adaptive-20261022";
@@ -27,7 +27,7 @@ import { AdaptiveQuality, GpuFrameTimer } from "./experience-quality.js?v=game-p
 import { createAdvancedRenderer } from "./experience-advanced.js?v=game-performance-20261009";
 import { createAdaptiveShadows } from "./experience-shadow-budget.js?v=advanced-render-20260930";
 import { buildDetailedPrinter, buildDetailedPegboardTools, refineWorkbenchInstruments } from "./experience-workbench-details.js?v=room-detail-20260926";
-import { ROOM_EXHIBITS, prepareRoomExhibit } from "./experience-exhibits.js?v=brake-dr-20261005";
+import { ROOM_EXHIBITS, prepareRoomExhibit } from "./experience-exhibits.js?v=aesthetic-batch1-20261024";
 import { addStudioRealism } from "./experience-realism.js?v=studio-realism-20260907";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
@@ -117,6 +117,34 @@ const startupUI = createStudioLoader(loaderEl);
 const revealScene = () => document.documentElement.classList.add("exp-ready");
 const easeInOutCubic = (x) =>
   x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+// Camera flights and the light boot advance on accumulated frame time. A
+// frame far longer than the recent median (a hitch: a late shader link, a GC)
+// advances at most MOTION_STEP_HITCH x that median, and never less than
+// MOTION_STEP_MIN_MS, so it is a short pause in the motion, not a jump ahead
+// (33 ms keeps the intro's post-hitch step under ~5 deg). A device that is
+// slow on every frame has a slow median and still runs in about wall time.
+const MOTION_STEP_MIN_MS = 33, MOTION_STEP_HITCH = 1.5, MOTION_STEP_SAMPLES = 9;
+function createMotionStep() {
+  const recent = [];
+  return (dt) => {
+    dt = Math.max(0, dt);
+    let cap = MOTION_STEP_MIN_MS;
+    if (recent.length) {
+      const sorted = recent.slice().sort((a, b) => a - b);
+      cap = Math.max(cap, MOTION_STEP_HITCH * sorted[sorted.length >> 1]);
+    }
+    recent.push(dt);
+    if (recent.length > MOTION_STEP_SAMPLES) recent.shift();
+    return Math.min(dt, cap);
+  };
+}
+// Interact markers (T11, 2026-10-24): static, with no bob or pulse; hover
+// eases a marker between these sizes instead of snapping it.
+const MARKER_REST = 0.048, MARKER_HOVER = 0.066, MARKER_EASE_MS = 180;
+const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3);
+// Camera bounds inside the room shell: the render loop clamps the camera to
+// them, and keyboard framing (M5) only picks orbit poses inside them.
+const ROOM_SHELL = { x: 2.35, zMin: -1.25, zMax: 3.35, yMin: 0.4, yMax: 3.15 };
 
 // Share one listener while hidden; downloads/worker decoding can continue.
 let visibleWait = null;
@@ -152,6 +180,7 @@ let MAXA = 4;
 let ANISO_DIRTY = true;
 const SOURCE_READY = new WeakMap();
 const ANISO_PENDING = new Set();
+const ANISO_SLOTS = ["map", "emissiveMap", "roughnessMap", "metalnessMap", "normalMap", "aoMap"];
 const textureReady = (t) => {
   const image = t?.source?.data;
   return !!(image && (image.width || image.videoWidth) > 0 && (image.height || image.videoHeight) > 0);
@@ -341,6 +370,10 @@ async function initScene(canvas) {
   renderer.shadowMap.autoUpdate = false;
   renderer.transmissionResolutionScale = 0.75;
   renderer.info.autoReset = false;
+  // 2026-10-24 (M1d): production skips the per-program info-log/link-status
+  // readback on first use (a synchronous GPU round trip per program).
+  // ?shaders=check restores Three's shader error reporting for local work.
+  renderer.debug.checkShaderErrors = new URLSearchParams(location.search).get("shaders") === "check";
   MAXA = renderer.capabilities.getMaxAnisotropy();
 
   // Slow-device notice: after reveal, a software rasterizer (SwiftShader,
@@ -757,6 +790,16 @@ async function initScene(canvas) {
   let bootRaf = 0;
   let bootRestore = null;
   const bootStatus = { plays: 0, startedAt: null, completedAt: null, cancelled: false };
+  // Deferred props without parallel shader compilation wait here until the
+  // reveal's camera sweep and this boot have ended (or never ran).
+  const introWaiters = [];
+  function introSettled() { return revealed && !bootTakeover && cameraIntro.phase !== "playing"; }
+  function whenIntroSettled() {
+    return introSettled() ? Promise.resolve() : new Promise((resolve) => introWaiters.push(resolve));
+  }
+  function notifyIntroSettled() {
+    if (introSettled()) for (const resolve of introWaiters.splice(0)) resolve();
+  }
   function cancelBoot() {
     if (!bootTakeover) return;
     bootTakeover = false;
@@ -765,6 +808,7 @@ async function initScene(canvas) {
     if (bootRaf) cancelAnimationFrame(bootRaf);
     if (bootRestore) bootRestore();
     bootRestore = null;
+    notifyIntroSettled();
   }
   function runBootIntro() {
     if (bootTakeover) return; // re-entry would capture mid-boot values as targets
@@ -886,11 +930,16 @@ async function initScene(canvas) {
     }, lin);
     seg(5100, 500, (k) => { bloom.strength = bloom0 + 0.08 * Math.sin(Math.PI * k); }, lin);
 
-    const t0 = performance.now();
+    // 2026-10-24 (M1b): the boot runs on accumulated frame time, hitch-capped
+    // per frame (createMotionStep), like the intro flight it is timed to. A
+    // main-thread hitch pauses both together instead of skipping ahead.
+    let el = 0, last = null;
+    const bootStep = createMotionStep();
     const TOTAL = 5700;
     const bt = (now) => {
       if (!bootTakeover) return;
-      const el = now - t0;
+      if (last !== null) el += bootStep(now - last);
+      last = now;
       for (const s of segs) {
         const k = Math.min(1, Math.max(0, (el - s.delay) / s.dur));
         s.fn(s.ez(k));
@@ -902,6 +951,7 @@ async function initScene(canvas) {
         bootStatus.completedAt = now;
         bootRestore = null;
         applyLightState(false); // land exactly on the canonical night state
+        notifyIntroSettled();
       }
     };
     bootRaf = requestAnimationFrame(bt);
@@ -1024,7 +1074,7 @@ async function initScene(canvas) {
     NO_PREPASS.push(hit, marker);
     deskLamp.userData.hotspot = {
       key: null, action: "lamp", label: "Room lights", baseScale: 1,
-      center, marker, pickProxy: hit, markerY: mLocal.y, phase: Math.random() * Math.PI * 2,
+      center, marker, pickProxy: hit, markerY: mLocal.y,
     };
     HOTSPOTS.push(deskLamp);
   }
@@ -1714,7 +1764,14 @@ async function initScene(canvas) {
 
   /* ---------- camera flight system ---------- */
   let flight = null;
+  // Keyboard framing (M5) only orbits the camera; true while the camera sits
+  // where such an orbit put it, so a stop that REST frames returns it there.
+  let kbDisplaced = false;
+  let markerMotion = false; // a hover marker is still easing between sizes
+  const ARC_SPH_A = new THREE.Spherical(), ARC_SPH_B = new THREE.Spherical();
+  const ARC_SPH = new THREE.Spherical(), ARC_LOOK = new THREE.Vector3(), V_TMP = new THREE.Vector3();
   const cameraIntro = { plays: 0, phase: "idle", completedLegs: 0 };
+  const flightStep = createMotionStep(); // fed by flight frames only
   // per-frame animation state (G-batch): tick delta + printer toolpath run
   let tickLast = null;
   const printerClock = new AmbientClock(30), scopeClock = new AmbientClock(10);
@@ -1731,9 +1788,12 @@ async function initScene(canvas) {
       fromLook: controls.target.clone(),
       toLook: toLook.clone(),
       ms,
-      start: null,
+      elapsed: null, // accumulated frame time; null until the first frame shows the start
       onDone,
+      arc: false, // keyboard framing: orbit about the target instead of a straight chord
+      kb: false,
     };
+    kbDisplaced = false;
     controls.enabled = false;
   }
   function startIntro(onDone = showDragHint) {
@@ -1757,6 +1817,7 @@ async function initScene(canvas) {
         else {
           cameraIntro.phase = "complete";
           document.getElementById("exp-skip-intro").hidden = true;
+          notifyIntroSettled();
           onDone();
         }
       }, true);
@@ -1782,6 +1843,7 @@ async function initScene(canvas) {
     controls.update();
     document.getElementById("exp-skip-intro").hidden = true;
     showDragHint();
+    notifyIntroSettled();
   }
   renderer.domElement.addEventListener("pointerdown", () => takeOverIntro(), { capture: true });
   renderer.domElement.addEventListener("wheel", () => takeOverIntro(), { capture: true, passive: true });
@@ -1798,6 +1860,71 @@ async function initScene(canvas) {
   advanced = createAdvancedRenderer({ renderer, scene, camera, composer, gtao, key, resumeSpot, lowTier: LOW_TIER,
     exclude: [...NO_PREPASS, ...ambientObjects].filter(Boolean) });
   advanced.resize(window.innerWidth, window.innerHeight, renderer.getPixelRatio());
+
+  /* ---------- deferred props: mount only with linked programs ----------
+     2026-10-24 (M1): the chair, tyre and helmets load after reveal. Their
+     first draw used to link ~95 KB MeshPhysical programs on the main thread,
+     freezing the room for seconds mid-intro, and the flight then jumped. With
+     KHR_parallel_shader_compile each prop is compiled while still detached,
+     its textures upload one per task, and it mounts once every program
+     reports completion. Without the extension a link cannot be awaited, so
+     the prop mounts after the intro and the light boot, at rest; its programs
+     are submitted and its textures uploaded first, while it is still
+     detached, and it mounts only after a quiet spell (UNPOLLED_LINK_WAIT_MS,
+     then an idle slot). Drivers that link in the background (ANGLE,
+     out-of-process WebGL) have then finished by its first draw, which used
+     to stop input for ~3.8 s right as the controls went live (round 1). The
+     loader's single preparation slot mounts the props one at a time. */
+  const PARALLEL_SHADER_COMPILE = !!renderer.compileAsync && renderer.extensions.has("KHR_parallel_shader_compile");
+  async function uploadRootTextures(root) {
+    const textures = new Set();
+    root.traverse((object) => {
+      if (!object.isMesh) return;
+      for (const material of Array.isArray(object.material) ? object.material : [object.material]) {
+        if (!material) continue;
+        // Upload at the anisotropy the render loop's sweep would apply, so
+        // that sweep finds nothing to re-upload once the prop is mounted.
+        for (const slot of ANISO_SLOTS) if (material[slot] && material[slot].anisotropy < MAXA) material[slot].anisotropy = MAXA;
+        for (const value of Object.values(material)) if (value?.isTexture && textureReady(value)) textures.add(value);
+      }
+    });
+    for (const texture of textures) {
+      if (loader.disposed || renderer.getContext().isContextLost()) return;
+      renderer.initTexture(texture);
+      await yieldToBrowser();
+    }
+  }
+  const UNPOLLED_LINK_WAIT_MS = 2000, UNPOLLED_IDLE_TIMEOUT_MS = 1000;
+  const idleSlot = (timeout) => new Promise((resolve) => {
+    if (window.requestIdleCallback) window.requestIdleCallback(() => resolve(), { timeout });
+    else setTimeout(resolve, 0);
+  });
+  async function prepareUnpolled(root, record) {
+    await whenIntroSettled();
+    if (loader.disposed || renderer.getContext().isContextLost()) return;
+    advanced.prewarm(root, record.url);
+    try { await prepareRootShaders(renderer, root, scene, camera, composer, { gtao, bokeh }); }
+    catch (error) { console.warn(`[experience] deferred shader submission failed; mounting at rest: ${record.url}`, error); }
+    await uploadRootTextures(root);
+    await new Promise((resolve) => setTimeout(resolve, UNPOLLED_LINK_WAIT_MS));
+    await idleSlot(UNPOLLED_IDLE_TIMEOUT_MS);
+  }
+  loader.beforeMount = async (root, record) => {
+    if (!record.deferred) return;
+    if (renderer.getContext().isContextLost()) { await whenIntroSettled(); return; }
+    if (!PARALLEL_SHADER_COMPILE) { await prepareUnpolled(root, record); return; }
+    // prewarm() first installs the ray-material hook every mounted prop gets
+    // (idempotent), so the program compiled here is the one that is drawn.
+    advanced.prewarm(root, record.url);
+    const compiled = prepareRootShaders(renderer, root, scene, camera, composer, { gtao, bokeh })
+      .catch((error) => {
+        console.warn(`[experience] deferred shader preparation failed; mounting at rest: ${record.url}`, error);
+        return whenIntroSettled();
+      });
+    await uploadRootTextures(root);
+    // A lost context never reports completion: mount at rest, not never.
+    await Promise.race([compiled, whenIntroSettled().then(() => new Promise((resolve) => setTimeout(resolve, 5000)))]);
+  };
   let paperWasMoving = false;
   let lastCameraMotion = performance.now(), lastLODUpdate = -Infinity;
   let shadowsDirty = true;
@@ -1887,11 +2014,12 @@ async function initScene(canvas) {
     if (!forced && resumeReader?.isReading()) { suspendAmbient('resume'); return; }
     const cameraMoved = lastCameraPosition.distanceToSquared(camera.position) > 1e-10 ||
       1 - Math.abs(lastCameraQuaternion.dot(camera.quaternion)) > 1e-10;
-    const interactionMotion = !!flight || cameraMoved || !!paperMotion || lightFadeActive || bootTakeover;
+    const interactionMotion = !!flight || cameraMoved || !!paperMotion || lightFadeActive || bootTakeover || markerMotion;
     if (cameraMoved || flight) lastCameraMotion = t;
     if (!forced && !frameClock.accept(t, interactionMotion)) return;
     const animateDecorations = !prefersReducedMotion && frameClock.isMoving;
-    const dtms = tickLast === null ? 1000 / 60 : Math.min(100, Math.max(0, t - tickLast));
+    const frameMs = tickLast === null ? 1000 / 60 : Math.max(0, t - tickLast);
+    const dtms = Math.min(100, frameMs);
     tickLast = t;
     controls.dampingFactor = frameAlpha(baseDamping, dtms);
     const scale = frameClock.isMoving ? pendingResolutionScale : 1;
@@ -1914,7 +2042,7 @@ async function initScene(canvas) {
         if (!o.isMesh) return;
         for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
           if (!m) continue;
-          for (const slot of ["map", "emissiveMap", "roughnessMap", "metalnessMap", "normalMap", "aoMap"]) {
+          for (const slot of ANISO_SLOTS) {
             const texture = m[slot];
             if (texture && texture.anisotropy < MAXA) ANISO_PENDING.add(texture);
           }
@@ -1931,12 +2059,28 @@ async function initScene(canvas) {
     }
 
     if (flight) {
-      if (flight.start === null) flight.start = t;
-      const p = Math.min((t - flight.start) / flight.ms, 1);
+      // 2026-10-24 (M1b): accumulated frame time, capped per frame. A hitch
+      // (a late shader link, a GC) now pauses the flight for that frame instead
+      // of skipping the elapsed stretch of the path, which read as a hard cut.
+      if (flight.elapsed === null) flight.elapsed = 0;
+      else flight.elapsed += flightStep(frameMs);
+      const p = Math.min(flight.elapsed / flight.ms, 1);
       const e = easeInOutCubic(p);
-      camera.position.lerpVectors(flight.fromPos, flight.toPos, e);
-      const look = flight.fromLook.clone().lerp(flight.toLook, e);
-      camera.lookAt(look);
+      if (flight.arc) {
+        // Keyboard framing orbits: interpolate the spherical offset about the
+        // (interpolated) target, so the camera keeps its distance on the way.
+        const look = ARC_LOOK.lerpVectors(flight.fromLook, flight.toLook, e);
+        const a = ARC_SPH_A.setFromVector3(V_TMP.subVectors(flight.fromPos, flight.fromLook));
+        const b = ARC_SPH_B.setFromVector3(V_TMP.subVectors(flight.toPos, flight.toLook));
+        ARC_SPH.set(a.radius + (b.radius - a.radius) * e, a.phi + (b.phi - a.phi) * e, a.theta + (b.theta - a.theta) * e);
+        if (p >= 1) camera.position.copy(flight.toPos);
+        else camera.position.setFromSpherical(ARC_SPH).add(look);
+        camera.lookAt(look);
+      } else {
+        camera.position.lerpVectors(flight.fromPos, flight.toPos, e);
+        const look = flight.fromLook.clone().lerp(flight.toLook, e);
+        camera.lookAt(look);
+      }
       if (p >= 1) {
         const done = flight.onDone;
         controls.target.copy(flight.toLook);
@@ -1959,9 +2103,9 @@ async function initScene(canvas) {
       // combination can ever peek past a wall
       const cp = camera.position;
       const bx = cp.x, by = cp.y, bz = cp.z;
-      cp.x = Math.max(-2.35, Math.min(2.35, cp.x));
-      cp.z = Math.max(-1.25, Math.min(3.35, cp.z));
-      cp.y = Math.max(0.4, Math.min(3.15, cp.y));
+      cp.x = Math.max(-ROOM_SHELL.x, Math.min(ROOM_SHELL.x, cp.x));
+      cp.z = Math.max(ROOM_SHELL.zMin, Math.min(ROOM_SHELL.zMax, cp.z));
+      cp.y = Math.max(ROOM_SHELL.yMin, Math.min(ROOM_SHELL.yMax, cp.y));
       // OrbitControls.update() baked its lookAt from the PRE-clamp position;
       // when the wall clamp actually moved the camera (e.g. zoomed out toward
       // a side wall) the frame would render mis-aimed, so re-aim at the target.
@@ -2146,8 +2290,11 @@ async function initScene(canvas) {
       }
     }
 
-    // Genshin-style interact markers: bob + pulse, hidden while busy
-    const busy = panelOpen || !!flight || paperReturning;
+    // Interact markers (T11, 2026-10-24): static — the bob and pulse ran only
+    // while the camera moved, so they froze mid-pulse at rest — and hidden
+    // while busy. Keyboard framing orbits keep them, and the label, visible.
+    const busy = panelOpen || (!!flight && !flight.kb) || paperReturning;
+    markerMotion = false;
     for (const h of HOTSPOTS) {
       // eased hover scale (an instant 6% pop read as a flash on click)
       const target = h.userData.hotspot.baseScale;
@@ -2155,19 +2302,27 @@ async function initScene(canvas) {
         h.scale.setScalar(h.scale.x + (target - h.scale.x) * frameAlpha(0.16, dtms));
         shadowsDirty = true;
       }
-      const m = h.userData.hotspot.marker;
+      const hs = h.userData.hotspot;
+      const m = hs.marker;
       if (!m) continue;
       m.visible = !busy;
-      if (!busy && animateDecorations) {
-        const ph = h.userData.hotspot.phase;
-        m.position.y = h.userData.hotspot.markerY + Math.sin(t * 0.0024 + ph) * 0.016;
-        // higher floor than the old additive marker: normal blending needs
-        // more opacity to stay legible, especially on white exhibits
-        m.material.opacity = 0.72 + 0.24 * (0.5 + 0.5 * Math.sin(t * 0.003 + ph));
-        const s = h === hovered ? 0.066 : 0.048;
-        m.scale.setScalar(s);
+      // Hover eases the marker's size (it used to snap 0.048 -> 0.066).
+      const size = h === hovered ? MARKER_HOVER : MARKER_REST;
+      if (hs.markerTo !== size) {
+        if (hs.markerTo === undefined) m.scale.setScalar(size);
+        else hs.markerEase = { from: m.scale.x, to: size, t0: null };
+        hs.markerTo = size;
+      }
+      const ease = hs.markerEase;
+      if (ease) {
+        if (ease.t0 === null) ease.t0 = t;
+        const k = prefersReducedMotion ? 1 : Math.min(1, (t - ease.t0) / MARKER_EASE_MS);
+        m.scale.setScalar(ease.from + (ease.to - ease.from) * easeOutCubic(k));
+        if (k >= 1) hs.markerEase = null;
+        else markerMotion = true;
       }
     }
+    placeLabel();
 
     // High detail is background work after the intro and a settled camera.
     // Project selection navigates away, so it must not start an obsolete GLB.
@@ -2444,10 +2599,145 @@ async function initScene(canvas) {
     if (Math.hypot(ev.clientX - downXY[0], ev.clientY - downXY[1]) > 8) dismissDragHint();
   }, { passive: true });
 
+  /* ---------- hover label anchor (T11, 2026-10-24; approved rule 2026-10-26) ----------
+     The label docks LABEL_GAP px above the hotspot's projected box, centred
+     on it. The box is the exhibit's pick box plus its marker at hover size,
+     so the label hides neither the exhibit nor the marker's hover growth
+     (where the marker sits on top, the label sits above the marker). It used
+     to sit at the pointer and covered the top of the exhibit it names.
+     Keyboard highlights use the same anchor, and the render loop re-docks it
+     while the camera moves. Edges: the label is clamped inside the viewport
+     horizontally, and only when there is no room above the box (viewport top
+     or the top HUD) does it dock LABEL_GAP px below the box instead. It never
+     docks beside the box: a side dock read as naming the neighbouring
+     exhibit (round 2's least-occlusion rule put steering's label in the
+     Javelin cubby). */
+  const LABEL_GAP = 8, LABEL_EDGE = 8, LABEL_FADE_MS = 120;
+  const HOTSPOT_POINTS = Array.from({ length: 16 }, () => new THREE.Vector3());
+  const POINT_V = new THREE.Vector3();
+  const NDC_RECT = { x0: 0, y0: 0, x1: 0, y1: 0 };
+  let labelSize = null, labelDock = "", labelPending = false;
+  let labelHud = null; // { top: [topbar, slow-device bar], dock }, looked up on first use
+  // A shown HUD element's viewport rect; null while it is hidden.
+  const hudRect = (el) => {
+    if (!el || el.hidden) return null;
+    const b = el.getBoundingClientRect();
+    return b.width && b.height ? b : null;
+  };
+  // World-space corners of a hotspot's pick box (the exhibit's bounds) and of
+  // its marker at hover size; returns how many of HOTSPOT_POINTS are filled.
+  function hotspotPoints(root) {
+    const hs = root.userData.hotspot;
+    const proxy = hs.pickProxy;
+    if (!proxy) return 0;
+    if (!proxy.geometry.boundingBox) proxy.geometry.computeBoundingBox();
+    const bb = proxy.geometry.boundingBox;
+    proxy.updateWorldMatrix(true, false);
+    let n = 0;
+    for (let i = 0; i < 8; i++) {
+      HOTSPOT_POINTS[n++].set(i & 1 ? bb.max.x : bb.min.x, i & 2 ? bb.max.y : bb.min.y, i & 4 ? bb.max.z : bb.min.z)
+        .applyMatrix4(proxy.matrixWorld);
+    }
+    if (hs.marker) {
+      const c = hs.marker.getWorldPosition(POINT_V), s = MARKER_HOVER / 2;
+      for (let i = 0; i < 8; i++) HOTSPOT_POINTS[n++].set(c.x + (i & 1 ? s : -s), c.y + (i & 2 ? s : -s), c.z + (i & 4 ? s : -s));
+    }
+    return n;
+  }
+  // NDC bounds of the first n HOTSPOT_POINTS seen from cam (its matrices must
+  // be current); null when any point is behind the camera.
+  function projectHotspot(n, cam) {
+    if (!n) return null;
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (let i = 0; i < n; i++) {
+      const v = POINT_V.copy(HOTSPOT_POINTS[i]).applyMatrix4(cam.matrixWorldInverse);
+      if (v.z > -cam.near) return null;
+      v.applyMatrix4(cam.projectionMatrix);
+      x0 = Math.min(x0, v.x); x1 = Math.max(x1, v.x); y0 = Math.min(y0, v.y); y1 = Math.max(y1, v.y);
+    }
+    NDC_RECT.x0 = x0; NDC_RECT.y0 = y0; NDC_RECT.x1 = x1; NDC_RECT.y1 = y1;
+    return NDC_RECT;
+  }
+  function placeLabel() {
+    if (!labelEl || labelEl.hidden || !hovered) return;
+    camera.updateMatrixWorld();
+    const ndc = projectHotspot(hotspotPoints(hovered), camera);
+    const r = renderer.domElement.getBoundingClientRect();
+    if (!labelSize) labelSize = { w: labelEl.offsetWidth, h: labelEl.offsetHeight };
+    const { w, h } = labelSize;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    // The label never covers the HUD controls (2026-10-24): the topbar's two
+    // control groups and the slow-device bar at the top, the dock at the
+    // bottom. Their rects, not the topbar's full-width transparent strip,
+    // decide whether there is room above an exhibit (2026-10-26).
+    labelHud ||= {
+      top: [document.querySelector(".exp-brand"), document.querySelector(".exp-topbar__right"), document.getElementById("exp-slowbar")],
+      dock: document.getElementById("exp-dock"),
+    };
+    const hud = [];
+    let minY = LABEL_EDGE, maxY = vh - LABEL_EDGE - h;
+    for (const el of labelHud.top) {
+      const b = hudRect(el);
+      if (b) hud.push(b);
+      if (b && b.bottom < vh / 2) minY = Math.max(minY, b.bottom + LABEL_GAP);
+    }
+    const dockRect = hudRect(labelHud.dock);
+    if (dockRect) hud.push(dockRect);
+    if (dockRect && dockRect.top > vh / 2) maxY = Math.min(maxY, dockRect.top - LABEL_GAP - h);
+    if (maxY < minY) { minY = LABEL_EDGE; maxY = vh - LABEL_EDGE - h; } // no band left: stay on screen
+    const clampX = (v) => Math.round(Math.min(Math.max(v, LABEL_EDGE), vw - LABEL_EDGE - w));
+    const clampY = (v) => Math.round(Math.min(Math.max(v, minY), maxY));
+    let x, y;
+    if (ndc) {
+      const left = r.left + (ndc.x0 + 1) / 2 * r.width, right = r.left + (ndc.x1 + 1) / 2 * r.width;
+      const top = r.top + (1 - ndc.y1) / 2 * r.height, bottom = r.top + (1 - ndc.y0) / 2 * r.height;
+      x = clampX((left + right) / 2 - w / 2);
+      // A dock fits when it stays on screen and LABEL_GAP clear of every HUD rect.
+      const fits = (ty) => ty >= LABEL_EDGE && ty + h <= vh - LABEL_EDGE &&
+        !hud.some((b) => x < b.right + LABEL_GAP && x + w > b.left - LABEL_GAP && ty < b.bottom + LABEL_GAP && ty + h > b.top - LABEL_GAP);
+      const above = Math.round(top - LABEL_GAP - h), below = Math.round(bottom + LABEL_GAP);
+      // Above whenever it fits; else below; with room on neither side, the
+      // side that overshoots the band less, kept inside the band.
+      y = fits(above) ? above : fits(below) ? below : clampY(minY - above <= below - maxY ? above : below);
+    } else {
+      x = clampX((vw - w) / 2); y = clampY(minY);
+    }
+    const dock = `translate3d(${x}px, ${y}px, 0)`;
+    if (dock !== labelDock) labelEl.style.transform = labelDock = dock;
+  }
+  // Fresh label content: measure, dock and fade it in (unless a keyboard
+  // orbit is still bringing its exhibit into view; it lands, then reveals it).
+  function showLabel() {
+    if (!labelEl) return;
+    labelSize = null; labelDock = "";
+    labelEl.hidden = false;
+    placeLabel();
+    labelEl.classList.toggle("exp-label--pending", labelPending);
+    if (labelPending) stopLabelFade();
+    else fadeInLabel();
+  }
+  function stopLabelFade() {
+    for (const animation of labelEl?.getAnimations?.() || []) animation.cancel();
+  }
+  function fadeInLabel() {
+    stopLabelFade();
+    if (!labelEl || labelEl.hidden || prefersReducedMotion || !labelEl.animate) return;
+    labelEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: LABEL_FADE_MS, easing: "cubic-bezier(0.16, 1, 0.3, 1)" });
+  }
+  function setLabelPending(value) {
+    if (labelPending === value) return;
+    labelPending = value;
+    if (!labelEl || labelEl.hidden) return;
+    labelEl.classList.toggle("exp-label--pending", value);
+    if (value) stopLabelFade();
+    else { placeLabel(); fadeInLabel(); }
+  }
+
   function setHover(root) {
     if (hovered === root) return;
     frameClock.noteMotion(performance.now());
     hovered = root; // scale eases toward its target in the render loop (no pop)
+    if (!root) labelPending = false;
     if (hovered) {
       setCursorHover(true);
       sndTick();
@@ -2470,21 +2760,20 @@ async function initScene(canvas) {
               : (window.projectData && window.projectData[hs.key] && window.projectData[hs.key].kicker) || "";
           labelEl.innerHTML = `<b>${hs.label}</b>` + (sub ? `<span>${sub}</span>` : "");
         }
-        labelEl.hidden = false;
+        showLabel();
       }
     } else {
       setCursorHover(false);
-      if (labelEl) labelEl.hidden = true;
+      if (labelEl) {
+        labelEl.hidden = true;
+        labelEl.classList.remove("exp-label--pending");
+      }
     }
   }
   function updatePointer(ev) {
     const r = renderer.domElement.getBoundingClientRect();
     pointer.x = ((ev.clientX - r.left) / r.width) * 2 - 1;
     pointer.y = -((ev.clientY - r.top) / r.height) * 2 + 1;
-    if (labelEl && !labelEl.hidden) {
-      labelEl.style.left = ev.clientX + "px";
-      labelEl.style.top = ev.clientY - 14 + "px";
-    }
   }
   function pickHotspot() {
     raycaster.setFromCamera(pointer, camera);
@@ -2520,12 +2809,7 @@ async function initScene(canvas) {
       pendingPointer = null;
       if (!point || panelOpen || paperReturning || flight) return;
       updatePointer(point);
-      setHover(pickHotspot());
-      // A newly opened label also needs the current pointer position.
-      if (labelEl && !labelEl.hidden) {
-        labelEl.style.left = point.clientX + "px";
-        labelEl.style.top = point.clientY - 14 + "px";
-      }
+      setHover(pickHotspot()); // the label docks to the exhibit, not the pointer
     });
   }, { passive: true });
   // the hover card would otherwise stay stuck when the pointer exits the
@@ -3184,21 +3468,253 @@ async function initScene(canvas) {
     return order;
   }
   function kbBusy() {
-    return !!flight || panelOpen || paperReturning || document.documentElement.classList.contains("exp-lightbox-open");
+    // A keyboard framing orbit is not busy: the next press retargets it.
+    return (!!flight && !flight.kb) || panelOpen || paperReturning || document.documentElement.classList.contains("exp-lightbox-open");
   }
-  function kbHighlight(order, next) {
+
+  /* ---------- keyboard framing (M5, 2026-10-24) ----------
+     A highlighted stop that left a 10% safe frame used to stay off screen
+     (stops 10-15, the right-wall cabinet). The camera now orbits about its
+     fixed target until the stop fits, within the orbit limits (azimuth
+     +/-57.6 deg, distance >= minDistance) and the room shell, over 600 ms
+     (easeInOutCubic); where no such orbit frames it (portrait screens), the
+     target also pans toward the stop (kbOrbitGoal). A stop that REST frames returns the camera to REST.
+     Portrait screens give each stop one fixed pose instead (kbPortraitPose).
+     Reduced motion jumps. A new press retargets a running orbit and held-key
+     auto-repeat waits for its last stop, so only the last target is framed.
+     These orbits never write the retained room's returnState: only
+     focusHotspot() does, when a stop is opened. */
+  const KB_SAFE = 0.1, KB_LAND = 0.125, KB_ORBIT_MS = 600, KB_REPEAT_SETTLE_MS = 140;
+  const KB_THETA_STEP = THREE.MathUtils.degToRad(0.5), KB_RADIUS_STEP = 0.15;
+  const kbCam = new THREE.PerspectiveCamera();
+  const KB_SPH = new THREE.Spherical(), KB_POS = new THREE.Vector3();
+  let kbFrameTimer = 0;
+  controls.addEventListener("start", () => { kbDisplaced = false; }); // the user took the camera
+  const insideShell = (p) => Math.abs(p.x) <= ROOM_SHELL.x && p.z >= ROOM_SHELL.zMin && p.z <= ROOM_SHELL.zMax &&
+    p.y >= ROOM_SHELL.yMin && p.y <= ROOM_SHELL.yMax;
+  // How far (NDC) the first n HOTSPOT_POINTS overshoot a frame with this
+  // margin, seen from pos looking at look; <= 0 means the stop fits.
+  function kbOvershoot(n, pos, look, margin) {
+    kbCam.position.copy(pos);
+    kbCam.lookAt(look);
+    kbCam.updateMatrixWorld();
+    const r = projectHotspot(n, kbCam);
+    if (!r) return Infinity;
+    const edge = 1 - 2 * margin;
+    return Math.max(-edge - r.x0, r.x1 - edge, -edge - r.y0, r.y1 - edge);
+  }
+  // Nearest orbit about look that frames the stop: the smallest azimuth turn
+  // at the current distance, then at closer distances. Returns the pose and
+  // how well it frames the stop (KB_FIT: land > safe > on screen > partly),
+  // or null when no pose shows any of it.
+  const KB_FIT = { partly: 0, onScreen: 1, safe: 2, land: 3 };
+  function kbOrbitSearch(n, pos, look, thetaStep = KB_THETA_STEP) {
+    const sph = KB_SPH.setFromVector3(V_TMP.subVectors(pos, look));
+    const min = controls.minAzimuthAngle + 1e-3, max = controls.maxAzimuthAngle - 1e-3;
+    const theta0 = THREE.MathUtils.clamp(sph.theta, min, max), phi = sph.phi, radius0 = sph.radius;
+    let onScreen = null, least = null;
+    for (let radius = radius0; radius >= controls.minDistance - 1e-6; radius -= KB_RADIUS_STEP) {
+      let safe = null;
+      for (let k = 0; theta0 + k * thetaStep <= max || theta0 - k * thetaStep >= min; k++) {
+        for (let side = 0; side < (k ? 2 : 1); side++) {
+          const theta = theta0 + (side ? -k : k) * thetaStep;
+          if (theta < min || theta > max) continue;
+          KB_POS.setFromSphericalCoords(radius, phi, theta).add(look);
+          if (!insideShell(KB_POS)) continue;
+          // Overshoot of the screen edge; a frame with margin m fits when
+          // over + 2m <= 0 (NDC spans 2), so one projection serves every margin.
+          const over = kbOvershoot(n, KB_POS, look, 0);
+          if (over + 2 * KB_LAND <= 0) return { pos: KB_POS.clone(), fit: KB_FIT.land };
+          if (!safe && over + 2 * KB_SAFE <= 0) safe = KB_POS.clone();
+          if (!onScreen && over <= 0) onScreen = KB_POS.clone();
+          const shows = over < Infinity && NDC_RECT.x0 < 1 && NDC_RECT.x1 > -1 && NDC_RECT.y0 < 1 && NDC_RECT.y1 > -1;
+          if (shows && (!least || over < least.over)) least = { over, pos: KB_POS.clone() };
+        }
+      }
+      if (safe) return { pos: safe, fit: KB_FIT.safe };
+    }
+    return onScreen ? { pos: onScreen, fit: KB_FIT.onScreen } : least ? { pos: least.pos, fit: KB_FIT.partly } : null;
+  }
+  // A narrow portrait screen cannot frame every stop by orbiting the room's
+  // target: the right-wall cabinet lies past the azimuth limit there, and the
+  // education shelf sits beside the camera (2026-10-24 round 1: four stops
+  // were fully off screen at 768x1024 and 390x844). Then the target also pans
+  // toward the stop, by the smallest share that frames it safely (else the
+  // best fit found); the camera keeps its offset to the target, inside the
+  // orbit limits and the room shell. Landscape screens never need this.
+  const KB_PAN_STEPS = [0.25, 0.5, 0.75, 1];
+  const KB_PAN_THETA_STEP = THREE.MathUtils.degToRad(1);
+  const KB_CENTER = new THREE.Vector3(), KB_LOOK = new THREE.Vector3(), KB_OFFSET = new THREE.Vector3();
+  // With nearest (portrait poses), every pan share is tried and, among the
+  // best fits, the pose the camera reaches with the least travel and turn
+  // wins: an orbit alone can swing the camera metres round the target.
+  function kbOrbitGoal(n, pos, look, nearest = false) {
+    const goal = (found, at) => ({ pos: found.pos.clone(), look: at.clone(), rest: false });
+    const dir = V_TMP.subVectors(look, pos).normalize().clone();
+    const cost = (found, at) => found.pos.distanceTo(pos) + dir.angleTo(V_TMP.subVectors(at, found.pos).normalize());
+    let best = kbOrbitSearch(n, pos, look), bestLook = look;
+    if (best && best.fit >= KB_FIT.safe && !nearest) return goal(best, look);
+    let bestCost = best ? cost(best, look) : Infinity;
+    KB_CENTER.set(0, 0, 0);
+    for (let i = 0; i < 8; i++) KB_CENTER.add(HOTSPOT_POINTS[i]);
+    KB_CENTER.multiplyScalar(1 / 8);
+    KB_OFFSET.subVectors(pos, look);
+    for (const share of KB_PAN_STEPS) {
+      const panned = KB_LOOK.lerpVectors(look, KB_CENTER, share).clone();
+      const found = kbOrbitSearch(n, V_TMP.addVectors(panned, KB_OFFSET).clone(), panned, KB_PAN_THETA_STEP);
+      const foundCost = found ? cost(found, panned) : Infinity;
+      if (found && (!best || found.fit > best.fit || (nearest && found.fit === best.fit && foundCost < bestCost))) {
+        best = found; bestLook = panned; bestCost = foundCost;
+      }
+      if (!nearest && best && best.fit >= KB_FIT.safe) break;
+    }
+    return best ? goal(best, bestLook) : null;
+  }
+  // Portrait screens (M5 round 2, 2026-10-24): searched from wherever the
+  // last stop left the camera, adjacent stops of one cabinet swung it across
+  // the room (53 deg / 2.75 m between two top-row neighbours) and a stop's
+  // pose depended on the path taken. There every stop now has one pose,
+  // worked out from REST alone: REST when it shows the stop whole; else the
+  // one pose that frames its whole cabinet (stops within KB_GROUP_GAP of each
+  // other), when that shows the stop whole; else its own orbit from that
+  // cabinet pose. Poses are cached until the rest pose or the view changes.
+  const KB_GROUP_GAP = 0.8, KB_WHOLE_SLACK = 0.02; // m between cabinet stops; NDC, about a pixel or two
+  const KB_BOX = new THREE.Box3();
+  let kbPoses = { key: "", stops: new Map(), groups: new Map() };
+  const kbRest = () => ({ pos: REST_POS.clone(), look: REST_TARGET.clone(), rest: true });
+  const kbWhole = (n, pos, look) => kbOvershoot(n, pos, look, 0) <= KB_WHOLE_SLACK;
+  // A stop's cabinet: the stops linked to it by gaps of at most KB_GROUP_GAP
+  // between their box centers, in keyboard order.
+  function kbCabinet(root, stops) {
+    const centers = stops.map((stop) => {
+      hotspotPoints(stop);
+      return KB_BOX.setFromPoints(HOTSPOT_POINTS.slice(0, 8)).getCenter(new THREE.Vector3());
+    });
+    const linked = new Set([stops.indexOf(root)]), queue = [...linked];
+    while (queue.length) {
+      const i = queue.pop();
+      centers.forEach((c, j) => {
+        if (!linked.has(j) && c.distanceTo(centers[i]) <= KB_GROUP_GAP) { linked.add(j); queue.push(j); }
+      });
+    }
+    return stops.filter((stop, i) => linked.has(i));
+  }
+  // The one pose that frames a whole cabinet: REST when it does, else the
+  // nearest orbit (and pan) from REST that frames the cabinet's bounds.
+  function kbCabinetPose(members) {
+    KB_BOX.makeEmpty();
+    for (const stop of members) {
+      const n = hotspotPoints(stop);
+      for (let i = 0; i < n; i++) KB_BOX.expandByPoint(HOTSPOT_POINTS[i]);
+    }
+    for (let i = 0; i < 8; i++) {
+      HOTSPOT_POINTS[i].set(i & 1 ? KB_BOX.max.x : KB_BOX.min.x, i & 2 ? KB_BOX.max.y : KB_BOX.min.y, i & 4 ? KB_BOX.max.z : KB_BOX.min.z);
+    }
+    if (kbWhole(8, REST_POS, REST_TARGET)) return kbRest();
+    return kbOrbitGoal(8, REST_POS, REST_TARGET, true) || kbRest();
+  }
+  function kbPortraitPose(root) {
+    const stops = kbOrder();
+    if (!stops.includes(root)) stops.push(root);
+    const key = [camera.aspect, camera.fov, ...REST_POS.toArray(), ...REST_TARGET.toArray(), stops.length]
+      .map((v) => v.toFixed(4)).join();
+    if (kbPoses.key !== key) kbPoses = { key, stops: new Map(), groups: new Map() };
+    let pose = kbPoses.stops.get(root);
+    if (!pose) {
+      if (kbWhole(hotspotPoints(root), REST_POS, REST_TARGET)) pose = kbRest();
+      else {
+        const members = kbCabinet(root, stops);
+        let cabinet = kbPoses.groups.get(members[0]);
+        if (!cabinet) kbPoses.groups.set(members[0], cabinet = kbCabinetPose(members));
+        const n = hotspotPoints(root);
+        pose = kbWhole(n, cabinet.pos, cabinet.look) ? cabinet : kbOrbitGoal(n, cabinet.pos, cabinet.look, true) || cabinet;
+      }
+      kbPoses.stops.set(root, pose);
+    }
+    return { pos: pose.pos.clone(), look: pose.look.clone(), rest: pose.rest };
+  }
+  // Where the camera must go to frame this stop; null when it already does
+  // (a running keyboard orbit is judged by where it lands).
+  function kbGoal(root) {
+    const n = hotspotPoints(root);
+    if (!n) return null;
+    kbCam.projectionMatrix.copy(camera.projectionMatrix);
+    kbCam.near = camera.near;
+    kbCam.up.copy(camera.up);
+    const pos = flight?.kb ? flight.toPos : camera.position;
+    const look = flight?.kb ? flight.toLook : controls.target;
+    const moved = (goal) => goal.pos.distanceToSquared(pos) > 1e-8 || goal.look.distanceToSquared(look) > 1e-8;
+    if (camera.aspect < 1) {
+      // A view the user chose keeps any stop it frames; the keyboard's own
+      // poses are fixed per stop, so the path taken never changes them.
+      if (!kbDisplaced && kbOvershoot(n, pos, look, KB_SAFE) <= 0) return null;
+      const goal = kbPortraitPose(root);
+      return moved(goal) ? goal : null;
+    }
+    if (kbDisplaced && kbOvershoot(n, REST_POS, REST_TARGET, KB_SAFE) <= 0) {
+      return { pos: REST_POS.clone(), look: REST_TARGET.clone(), rest: true };
+    }
+    const goal = kbOvershoot(n, pos, look, KB_SAFE) > 0 ? kbOrbitGoal(n, pos, look) : null;
+    // The best pose may be the current one (a narrow screen): nothing to fly.
+    return goal && moved(goal) ? goal : null;
+  }
+  function kbGo(goal, instant = prefersReducedMotion) {
+    if (!goal) { if (!flight?.kb) setLabelPending(false); return; }
+    if (instant) {
+      flight = null;
+      camera.position.copy(goal.pos);
+      controls.target.copy(goal.look);
+      camera.lookAt(goal.look);
+      controls.enabled = true;
+      controls.update();
+      kbDisplaced = !goal.rest;
+      setLabelPending(false);
+      return;
+    }
+    setLabelPending(true);
+    startFlight(goal.pos, goal.look, KB_ORBIT_MS, () => setLabelPending(false));
+    flight.arc = flight.kb = true;
+    kbDisplaced = !goal.rest;
+  }
+  // Whether any of the stop shows from the current camera.
+  function kbVisible(root) {
+    camera.updateMatrixWorld();
+    const r = projectHotspot(hotspotPoints(root), camera);
+    return !!r && r.x0 < 1 && r.x1 > -1 && r.y0 < 1 && r.y1 > -1;
+  }
+  // Land any pending or running keyboard framing at once, so the stop being
+  // opened is in view and its returnState is the framed pose.
+  function kbSettle() {
+    if (kbFrameTimer) {
+      clearTimeout(kbFrameTimer); kbFrameTimer = 0;
+      if (hovered) kbGo(kbGoal(hovered), true);
+    }
+    if (!flight?.kb) return;
+    const done = flight.onDone;
+    camera.position.copy(flight.toPos);
+    controls.target.copy(flight.toLook);
+    camera.lookAt(flight.toLook);
+    flight = null;
+    controls.enabled = true;
+    controls.update();
+    if (done) done();
+  }
+  function kbHighlight(order, next, repeat = false) {
     kbIndex = ((next % order.length) + order.length) % order.length;
     const root = order[kbIndex];
-    setHover(root);
-    // keyboard has no cursor: dock the label at the exhibit's projected screen
-    // position (it used to render at the stale pointer coords — 0,0 offscreen)
-    if (labelEl && !labelEl.hidden) {
-      const v = new THREE.Vector3();
-      new THREE.Box3().setFromObject(root).getCenter(v).project(camera);
-      const r = renderer.domElement.getBoundingClientRect();
-      labelEl.style.left = r.left + ((v.x + 1) / 2) * r.width + "px";
-      labelEl.style.top = r.top + ((1 - v.y) / 2) * r.height - 18 + "px";
-    }
+    clearTimeout(kbFrameTimer); kbFrameTimer = 0;
+    const goal = kbGoal(root);
+    // The label waits for any orbit that brings its stop into view, rather
+    // than flashing at the screen edge; it shares the pointer's anchor.
+    const pending = !!goal || !!flight?.kb;
+    if (hovered === root) setLabelPending(pending);
+    else { labelPending = pending; setHover(root); }
+    if (goal && repeat) {
+      kbFrameTimer = setTimeout(() => {
+        kbFrameTimer = 0;
+        if (hovered === root && !kbBusy()) kbGo(kbGoal(root));
+      }, KB_REPEAT_SETTLE_MS);
+    } else kbGo(goal);
   }
   renderer.domElement.addEventListener("keydown", (e) => {
     if (kbBusy()) return;
@@ -3206,21 +3722,31 @@ async function initScene(canvas) {
     if (!order.length) return;
     if (e.key === "ArrowRight" || e.key === "ArrowDown") {
       e.preventDefault();
-      kbHighlight(order, kbIndex + 1);
+      kbHighlight(order, kbIndex + 1, e.repeat);
     } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
       e.preventDefault();
-      kbHighlight(order, kbIndex - 1);
+      kbHighlight(order, kbIndex - 1, e.repeat);
     } else if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
       if (kbIndex < 0 || kbIndex >= order.length) return;
       e.preventDefault();
       const root = order[kbIndex];
+      // Enter opens only the stop on screen: a highlight that the pointer or
+      // a blur cleared is shown (and framed) again first.
+      if (hovered !== root) { kbHighlight(order, kbIndex); return; }
+      kbSettle();
+      // ...and never one that is not on screen at all (no framing pose could
+      // show it): its label stays, the exhibit is not opened unseen.
+      if (!kbVisible(root)) return;
       if (root.userData.hotspot.action === "lamp") { toggleRoomLights(); return; }
       focusHotspot(root);
     }
   });
   // losing keyboard focus on the stage clears the keyboard highlight, same
   // path the pointer uses when it leaves the canvas
-  renderer.domElement.addEventListener("blur", () => setHover(null));
+  renderer.domElement.addEventListener("blur", () => {
+    clearTimeout(kbFrameTimer); kbFrameTimer = 0;
+    setHover(null);
+  });
 
   window.__exp = {
     THREE, scene, camera, renderer, controls, composer, bloom, key, hemi,
@@ -3515,7 +4041,6 @@ function placeRoot(root, scene, opts, onPlaced) {
       marker,
       markerY,
       pickupObject: opts.action === "resume" ? root : null,
-      phase: Math.random() * Math.PI * 2,
     };
     HOTSPOTS.push(pivot);
     MODELS[opts.name] = pivot;
@@ -4180,7 +4705,7 @@ function makeInteractMarker() {
       opacity: 0.95,
     })
   );
-  sprite.scale.setScalar(0.042);
+  sprite.scale.setScalar(MARKER_REST);
   sprite.renderOrder = 5;
   return sprite;
 }
