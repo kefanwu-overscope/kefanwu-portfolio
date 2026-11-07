@@ -76,6 +76,24 @@
 
   const project = projects[key];
   const liveModel = studioMode || key === 'steering';
+  // "Drawn, then built": a stage's first arrival is drawn from line layers
+  // registered on its cover (project-motion-arrival.js); a live model waits behind
+  // the drawing. The stage is marked in the markup, so the cover is an 18% grey
+  // print from its first paint (project-case-3d.css). No arrival inside the
+  // retained studio's frame (the room's own curtain is that page's arrival), on a
+  // slow or data-saving connection (as the homepage cards), when this page's own
+  // bytes took so long that a drawing would only make a visitor who has already
+  // waited wait again (navigator.connection reads low on a cold start, so what this
+  // load actually took is the measure), or without the browser features it runs on.
+  const PRINT_HOLD = 850, STAGE_LATE = 1000, COVER_CAP = 3000;
+  const arrivalQuery = new URLSearchParams(location.search);
+  const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+  const connection = typeof navigator === 'undefined' ? undefined : navigator.connection;
+  const slowConnection = !!connection && (connection.saveData === true || /^(slow-2g|2g|3g)$/.test(connection.effectiveType || ''));
+  const arrivalCapable = typeof window.IntersectionObserver === 'function' && typeof Element.prototype.animate === 'function';
+  const drawArrival = arrivalCapable && !inStudioFrame && !slowConnection && !reducedMotion?.matches && performance.now() <= STAGE_LATE &&
+    arrivalQuery.get('arrival') !== 'off' && arrivalQuery.get('draw') !== 'off' &&
+    document.documentElement.dataset.vtEntry !== 'morph'; // a card morph was this page's arrival (page-transitions-20261027.js)
   const editorial = editorials[key];
   const engineering = editorial.engineering;
   const supplement = window.caseStudySupplements?.[key] || {};
@@ -108,7 +126,7 @@
     : availableKeys[(availableKeys.indexOf(key) + 1) % availableKeys.length];
   const next = editorials[nextKey];
   const studioURL = inStudioFrame ? 'experience.html?return=project'
-    : studioMode || project.noStudio ? 'experience.html' : `project-3d.html#${encodeURIComponent(key)}`;
+    : studioMode || project.noStudio ? 'experience.html' : `project-3d.html?project=${encodeURIComponent(key)}`;
   const studioLabel = inStudioFrame ? 'Return to' : studioMode ? 'Enter the' : project.noStudio ? 'Explore the' : 'View in';
   const previewInstructions = 'Scroll down to explore the mechanism; scroll back to reverse. The notes follow each stage. You can also choose a numbered step or use the progress slider.';
   const resumeHref = document.querySelector('.site-header a[href*="kefan-wu-resume"]')?.getAttribute('href') || 'assets/kefan-wu-resume.pdf';
@@ -331,12 +349,12 @@
       <dl class="case-summary" aria-label="Case study in 30 seconds">${editorial.summary.map(([label, text]) => `<div><dt>${escape(label)}</dt><dd>${escape(text)}</dd></div>`).join('')}</dl>
     </section>
       <section class="case-motion-story" id="motion" aria-labelledby="preview-title" data-motion-project="${escape(key)}">
-      <div class="case-motion-pin"><svg class="motion-leader" aria-hidden="true"><defs><marker id="motion-arrow" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M1 1 L6 4 L1 7"/></marker></defs><path class="motion-leader-line" pathLength="1" marker-end="url(#motion-arrow)"/><circle class="motion-leader-target" r="2.5"/></svg>
+      <div class="case-motion-pin"><svg class="motion-leader" aria-hidden="true"><defs><marker id="motion-arrow" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M1 1 L6 4 L1 7"/></marker></defs><g class="motion-leader-live"><path class="motion-leader-halo" pathLength="1"/><path class="motion-leader-line" pathLength="1" marker-end="url(#motion-arrow)"/><circle class="motion-leader-target" r="2.5"/></g></svg>
       <div class="motion-story-heading"><p class="eyebrow">${escape(project.title)} <span aria-hidden="true"> / </span> In motion</p><a class="motion-skip" href="#brief">The design story <span aria-hidden="true">↓</span></a></div>
       <div class="case-preview-layout">
         <figure class="case-preview-figure">
           <div class="case-animation-host" data-motion-live="${liveModel}" data-scroll-driven="true" data-project="${escape(key)}" data-preview-title="${escape(project.title)}" data-preview-instructions="preview-instructions" role="group" aria-labelledby="preview-title">
-            <div class="card-media"><img src="${escape(cover.src)}"${cover.srcset ? ` srcset="${escape(cover.srcset)}" sizes="(max-width: 700px) 100vw, min(100vw, 1440px)"` : ''} alt="${escape(cover.alt || project.title)}" width="${cover.width || 1800}" height="${cover.height || 1200}" loading="eager" decoding="async" fetchpriority="high"></div>
+            <div class="card-media"${drawArrival ? ' data-arrival="pending"' : ''}><img src="${escape(cover.src)}"${cover.srcset ? ` srcset="${escape(cover.srcset)}" sizes="(max-width: 700px) 100vw, min(100vw, 1440px)"` : ''} alt="${escape(cover.alt || project.title)}" width="${cover.width || 1800}" height="${cover.height || 1200}" loading="eager" decoding="async" fetchpriority="high"></div>
           </div>
           <figcaption class="cover-caption"><span>${escape(cover.caption || 'Explore the project model and its motion.')}</span><span class="eyebrow">Interactive project model</span></figcaption>
         </figure>
@@ -377,7 +395,97 @@
     </div></section>
   </article>`;
   resolveCover().then(refineCover);
+  if (drawArrival) {
+    const host = root.querySelector('.case-animation-host');
+    try { holdForDrawing(host); } catch (error) { dropArrival(host, error); }
+  }
   announceReady();
+
+  function dropArrival(host, error) {
+    console.warn('[case-arrival] Drawing unavailable; showing the cover.', error);
+    const media = host?.querySelector('.card-media');
+    media?.querySelectorAll('.case-drawing').forEach((node) => node.remove());
+    if (media) delete media.dataset.arrival;
+    const poster = media?.querySelector(':scope > img');
+    ['opacity', 'filter', 'transition'].forEach((name) => poster?.style.removeProperty(name));
+    window.__caseArrival = { getState: () => ({ key, mode: 'frames', phase: 'off', reason: 'drawing unavailable' }) };
+    host?.dispatchEvent(new CustomEvent('case-arrival-end'));
+  }
+
+  // The drawing is a module of its own, so none of its bytes sit on the path to
+  // this stage. Until it claims the stage this keeps the print's promises: at most
+  // PRINT_HOLD ms on screen after the cover decodes ('late'), and a cover that has
+  // not decoded when the model is ready or by COVER_CAP never holds the stage
+  // ('cover late'); intent on the stage or a morph gives the cover back at once, a
+  // hidden tab, reduced motion or a module that cannot load gives it back without motion.
+  function holdForDrawing(host) {
+    const media = host.querySelector('.card-media'), poster = media.querySelector(':scope > img');
+    const events = new AbortController();
+    const on = (node, type, listener) => node.addEventListener(type, listener, { signal: events.signal });
+    let left = PRINT_HOLD, from = null, timer = 0, coverTimer = 0, onScreen = false, done = false, claimed = false, tap = null;
+    let decoded = poster.complete && poster.naturalWidth > 0;
+    media.dataset.arrival = 'held';
+    // Inline, and without the 3D page's poster transition: the print moves to
+    // the paper in one frame.
+    poster.style.transition = 'none';
+    poster.style.opacity = '.18';
+    poster.style.filter = 'grayscale(1)';
+    window.__caseArrival = { getState: () => ({ key, mode: 'frames', phase: done ? 'off' : 'held', reason: '' }) };
+    const clock = () => {
+      if (from !== null) { left -= performance.now() - from; from = null; }
+      clearTimeout(timer); timer = 0;
+      if (done || !decoded || !onScreen || document.hidden) return;
+      from = performance.now();
+      timer = setTimeout(() => giveBack('late'), Math.max(0, left));
+    };
+    const stop = () => { done = true; clock(); clearTimeout(coverTimer); events.abort(); visibility.disconnect(); };
+    function giveBack(why, ms = 150) {
+      if (done) return;
+      stop();
+      delete media.dataset.arrival;
+      poster.style.removeProperty('opacity');
+      poster.style.removeProperty('filter');
+      requestAnimationFrame(() => poster.style.removeProperty('transition'));
+      window.__caseArrival = { getState: () => ({ key, mode: 'frames', phase: 'off', reason: why }) };
+      const end = () => host.dispatchEvent(new CustomEvent('case-arrival-end'));
+      if (ms && !reducedMotion?.matches) poster.animate([{ opacity: .18, filter: 'grayscale(1)' }, { opacity: 1, filter: 'grayscale(0)' }], { duration: ms, easing: 'ease-out' }).finished.then(end, end);
+      else end();
+    }
+    const visibility = new IntersectionObserver((entries) => { const entry = entries[entries.length - 1]; onScreen = entry.isIntersecting && entry.intersectionRatio > 0; clock(); });
+    visibility.observe(media);
+    on(host, 'case-motion-request', (event) => { if (Number(event.detail?.progress) > .01) giveBack('interrupted'); });
+    on(host, 'case-motion-mode', (event) => { if (event.detail?.free) giveBack('interrupted'); });
+    on(host, 'keydown', () => giveBack('interrupted'));
+    on(media, 'pointerdown', (event) => {
+      if (!event.pointerType || event.pointerType === 'mouse') giveBack('interrupted');
+      else tap = event.isPrimary ? { id: event.pointerId, x: event.clientX, y: event.clientY } : null;
+    });
+    on(media, 'pointercancel', () => { tap = null; });
+    on(media, 'pointerup', (event) => {
+      if (tap?.id === event.pointerId && Math.hypot(event.clientX - tap.x, event.clientY - tap.y) <= 10) giveBack('interrupted');
+      tap = null;
+    });
+    on(document, 'visibilitychange', () => { if (document.hidden) giveBack('interrupted', 0); else clock(); });
+    if (reducedMotion?.addEventListener) on(reducedMotion, 'change', () => { if (reducedMotion.matches) giveBack('reduced motion', 0); });
+    on(window, 'kw-vt-morph', () => giveBack('morph'));
+    on(host, 'case-model-ready', () => { if (!decoded) giveBack('cover late', 0); });
+    if (!decoded) {
+      coverTimer = setTimeout(() => { if (!decoded) giveBack('cover late', 0); }, Math.max(0, COVER_CAP - performance.now()));
+      const onDecoded = () => { decoded = true; clock(); };
+      poster.addEventListener('load', onDecoded, { once: true });
+      poster.addEventListener('error', onDecoded, { once: true });
+    }
+    import('./project-motion-arrival.js?v=dtb-20261027').then(({ frameArrival }) => {
+      if (done) return;
+      claimed = true;
+      stop();
+      frameArrival({ key, host, media, poster, holdLeft: Math.max(0, left), reducedMotion });
+    }).catch((error) => {
+      if (done && !claimed) return;
+      if (!done) stop();
+      dropArrival(host, error);
+    });
+  }
 
   // Failed assets retain a readable caption and a working original-image link.
   root.addEventListener('error', (event) => {

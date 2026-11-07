@@ -605,3 +605,93 @@ html:has(.white-home) {
   .white-home .hero-copy { margin-top: 25px; }
   .white-home .hero-media, .white-home .hero-shade, .white-home .hero-skill-strip { display: none; }
 }
+
+/* Hero opening, "Drawn, then built" (hero-drawing-20261027.js; first visit per tab session).
+   The race car is drawn in lines registered to the photo, then the photo develops through a
+   page-white veil (the whole frame together, the car slightly ahead) and the lines retire. The
+   script then removes the veil, the drawing and every class below, so the settled hero is
+   exactly the hero above.
+   html.hero-draw      set by the inline <head> guard before first paint: the veil paints page
+                       white over both photo layers. The photos' own opacity and filter are never
+                       touched, so the photo stays the LCP paint. CSS-only failsafe: the veil
+                       fades out at 2.8-3.3 s and is hidden from 3.3 s if the script never takes
+                       over (the guard also drops html.hero-draw at 4 s in that case).
+   html.hero-draw-js   the script owns the veil (painted per frame). Backstop: the veil and the
+                       lines hide at 9.5 s if the script dies mid-sequence.
+   html.hero-draw-own  the script also owns the reveal timing, so script.js's slow-load veil
+                       (.hero-media::after) stays off while it runs. */
+.hero-draw-veil, .hero-draw-lines { display: none; }
+html.hero-draw .white-home .hero-draw-veil {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: #fff;
+  pointer-events: none;
+  animation: hero-draw-failsafe 500ms cubic-bezier(.65, 0, .35, 1) 2.8s both, hero-draw-backstop 1ms linear 3.3s forwards;
+}
+/* background-color, not opacity: an opacity animation would promote the veil to its own
+   layer from the first frame; this way the pre-script state is one plain white paint. */
+@keyframes hero-draw-failsafe { from { background-color: #fff; } to { background-color: #fff0; } }
+/* from and to both hidden with fill forwards: no effect during the delay, hidden after it (a
+   visible -> hidden interpolation can stop at progress 0.9999... and stay visible). */
+@keyframes hero-draw-backstop { from, to { visibility: hidden; } }
+html.hero-draw .white-home .hero-draw-lines { animation: hero-draw-backstop 1ms linear 3.3s forwards; }
+html.hero-draw.hero-draw-js .white-home .hero-draw-veil { animation: hero-draw-backstop 1ms linear 9.5s forwards; }
+html.hero-draw.hero-draw-own .white-home .hero-media::after { opacity: 0 !important; transition: none !important; }
+/* Above the photo layers (same z-index, later in the hero), below all text. */
+html.hero-draw.hero-draw-js .white-home .hero-draw-lines:not([hidden]) {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  overflow: hidden;
+  contain: strict;
+  pointer-events: none;
+  animation: hero-draw-backstop 1ms linear 9.5s forwards;
+}
+.hero-draw-lines svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.hero-draw-lines path { stroke-dasharray: 1 1; stroke-dashoffset: 1; opacity: 0; }
+@media (prefers-reduced-motion: reduce), print {
+  .hero-draw-veil, .hero-draw-lines { display: none !important; }
+}
+/* Forced colors (high contrast): no drawing at all (the scripts bail out as well); a veil would
+   paint as a system colour box and the lines would vanish. */
+@media (forced-colors: active) {
+  .hero-draw-veil, .hero-draw-lines, .card-draw-veil, .card-draw-lines { display: none !important; }
+}
+/* Project cards, "Drawn, then built" (card-drawing-20261027.js; once per card per tab session).
+   A card's cover first appears as its line drawing (registered to the cover, same box and fit),
+   then develops through a page-white veil while the lines retire; the script then removes both
+   nodes, so the settled card is exactly the card above. Both sit inside .card-media, absolutely
+   positioned, above the cover and below the frame stage and its controls. The lines start
+   masked out; the script wipes the mask across the drawing's own extent (mask-position from about
+   75% to about 25%; card-drawing-20261027.js derives the values from this geometry). With
+   mask-size 250% and stops at 48.8/51.2 % of a 100deg gradient (a soft edge about 6 % of the
+   card wide), 100% is fully hidden and 0% fully shown even at the corners of a 640:427 box. */
+.white-home .project-card .card-media > .card-draw-veil,
+.white-home .project-card .card-media > img.card-draw-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.white-home .project-card .card-media > .card-draw-veil { background: #fff; }
+.white-home .project-card .card-media > img.card-draw-lines {
+  object-fit: contain;
+  -webkit-mask-image: linear-gradient(100deg, #000 48.8%, #0000 51.2%);
+  mask-image: linear-gradient(100deg, #000 48.8%, #0000 51.2%);
+  -webkit-mask-size: 250% 100%;
+  mask-size: 250% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 100% 0%;
+  mask-position: 100% 0%;
+}
+/* The armed preview's poster switches to cover (exploded.css); the drawing follows it. */
+.white-home .project-card.has-explode .card-media > img.card-draw-lines { object-fit: cover; }
+@media (prefers-reduced-motion: reduce), print {
+  .white-home .card-draw-veil, .white-home .card-draw-lines { display: none !important; }
+}

@@ -2,6 +2,392 @@
 
 > Project rules for agents live in ../CLAUDE.md. Entries below are a dated log, newest first; when entries disagree, the newest one wins.
 
+## Drawn, then built · 2026-11-06
+
+Based on e42a05b4. The owner approved the design on 2026-10-27: "The first page will also
+be cool if it start with drawing line for race car, you may change whatever you
+want and render whatever you want. I trust ur design, improve both the main
+website and 3d website". The final gate passed on 2026-11-06 with 0 blockers.
+Release: 249 files (28 modified, 221 new) plus these docs. Cache label
+`?v=dtb-20261027`. New asset folders, all with immutable rules in `vercel.json`:
+`assets/hero-drawing-20261027/`, `assets/editorial/lines-20261027/`,
+`assets/detail-drawing-20261027/`, `assets/detail-callouts-20261028/`.
+
+The idea throughout: things appear as a line drawing, then become the real thing.
+Every drawn sequence removes its nodes when it ends. What stays different afterward:
+the homepage and 404 settle within 2 levels of the old page; detail pages differ by
+the typography pass, the callouts and the fallback faces; the studio chrome stays
+restyled.
+
+This entry was written before the push, so it holds no live result. The live byte
+check and screenshots will be recorded after the push in
+`../releases/drawn-then-built-20261027/release-record.json`. Gate evidence, with
+`gate-result.json` as its index: `../releases/drawn-then-built-20261027/verify/gate-final-1/`.
+Owner preview clips: `../releases/drawn-then-built-20261027/preview/`. Below, "tree"
+means this release's files, "HEAD" means e42a05b4, "stage" means the detail page's model
+area, and "morph" means the card cover flying into the stage (or back).
+Older lane reports in `verify/lane-reports/` describe earlier states (for example a
+340 ms push and an arrival inside the studio frame); this entry and the code win.
+
+### What shipped
+
+- Homepage hero, `hero-drawing-20261027.js`, inline guard and SVG in `index.html`,
+  rules in `white-home-20261011.css`:
+  - First visit per tab session (sessionStorage `kw-hero-drawn`). Strokes draw by
+    1.2 s (28 traced strokes plus 2 wheel-centre marks), the photo develops through
+    a page-white veil over 1.05-2.05 s, and everything is removed by about 2.2 s.
+    The clock starts on the first frame after first contentful paint is reported
+    (held at most 1.5 s), because the first GPU raster of the strokes on an empty
+    shader cache would otherwise delay the first paint.
+  - Not played: reduced motion, forced colors, a hidden tab, a `#` deep link, no CSS
+    masks. Under 50% of the car on screen (phone landscape): a 300 ms reveal, no lines.
+  - Pointer, wheel, scroll or key settles it in about 160 ms. CSS failsafes end it
+    at 3.3 s if the script never starts and at 9.5 s if it dies mid-sequence.
+  - Photo pixels, opacity and fetch priority are untouched. The drawing traces only
+    edges visible in the photo. Regenerate with `tools/hero-drawing/inline_hero_svg.cjs`.
+- Project cards, `card-drawing-20261027.js` (loaded after window load), `script.js`:
+  - 15 cards draw once per tab session (`kw-cards-drawn`); ansysCfd keeps its cover.
+    Lines wipe in over 0-600 ms, the cover develops over 450-1050 ms, lines retire
+    over 600-1150 ms, 70 ms apart between cards.
+  - A card already on screen when the script starts keeps its cover. Data saver and
+    connections reporting 3g or slower keep today's cards. Line images load only after
+    the hero photos and every nearby cover have finished. Using a filter or search
+    ends the feature for that page.
+  - Filter FLIP: staying cards glide 320 ms, leaving cards fade 160 ms, a jump over
+    .8 screens fades in place. `?cards=static` also turns FLIP off.
+  - If a drawing is regenerated (`tools/card-lines/`), update its hash and extent in
+    the `LINES` table.
+- Detail pages, all 16 on `case-study.html` and `project-3d.html`,
+  `project-motion-arrival.js`, `case-study.js`, `project-case-3d.js`:
+  - Frame arrival: the cover waits as an 18% grey print, the drawing appears at 35%,
+    each story step inks once 15% of the stage is in view, the cover develops, and
+    the lines retire. 1.95 s, or 1.6 s below 768 px. Sheets decode in a blob Worker
+    (main thread if none) and each has one composited animation.
+  - Not played: inside the studio frame (no arrival there at all), a card morph entry
+    (the morph is the arrival), `saveData` or 3g and slower, reduced motion, a page
+    whose stage script ran later than 1 s after navigation. A print still waiting past
+    its budget gives the cover back.
+  - The model's first draw waits for the drawing (`holdDraw`); motion data still
+    loads during it. All stage observers read the last entry of a batch, which
+    fixes the early-scroll stuck stage that HEAD also has.
+  - "Loading interactive model…" moved to the stage's top corner and is visually
+    hidden during the drawing.
+  - Changing a cover or its framing means re-rendering the layers:
+    `../releases/drawn-then-built-20261027/detail-arrival/harness/` (`layers.cjs`,
+    `pack_layers.py`; story orders live in the `drafting-arrival-20261027.js` kept
+    there, which no longer ships), then update `FRAME_DRAWINGS`.
+- Drawn callouts, `project-motion-story.js`, `project-motion-labels.js`,
+  `project-annotation-layout.js`, `assets/detail-callouts-20261028/`:
+  - 1 px #505b66 leader on a 5 px white knock-out, #111316 dot with a white ring, no
+    arrowhead. The note is readable at once and is not animated. The leader draws to
+    the part in 200 ms, the dot lands at 130 + 80 ms, the outgoing leader retracts in
+    120 ms. A leader waits for a running arrival (7 s cap).
+  - Re-bake anchors with `../releases/drawn-then-built-20261027/detail-callouts/harness2/`
+    (`audit.cjs`, `merge-anchors.cjs`, `provenance-anchors.cjs`), then update
+    `DRAWN_ANCHORS`.
+- Page transitions, `page-transitions-20261027.js` plus a generated head block in
+  `index.html`, `case-study.html`, `project-3d.html`:
+  - Cross-document view transitions: old page out 0-160 ms, new page in 80-240 ms.
+    Card and stage morph over 400 ms in landscape windows when both ends are on
+    screen; Back restores the scroll position first. Speculation-rules document
+    prefetch (hover or press, never prerender, never the studio).
+  - The head block is generated by
+    `../releases/drawn-then-built-20261027/continuity/harness/head-block.cjs`; the
+    bootstrap must stay byte-identical on the three pages. Readability group 22 pins
+    this and runs the real `pageswap` decision.
+  - `script#kw-vt-filter` is the first script of each page: it silences only the
+    rejection Chrome raises when input aborts a transition (decision D2).
+  - Case-study links changed from `project-3d.html#key` to `?project=key`; old links
+    still open the right page.
+- Studio, `experience.js`, `experience.html`, `experience.css`,
+  `experience-loader-drawing.js`, `studio-navigation.js/css`:
+  - Intro: one 5.1 s curve (`INTRO_EYE`, `INTRO_YAW`, `INTRO_PITCH`, `BOOT_BEATS`).
+  - Exhibit push: the camera moves 30% toward the exhibit over 240 ms under the white
+    curtain, with orientation held (`PUSH_MS`, `PUSH_FRACTION`). No push for an exhibit
+    off screen or over 25 degrees off axis, under reduced motion, or during another
+    camera move. The return restores the exact pose.
+  - Drawn loader (the default, see D1): parts ink as their geometry arrives. At the
+    assets boundary (all base models loaded, before the shader compile) the drawing
+    is finished and held with the room's loop parked; the veil then lifts over 900 ms.
+  - Chrome restyle: paper #0b0c0e, ink #ece9e2, no #3f8cff or glow, text at least
+    11 px. Tokens are in `experience.css` `:root`. Room materials did not change.
+- Off-thread shader linking: `warmPrograms` in `studio-inspector.js`, on for both
+  detail pages when `KHR_parallel_shader_compile` exists, 4 s cap per wait. The studio
+  room and export tools keep the old path. `dispose()` now tolerates disposal before
+  the warm pass ends.
+- Fallback faces: `case-study.css` has metric-matched `local()` faces (Inter Fallback,
+  Inter Tight Fallback, Inter Link Fallback) so the web-font swap does not move the
+  page (see D6). The final type is unchanged.
+
+### Typography pass ("Task B"): intended, visible, no URL switch
+
+A deliberate design change on the detail pages, in `case-study.css`,
+`project-case-3d.css`, `project-motion-story.css` and `white-case-20261011.css`:
+
+- 9 px and 10 px text becomes 11 px; line height follows where needed.
+- Heading tracking loosens from -.05/-.035em to -.01/-.015em.
+- h1 fits at 320 px (`clamp(36px, 12.2vw, 44px)` at 370 px and below). From 1001 px it
+  is `clamp(44px, 6.1vw, 88px)`, so 88 becomes 87.84 px at 1440.
+- Free-mode progress is a 2 px track with an 8 px dot.
+
+Effect measured by the gate, tree vs HEAD on 5 pages at 2 sizes: page height +5 to
++44 px at 1440 and +11 to +96 px at 390. Full-page pixels over 8 levels are 4.9-11.0%
+at 1440 and 15.3-19.4% at 390, because the reflow moves everything below it; HEAD vs
+HEAD is 0. With notes and leaders hidden, 36/36 settled stage shots are identical to
+HEAD. All 32 detail pages at 2 sizes keep the same text, title, h1, headings and
+sections. The computed-style differences outside type are the fallback faces and the
+leader opacity.
+
+### URL switches and the combined comparison query
+
+These are per-URL QA switches, for looking at one page without part of the motion in a
+QA session. They are not a rollback: a visitor whose URL lacks them gets the full release.
+
+To roll back the live site, revert the release commit and push to `main`; Vercel
+redeploys. The release's restorable backup chain will be in
+`../releases/drawn-then-built-20261027/RESTORE.md`, written after the push. The revert
+itself has not been rehearsed.
+
+The switches:
+
+- `?draw=off`: no hero, card, arrival or loader drawing. Intro, push and filter FLIP are
+  unaffected. Drawn callouts show at once, with no leader animation. That holds only
+  without `?callouts=classic`: with both in one URL the classic entrance still plays on
+  every step (leader 300 ms, target circle 210 ms, note 240 ms), the same as the old site.
+- `?hero=photo|draw`, `?cards=static|draw` (`draw` replays, for review; `static` also
+  turns filter FLIP off), `?arrival=off`, `?callouts=classic`, `?vt=off`, `?prefetch=off`,
+  `?loader=classic` (`?loader=drawing` is a no-op), `?intro=legacy`, `?push=off`.
+- `?warm=off`: applies to live detail stages. The studio room keeps its own shader polling
+  path and is unaffected (a test run counted 7,817 completion polls at 390 and 40,987 at
+  1440 on the room with the combined query, 16,204 and 31,976 without it).
+
+Gate: 14 switch settings, each on its own, plus the default on 5 pages at 2 sizes, 150
+loads, 0 problems. The gate did not run them together; the test below did.
+
+Combined comparison query, eight switches as tested:
+`?draw=off&vt=off&prefetch=off&callouts=classic&intro=legacy&push=off&warm=off&cards=static`.
+`?cards=static` is in it because `?draw=off` leaves filter FLIP on. No switch exists for
+the typography pass, the studio chrome restyle, the fallback faces, the status-line
+position or the case-study link format, so even on its own page it does not show the old
+site.
+
+What it does not cover:
+
+- It applies only to the URL that carries it. No internal link keeps it: 0 of 25 links on
+  index, 0 of 4 on case-study, 0 of 6 on project-3d. The next click brings the motion back:
+  arrival, drawn callouts, shader polling, view transitions and prefetch on a detail page;
+  the drawn loader, curve intro and push from the studio link; hero and card drawings on
+  the way home. Browser Back to the query URL keeps it.
+- Opening an exhibit in the studio builds the frame URL without it. In
+  `studio-navigation.js`, `openProject` (line 273) builds the URL from the project key
+  alone, and `showProject` (lines 249-250) adds `studioFrame` and sets `frame.src`. The
+  frame shows drawn callouts and shader polling even with `callouts=classic` and
+  `warm=off` in the room's URL. The room side holds: no push, room kept without a reload,
+  camera pose identical after the return.
+- A visitor without the query never gets any of it.
+- `?draw=off` returns before marking the hero as drawn (`kw-hero-drawn`), so going from the
+  query page to plain `index.html` plays the full hero drawing. That is expected and does
+  not mean the switch failed.
+
+Result, in `../releases/drawn-then-built-20261027/verify/rollback-combined/result.json`:
+direct pages at 390 and 1440 (index, steering on case-study, scanner on project-3d, the
+studio) behaved as each switch promises. All flows, with the query and in the control
+without it: 0 console errors, 0 page errors, 0 failed requests, no horizontal overflow. That
+file says `pass: false`, and its folder is named `rollback-combined`, because the test judged
+the query against the old wording of these docs. The release agent's decision, taken under
+the 2026-10-27 approval and not yet reviewed by the owner: nothing is broken, the docs are
+corrected, no runtime file changed for this, and the switches stay per URL. Some motion has
+no switch, such as the skills strip, scroll reveals, the classic loader's own animation and
+the studio's white curtain; those four are also in HEAD (source check). Coverage: a local
+HTTP/1.1 server, not the live site; one card, one link of each kind and the exhibits
+carbonSeat and aura were followed; hover prefetch only at 1440.
+
+### Decisions recorded for the owner
+
+The owner decided two things: the 2026-10-27 approval of the design quoted at the top of
+this entry, and the standing authorization to push after verification.
+
+D1-D7, the slow-connection line (the last item below) and the combined query decision (the
+switches stay per URL, see the section above) are the release agent's judgement under the
+2026-10-27 approval; the owner has not reviewed them and can change them. "Accepted" in
+these items means accepted by the release agent. D6 and D7: on the night of 2026-11-05 the
+release agent told the owner it planned to accept both costs and that the owner could
+object. The owner's only reply, on 2026-11-06, was "继续" ("continue"). So the owner did
+not object, which is not the same as approving.
+
+All numbers are from the gate; a/b means this release (tree) / HEAD e42a05b4, medians in
+ms unless marked.
+
+- D1, the drawn loader stays the studio default because the gate's stall check favours
+  it. Mid-compile long tasks over 100 ms, runs with any and ms per run, interleaved
+  cold runs. 1440, n=16: drawing 5/16 and 50.9, classic card 10/16 and 139.6, HEAD
+  13/16 and 197.7. 390, n=8: drawing 1/8 and 44.2, classic 5/8 and 196.9, HEAD 3/8 and
+  78.9. Longest compile-window frame at 1440: 99, 1535, 1567. Reveal, same order: 1440
+  6153, 6155, 6170; 390 3048, 3102, 3129. It falls back to the classic card by itself
+  when it is not live within 4 s of the head script, when its module arrives after the
+  assets boundary, when a shader fails to link, or on context loss. Also classic:
+  `?loader=classic`, `?draw=off`, no WebGL 2.
+- D2, moving-pointer abort: when input reaches a destination that is still
+  render-blocked, Chrome drops the transition and rejects a promise page code cannot
+  reach. The rejection is filtered and the visitor gets a hard cut. Survival on a fast
+  link: 3/72 moving, 72/72 still. 144 navigations, 0 page errors, 0 console errors, 0
+  end-state problems. Control with the filter stripped and `?prefetch=off`: 12/12 errors,
+  shipped bytes 0/12.
+- D3, renderer crash: earlier rounds saw "Target crashed" twice (a homepage reading
+  pass under heavy CPU load, and steering with `?draw=off` at CPU x4), cause unknown (no
+  dump). No code change. The soak, 17 min with 4 workers on a quiet machine,
+  had 236 tree and 141 HEAD visits with 0 crashes. That does not prove a cause either way.
+- D4, the forward morph threshold stays at 50% of the stage on screen. At common desktop
+  sizes the forward path is a crossfade and Back morphs. Over HTTP/2: 1440x900 forward
+  crossfade 20/20 and Back to card 20/20; 1920x1400 and 2560x1440 forward morph 40/40.
+- D5, phone TBT and later model reveal are accepted. TBT at CPU x4 on 390, tree/HEAD:
+  steering 88/700, scanner 102/762, brakeSim 0/0, so it is now below HEAD. Time to live
+  model at 20 Mbit/40 ms with the stage scrolled in: 390 steering 2135/2016, scanner
+  2130/1859; 390 x4 steering 2508/2575, scanner 2515/2315; 1440 steering 1741/2018,
+  scanner 1434/1863. With no scroll at 1440 and zero latency the model waits for the
+  1.95 s drawing by design: steering 2292/933, scanner 2280/977, with the cover and
+  drawing on screen meanwhile.
+- D6, the `local()` fallback faces stay and the cost is accepted. FCP at CPU x4: 390
+  (n=5) steering 524/500, brakeSim 548/496 (flagged), scanner 516/480; 390 (n=7) 524/488,
+  548/500, 504/480; 1440 (n=7) steering 556/496, scanner 536/496. At CPU x1 detail first
+  paint is not worse. They buy CLS 0 at 1440 with 40 ms RTT, where HEAD is .0112 on
+  steering and .0154 on scanner. Tested and not taken: faces only from 768 px,
+  `../releases/drawn-then-built-20261027/verify/fix-detail-r4/overlay-d/case-study.css`
+  (reasoning in `paused-20261105/agents-digest.json`).
+- D7, the headers-alone residual of the moving-pointer error is accepted and was not
+  retested in that form. If response headers arrive alone, the first body packet is late,
+  the connection reports fast and input lands in that gap, the console shows the line and
+  the visitor sees only a hard cut. Ordinary shapes in the gate: 0 errors in 72 throttled
+  and 144 fast navigations.
+- Judgement call: no page transition on slow connections, meaning `effectiveType`
+  slow-2g, 2g or 3g, or a downlink under .7 Mbps. The .7 line is a judgement, chosen
+  because a low-RTT link reports 4g however thin it is. Real Chrome estimates on real slow
+  links were not measured.
+
+### Measured
+
+Everything in this entry is a single-machine measurement: one Windows machine, headless
+Chrome, ANGLE D3D11, local Node server (HTTP/1.1, gzip, Vercel-style headers; local
+HTTP/2 only for the morph rate). Compare tree with HEAD only; these are not production
+numbers. Full tables: `perf/summary.txt` under the gate folder.
+
+- 250 cold runs, 5 per cell per tree, 25 cells: 0 errors. 2 cells flagged. Studio 1440 TBT
+  528/303 is an artifact of counting only tasks after first paint: from navigation start
+  626/824, total long-task time 819/1074. BrakeSim CPU x4 FCP is D6.
+- FCP, unthrottled: home 328/348 at 1440, 344/344 at 390 (LCP 352/344). At 40 ms/20 Mbit,
+  home 356/368 and 360/360.
+- Live stages: steering FCP 292/636 and TBT 0/201 at 1440 with no added latency; at 40
+  ms/20 Mbit FCP 272/264 and TBT 0/529. Scanner 3D TBT 0/229 and 0/555.
+- Transfer at 1440, KB: home 950/853 (35/26 requests), steering 2131/2096, 3D scanner
+  1899/1864, studio 23850/23814.
+- Studio: long tasks over 100 ms in the 8 s after reveal, 0 in 25 tree and 25 HEAD runs.
+  Reveal: 1440 6124/6209, 390 2967/3087, 390 x4 5076/5106. Small costs inside the margins:
+  x4 TBT 1698/1530; 390 loading long-task time 810/696. First strokes after the drawing
+  goes live at 40 ms/20 Mbps: 180-181 ms at 1440, 152-154 ms at 390.
+- End state: homepage and 404 vs HEAD at 8 sizes, DPR 1: at most 2 levels of difference,
+  the same ceiling as HEAD vs HEAD. Hero at real pixel ratio: the same.
+- Early scroll at 390: 0/100 stuck, HEAD 2/100. Bfcache leave at 300-1600 ms: 0/48 stuck,
+  HEAD 0/48. Soak: see D3.
+- Sweep: index, 32 detail pages, studio and 404 at 6 widths, 210 loads, 0 problems,
+  192/192 arrivals settled, 102/102 live stages ready, `window.__exp` 6/6. Reduced motion:
+  54 loads, 0 problems. Keyboard: 10 flows, 0 problems.
+- Tests: `node --check` on 32 files, inline scripts 12 plus 4 JSON blocks, readability
+  22/22, room tests 228/228, room verify, advanced-render 4/4, `tools/lod/validate.mjs`,
+  hero-drawing 3/3, hero-first-paint 5/5.
+
+### Accepted limits
+
+- The forward morph rarely shows at common desktop sizes, because it needs 50% of the
+  stage on screen. Steering shows 31% at 1440x900 and 46% at 1440x1100. One project of 16
+  reaches 50% at 1920x1080, 14 at 1920x1200 (steering 51%) and all 16 at 1920x1400. The
+  1440x900 and 1920-wide shares come from `verify/fix-shared-r3/survive/stage-geometry.json`
+  and `verify/reverify-shared-r3/survive-geometry.json`; the 1440x1100 share comes from the
+  preview capture notes (`previewNotes` in `verify/final-round-inputs.json`); the gate ran
+  the morph only at 1440x900, 1920x1400 and 2560x1440.
+- At 1440x900 the arrival plays mostly below the fold if the visitor does not scroll.
+- The exhibit push is hard to see: the white curtain is near-opaque about 110 ms after
+  the click.
+- `ERR_NO_BUFFER_SPACE` about once per 1000 loads earlier, 0 in the gate.
+
+### Known P3s, reported and not fixed
+
+- SO-01: a model failure during the drawing sits under it, faint and cut off, with Retry
+  invisible, until the drawing ends (at most 1.95 s, 1.6 s below 768 px). Then it works.
+  Suggested: `.card-media[data-arrival][data-status=error] > .case-3d-status { z-index: 4 }`.
+- RDR3-N3: the same issue as SO-01.
+- SO-02: a driver that never reports link completion costs two 4 s caps, not the one the
+  comment promises. Seen with a stub only; nothing gets stuck.
+- SO-03: the comment says the transition filter matches name and message exactly; the
+  code matches the name and a message prefix. The code is right; fix the comment.
+- NF-S1-R3-RM: under reduced motion on networks slower than about 4 s to the assets
+  boundary, the loader shows dark paper and the title strip for 4 s, then cuts to the
+  classic card. The still drawing never appears.
+- NF-S1-R3-OCC: a few early lower-left lines ink, then vanish when the baked desk arrives.
+- NF-S1-R3-STATS: QA stats `groupInkedAt` and `inkedAt` now latch on the first arrival. No
+  page effect. Use the pixel check (`castcheck.py`), not `inkcheck.cjs`.
+- RVH3-N2: with an empty shader cache a frame gap falls just after first paint and first
+  strokes appear slightly later; only the veil and static text are on screen.
+- RVH3-N3: under heavy machine load, long tasks appear during the hero; HEAD had none in
+  those runs. 0 on the gate's quiet machine. Cause not traced.
+- RVH3-N4: the `ERR_NO_BUFFER_SPACE` line above; failed resource not captured.
+- RDR3-N4: `script.js` `observeAmbientMotion` reads the first entry of a batch. Same line
+  in HEAD, code reading only; it can only leave ambient motion paused or running.
+- NF-SH-R3-02: on very slow links a short-window card click shows the page skeleton during
+  the crossfade. Not remeasured by the gate.
+- RDR4-N2: WebGL context lost plus a bfcache return before the model is ready. With the
+  shader-link wait (`warmPrograms`) held open 3 s, the tree first shows the error with Retry
+  and logs three's TypeError 4/4; HEAD logs it 0/4 and reaches ready without Retry. Retry
+  then brings the tree to ready 4/4. Natural timing in the gate: TypeError 0/12 on both.
+  With the loss forced at 300 ms, 8 runs each: TypeError tree 6/8, HEAD 4/8; not ready
+  without Retry tree 8/8, HEAD 5/8; Retry recovers tree 7/8, HEAD 8/8. Evidence:
+  `warm/wc-ctx.json` and `warm/wc-ctx0.json` in the gate folder,
+  `verify/reverify-detail-r4/final-20261106/warm/wcctx300.json`.
+
+The gate did not remeasure NF-S1-R3-RM, NF-S1-R3-OCC, RVH3-N2, RDR3-N3 or NF-SH-R3-02.
+Their evidence is in `verify/reverify-*-r3/` and `paused-20261105/agents-digest.json`.
+
+### Deferred
+
+- C11-css: dead `::view-transition` rules in `styles.css` from the old card modal.
+- CODE-11: cover and stage poster load the same render from different URLs (`?v` on the
+  homepage only). Pre-existing.
+- DET-5: frame-story order follows the load path on 4 projects, base or frame last;
+  changing it means re-rendering layers.
+- DET-7: ftc step 3 and telecaster step 4 anchors point at parts hidden at that pose.
+  Pre-existing; belongs to audit #6.
+- S10: rotating a phone in the last 150 ms of the intro snaps the camera.
+- ROOM-LED: the rug LED inlay is still a blue glow. Needs owner approval; audit #14.
+
+### Not verified
+
+- Real phones and touch: 320 and 390 are headless emulation.
+- Safari and Firefox: cross-document view transitions and `local()` resolution on real
+  iPhone or Android fonts are untested.
+- Screen readers.
+- Live Vercel HTTP/2 + brotli timing.
+- Real slow or lossy links; slow shapes are CDP emulation.
+- Physical display smoothness: frame gaps come from CDP screencast and traces.
+- Motion quality was not re-judged by eye in the gate.
+- Full-page pixel diffs cover 5 detail pages at 2 sizes; the rest have the sweep and the
+  text, link and section compare. Full-page end state is DPR 1 only.
+
+### For the next agent
+
+- Harness caveat: several rounds' local servers built the immutable regex wrongly and
+  served assets with `max-age=0`, so revisit or warm numbers in those rounds include
+  revalidation. Cold-load numbers are unaffected.
+- Codex's second opinion ran on gpt-6-astra per `~/.codex/config.toml`, not gpt-6.1-sol;
+  global CLAUDE.md says otherwise, so the owner may want to look. It ran statically, and
+  its claims were then tested in Chrome: `verify/second-opinion/`.
+- To control the pointer test use `verify/gate-final-1/harness/pointer-control.cjs`
+  (`?prefetch=off`); with prefetch on, a stripped filter shows no errors.
+- CDP screencast misleads: it can show a one-frame homepage flash on bfcache returns and
+  frame gaps that a real window capture does not show. Measure morph rates over HTTP/2
+  or at zero latency.
+- If release files change, rerun `verify/fix-shared-r3/harness/release_list.py --write`.
+- QA hooks: `window.__cardDraw`, `window.__vt`, `window.__vtBoot`,
+  `window.__exp.getLoaderDrawingStats()`, `window.__exp.getExhibitPushStats()`.
+
 ## Aesthetic batch 1 · 2026-10-26
 
 Based on 65c23eba. The owner approved the release on 2026-10-26 after three

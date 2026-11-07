@@ -37,9 +37,31 @@
  * lighting boot. This module never hides the loader, starts the boot or uses storage.
  * Calling the factory again for the same element returns the same controller.
  * A missing element is safe. No auto-init; import and connect from experience.js.
+ *
+ * 2026-10-27 ("Drawn, then built"): createStudioLoader(element, { mode: "drawing" })
+ * is the startup screen that draws the room. Its stage weights follow where
+ * the time actually goes: loading 0–45%, preparing 45–95% (texture uploads
+ * 45–50, shader compiling 50–92, lighting 92–95), first frame 95–99%. While
+ * compiling it accepts counts, compiled/linked programs out of those
+ * submitted: measured, so no shimmer. getProgress() returns the unrounded
+ * percentage (2026-11-04: QA only; the room drawing inks parts as their
+ * geometry arrives, not to this number). The default mode ("classic") keeps
+ * its stage weights.
+ *
+ * 2026-10-28 (F29, both modes): the screen is repainted for counts at most
+ * twice a second (COUNT_PAINT_MS); a stage boundary (phase or named stage)
+ * paints at once, and only stage boundaries change the status line. A
+ * measured named stage (compiling) shows its own line, "Compiling materials"
+ * with the percentage, never "N / M": the number of programs submitted grows
+ * while the compile runs, so its denominator would change on screen.
+ * getProgress() is never throttled. holdCounts(predicate): while it returns
+ * true (2026-10-29: the startup drawing is finished and held through the
+ * compile, with no canvas frames), the compile's percentage is painted at
+ * most every COUNT_HOLD_MS, so the screen commits as rarely as it can while
+ * the GPU links the room's programs.
  */
 
-const PHASES = [
+const CLASSIC = [
   {
     id: "loading", start: 0, end: 85,
     text: "Loading studio resources", active: "Loading",
@@ -56,22 +78,37 @@ const PHASES = [
     detail: "The studio opens after its first frame", unit: "render steps complete",
   },
 ];
+const DRAWING_BANDS = { loading: { start: 0, end: 45 }, preparing: { start: 45, end: 95 }, "first-frame": { start: 95, end: 99 } };
+const MODES = {
+  classic: { phases: CLASSIC, within: null },
+  drawing: {
+    phases: CLASSIC.map((phase) => ({ ...phase, ...DRAWING_BANDS[phase.id] })),
+    // Shares of the preparing phase, by the stage running in it.
+    within: { none: [0, 0.1], decoding: [0, 0.1], compiling: [0.1, 0.94], lighting: [0.94, 1] },
+  },
+};
 
 // Named stages inside a phase. None reports partial progress of its own.
 const ACTIVITIES = {
   decoding: { phases: [0, 1], text: "Decoding studio lighting", step: "Decoding", detail: "Decoding the lighting environment" },
-  compiling: { phases: [1], text: "Compiling materials", step: "Compiling", detail: "Compiling materials for this GPU" },
+  compiling: { phases: [1], text: "Compiling materials", step: "Compiling", detail: "Compiling materials for this GPU", unit: "shaders compiled" },
   lighting: { phases: [1], text: "Preparing lighting", step: "Lighting", detail: "Preparing lighting and post-processing" },
 };
 const FAILED_TEXT = "This browser can't run the 3D studio.";
+// Count-only repaints at most twice a second (the status line changes only at
+// stage boundaries, which paint at once).
+const COUNT_PAINT_MS = 500;
+const COUNT_HOLD_MS = 2000;
 
 const controllers = new WeakMap();
 const noop = () => {};
-const emptyController = Object.freeze({ update: noop, setPhase: noop, complete: noop, fail: noop });
+const emptyController = Object.freeze({ update: noop, setPhase: noop, complete: noop, fail: noop, getProgress: () => 0, mode: "classic",
+  holdCounts: noop });
 
-export function createStudioLoader(element) {
+export function createStudioLoader(element, { mode = "classic" } = {}) {
   if (!element?.querySelector) return emptyController;
   if (controllers.has(element)) return controllers.get(element);
+  const { phases: PHASES, within } = MODES[mode] || MODES.classic;
 
   const bar = element.querySelector(".exp-loader__bar");
   const fill = element.querySelector(".exp-loader__bar i");
@@ -82,10 +119,13 @@ export function createStudioLoader(element) {
   const steps = Array.from(element.querySelectorAll("[data-loader-stage]"));
   let phaseIndex = 0;
   let progress = 0;
+  let exact = 0;
   let hasProgress = false;
   let terminal = "";
   let counts = null;
   let activity = null;
+  let lastCountPaint = -Infinity;
+  let countTimer = 0;
 
   const setText = (node, text) => {
     if (node && node.textContent !== text) node.textContent = text;
@@ -94,9 +134,11 @@ export function createStudioLoader(element) {
     if (node && node.getAttribute(name) !== text) node.setAttribute(name, text);
   };
   const phaseText = () => ACTIVITIES[activity]?.text || PHASES[phaseIndex].text;
+  // Counts given during a named stage measure that stage (drawing mode only).
+  const measuredStage = () => !!(within && activity && ACTIVITIES[activity]?.unit && counts);
   // Unmeasured work shimmers; the stored percentage stays where real counts left it.
   const renderIndeterminate = () => {
-    const unmeasured = !terminal && (!!activity || !counts);
+    const unmeasured = !terminal && ((!!activity && !measuredStage()) || !counts);
     if (unmeasured) setAttribute(element, "data-indeterminate", "");
     else element.removeAttribute("data-indeterminate");
   };
@@ -115,7 +157,9 @@ export function createStudioLoader(element) {
     setAttribute(bar, "aria-valuetext", finished
       ? "100% startup progress. First frame rendered."
       : `${hasProgress ? `${progress}% startup progress` : "Progress not yet available"}. ${phaseText()}.`);
-    setText(detail, finished ? "First frame rendered" : counts
+    // A measured named stage shows its own line: its total grows as work is
+    // submitted, so "N / M" would show a changing denominator.
+    setText(detail, finished ? "First frame rendered" : counts && !measuredStage()
       ? `${counts.loaded.toLocaleString("en-US")} / ${counts.total.toLocaleString("en-US")} ${phase.unit}`
       : ACTIVITIES[activity]?.detail || phase.detail);
     setAttribute(element, "data-state", terminal || (counts ? "loading" : "waiting"));
@@ -141,6 +185,27 @@ export function createStudioLoader(element) {
     }
   }
 
+  // What the screen would show for the counts (a measured stage shows only
+  // its percentage), so unchanged counts never repaint.
+  const shown = () => `${progress}|${!counts ? "-" : measuredStage() ? "m" : `${counts.loaded}/${counts.total}`}`;
+  // Paint now (a stage boundary, the end) or within COUNT_PAINT_MS (counts).
+  function paintProgress() {
+    clearTimeout(countTimer);
+    countTimer = 0;
+    lastCountPaint = performance.now();
+    renderProgress();
+  }
+  // holdCounts(predicate): while it returns true, a measured stage's counts
+  // are painted at most every COUNT_HOLD_MS (the startup drawing holds still
+  // through the compile; the screen commits as rarely as it can).
+  let countHold = () => false;
+  function scheduleProgress() {
+    const held = measuredStage() && countHold();
+    const wait = (held ? COUNT_HOLD_MS : COUNT_PAINT_MS) - (performance.now() - lastCountPaint);
+    if (wait <= 0) { paintProgress(); return; }
+    if (!countTimer) countTimer = setTimeout(() => { countTimer = 0; if (!terminal) paintProgress(); }, wait);
+  }
+
   function update(input = {}) {
     if (terminal || !input || typeof input !== "object") return;
     const nextIndex = input.phase === undefined
@@ -154,6 +219,7 @@ export function createStudioLoader(element) {
       counts = null;
       activity = null;
       hasProgress = true;
+      exact = Math.max(exact, PHASES[phaseIndex].start);
       progress = Math.max(progress, PHASES[phaseIndex].start);
       statusChanged = true;
     }
@@ -162,21 +228,36 @@ export function createStudioLoader(element) {
       nextActivity !== activity) {
       activity = nextActivity;
       statusChanged = true;
+      // Drawing mode: a later stage starts where its share starts, and the
+      // previous stage's counts no longer describe it.
+      if (within && PHASES[phaseIndex].id === "preparing" && activity) {
+        const phase = PHASES[phaseIndex], share = within[activity] || within.none;
+        exact = Math.max(exact, phase.start + share[0] * (phase.end - phase.start));
+        progress = Math.max(progress, Math.floor(exact));
+        if (!("loaded" in input)) counts = null;
+      }
     }
     if (statusChanged) renderPhase();
+    const before = shown();
     if ("loaded" in input || "total" in input) {
       const { loaded, total } = input;
       if (Number.isFinite(loaded) && loaded >= 0 && Number.isFinite(total) && total > 0) {
         const phase = PHASES[phaseIndex];
         counts = { loaded, total };
         hasProgress = true;
-        const fraction = Math.min(1, loaded / total);
-        progress = Math.max(progress, Math.floor(phase.start + fraction * (phase.end - phase.start)));
+        let fraction = Math.min(1, loaded / total);
+        if (within && phase.id === "preparing") {
+          const share = within[activity || "none"] || within.none;
+          fraction = share[0] + fraction * (share[1] - share[0]);
+        }
+        exact = Math.max(exact, phase.start + fraction * (phase.end - phase.start));
+        progress = Math.max(progress, Math.floor(exact));
       } else {
         counts = null;
       }
     }
-    renderProgress();
+    if (statusChanged) paintProgress();
+    else if (shown() !== before) scheduleProgress();
   }
 
   function setPhase(phase) {
@@ -187,17 +268,20 @@ export function createStudioLoader(element) {
     if (terminal) return;
     terminal = "ready";
     progress = 100;
+    exact = 100;
     hasProgress = true;
     phaseIndex = PHASES.length - 1;
     activity = null;
     renderPhase();
-    renderProgress();
+    paintProgress();
   }
 
   function fail(message) {
     if (terminal === "failed") return;
     terminal = "failed";
     activity = null;
+    clearTimeout(countTimer);
+    countTimer = 0;
     const text = typeof message === "string" && message.trim() ? message.trim() : FAILED_TEXT;
     setAttribute(element, "data-state", "failed");
     element.removeAttribute("data-activity");
@@ -227,7 +311,8 @@ export function createStudioLoader(element) {
   renderPhase();
   renderProgress();
 
-  const controller = Object.freeze({ update, setPhase, complete, fail });
+  const controller = Object.freeze({ update, setPhase, complete, fail, getProgress: () => exact, mode,
+    holdCounts: (predicate) => { countHold = typeof predicate === "function" ? predicate : () => false; } });
   controllers.set(element, controller);
   return controller;
 }

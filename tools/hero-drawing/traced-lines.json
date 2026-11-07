@@ -1,0 +1,371 @@
+{
+ "asset": "tools/hero-drawing/traced-lines.svg",
+ "kind": "Traced master of the homepage hero line drawing (pen-sketch tracing). The public drawing, assets/hero-drawing-20261027/hero-lines.svg, is derived from it by inline_hero_svg.cjs.",
+ "source": {
+  "file": "assets/hero-fsae-track-2200.webp",
+  "sha256": "29159c8b770699ad6b5243db395256c051372e86d50f4145bd6d87cd0b36dedd",
+  "pixels": [
+   2200,
+   1238
+  ],
+  "note": "The public 2200 px hero photo already in the repo. No raw or private photo was used."
+ },
+ "svg": {
+  "sha256": "44a3dd98bf8175362dd952c5af305f826dd13df80432c3d54503b475f56641c2",
+  "bytes": 5561,
+  "paths": 30,
+  "groups": {
+   "silhouette": 7,
+   "structure": 14,
+   "detail": 4,
+   "ground": 5
+  },
+  "coordinates": "viewBox 0 0 2200 1238 = source photo pixels (no transform); coordinates rounded to 0.1 px"
+ },
+ "statement": [
+  "This is a tracing derived from the public hero photo (hero-fsae-track-2200.webp) of Kefan Wu in the Olin Electric Motorsports FSAE car.",
+  "Every stroke was snapped onto a measured edge (or, for thin tubes, the dark centre line) of that photo; nothing was drawn freehand.",
+  "It adds no hardware that is not in the photo. Lines stop where an edge disappears into shadow instead of being completed by guesswork; no hatching, no texture.",
+  "Wheel rims are fitted ellipses (least squares to the snapped edge points); the rest are smoothing-spline / cubic Bezier fits within about 1 px RMS of the edge points.",
+  "Decals (numbers, sponsor text, logos), asphalt and grass texture and the sky were deliberately not traced; the 219 number plate is drawn only as its panel outline.",
+  "The live hero still ends on the original photo pixels: the drawing is an overlay for the opening animation and the hero-fsae-track-*.webp files are unchanged."
+ ],
+ "method": [
+  "Edge-preserving smoothing (two bilateral passes), then channels: log luminance (lifts edges inside the black body and tyres), CIE L, a and b (chroma separates the blue stripes, grass and asphalt).",
+  "Authoring aid (chains.py): Di Zenzo colour gradient + Canny hysteresis, thinned and linked into labelled edge chains; used only to measure where real edges are.",
+  "Curation (author_guides.py): each stroke is a guide built from measured chain runs and luminance probes; strokes are grouped (silhouette, structure, detail, ground) and ordered like a designer sketching.",
+  "Snapping (trace_lines.py): intensity profiles along the guide normals; per sample the strongest edge / tube centre is chosen by dynamic programming (edge strength minus a smoothness penalty), optional polarity, sub-pixel peak refinement and median outlier rejection.",
+  "Fitting: smoothing cubic spline within a stroke-specific RMS tolerance (0.3-1.5 px), then Schneider cubic Bezier fit (max error 0.5 px) written as relative path data; ellipses for rims and the visible tyre-face arc."
+ ],
+ "parameters": {
+  "bilateral": "2 x (d=7, sigmaColor=22, sigmaSpace=4)",
+  "channel_weights": "logY x12, L x1, a x1.4, b x1.4",
+  "profile_step_px": 0.5,
+  "sample_spacing_px": 2.0,
+  "bezier_max_error_px": 0.5,
+  "draw_order_windows": {
+   "body": [
+    0.0,
+    0.2
+   ],
+   "wheels": [
+    0.2,
+    0.38
+   ],
+   "structure": [
+    0.38,
+    0.6
+   ],
+   "driver": [
+    0.6,
+    0.74
+   ],
+   "detail": [
+    0.74,
+    0.88
+   ],
+   "ground": [
+    0.88,
+    1.0
+   ]
+  },
+  "group_weights": {
+   "silhouette": 1.0,
+   "structure": 0.7,
+   "detail": 0.5,
+   "ground": 0.4
+  }
+ },
+ "strokes": [
+  {
+   "id": "nose-outline",
+   "group": "silhouette",
+   "phase": "body",
+   "data-o": 0,
+   "data-w": 1,
+   "median_edge_strength": 0.85,
+   "dev95_px": 1.52
+  },
+  {
+   "id": "nose-crease",
+   "group": "silhouette",
+   "phase": "body",
+   "data-o": 0.05,
+   "data-w": 0.85,
+   "median_edge_strength": 0.84,
+   "dev95_px": 2.1
+  },
+  {
+   "id": "nose-rear",
+   "group": "silhouette",
+   "phase": "body",
+   "data-o": 0.1,
+   "data-w": 0.75,
+   "median_edge_strength": 0.79,
+   "dev95_px": 0.81
+  },
+  {
+   "id": "cockpit-top",
+   "group": "silhouette",
+   "phase": "body",
+   "data-o": 0.15,
+   "data-w": 0.9,
+   "median_edge_strength": 0.89,
+   "dev95_px": 0.96
+  },
+  {
+   "id": "fw-outline",
+   "group": "structure",
+   "phase": "wheels",
+   "data-o": 0.2,
+   "data-w": 0.8,
+   "median_edge_strength": 0.64,
+   "dev95_px": 2.2
+  },
+  {
+   "id": "fw-face",
+   "group": "structure",
+   "phase": "wheels",
+   "data-o": 0.236,
+   "data-w": 0.6,
+   "median_edge_strength": 0.4,
+   "ellipse_fit_rms_px": 0.82
+  },
+  {
+   "id": "fw-rim",
+   "group": "structure",
+   "phase": "wheels",
+   "data-o": 0.272,
+   "data-w": 0.6,
+   "median_edge_strength": 0.45,
+   "ellipse_fit_rms_px": 1.05
+  },
+  {
+   "id": "rw-outline",
+   "group": "structure",
+   "phase": "wheels",
+   "data-o": 0.308,
+   "data-w": 0.8,
+   "median_edge_strength": 0.35,
+   "dev95_px": 1.74
+  },
+  {
+   "id": "rw-rim",
+   "group": "structure",
+   "phase": "wheels",
+   "data-o": 0.344,
+   "data-w": 0.6,
+   "median_edge_strength": 0.48,
+   "ellipse_fit_rms_px": 0.45
+  },
+  {
+   "id": "hoop",
+   "group": "structure",
+   "phase": "structure",
+   "data-o": 0.38,
+   "data-w": 0.75,
+   "median_edge_strength": 0.63,
+   "dev95_px": 1.43
+  },
+  {
+   "id": "hoop-diag",
+   "group": "structure",
+   "phase": "structure",
+   "data-o": 0.407,
+   "data-w": 0.6,
+   "median_edge_strength": 0.2,
+   "dev95_px": 0.31
+  },
+  {
+   "id": "hoop-brace",
+   "group": "structure",
+   "phase": "structure",
+   "data-o": 0.435,
+   "data-w": 0.65,
+   "median_edge_strength": 0.93,
+   "dev95_px": 0.46
+  },
+  {
+   "id": "rear-rail-top",
+   "group": "structure",
+   "phase": "structure",
+   "data-o": 0.463,
+   "data-w": 0.6,
+   "median_edge_strength": 0.31,
+   "dev95_px": 1.26
+  },
+  {
+   "id": "rear-rail-low",
+   "group": "structure",
+   "phase": "structure",
+   "data-o": 0.49,
+   "data-w": 0.6,
+   "median_edge_strength": 0.29,
+   "dev95_px": 0.47
+  },
+  {
+   "id": "rear-toe",
+   "group": "structure",
+   "phase": "structure",
+   "data-o": 0.517,
+   "data-w": 0.55,
+   "median_edge_strength": 0.56,
+   "dev95_px": 0.65
+  },
+  {
+   "id": "rear-wb-upper",
+   "group": "structure",
+   "phase": "structure",
+   "data-o": 0.545,
+   "data-w": 0.55,
+   "median_edge_strength": 0.83,
+   "dev95_px": 0.38
+  },
+  {
+   "id": "rear-wb-lower",
+   "group": "structure",
+   "phase": "structure",
+   "data-o": 0.573,
+   "data-w": 0.55,
+   "median_edge_strength": 0.66,
+   "dev95_px": 0.29
+  },
+  {
+   "id": "helmet",
+   "group": "silhouette",
+   "phase": "driver",
+   "data-o": 0.6,
+   "data-w": 1,
+   "median_edge_strength": 0.73,
+   "dev95_px": 0.86
+  },
+  {
+   "id": "visor",
+   "group": "detail",
+   "phase": "driver",
+   "data-o": 0.635,
+   "data-w": 0.5,
+   "median_edge_strength": 0.89,
+   "dev95_px": 1.11
+  },
+  {
+   "id": "shoulder-near",
+   "group": "silhouette",
+   "phase": "driver",
+   "data-o": 0.67,
+   "data-w": 0.8,
+   "median_edge_strength": 0.71,
+   "dev95_px": 1.38
+  },
+  {
+   "id": "shoulder-far",
+   "group": "silhouette",
+   "phase": "driver",
+   "data-o": 0.705,
+   "data-w": 0.8,
+   "median_edge_strength": 0.88,
+   "dev95_px": 0.56
+  },
+  {
+   "id": "stripe-inner",
+   "group": "detail",
+   "phase": "detail",
+   "data-o": 0.74,
+   "data-w": 0.45,
+   "median_edge_strength": 0.89,
+   "dev95_px": 1.57
+  },
+  {
+   "id": "shadow-nose",
+   "group": "ground",
+   "phase": "ground",
+   "data-o": 0.88,
+   "data-w": 0.4,
+   "median_edge_strength": 0.91,
+   "dev95_px": 1.41
+  },
+  {
+   "id": "shadow-front",
+   "group": "ground",
+   "phase": "ground",
+   "data-o": 0.904,
+   "data-w": 0.4,
+   "median_edge_strength": 0.88,
+   "dev95_px": 0.48
+  },
+  {
+   "id": "shadow-rear",
+   "group": "ground",
+   "phase": "ground",
+   "data-o": 0.928,
+   "data-w": 0.4,
+   "median_edge_strength": 0.92,
+   "dev95_px": 1.1
+  },
+  {
+   "id": "grass-left",
+   "group": "ground",
+   "phase": "ground",
+   "data-o": 0.952,
+   "data-w": 0.35,
+   "median_edge_strength": 0.73,
+   "dev95_px": 0.79
+  },
+  {
+   "id": "grass-right",
+   "group": "ground",
+   "phase": "ground",
+   "data-o": 0.976,
+   "data-w": 0.35,
+   "median_edge_strength": 0.73,
+   "dev95_px": 1.15
+  },
+  {
+   "id": "plate-219",
+   "group": "detail",
+   "phase": "driver",
+   "data-o": 0.62,
+   "data-w": 0.5,
+   "median_edge_strength": 0.95,
+   "dev95_px": 0.36,
+   "added": "2026-10-29"
+  },
+  {
+   "id": "fw-far-crown",
+   "group": "structure",
+   "phase": "wheels",
+   "data-o": 0.36,
+   "data-w": 0.8,
+   "median_edge_strength": 0.84,
+   "dev95_px": 0.43,
+   "added": "2026-10-29"
+  },
+  {
+   "id": "tsal-lamp",
+   "group": "detail",
+   "phase": "structure",
+   "data-o": 0.41,
+   "data-w": 0.45,
+   "median_edge_strength": 0.87,
+   "dev95_px": 0.63,
+   "added": "2026-10-29"
+  }
+ ],
+ "runs": [
+  {
+   "date": "2026-10-27",
+   "strokes": "all",
+   "channels": "OpenCV (version not recorded)"
+  },
+  {
+   "date": "2026-10-29",
+   "strokes": [
+    "plate-219",
+    "fw-far-crown",
+    "tsal-lamp"
+   ],
+   "channels": "np_cv2 (NumPy/SciPy stand-in for OpenCV's bilateralFilter, cvtColor BGR2LAB and GaussianBlur)"
+  }
+ ],
+ "generator": "tools/hero-drawing/ (author_guides.py -> guides.json -> trace_lines.py); see README.md"
+}

@@ -56,13 +56,14 @@
 .case-motion-story:not(.is-free) #case-3d-canvas { pointer-events:none; touch-action:pan-y; }
 .case-motion-story:not(.is-free) .case-3d-controls { display:none; }
 .case-motion-story .case-3d-viewport > img { background:transparent; }
-.case-motion-story .case-3d-status { border:0; background:none; color:#afb4b8; bottom:25px; left:50%; transform:translateX(-50%); font-size:11px; }
+/* Under the eyebrow, in the stage's top corner: at the stage's foot it crossed the "Scroll to explore" arrow. */
+.case-motion-story .case-3d-status { border:0; background:none; color:#afb4b8; top:8px; bottom:auto; left:var(--gutter); right:auto; max-width:calc(100% - 2 * var(--gutter)); padding:0; font-size:11px; }
 /* The solved pressure scale keeps its values, ramp and nonlinear-scale note. */
 .case-motion-story #case-3d-legend { position:absolute; z-index:3; bottom:38px; left:var(--gutter); width:min(340px,calc(100% - 2 * var(--gutter))); display:grid; grid-template-columns:1fr; padding:0; border:0; background:none; font-size:11px; }
 .case-motion-story #case-3d-legend p { margin:0; font-size:11px; line-height:14px; }
 .case-motion-story #case-3d-legend .case-3d-legend-bar { height:4px; margin-top:5px; }
 .case-motion-story #case-3d-legend .case-3d-legend-ticks { height:16px; margin-top:4px; font-size:11px; line-height:16px; }
-.case-motion-story #case-3d-legend small { display:block; margin-top:2px; font-size:10px; line-height:13px; }
+.case-motion-story #case-3d-legend small { display:block; margin-top:2px; font-size:11px; line-height:14px; }
 .case-motion-story.is-free .motion-notes,.case-motion-story.is-free .motion-step-buttons,.case-motion-story.is-free .motion-story-timeline { display:none; }
 .case-motion-story.is-free .motion-story-footer { justify-content:flex-end; }
 .case-motion-story.is-free .case-preview-figure { inset:32px 0 130px; transform:none; }
@@ -78,6 +79,11 @@
 .case-motion-story[data-portrait-fit=true] .case-preview-figure .case-animation-host .card-media > img,
 .case-motion-story[data-portrait-fit=true] .case-preview-figure .case-animation-host.has-explode .card-media > img,
 .case-motion-story[data-portrait-fit=true] .case-preview-figure .case-animation-host .card-media .card-explode-frame { transform-origin:0 0; transform:var(--motion-fit)!important; }
+/* "Drawn, then built" line layers (project-motion-arrival.js) take the cover's exact framing,
+   also inside the one-step drawing's reveal frame. */
+.case-drawing :is(img,canvas) { object-fit:cover; }
+.case-motion-story .case-drawing :is(img,canvas) { object-fit:contain; }
+.case-motion-story[data-portrait-fit=true] .case-drawing :is(img,canvas) { transform-origin:0 0; transform:var(--motion-fit); }
 @media(max-width:700px) {
  .case-motion-story { scroll-margin-top:calc(var(--story-top) - 160px); }
  .case-motion-pin { min-height:520px; }
@@ -97,7 +103,7 @@
  .motion-story-timeline input { height:30px; }
  .case-motion-story .preview-links { grid-area:links; }
  .case-motion-story #case-3d-legend { top:25px; bottom:auto; left:var(--gutter); width:calc(100% - 2 * var(--gutter)); }
- .case-motion-story #case-3d-legend .case-3d-legend-ticks { font-size:10px; }
+ .case-motion-story #case-3d-legend .case-3d-legend-ticks { font-size:11px; }
  .case-motion-story.is-free .case-preview-figure { inset:30px 0 156px; }
  .case-motion-story.is-free .case-3d-controls { bottom:-124px; }
  /* Seven stages keep 44px targets: the row may run into the right gutter. */

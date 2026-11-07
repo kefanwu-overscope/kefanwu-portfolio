@@ -11,11 +11,26 @@ const RETURN_EASE = 'cubic-bezier(.33, 1, .68, 1)'; // ease-out (cubic)
 // Opening: the room fades to plain white first; a frame that is ready sooner
 // waits (transparent) until the panel's entry fade has finished, then fades
 // in on the opaque white panel, so no frame shows the page over the room.
+// 2026-10-28 (F34): the room's camera push (#7) is a short lean-in under the
+// curtain, never ahead of it. openProject() tells the room (onOpen(key)) and
+// then opens exactly as it does without a push: the panel, its white fade and
+// the frame all start at the click. onCovered() fires once the curtain is
+// opaque, so the room can land its push and stop rendering. When the room
+// leans in (onOpen returned true) that is as soon as the curtain reads as
+// opaque (COVER_OPACITY, about 115 ms into the fade), not at the fade's end;
+// curtainStarted() tells the room when the fade has actually begun (it starts
+// on the frame after the click), so the push starts with it. The room has
+// stopped drawing then, so a frame that is ready already starts its fade-in
+// at that moment too: the frames the room drew for the lean-in delay the
+// page's own first task, which would otherwise hold up the fade's end (and so
+// the page) by about 40 ms. Without a lean-in (?push=off, reduced motion, an
+// off-screen exhibit) the frame waits for the fade's end exactly as before.
+const COVER_OPACITY = 0.98;
 
 // The loaded room remains the top-level document during project visits. One
 // disposable frame hosts the existing full project page; only this controller
 // owns history, so chapter/next-project links cannot add hidden frame entries.
-export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
+export function createStudioNavigation({ onActiveChange = () => {}, onOpen = () => {}, onCovered = () => {} } = {}) {
   const roomURL = new URL(location.href);
   const projectPath = new URL('project-3d.html', roomURL).pathname;
   const roomTitle = document.title;
@@ -23,7 +38,7 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
   let panel = null, frame = null, frameKey = null, ready = false, pendingReady = false, timer = null;
   let savedFocus = null, hiddenElements = [], lastIndex = 0, disposed = false;
   let active = false, returning = false, panelTransition = null, frameTransition = null, returnPaint = null;
-  let frameRevealWaiting = false;
+  let frameRevealWaiting = false, coverSent = false, coverWatch = null, leanEntry = false;
   const motion = window.matchMedia?.('(prefers-reduced-motion: reduce)');
   const current = () => history.state?.[STATE];
   const owned = state => state?.session === session && Number.isInteger(state.index) && state.index >= 0;
@@ -64,24 +79,56 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
     };
     const finish = () => { if (cancel()) complete(); };
     animation.onfinish = finish;
-    return { cancel, finish };
+    // pending: created but not yet started (its first frame is not committed)
+    return { cancel, finish, get pending() { return animation.pending === true; } };
   }
   const panelOpacity = () => Number.parseFloat(window.getComputedStyle(panel).opacity);
   function cancelReturnPaint() {
     if (returnPaint !== null) window.cancelAnimationFrame(returnPaint);
     returnPaint = null;
   }
+  // Once per entry: the curtain covers the room (read as opaque, or finished).
+  function covered() {
+    if (coverSent || !panel || returning) return;
+    coverSent = true;
+    try { onCovered(); } catch (error) { console.warn('[studio] cover listener failed', error); }
+    // After a lean-in the page may start to appear as soon as the room is covered.
+    if (leanEntry && frameRevealWaiting && panel && !returning) fadeInFrame();
+  }
+  function stopCoverWatch() {
+    if (coverWatch !== null) window.cancelAnimationFrame(coverWatch);
+    coverWatch = null;
+  }
+  // While the room leans in behind the fading curtain: covered() as soon as
+  // the curtain reads as opaque, so the room stops drawing what nobody sees.
+  function watchCover() {
+    stopCoverWatch();
+    const step = () => {
+      coverWatch = null;
+      if (!panel || returning || coverSent || !panelTransition) return;
+      if (!panelTransition.pending && panelOpacity() >= COVER_OPACITY) { covered(); return; }
+      coverWatch = window.requestAnimationFrame(step);
+    };
+    coverWatch = window.requestAnimationFrame(step);
+  }
   function enterPanel(from = 0) {
     panelTransition?.cancel();
+    coverSent = false;
     panelTransition = fade(panel, from, 1, TRANSITION_MS, () => {
       panelTransition = null;
-      if (panel && !returning) document.body.classList.add('studio-project-covered');
+      stopCoverWatch();
+      if (panel && !returning) {
+        document.body.classList.add('studio-project-covered');
+        covered();
+      }
       if (frameRevealWaiting && panel && !returning) fadeInFrame();
     });
   }
   function fadeInFrame() {
     frameRevealWaiting = false;
     if (!frame) return;
+    frame.inert = false;
+    frame.focus({ preventScroll: true });
     frameTransition?.cancel();
     frameTransition = fade(frame, 0, 1, FRAME_REVEAL_MS, () => { frameTransition = null; });
   }
@@ -95,7 +142,8 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
   }
   function finishRoom() {
     if (!panel) return;
-    cancelReturnPaint(); panelTransition?.cancel(); panelTransition = null;
+    cancelReturnPaint(); stopCoverWatch(); panelTransition?.cancel(); panelTransition = null;
+    leanEntry = false;
     releaseFrame(); panel.remove(); panel = null;
     returning = false;
     document.body.classList.remove('studio-project-open', 'studio-project-covered');
@@ -114,6 +162,8 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
     if (immediate) { finishRoom(); return; }
     if (returning) return;
     returning = true;
+    stopCoverWatch();
+    leanEntry = false;
     const from = panel.animate ? panelOpacity() : 1;
     panelTransition?.cancel(); panelTransition = null;
     panel.style.opacity = String(from);
@@ -166,14 +216,14 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
   function revealFrame(state) {
     ready = true; pendingReady = false; clearTimeout(timer); timer = null;
     panel.classList.add('is-ready'); panel.classList.remove('has-error');
-    frame.inert = false;
-    if (panelTransition || returning) {
-      // is-ready shows the frame at opacity 1; hold it transparent meanwhile.
+    if (returning || (panelTransition && !(leanEntry && coverSent))) {
+      // is-ready shows the frame at opacity 1; hold it transparent meanwhile,
+      // and inert and unfocused (fadeInFrame releases it), so no input reaches
+      // a page that is not on screen yet.
       frameRevealWaiting = true;
       frame.style.opacity = '0';
     } else fadeInFrame();
     send({ type: 'location', url: state.url, scrollY: state.scrollY });
-    frame.focus({ preventScroll: true });
   }
   function showProject(state) {
     const url = route(state.url);
@@ -218,6 +268,18 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
     const next = { session, kind: 'project', index, url: url.href };
     write(next, url); showProject(next); return true;
   }
+  function openProject(key) {
+    if (disposed) return false;
+    const url = route(new URL(`project-3d.html?project=${encodeURIComponent(key)}`, roomURL).href);
+    if (!url) return false;
+    // Only a fresh panel lets the room lean in; an open one swaps content.
+    let leaning = false;
+    if (!panel) { try { leaning = onOpen(key) === true; } catch (error) { console.warn('[studio] open listener failed', error); } }
+    const opened = navigate(url.href);
+    leanEntry = leaning && opened && !!panelTransition;
+    if (leanEntry) watchCover();
+    return opened;
+  }
   function message(event) {
     if (disposed || !frame || event.origin !== roomURL.origin || event.source !== frame.contentWindow || event.data?.protocol !== PROTOCOL) return;
     const data = event.data, state = current();
@@ -260,12 +322,14 @@ export function createStudioNavigation({ onActiveChange = () => {} } = {}) {
   motion?.addEventListener('change', settleMotion);
   document.addEventListener?.('visibilitychange', settleMotion);
   return {
-    openProject: key => navigate(new URL(`project-3d.html?project=${encodeURIComponent(key)}`, roomURL).href),
+    openProject,
+    // false only while the curtain's fade is created but not yet started
+    curtainStarted: () => !panelTransition || !panelTransition.pending,
     snapshot: () => ({ session, open: !!panel, key: frameKey, ready, historyIndex: current()?.index ?? null,
       phase: !panel ? 'room' : returning ? 'returning' : frameTransition ? 'revealing' : panelTransition || frameRevealWaiting ? 'entering' : ready ? 'project' : 'loading',
       reducedMotion: !!motion?.matches, transitionMs: TRANSITION_MS, frameRevealMs: FRAME_REVEAL_MS, returnMs: RETURN_MS }),
     dispose() {
-      disposed = true; showRoom(true);
+      disposed = true; stopCoverWatch(); showRoom(true);
       window.removeEventListener('message', message); window.removeEventListener('popstate', pop);
       motion?.removeEventListener('change', settleMotion);
       document.removeEventListener?.('visibilitychange', settleMotion);

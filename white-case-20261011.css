@@ -36,7 +36,15 @@
 .case-3d-controls select { background: #fff; border-color: #bdc6ce; color: var(--ink); }
 .case-3d-controls button[aria-pressed=true] { background: #18232c; border-color: #18232c; color: #fff; }
 #case-3d-annotation { background: #fffffff0; border-color: var(--line); }
-#case-3d-progress { background: linear-gradient(to right, var(--accent) 0 var(--progress), #cbd2d8 var(--progress) 100%) center / 100% 4px no-repeat; }
+/* Free exploration uses the site's fine progress control (as the home cards):
+   a 2px track and an 8px dot on the input's full-height target. */
+#case-3d-progress { -webkit-appearance: none; appearance: none; background: transparent; accent-color: #6b7782; }
+#case-3d-progress::-webkit-slider-runnable-track { height: 2px; border: 0; border-radius: 2px; background: linear-gradient(to right, #6b7782 0 var(--progress, 0%), #dfe4e8 var(--progress, 0%) 100%); }
+#case-3d-progress::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 8px; height: 8px; margin-top: -3px; border: 0; border-radius: 50%; background: #6b7782; }
+#case-3d-progress::-moz-range-track { height: 2px; border: 0; border-radius: 2px; background: #dfe4e8; }
+#case-3d-progress::-moz-range-progress { height: 2px; border: 0; border-radius: 2px; background: #6b7782; }
+#case-3d-progress::-moz-range-thumb { width: 8px; height: 8px; border: 0; border-radius: 50%; background: #6b7782; }
+#case-3d-progress:focus-visible { outline: 2px solid #245cab; outline-offset: -2px; }
 .case-motion-story .motion-notes {
   border-left-color: #8b99a6;
   background: linear-gradient(110deg, #fffffff5, #ffffffe8 76%, #fff0);
@@ -53,6 +61,19 @@
 .motion-leader path { stroke: #50687b; }
 .motion-leader marker path { stroke: #38556b; }
 .motion-leader-target { fill: #fff; stroke: #38556b; }
+/* Drawn callouts (project-motion-story.js): an ink leader on a white knock-out,
+   drawn from its note to an ink dot on the part. The note itself is never
+   faded in. ?callouts=classic keeps the rules above. */
+.motion-leader-halo { display: none; }
+.case-motion-story.case-motion-story[data-callouts=drawn] .motion-leader { opacity: 1; transition: none; }
+.case-motion-story[data-callouts=drawn]:not([data-leader=in]) .motion-leader-live { visibility: hidden; }
+.case-motion-story[data-callouts=drawn] .motion-leader .motion-leader-halo { display: inline; fill: none; stroke: #fff; stroke-width: 5; stroke-opacity: .9; }
+.case-motion-story[data-callouts=drawn] .motion-leader .motion-leader-line { stroke: #505b66; stroke-width: 1; marker-end: none; }
+.case-motion-story[data-callouts=drawn] .motion-leader .motion-leader-target { fill: #111316; stroke: #fff; stroke-width: 3; paint-order: stroke; }
+.case-motion-story[data-callouts=drawn][data-notes-visible=true][data-anchor-visible=true] .motion-notes { transition: none; }
+/* The note travels between stages by transform, so a stage change never shifts layout. */
+.case-motion-story[data-callouts=drawn] .motion-notes { left: 0; top: 0; transform: translate(var(--label-x, 0), var(--label-y, 0)); }
+@media print { .motion-leader-ghost { display: none; } }
 .motion-step-buttons button { color: #68747f; }
 .motion-step-buttons button[aria-pressed=true] { color: #15232f; border-color: #15232f; }
 .motion-story-timeline input {

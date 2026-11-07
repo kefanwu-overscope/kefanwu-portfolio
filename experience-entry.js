@@ -9,4 +9,15 @@ function redirectProject() {
 }
 
 window.addEventListener('hashchange', redirectProject);
-if (!redirectProject()) await import('./experience.js?v=aesthetic-batch1-20261026');
+if (!redirectProject()) {
+  prefetchStartupDrawing();
+  await import('./experience.js?v=dtb-20261027');
+}
+
+// 2026-10-27 ("Drawn, then built", #5): the optional startup drawing downloads
+// alongside the room's modules (experience.js imports the same URL, so it is
+// fetched once); today's startup screen never asks for it.
+function prefetchStartupDrawing() {
+  if (document.documentElement.dataset.loader !== 'drawing') return;
+  import('./experience-loader-drawing.js?v=dtb-20261027').catch(() => {});
+}

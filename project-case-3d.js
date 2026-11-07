@@ -1,5 +1,5 @@
 import { renderPressureLegend } from './project-pressure-legend.js';
-import { projectMotionLabels } from './project-motion-labels.js?v=aesthetic-batch1-20261024';
+import { projectMotionLabels } from './project-motion-labels.js?v=dtb-20261027';
 import { projectMotionNotes } from './project-motion-notes.js?v=seat-truth-20261022';
 import { getStudioProject } from './studio-catalog.js?v=owner-facts-20261023';
 
@@ -70,6 +70,10 @@ function mount() {
   legend.hidden = true;
   viewport.after(controls, legend);
 
+  // A frame drawing (project-motion-arrival.js) owns a marked stage; the model
+  // waits behind it, undrawn, and swaps in when it ends.
+  listen(host, 'case-arrival-end', () => { inspector?.invalidate(); revealWhenDrawn(); });
+
   const find = (id) => host.querySelector(`#case-3d-${id}`);
   const play = find('play');
   const reverse = find('reverse');
@@ -91,6 +95,7 @@ function mount() {
   let suspended = false;
   let lightboxOpen = false;
   let inViewport = false;
+  let nearViewport = false;
   let modelLoaded = false;
   let modelDrawn = false;
   let modelState = 'loading';
@@ -152,6 +157,13 @@ function mount() {
   function canRender() {
     return !disposed && !suspended && !document.hidden && !lightboxOpen && inViewport;
   }
+  // The model also draws (on demand, only when its pose changes) while the
+  // stage is within a quarter viewport below the fold, where the motion story
+  // keeps tracking (project-motion-story.js TRACK_BELOW): a visitor scrolling
+  // back down to it finds the current stage already posed, never an old one.
+  function canDraw() {
+    return !disposed && !suspended && !document.hidden && !lightboxOpen && (inViewport || nearViewport);
+  }
 
   function updateControls() {
     const ready = modelState === 'ready' && modelLoaded;
@@ -198,10 +210,12 @@ function mount() {
 
   function revealWhenDrawn(attempts = 3) {
     if (revealFrame || modelDrawn || !modelLoaded || modelState !== 'ready' || !canRender()) return;
+    // The cover waits for a frame drawing on the stage to end.
+    if (viewport.dataset.arrival) return;
     const ticket = generation;
     revealFrame = requestAnimationFrame(() => {
       revealFrame = 0;
-      if (ticket !== generation || modelDrawn || modelState !== 'ready' || !canRender()) return;
+      if (ticket !== generation || modelDrawn || modelState !== 'ready' || !canRender() || viewport.dataset.arrival) return;
       const state = inspector?.getState();
       if (state?.key === key && state.renderedFrames >= minimumDrawnFrames) {
         // Never uncover an empty WebGL buffer just because a fetch completed.
@@ -239,6 +253,10 @@ function mount() {
       motionError = status.motionError === true;
       if (motionReady || motionError) motionRetryInFlight = false;
       updatePressureLegend(status.manifest);
+      // Ready behind a drawing: the status has nothing to say when the drawing ends.
+      if (viewport.dataset.arrival) statusBox.hidden = true;
+      // A print still waiting for its cover or layers gives way (project-motion-arrival.js).
+      host.dispatchEvent(new CustomEvent('case-model-ready'));
       revealWhenDrawn();
     } else {
       cancelReveal();
@@ -254,11 +272,10 @@ function mount() {
   }
 
   function syncActivity() {
-    inspector?.setActive(canRender());
-    if (canRender()) {
-      setProgress(progress);
-      revealWhenDrawn();
-    } else cancelReveal();
+    inspector?.setActive(canDraw());
+    if (canDraw()) setProgress(progress);
+    if (canRender()) revealWhenDrawn();
+    else cancelReveal();
   }
 
   function measureVisibility() {
@@ -285,7 +302,7 @@ function mount() {
     receiveStatus({ state: 'loading' });
     const current = () => ticket === generation && !disposed && !suspended;
     try {
-      const { createStudioInspector } = await import('./studio-inspector.js?v=aesthetic-batch1-20261024');
+      const { createStudioInspector } = await import('./studio-inspector.js?v=dtb-20261027');
       if (!current() || signal.aborted) return;
       inspector = createStudioInspector({
         canvas,
@@ -293,6 +310,9 @@ function mount() {
         backgroundColor: 0xffffff,
         // Match the re-framed AURA frames and covers shown on this page.
         derivativeFrames: true,
+        // Shader links must not stop what is on screen while the model loads (?warm=off: linked inside the first draw).
+        warmPrograms: !/[?&]warm=off(&|$)/.test(window.location?.search || ''),
+        holdDraw: () => Boolean(viewport.dataset.arrival),
         onFrame: ({ progress: applied }) => {
           if (!current() || !inspector || freeExploration) return;
           const steps = projectMotionNotes[key]?.steps || [];
@@ -402,11 +422,19 @@ function mount() {
     syncActivity();
   });
 
+  // A delivered batch lists every crossing since the last delivery, oldest first:
+  // the last entry is the stage's state now. No later callback corrects a stale read.
   const observer = new IntersectionObserver((entries) => {
-    inViewport = entries[0].isIntersecting && entries[0].intersectionRatio > 0;
+    const latest = entries[entries.length - 1];
+    inViewport = latest.isIntersecting && latest.intersectionRatio > 0;
     syncActivity();
   });
   observer.observe(viewport);
+  const nearObserver = new IntersectionObserver((entries) => {
+    nearViewport = entries[entries.length - 1].isIntersecting;
+    syncActivity();
+  }, { rootMargin: '0px 0px 25% 0px' });
+  nearObserver.observe(viewport);
 
   function suspendProject(persisted) {
     if (disposed) return;
@@ -431,6 +459,7 @@ function mount() {
       disposed = true;
       generation += 1;
       observer.disconnect();
+      nearObserver.disconnect();
       events.abort();
       inspector?.dispose();
       inspector = null;
@@ -453,7 +482,22 @@ function mount() {
   });
 
   measureVisibility();
-  void loadModel();
+  // The drawing is what the visitor sees first and the model is not shown before
+  // it ends, so the model's megabytes start once the drawing's layers are in, with
+  // or without a cover (or the drawing has been given up), and never hold the
+  // arrival back.
+  const heldBy = viewport.dataset.arrival;
+  if (heldBy && heldBy !== 'drawn' && !viewport.dataset.arrivalLayers) {
+    receiveStatus({ state: 'loading' });
+    const begin = () => {
+      watch.disconnect();
+      clearTimeout(timer);
+      if (!request && !disposed) void loadModel();
+    };
+    const watch = new MutationObserver(() => { if (viewport.dataset.arrival !== heldBy || viewport.dataset.arrivalLayers) begin(); });
+    const timer = setTimeout(begin, 1200);
+    watch.observe(viewport, { attributes: true, attributeFilter: ['data-arrival', 'data-arrival-layers'] });
+  } else void loadModel();
 }
 
 window.addEventListener('project-previews-ready', mount);

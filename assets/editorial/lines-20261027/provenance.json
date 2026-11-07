@@ -1,0 +1,528 @@
+{
+  "date": "2026-10-27",
+  "purpose": "Line drawings that register on each homepage card cover (frame 0), for the \"Drawn, then built\" card arrival.",
+  "renderer": "Three.js r185 project inspector (studio-inspector.js and its modules) from commit e42a05b49b44d563fb635b4994e68834ab6982fa, loaded as tools/white-studio/export.js loads a cover: 900x600 selection canvas, source camera reset, progress 0; AURA with its aura-reframe-20261022 framing. Tool: tools/card-lines/.",
+  "method": "Two geometry passes at 4800x3200 (4x the 1200 w cover) store view normals, part ids and 24-bit view depth. Lines between neighbouring pixels: model outline and depth steps #111316; seams between parts and folds of at least crease_deg #505b66. Each line is centred on its boundary at line_px output pixels (line_px_small below 1200 w), box-averaged to each width. No cover pixel is read to draw the lines. Transparent background; lossless WebP of coverage stored in alpha_levels steps (near-lossless).",
+  "registration": "The harness also re-encodes its own frame-0 render with the exporter settings (WebP q.94, 1800x1200). Byte-identical to the published cover: steering, brakeSim, scanner, javelin, materialTest, aura, seat, pool, lineFollower, formlabs, telecaster, education, ftc. Not byte-identical, same geometry and camera (zero phase-correlation shift; transmission or carbon-weave shading differs by at most 11 levels): vineRobot, carbonSeat.",
+  "defaults": {
+    "widths": [
+      1200,
+      600
+    ],
+    "crease_deg": 30.0,
+    "step_px": 1.0,
+    "line_px": {
+      "silhouette": 1.5,
+      "contour": 1.5,
+      "seam": 0.75,
+      "crease": 0.75,
+      "through": 0.75
+    },
+    "min_px": {
+      "silhouette": 0,
+      "contour": 6,
+      "seam": 6,
+      "crease": 8,
+      "through": 8
+    },
+    "seam_as": "seam",
+    "line_px_small": {
+      "silhouette": 1.25,
+      "contour": 1.0,
+      "seam": 0.6,
+      "crease": 0.6,
+      "through": 0.6
+    },
+    "alpha_levels": 32
+  },
+  "skipped": {
+    "ansysCfd": "Scientific image: Fluent pressure field and flow paths on the Javelin body (CFD plot, not traced)."
+  },
+  "projects": {
+    "steering": {
+      "sourceCover": "assets/editorial/white-20261022/steering-wide-1200.webp",
+      "sourceCover1800": "assets/editorial/white-20261011/steering-wide-1800.webp",
+      "sourceCover1800Sha256": "faaacf3dd653acc8a1711a158a6bffd07e28042a8e5bdf931f92f29d93cd9a0b",
+      "harnessCover": {
+        "webpBytesIdentical": true,
+        "pngMeanAbsDiff": 0.0683,
+        "pngMaxAbsDiff": 8,
+        "phaseCorrelationShiftPx": [
+          0,
+          0
+        ]
+      },
+      "settings": {},
+      "files": {
+        "1200": {
+          "src": "assets/editorial/lines-20261027/steering.webp",
+          "w": 1200,
+          "h": 800,
+          "bytes": 12358,
+          "sha256": "1b7fbe5b1b77ede1c99023761336afea39dd2dc80aeb2f550d3bca772ec2e210"
+        },
+        "600": {
+          "src": "assets/editorial/lines-20261027/steering-600.webp",
+          "w": 600,
+          "h": 400,
+          "bytes": 5860,
+          "sha256": "a37ac4e7d10c58ba7ca83ede8512a4a3635a996d70bcde4c06268c97d13ebb45"
+        }
+      }
+    },
+    "vineRobot": {
+      "sourceCover": "assets/editorial/white-20261022/vineRobot-wide-1200.webp",
+      "sourceCover1800": "assets/editorial/white-20261011/vineRobot-wide-1800.webp",
+      "sourceCover1800Sha256": "2d2d1e019851f510331ee0f44dc08e4ef21927624537bfb1d946e543d784efcd",
+      "harnessCover": {
+        "webpBytesIdentical": false,
+        "pngMeanAbsDiff": 0.1429,
+        "pngMaxAbsDiff": 11,
+        "phaseCorrelationShiftPx": [
+          0,
+          0
+        ]
+      },
+      "settings": {},
+      "files": {
+        "1200": {
+          "src": "assets/editorial/lines-20261027/vineRobot.webp",
+          "w": 1200,
+          "h": 800,
+          "bytes": 13828,
+          "sha256": "a25b835fdcd0fcb0110d1a96256f8a4d911a16734efe6130d082370f6c454934"
+        },
+        "600": {
+          "src": "assets/editorial/lines-20261027/vineRobot-600.webp",
+          "w": 600,
+          "h": 400,
+          "bytes": 7672,
+          "sha256": "d189d8871eb55024c2309d73e77259c60d2b1a76a01e34dccff318d60d829ead"
+        }
+      }
+    },
+    "brakeSim": {
+      "sourceCover": "assets/editorial/white-20261022/brakeSim-wide-1200.webp",
+      "sourceCover1800": "assets/editorial/white-20261011/brakeSim-wide-1800.webp",
+      "sourceCover1800Sha256": "df33e58609d2a750d539db80588591f37ecb7251f5b56ef5c9813b0ecc4843ac",
+      "harnessCover": {
+        "webpBytesIdentical": true,
+        "pngMeanAbsDiff": 0.2524,
+        "pngMaxAbsDiff": 11,
+        "phaseCorrelationShiftPx": [
+          0,
+          0
+        ]
+      },
+      "settings": {
+        "alpha_levels": 16
+      },
+      "note": "80 drilled holes, each with a far wall and a near edge: 16 coverage steps keep the file near 30 KB.",
+      "files": {
+        "1200": {
+          "src": "assets/editorial/lines-20261027/brakeSim.webp",
+          "w": 1200,
+          "h": 800,
+          "bytes": 28694,
+          "sha256": "9c8324c308a25d011966b309d86d731c178eeb37b841b38b1fcd64bae2f380d8"
+        },
+        "600": {
+          "src": "assets/editorial/lines-20261027/brakeSim-600.webp",
+          "w": 600,
+          "h": 400,
+          "bytes": 13716,
+          "sha256": "c2db83750a224f706a86b6447a4c604fff926de7e5823d822ca221825acc55e8"
+        }
+      }
+    },
+    "scanner": {
+      "sourceCover": "assets/editorial/scanner-color-20261024/scanner-wide-1200.webp",
+      "sourceCover1800": "assets/editorial/scanner-color-20261024/scanner-wide-1800.webp",
+      "sourceCover1800Sha256": "a9ab8642d1d6530dbaebc4fe1ec26a3a3908412d37731d09e98de14addf5a0b7",
+      "harnessCover": {
+        "webpBytesIdentical": true,
+        "pngMeanAbsDiff": 0.2293,
+        "pngMaxAbsDiff": 11,
+        "phaseCorrelationShiftPx": [
+          0,
+          0
+        ]
+      },
+      "settings": {},
+      "files": {
+        "1200": {
+          "src": "assets/editorial/lines-20261027/scanner.webp",
+          "w": 1200,
+          "h": 800,
+          "bytes": 26568,
+          "sha256": "2ed1a61b35b8e47fed07605a508c29f0bd98027b019ab76433e3283a1242eb5f"
+        },
+        "600": {
+          "src": "assets/editorial/lines-20261027/scanner-600.webp",
+          "w": 600,
+          "h": 400,
+          "bytes": 12828,
+          "sha256": "3321b11097675f9cdea68181cbd73785e7a21bb1c8f82118cff223fcfb71e1c4"
+        }
+      }
+    },
+    "javelin": {
+      "sourceCover": "assets/editorial/white-20261022/javelin-wide-1200.webp",
+      "sourceCover1800": "assets/editorial/white-20261011/javelin-wide-1800.webp",
+      "sourceCover1800Sha256": "34aa1d776c32b22f05f564b9c456ccc4bea53db0c5d55133b134c22538fdf54b",
+      "harnessCover": {
+        "webpBytesIdentical": true,
+        "pngMeanAbsDiff": 0.0791,
+        "pngMaxAbsDiff": 8,
+        "phaseCorrelationShiftPx": [
+          0,
+          0
+        ]
+      },
+      "settings": {},
+      "files": {
+        "1200": {
+          "src": "assets/editorial/lines-20261027/javelin.webp",
+          "w": 1200,
+          "h": 800,
+          "bytes": 14346,
+          "sha256": "c9e824e05a24b16f1320bf3896446103e2ff4a1f55c91dbfce844a5601db854b"
+        },
+        "600": {
+          "src": "assets/editorial/lines-20261027/javelin-600.webp",
+          "w": 600,
+          "h": 400,
+          "bytes": 6198,
+          "sha256": "0b28f45f849df6c63d5f90d4852eb575f411b226bec193f83fc8e735525f9739"
+        }
+      }
+    },
+    "materialTest": {
+      "sourceCover": "assets/editorial/white-20261022/materialTest-wide-1200.webp",
+      "sourceCover1800": "assets/editorial/white-20261011/materialTest-wide-1800.webp",
+      "sourceCover1800Sha256": "77d55b1143824fba0e9dab0d5917f396ac7c8bd6089d64a2273148702a92f896",
+      "harnessCover": {
+        "webpBytesIdentical": true,
+        "pngMeanAbsDiff": 0.1204,
+        "pngMaxAbsDiff": 9,
+        "phaseCorrelationShiftPx": [
+          0,
+          0
+        ]
+      },
+      "settings": {
+        "quiet": [
+          "^MaterialTest_collar_knurl"
+        ]
+      },
+      "note": "Knurled collars: thin folds.",
+      "files": {
+        "1200": {
+          "src": "assets/editorial/lines-20261027/materialTest.webp",
+          "w": 1200,
+          "h": 800,
+          "bytes": 12082,
+          "sha256": "162f0a0419bd05a09f7ad481ba4ad81430ae9269880c818b14e5f0b6fd03fef4"
+        },
+        "600": {
+          "src": "assets/editorial/lines-20261027/materialTest-600.webp",
+          "w": 600,
+          "h": 400,
+          "bytes": 5768,
+          "sha256": "c795fc816ef76076765c5cddaeb2e9bf71b0936650d10825d4d45acdc00704d3"
+        }
+      }
+    },
+    "aura": {
+      "sourceCover": "assets/editorial/aura-reframe-20261022/aura-wide-1200.webp",
+      "sourceCover1800": "assets/editorial/aura-reframe-20261022/aura-wide-1800.webp",
+      "sourceCover1800Sha256": "01174a4814d470751f4ec15fd032e72228f586ceb1129477ed77c8d74ee0c47e",
+      "harnessCover": {
+        "webpBytesIdentical": true,
+        "pngMeanAbsDiff": 0.0905,
+        "pngMaxAbsDiff": 9,
+        "phaseCorrelationShiftPx": [
+          0,
+          0
+        ]
+      },
+      "settings": {},
+      "files": {
+        "1200": {
+          "src": "assets/editorial/lines-20261027/aura.webp",
+          "w": 1200,
+          "h": 800,
+          "bytes": 13840,
+          "sha256": "d075460189ed183a0d934737afe4f8a9563af0a0b1ec3f992d796ab7accea68f"
+        },
+        "600": {
+          "src": "assets/editorial/lines-20261027/aura-600.webp",
+          "w": 600,
+          "h": 400,
+          "bytes": 6532,
+          "sha256": "19d8c1d6b56e19c6ca437f1fb2a7d533a8ec0e7442c2c61b6e2c727a24b3cfc8"
+        }
+      }
+    },
+    "carbonSeat": {
+      "sourceCover": "assets/editorial/white-20261022/carbonSeat-wide-1200.webp",
+      "sourceCover1800": "assets/editorial/white-20261011/carbonSeat-wide-1800.webp",
+      "sourceCover1800Sha256": "f71ff7f82f3d3f6940d8dd8a37dd22f098e158dd75b796c1e21c7ea18c496c17",
+      "harnessCover": {
+        "webpBytesIdentical": false,
+        "pngMeanAbsDiff": 0.1676,
+        "pngMaxAbsDiff": 8,
+        "phaseCorrelationShiftPx": [
+          0,
+          0
+        ]
+      },
+      "settings": {},
+      "files": {
+        "1200": {
+          "src": "assets/editorial/lines-20261027/carbonSeat.webp",
+          "w": 1200,
+          "h": 800,
+          "bytes": 8778,
+          "sha256": "06852f3e1e8601cdc7706c1bb59513ca524427a793626c51ebb82846ea7e7a91"
+        },
+        "600": {
+          "src": "assets/editorial/lines-20261027/carbonSeat-600.webp",
+          "w": 600,
+          "h": 400,
+          "bytes": 3898,
+          "sha256": "fcbf6bdd12cdf7f5e51f07f8e4bac6b89f287152c336f2b7bb19c0b5431c6100"
+        }
+      }
+    },
+    "seat": {
+      "sourceCover": "assets/editorial/white-20261022/seat-wide-1200.webp",
+      "sourceCover1800": "assets/editorial/white-20261011/seat-wide-1800.webp",
+      "sourceCover1800Sha256": "ca529c8e9c20faacf5658ac8085a740070c1f7c5828cc9a369917ddb228de3a8",
+      "harnessCover": {
+        "webpBytesIdentical": true,
+        "pngMeanAbsDiff": 0.0776,
+        "pngMaxAbsDiff": 11,
+        "phaseCorrelationShiftPx": [
+          0,
+          0
+        ]
+      },
+      "settings": {},
+      "files": {
+        "1200": {
+          "src": "assets/editorial/lines-20261027/seat.webp",
+          "w": 1200,
+          "h": 800,
+          "bytes": 11600,
+          "sha256": "415565adf8bd1341431326a1fcf49aae189f4ffe16916a4ef25a50213110aa0e"
+        },
+        "600": {
+          "src": "assets/editorial/lines-20261027/seat-600.webp",
+          "w": 600,
+          "h": 400,
+          "bytes": 6222,
+          "sha256": "ceaaf3ab2376a733fa2c777ec64accc731b4cdb9966be7fa0bd733fa22450735"
+        }
+      }
+    },
+    "pool": {
+      "sourceCover": "assets/editorial/white-20261022/pool-wide-1200.webp",
+      "sourceCover1800": "assets/editorial/white-20261011/pool-wide-1800.webp",
+      "sourceCover1800Sha256": "80003fdd34449bb0ddcdd19eca1592b4beb49e5d521854452417684066cba970",
+      "harnessCover": {
+        "webpBytesIdentical": true,
+        "pngMeanAbsDiff": 0.1759,
+        "pngMaxAbsDiff": 9,
+        "phaseCorrelationShiftPx": [
+          0,
+          0
+        ]
+      },
+      "settings": {},
+      "files": {
+        "1200": {
+          "src": "assets/editorial/lines-20261027/pool.webp",
+          "w": 1200,
+          "h": 800,
+          "bytes": 16014,
+          "sha256": "265b6c3ab57c6d2f6ac7882870a3276ed1c6b61be95ed5a96192ba7de2f5f479"
+        },
+        "600": {
+          "src": "assets/editorial/lines-20261027/pool-600.webp",
+          "w": 600,
+          "h": 400,
+          "bytes": 8396,
+          "sha256": "bb6df18c0ed78417da04e0138595debb24edbadcf091421a5f66e96d0feb57ac"
+        }
+      }
+    },
+    "lineFollower": {
+      "sourceCover": "assets/editorial/white-20261022/lineFollower-wide-1200.webp",
+      "sourceCover1800": "assets/editorial/white-20261011/lineFollower-wide-1800.webp",
+      "sourceCover1800Sha256": "bda02183cadac6b069d5dc5d0fe62a35d61068799c86eab4dd7c570caf9c4b5f",
+      "harnessCover": {
+        "webpBytesIdentical": true,
+        "pngMeanAbsDiff": 0.2042,
+        "pngMaxAbsDiff": 15,
+        "phaseCorrelationShiftPx": [
+          0,
+          0
+        ]
+      },
+      "settings": {
+        "quiet": [
+          "^mat_rubber_orange_part_"
+        ],
+        "alpha_levels": 16
+      },
+      "note": "Knurled tyre tread: its own ridge steps are thin folds, so the tyres read as tyres without a dark hatch; 16 coverage steps keep the file under 30 KB.",
+      "files": {
+        "1200": {
+          "src": "assets/editorial/lines-20261027/lineFollower.webp",
+          "w": 1200,
+          "h": 800,
+          "bytes": 29094,
+          "sha256": "3c8c82bdaf0491c7a260e575234b9f802936b3cb8793d77a3fe5ee4dfa169d8b"
+        },
+        "600": {
+          "src": "assets/editorial/lines-20261027/lineFollower-600.webp",
+          "w": 600,
+          "h": 400,
+          "bytes": 12010,
+          "sha256": "9a02cf6cca95ea8c27e2a009ed1a2a70c38c14136a36d42189a9c4b7b3173352"
+        }
+      }
+    },
+    "formlabs": {
+      "sourceCover": "assets/editorial/white-20261022/formlabs-wide-1200.webp",
+      "sourceCover1800": "assets/editorial/white-20261011/formlabs-wide-1800.webp",
+      "sourceCover1800Sha256": "f3012d350f398841656dc3b2a5b2c0eb3ae4e6a9cafee604b5c7a5700e88c33a",
+      "harnessCover": {
+        "webpBytesIdentical": true,
+        "pngMeanAbsDiff": 0.1701,
+        "pngMaxAbsDiff": 9,
+        "phaseCorrelationShiftPx": [
+          0,
+          0
+        ]
+      },
+      "settings": {
+        "quiet": [
+          "^mat_steel_part_4 ",
+          "^mat_steel_part_5 "
+        ]
+      },
+      "note": "Lead-screw threads: thin folds instead of a solid dark bar.",
+      "files": {
+        "1200": {
+          "src": "assets/editorial/lines-20261027/formlabs.webp",
+          "w": 1200,
+          "h": 800,
+          "bytes": 23312,
+          "sha256": "9b08a092188ec284636aacfc22dd2b622beb3df9fa516c8a00da06faf071a131"
+        },
+        "600": {
+          "src": "assets/editorial/lines-20261027/formlabs-600.webp",
+          "w": 600,
+          "h": 400,
+          "bytes": 10760,
+          "sha256": "6c3b232ab44b8b6a44ed1adea3d07f5b6dc158573d0a0a80a340711857eb9d52"
+        }
+      }
+    },
+    "telecaster": {
+      "sourceCover": "assets/editorial/white-20261022/telecaster-wide-1200.webp",
+      "sourceCover1800": "assets/editorial/white-20261011/telecaster-wide-1800.webp",
+      "sourceCover1800Sha256": "55ea248c3f8f02d14450adc39e106d47208402929a8116e90ed3aa9284040b1c",
+      "harnessCover": {
+        "webpBytesIdentical": true,
+        "pngMeanAbsDiff": 0.0695,
+        "pngMaxAbsDiff": 20,
+        "phaseCorrelationShiftPx": [
+          0,
+          0
+        ]
+      },
+      "settings": {},
+      "files": {
+        "1200": {
+          "src": "assets/editorial/lines-20261027/telecaster.webp",
+          "w": 1200,
+          "h": 800,
+          "bytes": 9720,
+          "sha256": "17e6850641a0a1df79240d640950636b713a2517bff7b82abee13aa119f2107d"
+        },
+        "600": {
+          "src": "assets/editorial/lines-20261027/telecaster-600.webp",
+          "w": 600,
+          "h": 400,
+          "bytes": 4520,
+          "sha256": "fd91fc8e72524b1e64d821d29b58da4dd4a49b2626e30cf296a302a61f1a1566"
+        }
+      }
+    },
+    "education": {
+      "sourceCover": "assets/editorial/white-20261022/education-wide-1200.webp",
+      "sourceCover1800": "assets/editorial/white-20261011/education-wide-1800.webp",
+      "sourceCover1800Sha256": "39802da7f47b84d608caf5cc0153c29e50b161ea74e9d87615b23a0c43d17723",
+      "harnessCover": {
+        "webpBytesIdentical": true,
+        "pngMeanAbsDiff": 0.0672,
+        "pngMaxAbsDiff": 9,
+        "phaseCorrelationShiftPx": [
+          0,
+          0
+        ]
+      },
+      "settings": {},
+      "files": {
+        "1200": {
+          "src": "assets/editorial/lines-20261027/education.webp",
+          "w": 1200,
+          "h": 800,
+          "bytes": 9540,
+          "sha256": "aceb274fa393384d55ae3c0e9752288d8907d8726b26ceb161ccc4e2e697f68e"
+        },
+        "600": {
+          "src": "assets/editorial/lines-20261027/education-600.webp",
+          "w": 600,
+          "h": 400,
+          "bytes": 4700,
+          "sha256": "26015985abd96facf80169d384ce47321f7855c6c2faeb090ad3db4e034d5360"
+        }
+      }
+    },
+    "ftc": {
+      "sourceCover": "assets/editorial/white-20261022/ftc-wide-1200.webp",
+      "sourceCover1800": "assets/editorial/white-20261011/ftc-wide-1800.webp",
+      "sourceCover1800Sha256": "b3b02785c4f6452b9d480c2448d63b38ee51d2d29cd580507c49495057bac87a",
+      "harnessCover": {
+        "webpBytesIdentical": true,
+        "pngMeanAbsDiff": 0.1114,
+        "pngMaxAbsDiff": 18,
+        "phaseCorrelationShiftPx": [
+          0,
+          0
+        ]
+      },
+      "settings": {},
+      "files": {
+        "1200": {
+          "src": "assets/editorial/lines-20261027/ftc.webp",
+          "w": 1200,
+          "h": 800,
+          "bytes": 23492,
+          "sha256": "d0043003b22af1c5bf0756fa4e1fb54d77993bd6ce67c895fae7800b41b15b92"
+        },
+        "600": {
+          "src": "assets/editorial/lines-20261027/ftc-600.webp",
+          "w": 600,
+          "h": 400,
+          "bytes": 11164,
+          "sha256": "ed25ebf97b0cd9529013314278184e7a8ce96af46dd7d88c8181ac8b85a15a76"
+        }
+      }
+    }
+  }
+}

@@ -182,6 +182,8 @@ async function render(key, { studio = false, hash = '', embedded = false, legacy
   document.innerHTML = pages[page]; document.body = document.querySelector('body');
   document.getElementById = id => document.querySelectorAll('[id]').find(node => node.id === id) || null;
   document.createElement = tag => new Element(tag, document);
+  // case-study.js reads documentElement.dataset.vtEntry (page-transitions-20261027.js marks a card-morph arrival).
+  document.documentElement = document.querySelector('html') || new Element('html', document);
   const window = new EventHost(); const messages = [], frames = new Map(), timers = new Map(), historyChanges = [];
   window.scrollY = 0; window.innerHeight = 900; window.innerWidth = 1280; window.location = location;
   window.scrollTo = options => { window.scrollY = options.top; };
@@ -195,6 +197,10 @@ async function render(key, { studio = false, hash = '', embedded = false, legacy
   let handle = 0;
   const context = vm.createContext({ window, document, location, history, console, URL, URLSearchParams, AbortController,
     innerHeight: 900, innerWidth: 1280, HTMLElement: Element, HTMLImageElement: Element,
+    // Minimal stubs for the drawn arrival (case-study.js): a clock and Element.prototype.animate feature detection.
+    performance: { now: () => 0 },
+    Element: class { animate() { return { finished: Promise.resolve(), cancel() {}, updatePlaybackRate() {} }; } },
+    IntersectionObserver: class { observe() {} unobserve() {} disconnect() {} },
     Event: class { constructor(type) { this.type = type; } },
     CustomEvent: class { constructor(type, options = {}) { this.type = type; Object.assign(this, options); } },
     Image: class extends Element { constructor() { super('img', document); } },
@@ -274,6 +280,14 @@ await check('Original cover catalog and tracked model / scientific-image / anima
     // 2026-10-24: scanner recolour pilot repoints its studio-motion source manifest
     // and the room catalogue to the recoloured scanner exhibit.
     ['assets/studio-motion/index.json', 'models/room-current/index.json'].includes(name) ||
+    // 2026-10-24 (e42a05b4): scanner recolour assets, the manifests that read them and the recoloured exhibit.
+    ['assets/exploded/manifest-white-20261024.json', 'assets/exploded/manifest-detail-white-20261024.json',
+      'models/room-current/scanner.fa233fb3c1c58551.glb.gz'].includes(name) ||
+    ['assets/exploded/scanner-color-20261024/', 'assets/editorial/scanner-color-20261024/',
+      'assets/studio-motion/scanner-color-20261024/'].some(prefix => name.startsWith(prefix)) ||
+    // 2026-10-27 "Drawn, then built": new dated line-drawing and callout assets.
+    ['assets/hero-drawing-20261027/', 'assets/editorial/lines-20261027/', 'assets/detail-drawing-20261027/',
+      'assets/detail-callouts-20261028/'].some(prefix => name.startsWith(prefix)) ||
     ['assets/editorial/white-20261022/', 'assets/method-20261022/', 'assets/og/', 'assets/hero-fsae-context-20261022/',
       'assets/studio-teaser-20261022/', 'models/baked/lowtier-20261022/',
       'assets/exploded/aura-reframe-20261022/', 'assets/editorial/aura-reframe-20261022/'].some(prefix => name.startsWith(prefix));
@@ -407,6 +421,56 @@ await check('Archive links, initial deep links, hash changes, and retained-studi
   assert.equal(h.history.state.retained, 'state');
   const legacy = await render('steering', { studio: true, legacy: true });
   assert.equal(legacy.location.searchParams.get('project'), 'steering'); assert.equal(legacy.location.hash, '');
+});
+
+await check('The page continuity bootstrap is identical on all three pages, filters only the aborted-transition rejection and skips the transition on a slow connection', async () => {
+  const filter = 'addEventListener("unhandledrejection",function(e){var r=e.reason;if(r&&r.name==="InvalidStateError"&&/^Transition was aborted/.test(r.message||""))e.preventDefault();});';
+  const boots = await Promise.all(['index.html', 'case-study.html', 'project-3d.html'].map(async (name) => {
+    const html = await read(name);
+    const lines = html.split('\n');
+    const boot = lines.find((line) => line.includes('w.__vtBoot='))?.trim();
+    assert(boot, `${name} has the inline bootstrap`);
+    assert(boot.startsWith('<script>(function(){var d=document,'), `${name}: the bootstrap has its expected start`);
+    assert(!boot.includes('unhandledrejection'), `${name}: the filter is not left in the bootstrap`);
+    const charset = lines.findIndex((line) => line.includes('<meta charset='));
+    assert.equal(lines[charset + 1].trim(), `<script id="kw-vt-filter">${filter}</script>`, `${name}: the filter comes right after <meta charset>`);
+    assert.equal(html.indexOf('<script'), html.indexOf('<script id="kw-vt-filter">'), `${name}: the filter is the first script`);
+    assert(Buffer.byteLength(html.slice(0, html.indexOf(filter) + filter.length)) < 300, `${name}: the filter ends in the first 300 bytes`);
+    return boot;
+  }));
+  assert.equal(new Set(boots).size, 1, 'head-block.cjs generates one bootstrap for all three pages');
+  // The pageswap decision, run for real: only the destination and the connection decide it.
+  const code = boots[0].slice('<script>'.length, -'</script>'.length);
+  const leave = (connection, to = 'https://x.test/case-study.html?project=scanner') => {
+    const listeners = {}; const element = { remove() {}, isConnected: false };
+    const window = { sessionStorage: { getItem: () => null, removeItem() {} }, CSSViewTransitionRule() {}, onpagereveal: null, onpageswap: null, addEventListener: (type, fn) => { (listeners[type] ||= []).push(fn); } };
+    window.top = window;
+    const context = {
+      window,
+      document: { getElementById: () => element, readyState: 'loading', addEventListener() {}, documentElement: {}, head: { appendChild() {} }, createElement: () => ({}) },
+      navigator: connection ? { connection } : {},
+      location: { href: 'https://x.test/index.html', origin: 'https://x.test', pathname: '/index.html', search: '' },
+      performance: { now: () => 0, getEntriesByType: () => [] },
+      URL, JSON, innerWidth: 1440, innerHeight: 900, setTimeout() {}, MutationObserver: class { observe() {} disconnect() {} },
+    };
+    vm.runInNewContext(code, context);
+    let skipped = false;
+    const done = Promise.resolve();
+    listeners.pageswap[0]({ viewTransition: { ready: done, finished: done, updateCallbackDone: done, skipTransition() { skipped = true; } }, activation: { entry: { url: to } } });
+    return { skipped, slow: window.__vtBoot.slow };
+  };
+  for (const connection of [undefined, { effectiveType: '4g', downlink: 10 }, { effectiveType: '4g', downlink: 1.65 }, { effectiveType: '4g', downlink: 0.7 }, { effectiveType: '4g', downlink: 0 }, { effectiveType: '4g' }]) {
+    assert.equal(leave(connection).skipped, false, `a transition stays on ${JSON.stringify(connection)}`);
+  }
+  for (const connection of [{ effectiveType: '3g', downlink: 5 }, { effectiveType: '2g', downlink: 10 }, { effectiveType: 'slow-2g' }, { effectiveType: '4g', downlink: 0.4 }, { effectiveType: '4g', downlink: 0.65 }]) {
+    assert.deepEqual(leave(connection), { skipped: true, slow: true }, `a transition is skipped on ${JSON.stringify(connection)}`);
+  }
+  for (const to of ['https://x.test/experience.html', 'https://x.test/404.html', 'https://x.test/assets/kefan-wu-resume.pdf', 'https://x.test/case-study.html?project=scanner&vt=off', 'https://y.test/index.html']) {
+    assert.deepEqual(leave({ effectiveType: '4g', downlink: 10 }, to), { skipped: true, slow: false }, `no transition to ${to}, and not for a slow connection`);
+  }
+  for (const to of ['https://x.test/', 'https://x.test/index.html#project-scanner', 'https://x.test/project-3d.html?project=scanner']) {
+    assert.equal(leave({ effectiveType: '4g', downlink: 10 }, to).skipped, false, `a transition stays to ${to}`);
+  }
 });
 
 console.log(`Passed ${checks} readability groups: 16 projects, 64 verbatim chapter archives, both page modes, 100 gallery references, and native / retained navigation. CSS geometry requires the separate browser checks.`);

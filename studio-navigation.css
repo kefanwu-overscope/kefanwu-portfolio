@@ -44,7 +44,8 @@ body.studio-project-covered > :not(.studio-project-page) { visibility: hidden !i
   cursor: pointer;
 }
 .studio-project-loading button:hover { background: #f2f5f7; border-color: #68747f; }
-.studio-project-loading button:focus-visible { outline: 2px solid #436f95; outline-offset: 3px; }
+/* Ink on white, as on the detail pages' white chrome (2026-10-28, #13). */
+.studio-project-loading button:focus-visible { outline: 2px solid #111316; outline-offset: 3px; }
 .studio-project-loading p { margin-top: 28px; color: #60666d; }
 .studio-project-page.has-error .studio-project-loading { animation: none; opacity: 1; }
 .studio-project-page.is-ready .studio-project-loading { display: none; }

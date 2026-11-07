@@ -66,17 +66,78 @@ function whenProgramsLinked(renderer, programs) {
 
 const programsSince = (renderer, existing) => renderer.info.programs.filter((program) => !existing.has(program));
 
+// 2026-10-27 ("Drawn, then built", studio startup): reports how many of the
+// programs submitted so far by this warmup (scene, override and post-processing
+// groups alike; the total grows as each group is submitted) have finished
+// compiling and linking, so the startup screen can show real progress through
+// the longest wait. It issues no GL queries of its own: it observes the
+// completion checks three (compileAsync) and whenProgramsLinked already make,
+// by wrapping each new program's isReady() until tracking stops. New programs
+// are adopted every 100 ms; the counts are reported at most twice a second
+// (2026-10-28, F29: the startup screen repaints for them no more often). A
+// program counts once a check has seen it complete (or once it is released).
+const ADOPT_MS = 100, REPORT_MS = 500;
+function trackLinks(submitted, onProgress) {
+  const watched = new Map(); // program -> { original, ready }
+  let linked = 0, total = 0, reported = "", timer = 0, stopped = false, reportedAt = -Infinity;
+  const adopt = () => {
+    for (const program of submitted()) {
+      if (watched.has(program)) continue;
+      const entry = { original: program.isReady, ready: program.usedTimes === 0 };
+      watched.set(program, entry);
+      total++;
+      if (entry.ready) { linked++; continue; }
+      program.isReady = function isReadyObserved() {
+        const ready = entry.original.call(this);
+        if (ready && !entry.ready) { entry.ready = true; linked++; }
+        return ready;
+      };
+    }
+  };
+  const report = (force = false) => {
+    const key = `${linked}/${total}`;
+    if (key === reported) return;
+    const now = performance.now();
+    if (!force && now - reportedAt < REPORT_MS) return;
+    reported = key;
+    reportedAt = now;
+    try { onProgress(linked, total); } catch (error) { console.warn("[experience] link progress listener failed", error); }
+  };
+  const tick = () => {
+    timer = 0;
+    if (stopped) return;
+    adopt();
+    report();
+    timer = setTimeout(tick, ADOPT_MS);
+  };
+  tick();
+  // final: one last report once the caller has awaited every link.
+  return (final = false) => {
+    if (stopped) return;
+    if (final) {
+      adopt();
+      for (const [program, entry] of watched) if (!entry.ready && program.usedTimes === 0) { entry.ready = true; linked++; }
+      report(true);
+    }
+    stopped = true;
+    clearTimeout(timer);
+    for (const [program, entry] of watched) if (program.isReady !== entry.original) program.isReady = entry.original;
+  };
+}
+
 // Match the composer's render targets: compiling against the screen creates
 // sRGB/tone-mapped scene programs that cannot be reused by its linear passes.
-export async function prepareRoomShaders(renderer, scene, camera, composer, { gtao, bokeh } = {}) {
+export async function prepareRoomShaders(renderer, scene, camera, composer, { gtao, bokeh, onProgress = null } = {}) {
   if (!renderer.compileAsync) return;
   const previousTarget = renderer.getRenderTarget();
   const quad = new THREE.PlaneGeometry(2, 2);
   const existing = new Set(renderer.info.programs);
+  let stopTracking = null;
   try {
     renderer.setRenderTarget(composer.readBuffer);
     const scenePrograms = renderer.compileAsync(scene, camera);
     compileTransmissionBackfaces(renderer, scene, camera, null);
+    if (onProgress) stopTracking = trackLinks(() => programsSince(renderer, existing), onProgress);
     await scenePrograms;
 
     const overrides = [gtao?.normalMaterial, bokeh?._materialDepth].filter(Boolean);
@@ -114,11 +175,14 @@ export async function prepareRoomShaders(renderer, scene, camera, composer, { gt
       await compiled;
     }
     await whenProgramsLinked(renderer, programsSince(renderer, existing));
+    stopTracking?.(true);
   } finally {
+    stopTracking?.();
     renderer.setRenderTarget(previousTarget);
     quad.dispose();
   }
 }
+
 
 // 2026-10-24: one loaded root that is not in the room yet (a deferred prop).
 // Its own programs and its GTAO/Bokeh override variants are compiled against

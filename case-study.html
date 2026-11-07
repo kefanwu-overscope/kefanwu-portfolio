@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <script id="kw-vt-filter">addEventListener("unhandledrejection",function(e){var r=e.reason;if(r&&r.name==="InvalidStateError"&&/^Transition was aborted/.test(r.message||""))e.preventDefault();});</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ffffff">
   <meta name="description" content="Explore sixteen engineering projects by Kefan Wu, with interactive model animations, project photographs, and technical records.">
@@ -17,22 +18,47 @@
   <title>Selected engineering work — Kefan Wu</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="assets/favicon_custom.png" sizes="any">
+  <!-- Page continuity: cross-document view transitions with the card <-> stage morph, and detail-page prefetch (page-transitions-20261027.js). The bootstrap below runs before the first frame: it drops this style when transitions are off (?vt=off, the studio's iframe, no browser support), removes the inert render-blocking #kw-vt-hold (after this page's own deferred scripts) unless a card morph or a return to the homepage needs its far end built (1 s at most), and loads the runtime: at once on such a held page, otherwise after the load event. Leaving for a page without the opt-in (the studio, 404, the PDF, ?vt=off), or on a slow connection, it skips the transition. -->
+  <style id="kw-vt-style">
+  @media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }
+  @keyframes kw-vt-out { to { opacity: 0; } }
+  @keyframes kw-vt-in { from { opacity: 0; } }
+  ::view-transition-group(root) { animation-duration: 240ms; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  ::view-transition-image-pair(root) { isolation: auto; }
+  ::view-transition-old(root) { mix-blend-mode: normal; animation: 160ms cubic-bezier(.65,0,.35,1) both kw-vt-out; }
+  ::view-transition-new(root) { mix-blend-mode: normal; animation: 160ms cubic-bezier(.65,0,.35,1) 80ms both kw-vt-in; }
+  ::view-transition-group(kw-morph) { animation-duration: 400ms; animation-timing-function: cubic-bezier(.65,0,.35,1); mix-blend-mode: multiply; }
+  ::view-transition-old(kw-morph), ::view-transition-new(kw-morph) { height: 100%; animation-timing-function: cubic-bezier(.65,0,.35,1); }
+  html[data-vt-morph=to-stage]::view-transition-old(kw-morph), html[data-vt-morph=to-card]::view-transition-new(kw-morph) { object-fit: contain; }
+  html[data-vt-morph=to-stage]::view-transition-new(kw-morph), html[data-vt-morph=to-card]::view-transition-old(kw-morph) { object-fit: cover; }
+  html[data-vt-morph=none]::view-transition-group(kw-morph) { animation-duration: 240ms; }
+  html:not([data-vt-morph=to-stage]):not([data-vt-morph=to-card])::view-transition-old(kw-morph) { animation: 160ms cubic-bezier(.65,0,.35,1) both kw-vt-out; }
+  html:not([data-vt-morph=to-stage]):not([data-vt-morph=to-card])::view-transition-new(kw-morph) { animation: 160ms cubic-bezier(.65,0,.35,1) 80ms both kw-vt-in; }
+  [data-vt-named] .card-explode-ui { visibility: hidden !important; }
+  html[data-vt-entry=morph] .case-animation-host > .card-media[data-arrival] > img { animation: none !important; opacity: 1 !important; }
+  html[data-vt-entry=morph] .case-animation-host .case-drawing { display: none !important; }
+  </style>
+  <script>(function(){var d=document,w=window,c=d.getElementById("kw-vt-style"),b=w.__vtBoot={on:false,hold:"",reason:"",t0:performance.now()};try{var q=location.search,p=location.pathname,home=p.slice(-1)==="/"||p.slice(-11)==="/index.html";if(w.top!==w)b.reason="framed";else if(/[?&]vt=off(&|$)/.test(q))b.reason="kill-switch";else if(!w.CSSViewTransitionRule||!("onpagereveal" in w)||!("onpageswap" in w))b.reason="unsupported";else{b.on=true;var s=w.sessionStorage,f=JSON.parse(s.getItem("kw-vt")||"null"),e=w.navigation&&navigation.currentEntry,n=performance.getEntriesByType("navigation")[0];if(f&&f.to===location.origin+p+q&&Date.now()-f.at<15000&&!(n&&n.type==="reload")){if(f.dir==="to-stage"&&!home&&innerWidth/innerHeight>.8)b.hold="stage";else if((f.dir==="to-card"||f.dir==="crossfade")&&home)b.hold="parsed";}else if(home&&n&&n.type==="back_forward"&&e&&s.getItem("kw-vt-y:"+e.key)!==null)b.hold="parsed";}}catch(x){b.reason=b.reason||"error";}if(!b.on&&c)c.remove();if(b.on)w.addEventListener("pageswap",function(e){var v=e.viewTransition,u=null,n=navigator.connection,o;if(!v)return;try{u=new URL(e.activation.entry.url,location.href);}catch(x){u=null;}o=n&&(/^(slow-2g|2g|3g)$/.test(n.effectiveType||"")||n.downlink>0&&n.downlink<.7);if(!o&&u&&u.origin===location.origin&&/^\/(index\.html|case-study\.html|project-3d\.html)?$/.test(u.pathname)&&!/[?&]vt=off(&|$)/.test(u.search))return;b.skipped=e;b.slow=!!o;[v.ready,v.finished,v.updateCallbackDone].forEach(function(p){if(p)p.catch(function(){});});v.skipTransition();},true);function L(e){if(b.load)return;b.load=e?"early":"late";var s=d.createElement("script");s.src="page-transitions-20261027.js?v=dtb-20261027";s.async=true;s.fetchPriority=e?"high":"low";d.head.appendChild(s);}if(b.reason!=="framed"){if(b.hold)L(true);else if(d.readyState==="complete")L(false);else{w.addEventListener("load",function(){L(false);},{once:true});setTimeout(function(){L(false);},5000);}}function g(h){if(!b.hold)h.remove();else setTimeout(function(){if(h.isConnected){h.remove();b.capped=true;try{w.sessionStorage.removeItem("kw-vt");}catch(x){}}},1000);}var h=d.getElementById("kw-vt-hold");if(h)g(h);else{var m=new MutationObserver(function(){var x=d.getElementById("kw-vt-hold");if(x){m.disconnect();g(x);}});m.observe(d.documentElement,{childList:true,subtree:true});d.addEventListener("DOMContentLoaded",function(){m.disconnect();},{once:true});}})();</script>
   <link rel="stylesheet" href="fonts.css?v=studio-polish-20260907">
   <link rel="stylesheet" href="exploded.css?v=media-polish-20261022">
-  <link rel="stylesheet" href="case-study.css?v=case-reading-20261022">
-  <link rel="stylesheet" href="project-case-3d.css?v=shared-case-20261022">
-  <link rel="stylesheet" href="project-motion-story.css?v=brake-dr-20261022">
-  <link rel="stylesheet" href="white-case-20261011.css?v=white-20261022">
+  <link rel="stylesheet" href="case-study.css?v=dtb-20261027">
+  <link rel="stylesheet" href="project-case-3d.css?v=dtb-20261027">
+  <link rel="stylesheet" href="project-motion-story.css?v=dtb-20261027">
+  <link rel="stylesheet" href="white-case-20261011.css?v=dtb-20261027">
+  <!-- The cover is this page's largest paint: fetch it as soon as the stylesheets are in (this script waits for them, so it never competes with first paint), not once case-study.js has arrived and built the stage. The same candidates and sizes as the stage's own <img> (case-study.js), so it is one request. -->
+  <script>(function(){var k=new URLSearchParams(location.search).get("project");if(!/^(steering|vineRobot|brakeSim|scanner|javelin|materialTest|aura|carbonSeat|seat|ansysCfd|pool|lineFollower|formlabs|telecaster|education|ftc)$/.test(k||""))return;var d="assets/editorial/"+(k==="aura"?"aura-reframe-20261022/":k==="scanner"?"scanner-color-20261024/":"white-20261011/"),l=document.createElement("link");l.rel="preload";l.as="image";l.fetchPriority="high";l.imageSizes="(max-width: 700px) 100vw, min(100vw, 1440px)";l.imageSrcset=[480,960,1200,1800].map(function(w){return(w===1200&&k!=="aura"&&k!=="scanner"?"assets/editorial/white-20261022/":d)+k+"-wide-"+w+".webp "+w+"w"}).join(", ");document.head.appendChild(l)})()</script>
   <noscript><style>.case-skeleton { display: none; }</style></noscript>
-  <script defer src="project-data.js?v=owner-facts-20261023"></script>
-  <script defer src="case-study-data.js?v=owner-facts-20261023"></script>
-  <script defer src="case-study-media.js?v=media-polish-20260913"></script>
-  <script defer src="case-study-supplements.js?v=owner-facts-20261023"></script>
-  <script defer src="case-study.js?v=aesthetic-batch1-20261024"></script>
+  <!-- These five build the stage: ahead of the modules, which only wake it. -->
+  <script defer fetchpriority="high" src="project-data.js?v=owner-facts-20261023"></script>
+  <script defer fetchpriority="high" src="case-study-data.js?v=owner-facts-20261023"></script>
+  <script defer fetchpriority="high" src="case-study-media.js?v=media-polish-20260913"></script>
+  <script defer fetchpriority="high" src="case-study-supplements.js?v=owner-facts-20261023"></script>
+  <script defer fetchpriority="high" src="case-study.js?v=dtb-20261027"></script>
   <script defer src="exploded.js?v=aesthetic-batch1-20261024" data-manifest="assets/exploded/manifest-detail-white-20261024.json"></script>
+  <script id="kw-vt-hold" defer blocking="render" src="data:text/javascript,"></script>
   <script type="importmap">{"imports":{"three":"./vendor/three/0.185.0/build/three.module.js","three/addons/":"./vendor/three/0.185.0/examples/jsm/"}}</script>
-  <script type="module" src="project-case-3d.js?v=aesthetic-batch1-20261024"></script>
-  <script type="module" src="project-motion-story.js?v=aesthetic-batch1-20261024"></script>
+  <script type="module" src="project-case-3d.js?v=dtb-20261027"></script>
+  <script type="module" src="project-motion-story.js?v=dtb-20261027"></script>
 </head>
 <body>
   <a class="skip-link" href="#case-main">Skip to case study</a>

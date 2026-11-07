@@ -3,8 +3,28 @@
 .case-mode-studio .case-animation-host .card-media { background:#191919; overflow:hidden; }
 .case-3d-viewport { position:relative; isolation:isolate; }
 #case-3d-canvas { position:absolute; inset:0; display:block; width:100%; height:100%; touch-action:none; outline-offset:-4px; }
-.case-3d-viewport > img { position:relative; z-index:1; pointer-events:none; background:#191919; transition:opacity .16s ease-out; }
+.case-3d-viewport > img { position:relative; z-index:1; pointer-events:none; background:#191919; transition:opacity .16s ease-out, filter .16s ease-out; }
 .case-3d-viewport[data-status=ready] > img { opacity:0; }
+/* "Drawn, then built" (project-motion-arrival.js). case-study.js marks the stage
+   pending in its markup, so the cover is an 18% grey print (drafting ink, not a
+   colour wash) from its first paint: showing the cover whole and then the drawing
+   would un-build the hardware. The print is the drawing's first frame. Real
+   content is never held so for long: at most 850 ms on screen after the cover
+   decodes, then the arrival is spent ('late') and the cover comes back in 150 ms.
+   Settled, fallback and disabled arrivals carry no mark: today's swap. While
+   held, inline styles keep the print from the frame loader's poster rules; a
+   model on the stage waits behind the drawing until it ends. */
+.card-media:is([data-arrival=pending],[data-arrival=held]):not([data-status=ready]) > img { opacity:.18; filter:grayscale(1); transition:none; }
+/* Until the first drawing, the canvas never shows hardware through the print. A
+   frame drawing (drawn) covers it with the full-strength cover and its paper, as
+   the cover covers it before today's swap, so it is not toggled when the drawing
+   ends (the model's first presentation is never in the frame that ends it). */
+.card-media:is([data-arrival=pending],[data-arrival=held]) > canvas { visibility:hidden; }
+/* While a drawing arrives, the drawing itself says the model is coming: the loading
+   status stays in the accessibility tree, out of sight. A failure is never hidden,
+   and a model still loading when the arrival ends shows the status. */
+.card-media[data-arrival][data-status=loading] > .case-3d-status { width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+@media print { .card-media[data-arrival] > img { animation:none; opacity:1!important; filter:none!important; } .case-drawing { display:none; } }
 .case-3d-status { position:absolute; z-index:2; bottom:14px; left:14px; right:14px; width:fit-content; max-width:calc(100% - 28px); padding:10px 13px; background:#202020ed; border:1px solid #ffffff26; border-radius:4px; color:#e2e2e0; font-size:12px; line-height:1.6; }
 .case-3d-status button { margin-left:12px; }
 .case-mode-studio [hidden] { display:none!important; }
@@ -25,7 +45,7 @@
 #case-3d-progress::-webkit-slider-thumb { appearance:none; width:14px; height:14px; border-radius:50%; background:var(--accent); border:0; }
 #case-3d-progress::-moz-range-thumb { width:14px; height:14px; border-radius:50%; background:var(--accent); border:0; }
 #case-3d-progress:disabled { opacity:.45; cursor:default; }
-.case-3d-hint { color:var(--muted); font-size:10px; line-height:1.6; }
+.case-3d-hint { color:var(--muted); font-size:11px; line-height:1.6; }
 #case-3d-retry-motion { margin-top:7px; padding:4px 8px; min-height:32px; font-size:11px; }
 #case-3d-annotation { position:absolute; z-index:2; right:13px; bottom:13px; max-width:min(245px,75%); padding:11px 13px; color:var(--ink); background:#202020ee; border:1px solid #ffffff26; border-radius:4px; font-size:11px; line-height:1.5; pointer-events:none; }
 #case-3d-annotation strong { font-weight:600; }
@@ -33,11 +53,11 @@
 #case-3d-legend { padding:14px 17px 12px; border:1px solid var(--line); border-top:0; font-size:11px; background:var(--surface); }
 #case-3d-legend p { margin-bottom:9px; }
 #case-3d-legend .case-3d-legend-bar { height:8px; }
-#case-3d-legend .case-3d-legend-ticks { position:relative; height:22px; margin-top:5px; font-size:9px; font-variant-numeric:tabular-nums; }
+#case-3d-legend .case-3d-legend-ticks { position:relative; height:22px; margin-top:5px; font-size:11px; font-variant-numeric:tabular-nums; }
 #case-3d-legend .case-3d-legend-ticks span { position:absolute; transform:translateX(-50%); }
 #case-3d-legend .case-3d-legend-ticks span:first-child { transform:none; }
 #case-3d-legend .case-3d-legend-ticks span:last-child { transform:translateX(-100%); }
-#case-3d-legend small { color:var(--muted); font-size:9px; }
+#case-3d-legend small { color:var(--muted); font-size:11px; }
 @media(max-width:700px) {
   .case-3d-controls { padding:12px; }
   /* 44px touch targets; the free-explore insets in project-motion-story.css allow for them. */

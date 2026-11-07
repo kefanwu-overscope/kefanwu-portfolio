@@ -40,3 +40,39 @@ test('Leader tip remains near the actual part and uses a rounded elbow',()=>{
   assert(Math.abs(Math.hypot(target.x-result.tip.x,target.y-result.tip.y)-4)<1e-8);
   assert.match(result.path,/^M[\d.,-]+ L[\d.,-]+ Q[\d.,-]+ [\d.,-]+ L[\d.,-]+$/);
 });
+
+
+const drawnInput = { mode: 'drawn', anchor: { x: 620, y: 330 }, width: 1440, height: 823, labelWidth: 220, labelHeight: 92,
+  reserved: [{ x: 0, y: 0, width: 1440, height: 62 }, { x: 0, y: 743, width: 1440, height: 80 }] };
+const hex = rows => rows.map(row => row.match(/.{4}/g).map(bits => parseInt(bits, 2).toString(16)).join(''));
+test('Drawn: labels stay on the gutter grid and under the 24% diagonal cap', () => {
+  for (const anchor of [{ x: 120, y: 200 }, { x: 1300, y: 600 }, { x: 720, y: 420 }]) {
+    const out = layoutAnnotation({ ...drawnInput, anchor });
+    assert(out.x >= 56 && out.x + out.width <= 1440 - 56, 'Gutter');
+    assert(out.longest <= .24 * Math.hypot(1440, 823), 'Cap');
+    assert(out.length >= 30, 'A leader, not a tick');
+    assert.match(out.path, / Q/);
+  }
+});
+test('Drawn: a leader prefers open paper to running over hardware', () => {
+  // Hardware fills the right of the anchor; the left is open.
+  const rows = Array.from({ length: 8 }, () => '00000000' + '11111111');
+  const occupancy = { mask: hex(rows), columns: 16, rows: 8, box: { x: 0, y: 0, width: 1440, height: 823 } };
+  const out = layoutAnnotation({ ...drawnInput, anchor: { x: 730, y: 400 }, occupancy });
+  assert(out.x + out.width <= 730, 'The note sits on the open side');
+  assert(out.run < 20, 'Little or no run over hardware');
+});
+test('Drawn: a note never covers its part anywhere along the phase', () => {
+  const trajectory = Array.from({ length: 6 }, (_, i) => ({ x: 500 + i * 60, y: 330 }));
+  const out = layoutAnnotation({ ...drawnInput, anchor: trajectory[0], trajectory });
+  for (const p of trajectory) assert(!(p.x >= out.x - 14 && p.x <= out.x + out.width + 14 && p.y >= out.y - 14 && p.y <= out.y + out.height + 14));
+});
+test('Drawn: a held note keeps its place while its part travels', () => {
+  const first = layoutAnnotation(drawnInput);
+  const next = layoutAnnotation({ ...drawnInput, anchor: { x: 640, y: 340 }, previous: first });
+  assert.equal(next.x, first.x); assert.equal(next.y, first.y); assert.notEqual(next.path, first.path);
+});
+test('Hex occupancy rows map like the 32-bit masks', () => {
+  const regions = maskRegions(['8003'], { x: 0, y: 0, width: 160, height: 10 }, 16, 1);
+  assert.deepEqual(regions, [{ x: 0, y: 0, width: 10, height: 10 }, { x: 140, y: 0, width: 20, height: 10 }]);
+});

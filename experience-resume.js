@@ -147,7 +147,7 @@ export function attachResumeReader(paper, { reducedMotion = false } = {}) {
       if (disposed || phase !== 'landing' || closePromise) return;
       const token = ++generation, from = image.getBoundingClientRect();
       phase = 'opening'; paper.classList.add('is-expanded', 'is-morphing'); paint(); viewport.scrollTo(0, 0);
-      void animate(paper, [{ backgroundColor: 'transparent' }, { backgroundColor: '#11151b' }], 320);
+      void animate(paper, [{ backgroundColor: 'transparent' }, { backgroundColor: '#0e0f11' }], 320);
       await morph(from, 360);
       if (disposed || token !== generation) return;
       phase = 'reading'; paper.classList.remove('is-morphing'); paint();

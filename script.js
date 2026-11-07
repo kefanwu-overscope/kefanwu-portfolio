@@ -304,7 +304,142 @@ const filterStatus = document.getElementById("filter-status");
 const projectSearch = document.getElementById("project-search");
 const searchEmpty = document.querySelector(".search-empty");
 
+// Filter motion (FLIP): cards that stay glide from where they were to their new places (a card
+// that would travel more than 0.8 of a screen fades in at its new place instead of whooshing
+// across the page), leaving cards fade out where they stood, entering cards fade in (never
+// re-drawn: the first filter or search use ends the card drawing, card-drawing-20261027.js).
+// The glide animates the individual `translate` property because editorial.css pins
+// `transform: none !important` on cards, which would override an animation. Every inline style
+// it sets is removed again when it ends, and a click mid-motion starts from where every card is
+// on screen. Reduced motion, a hidden page,
+// ?cards=static and browsers without `translate` keep the instant change.
+const projectGrid = document.getElementById("project-cards");
+const FLIP_EASE = "cubic-bezier(.65, 0, .35, 1)";
+const FLIP_MS = 320;
+const LEAVE_MS = 160;
+const ENTER_MS = 240;
+const ENTER_DELAY = 80;
+const JUMP_FADE_MS = 200;   // a long jump (> 0.8 screens) fades in at its new place
+const JUMP_SCREENS = 0.8;
+const LEAVE_STYLE = ["position", "left", "top", "width", "height", "margin", "display", "box-sizing", "pointer-events"];
+const flipSupported = Boolean(projectGrid && Element.prototype.animate && window.CSS?.supports?.("translate", "1px 1px"))
+  && !/[?&]cards=static(&|$)/.test(location.search);
+const flipping = new Map(); // card -> { anims, leaving }
+
+const dropEmptyStyle = (el) => { if (!el.getAttribute("style")) el.removeAttribute("style"); };
+function endLeave(card) {
+  LEAVE_STYLE.forEach((prop) => card.style.removeProperty(prop));
+  card.inert = false;
+  dropEmptyStyle(card);
+}
+function stopFlip() {
+  flipping.forEach((motion, card) => {
+    motion.anims.forEach((animation) => animation.cancel());
+    if (motion.leaving) endLeave(card);
+  });
+  flipping.clear();
+  if (projectGrid) {
+    projectGrid.style.removeProperty("position");
+    dropEmptyStyle(projectGrid);
+  }
+}
+function trackFlip(card, animation, leaving = false) {
+  const motion = flipping.get(card) || { anims: [], leaving };
+  motion.anims.push(animation);
+  flipping.set(card, motion);
+  animation.finished.then(() => {
+    if (flipping.get(card) !== motion) return;
+    motion.anims = motion.anims.filter((item) => item !== animation);
+    if (motion.anims.length) return;
+    flipping.delete(card);
+    if (motion.leaving) {
+      animation.cancel();
+      endLeave(card);
+    }
+    if (![...flipping.values()].some((item) => item.leaving) && projectGrid) {
+      projectGrid.style.removeProperty("position");
+      dropEmptyStyle(projectGrid);
+    }
+  }, () => {});
+}
+// First: where every shown card (or card still fading out) is on screen right now.
+function flipFirst() {
+  const first = new Map();
+  cards.forEach((card) => {
+    const motion = flipping.get(card);
+    if (card.classList.contains("is-hidden") && !motion?.leaving) return;
+    first.set(card, {
+      rect: card.getBoundingClientRect(),
+      opacity: motion ? Number(getComputedStyle(card).opacity) : 1,
+      leaving: Boolean(motion?.leaving),
+    });
+  });
+  return first;
+}
+function flipPlay(first) {
+  const leaving = [];
+  const staying = [];   // shown before and after (including a card that was still fading out)
+  const entering = [];  // newly shown: fades in where it lands
+  cards.forEach((card) => {
+    const shown = !card.classList.contains("is-hidden");
+    const before = first.get(card);
+    if (shown && before) staying.push([card, before]);
+    else if (shown) entering.push(card);
+    else if (before) leaving.push([card, before]);
+  });
+  // Leaving cards stay where they stood, out of the flow, while they fade.
+  if (leaving.length) {
+    projectGrid.style.position = "relative";
+    const box = projectGrid.getBoundingClientRect();
+    const left = box.left + projectGrid.clientLeft;
+    const top = box.top + projectGrid.clientTop;
+    leaving.forEach(([card, { rect }]) => {
+      Object.assign(card.style, {
+        position: "absolute", left: `${rect.left - left}px`, top: `${rect.top - top}px`,
+        width: `${rect.width}px`, height: `${rect.height}px`, margin: "0",
+        display: "grid", boxSizing: "border-box", pointerEvents: "none",
+      });
+      card.inert = true;
+    });
+  }
+  // Last: read every new position before starting any animation.
+  const moves = staying.map(([card, before]) => {
+    const after = card.getBoundingClientRect();
+    return [card, before.rect.left - after.left, before.rect.top - after.top, before.opacity];
+  });
+  leaving.forEach(([card, { opacity }]) => {
+    trackFlip(card, card.animate([{ opacity }, { opacity: 0 }],
+      { duration: Math.max(1, LEAVE_MS * opacity), easing: FLIP_EASE, fill: "forwards" }), true);
+  });
+  // A card caught mid-fade (still entering, or fading out and now shown again) glides from where
+  // it is on screen and continues its fade from its current opacity: no jump, no snap. A card
+  // that would glide more than 0.8 of a screen fades in where it lands instead.
+  const far = JUMP_SCREENS * window.innerHeight;
+  moves.forEach(([card, dx, dy, opacity]) => {
+    if (Math.hypot(dx, dy) > far) {
+      trackFlip(card, card.animate([{ opacity: 0 }, { opacity: 1 }], { duration: JUMP_FADE_MS, easing: FLIP_EASE }));
+      return;
+    }
+    if (Math.abs(dx) >= 0.5 || Math.abs(dy) >= 0.5) {
+      trackFlip(card, card.animate([{ translate: `${dx}px ${dy}px` }, { translate: "0px 0px" }],
+        { duration: FLIP_MS, easing: FLIP_EASE }));
+    }
+    if (opacity < 0.999) {
+      trackFlip(card, card.animate([{ opacity }, { opacity: 1 }],
+        { duration: Math.max(1, ENTER_MS * (1 - opacity)), easing: FLIP_EASE }));
+    }
+  });
+  entering.forEach((card) => {
+    trackFlip(card, card.animate([{ opacity: 0 }, { opacity: 1 }],
+      { duration: ENTER_MS, delay: ENTER_DELAY, easing: FLIP_EASE, fill: "backwards" }));
+  });
+}
+motionUpdates.add(() => { if (!canAnimatePage()) stopFlip(); });
+
 function applyProjectFilter(button) {
+  const animateFilter = flipSupported && canAnimatePage();
+  const first = animateFilter ? flipFirst() : null;
+  stopFlip();
   activeFilter = button;
   const filter = button.dataset.filter;
   const query = (projectSearch?.value || "").trim().toLowerCase();
@@ -330,11 +465,13 @@ function applyProjectFilter(button) {
     filterStatus.classList.toggle("is-idle", filter === "all" && !query);
   }
   if (searchEmpty) searchEmpty.hidden = shown !== 0;
+  if (first) flipPlay(first);
   scheduleScrollEffects();
 }
 
 // The former 150 ms grid fade never ran (editorial.css keeps cards opaque), so
-// it only delayed the change. Apply each click at once; the latest click wins.
+// it only delayed the change. Apply each click at once; the latest click wins
+// (the FLIP above animates from wherever the previous change left every card).
 filters.forEach((button) => {
   button.addEventListener("click", () => applyProjectFilter(button));
 });

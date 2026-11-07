@@ -26,11 +26,37 @@
     <title>Kefan Wu | Interactive 3D Studio</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="assets/favicon_custom.png" sizes="any" />
+    <!-- 2026-10-27 ("Drawn, then built", #5): a startup screen that draws the
+         room. 2026-10-28 (F29 gate): it was opt-in for a day, because its
+         canvas frames during the shader compile caused more main-thread stalls
+         than the classic card. 2026-11-03 (F32/RS1): the drawing is finished at
+         the assets boundary and then holds (no canvas frame, and the room's
+         render loop parked, until the room is prepared), the gate passes
+         again, and the drawing is the default.
+         ?loader=classic, ?draw=off or no WebGL 2 keep the classic card; the
+         choice is made before the first paint. F33: the drawing may start only
+         before the room passes its assets boundary (experience.js) and within
+         4 s of this script running (counted from here, so a previous page's
+         teardown on a reload does not count); otherwise the classic card
+         (data-draw="off"). -->
+    <script>
+      (function () {
+        try {
+          var q = new URLSearchParams(location.search);
+          if (q.get("loader") === "classic" || q.get("draw") === "off" || !window.WebGL2RenderingContext) return;
+          document.documentElement.setAttribute("data-loader", "drawing");
+          setTimeout(function () {
+            var el = document.getElementById("exp-loader");
+            if (el && el.getAttribute("data-draw") !== "live" && !document.documentElement.classList.contains("exp-ready")) el.setAttribute("data-draw", "off");
+          }, 4000);
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/Inter-400.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/InterTight-700.woff2" crossorigin />
     <link rel="stylesheet" href="fonts.css?v=studio-polish-20260907" />
-    <link rel="stylesheet" href="experience.css?v=aesthetic-batch1-20261026" />
-    <link rel="stylesheet" href="studio-navigation.css?v=aesthetic-batch1-20261024" />
+    <link rel="stylesheet" href="experience.css?v=dtb-20261027" />
+    <link rel="stylesheet" href="studio-navigation.css?v=dtb-20261027" />
     <noscript><style>.exp-loader, .exp-stage { display: none; }</style></noscript>
 
     <!-- Pinned, byte-identical Three.js runtime served with the website. -->
@@ -49,8 +75,8 @@
          must equal its import specifier, ?v label included, or the module is
          fetched twice; tools/room-tests/experience-modulepreload-20261022.test.mjs
          checks the list against the imports. -->
-    <link rel="modulepreload" href="experience.js?v=aesthetic-batch1-20261026" />
-    <link rel="modulepreload" href="studio-navigation.js?v=aesthetic-batch1-20261024" />
+    <link rel="modulepreload" href="experience.js?v=dtb-20261027" />
+    <link rel="modulepreload" href="studio-navigation.js?v=dtb-20261027" />
     <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/controls/OrbitControls.js" />
     <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/loaders/HDRLoader.js" />
     <link rel="modulepreload" href="experience-lod.js?v=game-performance-20261009" />
@@ -58,10 +84,10 @@
     <link rel="modulepreload" href="experience-ambient.js?v=workbench-live-20260930" />
     <link rel="modulepreload" href="experience-light-grade.js?v=workbench-live-20260930" />
     <link rel="modulepreload" href="experience-batching.js?v=room-performance-20260919" />
-    <link rel="modulepreload" href="experience-warmup.js?v=aesthetic-batch1-20261026" />
+    <link rel="modulepreload" href="experience-warmup.js?v=dtb-20261027" />
     <link rel="modulepreload" href="experience-baked-material.js?v=realism-20260925" />
     <link rel="modulepreload" href="experience-baked-assets.js?v=room-detail-20260926" />
-    <link rel="modulepreload" href="experience-loader.js?v=exp-adaptive-20261022" />
+    <link rel="modulepreload" href="experience-loader.js?v=dtb-20261027" />
     <link rel="modulepreload" href="experience-hdr.js?v=exp-adaptive-20260907" />
     <link rel="modulepreload" href="experience-quality.js?v=game-performance-20261022" />
     <link rel="modulepreload" href="experience-advanced.js?v=game-performance-20261009" />
@@ -77,7 +103,7 @@
     <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/postprocessing/GTAOPass.js" />
     <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/postprocessing/BokehPass.js" />
     <link rel="modulepreload" href="experience-data.js?v=resume-align-20261023" />
-    <link rel="modulepreload" href="experience-resume.js?v=resume-align-20261023" />
+    <link rel="modulepreload" href="experience-resume.js?v=dtb-20261027" />
     <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/loaders/GLTFLoader.js" />
     <link rel="modulepreload" href="vendor/three/0.185.0/examples/jsm/utils/BufferGeometryUtils.js" />
     <link rel="modulepreload" href="experience-gpu-device.js?v=advanced-render-20260930" />
@@ -256,14 +282,14 @@
     </div>
 
     <noscript>
-      <div style="text-align:center;color:#a1a1a6;padding:3rem 1.5rem;font-family:sans-serif">
+      <div style="text-align:center;color:#ece9e2;padding:3rem 1.5rem;font-family:Inter,sans-serif">
         <h2 style="font-weight:700">Kefan Wu — Interactive 3D Studio</h2>
         <p>This interactive 3D view needs JavaScript.</p>
-        <p><a href="index.html" style="color:#3f8cff">View the classic portfolio &rarr;</a></p>
+        <p><a href="index.html" style="color:#ece9e2;text-decoration:underline;text-underline-offset:4px">View the classic portfolio &rarr;</a></p>
       </div>
     </noscript>
 
     <script src="project-data.js?v=owner-facts-20261023"></script>
-    <script type="module" src="experience-entry.js?v=aesthetic-batch1-20261026"></script>
+    <script type="module" src="experience-entry.js?v=dtb-20261027"></script>
   </body>
 </html>

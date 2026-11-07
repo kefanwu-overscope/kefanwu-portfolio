@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2200 1238" width="2200" height="1238" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+<g id="silhouette" data-w="1">
+<path d="M959.3 851.1c-6.3-3.1-12.2-6.5-16.9-11.9c-6.3-7.1-9.8-16.2-10.3-25.7c-1.7-33.9 31.5-55.9 55.6-73.5c6.1-4.5 12.3-9 18.6-13.3c99.8-68.3 206.7-91.2 326.3-90.1" pathLength="1" data-o="0.000" data-w="1" vector-effect="non-scaling-stroke"/>
+<path d="M943.5 812.6c66.5-28.1 136.8-45 204.6-69.3c67.9-24.4 132.9-56.2 201.1-79.9" pathLength="1" data-o="0.050" data-w=".85" vector-effect="non-scaling-stroke"/>
+<path d="M1366.1 700.2c-.9 22.2 10.1 42.3 .6 63.9" pathLength="1" data-o="0.100" data-w=".75" vector-effect="non-scaling-stroke"/>
+<path d="M1370.8 700.1c50.9-4.4 99.3-21.8 149.1-32.5" pathLength="1" data-o="0.150" data-w=".9" vector-effect="non-scaling-stroke"/>
+<path d="M1399.7 618.8c10.8 4.7 21.9 1.8 32.3-2.8c10.8-4.6 21.5-11.2 28.1-21.2c12.3-18.5 8.6-48.2-11.3-60c-7.6-4.5-16.8-6-25.5-5.4c-43.9 3.5-53.5 68.5-23.6 89.4" pathLength="1" data-o="0.600" data-w="1" vector-effect="non-scaling-stroke"/>
+<path d="M1360.3 669.9c-4.4-22.3 16.9-33.5 31.2-46.3" pathLength="1" data-o="0.670" data-w=".8" vector-effect="non-scaling-stroke"/>
+<path d="M1451.7 617.5c16.5 8.4 35.9 5.9 51.3 16.7" pathLength="1" data-o="0.705" data-w=".8" vector-effect="non-scaling-stroke"/>
+</g>
+<g id="structure" data-w=".7">
+<path d="M1449.4 921.2c27.6-28.7 54.5-65.2 47.4-107.4c-2.2-13.5-8.1-26.1-17.8-36c-6.3-6.2-13.7-11.3-21.6-15.2c-24-11.7-55.2-14.8-79.4-1.8c-37.5 20.1-40 72-14.6 102.5" pathLength="1" data-o="0.200" data-w=".8" vector-effect="non-scaling-stroke"/>
+<path d="M1480 787.1A50.4 78.3 1.6 0 0 1401.4 823.4A50.4 78.3 1.6 0 0 1445.8 927.6" pathLength="1" data-o="0.236" data-w=".6" vector-effect="non-scaling-stroke"/>
+<path d="M1486.9 855.5A39 47.9 12.3 0 1 1420.9 883.6A39 47.9 12.3 0 1 1438.6 802.6A39 47.9 12.3 0 1 1486.9 855.5" pathLength="1" data-o="0.272" data-w=".6" vector-effect="non-scaling-stroke"/>
+<path d="M1729.1 792.2c16-28.4 42.9-55.7 21.3-89.4c-3.4-5.2-7.6-9.9-12.3-14c-5.7-4.9-12.4-9-19.6-11.3c-37.6-12.5-77.7 23.2-79.9 60.3c-.6 9.7 1.6 18.7 5.4 27.7" pathLength="1" data-o="0.308" data-w=".8" vector-effect="non-scaling-stroke"/>
+<path d="M1747.2 746.2A16.2 42.7 5 0 1 1719.9 781A16.2 42.7 5 0 1 1726.3 707.3A16.2 42.7 5 0 1 1747.2 746.2" pathLength="1" data-o="0.344" data-w=".6" vector-effect="non-scaling-stroke"/>
+<path d="M1123.7 666.7c14.9-17.1 35.6-24.3 56.8-13.8" pathLength="1" data-o="0.360" data-w=".8" vector-effect="non-scaling-stroke"/>
+<path d="M1409.1 525.8c10.4-14.5 16.9-29.9 21.8-47c4.1-14.8 8-33.8 21.9-42.8c13.4-8.8 34.7-6.8 43.9 7.2c5.5 8.5 6.7 19.5 7.6 29.4c2 20.5 2.6 41.2 3.8 61.7c2.6 47.8 4.4 95.6 3 143.5" pathLength="1" data-o="0.380" data-w=".75" vector-effect="non-scaling-stroke"/>
+<path d="M1440.7 489.3c13.7 14.8 26 30.7 38 46.9" pathLength="1" data-o="0.407" data-w=".6" vector-effect="non-scaling-stroke"/>
+<path d="M1512 477.1c31.4 62.4 62.3 125.1 93.4 187.7" pathLength="1" data-o="0.435" data-w=".65" vector-effect="non-scaling-stroke"/>
+<path d="M1526 681.6c32-2 64.1 .7 95.5-7.2" pathLength="1" data-o="0.463" data-w=".6" vector-effect="non-scaling-stroke"/>
+<path d="M1493.3 789.1c37.1-10.9 73.5-26.1 112.9-23.8" pathLength="1" data-o="0.490" data-w=".6" vector-effect="non-scaling-stroke"/>
+<path d="M1622.6 672.5c10.4 8.3 19.3 18 31 24.7" pathLength="1" data-o="0.517" data-w=".55" vector-effect="non-scaling-stroke"/>
+<path d="M1582 706.7c21.6 .9 43.3 1.6 65 2" pathLength="1" data-o="0.545" data-w=".55" vector-effect="non-scaling-stroke"/>
+<path d="M1589.6 733.5c18.1 2.5 36 6 54.1 7.6" pathLength="1" data-o="0.573" data-w=".55" vector-effect="non-scaling-stroke"/>
+</g>
+<g id="detail" data-w=".5">
+<path d="M1476.9 454.3c1.5 .6 2.8 .7 4 1.8c3.7 3.2 2 9-1.9 11.1c-4.1 2.2-8.9 0-13.3 0c-5.7 0-14.8 2.9-17.7-4.3c-1.6-3.9 3-7.3 6.1-8.6c5.6-2.4 16.7-.7 22.8 0" pathLength="1" data-o="0.410" data-w=".45" vector-effect="non-scaling-stroke"/>
+<path d="M1410.1 706.2c28.5-8 57.1-15.6 85.7-23.5c2.1 21.9 5 43.5 5 65.6c-15.7 3.8-31.1 9.4-46.6 14.1c-12.3-4.5-25.1-8.1-37.8-10.9c-.2-.6-1-.7-1.3-1.2c-.6-1.5-.6-10.1-.9-12.5c-1.4-10.2-3.7-20.4-4.9-30.7" pathLength="1" data-o="0.620" data-w=".5" vector-effect="non-scaling-stroke"/>
+<path d="M1387.7 573.6c8.4 1.9 16.9 4 25.5 4c5.3 0 10.6-1.2 15.9-.4c4.4 .6 9.5 2.9 9.3 8.1c-.2 6.6-7.1 9.9-12.5 11.6c-13.3 4.3-26.7 4.7-39.6-1.1" pathLength="1" data-o="0.635" data-w=".5" vector-effect="non-scaling-stroke"/>
+<path d="M1210.7 697.9c-60.7 32.1-126.4 53-191.7 73.7c-15.7 4.9-31.4 9.9-47.1 14.9c-4.1 1.3-12.7 5.1-16 .3c-3.5-5 .9-11.9 4.3-15.6c9.1-10 21.8-17.2 32.5-25.4c12.9-10 25.6-20.3 39.2-29.3c34.5-22.9 73.8-38.1 113.3-50" pathLength="1" data-o="0.740" data-w=".45" vector-effect="non-scaling-stroke"/>
+</g>
+<g id="ground" data-w=".4">
+<path d="M918.4 917.9c122.7-.9 249.4-5.3 362.1-58.8" pathLength="1" data-o="0.880" data-w=".4" vector-effect="non-scaling-stroke"/>
+<path d="M1321.5 922c34.4 23.9 74.7 15.2 112.1 4" pathLength="1" data-o="0.904" data-w=".4" vector-effect="non-scaling-stroke"/>
+<path d="M1611 792.4c40.2 20.5 91.9 27.3 125.8-8.4" pathLength="1" data-o="0.928" data-w=".4" vector-effect="non-scaling-stroke"/>
+<path d="M1000.3 590.5c125.1-8 250.4-13.4 375.6-20.9" pathLength="1" data-o="0.952" data-w=".35" vector-effect="non-scaling-stroke"/>
+<path d="M1562.2 552c166.2-2.7 331.8-18.3 497.6-28.7" pathLength="1" data-o="0.976" data-w=".35" vector-effect="non-scaling-stroke"/>
+</g>
+</svg>

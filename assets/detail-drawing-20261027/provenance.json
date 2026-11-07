@@ -1,0 +1,519 @@
+{
+ "date": "2026-10-27",
+ "purpose": "Line layers for the \"drawn, then built\" arrival on the detail pages (project-motion-arrival.js): one transparent layer per story step, registered on each project's frame-0 cover. case-study.html and project-3d.html run the same arrival on the same cover in the same stage box; a live model (the 3D page, steering's case study) waits behind it and then swaps in as with ?arrival=off. Steering has had its layers since 2026-10-29. No page loads drafting-arrival-20261027.js any more, and it left the site on 2026-11-04: releases/drawn-then-built-20261027/detail-arrival/harness/drafting-arrival-20261027.js still holds the line pass and story orders the layers are rendered with.",
+ "renderer": "Three.js r185 with the working-tree studio-inspector.js (rendering unchanged from e42a05b4; it only records merged source parts). Each project is loaded as tools/white-studio/export.js loads a cover (900x600 selection canvas, source camera reset, progress 0; AURA with its aura-reframe-20261022 framing), then the cover camera renders the prepass and line pass of drafting-arrival-20261027.js (same shaders, same story orders ORDERS, same 30-degree folds) at 3600x2400 with paper and ghost removed.",
+ "method": "Outlines at part or depth changes #111316, folds #505b66. Premultiplied box-filtered to 1800 and 900 px wide, lossless WebP, transparent background. No pixel of a cover is read to draw the lines; the cover is only used to check registration. Plain parts (ansysCfd flow paths and tracers) are never lined; scientific colours are untouched.",
+ "registration": "The harness re-renders each 1800 px cover with the same camera; mean absolute difference to the published poster (lossy WebP) 0.08-0.74 levels, p99 2-16 (per project below). The largest (ansysCfd) is the lossy encoding of its 1 px flow lines and pressure texture, not an offset: no edge is doubled.",
+ "layout": "<key>.<tag>/<step>-<width>.webp; tag = first 10 hex of the SHA256 over all of a project's layers. Immutable.",
+ "evidence": "releases/drawn-then-built-20261027/detail-arrival/ (harness/layers.js, harness/pack_layers.py, layers-preview/, layers-summary.json); steering (2026-10-29): releases/drawn-then-built-20261027/verify/fix-detail-r2/ (layers-harness/, a copy of that harness on another port; layers-preview/, layers-summary.json)",
+ "projects": {
+  "steering": {
+   "dir": "assets/detail-drawing-20261027/steering.f2d5be168b/",
+   "steps": 6,
+   "stepStartsMs": [
+    0,
+    106,
+    212,
+    318,
+    424,
+    530
+   ],
+   "topDownSweep": false,
+   "story": "Torque path: wheel, upper shaft, U-joints, bearing cage, lower shaft, rack.",
+   "bytes": {
+    "900": 14374,
+    "1800": 23018
+   },
+   "registration": {
+    "meanAbs": 0.0807,
+    "p99": 2,
+    "max": 11
+   },
+   "files": {
+    "0-1800.webp": "83f4894626e43fb0cd3c8efdf8cdd2dab2af0cf4b6a519020c87047e3b25fbd2",
+    "0-900.webp": "96ae6a30d173a765f347c520f00472e71d06d1074d5a74ed42d2e6110d4b23b2",
+    "1-1800.webp": "b4ef6908407e8c937a65b91b75dc4fc354d3f88764db1e4b9c7c31bb99da24bc",
+    "1-900.webp": "319710b79d778531bb7c4a04588267bb679f086c06ba77b2b71104ed0e7e980e",
+    "2-1800.webp": "a20bf9c71a54c6234a63a9f848b7c057f6b31664d98d222638ab55e9f3a3c91c",
+    "2-900.webp": "0c50943e6dfcbdcffbbce0e71f456165046b6e171f0728a2eb38d308f0956fa9",
+    "3-1800.webp": "265803e33bf376c7ad889c7e6508c48733fd8584f46575aa450b753f6da67fff",
+    "3-900.webp": "065053b4757115f2c243ba9dde14388bad5e1989adf62ce5653000e225491ea6",
+    "4-1800.webp": "ca51c725701a8c0caf29e6068e1e59b42827c9820cd9f995d6f3cd8eb3d56e3b",
+    "4-900.webp": "1d89db4b55346b8a626c1881c7ee77d6bdaf5593c07fe4c8dc1726de7d9c776c",
+    "5-1800.webp": "1d5f5c1baff96fe96567c9d5ab2335787b23c6b4ebda55be1a9f73e7cc42bbf1",
+    "5-900.webp": "a6e446edb026522e71ff078d59e1927e58d1ab92c3af60cc7789ae5df517a6f2"
+   }
+  },
+  "vineRobot": {
+   "dir": "assets/detail-drawing-20261027/vineRobot.8fd5ac9d15/",
+   "steps": 7,
+   "stepStartsMs": [
+    0,
+    88.3,
+    176.7,
+    265,
+    353.3,
+    441.7,
+    530
+   ],
+   "topDownSweep": false,
+   "story": "Film path, lid down: drive, spool and inner frame, pressure vessel, ribs, outlet, base, then the everted film.",
+   "bytes": {
+    "900": 19082,
+    "1800": 31298
+   },
+   "registration": {
+    "meanAbs": 0.2969,
+    "p99": 4,
+    "max": 92
+   },
+   "files": {
+    "0-1800.webp": "dafe8452e9d474053005fcf04f6211bd12f6547a6ee9fb550370561f37fc23a5",
+    "0-900.webp": "deb7b712ba7f83f940247a77a2291e112ad63f368ef3d08e46163ab9884ce85f",
+    "1-1800.webp": "12711d0ef296d401f42d453a636ae5756a55512f369a1516fa1e0dd7edd6d333",
+    "1-900.webp": "39f51735c68f36a463dde5f58c71438a96bcc69e31555359ce93c8b177666e12",
+    "2-1800.webp": "5fe64ef6ded7dc9f30f572e12a112c2ae0a2a8c72ba51519e0c48fa9e59dbd91",
+    "2-900.webp": "28ee74fcbbeb418862c9d6d9f89fbd0621d81999551e57db929766b92f10878a",
+    "3-1800.webp": "293a80ad85f7e9867352cbc655b080d43e3981e513b3a785c3c3bc73e29efb4a",
+    "3-900.webp": "7e162c2137f50bb8e006197b5429e99c3ced5e4e24a0e276ff099fe6c8f95cbb",
+    "4-1800.webp": "bfbc27cd6a2ad292bd8876a481461492fb41cd4516e2c61dc7b23fb3f5899bcf",
+    "4-900.webp": "a3e86cb7f0c24c40116d2fd5b81d0ed04bc5db88e9a081f0cbdc56176c958f80",
+    "5-1800.webp": "ab45f6cef705114b5bc0d0c1364bf4dcef01d1c5b2b32bbdda9c68bddf3f3731",
+    "5-900.webp": "da5209312f077d6a4fbbbf53853e3d73392ed90e6200d214885aed51887d6185",
+    "6-1800.webp": "2dd3fff3aa8a94aeb71a2060eb06142fa83e431464f0194e02a610f4ad51ee81",
+    "6-900.webp": "ff14ce0525c416ea97dcd8cbb3263d844a6b4562b50c245ffffbf9fe5e9c8c99"
+   }
+  },
+  "brakeSim": {
+   "dir": "assets/detail-drawing-20261027/brakeSim.e8fa6f12c9/",
+   "steps": 1,
+   "stepStartsMs": [
+    0
+   ],
+   "topDownSweep": true,
+   "story": "One rotor: drawn top to bottom, then built.",
+   "bytes": {
+    "900": 23682,
+    "1800": 37400
+   },
+   "registration": {
+    "meanAbs": 0.2414,
+    "p99": 3,
+    "max": 12
+   },
+   "files": {
+    "0-1800.webp": "f5f52449c4b40d2fa7b437e7b11a80cdeeed268656bba294d7c66c27abf71973",
+    "0-900.webp": "9a537c8613f791c8200deb809fcee013825ed07b41a9ab45fea7c7adb3f16fc9"
+   }
+  },
+  "scanner": {
+   "dir": "assets/detail-drawing-20261027/scanner.48418729f7/",
+   "steps": 4,
+   "stepStartsMs": [
+    0,
+    176.7,
+    353.3,
+    530
+   ],
+   "topDownSweep": false,
+   "story": "Motion chain: the frame and guide rails, the gantry on them, the sensor carriage on the gantry; the plywood base last.",
+   "bytes": {
+    "900": 28706,
+    "1800": 42152
+   },
+   "registration": {
+    "meanAbs": 0.3932,
+    "p99": 5,
+    "max": 79
+   },
+   "files": {
+    "0-1800.webp": "e6ab8b9c387d3f72865c5df592d5d24b8e1702677cde6f0bf8a4022b60c4a340",
+    "0-900.webp": "f75487b8c6739ddd1e3f1419cf03ee986879b335c6686b78530f56c01f95e373",
+    "1-1800.webp": "501eb7a18e9b997a87cdbe31091048e7f450db16ef0ff763914ee6f6ce4352fd",
+    "1-900.webp": "632a06bae03de4cb421406dde18558f9df72dd2a95838b917bf9a6f49d93e899",
+    "2-1800.webp": "80dc051e1adf5853548ae556d3792fcfbf10122e518e97fa1099ad2850694198",
+    "2-900.webp": "8ca5b45bb27db617f77278e59983e0f312ee1d188c140254ba063eccab28dbf1",
+    "3-1800.webp": "a7d5e7aecdb24899eb409cba639e6c82673fa44ce6847449a49a468e124e8124",
+    "3-900.webp": "713912f787528090af71da9678a519c93cecef5771bb7b7394184f66277910d2"
+   }
+  },
+  "javelin": {
+   "dir": "assets/detail-drawing-20261027/javelin.6036787324/",
+   "steps": 5,
+   "stepStartsMs": [
+    0,
+    132.5,
+    265,
+    397.5,
+    530
+   ],
+   "topDownSweep": false,
+   "story": "Centre outwards: fuselage and wings, arms, mounts, motors, then propellers.",
+   "bytes": {
+    "900": 15718,
+    "1800": 25684
+   },
+   "registration": {
+    "meanAbs": 0.0867,
+    "p99": 2,
+    "max": 10
+   },
+   "files": {
+    "0-1800.webp": "30baa53cfc409eed59067efe34f2923638e1b418e64df3f9e9aa15b850990d2b",
+    "0-900.webp": "0a1fa10983c97cf601e979f1b294522f2f04b38acedbd5cc826a879918ddee67",
+    "1-1800.webp": "8524242e4434ad89ca231f7c457b7f414ae2b095016a3de0f92d3820db19ff1e",
+    "1-900.webp": "06553a78d87d42bae9ca1d0cbd93de1ab04fc645871b5c624db95f08e6b9fdd2",
+    "2-1800.webp": "b9659db6724193e44ca579dff9f0ea9ee741a5c51fe8da87958f1b5e14f5ac9a",
+    "2-900.webp": "0829da616fd38299bdc0f82c88f024198840c81b887d7c571b125b2e618875d2",
+    "3-1800.webp": "240d1b507aa803851cd455388838c7c43f0fe6b05466cdd5c32fac6608babe1e",
+    "3-900.webp": "56ce7e5597db77079fa36c9800de31c2c192d468ec75e1c0b0eb451d376ded5f",
+    "4-1800.webp": "45762f4d005e194c55449a6e5c0086fd3002102592404952c616b5be5b1dbd8d",
+    "4-900.webp": "e0ff2c5463872fc947caae77bab9383deb92cf9a25b960d3ecb0169725eea7b3"
+   }
+  },
+  "materialTest": {
+   "dir": "assets/detail-drawing-20261027/materialTest.82efd4a7cd/",
+   "steps": 5,
+   "stepStartsMs": [
+    0,
+    132.5,
+    265,
+    397.5,
+    530
+   ],
+   "topDownSweep": false,
+   "story": "Load path of the tensile test: column and crosshead, upper grip and load cell, specimen, lower grip, base.",
+   "bytes": {
+    "900": 13568,
+    "1800": 20918
+   },
+   "registration": {
+    "meanAbs": 0.1447,
+    "p99": 2,
+    "max": 54
+   },
+   "files": {
+    "0-1800.webp": "17f2a059594091266dbbdd49468f02e1116e0be8d7fcc73d619ea1878ff8ab29",
+    "0-900.webp": "35b35353117e6a7c934deff509075596b9efeb4ca6224d9d59a7d9f6a6fb3193",
+    "1-1800.webp": "a9bc3a26414ffeacdd6791eeb1e9c0f4e8cb6aa4a63227ce9727f06a9bed6733",
+    "1-900.webp": "9c4469b9305760b77f7b825c6a3087cc714313b2cee4f8ec46c28c1a004824d9",
+    "2-1800.webp": "b32c93235db52578c1126efb7383d3b99314d0e203b5ef645ecde33f1e91bccc",
+    "2-900.webp": "4016b3144b18ff1fbe1f69961023c8b247086fcfe01a265c8fd83a4af8a25cd0",
+    "3-1800.webp": "d763eff92faffb76387c85b4a0d8fb0e34a48101fb3b2cfcd4806c56c304bd1b",
+    "3-900.webp": "c63d70dce09dd64806294d3c57b396a1eb44d9bcd82926f6656111d4fdf091d1",
+    "4-1800.webp": "85e1c3d1bc070e79597709ca2a9fefe5eebc5911c3d0ba492f0e657703ac88fe",
+    "4-900.webp": "c9b6a3d84debe5667f5a9bb50653ed13349803ea1c92be949e3439b9907f9794"
+   }
+  },
+  "aura": {
+   "dir": "assets/detail-drawing-20261027/aura.6c1e3e121c/",
+   "steps": 6,
+   "stepStartsMs": [
+    0,
+    106,
+    212,
+    318,
+    424,
+    530
+   ],
+   "topDownSweep": false,
+   "story": "Steering path, top down: steering motor, bearing cover, slewing bearing, mount plate, fork and wheel; then the drive motor that spins the wheel.",
+   "bytes": {
+    "900": 16270,
+    "1800": 25478
+   },
+   "registration": {
+    "meanAbs": 0.1014,
+    "p99": 2,
+    "max": 12
+   },
+   "files": {
+    "0-1800.webp": "d93b9b384ed1fe88ec70f8a1925ab26fe6664d52dfdb6cf949338a89fa5174a8",
+    "0-900.webp": "53caa45fc21785f00608cd47759c92f51416e03572a5fad6c1648e61614272cb",
+    "1-1800.webp": "673d1fe387bd33488559bef8976a910f4e855937bb02361f2c0b142b54e44155",
+    "1-900.webp": "45777e285062ce2de9979c829427a4b9ddcac17587a0e2b543801cf5d43758b8",
+    "2-1800.webp": "ef4e4ca64ca760b01bb1bc16b2b8cc2daef2dcf3a8e14051192722a3cb5e5be5",
+    "2-900.webp": "cf3b0a19995f622d22b198cbe7ff8568059cff9b38267a1246a632adb3e237e3",
+    "3-1800.webp": "d208d93e6df0148eb4c9932f65eb76282f3d100b134666ff93f11a8489554616",
+    "3-900.webp": "88b417486caa8d2728835e4fdcfed01bedb5843e9e88252f821ac25a0b256868",
+    "4-1800.webp": "3158384763493ec38fc1d256a3fd8ea1a4e30c66c216c46d8dc1458fb667653e",
+    "4-900.webp": "57a9891eaf8d0f4019cc16b9ce8b48bffd906552962323379b5a62561e70348b",
+    "5-1800.webp": "f0b6d462fdefbf529eb9c0a22130f3a0599bafcbfb39999b7691a942f9f192b3",
+    "5-900.webp": "83695829330e2077f05083cebaeab41bc4017fc8b6d3e883f0f7dba40cfb01f5"
+   }
+  },
+  "carbonSeat": {
+   "dir": "assets/detail-drawing-20261027/carbonSeat.122c1ef380/",
+   "steps": 1,
+   "stepStartsMs": [
+    0
+   ],
+   "topDownSweep": true,
+   "story": "One moulded shell: drawn top to bottom, then built.",
+   "bytes": {
+    "900": 7294,
+    "1800": 9532
+   },
+   "registration": {
+    "meanAbs": 0.1773,
+    "p99": 3,
+    "max": 9
+   },
+   "files": {
+    "0-1800.webp": "190a2b5c907e41874eab7a898d6ab8cddb60a251ddd90d3febcfab548df073c7",
+    "0-900.webp": "007fe8f4b32f0d8ad455388787f926a4649a096dcd88c6c398a0ea84ccb8b146"
+   }
+  },
+  "seat": {
+   "dir": "assets/detail-drawing-20261027/seat.fa1519437f/",
+   "steps": 1,
+   "stepStartsMs": [
+    0
+   ],
+   "topDownSweep": true,
+   "story": "One folded sheet: drawn top to bottom, then built.",
+   "bytes": {
+    "900": 10374,
+    "1800": 14242
+   },
+   "registration": {
+    "meanAbs": 0.1065,
+    "p99": 2,
+    "max": 11
+   },
+   "files": {
+    "0-1800.webp": "ba75ad592e597f7a64160b5e345b3d7675830f0d6e1121c41d3815516d5356ec",
+    "0-900.webp": "1e44f577188480d34ddb7648b006677c2bf019ceb52cf376586e4d188c5cdc2f"
+   }
+  },
+  "ansysCfd": {
+   "dir": "assets/detail-drawing-20261027/ansysCfd.2cf8fb66af/",
+   "steps": 2,
+   "stepStartsMs": [
+    0,
+    530
+   ],
+   "topDownSweep": false,
+   "story": "Geometry first, then the computed flow: the wall (its pressure colours untouched), then the flow paths and tracers, which develop without lines.",
+   "bytes": {
+    "900": 7552,
+    "1800": 12342
+   },
+   "registration": {
+    "meanAbs": 0.736,
+    "p99": 16,
+    "max": 176
+   },
+   "files": {
+    "0-1800.webp": "c7a990b4cb22853abd689c1d13a8cf2bc887c445643aa7cf3e62f76bdb3499e5",
+    "0-900.webp": "86b5fe40c77df80ead98f16284810184800600ddbb303a91bf9df3d79c336981",
+    "1-1800.webp": "6a3f2921dbe89007d71214cfa8d7f48e80186a7a20404e49d455e251f31da811",
+    "1-900.webp": "f523a92df28a2ddb12f9e5100ca378a74a98508b4877705901086386ab49f788"
+   }
+  },
+  "pool": {
+   "dir": "assets/detail-drawing-20261027/pool.064fc7d99e/",
+   "steps": 5,
+   "stepStartsMs": [
+    0,
+    132.5,
+    265,
+    397.5,
+    530
+   ],
+   "topDownSweep": false,
+   "story": "Drive path: motor, sprocket and coupling, pinion and driven sprocket, cue rack and latches; the frame that carries them last.",
+   "bytes": {
+    "900": 14912,
+    "1800": 22460
+   },
+   "registration": {
+    "meanAbs": 0.2383,
+    "p99": 3,
+    "max": 59
+   },
+   "files": {
+    "0-1800.webp": "da9c01f896197d942a8d7d6983ad35aa894d7d367564f0fa0b195a8c07687768",
+    "0-900.webp": "2ded61aef6b650758394e0d3235d622491fb763bfd0d5e1b08f553d93daad79f",
+    "1-1800.webp": "ac7955c6f1882e129dd3a2b6830791d7d6499d478a6f44f42c33570ece7c8e29",
+    "1-900.webp": "100855f04bd677a2b7976595d144ef8dead0ee067e00cff06ab9d09fcf5eeb21",
+    "2-1800.webp": "ac7955c6f1882e129dd3a2b6830791d7d6499d478a6f44f42c33570ece7c8e29",
+    "2-900.webp": "100855f04bd677a2b7976595d144ef8dead0ee067e00cff06ab9d09fcf5eeb21",
+    "3-1800.webp": "7edb17a77cb0f1534f1a9eb60b351c7fbaf20d8c97c68662de3aae653635fbbc",
+    "3-900.webp": "bd0d3793cc552232ee8deef6aea5993e314babb2a88f3f5f088fdc5e024e63a1",
+    "4-1800.webp": "97dbf698a7fa1ca5caf2aab986bc1214113cb83c767a1c5c063851bb358c28ad",
+    "4-900.webp": "93c6d045b70aa8c238b98647746cc8aef16831fc4faf4dd5b68d486cd0250187"
+   }
+  },
+  "lineFollower": {
+   "dir": "assets/detail-drawing-20261027/lineFollower.8f886e0df1/",
+   "steps": 6,
+   "stepStartsMs": [
+    0,
+    106,
+    212,
+    318,
+    424,
+    530
+   ],
+   "topDownSweep": false,
+   "story": "Control stack down to the floor: boards, components and wiring, battery, chassis plate, axles, then the wheels.",
+   "bytes": {
+    "900": 41126,
+    "1800": 56602
+   },
+   "registration": {
+    "meanAbs": 0.322,
+    "p99": 5,
+    "max": 76
+   },
+   "files": {
+    "0-1800.webp": "8f7a391f01fc9ffa2a0b94dabf47888953d79420ef500975f24ae07624985857",
+    "0-900.webp": "dc2cddf9fd1a44ee621afda8dc587e7864d00dcb66b91686f4cfe2fba4ff4aa7",
+    "1-1800.webp": "72d370db471a85362a2679ae225b6b4384d9f3aa52f72f849d7e237c40c79615",
+    "1-900.webp": "adcc63c82237cef80cebc01924cdf55449db6c6a5323c5ab56d85469f668200f",
+    "2-1800.webp": "3a7d61c94156e0a7c7ea0e58cb2f0561c9b415910a9a58457af68ccc891a2188",
+    "2-900.webp": "1b0056700dd716e6da48b17a841abbd2ebd0f7e4fadb1b87b49255a8ba3f427f",
+    "3-1800.webp": "5196777dba877620aa386dffd644e9b4377493da0899b7a7fa3106b3554088cc",
+    "3-900.webp": "d987c9af36dce214106fcd8fd360b643106a28a4267e5d18c457487e675a38fd",
+    "4-1800.webp": "2e08cf099edcac7e9ff92823a831884cbd96ec800a83af76b8defc2e845a956b",
+    "4-900.webp": "3847ce59f28dae8ddd534561f517a4b20e3acd6f105e83b9c5cc473370319b03",
+    "5-1800.webp": "f67733faf0102d85882f51641c712a5aec857369d99a04a87d0bfc884d57a2d7",
+    "5-900.webp": "9b077d23684dae1ab56f18068486458f73ef2e3b3760bb5150bd577907c9aa6d"
+   }
+  },
+  "formlabs": {
+   "dir": "assets/detail-drawing-20261027/formlabs.c33039fed1/",
+   "steps": 4,
+   "stepStartsMs": [
+    0,
+    176.7,
+    353.3,
+    530
+   ],
+   "topDownSweep": false,
+   "story": "Drive path: lead screws and couplings lift the gantry, which carries the dispensing carriage; the frame and resin tank last.",
+   "bytes": {
+    "900": 25752,
+    "1800": 35920
+   },
+   "registration": {
+    "meanAbs": 0.184,
+    "p99": 2,
+    "max": 35
+   },
+   "files": {
+    "0-1800.webp": "323eeffbe71108b31baf645938e3495ef758918878945bc7422314de500bdeea",
+    "0-900.webp": "98f3826c5f055777591a472176423f6a2fd83558ca7e8808a941d8b173545482",
+    "1-1800.webp": "50cc4b09661022fa775331ddd616f40138a153e606338e62aa1eb34cfa3bb802",
+    "1-900.webp": "157e78d9c2a7e25a190cb0bbd38771808bde137ce64bd0efe78e173f86c3d24c",
+    "2-1800.webp": "3ea6bd5f76cc4631a1a0732682d999c8c6361efa4489441e543a6f43359a32d8",
+    "2-900.webp": "5553dbcb40f4f835ae0f778bcca263beb1188e92ea42d80c850b06644c59b1da",
+    "3-1800.webp": "158952eafc951273b342dfc067109dd78bec2c57b9f017c76dbbbb0f869c88e2",
+    "3-900.webp": "7bd73eb8a048c15b28ac155ce52b1e46b474cff60335e73e0d7e899a9dc1483a"
+   }
+  },
+  "telecaster": {
+   "dir": "assets/detail-drawing-20261027/telecaster.36fcebd99a/",
+   "steps": 5,
+   "stepStartsMs": [
+    0,
+    132.5,
+    265,
+    397.5,
+    530
+   ],
+   "topDownSweep": false,
+   "story": "Build order, head down: neck and fretboard, body, pickguard, hardware, then the knobs.",
+   "bytes": {
+    "900": 15196,
+    "1800": 22800
+   },
+   "registration": {
+    "meanAbs": 0.1327,
+    "p99": 3,
+    "max": 79
+   },
+   "files": {
+    "0-1800.webp": "a2913625a87907e36d4b0c0c5358a2ce1c0ff31f26aec18a46ec79d57dfa7639",
+    "0-900.webp": "6958610788ee36c47db29166e42959ed6b5394437acf858e226afd8c726f43ae",
+    "1-1800.webp": "411542ff80b2d4a6d836586c6dbf7b73b80e2fc6ab398c2b820b00ba270aef94",
+    "1-900.webp": "9405bcbe7fe06fc1d6e7280abf25ced31fd1c18125b2a91411cf054fac4c32c6",
+    "2-1800.webp": "0e0814039aa660b21693d7bf543701c63bfb76666981eba28be3f15f9755e543",
+    "2-900.webp": "fafccc58c33b91f94b2910667f851e082c443ad8228a007a2ae28adbc98ca6de",
+    "3-1800.webp": "36da30298cc5978fcd237e504ad19a5f282b6b9d1d935e71c20b1010fb3fec5a",
+    "3-900.webp": "33544760f8b54224c92828c64c75bde0c532f62e763e93d41003a1052093c915",
+    "4-1800.webp": "3f2f0566c0bfe574cc3a0ef744c56d5b0a208a6af0022c30ff6a1a91b995f299",
+    "4-900.webp": "4faa677658155957221ccf26f3e289e5fbc3189bfa5683149a580575ea166487"
+   }
+  },
+  "education": {
+   "dir": "assets/detail-drawing-20261027/education.f5cf9a51be/",
+   "steps": 6,
+   "stepStartsMs": [
+    0,
+    106,
+    212,
+    318,
+    424,
+    530
+   ],
+   "topDownSweep": false,
+   "story": "Kit order: neck, body, pickguard, the pickup stack, bridge, then the controls.",
+   "bytes": {
+    "900": 11596,
+    "1800": 17542
+   },
+   "registration": {
+    "meanAbs": 0.085,
+    "p99": 2,
+    "max": 25
+   },
+   "files": {
+    "0-1800.webp": "9d62d4a1dd2f1c44ab230edba02951a4e602c6708aff11dba36acecec3cac6a9",
+    "0-900.webp": "120e2f5678b4ae1c14c0b7ee26fd054702139e1fa959dae428c554650d6d3357",
+    "1-1800.webp": "2f188639a48a27ec80267106154a9aa839cefa4c0a2d66399b58202a6e339e99",
+    "1-900.webp": "cc661e7d81ec39d23ba24049d8d15b5da1648bb6e85586c315cddb3c12d8feae",
+    "2-1800.webp": "4fc7cc988eb2ea4549ddbadfd94b4ebd2b576e868a667b38bee44adf1b5e4902",
+    "2-900.webp": "ebe13cff2e0dcfbaaadab84f7aa475ee7b2ff1f86fb28872c9cbce44b890e62c",
+    "3-1800.webp": "536b9828961573b1d0d828241dae6ae1c68baad085dfe63ea8288a859b8b3341",
+    "3-900.webp": "e023a9854c01c51ed0439bcc059dc4fcc7ee7764b6f651271f8345c54672fbec",
+    "4-1800.webp": "b7be83e368c90ef5d7c2f1bf122c278153c4293611f2a10355a6c8214ad0512f",
+    "4-900.webp": "ba799f594b427ef713f244f3eb5315d74d1ebcca5f0bcf6fdd2dedde863825a2",
+    "5-1800.webp": "7f80d42de99b536cefe3b8acc0143e90c7a705f30ce6b90c03bc2d6c100c5f83",
+    "5-900.webp": "5380435e85b0ee8bc3c465d12ae18c583520d1d33b886d07bff644d915305427"
+   }
+  },
+  "ftc": {
+   "dir": "assets/detail-drawing-20261027/ftc.068383db8a/",
+   "steps": 4,
+   "stepStartsMs": [
+    0,
+    176.7,
+    353.3,
+    530
+   ],
+   "topDownSweep": false,
+   "story": "Load path from the top: lift and deposit, chassis and electronics, the four wheels; the intake last.",
+   "bytes": {
+    "900": 30740,
+    "1800": 41512
+   },
+   "registration": {
+    "meanAbs": 0.2062,
+    "p99": 4,
+    "max": 98
+   },
+   "files": {
+    "0-1800.webp": "ec400b4551a14815328bd42897c827335f856e572f6edda1eae72e3fbe8c469b",
+    "0-900.webp": "ee0e6fb6feb1ecc6b353eaa557add04f0ce79ec8e4dc949573dc909eae22b8ce",
+    "1-1800.webp": "08d91e8e336c3e9524db1cf33e5a9fd2ff13ecb17a28a4ccda6637c081d0e20e",
+    "1-900.webp": "83d2ed5bb8556b1525b05926a19ddd40341d635c95d8a66273f835e224860b56",
+    "2-1800.webp": "e728d84313f686bda5b79ab147672d44620b2d50acb2b4d7ea3b10c2c54defef",
+    "2-900.webp": "99a02b7a99ec16dd3d68af3ad58d8679e8fcdc45ab78efbe627be91db9b07bf7",
+    "3-1800.webp": "0c5eaaddd7b9a24c6c9e90eb0b9ee7960a69a7d7d0276a5cdeff2648d373558d",
+    "3-900.webp": "08663c65359347026def91c6d3f1d8a13065836906f4bb38e9caddbbd462c970"
+   }
+  }
+ }
+}

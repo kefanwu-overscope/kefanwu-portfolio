@@ -1,0 +1,137 @@
+{
+  "steering": {
+    "src": "assets/editorial/lines-20261027/steering.webp",
+    "w": 1200,
+    "h": 800,
+    "cover": "assets/editorial/white-20261022/steering-wide-1200.webp",
+    "srcset": "assets/editorial/lines-20261027/steering-600.webp?v=a37ac4e7d10c 600w, assets/editorial/lines-20261027/steering.webp?v=1b7fbe5b1b77 1200w",
+    "sha256": "1b7fbe5b1b77ede1c99023761336afea39dd2dc80aeb2f550d3bca772ec2e210",
+    "src600": "assets/editorial/lines-20261027/steering-600.webp"
+  },
+  "vineRobot": {
+    "src": "assets/editorial/lines-20261027/vineRobot.webp",
+    "w": 1200,
+    "h": 800,
+    "cover": "assets/editorial/white-20261022/vineRobot-wide-1200.webp",
+    "srcset": "assets/editorial/lines-20261027/vineRobot-600.webp?v=d189d8871eb5 600w, assets/editorial/lines-20261027/vineRobot.webp?v=a25b835fdcd0 1200w",
+    "sha256": "a25b835fdcd0fcb0110d1a96256f8a4d911a16734efe6130d082370f6c454934",
+    "src600": "assets/editorial/lines-20261027/vineRobot-600.webp"
+  },
+  "brakeSim": {
+    "src": "assets/editorial/lines-20261027/brakeSim.webp",
+    "w": 1200,
+    "h": 800,
+    "cover": "assets/editorial/white-20261022/brakeSim-wide-1200.webp",
+    "srcset": "assets/editorial/lines-20261027/brakeSim-600.webp?v=c2db83750a22 600w, assets/editorial/lines-20261027/brakeSim.webp?v=9c8324c308a2 1200w",
+    "sha256": "9c8324c308a25d011966b309d86d731c178eeb37b841b38b1fcd64bae2f380d8",
+    "src600": "assets/editorial/lines-20261027/brakeSim-600.webp"
+  },
+  "scanner": {
+    "src": "assets/editorial/lines-20261027/scanner.webp",
+    "w": 1200,
+    "h": 800,
+    "cover": "assets/editorial/scanner-color-20261024/scanner-wide-1200.webp",
+    "srcset": "assets/editorial/lines-20261027/scanner-600.webp?v=3321b1109767 600w, assets/editorial/lines-20261027/scanner.webp?v=2ed1a61b35b8 1200w",
+    "sha256": "2ed1a61b35b8e47fed07605a508c29f0bd98027b019ab76433e3283a1242eb5f",
+    "src600": "assets/editorial/lines-20261027/scanner-600.webp"
+  },
+  "javelin": {
+    "src": "assets/editorial/lines-20261027/javelin.webp",
+    "w": 1200,
+    "h": 800,
+    "cover": "assets/editorial/white-20261022/javelin-wide-1200.webp",
+    "srcset": "assets/editorial/lines-20261027/javelin-600.webp?v=0b28f45f849d 600w, assets/editorial/lines-20261027/javelin.webp?v=c9e824e05a24 1200w",
+    "sha256": "c9e824e05a24b16f1320bf3896446103e2ff4a1f55c91dbfce844a5601db854b",
+    "src600": "assets/editorial/lines-20261027/javelin-600.webp"
+  },
+  "materialTest": {
+    "src": "assets/editorial/lines-20261027/materialTest.webp",
+    "w": 1200,
+    "h": 800,
+    "cover": "assets/editorial/white-20261022/materialTest-wide-1200.webp",
+    "srcset": "assets/editorial/lines-20261027/materialTest-600.webp?v=c795fc816ef7 600w, assets/editorial/lines-20261027/materialTest.webp?v=162f0a0419bd 1200w",
+    "sha256": "162f0a0419bd05a09f7ad481ba4ad81430ae9269880c818b14e5f0b6fd03fef4",
+    "src600": "assets/editorial/lines-20261027/materialTest-600.webp"
+  },
+  "aura": {
+    "src": "assets/editorial/lines-20261027/aura.webp",
+    "w": 1200,
+    "h": 800,
+    "cover": "assets/editorial/aura-reframe-20261022/aura-wide-1200.webp",
+    "srcset": "assets/editorial/lines-20261027/aura-600.webp?v=19d8c1d6b56e 600w, assets/editorial/lines-20261027/aura.webp?v=d075460189ed 1200w",
+    "sha256": "d075460189ed183a0d934737afe4f8a9563af0a0b1ec3f992d796ab7accea68f",
+    "src600": "assets/editorial/lines-20261027/aura-600.webp"
+  },
+  "carbonSeat": {
+    "src": "assets/editorial/lines-20261027/carbonSeat.webp",
+    "w": 1200,
+    "h": 800,
+    "cover": "assets/editorial/white-20261022/carbonSeat-wide-1200.webp",
+    "srcset": "assets/editorial/lines-20261027/carbonSeat-600.webp?v=fcbf6bdd12cd 600w, assets/editorial/lines-20261027/carbonSeat.webp?v=06852f3e1e86 1200w",
+    "sha256": "06852f3e1e8601cdc7706c1bb59513ca524427a793626c51ebb82846ea7e7a91",
+    "src600": "assets/editorial/lines-20261027/carbonSeat-600.webp"
+  },
+  "seat": {
+    "src": "assets/editorial/lines-20261027/seat.webp",
+    "w": 1200,
+    "h": 800,
+    "cover": "assets/editorial/white-20261022/seat-wide-1200.webp",
+    "srcset": "assets/editorial/lines-20261027/seat-600.webp?v=ceaaf3ab2376 600w, assets/editorial/lines-20261027/seat.webp?v=415565adf8bd 1200w",
+    "sha256": "415565adf8bd1341431326a1fcf49aae189f4ffe16916a4ef25a50213110aa0e",
+    "src600": "assets/editorial/lines-20261027/seat-600.webp"
+  },
+  "pool": {
+    "src": "assets/editorial/lines-20261027/pool.webp",
+    "w": 1200,
+    "h": 800,
+    "cover": "assets/editorial/white-20261022/pool-wide-1200.webp",
+    "srcset": "assets/editorial/lines-20261027/pool-600.webp?v=bb6df18c0ed7 600w, assets/editorial/lines-20261027/pool.webp?v=265b6c3ab57c 1200w",
+    "sha256": "265b6c3ab57c6d2f6ac7882870a3276ed1c6b61be95ed5a96192ba7de2f5f479",
+    "src600": "assets/editorial/lines-20261027/pool-600.webp"
+  },
+  "lineFollower": {
+    "src": "assets/editorial/lines-20261027/lineFollower.webp",
+    "w": 1200,
+    "h": 800,
+    "cover": "assets/editorial/white-20261022/lineFollower-wide-1200.webp",
+    "srcset": "assets/editorial/lines-20261027/lineFollower-600.webp?v=9a02cf6cca95 600w, assets/editorial/lines-20261027/lineFollower.webp?v=3c8c82bdaf04 1200w",
+    "sha256": "3c8c82bdaf0491c7a260e575234b9f802936b3cb8793d77a3fe5ee4dfa169d8b",
+    "src600": "assets/editorial/lines-20261027/lineFollower-600.webp"
+  },
+  "formlabs": {
+    "src": "assets/editorial/lines-20261027/formlabs.webp",
+    "w": 1200,
+    "h": 800,
+    "cover": "assets/editorial/white-20261022/formlabs-wide-1200.webp",
+    "srcset": "assets/editorial/lines-20261027/formlabs-600.webp?v=6c3b232ab44b 600w, assets/editorial/lines-20261027/formlabs.webp?v=9b08a092188e 1200w",
+    "sha256": "9b08a092188ec284636aacfc22dd2b622beb3df9fa516c8a00da06faf071a131",
+    "src600": "assets/editorial/lines-20261027/formlabs-600.webp"
+  },
+  "telecaster": {
+    "src": "assets/editorial/lines-20261027/telecaster.webp",
+    "w": 1200,
+    "h": 800,
+    "cover": "assets/editorial/white-20261022/telecaster-wide-1200.webp",
+    "srcset": "assets/editorial/lines-20261027/telecaster-600.webp?v=fd91fc8e7252 600w, assets/editorial/lines-20261027/telecaster.webp?v=17e6850641a0 1200w",
+    "sha256": "17e6850641a0a1df79240d640950636b713a2517bff7b82abee13aa119f2107d",
+    "src600": "assets/editorial/lines-20261027/telecaster-600.webp"
+  },
+  "education": {
+    "src": "assets/editorial/lines-20261027/education.webp",
+    "w": 1200,
+    "h": 800,
+    "cover": "assets/editorial/white-20261022/education-wide-1200.webp",
+    "srcset": "assets/editorial/lines-20261027/education-600.webp?v=26015985abd9 600w, assets/editorial/lines-20261027/education.webp?v=aceb274fa393 1200w",
+    "sha256": "aceb274fa393384d55ae3c0e9752288d8907d8726b26ceb161ccc4e2e697f68e",
+    "src600": "assets/editorial/lines-20261027/education-600.webp"
+  },
+  "ftc": {
+    "src": "assets/editorial/lines-20261027/ftc.webp",
+    "w": 1200,
+    "h": 800,
+    "cover": "assets/editorial/white-20261022/ftc-wide-1200.webp",
+    "srcset": "assets/editorial/lines-20261027/ftc-600.webp?v=ed25ebf97b0c 600w, assets/editorial/lines-20261027/ftc.webp?v=d0043003b22a 1200w",
+    "sha256": "d0043003b22af1c5bf0756fa4e1fb54d77993bd6ce67c895fae7800b41b15b92",
+    "src600": "assets/editorial/lines-20261027/ftc-600.webp"
+  }
+}

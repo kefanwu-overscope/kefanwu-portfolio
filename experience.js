@@ -10,7 +10,7 @@
    ============================================================ */
 
 import * as THREE from "three";
-import { createStudioNavigation } from "./studio-navigation.js?v=aesthetic-batch1-20261024";
+import { createStudioNavigation } from "./studio-navigation.js?v=dtb-20261027";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
 import { ModelLODLoader, modelBounds, yieldToBrowser } from "./experience-lod.js?v=game-performance-20261009";
@@ -18,10 +18,10 @@ import { AdaptiveFrameClock, frameAlpha } from "./experience-timing.js?v=game-pe
 import { AmbientClock, ambientScreenRect } from "./experience-ambient.js?v=workbench-live-20260930";
 import { ROOM_LIGHT_GRADE } from "./experience-light-grade.js?v=workbench-live-20260930";
 import { batchStaticRoom } from "./experience-batching.js?v=room-performance-20260919";
-import { prepareRoomShaders, prepareRootShaders } from "./experience-warmup.js?v=aesthetic-batch1-20261026";
+import { prepareRoomShaders, prepareRootShaders } from "./experience-warmup.js?v=dtb-20261027";
 import { loadRGBMLightmap, installBakedDiffuse } from "./experience-baked-material.js?v=realism-20260925";
 import { ROOM_BAKE } from "./experience-baked-assets.js?v=room-detail-20260926";
-import { createStudioLoader } from "./experience-loader.js?v=exp-adaptive-20261022";
+import { createStudioLoader } from "./experience-loader.js?v=dtb-20261027";
 import { createHDRService, createHDRTexture } from "./experience-hdr.js?v=exp-adaptive-20260907";
 import { AdaptiveQuality, GpuFrameTimer } from "./experience-quality.js?v=game-performance-20261022";
 import { createAdvancedRenderer } from "./experience-advanced.js?v=game-performance-20261009";
@@ -37,7 +37,7 @@ import { RectAreaLightUniformsLib } from "three/addons/lights/RectAreaLightUnifo
 import { GTAOPass } from "three/addons/postprocessing/GTAOPass.js";
 import { BokehPass } from "three/addons/postprocessing/BokehPass.js";
 import { RESUME } from "./experience-data.js?v=resume-align-20261023";
-import { RESUME_ASSET, RESUME_PAPER, resumeHTML, attachResumeReader } from "./experience-resume.js?v=resume-align-20261023";
+import { RESUME_ASSET, RESUME_PAPER, resumeHTML, attachResumeReader } from "./experience-resume.js?v=dtb-20261027";
 
 document.documentElement.classList.add("exp-js");
 
@@ -113,7 +113,21 @@ function webglSupported() {
 
 const canvas = document.getElementById("exp-canvas");
 const loaderEl = document.getElementById("exp-loader");
-const startupUI = createStudioLoader(loaderEl);
+// 2026-10-27 ("Drawn, then built", #5): by default (experience.html's head
+// script decides; the default again since 2026-11-03, F32/RS1) the startup
+// screen draws the room (experience-loader-drawing.js); its percentage then
+// follows the real stages, shader linking included. With ?loader=classic,
+// ?draw=off or no WebGL 2, the classic card.
+const DRAWING_LOADER = document.documentElement.dataset.loader === "drawing";
+const startupUI = createStudioLoader(loaderEl, { mode: DRAWING_LOADER ? "drawing" : "classic" });
+// Optional: a slow or failed download of the drawing never holds up the room
+// (it is not in the room's static graph), and today's screen never fetches it.
+const loaderDrawingModule = DRAWING_LOADER
+  ? import("./experience-loader-drawing.js?v=dtb-20261027").catch((error) => {
+    console.warn("[experience] startup drawing unavailable; keeping the startup screen", error);
+    return null;
+  })
+  : Promise.resolve(null);
 const revealScene = () => document.documentElement.classList.add("exp-ready");
 const easeInOutCubic = (x) =>
   x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
@@ -168,7 +182,7 @@ const COL = {
   wallTint: 0xa4a7ad, // light graphite plaster
   woodTint: 0x3c332a, // ebonized cool walnut
   leather: 0x16181c, // near-black desk leather
-  accent: 0x3f8cff, // site accent blue
+  accent: 0xece9e2, // warm-white ink (2026-10-28, #13; the accent blue is retired)
 };
 
 /* ---------- shared texture sets ---------- */
@@ -457,6 +471,19 @@ async function initScene(canvas) {
   };
   applyRestPose(window.innerWidth, window.innerHeight);
   const FLY_POS = new THREE.Vector3(2.1, 1.8, 2.9);
+  // 2026-10-27 ("Drawn, then built", studio motion): the intro is one
+  // continuous curve (startCurveIntro) and, under reduced motion, the startup
+  // screen crossfades into the room over exactly 1.0 s. ?intro=legacy keeps
+  // the 2026-10-24 two-stop sweep and its hard cut, byte for byte in
+  // behaviour. ?push=off disables the exhibit-open camera push
+  // (startExhibitPush). Neither feature draws lines, so ?draw=off leaves both.
+  const SEARCH = new URLSearchParams(location.search);
+  const INTRO_CURVE = SEARCH.get("intro") !== "legacy";
+  const EXHIBIT_PUSH = SEARCH.get("push") !== "off";
+  // Reduced motion: the card (and its text) leaves within the first 150 ms
+  // so it never ghosts over the lit room; the dark backdrop starts 100 ms in,
+  // once the card is mostly gone, and is fully gone at exactly 1000 ms.
+  const INTRO_CROSSFADE_MS = 1000, INTRO_CARD_FADE_MS = 150, INTRO_BACKDROP_DELAY_MS = 100;
 
   const camera = new THREE.PerspectiveCamera(
     42,
@@ -545,10 +572,11 @@ async function initScene(canvas) {
     console.warn("[experience] malformed deep link", error);
   }
   const loader = new ModelLODLoader(manager, { targetKey: deepLinkKey });
-  loader.onLevelLoaded = record => { ANISO_DIRTY = true; assetGeometryChanged = true; advanced?.prewarm(record?.high, record?.key || record?.url); };
+  loader.onLevelLoaded = record => { ANISO_DIRTY = true; assetGeometryChanged = true; loaderDrawing?.invalidate(); advanced?.prewarm(record?.high, record?.key || record?.url); };
   // Decoration reuses the warmed room material variants. Extra compilation is
   // opportunistic: an overloaded/lost GPU must never block the loader queue.
   loader.onBaseLoaded = record => {
+    loaderDrawing?.invalidate();
     if (!record.deferred) return;
     ANISO_DIRTY = true;
     assetGeometryChanged = true;
@@ -560,6 +588,9 @@ async function initScene(canvas) {
     startupUI.update({ loaded, total, phase: "loading" });
   };
   let revealed = false, revealPending = false;
+  // The startup drawing (#5): created once the room is constructed, null on
+  // today's screen. Never awaited: the room's readiness does not depend on it.
+  let loaderDrawing = null, loaderDrawingRefused = "";
   // one-shot: set when a flow (deep link) skips the normal drag-hint timing;
   // checked once in closePanel() so the hint still surfaces exactly once
   let pendingDragHintOnClose = false;
@@ -574,6 +605,31 @@ async function initScene(canvas) {
     // The first real frame is already painted. Optional props retain their
     // source geometry and load through the same bounded network/CPU queues.
     loader.releaseDeferred();
+    // Reduced motion: the startup screen fades out over exactly 1.0 s onto
+    // the resting room (no camera travel) instead of a hard cut. Only the
+    // dark backdrop crossfades; the card and its text leave within
+    // INTRO_CARD_FADE_MS so they never ghost over the lit room, and the
+    // backdrop starts once the card is mostly gone, so the two changes never
+    // stack into one jump (<= 15 mean RGB per 250 ms at 390 px). The
+    // reduced-motion stylesheet strips the loader's transitions with
+    // !important; only an inline !important declaration outranks it.
+    // The startup drawing under reduced motion is a still copy on the startup
+    // screen: it leaves with this same crossfade, return visits included.
+    const introCrossfade = prefersReducedMotion && !!loaderEl &&
+      ((INTRO_CURVE && !roomReturn) || !!loaderDrawing?.reducedSheet);
+    if (introCrossfade) {
+      const card = loaderEl.querySelector(".exp-loader__inner");
+      const end = INTRO_CROSSFADE_MS;
+      loaderEl.style.setProperty("transition",
+        `opacity ${INTRO_CROSSFADE_MS - INTRO_BACKDROP_DELAY_MS}ms linear ${INTRO_BACKDROP_DELAY_MS}ms, visibility 0s ${end}ms`, "important");
+      card?.style.setProperty("transition", `opacity ${INTRO_CARD_FADE_MS}ms linear`, "important");
+      card?.style.setProperty("opacity", "0");
+      setTimeout(() => {
+        loaderEl.style.removeProperty("transition");
+        card?.style.removeProperty("transition");
+        card?.style.removeProperty("opacity");
+      }, end + 100);
+    }
     if (loaderEl) {
       const hideStatus = () => {
         loaderEl.setAttribute("aria-hidden", "true");
@@ -586,13 +642,24 @@ async function initScene(canvas) {
       loaderEl.addEventListener("transitionend", onFadeEnd);
       // Reduced motion may have no transitionend; this affects accessibility
       // only, after the real first-frame readiness gate has already passed.
-      const fadeFallback = setTimeout(hideStatus, prefersReducedMotion ? 0 : 1000);
+      const fadeFallback = setTimeout(hideStatus, introCrossfade ? INTRO_CROSSFADE_MS
+        : prefersReducedMotion ? 0 : 1000);
     }
+    // The drawing screen's title block (F31) sits on the edge the dock uses:
+    // it leaves within TITLE_FADE_MS and the dock waits until it has.
+    const titleBlock = DRAWING_LOADER && loaderEl && loaderEl.dataset.draw !== "off" &&
+      document.documentElement.dataset.loader === "drawing" ? loaderEl.querySelector(".exp-loader__inner") : null;
     revealScene();
+    // The room develops through the startup drawing (veil lifts, lines retire)
+    // while the intro below starts; the drawing follows the live camera.
+    loaderDrawing?.develop(performance.now());
     // Asset registration precedes GPU preparation. Enable interaction only
     // after a completed frame, so startup cannot overwrite a user's selection.
     const dock = document.getElementById("exp-dock");
-    if (dock) dock.hidden = false;
+    if (dock) {
+      if (titleBlock) holdDockForTitle(dock, titleBlock, introCrossfade);
+      dock.hidden = false;
+    }
     const lightToggle = document.getElementById("exp-light-toggle");
     if (lightToggle) lightToggle.disabled = false;
     updateLightingUI();
@@ -628,12 +695,42 @@ async function initScene(canvas) {
       // Lighting and the complete camera sweep both repeat on every visit.
       runBootIntro();
       startIntro(); // the drag hint fires from startIntro()'s final flight leg, once the camera actually lands
+    } else if (introCrossfade) {
+      // hold the hint until the crossfade has ended, so it lands on the lit
+      // room (as after the legacy hard cut), never over the fading startup
+      // card or the still-dark backdrop
+      setTimeout(showDragHint, INTRO_CROSSFADE_MS);
     } else {
       // no flight to wait for under reduced motion — show it immediately
       showDragHint();
     }
   };
   manager.onLoad = () => { readiness.assets = true; markAssetsReady(); };
+  // F31: the dock is laid out at the reveal but held unseen (data-hold) until
+  // the drawing screen's title block is gone: faded here over TITLE_FADE_MS,
+  // or by the reduced-motion crossfade's card fade, or at once when reduced
+  // motion hides the screen without one. The block's fade is dropped once
+  // the screen itself is hidden, so a later failure page still shows it.
+  const TITLE_FADE_MS = 200, TITLE_HOLD_MAX_MS = 350;
+  function holdDockForTitle(dock, block, crossfading) {
+    if (prefersReducedMotion && !crossfading) return;
+    dock.dataset.hold = "";
+    let held = true;
+    const release = () => {
+      if (!held) return;
+      held = false;
+      delete dock.dataset.hold;
+      readiness.timings.dockShown = performance.now();
+    };
+    if (crossfading) { setTimeout(release, INTRO_CARD_FADE_MS); return; }
+    if (block.animate) {
+      const fade = block.animate([{ opacity: getComputedStyle(block).opacity }, { opacity: 0 }],
+        { duration: TITLE_FADE_MS, easing: "linear", fill: "forwards" });
+      fade.onfinish = release;
+      setTimeout(() => fade.cancel(), 1200);
+    }
+    setTimeout(release, TITLE_HOLD_MAX_MS);
+  }
 
   setupTextures(manager);
 
@@ -785,10 +882,20 @@ async function initScene(canvas) {
   /* every-visit cold boot: the room powers on in a staged sequence.
      Rug LEDs trace on, each cabinet's strips strike alive as the camera
      passes it, and the desk lamp "clicks" last — landing the warm pool on
-     the resume and implicitly teaching the light switch. Timings follow the
-     intro flight legs (1700 + 1900 + 1500 ms). */
+     the resume and implicitly teaching the light switch. Beats are ms from
+     the start of the camera move (BOOT_BEATS); the lamp still clicks at the
+     5.1 s landing on either path. */
   let bootRaf = 0;
   let bootRestore = null;
+  // [delay, step-or-duration] per beat. ?intro=legacy keeps the beats timed
+  // to its flight legs (1700 + 1900 + 1500 ms): the right-wall cabinet
+  // strikes during leg 1, the main cabinet during leg 2. The curve opens on
+  // the right-wall cabinet, so it strikes as the iris opens (lit work on
+  // screen within ~0.4 s), the TIG readout beside it next, and the main
+  // cabinet as the view swings onto it (~1.2-1.9 s).
+  const BOOT_BEATS = INTRO_CURVE
+    ? { side: [350, 150], main: [1150, 170], caseSpots: [2100, 550], tig: [700, 500], pendant: [1900, 600], moon: [3000, 900] }
+    : { side: [850, 170], main: [2250, 170], caseSpots: [3350, 550], tig: [1300, 500], pendant: [2600, 600], moon: [3600, 900] };
   const bootStatus = { plays: 0, startedAt: null, completedAt: null, cancelled: false };
   // Deferred props without parallel shader compilation wait here until the
   // reveal's camera sweep and this boot have ended (or never ran).
@@ -890,8 +997,7 @@ async function initScene(canvas) {
     });
     // rug LED inlay traces on line by line
     blueLines.forEach((m, i) => seg(250 + i * 130, 480, (k) => { m.emissiveIntensity = 1.1 * k; }, easeOut));
-    // cabinet strips strike row by row as the camera passes each cabinet:
-    // right cabinet during flight leg 1, main cabinet during leg 2
+    // cabinet strips strike row by row as the camera reaches each cabinet
     const strikeRow = (light, mats, delay) => seg(delay, 300, (k) => {
       const s = strike(k);
       if (light) light.intensity = light.userData.bootTarget * s;
@@ -900,26 +1006,26 @@ async function initScene(canvas) {
     const nSide = Math.max(stripMats.side.length, caseStrips.side.length);
     for (let i = 0; i < nSide; i++) {
       strikeRow(i < caseStrips.side.length ? caseStrips.side[i] : null,
-        i < stripMats.side.length ? [stripMats.side[i]] : [], 850 + i * 170);
+        i < stripMats.side.length ? [stripMats.side[i]] : [], BOOT_BEATS.side[0] + i * BOOT_BEATS.side[1]);
     }
     const nMain = Math.max(stripMats.main.length, caseStrips.main.length);
     for (let i = 0; i < nMain; i++) {
       strikeRow(i < caseStrips.main.length ? caseStrips.main[i] : null,
-        i < stripMats.main.length ? [stripMats.main[i]] : [], 2250 + i * 170);
+        i < stripMats.main.length ? [stripMats.main[i]] : [], BOOT_BEATS.main[0] + i * BOOT_BEATS.main[1]);
     }
     // gentle case spots once both cabinets are alive
-    seg(3350, 550, (k) => caseSpots.forEach((s) => { s.l.intensity = s.target * k; }));
-    // the TIG amp readout's warm pool strikes with the right-side leg,
+    seg(...BOOT_BEATS.caseSpots, (k) => caseSpots.forEach((s) => { s.l.intensity = s.target * k; }));
+    // the TIG amp readout's warm pool strikes with the right-side cabinet,
     // the pendant wakes with the main cabinet, the bench bar joins the lamp
-    seg(1300, 500, (k) => { if (MODELS.tigGlow) MODELS.tigGlow.intensity = 0.8 * k; });
-    seg(2600, 600, (k) => {
+    seg(...BOOT_BEATS.tig, (k) => { if (MODELS.tigGlow) MODELS.tigGlow.intensity = 0.8 * k; });
+    seg(...BOOT_BEATS.pendant, (k) => {
       MODELS.pendantLight.intensity = 0.3 * k;
       if (MODELS.pendantBulb) MODELS.pendantBulb.material.emissiveIntensity = (0.15 + 0.85 * (0.3 / 2.6)) * k;
       if (MODELS.pendantShadeInner) MODELS.pendantShadeInner.material.emissiveIntensity = (0.06 + 0.6 * (0.3 / 2.6)) * k;
     });
     seg(5080, 320, (k) => { benchBarSpot.intensity = 0.95 * 1.6 * k; }, easeOut);
     // the moon reveals itself as the camera settles toward the rest pose
-    seg(3600, 900, (k) => { moonSpot.intensity = MOON_NIGHT * k; });
+    seg(...BOOT_BEATS.moon, (k) => { moonSpot.intensity = MOON_NIGHT * k; });
     // final beat at flight landing: the lamp clicks on — snappy, not eased —
     // and the warm pool blooms up on the resume
     seg(5050, 90, (k) => lampLeds.forEach((m) => { m.emissiveIntensity = 2.4 * k; }), lin);
@@ -1542,6 +1648,7 @@ async function initScene(canvas) {
   }
   const probeTargets = [];
   function activateBakedRoom() {
+    loaderDrawing?.invalidate();
     if (!bakeActive || !bakedRoot || !LM.off2k || !LM.probeOff || !LM.deskOff) return;
     scene.children.forEach((o) => {
       if (o === bakedRoot) return;
@@ -1554,6 +1661,7 @@ async function initScene(canvas) {
   }
   function restoreProceduralRoom(error) {
     bakeActive = false;
+    loaderDrawing?.invalidate();
     if (bakedRoot) bakedRoot.visible = false;
     bakedMats = [];
     deskBakedMats.length = 0;
@@ -1797,13 +1905,15 @@ async function initScene(canvas) {
     controls.enabled = false;
   }
   function startIntro(onDone = showDragHint) {
-    camera.position.copy(FLY_POS);
-    controls.target.set(0, 0.75, -0.1);
     cameraIntro.plays++;
     cameraIntro.phase = "playing";
     cameraIntro.completedLegs = 0;
     document.getElementById("exp-skip-intro").hidden = false;
-    // Preserve the original first-visit path and timing, with no visit flag.
+    if (INTRO_CURVE) { startCurveIntro(onDone); return; }
+    camera.position.copy(FLY_POS);
+    controls.target.set(0, 0.75, -0.1);
+    cameraIntro.path = "legacy";
+    // ?intro=legacy: the 2026-10-24 first-visit path and timing, no visit flag.
     const legs = [
       [new THREE.Vector3(0.7, 1.5, 1.9), new THREE.Vector3(2.3, 1.2, CAB2.z), 1700],
       [new THREE.Vector3(0.6, 1.45, 1.6), new THREE.Vector3(0, 1.2, -1.1), 1900],
@@ -1824,17 +1934,185 @@ async function initScene(canvas) {
     };
     playLeg(0);
   }
+  /* One-curve intro (2026-10-27; the A/B pilot's ?intro=curve, now the
+     default). One glide, no stops and no swing-back: it opens on the
+     right-wall cabinet with the main cabinet's right bay beside it (both
+     strike alive as the iris opens, BOOT_BEATS), turns left onto the main
+     cabinet while easing in toward it, and pulls back out to the rest pose,
+     where the lamp clicks on. The 2026-10-24 legs reversed the yaw at the
+     right cabinet (a pendulum) and stopped dead twice.
+     - Eye: one cubic Bezier from INTRO_EYE[0] to the live REST_POS.
+     - View: yaw and pitch, each one cubic Bezier ending on the rest view.
+       Their control values fall monotonically, so the view only ever turns
+       one way (left), and a single segment has no knots: the path is C2 (in
+       fact C-infinity) everywhere, with no acceleration corner.
+     - Pace: pose-space arc length (eye metres + INTRO_TURN_M per radian of
+       view rotation) under ONE ease over INTRO_MS: raised-cosine ramp in,
+       steady cruise, raised-cosine ramp out. The ramps start and end at zero
+       acceleration, so the speed is continuous and so is the acceleration.
+     - The flight keeps the hitch-capped clock (flightStep), lands exactly on
+       the rest pose, and Skip / pointer / wheel / key take over as before.
+     Yaw is measured from -z (the back wall) toward +x (the right wall). */
+  const INTRO_MS = 5100;
+  const INTRO_EYE = [[-0.2, 1.55, 2.3], [0.05, 1.5, 1.75], [0.75, 1.5, 1.85]];
+  const INTRO_YAW = [43.8, 10, -8].map(THREE.MathUtils.degToRad);
+  const INTRO_PITCH = [-6.6, -5, -5.5].map(THREE.MathUtils.degToRad);
+  const INTRO_TURN_M = 1.33, INTRO_TABLE_STEPS = 1024, INTRO_EASE_IN = 0.22, INTRO_EASE_OUT = 0.14;
+  const INTRO_CRUISE = 1 / (1 - INTRO_EASE_IN / 2 - INTRO_EASE_OUT / 2);
+  // time fraction (0..1) -> path fraction (0..1)
+  function introCurveEase(x) {
+    if (x <= 0) return 0;
+    if (x >= 1) return 1;
+    const a = INTRO_EASE_IN, b = INTRO_EASE_OUT, v = INTRO_CRUISE;
+    if (x < a) return v * (x / 2 - a / (2 * Math.PI) * Math.sin(Math.PI * x / a));
+    if (x <= 1 - b) return v * (a / 2 + x - a);
+    return 1 - v * ((1 - x) / 2 - b / (2 * Math.PI) * Math.sin(Math.PI * (1 - x) / b));
+  }
+  const bezier3 = (a, b, c, d, u) => {
+    const v = 1 - u;
+    return v * v * v * a + 3 * v * v * u * b + 3 * v * u * u * c + u * u * u * d;
+  };
+  const viewYaw = (dir) => Math.atan2(dir.x, -dir.z);
+  const viewPitch = (dir) => Math.atan2(dir.y, Math.hypot(dir.x, dir.z));
+  function setViewDir(out, yaw, pitch) {
+    return out.set(Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), -Math.cos(yaw) * Math.cos(pitch));
+  }
+  // The curve onto one rest pose. sample(p, eye) writes the eye at time
+  // fraction p and returns [yaw, pitch].
+  function buildIntroCurve(restPos, restTarget) {
+    const restDir = V_TMP.subVectors(restTarget, restPos).normalize();
+    const E = [...INTRO_EYE.map((p) => new THREE.Vector3().fromArray(p)), restPos.clone()];
+    const Y = [...INTRO_YAW, viewYaw(restDir)], P = [...INTRO_PITCH, viewPitch(restDir)];
+    const eyeAt = (u, out) => out.set(bezier3(E[0].x, E[1].x, E[2].x, E[3].x, u),
+      bezier3(E[0].y, E[1].y, E[2].y, E[3].y, u), bezier3(E[0].z, E[1].z, E[2].z, E[3].z, u));
+    const yawAt = (u) => bezier3(Y[0], Y[1], Y[2], Y[3], u), pitchAt = (u) => bezier3(P[0], P[1], P[2], P[3], u);
+    // cumulative pose-space length at u = i / n
+    const n = INTRO_TABLE_STEPS, table = new Float64Array(n + 1);
+    const e0 = eyeAt(0, new THREE.Vector3()), e1 = new THREE.Vector3();
+    const d0 = setViewDir(new THREE.Vector3(), Y[0], P[0]), d1 = new THREE.Vector3();
+    for (let i = 1; i <= n; i++) {
+      eyeAt(i / n, e1);
+      setViewDir(d1, yawAt(i / n), pitchAt(i / n));
+      table[i] = table[i - 1] + e1.distanceTo(e0) + INTRO_TURN_M * d0.angleTo(d1);
+      e0.copy(e1); d0.copy(d1);
+    }
+    const total = table[n];
+    // path fraction s -> u: cubic Hermite inverse, slopes du/ds from the
+    // table, so the pace is continuous across table steps as well
+    const slope = (i) => (Math.min(n, i + 1) - Math.max(0, i - 1)) / n /
+      Math.max(1e-9, (table[Math.min(n, i + 1)] - table[Math.max(0, i - 1)]) / total);
+    const at = (s) => {
+      const goal = Math.min(Math.max(s, 0), 1) * total;
+      let lo = 0, hi = n;
+      while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (table[mid] <= goal) lo = mid; else hi = mid; }
+      const h = (table[hi] - table[lo]) / total;
+      if (h <= 0) return lo / n;
+      const x = (goal - table[lo]) / total / h, x2 = x * x, x3 = x2 * x;
+      return Math.min(1, (2 * x3 - 3 * x2 + 1) * (lo / n) + (x3 - 2 * x2 + x) * h * slope(lo) +
+        (-2 * x3 + 3 * x2) * (hi / n) + (x3 - x2) * h * slope(hi));
+    };
+    return {
+      restPos: restPos.clone(), restTarget: restTarget.clone(), length: total,
+      sample(p, eye) {
+        const u = at(introCurveEase(p));
+        eyeAt(u, eye);
+        return [yawAt(u), pitchAt(u)];
+      },
+    };
+  }
+  // A resize or rotation that re-picks the rest pose mid-flight blends from
+  // the running curve into the curve onto the new rest pose, starting at the
+  // current time fraction p0 with a smootherstep weight (zero slope and
+  // curvature at both ends): the pose, its velocity and its acceleration
+  // stay continuous through the resize, and the flight still lands exactly
+  // on the live rest pose. Only the field of view reframes (the screen shape
+  // changed). Each further resize blends from the running blend, so its cost
+  // grows by one curve sample per orientation change during the 5.1 s.
+  function blendIntroCurves(from, to, p0) {
+    const eyeB = new THREE.Vector3();
+    return {
+      restPos: to.restPos, restTarget: to.restTarget,
+      sample(p, eye) {
+        const x = p0 >= 1 ? 1 : Math.min(Math.max((p - p0) / (1 - p0), 0), 1);
+        const w = x * x * x * (10 + x * (6 * x - 15));
+        const [ya, pa] = from.sample(p, eye);
+        const [yb, pb] = to.sample(p, eyeB);
+        eye.lerp(eyeB, w);
+        return [ya + (yb - ya) * w, pa + (pb - pa) * w];
+      },
+    };
+  }
+  // The dock's "Drag to orbit" line is hidden while the camera flies and
+  // returns over 180 ms once it lands or the visitor takes over.
+  const dockHintEl = document.querySelector(".exp-dock__hint");
+  const DOCK_HINT_RESTORE_MS = 180;
+  function restoreDockHint() {
+    if (!dockHintEl || dockHintEl.style.opacity !== "0") return;
+    dockHintEl.style.transition = `opacity ${DOCK_HINT_RESTORE_MS}ms ease-out`;
+    dockHintEl.style.opacity = "";
+    setTimeout(() => { if (dockHintEl.style.opacity !== "0") dockHintEl.style.removeProperty("transition"); }, DOCK_HINT_RESTORE_MS + 60);
+  }
+  const INTRO_LOOK = new THREE.Vector3();
+  function startCurveIntro(onDone) {
+    cameraIntro.path = "curve";
+    const curve = buildIntroCurve(REST_POS, REST_TARGET);
+    const [yaw, pitch] = curve.sample(0, camera.position);
+    camera.lookAt(INTRO_LOOK.addVectors(camera.position, setViewDir(V_TMP, yaw, pitch)));
+    // Takeover keeps the view: the orbit target goes where the camera looks
+    // (takeOverIntro), so the stale start target only has to be on screen.
+    controls.target.copy(camera.position).addScaledVector(V_TMP, 2);
+    if (dockHintEl) { dockHintEl.style.transition = "none"; dockHintEl.style.opacity = "0"; }
+    startFlight(REST_POS, REST_TARGET, INTRO_MS, () => {
+      cameraIntro.completedLegs = 1;
+      cameraIntro.phase = "complete";
+      document.getElementById("exp-skip-intro").hidden = true;
+      restoreDockHint();
+      notifyIntroSettled();
+      onDone();
+    }, true);
+    flight.curve = curve;
+  }
+  // Called once per curve frame from the render loop: p is the time fraction.
+  function flyIntroCurve(p) {
+    if (p >= 1) {
+      camera.position.copy(flight.toPos);
+      camera.lookAt(flight.toLook);
+      return;
+    }
+    const [yaw, pitch] = flight.curve.sample(p, camera.position);
+    camera.lookAt(INTRO_LOOK.addVectors(camera.position, setViewDir(V_TMP, yaw, pitch)));
+  }
+  // onResize (registered earlier) has already re-picked REST_POS.
+  if (INTRO_CURVE) window.addEventListener("resize", () => {
+    if (!flight?.curve || (flight.toPos.equals(REST_POS) && flight.toLook.equals(REST_TARGET))) return;
+    const p0 = flight.elapsed === null ? 0 : Math.min(flight.elapsed / flight.ms, 1);
+    flight.curve = blendIntroCurves(flight.curve, buildIntroCurve(REST_POS, REST_TARGET), p0);
+    flight.toPos.copy(REST_POS);
+    flight.toLook.copy(REST_TARGET);
+  });
+  // A hidden tab settles a running curve intro at its end state (the rest
+  // pose, canonical lights), as Skip does, rather than resuming mid-flight.
+  if (INTRO_CURVE) document.addEventListener("visibilitychange", () => {
+    if (document.hidden && cameraIntro.phase === "playing" && cameraIntro.path === "curve") takeOverIntro(true);
+  });
   function takeOverIntro(resetView = false) {
     if (cameraIntro.phase !== "playing") return;
     cameraIntro.phase = "interrupted";
     flight = null;
+    restoreDockHint();
     // Preserve the current direction on pointer takeover; the explicit Skip
     // button lands at the original resting composition.
     if (resetView) {
       camera.position.copy(REST_POS);
       controls.target.copy(REST_TARGET);
     } else {
-      const distance = camera.position.distanceTo(controls.target);
+      // The curve places the orbit target at the camera's distance from the
+      // rest target, within the orbit limits, so controls.update() keeps the
+      // camera exactly where it is (the view stays inside the azimuth and
+      // polar limits along the whole curve).
+      const distance = cameraIntro.path === "curve"
+        ? THREE.MathUtils.clamp(camera.position.distanceTo(REST_TARGET), controls.minDistance, controls.maxDistance)
+        : camera.position.distanceTo(controls.target);
       camera.getWorldDirection(controls.target).multiplyScalar(distance).add(camera.position);
     }
     cancelBoot();
@@ -1935,6 +2213,11 @@ async function initScene(canvas) {
   controls.addEventListener("start", () => frameClock.noteMotion(performance.now()));
   controls.addEventListener("change", () => frameClock.noteMotion(performance.now()));
   let projectPageOpen = false;
+  // Exhibit-open push (#7, startExhibitPush): while the camera leans in, the
+  // room keeps rendering behind the fading curtain until it reads as opaque;
+  // settle() lands the push at once, restore() puts the camera back on the
+  // pre-push pose; waiting() is true until the curtain's fade has started.
+  const exhibitPush = { active: false, settle: null, restore: null, waiting: () => false };
   let running = !document.hidden;
   reducedMotionQuery.addEventListener('change', (event) => {
     prefersReducedMotion = event.matches;
@@ -1943,9 +2226,11 @@ async function initScene(canvas) {
     frameClock.reset(); tickLast = null; ambientVisibilityAt = -Infinity;
     advanced.refresh('motion-preference');
   });
-  const studioNavigation = createStudioNavigation({ onActiveChange(open) {
+  const studioNavigation = createStudioNavigation({ onOpen: (key) => startExhibitPush(key) === true, onCovered: () => exhibitCovered(), onActiveChange(open) {
     projectPageOpen = open;
-    running = !document.hidden && !open;
+    // back on the exact pre-push pose before the room's first return frame
+    if (!open) exhibitPush.restore?.();
+    running = !document.hidden && (!open || exhibitPush.active);
     advanced.invalidate(open ? 'project-open' : 'project-return');
     suspendAmbient(open ? 'project' : 'resuming'); ambientVisibilityAt = -Infinity;
     frameClock.reset(); shadowClock.reset(); tickLast = null; rafStamp = null;
@@ -1971,6 +2256,7 @@ async function initScene(canvas) {
     }
   });
   document.addEventListener("visibilitychange", () => {
+    if (document.hidden) exhibitPush.settle?.(); // a hidden tab lands a running push
     running = !document.hidden && !projectPageOpen;
     frameClock.reset();
     shadowClock.reset();
@@ -2008,15 +2294,30 @@ async function initScene(canvas) {
       frameClock.setDisplayInterval(delta);
       refreshBudget = frameClock.frameBudgetMs;
     }
-    if (!readiness.assets || !readiness.construction || !readiness.prepared) return;
+    if (!readiness.assets || !readiness.construction || !readiness.prepared) {
+      // Until the room is prepared, the startup drawing owns the canvas.
+      loaderDrawing?.frame(t);
+      // From the assets boundary the drawing is finished and holds, so nothing
+      // needs a frame until the room is prepared. Once this display's cadence
+      // is known (the room's first frames rely on it) the loop parks: no
+      // animation-frame wakeups through the compile. In a microtask, because
+      // three re-requests its frame right after this callback returns.
+      if (!forced && loaderDrawing?.held && frameClock.displayFps !== null) queueMicrotask(() => renderer.setAnimationLoop(null));
+      return;
+    }
     if (renderer.getContext().isContextLost()) return;
     if (!running && !forced) return;
     if (!forced && resumeReader?.isReading()) { suspendAmbient('resume'); return; }
+    // F34: the lean-in starts with its curtain. Until the curtain's fade has
+    // started (on the frame after the click) the room draws nothing new, so
+    // that frame is as light as with ?push=off and the curtain starts as soon.
+    if (!forced && exhibitPush.active && exhibitPush.waiting()) return;
     const cameraMoved = lastCameraPosition.distanceToSquared(camera.position) > 1e-10 ||
       1 - Math.abs(lastCameraQuaternion.dot(camera.quaternion)) > 1e-10;
-    const interactionMotion = !!flight || cameraMoved || !!paperMotion || lightFadeActive || bootTakeover || markerMotion;
+    const interactionMotion = !!flight || cameraMoved || !!paperMotion || lightFadeActive || bootTakeover || exhibitPush.active || markerMotion;
     if (cameraMoved || flight) lastCameraMotion = t;
-    if (!forced && !frameClock.accept(t, interactionMotion)) return;
+    // The startup drawing's develop needs every frame, even under reduced motion.
+    if (!forced && !frameClock.accept(t, interactionMotion || !!loaderDrawing?.active)) return;
     const animateDecorations = !prefersReducedMotion && frameClock.isMoving;
     const frameMs = tickLast === null ? 1000 / 60 : Math.max(0, t - tickLast);
     const dtms = Math.min(100, frameMs);
@@ -2058,6 +2359,7 @@ async function initScene(canvas) {
       ANISO_PENDING.delete(texture);
     }
 
+    if (exhibitPush.active) advanceExhibitPush(frameMs);
     if (flight) {
       // 2026-10-24 (M1b): accumulated frame time, capped per frame. A hitch
       // (a late shader link, a GC) now pauses the flight for that frame instead
@@ -2066,7 +2368,9 @@ async function initScene(canvas) {
       else flight.elapsed += flightStep(frameMs);
       const p = Math.min(flight.elapsed / flight.ms, 1);
       const e = easeInOutCubic(p);
-      if (flight.arc) {
+      if (flight.curve) {
+        flyIntroCurve(p); // the one-curve intro; lands exactly on the rest pose
+      } else if (flight.arc) {
         // Keyboard framing orbits: interpolate the spherical offset about the
         // (interpolated) target, so the camera keeps its distance on the way.
         const look = ARC_LOOK.lerpVectors(flight.fromLook, flight.toLook, e);
@@ -2366,6 +2670,9 @@ async function initScene(canvas) {
     renderStats.triangles = renderer.info.render.triangles;
     renderStats.cpuMs = performance.now() - renderStart;
     renderStats.gpuMs = gpuMs;
+    // Over the lit frame (not part of its statistics): the drawing covers the
+    // room until the reveal, then the room develops through it.
+    loaderDrawing?.overlay(t, camera);
     advanced.schedule({ moving: frameClock.isMoving,
       frameMs: Math.max(renderStats.cpuMs, gpuMs || 0),
       frameBudgetMs: frameClock.isMoving ? refreshBudget : 1000 / frameClock.idleFps });
@@ -2529,8 +2836,22 @@ async function initScene(canvas) {
     const t = dragHintEl.querySelector(".exp-draghint__text");
     if (t) t.textContent = "Swipe to look around";
   }
+  // F36: the onboarding hints run only on a visible tab. One due while the
+  // tab is hidden (a hidden tab settles the curve intro, and the chain's own
+  // timers keep running) waits for the tab to be visible again, so it is
+  // neither shown nor used up (kw_lamphint) unseen.
+  const hintsWaiting = new Set();
+  function deferWhileHidden(show) {
+    if (!document.hidden) return false;
+    if (!hintsWaiting.has(show)) {
+      hintsWaiting.add(show);
+      void waitForVisible().then(() => { hintsWaiting.delete(show); show(); });
+    }
+    return true;
+  }
   function showDragHint() {
     if (dragHintDone || !dragHintEl || panelOpen) return;
+    if (deferWhileHidden(showDragHint)) return;
     dragHintEl.hidden = false;
     requestAnimationFrame(() => dragHintEl.classList.add("is-on"));
     setTimeout(dismissDragHint, 5000); // auto-dismiss after 5s (or sooner on first drag)
@@ -2556,6 +2877,7 @@ async function initScene(canvas) {
   }
   function showClickHint() {
     if (clickHintDone || !clickHintEl || panelOpen) return;
+    if (deferWhileHidden(showClickHint)) return;
     clickHintEl.hidden = false;
     requestAnimationFrame(() => clickHintEl.classList.add("is-on"));
     setTimeout(dismissClickHint, 2500); // brief nudge, then get out of the way
@@ -2576,6 +2898,7 @@ async function initScene(canvas) {
   let lampHintEl = null;
   function showLampHint() {
     if (lampHintDone || panelOpen) return;
+    if (deferWhileHidden(showLampHint)) return;
     lampHintDone = true;
     try { localStorage.setItem("kw_lamphint", "1"); } catch (e) {}
     lampHintEl = document.createElement("div");
@@ -2833,6 +3156,131 @@ async function initScene(canvas) {
     if (root.userData.hotspot.action === "lamp") { toggleRoomLights(); return; }
     focusHotspot(root);
   });
+
+  /* ---------- exhibit-open push (#7, 2026-10-27; F34, F35 2026-10-28) ----------
+     Opening a project exhibit (click, keyboard Enter, the exhibit picker)
+     leans the camera PUSH_FRACTION of the way toward the exhibit along the
+     line of sight to its centre, over PUSH_MS with an ease-out and the
+     orientation held, so the exhibit stays where it is on screen and grows.
+     It is a short lean-in under the curtain, never ahead of it: the project
+     page, its white curtain and its frame start at the click exactly as with
+     ?push=off (studio-navigation onOpen); the push starts moving when the
+     curtain's fade has started (the frame after the click; the room draws
+     nothing until then, at most PUSH_CURTAIN_WAIT_MS), lands at the latest
+     when the curtain reads as opaque (onCovered, about 115 ms into its fade),
+     and the room stops rendering then.
+     The push stops PUSH_CLEARANCE_M short of anything on that line (a ray
+     cast; glass shelves count, the exhibit and the invisible pick boxes do
+     not) and never comes closer than PUSH_MIN_GAP_M to the centre. An
+     exhibit that is not on screen (its centre outside PUSH_SCREEN_NDC of the
+     view, or more than PUSH_MAX_ANGLE_DEG off the view axis, e.g. one opened
+     from the picker) gets no push: the camera never moves sideways toward
+     something unseen. Once the project is open, the return restores the exact
+     pre-push pose (position, orientation, orbit target) before the room's
+     first frame. Pointer, wheel or key input during the push, or a hidden
+     tab, lands it at once. Reduced motion, ?push=off, or another camera move
+     still running: no push. */
+  const PUSH_MS = 240, PUSH_FRACTION = 0.3, PUSH_CURTAIN_WAIT_MS = 120;
+  const PUSH_CLEARANCE_M = 0.3, PUSH_MIN_GAP_M = 0.55;
+  const PUSH_SCREEN_NDC = 0.9, PUSH_MAX_ANGLE_DEG = 25;
+  const PUSH_INTENT = ["pointerdown", "wheel", "keydown"];
+  const pushStep = createMotionStep();
+  const pushRay = new THREE.Raycaster();
+  const pushAxis = new THREE.Vector3();
+  const pushStats = { plays: 0, settled: 0, skipped: "", distance: 0, fraction: 0, offAxisDeg: null, startedAt: null, endedAt: null, coveredAt: null };
+  let push = null;
+  const onPushIntent = () => settleExhibitPush();
+  function startExhibitPush(key) {
+    settleExhibitPush();
+    const skip = !EXHIBIT_PUSH ? "off" : prefersReducedMotion ? "reduced-motion" : document.hidden || !running ? "hidden"
+      : flight || paperMotion ? "camera-busy" : "";
+    const pivot = HOTSPOTS.find((h) => h.userData.hotspot.key === key);
+    Object.assign(pushStats, { skipped: skip || (pivot ? "" : "no-exhibit"), offAxisDeg: null, coveredAt: null });
+    if (pushStats.skipped) return;
+    const from = camera.position.clone();
+    const center = pivot.userData.hotspot.center?.clone() || pivot.getWorldPosition(new THREE.Vector3());
+    const dir = center.clone().sub(from);
+    const span = dir.length();
+    dir.divideScalar(span || 1);
+    // F35: only toward an exhibit that is on screen, near the view axis.
+    camera.updateMatrixWorld();
+    const ndc = center.clone().project(camera);
+    const offAxis = THREE.MathUtils.radToDeg(dir.angleTo(camera.getWorldDirection(pushAxis)));
+    pushStats.offAxisDeg = +offAxis.toFixed(2);
+    if (!(Math.abs(ndc.x) <= PUSH_SCREEN_NDC && Math.abs(ndc.y) <= PUSH_SCREEN_NDC && ndc.z < 1) || offAxis > PUSH_MAX_ANGLE_DEG) {
+      pushStats.skipped = "off-screen";
+      return;
+    }
+    let distance = Math.min(PUSH_FRACTION * span, span - PUSH_MIN_GAP_M);
+    const blockers = [];
+    scene.traverse((o) => {
+      if (!o.isMesh || NO_PREPASS.includes(o)) return;
+      for (let p = o; p; p = p.parent) if (!p.visible || p === pivot) return;
+      blockers.push(o);
+    });
+    pushRay.set(from, dir);
+    pushRay.far = Math.max(0, distance) + PUSH_CLEARANCE_M;
+    const hit = pushRay.intersectObjects(blockers, false)[0];
+    if (hit) distance = Math.min(distance, hit.distance - PUSH_CLEARANCE_M);
+    if (!(distance > 0.02)) { pushStats.skipped = "blocked"; return; }
+    push = { from, dir, distance, elapsed: null, quaternion: camera.quaternion.clone(),
+      target: controls.target.clone(), enabled: controls.enabled };
+    controls.enabled = false;
+    exhibitPush.active = true;
+    exhibitPush.settle = settleExhibitPush;
+    exhibitPush.restore = restoreExhibitPush;
+    exhibitPush.waiting = pushWaitingForCurtain;
+    for (const type of PUSH_INTENT) window.addEventListener(type, onPushIntent, { capture: true, passive: true });
+    Object.assign(pushStats, { plays: pushStats.plays + 1, distance, fraction: distance / span, startedAt: performance.now(), endedAt: null,
+      movedAt: null, from: from.toArray(), fromQuaternion: push.quaternion.toArray(), fromTarget: push.target.toArray() });
+    return true;
+  }
+  function pushWaitingForCurtain() {
+    return !!push && push.elapsed === null && !studioNavigation.curtainStarted() &&
+      performance.now() - pushStats.startedAt < PUSH_CURTAIN_WAIT_MS;
+  }
+  // render loop: accumulated frame time, hitch-capped like the flights
+  function advanceExhibitPush(frameMs) {
+    if (push.elapsed === null) { push.elapsed = 0; pushStats.movedAt = performance.now(); }
+    else push.elapsed += pushStep(frameMs);
+    const k = Math.min(push.elapsed / PUSH_MS, 1);
+    camera.position.copy(push.from).addScaledVector(push.dir, push.distance * easeOutCubic(k));
+    if (k >= 1) endExhibitPush();
+  }
+  function endExhibitPush() {
+    exhibitPush.active = false;
+    exhibitPush.settle = null;
+    exhibitPush.waiting = () => false;
+    pushStats.endedAt = performance.now();
+    for (const type of PUSH_INTENT) window.removeEventListener(type, onPushIntent, { capture: true });
+    // The curtain covers the room from here: stop its loop as an open
+    // project always does (a frame of the loop still renders the landed push).
+    if (projectPageOpen) { running = false; renderer.setAnimationLoop(null); }
+  }
+  // Lands a running push where it was going (curtain opaque, input, hidden tab).
+  function settleExhibitPush() {
+    if (!push || !exhibitPush.active) return;
+    camera.position.copy(push.from).addScaledVector(push.dir, push.distance);
+    pushStats.settled++;
+    endExhibitPush();
+  }
+  // The curtain reads as opaque (or has finished): the room is out of sight,
+  // so it stops rendering.
+  function exhibitCovered() {
+    pushStats.coveredAt = performance.now();
+    settleExhibitPush();
+    if (projectPageOpen && running) { running = false; renderer.setAnimationLoop(null); }
+  }
+  function restoreExhibitPush() {
+    if (!push) return;
+    if (exhibitPush.active) endExhibitPush();
+    camera.position.copy(push.from);
+    camera.quaternion.copy(push.quaternion);
+    controls.target.copy(push.target);
+    controls.enabled = push.enabled;
+    push = null;
+    exhibitPush.restore = null;
+  }
 
   function focusHotspot(root) {
     if (!readiness.revealed || paperReturning) return;
@@ -3763,7 +4211,10 @@ async function initScene(canvas) {
       spoolAngle: MODELS.activeSpool?.rotation.x, scopeTextureVersion: MODELS.scope?.tex.version }),
     getBootStats: () => ({ ...bootStatus, active: bootTakeover }),
     getCameraIntroStats: () => ({ ...cameraIntro }),
+    getExhibitPushStats: () => ({ ...pushStats, active: exhibitPush.active, enabled: EXHIBIT_PUSH }),
     getSlowNoticeStats: () => slowNotice.snapshot(),
+    getLoaderDrawingStats: () => loaderDrawing?.getState() || { phase: !DRAWING_LOADER ? "classic" : loaderDrawingRefused ? "off" : "not-started",
+      reason: loaderDrawingRefused, live: false },
     getRealismStats: () => ({ ...studioRealism.stats }),
     getHDRStats: () => ({ ...hdrService.getStats(), fallback: hdrFallback }),
     getQualityStats: () => ({ ...adaptiveQuality.getStats(), appliedScale: resolutionScale, gpuTiming: gpuTimer.supported, displayBudgetMs: refreshBudget }),
@@ -3779,6 +4230,41 @@ async function initScene(canvas) {
   };
   readiness.construction = true;
   readiness.timings.construction = performance.now();
+  if (DRAWING_LOADER && loaderEl) void loaderDrawingModule.then((drawingModule) => {
+    if (!drawingModule) { loaderDrawingRefused = "unavailable"; if (loaderEl.dataset.draw !== "live") loaderEl.dataset.draw = "off"; return; }
+    if (loaderEl.dataset.draw === "off" || readiness.revealed || loader.disposed) { loaderDrawingRefused ||= loaderEl.dataset.draw === "off" ? "deadline" : "revealed"; return; }
+    // F33: a module that arrives after the assets boundary would link its
+    // programs while the room compiles: the classic card stays instead.
+    if (readiness.timings.assets !== undefined) {
+      loaderDrawingRefused = "late";
+      loaderEl.dataset.draw = "off";
+      return;
+    }
+    const drawEye = new THREE.Vector3(), drawLook = new THREE.Vector3();
+    // The pose the room is revealed at: a saved return, the rest view under
+    // reduced motion (no intro), else the intro's first frame.
+    const revealPose = () => {
+      if (roomReturn) return { position: drawEye.fromArray(roomReturn.position), look: drawLook.fromArray(roomReturn.target) };
+      if (prefersReducedMotion) return { position: REST_POS, look: REST_TARGET };
+      if (!INTRO_CURVE) return { position: FLY_POS, look: drawLook.set(0, 0.75, -0.1) };
+      drawEye.fromArray(INTRO_EYE[0]);
+      return { position: drawEye, look: drawLook.addVectors(drawEye, setViewDir(V_TMP, INTRO_YAW[0], INTRO_PITCH[0])) };
+    };
+    loaderDrawing = drawingModule.createLoaderDrawing({
+      renderer, scene, camera, loaderEl, pose: revealPose,
+      progress: () => startupUI.getProgress(),
+      // The baked architecture as soon as it is loaded; the procedural room
+      // only once the bake has failed.
+      shell: () => ({ root: bakeActive ? bakedRoot : null, procedural: !bakeActive }),
+      exclude: NO_PREPASS,
+      reducedMotion: () => prefersReducedMotion,
+    });
+    // F32/RS1: from the assets boundary the drawing is finished and held (no
+    // canvas frames); while it holds, the compile's percentage is painted at
+    // most every 2 s (experience-loader.js COUNT_HOLD_MS).
+    startupUI.holdCounts(() => !!loaderDrawing?.held);
+    window.__expLoaderDrawing = { getState: () => loaderDrawing.getState() };
+  });
   void loader.whenAllReady().then(records => {
     if (loader.disposed) return;
     readiness.detailsSettled = true;
@@ -3791,11 +4277,19 @@ async function initScene(canvas) {
   await assetsReady;
   if (loader.disposed) return;
   readiness.timings.assets = performance.now();
+  // The drawing is finished here and then holds until the room is prepared
+  // (no canvas frames, GL calls or uploads through the batching, the texture
+  // uploads and the compile). It registers the static meshes (already
+  // uploaded) before the merge detaches them.
+  loaderDrawing?.capture();
   batchingStats = await batchStaticRoom(scene, {
     exclude: [MODELS.printerHead, MODELS.chamberFan, MODELS.activeSpool, ...HOTSPOTS],
     yieldTask: yieldToBrowser,
   });
   advanced.install();
+  // The batches replace their source meshes; the drawing keeps drawing those
+  // (already uploaded) and frees their buffers when it ends.
+  loaderDrawing?.invalidate();
   // Populate after proxies register; doReveal enables the dock after GPU preparation.
   const dock = document.getElementById("exp-dock");
   const exhibitSelect = document.getElementById("exp-project-select");
@@ -3875,8 +4369,16 @@ async function initScene(canvas) {
   };
   startupUI.update({ phase: "preparing", activity: "compiling" });
   await paintStage();
-  await prepareRoomShaders(renderer, scene, camera, composer, { gtao, bokeh });
-  startupUI.update({ phase: "preparing", activity: "lighting", loaded: textures.size + 1, total: preparationTotal });
+  // The drawing screen shows the share of the room's programs already
+  // compiled and linked (its drawing is already finished and held); today's
+  // screen keeps its shimmer. F29: the counts arrive at most twice a second
+  // and the screen shows them only as its percentage ("Compiling materials",
+  // never "N / M": the total grows as the compile submits each group); the
+  // status line changes only here, at the stage boundaries.
+  await prepareRoomShaders(renderer, scene, camera, composer, { gtao, bokeh,
+    onProgress: DRAWING_LOADER ? (linked, total) => startupUI.update({ phase: "preparing", activity: "compiling", loaded: linked, total }) : null });
+  if (DRAWING_LOADER) startupUI.update({ phase: "preparing", activity: "lighting" });
+  else startupUI.update({ phase: "preparing", activity: "lighting", loaded: textures.size + 1, total: preparationTotal });
   await paintStage();
   await advanced.warmup();
   startupUI.update({ phase: "preparing", activity: null, loaded: preparationTotal, total: preparationTotal });
@@ -3885,6 +4387,8 @@ async function initScene(canvas) {
   await paintStage();
   readiness.prepared = true;
   readiness.timings.prepared = performance.now();
+  // The held drawing parked the loop (tick): the first lit frame restarts it.
+  if (loaderDrawing && running) { rafStamp = null; renderer.setAnimationLoop(tick); }
   console.info(`[experience] base assets prepared — ${HOTSPOTS.length} hotspots; awaiting first frame`);
 }
 
@@ -4652,11 +5156,11 @@ function buildLedBarLamp() {
 }
 
 function makeInteractMarker() {
-  // Genshin-style prompt: soft blue glow + diamond ring + white core.
-  // Built to read on BOTH dark exhibits AND white ones (CFD monitor, résumé):
-  // additive blending vanished against white, so this uses NORMAL blending
-  // with a dark contour behind the blue ring and a dark edge on the core —
-  // contrast that survives a white background while still glowing on dark.
+  // Interact prompt: a warm-white diamond ring with a warm-white core
+  // (2026-10-28, #13: the chrome's ink; no blue and no glow). Built to read on
+  // BOTH dark exhibits AND white ones (CFD monitor, résumé): NORMAL blending,
+  // with a dark contour behind the ring and a dark edge on the core, so it
+  // keeps an edge on a white background and on the dark room alike.
   const s = 128;
   const c = document.createElement("canvas");
   c.width = c.height = s;
@@ -4666,32 +5170,26 @@ function makeInteractMarker() {
   // it stays legible over the white résumé sheet / CFD monitor while the
   // disc melts away over dark exhibits (Kefan asked twice — keep this)
   const back = ctx.createRadialGradient(cx, cx, 2, cx, cx, 46);
-  back.addColorStop(0, "rgba(9, 18, 36, 0.55)");
-  back.addColorStop(0.55, "rgba(9, 18, 36, 0.34)");
-  back.addColorStop(1, "rgba(9, 18, 36, 0)");
+  back.addColorStop(0, "rgba(8, 9, 11, 0.7)");
+  back.addColorStop(0.55, "rgba(8, 9, 11, 0.42)");
+  back.addColorStop(1, "rgba(8, 9, 11, 0)");
   ctx.fillStyle = back;
-  ctx.fillRect(0, 0, s, s);
-  const glow = ctx.createRadialGradient(cx, cx, 3, cx, cx, cx);
-  glow.addColorStop(0, "rgba(63, 140, 255, 0.55)");
-  glow.addColorStop(0.4, "rgba(63, 140, 255, 0.22)");
-  glow.addColorStop(1, "rgba(63, 140, 255, 0)");
-  ctx.fillStyle = glow;
   ctx.fillRect(0, 0, s, s);
   ctx.save();
   ctx.translate(cx, cx);
   ctx.rotate(Math.PI / 4);
   // dark contour first — gives the ring an edge on WHITE backgrounds
-  ctx.strokeStyle = "rgba(4, 12, 28, 0.9)";
+  ctx.strokeStyle = "rgba(8, 9, 11, 0.9)";
   ctx.lineWidth = 9;
   ctx.strokeRect(-19, -19, 38, 38);
-  // saturated brand-blue ring
-  ctx.strokeStyle = "#3f8cff";
+  // warm-white ink ring
+  ctx.strokeStyle = "#ece9e2";
   ctx.lineWidth = 5;
   ctx.strokeRect(-19, -19, 38, 38);
-  // white core with a thin dark edge (reads on white, glows on dark)
-  ctx.fillStyle = "rgba(6, 16, 34, 0.85)";
+  // warm-white core with a thin dark edge (reads on white and on dark)
+  ctx.fillStyle = "rgba(8, 9, 11, 0.85)";
   ctx.fillRect(-10.5, -10.5, 21, 21);
-  ctx.fillStyle = "rgba(255, 255, 255, 0.98)";
+  ctx.fillStyle = "rgba(236, 233, 226, 0.98)";
   ctx.fillRect(-8, -8, 16, 16);
   ctx.restore();
   const tex = new THREE.CanvasTexture(c);

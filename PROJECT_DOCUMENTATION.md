@@ -114,10 +114,12 @@ audit records remain outside the public repository. No cloud document is edited.
 ## Refined surfaces and nearby animated annotations · follow-up to465eb59e
 
 Models stay fixed in the page. Small callouts now choose nearby free space using
-baked source-pose occupancy masks; the component dot appears, the rounded
-leader draws outward, and concise text follows. Labels retain their position
+baked source-pose occupancy masks. The leader draws to the part and its dot lands
+at the end, and the note text is not animated (since 2026-11-06; `?callouts=classic`
+shows the earlier rendering on that URL only). Labels retain their position
 within a phase. Reduced motion, hidden pages, image viewers, free exploration
-and disposal cancel all three animations. Named seeks remeasure the current
+and disposal cancel the leader and dot animations (and the note's under
+`?callouts=classic`). Named seeks remeasure the current
 section position so late fonts cannot move the requested phase backwards.
 
 Surface changes restore existing source bump and add restrained neutral print,
@@ -136,7 +138,8 @@ exact release backup records are in ../.codex/refined-annotations-20260930/.
 
 User requested no lateral whole-model movement, small technical labels with
 arrows, and photo-matched finishes. CSS model translation is removed. The 72
-stages now use 10–12px component labels and SVG arrows, projected from exact
+stages now use component labels (at least 11px) and SVG leaders with no arrowhead
+(both since 2026-11-06), projected from exact
 source nodes (live) or exported with the actual displayed frame (main-site
 sequences). Preserve native scroll, +/-90 degree steering and retained room
 navigation. Labels must never move the model to make room.

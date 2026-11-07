@@ -1,0 +1,297 @@
+{
+ "generated": "2026-10-28",
+ "tool": "releases/drawn-then-built-20261027/detail-callouts/tools/bake_occupancy.py",
+ "source": "assets/exploded/manifest-detail-white-20261024.json (detail frames, 1280 x 854, white background)",
+ "grid": {
+  "columns": 80,
+  "rows": 54
+ },
+ "threshold": "min(R,G,B) < 245",
+ "rule": "cell occupied when any frame of the story phase has a non-white pixel in it; rows are hex strings, most significant bit = leftmost column",
+ "phases": "phase of frame i = last step j with i/(N-1) + 1e-5 >= step.at (project-motion-notes.js), as in tools/white-studio/export.js",
+ "files": {
+  "steering.2685ec27b1.json": {
+   "sha256": "2685ec27b1854aa2057008f97a224539335afbe05fbe3c1edd014e46fd7a5d69",
+   "frames": 121,
+   "phases": 7,
+   "bytes": 8771,
+   "occupied": [
+    0.0664,
+    0.0782,
+    0.0688,
+    0.0785,
+    0.0782,
+    0.0662,
+    0.078
+   ]
+  },
+  "vineRobot.e04fa96249.json": {
+   "sha256": "e04fa96249cb1c1c29f25214b147a21880d85d593f283b6e47bdf116a6694710",
+   "frames": 145,
+   "phases": 4,
+   "bytes": 5039,
+   "occupied": [
+    0.1727,
+    0.1794,
+    0.1875,
+    0.19
+   ]
+  },
+  "javelin.d7952fe832.json": {
+   "sha256": "d7952fe832f619b58b9139b21d1d4f1f34a4041e6d32ea34fc832dee8eeea25b",
+   "frames": 121,
+   "phases": 4,
+   "bytes": 5039,
+   "occupied": [
+    0.1965,
+    0.1984,
+    0.2014,
+    0.1963
+   ]
+  },
+  "brakeSim.9b6b82c455.json": {
+   "sha256": "9b6b82c455088b546d7e78a4f3ef82c9f302de1feace970d75d4b7d5ea21eb18",
+   "frames": 121,
+   "phases": 4,
+   "bytes": 5039,
+   "occupied": [
+    0.2815,
+    0.2836,
+    0.2861,
+    0.2868
+   ]
+  },
+  "aura.79ac4f779d.json": {
+   "sha256": "79ac4f779dd53de4552e24a24f300fc90a83385878c56091432450b7c73d45de",
+   "frames": 145,
+   "phases": 5,
+   "bytes": 6283,
+   "occupied": [
+    0.1125,
+    0.1201,
+    0.131,
+    0.1377,
+    0.141
+   ]
+  },
+  "scanner.fa6aace024.json": {
+   "sha256": "fa6aace02468f0793749fbe5d257bc1b0c651548c13b60379fba2f3139252c52",
+   "frames": 121,
+   "phases": 4,
+   "bytes": 5039,
+   "occupied": [
+    0.2882,
+    0.2921,
+    0.2921,
+    0.2887
+   ]
+  },
+  "seat.0e1b157fc6.json": {
+   "sha256": "0e1b157fc6ebd424bfcef22438f325da794e4f7e5f675638aa142f3fa64066ca",
+   "frames": 121,
+   "phases": 4,
+   "bytes": 5039,
+   "occupied": [
+    0.1669,
+    0.197,
+    0.2164,
+    0.1593
+   ]
+  },
+  "materialTest.83a08788e4.json": {
+   "sha256": "83a08788e4a8e994754c893f61d9e2a6cec7b83a6a7351af71cef3a0a8c56aff",
+   "frames": 145,
+   "phases": 5,
+   "bytes": 6283,
+   "occupied": [
+    0.1308,
+    0.1308,
+    0.1308,
+    0.1303,
+    0.1306
+   ]
+  },
+  "ansysCfd.a96c9743f2.json": {
+   "sha256": "a96c9743f2596953deb3584748ef5c0a7ce86c344e6c27815a541cef55434db7",
+   "frames": 121,
+   "phases": 4,
+   "bytes": 5039,
+   "occupied": [
+    0.3123,
+    0.3132,
+    0.3139,
+    0.3113
+   ]
+  },
+  "pool.1986d008d3.json": {
+   "sha256": "1986d008d3930366f5b85c8b972393d1c683ddf472268e6ebf901211eecdb7df",
+   "frames": 145,
+   "phases": 5,
+   "bytes": 6283,
+   "occupied": [
+    0.2016,
+    0.2007,
+    0.1998,
+    0.2016,
+    0.2014
+   ]
+  },
+  "lineFollower.1e62cf803e.json": {
+   "sha256": "1e62cf803e35ed17bd9c1b0fbf803bb47ea068d8d337b84caa2f2521681d1fbd",
+   "frames": 121,
+   "phases": 4,
+   "bytes": 5039,
+   "occupied": [
+    0.2428,
+    0.2444,
+    0.2481,
+    0.2414
+   ]
+  },
+  "formlabs.87d1485484.json": {
+   "sha256": "87d1485484809e73d367d51e22324dabcf12125a32ab23d90880bf7809be566e",
+   "frames": 121,
+   "phases": 4,
+   "bytes": 5039,
+   "occupied": [
+    0.2532,
+    0.2685,
+    0.2681,
+    0.2544
+   ]
+  },
+  "education.9dcda4fbaf.json": {
+   "sha256": "9dcda4fbaf0e4bd0b5c6bfe13b67b462bf0c45a8d0b58e446605c52b4870ee90",
+   "frames": 121,
+   "phases": 5,
+   "bytes": 6283,
+   "occupied": [
+    0.1912,
+    0.0917,
+    0.1,
+    0.0919,
+    0.0806
+   ]
+  },
+  "ftc.5f999702c3.json": {
+   "sha256": "5f999702c3d5aaadeacf43e937c7882fcf7c756429a849b5cc6c8e9f11f1be0e",
+   "frames": 121,
+   "phases": 5,
+   "bytes": 6283,
+   "occupied": [
+    0.109,
+    0.1116,
+    0.1093,
+    0.1176,
+    0.1174
+   ]
+  },
+  "telecaster.a2128bc07e.json": {
+   "sha256": "a2128bc07e09f20dc59a30508c3b39333cfde4bf58b9690e1447b3d0eaed9e20",
+   "frames": 121,
+   "phases": 4,
+   "bytes": 5039,
+   "occupied": [
+    0.0873,
+    0.0785,
+    0.0875,
+    0.0738
+   ]
+  },
+  "carbonSeat.d8b74d7d1a.json": {
+   "sha256": "d8b74d7d1a0681b9338280c05f16e4f68505e4e208064da02e4dcd481bf21e9b",
+   "frames": 121,
+   "phases": 4,
+   "bytes": 5039,
+   "occupied": [
+    0.1898,
+    0.1898,
+    0.1898,
+    0.1898
+   ]
+  }
+ },
+ "anchors": {
+  "file": "anchors.36cd6c30cd.json",
+  "sha256": "36cd6c30cde6894c969bd645597c517bd5e0cf24ed655e97df2fd12275a5f186",
+  "bytes": 70028,
+  "source": "assets/exploded/scanner-color-20261024/anchors.json (published frame anchors; aspect, masks and legend carried over unchanged)",
+  "method": "Per-frame points re-projected with the live inspector posed exactly as the detail-frame export (640 x 427, source camera, studio-inspector.js projectAnchor) for the label targets in project-motion-labels.js; frames whose stage target did not change reproduce the published points exactly.",
+  "check": "Every stage target was ray-checked on 9 frames of its phase (releases/drawn-then-built-20261027/detail-callouts/harness2/audit.cjs); the corrected points came from author.cjs, author-at.cjs and author-line.cjs there.",
+  "rebaked": {
+   "steering": {
+    "frames": 121,
+    "changed": 54,
+    "max": 0.0487,
+    "from": "../audit/bake1.json"
+   },
+   "vineRobot": {
+    "frames": 145,
+    "changed": 76,
+    "max": 0.116,
+    "from": "../audit/bake1.json"
+   },
+   "scanner": {
+    "frames": 121,
+    "changed": 25,
+    "max": 0.0377,
+    "from": "../audit/bake1.json"
+   },
+   "javelin": {
+    "frames": 121,
+    "changed": 25,
+    "max": 0.0341,
+    "from": "../audit/bake2.json"
+   },
+   "materialTest": {
+    "frames": 145,
+    "changed": 29,
+    "max": 0.018,
+    "from": "../audit/bake2.json"
+   },
+   "aura": {
+    "frames": 145,
+    "changed": 19,
+    "max": 0.0522,
+    "from": "../audit/bake2.json"
+   },
+   "ansysCfd": {
+    "frames": 121,
+    "changed": 36,
+    "max": 0.2979,
+    "from": "../audit/bake5.json"
+   },
+   "pool": {
+    "frames": 145,
+    "changed": 145,
+    "max": 0.1306,
+    "from": "../audit/bake1.json"
+   },
+   "formlabs": {
+    "frames": 121,
+    "changed": 61,
+    "max": 0.0901,
+    "from": "../audit/bake2.json"
+   },
+   "lineFollower": {
+    "frames": 121,
+    "changed": 94,
+    "max": 0.1181,
+    "from": "../audit/bake3.json"
+   },
+   "ftc": {
+    "frames": 121,
+    "changed": 24,
+    "max": 0.0201,
+    "from": "../audit/bake3.json"
+   },
+   "telecaster": {
+    "frames": 121,
+    "changed": 82,
+    "max": 0.1194,
+    "from": "../audit/bake4.json"
+   }
+  },
+  "usedBy": "project-motion-story.js (drawn callouts); ?callouts=classic reads the published file"
+ }
+}

@@ -47,11 +47,12 @@ class Element {
 }
 
 function setup({ reducedMotion = false, scroll = 923, width = 1280, height = 900,
-  project = 'steering', storyTop = 1000, mediaHeight = 300 } = {}) {
+  project = 'steering', storyTop = 1000, mediaHeight = 300, search = '', arrival = null } = {}) {
   const window = new Element(), document = new Element(), reduced = new Element();
   document.hidden = false; window.scrollY = scroll; reduced.matches = reducedMotion;
   const story = new Element(), host = new Element(), pin = new Element(), media = new Element();
   story.dataset.motionProject = project;
+  if (arrival) media.dataset.arrival = arrival;
   if (project === 'steering') host.dataset.motionLive = 'true';
   const nodes = Object.fromEntries([
     '#preview-title', '.motion-note-body', '.motion-step-count', '.motion-evidence-note',
@@ -79,13 +80,24 @@ function setup({ reducedMotion = false, scroll = 923, width = 1280, height = 900
     return { left: 0, width: context.innerWidth, top, bottom: top + geometry.pinHeight, height: geometry.pinHeight };
   };
   const frames = new Map(), requests = [], modes = [], scrolls = [], intersections = [], resizes = [];
-  const fetches = [];
+  const fetches = [], observers = [], timers = new Map();
+  let timerID = 0;
   let frameID = 0, time = 0, liveAnchor = { x: .5, y: .5 };
   window.scrollTo = options => { scrolls.push(options); window.scrollY = options.top; window.emit('scroll'); };
   host.addEventListener('case-motion-request', event => requests.push(event.detail));
   host.addEventListener('case-motion-mode', event => modes.push(event.detail));
   const context = {
     window, document, layoutAnnotation, maskRegions, innerWidth: width, innerHeight: height,
+    ...(search ? { location: { search }, URLSearchParams } : {}),
+    ...(arrival ? {
+      MutationObserver: class {
+        constructor(callback) { this.callback = callback; this.disconnected = false; observers.push(this); }
+        observe(element, options) { this.element = element; this.options = options; }
+        disconnect() { this.disconnected = true; }
+      },
+      setTimeout: (callback, ms) => { const id = ++timerID; timers.set(id, { callback, ms }); return id; },
+      clearTimeout: id => timers.delete(id),
+    } : {}),
     matchMedia: () => reduced,
     AbortController: class {
       constructor() { this.signal = new Element(); }
@@ -111,7 +123,7 @@ function setup({ reducedMotion = false, scroll = 923, width = 1280, height = 900
     'globalThis.attach = attachMotionStory; globalThis.notes = projectMotionNotes; globalThis.labels = projectMotionLabels;';
   vm.runInNewContext(runnable, context);
   const controller = context.attach(story);
-  const app = { window, document, story, host, pin, nodes, frames, requests, modes, scrolls, geometry,
+  const app = { window, document, story, host, pin, media, nodes, frames, requests, modes, scrolls, geometry, observers, timers,
     controller, context, notes: { ...context.notes[project], steps: context.notes[project].steps.map((step, i) => ({ ...step, ...context.labels[project][i] })) },
     intersections, resizes, fetches,
     tick() { time += 17; const callbacks = [...frames.values()]; frames.clear(); callbacks.forEach(callback => callback(time)); },
@@ -174,24 +186,25 @@ test('Native scroll eases requested progress while annotations wait for the disp
 });
 
 test('Annotations appear from the displayed pose and animate only actual stage changes', () => {
-  const h = setup(), annotation = h.nodes['.motion-notes'];
+  const h = setup(), annotation = h.nodes['.motion-notes'], line = h.nodes['.motion-leader-line'];
   assert.equal(h.story.dataset.notesVisible, 'false');
   assert.equal(annotation.getAttribute('aria-hidden'), 'true');
   h.scrollToProgress(.73); h.drain();
   assert.equal(h.story.dataset.notesVisible, 'false', 'An unloaded requested pose cannot reveal its notes');
-  assert.equal(annotation.animations?.length || 0, 0);
+  assert.equal(line.animations?.length || 0, 0);
   h.show(.1);
   assertNoteAt(h, .1);
   assert.equal(h.story.dataset.notesVisible, 'true');
   assert.equal(annotation.getAttribute('aria-hidden'), 'false');
-  const firstEntrance = annotation.animations[0];
-  assert.equal(firstEntrance.options.duration, 240);
+  assert.equal(annotation.animations?.length || 0, 0, 'The note is readable at once: it is never faded in');
+  const firstEntrance = line.animations[0];
+  assert.equal(firstEntrance.options.duration, 200);
   h.show(.15);
-  assert.equal(annotation.animations.length, 1, 'Progress inside a stage must not restart the entrance');
+  assert.equal(line.animations.length, 1, 'Progress inside a stage must not restart the entrance');
   h.show(.68);
   assertNoteAt(h, .68);
   assert.equal(firstEntrance.playState, 'idle', 'Changing stages cancels the superseded entrance');
-  assert.equal(annotation.animations.length, 2);
+  assert.equal(line.animations.length, 2);
 });
 
 test('All seven steering readings follow actual forward and reverse boundary crossings', () => {
@@ -290,11 +303,11 @@ test('Reduced-motion changes settle an in-flight guide and keep explicit seeking
 test('Enabling reduced motion cancels an entrance even when the displayed stage is unchanged', () => {
   const h = setup();
   h.show(.22);
-  const animation = h.nodes['.motion-notes'].animations.at(-1);
+  const animation = h.nodes['.motion-leader-line'].animations.at(-1);
   assert.equal(animation.playState, 'running');
   h.reduce(true); h.drain();
   assert.equal(animation.playState, 'idle');
-  assert.equal(h.nodes['.motion-notes'].animations.length, 1, 'Preference changes must not create a replacement fade');
+  assert.equal(h.nodes['.motion-leader-line'].animations.length, 1, 'Preference changes must not create a replacement fade');
   assertNoteAt(h, .22);
   assert.equal(h.story.dataset.notesVisible, 'true');
 });
@@ -302,7 +315,7 @@ test('Enabling reduced motion cancels an entrance even when the displayed stage 
 test('Hidden and offscreen guides stop work and replay their position on return', () => {
   const h = setup();
   h.scrollToProgress(.5); h.tick(); h.show(.5);
-  const entrance = h.nodes['.motion-notes'].animations.at(-1);
+  const entrance = h.nodes['.motion-leader-line'].animations.at(-1);
   h.hidden(true);
   assert.equal(h.frames.size, 0);
   assert.equal(entrance.playState, 'idle');
@@ -379,7 +392,7 @@ test('Offline stage buttons choose a decoded-frame position at or after the name
 test('BFCache suspension preserves the guide and restoration resends the current pose request', () => {
   const h = setup();
   h.scrollToProgress(.5); h.drain(); h.show(.5);
-  const entrance = h.nodes['.motion-notes'].animations.at(-1);
+  const entrance = h.nodes['.motion-leader-line'].animations.at(-1);
   h.window.emit('pagehide', undefined, { persisted: true });
   assert.equal(entrance.playState, 'idle');
   const count = h.requests.length;
@@ -394,7 +407,7 @@ test('BFCache suspension preserves the guide and restoration resends the current
 test('Disposal cancels observers, listeners and frames so late engine events cannot mutate the guide', () => {
   const h = setup();
   h.scrollToProgress(.78); h.tick(); h.show(.56);
-  const entrance = h.nodes['.motion-notes'].animations.at(-1);
+  const entrance = h.nodes['.motion-leader-line'].animations.at(-1);
   h.window.emit('studio-project-dispose');
   assert.equal(entrance.playState, 'idle');
   const count = h.requests.length, shown = h.controller.getState().shown;
@@ -464,7 +477,7 @@ test('Live leaders follow projected model points without seeking or moving the m
 });
 
 test('Missing or offscreen targets cannot run an opacity animation over hidden labels', () => {
-  const h = setup(), annotation = h.nodes['.motion-notes'];
+  const h = setup(), annotation = h.nodes['.motion-leader-line'];
   h.anchor(null); h.show(.22);
   assert.equal(annotation.animations?.length || 0, 0);
   h.anchor({ x: .5, y: .5 }); h.show(.54);
@@ -478,7 +491,7 @@ test('Missing or offscreen targets cannot run an opacity animation over hidden l
 test('Offline leaders use the decoded frame and preserve contain-fit letterboxing after resize', async () => {
   const h = setup({ project: 'materialTest' }), leader = h.nodes['.motion-leader-line'];
   assert.equal(h.fetches.length, 1);
-  assert.match(h.fetches[0].url, /anchors\.json$/);
+  assert.match(h.fetches[0].url, /anchors(\.[0-9a-f]{10})?\.json$/);
   const points = Array.from({ length: 101 }, (_, i) => ({ x: i / 100, y: .5 }));
   h.scrollToProgress(.9); h.drain(); h.show(.25);
   await h.resolveAnchors({ materialTest: { aspect: 1.5, points } });
@@ -526,8 +539,9 @@ test('The actual image renderer republishes an identical cached pose after reset
 });
 
 
-test('Component dot, drawn leader and delayed label form one cancellable entrance', () => {
-  const h = setup(); h.show(.22);
+test('Classic callouts keep the dot, reverse-drawn leader and delayed label entrance', () => {
+  const h = setup({ search: '?callouts=classic' }); h.show(.22);
+  assert.equal(h.story.dataset.callouts, 'classic');
   const dot = h.nodes['.motion-leader-target'].animations.at(-1);
   const line = h.nodes['.motion-leader-line'].animations.at(-1);
   const text = h.nodes['.motion-notes'].animations.at(-1);
@@ -546,7 +560,7 @@ test('Component dot, drawn leader and delayed label form one cancellable entranc
 
 test('Opening the image viewer cancels every annotation animation', () => {
   const h = setup(); h.show(.22);
-  const animations = ['.motion-notes','.motion-leader-line','.motion-leader-target'].map(selector => h.nodes[selector].animations.at(-1));
+  const animations = ['.motion-leader-line','.motion-leader-target'].map(selector => h.nodes[selector].animations.at(-1));
   h.window.emit('case-lightbox-state', {open:true});
   assert(animations.every(animation => animation.playState === 'idle'));
 });
@@ -559,4 +573,148 @@ test('Explicit stage selection remeasures a section moved by late fonts or case 
   assert.equal(h.controller.getState().start, 948);
   assertScrollBoundary(h,h.notes.steps[1].at);
   assert.equal(h.story.dataset.userSeeking,'true');
+});
+
+
+test('Drawn callouts: the note is never animated; the leader draws from it and its dot lands', () => {
+  const h = setup(); h.show(.22);
+  assert.equal(h.story.dataset.callouts, 'drawn');
+  assert.equal(h.story.dataset.leader, 'in');
+  assert.equal(h.nodes['.motion-notes'].animations?.length || 0, 0);
+  const line = h.nodes['.motion-leader-line'].animations.at(-1), dot = h.nodes['.motion-leader-target'].animations.at(-1);
+  assert.equal(line.options.duration, 200); assert.equal(line.options.easing, 'cubic-bezier(.45,0,.2,1)');
+  assert.deepEqual([line.keyframes[0].strokeDashoffset, line.keyframes[1].strokeDashoffset], [1, 0], 'Drawn from the note towards the part');
+  assert.equal(dot.options.delay + dot.options.duration <= 250, true, 'Settled within 250 ms');
+  const counts = ['.motion-leader-target', '.motion-leader-line'].map(selector => h.nodes[selector].animations.length);
+  h.show(.24);
+  assert.deepEqual(['.motion-leader-target', '.motion-leader-line'].map(selector => h.nodes[selector].animations.length), counts);
+  h.hidden(true);
+  assert.deepEqual([dot, line].map(animation => animation.playState), ['idle', 'idle']);
+});
+
+test('Drawn callouts appear at once under reduced motion and ?draw=off', () => {
+  for (const options of [{ reducedMotion: true }, { search: '?draw=off' }]) {
+    const h = setup(options); h.choose(2); h.show(h.notes.steps[2].at);
+    assert.equal(h.story.dataset.leader, 'in');
+    assert.equal(h.nodes['.motion-leader-line'].animations?.length || 0, 0);
+    assert.equal(h.nodes['.motion-leader-target'].animations?.length || 0, 0);
+  }
+});
+
+test('A drawn leader waits for a still-running arrival, then draws; the note is shown meanwhile', () => {
+  const h = setup({ arrival: 'drawing' }); h.show(.22);
+  assert.equal(h.story.dataset.leader, 'wait');
+  assert.equal(h.story.dataset.notesVisible, 'true');
+  assert.equal(h.nodes['.motion-leader-line'].animations?.length || 0, 0, 'No callout lands on a model still inking');
+  assert.equal(h.observers.at(-1).options.attributeFilter[0], 'data-arrival');
+  delete h.media.dataset.arrival; h.observers.at(-1).callback([]);
+  assert.equal(h.story.dataset.leader, 'in');
+  assert.equal(h.nodes['.motion-leader-line'].animations.at(-1).options.duration, 200);
+  // A mark that never clears still gives the leader its place after the wait.
+  const late = setup({ arrival: 'held' }); late.show(.22);
+  const timer = [...late.timers.values()].find(t => t.ms === 7000);
+  assert(timer, 'A bounded wait'); timer.callback();
+  assert.equal(late.story.dataset.leader, 'in');
+});
+
+test('A leader placed while its stage is off screen still waits for the running arrival', () => {
+  const h = setup({ arrival: 'drawing' }); h.visible(false); h.show(.22);
+  assert.notEqual(h.story.dataset.leader, 'in', 'No leader may stand over a model that will ink when it scrolls in');
+  h.visible(true); h.drain();
+  assert.equal(h.story.dataset.leader, 'wait');
+  delete h.media.dataset.arrival; h.observers.at(-1).callback([]);
+  assert.equal(h.story.dataset.leader, 'in');
+  assert.equal(h.nodes['.motion-leader-line'].animations.at(-1).options.duration, 200, 'Drawn in once the stage is on screen');
+});
+
+test('An arrival wait does not survive the image viewer and resumes behind the same gate', () => {
+  const h = setup({ arrival: 'drawing' }); h.show(.22);
+  assert.equal(h.story.dataset.leader, 'wait');
+  h.window.emit('case-lightbox-state', { open: true });
+  assert.equal(h.story.dataset.leader, 'off');
+  assert.equal(h.timers.size, 0, 'The wait timer is cleared');
+  h.window.emit('case-lightbox-state', { open: false }); h.drain();
+  assert.equal(h.story.dataset.leader, 'wait', 'Still gated by the running arrival');
+  delete h.media.dataset.arrival; h.observers.at(-1).callback([]);
+  assert.equal(h.story.dataset.leader, 'in');
+});
+
+test('Drawn layout inputs carry the gutter, the 24% diagonal cap and the phase trajectory', async () => {
+  const h = setup({ project: 'materialTest' });
+  const points = Array.from({ length: 145 }, (_, i) => ({ x: .3 + i / 1000, y: .5 }));
+  h.scrollToProgress(.9); h.drain(); h.show(.25);
+  await h.resolveAnchors({ materialTest: { aspect: 1.5, points } });
+  const state = h.window.__caseCallouts.getState();
+  assert.equal(state.mode, 'drawn');
+  assert.equal(state.input.gutter, 56);
+  assert(Math.abs(state.input.cap - .24 * Math.hypot(1280, 540)) < .01);
+  assert.equal(state.input.trajectory.length, 6);
+  assert(state.placement.x >= 56 && state.placement.longest <= state.input.cap);
+});
+
+
+// The classic path (?callouts=classic) keeps the pre-2026-10-27 note entrance. These
+// restate the original note-fade assertions that the drawn default no longer exercises.
+const classic = (options = {}) => setup({ ...options, search: '?callouts=classic' });
+
+test('Classic callouts: the note entrance follows actual stage changes only', () => {
+  const h = classic(), annotation = h.nodes['.motion-notes'];
+  h.scrollToProgress(.73); h.drain();
+  assert.equal(h.story.dataset.notesVisible, 'false', 'An unloaded requested pose cannot reveal its notes');
+  assert.equal(annotation.animations?.length || 0, 0);
+  h.show(.1);
+  assertNoteAt(h, .1);
+  assert.equal(h.story.dataset.notesVisible, 'true');
+  const firstEntrance = annotation.animations[0];
+  assert.equal(firstEntrance.options.duration, 240);
+  h.show(.15);
+  assert.equal(annotation.animations.length, 1, 'Progress inside a stage must not restart the entrance');
+  h.show(.68);
+  assertNoteAt(h, .68);
+  assert.equal(firstEntrance.playState, 'idle', 'Changing stages cancels the superseded entrance');
+  assert.equal(annotation.animations.length, 2);
+});
+
+test('Classic callouts: reduced motion cancels the note entrance without a replacement fade', () => {
+  const h = classic(); h.show(.22);
+  const animation = h.nodes['.motion-notes'].animations.at(-1);
+  assert.equal(animation.playState, 'running');
+  h.reduce(true); h.drain();
+  assert.equal(animation.playState, 'idle');
+  assert.equal(h.nodes['.motion-notes'].animations.length, 1, 'Preference changes must not create a replacement fade');
+  assertNoteAt(h, .22);
+  assert.equal(h.story.dataset.notesVisible, 'true');
+});
+
+test('Classic callouts: hiding, BFCache suspension and disposal cancel the note entrance', () => {
+  for (const suspend of [
+    h => h.hidden(true),
+    h => h.window.emit('pagehide', undefined, { persisted: true }),
+    h => h.window.emit('studio-project-dispose'),
+  ]) {
+    const h = classic(); h.scrollToProgress(.5); h.tick(); h.show(.5);
+    const entrance = h.nodes['.motion-notes'].animations.at(-1);
+    assert.equal(entrance.playState, 'running');
+    suspend(h);
+    assert.equal(entrance.playState, 'idle');
+  }
+});
+
+test('Classic callouts: missing or offscreen targets cannot run the note fade', () => {
+  const h = classic(), annotation = h.nodes['.motion-notes'];
+  h.anchor(null); h.show(.22);
+  assert.equal(annotation.animations?.length || 0, 0);
+  h.anchor({ x: .5, y: .5 }); h.show(.54);
+  const entrance = annotation.animations.at(-1);
+  assert.equal(entrance.playState, 'running');
+  h.anchor({ x: 2, y: .5 });
+  assert.equal(h.story.dataset.anchorVisible, 'false');
+  assert.equal(entrance.playState, 'idle', 'WAAPI must not override the hidden target CSS guard');
+});
+
+test('Classic callouts: opening the image viewer cancels the note, leader and dot animations', () => {
+  const h = classic(); h.show(.22);
+  const animations = ['.motion-notes','.motion-leader-line','.motion-leader-target'].map(selector => h.nodes[selector].animations.at(-1));
+  h.window.emit('case-lightbox-state', {open:true});
+  assert(animations.every(animation => animation.playState === 'idle'));
 });

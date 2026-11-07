@@ -99,6 +99,10 @@ function batchRigidParts(key, manifest, root, nodes) {
   for (const indices of groups.values()) {
     if (indices.length < 2) continue;
     const leader = nodes[indices[0]], geometry = new THREE.BufferGeometry();
+    // Which source parts the merged vertices came from, in order (metadata
+    // only: the line-layer renderers ink them by source part).
+    leader.userData.batch = indices.map((index) => ({ name: manifest.nodes[index].name, group: manifest.nodes[index].group,
+      vertices: nodes[index].geometry.attributes.position.count }));
     let vertices = 0, indexCount = 0;
     for (const index of indices) {
       const part = nodes[index].geometry;
@@ -276,12 +280,25 @@ export function createStudioInspector({
   onPlaybackChange = () => {},
   onPartSelect = () => {},
   onFrame = () => {},
+  // Optional pass drawn over each finished frame (the line-layer renderers).
+  // Returning true asks for one more frame. Absent, nothing changes.
+  afterRender = null,
   manifestUrl,
   quality = 'auto',
   transparentBackground = false,
   backgroundColor = 0x191919,
   derivativeFrames = false,
   framing = derivativeFrames ? derivativeFraming : {},
+  // Shader programs link off the main thread and are complete before their first
+  // draw (the detail pages, where a drawing or a card morph is on screen while the
+  // model loads). Absent, the environment is built here and programs link inside
+  // the first draw, as the export tools expect.
+  warmPrograms = false,
+  // While this returns true the canvas draws nothing and everything else goes on: a
+  // model's first draw compiles shader variants on the GPU thread on Direct3D, which
+  // stops the page's compositor too (250 ms on the detail pages), and the drawing that
+  // covers the model until it ends must not stop.
+  holdDraw = null,
 } = {}) {
   if (!canvas) throw new Error('The project workbench needs a canvas.');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: transparentBackground, powerPreference: 'high-performance' });
@@ -300,6 +317,13 @@ export function createStudioInspector({
   // pass, so clear acrylic refracts the same surface shown behind the model.
   scene.background = transparentBackground ? null : new THREE.Color(backgroundColor);
   let environmentTarget;
+  // 2026-11-04: reading a program's uniforms before its link has finished blocks
+  // the main thread on the shader compiler. That wait, not the model's data, was
+  // the long tasks on a live stage: about 380 ms in this environment's PMREM passes
+  // and 250 ms in the model's first draw (buildResource itself takes 23 ms at 1920,
+  // CPU profile). With KHR_parallel_shader_compile the link runs elsewhere and its
+  // completion can be polled, so both are compiled first and drawn once linked.
+  const lateLink = warmPrograms && renderer.extensions.has('KHR_parallel_shader_compile');
   function rebuildEnvironment() {
     environmentTarget?.dispose();
     const environment = new RoomEnvironment();
@@ -309,7 +333,7 @@ export function createStudioInspector({
     environment.dispose();
     pmrem.dispose();
   }
-  rebuildEnvironment();
+  if (!lateLink) rebuildEnvironment();
   scene.environmentIntensity = 0.65;
   scene.add(new THREE.HemisphereLight(0xffffff, 0x737373, 1));
   const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
@@ -367,6 +391,55 @@ export function createStudioInspector({
   const frameSamples = [];
   let manifestIndexRequest = null;
   const manifestIndexController = new AbortController();
+
+  // Every program so far has linked and read its uniform table (the step three
+  // otherwise runs inside the program's first draw). A driver that never reports
+  // completion costs at most the cap, then the first draw links as it would without this.
+  function programsLinked() {
+    const cap = performance.now() + 4000;
+    return new Promise((resolve) => {
+      const check = () => {
+        if (disposed || renderer.getContext().isContextLost()) { resolve(); return; }
+        let waiting = false;
+        for (const program of renderer.info.programs) {
+          if (program.isReady()) program.getUniforms();
+          else waiting = true;
+        }
+        if (waiting && performance.now() < cap) setTimeout(check, 10);
+        else resolve();
+      };
+      check();
+    });
+  }
+  // A dry pass of the PMREM generator: each of its render passes becomes a compile,
+  // so all its programs start linking and nothing waits. The real pass then finds
+  // them in the program cache (the dry pass holds them until it has run). Until this
+  // pass ends there is no environmentTarget; an inspector disposed before then (a page
+  // back from the bfcache during its first second) releases the pass itself, while the
+  // renderer still knows the textures the pass allocated.
+  let releaseWarmPass = null;
+  async function warmEnvironment() {
+    const room = new RoomEnvironment();
+    const dry = new THREE.PMREMGenerator(new Proxy(renderer, {
+      get: (target, name) => (name === 'render' ? (object, view) => { target.compile(object, view); } : target[name]),
+      set: (target, name, value) => { target[name] = value; return true; },
+    }));
+    let unused = null;
+    releaseWarmPass = () => {
+      releaseWarmPass = null;
+      unused?.dispose();
+      dry.dispose();
+      room.dispose();
+    };
+    try {
+      unused = dry.fromScene(room, 0.04);
+      await programsLinked();
+    } finally {
+      if (!disposed && !contextLost) rebuildEnvironment();
+      releaseWarmPass?.();
+    }
+  }
+  const environmentReady = lateLink ? warmEnvironment().catch(() => {}) : null;
 
   async function resolveManifestUrl(key, signal) {
     if (manifestUrl) {
@@ -487,15 +560,19 @@ export function createStudioInspector({
       poseDirty = false;
     }
     const moving = controls.update();
+    let again = false;
     if (dirty || moving || playing) {
-      const started = performance.now();
-      if (resource && renderer.shadowMap?.needsUpdate) shadowUpdates++;
-      renderer.render(scene, camera);
-      renderedFrames += 1;
-      onFrame({ progress });
-      frameSamples.push(performance.now() - started);
-      if (frameSamples.length > 120) frameSamples.shift();
-      dirty = false;
+      if (!holdDraw?.()) {
+        const started = performance.now();
+        if (resource && renderer.shadowMap?.needsUpdate) shadowUpdates++;
+        renderer.render(scene, camera);
+        if (afterRender) again = afterRender({ renderer, scene, camera, nodes: resource?.nodes || [] }) === true;
+        renderedFrames += 1;
+        onFrame({ progress });
+        frameSamples.push(performance.now() - started);
+        if (frameSamples.length > 120) frameSamples.shift();
+        dirty = again;
+      }
       if (motionTask && !motionTask.scheduled) {
         const task = motionTask;
         task.scheduled = true;
@@ -505,7 +582,7 @@ export function createStudioInspector({
       }
     }
     insideFrame = false;
-    if ((playing || moving || interaction) && !raf) raf = requestAnimationFrame(frame);
+    if ((playing || moving || interaction || again) && !raf) raf = requestAnimationFrame(frame);
     else if (!raf) lastTime = 0;
   }
 
@@ -744,6 +821,16 @@ export function createStudioInspector({
     try {
       const entry = await cache.select(key, { signal });
       if (disposed || ticket !== loadTicket || signal?.aborted) throw abortError();
+      if (lateLink) {
+        await environmentReady;
+        // A task of its own after the build.
+        await new Promise((resolve) => setTimeout(resolve));
+        if (disposed || ticket !== loadTicket || signal?.aborted) throw abortError();
+        // Not in the scene yet, so no frame can draw (and wait on) a program still linking.
+        renderer.compile(entry.root, camera, scene);
+        await programsLinked();
+        if (disposed || ticket !== loadTicket || signal?.aborted) throw abortError();
+      }
       resource = entry;
       scene.add(entry.root);
       initializeCamera(entry);
@@ -876,9 +963,30 @@ export function createStudioInspector({
   function pickPoint(x, y) {
     if (!resource) return null;
     resource.root.updateMatrixWorld(true); camera.updateMatrixWorld(true);
+    // Deforming parts outgrow the bounds they loaded with; refresh them for the ray.
+    resource.nodes.forEach((object, index) => {
+      const positions = resource.anchors[index]?.positions;
+      if (!positions || object.userData.rayBounds === positions.version) return;
+      object.geometry.computeBoundingBox(); object.geometry.computeBoundingSphere(); object.userData.rayBounds = positions.version;
+    });
     raycaster.setFromCamera(new THREE.Vector2(x * 2 - 1, 1 - y * 2), camera);
-    const hit = raycaster.intersectObjects(resource.nodes, false).find((result) => result.object.visible && !result.object.userData.presentationHidden);
-    return hit ? { name: hit.object.userData.sourceName, point: hit.object.worldToLocal(hit.point.clone()).toArray() } : null;
+    // See-through parts (glass, acrylic) are listed as passed; the hit is the first opaque part.
+    const through = [], seeThrough = (material) => !Array.isArray(material) && (material.transparent || material.transmission > 0);
+    const hit = raycaster.intersectObjects(resource.nodes, false).find((result) => {
+      if (!result.object.visible || result.object.userData.presentationHidden) return false;
+      if (!seeThrough(result.object.material)) return true;
+      if (!through.includes(result.object.userData.sourceName)) through.push(result.object.userData.sourceName);
+      return false;
+    });
+    if (!hit) return through.length ? { name: null, group: null, through } : null;
+    let name = hit.object.userData.sourceName, group = hit.object.userData.group;
+    // A merged rigid batch names the source part that owns the hit face.
+    const batch = hit.object.userData.batch;
+    if (batch && hit.face) {
+      let offset = hit.face.a;
+      for (const part of batch) { if (offset < part.vertices) { name = part.name; group = part.group; break; } offset -= part.vertices; }
+    }
+    return { name, group, point: hit.object.worldToLocal(hit.point.clone()).toArray(), ...(through.length ? { through } : {}) };
   }
 
   // Export/QA only. Callout placement uses these baked per-phase occupancy
@@ -909,7 +1017,7 @@ export function createStudioInspector({
 
   return {
     projectAnchor, projectRegions, pickPoint,
-    selectProject, setProgress, play, pause, resize, setView, setActive, retryMotion, fitPose,
+    selectProject, setProgress, play, pause, resize, setView, setActive, retryMotion, fitPose, invalidate,
     whenMotionReady: () => motionCompletion,
     reset({ camera: resetCamera = true } = {}) {
       if (motionTask) motionTask.restoreProgress = 0;
@@ -948,7 +1056,8 @@ export function createStudioInspector({
       controls.dispose();
       cache.dispose();
       keyLight.shadow.map?.dispose(); keyLight.shadow.mapPass?.dispose();
-      environmentTarget.dispose();
+      releaseWarmPass?.();
+      environmentTarget?.dispose();
       renderer.dispose();
       resource = null;
       saved.clear();

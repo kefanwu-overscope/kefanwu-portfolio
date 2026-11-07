@@ -1,5 +1,62 @@
 # Homepage presentation
 
+## Drawn, then built · 2026-11-06
+
+Built under the owner's 2026-10-27 approval of the design ("I trust ur design, improve
+both the main website and 3d website"); these rules supersede the matching items below.
+The 50% morph threshold and the slow-connection line below are the release agent's
+judgement under that approval; the owner has not reviewed them and can change them.
+
+- Hero opening (`hero-drawing-20261027.js`, inline guard and SVG in `index.html`,
+  rules in `white-home-20261011.css`): on the first visit per tab session the car
+  is drawn by 1.2 s (28 traced strokes plus 2 wheel-centre marks, registered to the
+  photo's live object-fit and object-position; the TSAL lamp outline only from
+  768px). The photo develops through a page-white veil over 1.05–2.05 s. By about
+  2.2 s every added node and class is gone, so the settled hero is the 10-26 hero.
+  The clock starts just after first contentful paint is reported (held at most
+  1.5 s). Trace only edges really visible in the photo; do not add hardware.
+- Hero exits: pointer, wheel, scroll or key settles it in about 160 ms. No drawing
+  under reduced motion, forced colors, a hidden tab, a `#` deep link, repeat visits
+  in the tab or no CSS masks. Under 50% of the car on screen (phone landscape) the
+  photo gets a 300ms reveal with no lines. CSS failsafes: veil gone by 3.3 s if the
+  script never starts; lines and veil hidden at 9.5 s if it dies mid-sequence.
+- Hero photo: its pixels, opacity, filter and fetch priority never change, and it
+  stays the LCP. The drawing's veil is a separate element above it. The slow-load
+  veil below stays off while the drawing owns the reveal (`html.hero-draw-own`) and
+  takes the reveal back only if the photo has not decoded by the end of the decode
+  hold or by a settle. Visits without the drawing use it as before.
+- Project cards (`card-drawing-20261027.js`, loaded after window load): the first
+  time a card arrives, its cover is a registered line drawing from
+  `assets/editorial/lines-20261027/`. Lines wipe in over 0–600ms, the cover develops
+  through white over 450–1050ms, lines retire over 600–1150ms, and all overlays are
+  then removed. Once per card per tab session; cards entering together start 70ms
+  apart. ansysCfd has no drawing and keeps its cover.
+- Cards are never blanked for choreography: a card already on screen when the script
+  starts keeps its cover, and so does a card that comes close before its drawing has
+  decoded. Line images load only after both hero photo layers and every cover within
+  about one screen (1000px at most) have finished. Data saver and connections reporting
+  3g or slower keep today's cards, as do reduced motion and forced colors. No card draws
+  alongside a slow hero. Hover, focus, click, key or a fast scroll settles a card in
+  about 160ms; reading-pace scrolling does not.
+- Filters still apply on click, now with FLIP motion (`script.js`): staying cards glide
+  320ms, leaving cards fade 160ms, entering cards fade in, and a jump over .8 screens
+  fades in place. Using a filter or search ends the card drawings for that page.
+- Leaving through a card: the page crossfades (old out 0–160ms, new in 80–240ms). The
+  cover morphs into the detail stage (400ms) only when at least 50% of the stage lands
+  on screen in a landscape window, so at common desktop sizes the forward path is a
+  crossfade. Back restores the scroll position and morphs the stage into its card.
+  Hard cut on a connection reporting 3g or slower, or a downlink under .7 Mbps.
+- Per-URL QA switches, for viewing one page without the motion: `?draw=off`,
+  `?hero=photo`, `?cards=static` (also turns off filter FLIP), `?vt=off`, `?prefetch=off`.
+  `?hero=draw` and `?cards=draw` replay, for review. They apply only to the URL that
+  carries them: no link on the page keeps them, and a visitor without them gets the full
+  release. They are not a rollback; the live-site rollback is in `AGENT_HANDOFF.md`,
+  2026-11-06. `?draw=off` does not mark the hero as drawn, so going from such a URL to
+  plain `index.html` plays the full drawing; that is expected.
+- End state: homepage vs HEAD e42a05b4 differs by at most 2 levels at 8 sizes, the same
+  ceiling as HEAD vs HEAD (single machine, headless Chrome, DPR 1). Real phones, Safari
+  and Firefox are not verified. Details and limits: `AGENT_HANDOFF.md`, 2026-11-06.
+
 ## Aesthetic batch 1 · 2026-10-26
 
 Owner-approved; these rules supersede the matching items below.
@@ -48,7 +105,8 @@ Owner-approved audit changes; these rules supersede older entries below.
   are unchanged. Elsewhere the background layer is .82 opacity / .97
   saturation. A page-white veil over `.hero-media` lifts over 450ms on slow
   first loads only (skipped for cached loads and reduced motion, 4s failsafe);
-  the photo itself is never hidden.
+  the photo element itself is never hidden (first visits also have the
+  drawing's veil, see 2026-11-06).
 - Hero actions gain "Resume (PDF) ↗". From 721px up the two text links sit on
   a second row under the button; on near-square windows (≥1101px, aspect
   ≤5/4) the résumé link takes a third row, so every link stays on the white

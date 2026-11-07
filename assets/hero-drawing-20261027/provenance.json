@@ -1,0 +1,420 @@
+{
+ "asset": "assets/hero-drawing-20261027/hero-lines.svg",
+ "date": "2026-10-27",
+ "updated": "2026-10-29",
+ "kind": "Stroke-only line drawing (pen-sketch tracing) for the homepage hero opening animation. This file is the drawing the homepage inlines (index.html .hero-draw-lines), byte for byte except width=\"2200\" height=\"1238\" on its root.",
+ "source": {
+  "file": "assets/hero-fsae-track-2200.webp",
+  "sha256": "29159c8b770699ad6b5243db395256c051372e86d50f4145bd6d87cd0b36dedd",
+  "pixels": [
+   2200,
+   1238
+  ],
+  "note": "The public 2200 px hero photo already in the repo. No raw or private photo was used."
+ },
+ "svg": {
+  "sha256": "1273c14cb378e7419505ed8a247f4bb81e9f37af01e90b0ddc5395e3ce46a2e6",
+  "bytes": 12167,
+  "paths": 30,
+  "groups": {
+   "guide": 2,
+   "silhouette": 7,
+   "structure": 14,
+   "detail": 4,
+   "ground": 3
+  },
+  "coordinates": "viewBox 0 0 2200 1238 = source photo pixels (no transform); path data rounded to 0.1 px",
+  "car_box_src_px": [
+   932,
+   430.7,
+   1758.5,
+   927.6
+  ]
+ },
+ "statement": [
+  "This is a tracing derived from the public hero photo (hero-fsae-track-2200.webp) of Kefan Wu in the Olin Electric Motorsports FSAE car.",
+  "Every stroke was snapped onto a measured edge (or, for thin tubes, the dark centre line) of that photo; nothing was drawn freehand.",
+  "It adds no hardware that is not in the photo. Lines stop where an edge disappears into shadow instead of being completed by guesswork; no hatching, no texture.",
+  "Wheel rims are fitted ellipses (least squares to the snapped edge points); the rest are smoothing-spline / cubic Bezier fits within about 1 px RMS of the edge points.",
+  "Decals (numbers, sponsor text, logos), asphalt and grass texture and the sky were deliberately not traced; the 219 number plate is drawn only as its panel outline.",
+  "The live hero still ends on the original photo pixels: the drawing is an overlay for the opening animation and the hero-fsae-track-*.webp files are unchanged.",
+  "Two CAD-style wheel-centre marks (the guide group) are construction marks derived from the tracing itself, not edges of the photo; they add no hardware."
+ ],
+ "method": [
+  "Edge-preserving smoothing (two bilateral passes), then channels: log luminance (lifts edges inside the black body and tyres), CIE L, a and b (chroma separates the blue stripes, grass and asphalt).",
+  "Authoring aid (chains.py): Di Zenzo colour gradient + Canny hysteresis, thinned and linked into labelled edge chains; used only to measure where real edges are.",
+  "Curation (author_guides.py): each stroke is a guide built from measured chain runs and luminance probes; strokes are grouped (silhouette, structure, detail, ground) and ordered like a designer sketching.",
+  "Snapping (trace_lines.py): intensity profiles along the guide normals; per sample the strongest edge / tube centre is chosen by dynamic programming (edge strength minus a smoothness penalty), optional polarity, sub-pixel peak refinement and median outlier rejection.",
+  "Fitting: smoothing cubic spline within a stroke-specific RMS tolerance (0.3-1.5 px), then Schneider cubic Bezier fit (max error 0.5 px) written as relative path data; ellipses for rims and the visible tyre-face arc."
+ ],
+ "parameters": {
+  "bilateral": "2 x (d=7, sigmaColor=22, sigmaSpace=4)",
+  "channel_weights": "logY x12, L x1, a x1.4, b x1.4",
+  "profile_step_px": 0.5,
+  "sample_spacing_px": 2,
+  "bezier_max_error_px": 0.5,
+  "draw_order_windows": {
+   "body": [
+    0,
+    0.2
+   ],
+   "wheels": [
+    0.2,
+    0.38
+   ],
+   "structure": [
+    0.38,
+    0.6
+   ],
+   "driver": [
+    0.6,
+    0.74
+   ],
+   "detail": [
+    0.74,
+    0.88
+   ],
+   "ground": [
+    0.88,
+    1
+   ]
+  },
+  "group_weights": {
+   "silhouette": 1,
+   "structure": 0.7,
+   "detail": 0.5,
+   "ground": 0.4
+  }
+ },
+ "strokes": [
+  {
+   "id": "front-wheel-centre",
+   "group": "guide",
+   "data-o": 0,
+   "data-w": 0.4,
+   "derived_from": "centre of the traced rim ellipse data-o 0.272 (fw-rim)",
+   "rim_centre_src_px": [
+    1448.8,
+    847.27
+   ],
+   "mark_offset_src_px": 0.067
+  },
+  {
+   "id": "rear-wheel-centre",
+   "group": "guide",
+   "data-o": 0.03,
+   "data-w": 0.4,
+   "derived_from": "centre of the traced rim ellipse data-o 0.344 (rw-rim)",
+   "rim_centre_src_px": [
+    1731.1,
+    744.81
+   ],
+   "mark_offset_src_px": 0.114
+  },
+  {
+   "id": "nose-outline",
+   "group": "silhouette",
+   "phase": "body",
+   "data-o": 0,
+   "data-w": 1,
+   "median_edge_strength": 0.85,
+   "dev95_px": 1.52
+  },
+  {
+   "id": "nose-crease",
+   "group": "silhouette",
+   "phase": "body",
+   "data-o": 0.05,
+   "data-w": 0.85,
+   "median_edge_strength": 0.84,
+   "dev95_px": 2.1
+  },
+  {
+   "id": "nose-rear",
+   "group": "silhouette",
+   "phase": "body",
+   "data-o": 0.1,
+   "data-w": 0.75,
+   "median_edge_strength": 0.79,
+   "dev95_px": 0.81
+  },
+  {
+   "id": "cockpit-top",
+   "group": "silhouette",
+   "phase": "body",
+   "data-o": 0.15,
+   "data-w": 0.9,
+   "median_edge_strength": 0.89,
+   "dev95_px": 0.96
+  },
+  {
+   "id": "helmet",
+   "group": "silhouette",
+   "phase": "driver",
+   "data-o": 0.6,
+   "data-w": 1,
+   "median_edge_strength": 0.73,
+   "dev95_px": 0.86
+  },
+  {
+   "id": "shoulder-near",
+   "group": "silhouette",
+   "phase": "driver",
+   "data-o": 0.67,
+   "data-w": 0.8,
+   "median_edge_strength": 0.71,
+   "dev95_px": 1.38
+  },
+  {
+   "id": "shoulder-far",
+   "group": "silhouette",
+   "phase": "driver",
+   "data-o": 0.705,
+   "data-w": 0.8,
+   "median_edge_strength": 0.88,
+   "dev95_px": 0.56
+  },
+  {
+   "id": "fw-outline",
+   "group": "structure",
+   "phase": "wheels",
+   "data-o": 0.2,
+   "data-w": 0.8,
+   "median_edge_strength": 0.64,
+   "dev95_px": 2.2
+  },
+  {
+   "id": "fw-face",
+   "group": "structure",
+   "phase": "wheels",
+   "data-o": 0.236,
+   "data-w": 0.6,
+   "median_edge_strength": 0.4,
+   "ellipse_fit_rms_px": 0.82
+  },
+  {
+   "id": "fw-rim",
+   "group": "structure",
+   "phase": "wheels",
+   "data-o": 0.272,
+   "data-w": 0.6,
+   "median_edge_strength": 0.45,
+   "ellipse_fit_rms_px": 1.05
+  },
+  {
+   "id": "rw-outline",
+   "group": "structure",
+   "phase": "wheels",
+   "data-o": 0.308,
+   "data-w": 0.8,
+   "median_edge_strength": 0.35,
+   "dev95_px": 1.74
+  },
+  {
+   "id": "rw-rim",
+   "group": "structure",
+   "phase": "wheels",
+   "data-o": 0.344,
+   "data-w": 0.6,
+   "median_edge_strength": 0.48,
+   "ellipse_fit_rms_px": 0.45
+  },
+  {
+   "id": "fw-far-crown",
+   "group": "structure",
+   "phase": "wheels",
+   "data-o": 0.36,
+   "data-w": 0.8,
+   "median_edge_strength": 0.84,
+   "dev95_px": 0.43,
+   "added": "2026-10-29"
+  },
+  {
+   "id": "hoop",
+   "group": "structure",
+   "phase": "structure",
+   "data-o": 0.38,
+   "data-w": 0.75,
+   "median_edge_strength": 0.63,
+   "dev95_px": 1.43
+  },
+  {
+   "id": "hoop-diag",
+   "group": "structure",
+   "phase": "structure",
+   "data-o": 0.407,
+   "data-w": 0.6,
+   "median_edge_strength": 0.2,
+   "dev95_px": 0.31
+  },
+  {
+   "id": "hoop-brace",
+   "group": "structure",
+   "phase": "structure",
+   "data-o": 0.435,
+   "data-w": 0.65,
+   "median_edge_strength": 0.93,
+   "dev95_px": 0.46
+  },
+  {
+   "id": "rear-rail-top",
+   "group": "structure",
+   "phase": "structure",
+   "data-o": 0.463,
+   "data-w": 0.6,
+   "median_edge_strength": 0.31,
+   "dev95_px": 1.26
+  },
+  {
+   "id": "rear-rail-low",
+   "group": "structure",
+   "phase": "structure",
+   "data-o": 0.49,
+   "data-w": 0.6,
+   "median_edge_strength": 0.29,
+   "dev95_px": 0.47
+  },
+  {
+   "id": "rear-toe",
+   "group": "structure",
+   "phase": "structure",
+   "data-o": 0.517,
+   "data-w": 0.55,
+   "median_edge_strength": 0.56,
+   "dev95_px": 0.65
+  },
+  {
+   "id": "rear-wb-upper",
+   "group": "structure",
+   "phase": "structure",
+   "data-o": 0.545,
+   "data-w": 0.55,
+   "median_edge_strength": 0.83,
+   "dev95_px": 0.38
+  },
+  {
+   "id": "rear-wb-lower",
+   "group": "structure",
+   "phase": "structure",
+   "data-o": 0.573,
+   "data-w": 0.55,
+   "median_edge_strength": 0.66,
+   "dev95_px": 0.29
+  },
+  {
+   "id": "tsal-lamp",
+   "group": "detail",
+   "phase": "structure",
+   "data-o": 0.41,
+   "data-w": 0.45,
+   "median_edge_strength": 0.87,
+   "dev95_px": 0.63,
+   "added": "2026-10-29",
+   "min_viewport_px": 768
+  },
+  {
+   "id": "plate-219",
+   "group": "detail",
+   "phase": "driver",
+   "data-o": 0.62,
+   "data-w": 0.5,
+   "median_edge_strength": 0.95,
+   "dev95_px": 0.36,
+   "added": "2026-10-29"
+  },
+  {
+   "id": "visor",
+   "group": "detail",
+   "phase": "driver",
+   "data-o": 0.635,
+   "data-w": 0.5,
+   "median_edge_strength": 0.89,
+   "dev95_px": 1.11
+  },
+  {
+   "id": "stripe-inner",
+   "group": "detail",
+   "phase": "detail",
+   "data-o": 0.74,
+   "data-w": 0.45,
+   "median_edge_strength": 0.89,
+   "dev95_px": 1.57
+  },
+  {
+   "id": "shadow-nose",
+   "group": "ground",
+   "phase": "ground",
+   "data-o": 0.88,
+   "data-w": 0.5,
+   "median_edge_strength": 0.91,
+   "dev95_px": 1.41,
+   "traced_data_w": 0.4
+  },
+  {
+   "id": "shadow-front",
+   "group": "ground",
+   "phase": "ground",
+   "data-o": 0.904,
+   "data-w": 0.5,
+   "median_edge_strength": 0.88,
+   "dev95_px": 0.48,
+   "traced_data_w": 0.4
+  },
+  {
+   "id": "shadow-rear",
+   "group": "ground",
+   "phase": "ground",
+   "data-o": 0.928,
+   "data-w": 0.5,
+   "median_edge_strength": 0.92,
+   "dev95_px": 1.1,
+   "traced_data_w": 0.4
+  }
+ ],
+ "trace": {
+  "master": "tools/hero-drawing/traced-lines.svg (record: traced-lines.json)",
+  "master_sha256": "44a3dd98bf8175362dd952c5af305f826dd13df80432c3d54503b475f56641c2",
+  "master_paths": 30,
+  "runs": [
+   {
+    "date": "2026-10-27",
+    "strokes": "all",
+    "channels": "OpenCV (version not recorded)"
+   },
+   {
+    "date": "2026-10-29",
+    "strokes": [
+     "plate-219",
+     "fw-far-crown",
+     "tsal-lamp"
+    ],
+    "channels": "np_cv2 (NumPy/SciPy stand-in for OpenCV's bilateralFilter, cvtColor BGR2LAB and GaussianBlur)"
+   }
+  ],
+  "added_2026_10_29": "plate-219, fw-far-crown and tsal-lamp: three more real, high-contrast edges read off zoomed crops of the 2200 px photo, snapped with trace_lines.py --only (the other 27 traced strokes keep their 2026-10-27 bytes). Not added: the lower body contour (black on black shadow) and the front wishbones (2-3 px glints), which are not reliably visible."
+ },
+ "derivation": {
+  "generator": "tools/hero-drawing/inline_hero_svg.cjs (one run writes index.html's inline drawing, this file and this record)",
+  "dropped": [
+   {
+    "data-o": 0.952,
+    "id": "grass-left"
+   },
+   {
+    "data-o": 0.976,
+    "id": "grass-right"
+   }
+  ],
+  "why_dropped": "The grass/track-edge strokes read as a horizon line over the white page, not as an edge of the car.",
+  "why_guides": "Two CAD-style centre marks (36 source px crosses) make the opening read as an engineering drawing. Each sits on the centre of a traced rim ellipse (recomputed from the ellipse's arc data on every --check; tolerance 0.5 source px), drawn in the light guide colour.",
+  "ground_weight": "The ground (tyre-contact) strokes are weighted data-w .5 on the homepage (traced at .4).",
+  "min_viewport": "The TSAL lamp outline carries data-min-vw=\"768\": it is not drawn on windows narrower than 768 px.",
+  "geometry": "data-len = total length (source px, 0.1 px); data-pts = 21 points at 0, 5, ... 100 % of the length (source px, rounded to 1 px); root data-car = tight bounding box x0 y0 x1 y1 of the silhouette and structure strokes (0.1 px). Precomputed so the page never measures SVG geometry; they match Chrome's getTotalLength / getPointAtLength / getBBox (tools/hero-tests).",
+  "changes": "group id -> data-group; width/height removed and preserveAspectRatio=\"none\" focusable=\"false\" aria-hidden=\"true\" added on the inline root (the script computes a viewBox reproducing the photo's object-fit: cover at its live object-position). Traced path data unchanged."
+ },
+ "homepage_inline": {
+  "page": "index.html (.hero-draw-lines, read by hero-drawing-20261027.js)",
+  "inline_sha256": "eb5d4b979c8fd77c97982d326020517224421ba05018c929ab408eb50be3531e",
+  "paths": 30
+ }
+}

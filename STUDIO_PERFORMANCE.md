@@ -4,6 +4,35 @@ This release preserves the restored room from `329b8c9` and the sixteen project
 workbenches. Main-site case studies, WebP sequences, project facts, source CAD,
 and material/motion definitions remain unchanged.
 
+## Startup screen and intro · 2026-11-06
+
+Supersedes the startup and intro statements below where they differ.
+
+- The default startup screen is a line drawing of the room
+  (`experience-loader-drawing.js`), inked on #0b0c0e paper as each part's geometry
+  arrives. At the assets boundary (all base models loaded, before the shader compile)
+  it is finished and held, with no canvas frames and the room's render loop parked,
+  until the room is prepared. Then its veil lifts over 900 ms into the intro. Under
+  reduced motion it is a still drawing that crossfades out.
+- It stays the default because of the gate's stall check. Mid-compile long tasks over
+  100 ms at 1440, 16 cold runs, runs with any and ms per run: drawing 5/16 and 50.9,
+  classic card 10/16 and 139.6, HEAD e42a05b4 13/16 and 197.7. At 390, 8 runs: 1/8 and
+  44.2, 5/8 and 196.9, 3/8 and 78.9. Single machine, headless Chrome.
+- It shows the classic card instead when: `?loader=classic`, `?draw=off` or no WebGL 2
+  (decided before first paint); it is not live within 4 s of the head script; its module
+  arrives after the assets boundary; a shader fails to link; or the context is lost.
+  `?loader=drawing` is a no-op. The room itself is unaffected by any of these.
+- `?loader=classic`, `?draw=off` and `?intro=legacy` are per-URL QA switches, not a
+  rollback: they apply only to the URL that carries them, and the studio link on the
+  homepage does not keep them. `?warm=off` applies to live detail stages; the room keeps
+  its own shader polling path and is unaffected.
+- Known limit: under reduced motion on networks slower than about 4 s to the assets
+  boundary, the screen is dark paper and the title strip for 4 s, then the classic card.
+- The intro is one 5.1 s curve (`INTRO_EYE`, `INTRO_YAW`, `INTRO_PITCH`; light beats in
+  `BOOT_BEATS`). `?intro=legacy` keeps the 2026-10-24 two-stop sweep.
+- Studio chrome: warm white on neutral dark (`experience.css` `:root`), no #3f8cff or
+  glow, text at least 11 px. Room materials are unchanged; the rug LED is still blue.
+
 ## Loading
 
 The project renderer first loads geometry and a small, exact initial-pose
@@ -39,8 +68,9 @@ settles. Static opaque meshes are batched conservatively by material and space,
 excluding interactive, animated, reflected and fallback-only objects. Static
 desk shadows are reused, moving shadows update less frequently, and ambient
 idle rendering targets 30 Hz while camera movement remains responsive. A
-Skip intro control and pointer takeover preserve the original camera sequence
-without forcing visitors to wait through it.
+Skip intro control and pointer takeover let visitors leave the camera sequence
+(since 2026-11-06 the one-curve intro; `?intro=legacy` keeps the older path)
+without waiting through it.
 
 Shader warmup now uses the real composer render target, actual override
 materials and the output pass's screen color/tone settings. Warming screen

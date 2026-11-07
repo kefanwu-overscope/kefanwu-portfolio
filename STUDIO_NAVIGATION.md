@@ -1,5 +1,21 @@
 # Retained studio navigation · 2026-09-26
 
+## Exhibit push · 2026-11-06
+
+Opening an exhibit (click, Enter or the picker) moves the camera 30% of the way to the
+exhibit over 240 ms with orientation held (`PUSH_MS`, `PUSH_FRACTION` in
+`experience.js`). The panel, white curtain and project frame still start at the click,
+as with `?push=off`. The push lands once the curtain reads as opaque (`COVER_OPACITY`
+.98) and the room stops rendering. A ray cast stops it .3 m
+short of any geometry. No push for an exhibit off screen or over 25 degrees off axis,
+under reduced motion, in a hidden tab or during another camera move. Input lands it at
+once. The return restores the exact pre-push pose before the room's first frame. The
+push is hard to see because the curtain is near-opaque about 110 ms after the click.
+
+The project page inside the studio frame plays no line-drawing arrival. Its URL is built
+without the room's query, so QA switches such as `?callouts=classic` and `?warm=off` on
+the room's URL do not reach it: the frame still shows drawn callouts and shader polling.
+
 ## Short transitions · 2026-09-30
 
 The retained navigation now uses200ms entry/return opacity transitions and a180ms

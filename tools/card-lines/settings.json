@@ -1,0 +1,31 @@
+{
+  "supersample": 4,
+  "defaults": {},
+  "projects": {
+    "lineFollower": {
+      "quiet": [
+        "^mat_rubber_orange_part_"
+      ],
+      "_why": "Knurled tyre tread: its own ridge steps are thin folds, so the tyres read as tyres without a dark hatch; 16 coverage steps keep the file under 30 KB.",
+      "alpha_levels": 16
+    },
+    "formlabs": {
+      "quiet": [
+        "^mat_steel_part_4 ",
+        "^mat_steel_part_5 "
+      ],
+      "_why": "Lead-screw threads: thin folds instead of a solid dark bar."
+    },
+    "materialTest": {
+      "quiet": [
+        "^MaterialTest_collar_knurl"
+      ],
+      "_why": "Knurled collars: thin folds."
+    },
+    "brakeSim": {
+      "alpha_levels": 16,
+      "_why": "80 drilled holes, each with a far wall and a near edge: 16 coverage steps keep the file near 30 KB."
+    }
+  },
+  "_clearParts": "Clear parts (pool side panels, Smelly acrylic) are drawn as solid panels. A glass layer (settings \"glass\") was tried: the cover refracts and softens what is behind them (transmission pass), so lines of the hidden rack, pinion and rods missed the cover by several pixels. Their own edges register exactly."
+}
