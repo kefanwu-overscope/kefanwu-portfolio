@@ -1,5 +1,38 @@
 # Homepage presentation
 
+## Every refresh plays · 2026-11-07
+
+The owner asked on 2026-11-06: "我指的是每次刷新网站线稿动画都能重新加载" (every refresh must
+replay the line drawing). These rules supersede the "once per tab session" and "repeat
+visits in the tab" items in the 2026-11-06 section below; the drawings' look and timing are
+unchanged. The scroll and Back/Forward rules, the saveData-only card gate and the reload
+handling of `#` links are agent decisions (spec `../releases/hand-drawn-20261106/design/PEN_SPEC.md`
+and the R1 fixers), not the owner's; the owner can change them. Details: `AGENT_HANDOFF.md`,
+2026-11-07.
+
+- Every load and every refresh plays the hero drawing and the card drawings. No
+  sessionStorage key gates them any more (`kw-hero-drawn` and `kw-cards-drawn` are gone).
+- A refresh lands at the top (`script#kw-scroll` sets `history.scrollRestoration='manual'`).
+  A refresh of a `#` URL other than `#top` drops the fragment from the address bar
+  (`replaceState`, query and history state kept) and lands at the top with the hero.
+- Back/Forward does not replay: no hero and no card drawing on a `back_forward` load, and
+  a bfcache restore keeps the settled hero and drawn cards, though cards not yet reached still
+  draw once when first scrolled into view (as at HEAD 27af3682).
+  Back restores the place the visitor left,
+  including same-page Back/Forward after a `#` link click. Without the Navigation API (older
+  Safari and Firefox) the page does this with URL keys, `click` and `popstate`; the manual mode
+  stays, so a refresh still lands at the top (fix-r3, an agent decision).
+- Arriving by a link on `/#contact`, `/#work` or `/#project-<key>` still lands on the target
+  with no hero. An arrival held by a view transition (`__vtBoot.hold`: the wordmark or a home
+  link from a detail page) lands at the top and plays the hero (fix-r3, an agent decision).
+- A hidden or prerendered tab keeps the photo and starts the drawing on its first visible
+  moment (`data-hero-pen=wait`, then `late`); the 4 s timer and CSS failsafes count from there.
+- Scroll no longer ends the hero. Pointer, touch, wheel or key still settle it in about 160 ms.
+- Cards: data saver is the only network gate (no `effectiveType` 3g test). Reduced motion and
+  forced colors keep the covers. While the hero waits for a visible tab, the cards wait too.
+- Not verified on real phones, Safari, Firefox or real slow networks (headless Chrome 156 on
+  one Windows machine, emulated networks).
+
 ## Drawn, then built · 2026-11-06
 
 Built under the owner's 2026-10-27 approval of the design ("I trust ur design, improve

@@ -80,18 +80,23 @@
   // registered on its cover (project-motion-arrival.js); a live model waits behind
   // the drawing. The stage is marked in the markup, so the cover is an 18% grey
   // print from its first paint (project-case-3d.css). No arrival inside the
-  // retained studio's frame (the room's own curtain is that page's arrival), on a
-  // slow or data-saving connection (as the homepage cards), when this page's own
-  // bytes took so long that a drawing would only make a visitor who has already
-  // waited wait again (navigator.connection reads low on a cold start, so what this
-  // load actually took is the measure), or without the browser features it runs on.
-  const PRINT_HOLD = 850, STAGE_LATE = 1000, COVER_CAP = 3000;
+  // retained studio's frame (the room's own curtain is that page's arrival), with
+  // data saver on (as the homepage cards), under forced colors (high contrast), when
+  // this page's own bytes took so long that a drawing would only make a visitor who
+  // has already waited wait again, or without the browser features it runs on.
+  // Every plain load and reload plays. The page's own time is counted from the first
+  // byte of its response (navigation responseStart), so a slow first byte does not
+  // count against it; the effective type is no gate (it reads 3g on some fast links).
+  const PRINT_HOLD = 3000, STAGE_LATE = 8000, COVER_CAP = 8000;
+  const responseStart = (() => { try { return performance.getEntriesByType?.('navigation')?.[0]?.responseStart || 0; } catch { return 0; } })();
+  const sinceResponse = () => performance.now() - responseStart;
   const arrivalQuery = new URLSearchParams(location.search);
   const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+  const forcedColors = !!window.matchMedia?.('(forced-colors: active)')?.matches;
   const connection = typeof navigator === 'undefined' ? undefined : navigator.connection;
-  const slowConnection = !!connection && (connection.saveData === true || /^(slow-2g|2g|3g)$/.test(connection.effectiveType || ''));
+  const saveData = !!connection && connection.saveData === true;
   const arrivalCapable = typeof window.IntersectionObserver === 'function' && typeof Element.prototype.animate === 'function';
-  const drawArrival = arrivalCapable && !inStudioFrame && !slowConnection && !reducedMotion?.matches && performance.now() <= STAGE_LATE &&
+  const drawArrival = arrivalCapable && !inStudioFrame && !saveData && !forcedColors && !reducedMotion?.matches && sinceResponse() <= STAGE_LATE &&
     arrivalQuery.get('arrival') !== 'off' && arrivalQuery.get('draw') !== 'off' &&
     document.documentElement.dataset.vtEntry !== 'morph'; // a card morph was this page's arrival (page-transitions-20261027.js)
   const editorial = editorials[key];
@@ -470,12 +475,12 @@
     on(window, 'kw-vt-morph', () => giveBack('morph'));
     on(host, 'case-model-ready', () => { if (!decoded) giveBack('cover late', 0); });
     if (!decoded) {
-      coverTimer = setTimeout(() => { if (!decoded) giveBack('cover late', 0); }, Math.max(0, COVER_CAP - performance.now()));
+      coverTimer = setTimeout(() => { if (!decoded) giveBack('cover late', 0); }, Math.max(0, COVER_CAP - sinceResponse()));
       const onDecoded = () => { decoded = true; clock(); };
       poster.addEventListener('load', onDecoded, { once: true });
       poster.addEventListener('error', onDecoded, { once: true });
     }
-    import('./project-motion-arrival.js?v=dtb-20261027').then(({ frameArrival }) => {
+    import('./project-motion-arrival.js?v=refresh-20261107').then(({ frameArrival }) => {
       if (done) return;
       claimed = true;
       stop();

@@ -1,4 +1,4 @@
-/* Homepage hero opening, "Drawn, then built" (first visit per tab session only).
+/* Homepage hero opening, "Drawn, then built" (every load and reload; never on Back/Forward).
  *
  * The race car is first a precise line drawing, registered to the hero photo exactly as the
  * browser lays the photo out (object-fit: cover at its live object-position). Then the real
@@ -21,18 +21,27 @@
  * measures SVG geometry (getTotalLength, getPointAtLength and getBBox are only a fallback).
  *
  * Contract
- * - The inline guard in index.html <head> decides before first paint (html.hero-draw) and sets
- *   sessionStorage "kw-hero-drawn". Kill switches: ?draw=off (all drawing sequences) and
- *   ?hero=photo (this one). Reduced motion, a hidden tab, a deep link (#hash) and browsers
- *   without CSS masks get today's hero. ?hero=draw replays the sequence (review only).
+ * - The inline guard in index.html <head> decides before first paint (html.hero-draw). There is
+ *   no session memory: every plain load and every reload plays (refresh-20261107). Kill switches:
+ *   ?draw=off (all drawing sequences) and ?hero=photo (this one). Reduced motion, forced colors,
+ *   browsers without CSS masks, a deep link (#hash other than #top) and Back/Forward (navigation
+ *   type back_forward, with or without the back/forward cache) get today's hero; ?hero=draw replays
+ *   the last two (review only). An arrival through a held view transition (window.__vtBoot.hold:
+ *   the wordmark or a home link from a detail page) lands at the top and plays like any other load
+ *   (fix-r3). A tab hidden or prerendered at parse keeps the photo (html[data-hero-pen=wait]) and
+ *   arms on its first visible: the guard adds html.hero-draw then (data-hero-pen=late), so the CSS
+ *   failsafes and the guard's 4 s timer start then, and this file starts its sequence, ceiling
+ *   included, from that moment.
  * - Text is never touched. The photos keep their fetch priority and decoding; their opacity and
  *   filter are never changed (only the veil above them is painted), so the photo stays the LCP.
  * - The drawing stays out of the page's paint until the first contentful paint has been reported
  *   (at most 1.5 s): frames before it never reach the screen, and with an empty GPU shader cache
  *   the stroke paths' first raster takes about 100-150 ms, which would otherwise delay the first
  *   paint, or the masked photo layer's paint on phones.
- * - Any intent (pointerdown, touchstart, wheel, scroll, keydown) settles to the end state in
- *   about 160 ms. A hidden tab, pagehide, leaving the page or reduced motion switching on finish
+ * - Any intent (pointerdown, touchstart, wheel, keydown) settles to the end state in about
+ *   160 ms. A scroll event is not intent: a restored scroll position fires one without any user
+ *   action (and a homepage refresh lands at the top anyway, history.scrollRestoration = "manual").
+ *   A hidden tab, pagehide, leaving the page or reduced motion switching on finish
  *   at once. Ceiling: at 9 s (a stalled photo) the lines fade out over 400 ms and it ends.
  * - A script that arrives after the CSS failsafe has started (2.4 s on its clock) leaves the
  *   reveal to the CSS and only cleans up (intent fast-forwards that fade). Intent before this
@@ -42,7 +51,7 @@
  *   this file never takes over (the inline guard also drops html.hero-draw at 4 s when this
  *   file has not started), and the veil and lines hide at 9.5 s if it dies mid-sequence.
  */
-(() => {
+(function heroDrawing(waited) {
   "use strict";
 
   const root = document.documentElement;
@@ -61,17 +70,41 @@
   };
   const teardown = () => {
     root.classList.remove("hero-draw", "hero-draw-js", "hero-draw-own");
+    root.removeAttribute("data-hero-pen");
     drop(wrap);
     drop(veil);
   };
   // A page restored from the back/forward cache shows the settled hero, never a frozen frame
-  // of the sequence (pagehide already finishes it; this catches anything left).
-  window.addEventListener("pageshow", (event) => { if (event.persisted) teardown(); });
+  // of the sequence (pagehide already finishes it; this catches anything left). Back never replays.
+  if (!waited) window.addEventListener("pageshow", (event) => { if (event.persisted) teardown(); });
 
-  // Repeat visit, kill switch, reduced motion, deep link...: the guard did not opt in.
-  if (!root.classList.contains("hero-draw")) { teardown(); return; }
+  if (!root.classList.contains("hero-draw")) {
+    // A tab hidden or prerendered at parse: the guard arms on its first visible (it listens
+    // first, so html.hero-draw is already there when this runs), and the sequence starts then.
+    if (!waited && root.getAttribute("data-hero-pen") === "wait") {
+      const wait = (window.__heroDraw = { state: "wait-visible", bootAt: Math.round(performance.now()) });
+      const stopWaiting = () => {
+        document.removeEventListener("visibilitychange", shown);
+        document.removeEventListener("prerenderingchange", shown);
+        window.removeEventListener("pagehide", gone);
+      };
+      const gone = () => { stopWaiting(); wait.state = "done"; teardown(); };
+      const shown = () => {
+        if (document.visibilityState !== "visible" || document.prerendering) return;
+        stopWaiting();
+        heroDrawing(true);
+      };
+      document.addEventListener("visibilitychange", shown);
+      document.addEventListener("prerenderingchange", shown);
+      window.addEventListener("pagehide", gone);
+      return;
+    }
+    // Kill switch, reduced motion, deep link, Back/Forward...: the guard did not opt in.
+    teardown();
+    if (waited) window.__heroDraw = { state: "done", doneAt: Math.round(performance.now()) };
+    return;
+  }
 
-  const SESSION_KEY = "kw-hero-drawn";
   const SRC_W = 2200, SRC_H = 1238;          // hero-lines.svg coordinates = source photo pixels
   const DRAW_END = 1200;                      // every stroke is drawn by 1.2 s
   const DEV_START = 1050, DEV_END = 2050;     // photo development window (ms)
@@ -103,7 +136,10 @@
   const svg = wrap && wrap.querySelector("svg");
   const photos = media ? [...media.querySelectorAll("img")] : [];
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const state = (window.__heroDraw = { state: "boot", bootAt: Math.round(performance.now()) });
+  // Armed now (visible at parse) or late (on the first visible): the clocks below count from here.
+  const armedAt = waited ? performance.now() : 0;
+  const state = (window.__heroDraw = { state: "boot", bootAt: Math.round(performance.now()),
+    arm: root.getAttribute("data-hero-pen") || "", armedAt: Math.round(armedAt) });
 
   let finished = false, raf = 0, ceiling = 0, ro = null;
   let settle = () => finish();               // replaced once the sequence is running: settle(ms)
@@ -123,7 +159,6 @@
   }
 
   if (!bg || !svg || !veil || reduce.matches || document.hidden) { finish(); return; }
-  try { sessionStorage.setItem(SESSION_KEY, "1"); } catch (e) { /* the guard already set it */ }
 
   // Intent is honoured from the start: before the drawing runs it simply finishes.
   const intent = (reason) => () => { if (!state.settledBy) state.settledBy = reason; settle(); };
@@ -131,7 +166,7 @@
   on(window, "touchstart", intent("touchstart"), { capture: true, passive: true });
   on(window, "wheel", intent("wheel"), { capture: true, passive: true });
   on(window, "keydown", intent("keydown"), { capture: true, passive: true });
-  on(window, "scroll", intent("scroll"), { passive: true });
+  // No scroll listener: a restored position fires a scroll event that no visitor made.
   on(document, "visibilitychange", () => { if (document.hidden) finish(); });
   on(window, "pagehide", finish);
   // Leaving for another page (link or script, Navigation API): finish now, so the frame a
@@ -156,7 +191,7 @@
     if (finished) return;
     try {
       const failsafe = veil.getAnimations ? veil.getAnimations().find((a) => a.animationName === "hero-draw-failsafe") : null;
-      const elapsed = failsafe ? Number(failsafe.currentTime) || 0 : performance.now();
+      const elapsed = failsafe ? Number(failsafe.currentTime) || 0 : performance.now() - armedAt;
       if (elapsed > LATE_MS) {
         state.state = "late";
         state.failsafeAt = Math.round(elapsed);
@@ -180,7 +215,9 @@
         if (finished) return;
         try {
           const s0 = performance.now();
-          if (getComputedStyle(media).display === "none" || window.scrollY > 4) { finish(); return; }
+          // A scrolled page is not intent either (see above); a car mostly off screen takes the
+          // quick reveal instead (MIN_VISIBLE).
+          if (getComputedStyle(media).display === "none") { finish(); return; }
           start();
           state.initMs = +(performance.now() - s0).toFixed(1);
         } catch (err) {

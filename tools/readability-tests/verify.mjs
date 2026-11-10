@@ -425,6 +425,7 @@ await check('Archive links, initial deep links, hash changes, and retained-studi
 
 await check('The page continuity bootstrap is identical on all three pages, filters only the aborted-transition rejection and skips the transition on a slow connection', async () => {
   const filter = 'addEventListener("unhandledrejection",function(e){var r=e.reason;if(r&&r.name==="InvalidStateError"&&/^Transition was aborted/.test(r.message||""))e.preventDefault();});';
+  const scrolls = [];
   const boots = await Promise.all(['index.html', 'case-study.html', 'project-3d.html'].map(async (name) => {
     const html = await read(name);
     const lines = html.split('\n');
@@ -436,9 +437,17 @@ await check('The page continuity bootstrap is identical on all three pages, filt
     assert.equal(lines[charset + 1].trim(), `<script id="kw-vt-filter">${filter}</script>`, `${name}: the filter comes right after <meta charset>`);
     assert.equal(html.indexOf('<script'), html.indexOf('<script id="kw-vt-filter">'), `${name}: the filter is the first script`);
     assert(Buffer.byteLength(html.slice(0, html.indexOf(filter) + filter.length)) < 300, `${name}: the filter ends in the first 300 bytes`);
+    // refresh-20261107: script#kw-scroll (history.scrollRestoration = "manual") is part A's last line, right after the bootstrap.
+    // fix-r1: it reads sessionStorage before it sets the manual mode (blocked storage leaves the browser's restoration alone).
+    const at = lines.findIndex((line) => line.includes('w.__vtBoot='));
+    assert(lines[at + 2]?.trim().startsWith('<script id="kw-scroll">(function(){var s;try{s=sessionStorage;s.getItem("kw-vt")}catch(x){return}try{history.scrollRestoration="manual";'), `${name}: the scroll script follows the bootstrap`);
+    // fix-r3: without the Navigation API, positions are keyed by URL and restored on popstate (a same-page Back/Forward).
+    assert(lines[at + 2].includes('else{c=K();addEventListener("click",') && lines[at + 2].includes('addEventListener("popstate",function(){var y;try{s.setItem(c,String(Math.round(scrollY)))}catch(x){}c=K();y=G();if(y>=0)J(y)})}'), `${name}: the no-Navigation-API fallback`);
+    scrolls.push(lines[at + 2].trim());
     return boot;
   }));
   assert.equal(new Set(boots).size, 1, 'head-block.cjs generates one bootstrap for all three pages');
+  assert.equal(new Set(scrolls).size, 1, 'and one scroll script');
   // The pageswap decision, run for real: only the destination and the connection decide it.
   const code = boots[0].slice('<script>'.length, -'</script>'.length);
   const leave = (connection, to = 'https://x.test/case-study.html?project=scanner') => {

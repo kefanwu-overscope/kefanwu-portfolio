@@ -194,7 +194,7 @@ test('The paper moves through the whole sequence, by amounts no pixel can show o
 
 test('A cover that has not decoded never holds a stage', () => {
   assert.match(arrival, /on\(host, 'case-model-ready'/, 'The drawing gives way to a ready model');
-  assert.match(arrival, /COVER_CAP = 3000/); assert.match(arrival, /giveBack\('cover late', 0\)/);
+  assert.match(arrival, /COVER_CAP = 8000/); assert.match(arrival, /giveBack\('cover late', 0\)/);
   assert.match(arrival, /dataset\.arrivalLayers = 'in'/, 'The layers, not the cover, start the model');
   const stage = text('project-case-3d.js'), renderer = text('case-study.js');
   assert.match(stage, /new CustomEvent\('case-model-ready'\)/);

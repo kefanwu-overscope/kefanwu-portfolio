@@ -36,9 +36,10 @@
          ?loader=classic, ?draw=off or no WebGL 2 keep the classic card; the
          choice is made before the first paint. F33: the drawing may start only
          before the room passes its assets boundary (experience.js) and within
-         4 s of this script running (counted from here, so a previous page's
-         teardown on a reload does not count); otherwise the classic card
-         (data-draw="off"). -->
+         20 s of this script running (counted from here, so a previous page's
+         teardown on a reload does not count; 4 s until refresh-20261107, which
+         a Fast 3G link missed: its first geometry arrives at about 11-12 s);
+         otherwise the classic card (data-draw="off"). -->
     <script>
       (function () {
         try {
@@ -48,7 +49,7 @@
           setTimeout(function () {
             var el = document.getElementById("exp-loader");
             if (el && el.getAttribute("data-draw") !== "live" && !document.documentElement.classList.contains("exp-ready")) el.setAttribute("data-draw", "off");
-          }, 4000);
+          }, 20000);
         } catch (e) {}
       })();
     </script>

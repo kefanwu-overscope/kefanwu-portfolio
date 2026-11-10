@@ -1,7 +1,7 @@
-/* Homepage project cards, "Drawn, then built" (one-time arrival per card).
+/* Homepage project cards, "Drawn, then built" (an arrival per card on every load and reload).
  *
- * The first time a card's cover comes into view, the cover is first its engineering line drawing
- * (assets/editorial/lines-20261027/, rendered from the same camera and pose as the cover, so
+ * The first time in a page load that a card's cover comes into view, the cover is first its
+ * engineering line drawing (assets/editorial/lines-20261027/, rendered from the same camera and pose as the cover, so
  * the lines sit on the cover's own edges). The real cover then develops through the drawing and
  * the lines retire. The end state is today's card: every node this file adds is removed.
  *
@@ -28,8 +28,8 @@
  *   still at least 24 px off screen. Once such a card has been on screen it keeps its cover
  *   ("seen-before-drawing"). Covers keep their own loading (lazy, async);
  *   they are never held back, and a cover that is not decoded yet holds the drawing (at most
- *   4 s) instead of revealing an empty frame. Data saver and slow connections (effective type 3g
- *   or slower: round trips of 270 ms and more) keep today's cards.
+ *   4 s) instead of revealing an empty frame. Data saver keeps today's cards; the effective type
+ *   (3g and slower) is no longer a gate (refresh-20261107).
  * - A primed card plays once >= 25 % of its cover is on screen, or after 200 ms partly on screen.
  *   Cards entering together start 70 ms apart. A card that leaves the screen mid-sequence ends.
  * - Cards further down draw once the hero opening has ended (gate released at 10 s at the
@@ -37,6 +37,7 @@
  *   cover instead (160 ms): no card draws alongside the hero or waits white for it.
  * - Leaving for another page finishes every card that is drawing or waiting on screen; after a
  *   back/forward-cache return, drawn cards never replay, and cards not yet seen still draw once.
+ *   Back/Forward without that cache (navigation type back_forward) draws nothing.
  * - Text, layout and the cover element are never touched; overlays are absolutely positioned
  *   inside .card-media with pointer-events: none (no layout shift).
  * - Intent settles to the end state in 160 ms: mouse/pen pointerdown anywhere, any keydown, a
@@ -50,9 +51,9 @@
  *   search ends the feature for this page (entering cards then just fade in, script.js FLIP).
  * - Kill switches: ?draw=off (every drawing sequence) and ?cards=static (this one, and the
  *   filter motion). Reduced motion and forced colors (high contrast) keep today's cards, as does
- *   a filter or search already in use when this file starts. ?cards=draw replays cards already drawn
- *   in this tab session (each card otherwise draws once per tab session, sessionStorage
- *   "kw-cards-drawn"). ansysCfd (a CFD plot) has no drawing and keeps today's cover.
+ *   a filter or search already in use when this file starts. There is no session memory: every
+ *   plain load and reload draws again. ?cards=draw also draws on Back/Forward (review only).
+ *   ansysCfd (a CFD plot) has no drawing and keeps today's cover.
  * - QA: window.__cardDraw = { enabled, reason, heroWait, cards: { key: { phase, ... } } }; a card
  *   armed at rest has nearStart and armedAtRest (its distance off screen, px).
  */
@@ -81,8 +82,16 @@
       ? "webkitMaskPosition" : "";
   if (!MASK_POS || !window.IntersectionObserver || !Element.prototype.animate) { QA.reason = "unsupported"; return; }
   const conn = navigator.connection;
+  // Data saver only. The effective type is not a gate: it reads 3g on some fast links (a cold
+  // start), which kept the drawings from visitors who would have seen them.
   if (conn && conn.saveData) { QA.reason = "save-data"; return; }
-  if (conn && /^(slow-2g|2g|3g)$/.test(conn.effectiveType || "")) { QA.reason = "slow-connection"; return; }
+  // Every load and reload draws (no session memory). A Back/Forward load without the
+  // back/forward cache draws nothing: the visitor returns to covers they have already seen.
+  // (A bfcache restore never reaches this line; see the header.) ?cards=draw replays.
+  const replay = /[?&]cards=draw(&|$)/.test(query);
+  let navType = "";
+  try { navType = (performance.getEntriesByType("navigation")[0] || {}).type || ""; } catch (e) { navType = ""; }
+  if (!replay && navType === "back_forward") { QA.reason = "back-forward"; return; }
 
   // Line drawings by card-lines (tools/card-lines): [600 w hash, 1200 w hash, left, right, q10, q90].
   // Hashes are sha256[:12] from assets/editorial/lines-20261027/lines.json; left/right are the
@@ -165,17 +174,6 @@
   const EASE_DEV = "cubic-bezier(.65,0,.35,1)";
   const EASE_SETTLE = "cubic-bezier(.33,1,.68,1)";
 
-  const SESSION_KEY = "kw-cards-drawn";
-  const replay = /[?&]cards=draw(&|$)/.test(query);
-  let drawn = new Set();
-  try {
-    if (!replay) drawn = new Set((sessionStorage.getItem(SESSION_KEY) || "").split(",").filter(Boolean));
-  } catch (e) { /* storage blocked: cards may draw again on a later load */ }
-  const remember = (key) => {
-    drawn.add(key);
-    try { sessionStorage.setItem(SESSION_KEY, [...drawn].join(",")); } catch (e) { /* ignore */ }
-  };
-
   // ---- records ----
   const recs = [];
   const byMedia = new Map();
@@ -188,7 +186,6 @@
     if (cover) coverOf.set(media, cover);
     const qa = (QA.cards[key] = { phase: "static" });
     if (!LINES[key] || !cover) { qa.why = "no-drawing"; continue; }
-    if (drawn.has(key)) { qa.why = "drawn-this-session"; continue; }
     const rec = { key, card, media, cover, qa, phase: "", lines: null, veil: null, loading: false, decoded: false,
       near: false, inGuard: false, nearStart: false, restWait: false, ratio: 0, dwell: 0, dwellDone: false,
       startAt: 0, played: false, anims: [] };
@@ -494,7 +491,6 @@
     if (rec.veil) rec.veil.remove();
     if (rec.lines && rec.lines.isConnected) rec.lines.remove();
     setPhase(rec, rec.played ? "done" : "skipped", why);
-    if (rec.played) remember(rec.key);
     unobserve(rec);
   }
   function skip(rec, why) { finish(rec, why); }
@@ -540,7 +536,10 @@
   }
 
   // ---- hero opening: no card draws alongside it ----
-  let heroWaiting = root.classList.contains("hero-draw");
+  // A hero still waiting for its tab's first visible (html[data-hero-pen=wait]) counts as running;
+  // its ceilings start when it arms.
+  const heroParked = () => root.getAttribute("data-hero-pen") === "wait";
+  let heroWaiting = root.classList.contains("hero-draw") || heroParked();
   let heroMO = null, heroCeil = 0, heroFinal = 0, heroLate = false;
   QA.heroWait = heroWaiting;
   function heroDone(why) {
@@ -561,11 +560,18 @@
     QA.heroLateAt = Math.round(now());
     flush();
   }
-  if (heroWaiting) {
-    heroMO = new MutationObserver(guard(() => { if (!root.classList.contains("hero-draw")) heroDone("hero"); }));
-    heroMO.observe(root, { attributes: true, attributeFilter: ["class"] });
+  function heroClocks() {
     heroCeil = setTimeout(guard(heroRunsLate), HERO_CEIL);
     heroFinal = setTimeout(guard(() => heroDone("timeout")), HERO_FINAL);
+  }
+  if (heroWaiting) {
+    let parked = heroParked();
+    heroMO = new MutationObserver(guard(() => {
+      if (parked && !heroParked()) { parked = false; heroClocks(); }
+      if (!parked && !root.classList.contains("hero-draw")) heroDone("hero");
+    }));
+    heroMO.observe(root, { attributes: true, attributeFilter: ["class", "data-hero-pen"] });
+    if (!parked) heroClocks();
   }
 
   // ---- observers ----

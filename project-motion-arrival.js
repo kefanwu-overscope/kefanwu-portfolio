@@ -18,11 +18,13 @@
 // inks top to bottom (two counter-moving transforms, compositor only). 1.95 s in
 // all; the end state is the untouched cover. Story progress or a click, tap or
 // key on the stage finish what remains within 250 ms; a hidden tab or reduced
-// motion finishes it at once. The print never keeps the decoded cover dimmed on
-// screen beyond its budget: a drawing not started by then gives the cover back
+// motion finishes it at once. The held print never keeps the decoded cover dimmed
+// on screen beyond its budget: a drawing not ready by then gives the cover back
 // ('late'), as does any error, and a cover that has not decoded when the model is
-// ready, or within COVER_CAP of the page's start, never holds the stage: its print
-// is given up ('cover late'). The settled drawing is hidden in one step and taken
+// ready, or within COVER_CAP of the page's first response byte, never holds the
+// stage: its print is given up ('cover late'). The budget runs only while held;
+// once the pencil drawing is up (the cover whole beneath it), it waits for the
+// stage to come into view. The settled drawing is hidden in one step and taken
 // apart one node per idle slice. Below 768 px the same sequence runs on a shorter
 // clock (1.6 s), since the model on a phone waits behind it.
 //
@@ -70,7 +72,12 @@ export function frameArrival({ key, host, media, poster, holdLeft: budget, reduc
   const PENCIL = .35, GHOST = .18, GREY = 'grayscale(1)', COLOUR = 'grayscale(0)', LINES_IN = 240, RUSH = 200, STAGED = .001, DRIFT = .0002;
   const [INK, SPREAD, DEVELOP, RETIRE, RETIRE_SPREAD] = innerWidth < 768 ? [380, 400, 520, 450, 80] : [420, 530, 600, 550, 114];
   const DEVELOP_AT = SPREAD + INK, RETIRE_AT = DEVELOP_AT + Math.round(DEVELOP * .56);
-  const GIVE_BACK = 150, TRIGGER = .15, TAP_SLOP = 10, COVER_CAP = 3000;
+  const GIVE_BACK = 150, TRIGGER = .15, TAP_SLOP = 10, COVER_CAP = 8000;
+  // The page's own time, from the first byte of its response (case-study.js counts the same way).
+  let responseStart = 0;
+  try { responseStart = performance.getEntriesByType?.('navigation')?.[0]?.responseStart || 0; } catch { responseStart = 0; }
+  // A hidden tab runs no animation frames: work that would wait for one waits for a timer instead.
+  const nextFrame = (callback) => (document.hidden ? setTimeout(callback, 0) : requestAnimationFrame(callback));
   const STROKE = 'cubic-bezier(.45,0,.2,1)', DEVELOP_EASE = 'cubic-bezier(.65,0,.35,1)';
   const TOTAL = RETIRE_AT + RETIRE_SPREAD + RETIRE; // 1950 ms (1601 ms below 768 px): the last lines retire
   const slots = Array.from({ length: steps }, (unused, index) => steps > 1 ? index * SPREAD / (steps - 1) : 0);
@@ -80,8 +87,8 @@ export function frameArrival({ key, host, media, poster, holdLeft: budget, reduc
   const on = (node, type, listener) => node.addEventListener(type, listener, { signal: events.signal });
   let phase = 'held', reason = '', triggeredAt = null, coverAt = null, readyAt = null, startedAt = null, settledAt = null, rushed = false, layerWidth = null;
   let animations = [], clock = null;
-  // The hold budget runs only while some of the stage is on screen with its
-  // cover decoded: below the fold the print costs nothing.
+  // The hold budget runs only while held and some of the stage is on screen with
+  // its cover decoded: below the fold the print costs nothing.
   let onScreen = false, holdLeft = budget, holdFrom = null, holdTimer = 0;
   const drawing = document.createElement('div');
   drawing.className = 'case-drawing';
@@ -264,7 +271,9 @@ export function frameArrival({ key, host, media, poster, holdLeft: budget, reduc
     const now = performance.now();
     if (holdFrom !== null) { holdLeft -= now - holdFrom; holdFrom = null; }
     clearTimeout(holdTimer); holdTimer = 0;
-    if ((phase !== 'held' && phase !== 'pencil') || coverAt === null || !onScreen || document.hidden) return;
+    // Only while held: once the pencil drawing is up, a stage under the trigger waits for the
+    // visitor to scroll to it instead of being given back (short windows lost it after 850 ms).
+    if (phase !== 'held' || coverAt === null || !onScreen || document.hidden) return;
     holdFrom = now;
     holdTimer = setTimeout(() => { holdTimer = 0; holdFrom = null; holdLeft = 0; giveBack('late'); }, Math.max(0, holdLeft));
   }
@@ -330,7 +339,9 @@ export function frameArrival({ key, host, media, poster, holdLeft: budget, reduc
   // The small line layers (14-23 KB) are requested after layout, ahead of the model
   // that waits behind them. The cover has been on its way since the page's head; a
   // connection too slow to carry both never gets here (case-study.js STAGE_LATE).
-  const layersRequested = new Promise((resolve) => requestAnimationFrame(() => resolve(requestLayers())));
+  // In a page opened in a hidden tab they are requested at once, so the drawing is ready when
+  // the tab is first shown.
+  const layersRequested = new Promise((resolve) => nextFrame(() => resolve(requestLayers())));
   coverLoaded.then(() => { if (alive()) { coverAt = performance.now(); holdClock(); } });
   // The grey copy is the cover's own selected image, from the HTTP cache.
   const printReady = coverLoaded.then(() => {
@@ -365,8 +376,17 @@ export function frameArrival({ key, host, media, poster, holdLeft: budget, reduc
   visibility.observe(media);
   // A cover that has not decoded never holds the stage: the model, when it is
   // ready, or the wall clock takes the print back, with nothing on screen to fade.
-  on(host, 'case-model-ready', () => { if (phase === 'held') { if (coverAt === null) giveBack('cover late', 0); else giveBack('late'); } });
-  coverTimer = setTimeout(() => { if (coverAt === null) giveBack('cover late', 0); }, Math.max(0, COVER_CAP - performance.now()));
+  // Not while the tab is hidden, nor in a page opened in a hidden tab: there the model is ready
+  // before anyone has seen the stage (its ready event lands in the first frames after the tab is
+  // shown, ahead of the sheets), and the drawing is still to be seen. The on-screen budget
+  // (holdClock) still bounds the print, and the model waits behind the drawing as on any arrival.
+  const openedHidden = document.hidden || (() => { try { return performance.getEntriesByType('visibility-state').some((entry) => entry.name === 'hidden'); } catch { return false; } })();
+  on(host, 'case-model-ready', () => {
+    if (phase !== 'held' || document.hidden) return;
+    if (coverAt === null) giveBack('cover late', 0);
+    else if (!openedHidden) giveBack('late');
+  });
+  coverTimer = setTimeout(() => { if (coverAt === null) giveBack('cover late', 0); }, Math.max(0, COVER_CAP - (performance.now() - responseStart)));
   on(host, 'case-motion-request', (event) => { if (Number(event.detail?.progress) > .01) rush(); });
   // Exploring freely wants the model that waits behind the drawing.
   on(host, 'case-motion-mode', (event) => { if (event.detail?.free) rush(); });
