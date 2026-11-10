@@ -1,5 +1,51 @@
 # Homepage presentation
 
+## Card drawings survive a fast scroll · 2026-11-09
+
+The owner wrote on 2026-11-09: "现在还有一个问题就是，呃，如果我在手机或者电脑上下滑的太快，我的项目的线稿就不会显示出来，请修复一下。"
+(scrolling down too fast on a phone or computer loses the project line drawings). These rules
+supersede the card items in the 2026-11-06 and 2026-11-07 sections below (fast scroll settles a
+card, loading only within about one screen, a card seen or near before decoding keeps its cover,
+any press or key settles every card). The pencil state, the calm rule, the rewind and every
+number here are agent decisions (main loop design, implementer and fixer), not the owner's; the
+owner can change them. Details: `AGENT_HANDOFF.md`, 2026-11-09.
+
+- A card that has not drawn yet waits in pencil: page-white paper over its cover with its own
+  line drawing at 30 %. A waiting card is never a blank white box and never its cover.
+- A waiting card draws (the same ink, develop and retire sequence, about 1.15 s) once at least
+  25 % of it is on screen and the scroll is calm: no scroll event for 150 ms, or slower than one
+  window height per second, clamped to 700-1000 px/s. Readable cards draw in grid order, 70 ms
+  apart. Reading pace (measured at or below about 580 px/s) draws as before.
+- Scroll speed never settles a card. A card that leaves the screen mid-draw goes back to pencil
+  and draws again from the start when it is next readable and calm. A finished card stays
+  finished for the page view. This holds for wheel, trackpad, keys, scrollbar drag, the `#work`
+  smooth scroll and phone flings.
+- What settles a card to its cover (about 160 ms): a mouse or pen press on that card, a real
+  pointer move over it (hover), focus or a key inside it, a touch on its control that ends as a
+  tap or a sideways slider drag (a touch the browser turns into a scroll does not count), the
+  filter or search, a cover that fails to load, or a 6 s failsafe for a readable card that
+  never gets a calm moment. Reduced motion, forced colors, data saver and a `back_forward` load
+  show no drawing at all, and a line image that fails to load keeps that card's cover. A press
+  or key elsewhere on the page does not.
+- A card under 25 % on screen at rest stays in faint pencil. Cards on screen when the script
+  starts keep their covers, and a card whose loaded cover was already seen keeps it until it has
+  been off screen.
+- All 15 line drawings load on every visit, nearest first, at most 4 at once, after the hero
+  photos and the near covers. ansysCfd still has no drawing.
+- Detail pages follow the same rule: the arrival waits in pencil until the stage is at least
+  15 % on screen and the scroll is calm, rewinds to pencil if it leaves mid-draw, and is still
+  rushed (about 200 ms) when the pinned story needs the stage.
+- Unchanged from R1: every load and refresh plays, Back/Forward does not, the cards wait for
+  the hero, no layout shift (CLS 0), text and cover elements untouched, hover frame-scrubbing
+  after a card settles or draws.
+- Not verified on real phones, real trackpads or mouse wheels, Safari, Firefox or real slow
+  networks (headless Chrome on one Windows machine, CDP-synthesized input and throttling).
+- A final independent review and regression sweep on the final tree passed
+  (`../releases/cards-fast-scroll-20261109/verify-final-review/`, `verify-final-sweep/`): no
+  correctness defect in the diff against 9af034df; hero-tests 33/33 and room-tests 243/243 with
+  0 skipped; 60 loads with 0 errors, 0 failed requests and 0 overflow; homepage 15/15 cards drawn
+  at all 6 widths with 0 blank frames; detail arrivals 48/48 settled.
+
 ## Every refresh plays · 2026-11-07
 
 The owner asked on 2026-11-06: "我指的是每次刷新网站线稿动画都能重新加载" (every refresh must

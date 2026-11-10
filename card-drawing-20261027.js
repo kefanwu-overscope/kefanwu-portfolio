@@ -1,61 +1,66 @@
 /* Homepage project cards, "Drawn, then built" (an arrival per card on every load and reload).
  *
- * The first time in a page load that a card's cover comes into view, the cover is first its
- * engineering line drawing (assets/editorial/lines-20261027/, rendered from the same camera and pose as the cover, so
- * the lines sit on the cover's own edges). The real cover then develops through the drawing and
- * the lines retire. The end state is today's card: every node this file adds is removed.
+ * When a card's cover comes into view, the cover is first its engineering line drawing
+ * (assets/editorial/lines-20261027/, rendered from the same camera and pose as the cover, so the
+ * lines sit on the cover's own edges). The real cover then develops through the drawing and the
+ * lines retire. The end state is today's card: every node this file adds is removed.
  *
- *   0 - 600 ms     lines wipe in across the object, left to right (a soft edge about 6 % of the
- *                  card wide; it crosses the drawing's own extent from 10 % to 90 % of the wipe,
- *                  paced by the ink: 10 % of the drawing's lines appear every 48 ms)
- *   450 - 1050 ms  the cover develops through a page-white veil (develop ease)
- *   600 - 1150 ms  the lines retire; then the veil and the lines are removed
+ *   waiting        page-white paper over the cover, the card's whole drawing at 30 % (pencil)
+ *   0 - 600 ms     lines ink in across the object, left to right, over the pencil (a soft edge
+ *                  about 6 % of the card wide; it crosses the drawing's own extent from 10 % to
+ *                  90 % of the wipe, paced by the ink: 10 % of the drawing's lines every 48 ms)
+ *   450 - 1050 ms  the cover develops through the paper (develop ease)
+ *   600 - 1150 ms  the lines retire; then the paper and the lines are removed
  *
- * Contract
+ * Contract (cards-20261109: a fast scroll no longer loses a drawing)
  * - This file is loaded after the window load event, in idle time (index.html), so it never
- *   competes with the hero. The line image loads late and at low priority, and never shares the
- *   network with real content: only after the window load event (or 4 s), only for cards within
- *   about one screen (at most 1000 px) of the viewport, and only once both hero photo layers and
- *   every cover in that zone have finished loading. A card is armed ("primed": white veil, lines
- *   masked out) only while it is still more than 15 % of a screen away from the viewport. Real
- *   content on screen is never hidden for choreography: a card already on screen when this file
- *   starts keeps its cover, untouched ("on-screen-at-start"), and a card that comes close before
- *   its drawing has decoded keeps today's cover too. A card that is already inside that 15 % band
- *   but off screen when this file starts (the row just under the fold of a tall window, or a first
- *   row right under the hero of a wide one) still draws: it is armed only after the hero opening
- *   has ended, while the page is at rest (nothing has scrolled it, and no touch, key or button
- *   press, for 300 ms), at a frame boundary where the scroll position is current, and while it is
- *   still at least 24 px off screen. Once such a card has been on screen it keeps its cover
- *   ("seen-before-drawing"). Covers keep their own loading (lazy, async);
- *   they are never held back, and a cover that is not decoded yet holds the drawing (at most
- *   4 s) instead of revealing an empty frame. Data saver keeps today's cards; the effective type
- *   (3g and slower) is no longer a gate (refresh-20261107).
- * - A primed card plays once >= 25 % of its cover is on screen, or after 200 ms partly on screen.
- *   Cards entering together start 70 ms apart. A card that leaves the screen mid-sequence ends.
- * - Cards further down draw once the hero opening has ended (gate released at 10 s at the
- *   latest); if it is still running at 3.2 s (a slow photo), a primed card on screen shows its
- *   cover instead (160 ms): no card draws alongside the hero or waits white for it.
+ *   competes with the hero. The line images load late and at low priority, and never share the
+ *   network with real content: only after the window load event (or 4 s), and only once both hero
+ *   photo layers and every cover within about one screen (at most 1000 px) of the viewport have
+ *   finished loading. Then every card's drawing is requested, nearest first, at most 4 at a time
+ *   (4-29 KB each; all 15 are 117 KiB at 600 w, 247 KiB at 1200 w): a drawing requested only when
+ *   its card came near was not there yet when a fast scroll brought the card on screen.
+ * - Waiting (phase "primed"): a card whose drawing has decoded is armed while it is off screen:
+ *   page-white paper over the cover with its own drawing at PENCIL. On screen that is a quiet pencil
+ *   state, never a blank white box and never the cover. Real content on screen is never hidden for
+ *   choreography: a card already on screen when this file starts keeps its cover, untouched
+ *   ("on-screen-at-start"); a card whose loaded cover came on screen before its drawing was ready
+ *   keeps the cover while it is on screen and is armed once it is off screen again, so it draws the
+ *   next time it comes back. A card nearer than 15 % of a screen is armed in a frame callback (the
+ *   scroll position current), only while at least ARM_PX plus 50 ms of the scroll's travel off
+ *   screen; one on screen whose cover has not loaded yet (an empty frame, nothing to hide) at once.
+ * - Drawing: a waiting card draws once >= 25 % of its cover is on screen and the scroll is calm:
+ *   no scroll event for IDLE_MS, or slower than about one screen a second (calmLimit: the window's
+ *   height in px/s, CALM_MIN to CALM_MAX; the lower median of the step speeds between scroll events
+ *   over the last 150 ms, known once two steps span 40 ms). While the page moves faster it waits in
+ *   pencil; when the scroll calms, the cards on screen draw in reading order, 70 ms apart. The same
+ *   for wheel, trackpad, keys, the scrollbar, a same-page link's smooth scroll and a touch fling.
+ * - A card that leaves the screen before its drawing completes goes back to waiting (pencil) while it
+ *   is off screen, and draws again from the start the next time it is on screen and the scroll is
+ *   calm (QA restarts). A card that finished stays finished for the rest of the page view. Scroll
+ *   speed never settles a card.
+ * - Cards wait for the hero opening (gate released at 10 s at the latest); if it is still running at
+ *   3.2 s (a slow photo), a waiting card on screen shows its cover instead (160 ms).
+ * - Settling to the end state (160 ms) comes only from input on that card: a mouse or pen press on it,
+ *   a key while focus is inside it, a real pointer move over it (hover), focus moving into it, a tap
+ *   or a sideways drag on its slider or another control (a touch there that the browser takes for a
+ *   scroll, pointercancel, is not intent); or the failsafe: a card on screen enough to draw that has
+ *   waited FAILSAFE_MS (calm never came). A press, key or scroll elsewhere is not intent for a card.
+ *   A hidden tab, pagehide and leaving the page finish the cards drawing or waiting on screen at
+ *   once. Using the project filter or search ends the feature for this page (entering cards then just
+ *   fade in, script.js FLIP). A drawing or a cover that fails to load keeps today's card.
  * - Leaving for another page finishes every card that is drawing or waiting on screen; after a
- *   back/forward-cache return, drawn cards never replay, and cards not yet seen still draw once.
+ *   back/forward-cache return, drawn cards never replay, and cards not yet drawn still draw.
  *   Back/Forward without that cache (navigation type back_forward) draws nothing.
  * - Text, layout and the cover element are never touched; overlays are absolutely positioned
  *   inside .card-media with pointer-events: none (no layout shift).
- * - Intent settles to the end state in 160 ms: mouse/pen pointerdown anywhere, any keydown, a
- *   real pointer move over a drawing card (hover), focus inside it, a touch on its slider, or a
- *   fast scroll (over max(2400 px/s, 2.6 screens/s): moving on, not reading) while cards are
- *   drawing on screen. Reading-pace scrolling is how cards arrive, so it (or a touch that starts
- *   it) is not intent; nor is the smooth scroll of a same-page link ("View all 16 projects") or
- *   a hash change: until that scroll ends (scrollend, or 150 ms without a scroll event; 1.5 s at
- *   most) the fast-scroll rule is off, so cards at the destination play as on arrival.
- *   A hidden tab, pagehide and leaving the page finish at once. Using the project filter or
- *   search ends the feature for this page (entering cards then just fade in, script.js FLIP).
  * - Kill switches: ?draw=off (every drawing sequence) and ?cards=static (this one, and the
  *   filter motion). Reduced motion and forced colors (high contrast) keep today's cards, as does
- *   a filter or search already in use when this file starts. There is no session memory: every
- *   plain load and reload draws again. ?cards=draw also draws on Back/Forward (review only).
- *   ansysCfd (a CFD plot) has no drawing and keeps today's cover.
- * - QA: window.__cardDraw = { enabled, reason, heroWait, cards: { key: { phase, ... } } }; a card
- *   armed at rest has nearStart and armedAtRest (its distance off screen, px).
+ *   data saver, and a filter or search already in use when this file starts. There is no session
+ *   memory: every plain load and reload draws again. ?cards=draw also draws on Back/Forward (review
+ *   only). ansysCfd (a CFD plot) has no drawing and keeps today's cover.
+ * - QA: window.__cardDraw = { enabled, reason, heroWait, calmLimit, cards: { key: { phase, why,
+ *   plays, restarts, armed, pencilSeen, waitedCalm, ... } } }.
  */
 (() => {
   "use strict";
@@ -81,6 +86,7 @@
     : supports("-webkit-mask-image", "linear-gradient(#000,#000)") && supports("-webkit-mask-position", "0% 0%")
       ? "webkitMaskPosition" : "";
   if (!MASK_POS || !window.IntersectionObserver || !Element.prototype.animate) { QA.reason = "unsupported"; return; }
+  const MASK_IMAGE = MASK_POS === "maskPosition" ? "maskImage" : "webkitMaskImage";
   const conn = navigator.connection;
   // Data saver only. The effective type is not a gate: it reads 3g on some fast links (a cold
   // start), which kept the drawings from visitors who would have seen them.
@@ -118,34 +124,37 @@
     ftc: ["ed25ebf97b0c", "d0043003b22a", 0.348, 0.652, 0.419, 0.596],
   };
 
-  const WIPE_MS = 600;                        // lines wipe in
+  const WIPE_MS = 600;                        // lines ink in
   const DEV_START = 450, DEV_MS = 600;        // cover develops 450-1050 ms
   const RETIRE_START = 600, RETIRE_MS = 550;  // lines retire 600-1150 ms
-  const STAGGER = 70;                         // between cards entering together
+  const STAGGER = 70;                         // between cards starting together (reading order)
   const SETTLE_MS = 160;                      // intent -> end state (+ a frame: < 250 ms)
-  const PLAY_RATIO = 0.25;                    // share of the cover on screen that starts it
-  const DWELL_MS = 200;                       // ...or this long partly on screen
-  const GUARD = 0.15;                         // arm only while > 15 % of a screen away
-  // ...except a card already in that band (but off screen) at the start: armed when the page is at
-  // rest, i.e. nothing has scrolled it and no touch, key or button press for REST_MS, and only
-  // while it is at least REST_PX off screen. Checked in a frame callback, after that frame's
-  // scroll events: a scroll the compositor began meanwhile has then been reported, so the only
-  // scroll the veil can race is one starting within the next frame or two, which from rest moves
-  // a few px in that time, less than REST_PX (and a cover's top edge is page white anyway).
-  const REST_MS = 300, REST_PX = 24;
+  const PLAY_RATIO = 0.25;                    // share of the cover on screen that is enough to read
+  const PENCIL = 0.3;                         // the waiting drawing's strength (the wipe's unshown side)
+  // Calm: no scroll event for IDLE_MS, or a scroll slower than calmLimit() px/s (about one screen a
+  // second). Chosen from releases/cards-fast-scroll-20261109/impl/before: reading pace (450-600 px/s)
+  // stays well under it, 1000 px/s and up on a 844-900 px window is over it.
+  const CALM_MIN = 700, CALM_MAX = 1000, IDLE_MS = 150;
+  const FAILSAFE_MS = 6000;                   // on screen enough to draw, still waiting: cover
+  const GUARD = 0.15;                         // armed at once while > 15 % of a screen away...
+  // ...nearer, in a frame callback (after that frame's scroll events, so the position is current),
+  // only while at least ARM_PX plus ARM_LEAD ms of the scroll's travel off screen: a scroll the
+  // compositor runs ahead of the main thread then reaches the card only after the paper is up.
+  const ARM_PX = 24, ARM_LEAD = 50;
   const COVER_HOLD = 4000;                    // longest wait for the cover to decode
   const HERO_CEIL = 3200;                     // longest wait for the hero opening
   const HERO_FINAL = 10000;                   // gate released even if the hero never finishes
   const LOAD_CEIL = 4000;                     // line loading opens at window load, or by then
-  const NEAR_MAX = 1000;                      // the loading zone: one screen, at most this (px)
-  const FAST_MIN = 2400, FAST_SCREENS = 2.6;  // a scroll faster than this (px/s) is intent
-  const FAST_WINDOW = 120;                    // ...if the last scroll event is this recent (ms)
-  const ANCHOR_IDLE = 150, ANCHOR_CAP = 1500; // a same-page link's scroll: ends after 150 ms quiet
+  const NEAR_MAX = 1000;                      // the zone whose covers load first: one screen, at most this (px)
+  const LOAD_PARALLEL = 4;                    // line images in flight at once
   // Wipe geometry, from the CSS mask (white-home-20261011.css): a 100deg gradient, opaque to
   // 48.8 % and clear from 51.2 % (a soft edge about 6 % of the card wide), sized 250 % x 100 % of
   // the 640:427 box; mask-position x puts the mask image's left edge at (1 - 2.5) * x box widths.
   // Below, in box widths: on the middle row the edge's centre is at the image centre; on every
   // row (the 10deg tilt included) left of M_SHOWN is fully drawn, right of M_HIDDEN not at all.
+  // This file sets the same gradient inline with PENCIL instead of clear on the unshown side, so
+  // the drawing waits as pencil and the wipe inks it (same geometry, same mask-position values).
+  const PENCIL_MASK = `linear-gradient(100deg, #000 48.8%, rgba(0, 0, 0, ${PENCIL}) 51.2%)`;
   const M_SIZE = 2.5, M_A = 0.488, M_B = 0.512, M_ANGLE = (100 * Math.PI) / 180, BOX_H = 427 / 640;
   const M_ALONG = (M_SIZE * Math.sin(M_ANGLE) + BOX_H * Math.abs(Math.cos(M_ANGLE))) / Math.sin(M_ANGLE);
   const M_TILT = (BOX_H / 2) * Math.abs(Math.cos(M_ANGLE) / Math.sin(M_ANGLE));
@@ -154,7 +163,7 @@
   const M_MARGIN = 0.02;
   const posAt = (edge) => (100 * edge) / (M_SIZE - 1);   // mask-position x (%) for an image-left edge at -edge
   // The wipe's mask-position keyframes for the drawing [left, right] with its ink quantiles
-  // [q10, q90]: fully hidden at 0, the edge's centre on the drawing's left extent at 10 %, on q10
+  // [q10, q90]: fully pencil at 0, the edge's centre on the drawing's left extent at 10 %, on q10
   // at 18 %, on q90 at 82 % and on its right extent at 90 % of the wipe, complete at 100 %. Linear
   // in between, so the ink appears at an even pace (10 % of it per 8 % of the wipe): a stroke ease
   // over the extent made most drawings, whose lines sit near their middle, flash in within about
@@ -187,8 +196,7 @@
     const qa = (QA.cards[key] = { phase: "static" });
     if (!LINES[key] || !cover) { qa.why = "no-drawing"; continue; }
     const rec = { key, card, media, cover, qa, phase: "", lines: null, veil: null, loading: false, decoded: false,
-      near: false, inGuard: false, nearStart: false, restWait: false, ratio: 0, dwell: 0, dwellDone: false,
-      startAt: 0, played: false, anims: [] };
+      inGuard: false, ratio: 0, startAt: 0, played: false, anims: [], run: 0, failTimer: 0 };
     recs.push(rec);
     byMedia.set(media, rec);
     byCard.set(card, rec);
@@ -198,8 +206,10 @@
 
   let enabled = true;
   let firstGuard = true;      // until the first guard pass has run (see guardIO)
+  const calmLimit = () => Math.min(CALM_MAX, Math.max(CALM_MIN, window.innerHeight || CALM_MIN));
   QA.enabled = true;
   QA.initAt = Math.round(now());
+  QA.calmLimit = calmLimit();
 
   function setPhase(rec, phase, why) {
     rec.phase = phase;
@@ -224,8 +234,10 @@
 
   const active = (rec) => rec.phase === "playing" || rec.phase === "settling";
   const onScreenPrimed = (rec) => rec.phase === "primed" && rec.ratio > 0;
+  const readable = (rec) => rec.ratio >= PLAY_RATIO - 1e-3;
+  const coverFailed = (rec) => rec.cover.complete && !rec.cover.naturalWidth;
 
-  // ---- loading the drawing (late, low priority, decoded before use) ----
+  // ---- loading the drawings (late, low priority, decoded before use) ----
   // A drawing is requested only when nothing real is still loading nearby: both hero photo
   // layers and every cover in the loading zone are complete (loaded or failed). Otherwise the
   // pump waits for those images and tries again, so a line image never shares bandwidth with a
@@ -251,22 +263,32 @@
     img.addEventListener("load", again, { once: true });
     img.addEventListener("error", again, { once: true });
   }
-  const wantsLoad = (rec) => !rec.loading && loadsOpen && rec.near && rec.phase === "idle";
+  const wantsLoad = (rec) => !rec.loading && loadsOpen && rec.phase === "idle";
+  const inFlight = () => recs.filter((rec) => rec.loading && !rec.decoded && !rec.qa.linesFailed).length;
+  // px between the card and the viewport (0: on screen); filtered-out cards last.
+  function distance(rec) {
+    const r = rec.media.getBoundingClientRect();
+    if (!r.width || !r.height) return Infinity;
+    return Math.max(0, r.top - window.innerHeight, -r.bottom);
+  }
   function pump() {
     // Not before the first guard pass: a card already on screen never requests its drawing.
-    if (!enabled || firstGuard || !recs.some(wantsLoad)) return;
+    if (!enabled || firstGuard) return;
+    const want = recs.filter(wantsLoad);
+    if (!want.length) return;
     const wait = blockers();
-    for (const rec of recs) if (wantsLoad(rec) && !rec.cover.complete && !wait.includes(rec.cover)) wait.push(rec.cover);
     if (wait.length) {
       QA.pumpWaits = (QA.pumpWaits || 0) + 1;
       wait.forEach(wakeOn);
       return;
     }
-    for (const rec of recs) if (wantsLoad(rec)) load(rec);
+    const free = LOAD_PARALLEL - inFlight();
+    if (free <= 0) return;
+    want.map((rec) => [distance(rec), rec]).sort((a, b) => a[0] - b[0]).slice(0, free).forEach(([, rec]) => load(rec));
   }
   function load(rec) {
-    if (rec.loading || !enabled || (rec.phase !== "idle" && rec.phase !== "primed")) return;
-    if (!rec.cover.naturalWidth) { finish(rec, "cover-failed"); return; }
+    if (rec.loading || !enabled || rec.phase !== "idle") return;
+    if (coverFailed(rec)) { skip(rec, "cover-failed"); return; }
     rec.loading = true;
     const img = document.createElement("img");
     img.className = "card-draw-lines";
@@ -276,6 +298,7 @@
     img.draggable = false;
     img.width = 1200;
     img.height = 800;
+    img.style[MASK_IMAGE] = PENCIL_MASK;
     if ("fetchPriority" in img) img.fetchPriority = "low";
     img.sizes = rec.cover.getAttribute("sizes") || "100vw";
     const [h600, h1200] = LINES[rec.key];
@@ -283,13 +306,14 @@
     rec.lines = img;
     rec.qa.requestedAt = Math.round(now());
     img.decode().then(guard(() => {
-      if (rec.phase !== "idle") return;
       rec.decoded = true;
       rec.qa.decodedAt = Math.round(now());
       tryPrime(rec);
+      pump();
     }), guard(() => {
       rec.qa.linesFailed = true;
       if (rec.phase === "idle") skip(rec, "lines-failed");
+      pump();
     }));
   }
   function openLoads() {
@@ -299,7 +323,7 @@
     pump();
   }
 
-  // ---- arming: white veil + masked lines, only well away from the viewport ----
+  // ---- arming: paper + pencil drawing, put up where nobody sees it go up ----
   function inGuardNow(rec) {
     const r = rec.media.getBoundingClientRect();
     if (!r.width || !r.height) return true;   // filtered out (display: none): never arm
@@ -308,53 +332,44 @@
   }
   function tryPrime(rec) {
     if (!enabled || rec.phase !== "idle" || !rec.decoded) return;
-    if (rec.inGuard || inGuardNow(rec)) {
-      if (rec.nearStart) waitForRest(rec);
-      else skip(rec, "near-viewport-before-drawing");
-      return;
-    }
-    arm(rec);
+    if (coverFailed(rec)) { skip(rec, "cover-failed"); return; }
+    if (!rec.inGuard && !inGuardNow(rec)) { arm(rec, "far"); return; }
+    scheduleArm();
   }
-  function arm(rec) {
+  let armFrame = 0;
+  function scheduleArm() {
+    if (armFrame || !enabled || !recs.some((rec) => rec.phase === "idle" && rec.decoded)) return;
+    armFrame = requestAnimationFrame(guard(armCheck));
+  }
+  // In a frame callback: this frame's scroll events have run, so the scroll position is current.
+  function armCheck() {
+    armFrame = 0;
+    if (!enabled) return;
+    const H = window.innerHeight;
+    const moving = now() - lastScrollAt < IDLE_MS ? Math.max(0, speed) : 0;
+    const margin = ARM_PX + (moving * ARM_LEAD) / 1000;
+    let onScreen = false;
+    for (const rec of recs) {
+      if (rec.phase !== "idle" || !rec.decoded) continue;
+      if (coverFailed(rec)) { skip(rec, "cover-failed"); continue; }
+      const r = rec.media.getBoundingClientRect();
+      if (!r.width || !r.height) continue;            // filtered out: never arm
+      const off = Math.max(r.top - H, -r.bottom);     // px off screen; <= 0: (partly) on screen
+      if (off >= margin) arm(rec, Math.round(off));
+      else if (off <= 0 && !rec.cover.complete) { arm(rec, "empty"); onScreen = true; }
+      else if (off <= 0) rec.qa.coverSeen = true;     // its cover is on screen: armed once it is off again
+    }
+    if (onScreen) flush();
+  }
+  function arm(rec, how) {
     veil(rec);
     rec.cover.after(rec.veil, rec.lines);
     setPhase(rec, "primed");
-  }
-
-  // A card that was in the guard band but off screen when this file started (see REST_MS): it
-  // waits, idle and showing its cover, for the hero opening to end and the page to be at rest.
-  let lastInputAt = -Infinity;   // touch, key or button press (scrolls: lastScrollAt)
-  let restTimer = 0;
-  const restLeft = () => REST_MS - (now() - Math.max(lastScrollAt, lastInputAt));
-  function waitForRest(rec) {
-    rec.restWait = true;
-    rec.qa.restWait = true;
-    scheduleRest();
-  }
-  function scheduleRest() {
-    if (restTimer || heroWaiting || !enabled || !recs.some((r) => r.restWait && r.phase === "idle")) return;
-    restTimer = setTimeout(guard(() => requestAnimationFrame(guard(restCheck))), Math.max(0, restLeft()));
-  }
-  // In a frame callback: this frame's scroll events have run, so the scroll position is current.
-  function restCheck() {
-    restTimer = 0;
-    if (!enabled || heroWaiting) return;
-    if (restLeft() > 0) { scheduleRest(); return; }
-    const H = window.innerHeight;
-    for (const rec of recs) {
-      if (!rec.restWait || rec.phase !== "idle") continue;
-      rec.restWait = false;
-      rec.qa.restWait = false;
-      const r = rec.media.getBoundingClientRect();
-      if (!r.width || !r.height) { skip(rec, "near-viewport-before-drawing"); continue; }
-      const off = Math.max(r.top - H, -r.bottom);   // px off screen; <= 0: (partly) on screen
-      if (rec.ratio > 0 || off <= 0) { skip(rec, "seen-before-drawing"); continue; }
-      if (off < REST_PX) { skip(rec, "near-viewport-before-drawing"); continue; }
-      rec.qa.armedAtRest = Math.round(off);
-      arm(rec);
-    }
+    rec.qa.armed = how;
+    if (readable(rec)) waitFailsafe(rec);
   }
   function veil(rec) {
+    if (rec.veil) return rec.veil;
     const el = document.createElement("div");
     el.className = "card-draw-veil";
     el.setAttribute("aria-hidden", "true");
@@ -362,65 +377,66 @@
     return el;
   }
 
-  // ---- playing ----
+  // ---- calm ----
   // Scroll speed over the last 40-150 ms of scroll events: the lower median of the speeds between
-  // consecutive events. A real flick is fast on every event; one long main-thread frame is not a
-  // flick (a scroll event handled late still reads the old position and the next one the caught-up
-  // position, a single fast-looking step that an average over the window would count).
+  // consecutive events (-1 while unknown). A real flick is fast on every event; one long main-thread
+  // frame is not a flick (a scroll event handled late still reads the old position and the next one
+  // the caught-up position, a single fast-looking step that an average over the window would count).
   const scrolls = [];
-  let speed = 0, lastScrollAt = -Infinity;
+  let speed = -1, lastScrollAt = -Infinity;
   function scrollSpeed(t) {
     while (scrolls.length && t - scrolls[0][0] > 150) scrolls.shift();
-    if (scrolls.length < 2 || scrolls[scrolls.length - 1][0] - scrolls[0][0] < 40) return 0;
+    if (scrolls.length < 2 || scrolls[scrolls.length - 1][0] - scrolls[0][0] < 40) return -1;
     const steps = [];
     for (let i = 1; i < scrolls.length; i += 1) {
       const dt = scrolls[i][0] - scrolls[i - 1][0];
       if (dt >= 1) steps.push((Math.abs(scrolls[i][1] - scrolls[i - 1][1]) / dt) * 1000);
     }
-    if (!steps.length) return 0;
+    if (!steps.length) return -1;
     steps.sort((a, b) => a - b);
     return steps[(steps.length - 1) >> 1];
   }
-  const fastLimit = () => Math.max(FAST_MIN, FAST_SCREENS * window.innerHeight);
-  // A same-page link or hash change scrolls smoothly to its target: not "moving on".
-  let anchoring = false, anchorIdle = 0, anchorCap = 0;
-  function anchorStart() {
-    anchoring = true;
-    lastInputAt = now();
-    QA.anchorScrolls = (QA.anchorScrolls || 0) + 1;
-    clearTimeout(anchorIdle);
-    clearTimeout(anchorCap);
-    anchorIdle = setTimeout(guard(anchorEnd), ANCHOR_IDLE * 2);   // no scroll at all (already there)
-    anchorCap = setTimeout(guard(anchorEnd), ANCHOR_CAP);
+  // Calm: no scroll event for IDLE_MS, or a known speed under the limit. A scroll that has just
+  // begun (speed unknown) is not calm until it has a speed or stops.
+  function calmNow(t = now()) {
+    if (t - lastScrollAt >= IDLE_MS) return true;
+    return speed >= 0 && speed <= calmLimit();
   }
-  function anchorEnd() {
-    if (!anchoring) return;
-    anchoring = false;
-    clearTimeout(anchorIdle);
-    clearTimeout(anchorCap);
-    scrolls.length = 0;
-    speed = 0;
-    flush();
+  let calmTimer = 0;
+  // Re-checked IDLE_MS after the last scroll event, in a frame callback (that frame's scroll events
+  // have run): a scroll that is still going has moved lastScrollAt on, and waits again.
+  function waitForCalm() {
+    if (calmTimer || !enabled) return;
+    calmTimer = setTimeout(guard(() => requestAnimationFrame(guard(() => {
+      calmTimer = 0;
+      scheduleArm();
+      flush();
+    }))), Math.max(0, IDLE_MS - (now() - lastScrollAt)) + 1);
   }
-  function fastNow() { return !anchoring && speed > fastLimit() && now() - lastScrollAt < FAST_WINDOW; }
+
+  // ---- playing ----
   let lastStart = -Infinity;
   function flush() {
     if (!enabled) return;
     if (heroWaiting) {
       // Past the ceiling the hero is still running (a slow photo): no card draws alongside it, and
-      // none waits white for it either; cards on screen show their covers.
-      if (heroLate) for (const rec of recs) if (rec.phase === "primed" && rec.ratio > 0) settle(rec, "hero-late");
+      // none waits for it either; cards on screen show their covers.
+      if (heroLate) for (const rec of recs) if (onScreenPrimed(rec)) settle(rec, "hero-late");
       return;
     }
-    const fast = fastNow();
-    for (const rec of recs) {
-      if (rec.phase === "primed" && rec.decoded && (rec.ratio >= PLAY_RATIO - 1e-3 || rec.dwellDone)) {
-        if (fast) { settle(rec, "fast-scroll"); continue; }
-        const t = now();
-        const at = Math.max(t, lastStart + STAGGER);
-        lastStart = at;
-        play(rec, at - t);
-      }
+    const ready = recs.filter((rec) => rec.phase === "primed" && readable(rec));
+    if (!ready.length) return;
+    const t = now();
+    if (!calmNow(t)) {
+      for (const rec of ready) rec.qa.waitedCalm = true;
+      waitForCalm();
+      return;
+    }
+    // Reading order: the grid's own order (left to right, row by row).
+    for (const rec of ready) {
+      const at = Math.max(t, lastStart + STAGGER);
+      lastStart = at;
+      play(rec, at - t);
     }
   }
 
@@ -440,37 +456,59 @@
   }
 
   function play(rec, delay) {
-    clearTimeout(rec.dwell);
-    rec.dwell = 0;
+    stopFailsafe(rec);
+    if (coverFailed(rec)) { settle(rec, "cover-failed"); return; }
     if (!rec.lines.isConnected) rec.veil.after(rec.lines);
+    rec.run += 1;
+    const run = rec.run;
     setPhase(rec, "playing");
     rec.played = true;
+    rec.qa.plays = (rec.qa.plays || 0) + 1;
     rec.startAt = now() + delay;
     rec.qa.delay = Math.round(delay);
     const [, , left, right, q10, q90] = LINES[rec.key];
     const frames = wipeFrames(left, right, q10, q90)
       .map(({ offset, x }) => ({ offset, [MASK_POS]: `${x.toFixed(2)}% 0%` }));
     rec.anims.push(rec.lines.animate(frames, { duration: WIPE_MS, delay, easing: "linear", fill: "both" }));
-    coverReady(rec).then(guard(() => develop(rec, true)));
+    coverReady(rec).then(guard(() => develop(rec, run)));
   }
 
-  function develop(rec, withLines) {
-    if (rec.phase !== "playing") return;
+  function develop(rec, run) {
+    if (rec.phase !== "playing" || rec.run !== run) return;
     const elapsed = now() - rec.startAt;
     const devDelay = Math.max(0, DEV_START - elapsed);
     rec.qa.developAt = Math.round(now() + devDelay);
     const dev = rec.veil.animate([{ opacity: 1 }, { opacity: 0 }],
       { duration: DEV_MS, delay: devDelay, easing: EASE_DEV, fill: "both" });
-    rec.anims.push(dev);
-    const ends = [dev.finished];
-    if (withLines) {
-      const retDelay = Math.max(RETIRE_START - elapsed, devDelay + (RETIRE_START - DEV_START));
-      const ret = rec.lines.animate([{ opacity: 1 }, { opacity: 0 }],
-        { duration: RETIRE_MS, delay: retDelay, easing: EASE_DEV, fill: "both" });
-      rec.anims.push(ret);
-      ends.push(ret.finished);
-    }
-    Promise.all(ends).then(guard(() => { if (rec.phase === "playing") finish(rec, "complete"); }), () => {});
+    const retDelay = Math.max(RETIRE_START - elapsed, devDelay + (RETIRE_START - DEV_START));
+    const ret = rec.lines.animate([{ opacity: 1 }, { opacity: 0 }],
+      { duration: RETIRE_MS, delay: retDelay, easing: EASE_DEV, fill: "both" });
+    rec.anims.push(dev, ret);
+    Promise.all([dev.finished, ret.finished])
+      .then(guard(() => { if (rec.phase === "playing" && rec.run === run) finish(rec, "complete"); }), () => {});
+  }
+
+  // Off screen before its drawing completed: back to waiting (pencil), unseen, to draw again from
+  // the start the next time it is on screen and the scroll is calm.
+  function rewind(rec) {
+    cancelAnims(rec);
+    rec.run += 1;
+    setPhase(rec, "primed", "rewound");
+    rec.qa.restarts = (rec.qa.restarts || 0) + 1;
+  }
+
+  // The failsafe: a card on screen enough to draw that is still waiting after FAILSAFE_MS (calm
+  // never came) shows its cover.
+  function waitFailsafe(rec) {
+    if (rec.failTimer) return;
+    rec.failTimer = setTimeout(guard(() => {
+      rec.failTimer = 0;
+      if (rec.phase === "primed" && readable(rec) && !heroWaiting) settle(rec, "failsafe");
+    }), FAILSAFE_MS);
+  }
+  function stopFailsafe(rec) {
+    clearTimeout(rec.failTimer);
+    rec.failTimer = 0;
   }
 
   // ---- ending ----
@@ -485,8 +523,8 @@
   }
   function finish(rec, why) {
     if (rec.phase === "done" || rec.phase === "skipped" || rec.phase === "static") return;
-    clearTimeout(rec.dwell);
-    rec.dwell = 0;
+    stopFailsafe(rec);
+    rec.run += 1;
     cancelAnims(rec);
     if (rec.veil) rec.veil.remove();
     if (rec.lines && rec.lines.isConnected) rec.lines.remove();
@@ -499,6 +537,7 @@
   function settle(rec, why, ms = SETTLE_MS) {
     if (rec.phase === "primed" && rec.ratio === 0) { finish(rec, why); return; }
     if (rec.phase !== "playing" && rec.phase !== "primed") return;
+    stopFailsafe(rec);
     const veilAlpha = Number(getComputedStyle(rec.veil).opacity);
     const linesOn = rec.lines && rec.lines.isConnected;
     const lineStyle = linesOn ? getComputedStyle(rec.lines) : null;
@@ -516,9 +555,6 @@
     Promise.all(ends.map((a) => a.finished)).then(done, () => {});
     setTimeout(done, ms + 120);   // even if a finished promise never settles
   }
-  function settleAll(why) {
-    for (const rec of recs) if (rec.phase === "playing" || onScreenPrimed(rec)) settle(rec, why);
-  }
   function finishAll(why) {
     for (const rec of recs) if (active(rec) || onScreenPrimed(rec)) finish(rec, why);
   }
@@ -528,6 +564,8 @@
     QA.enabled = false;
     QA.reason = why;
     QA.disabledAt = Math.round(now());
+    clearTimeout(calmTimer);
+    cancelAnimationFrame(armFrame);
     for (const rec of recs) {
       if (rec.phase === "playing" || onScreenPrimed(rec)) settle(rec, why);
       else if (rec.phase !== "settling") finish(rec, why);
@@ -550,9 +588,9 @@
     clearTimeout(heroFinal);
     QA.heroDoneAt = Math.round(now());
     QA.heroDoneBy = why;
-    if (enabled) { flush(); scheduleRest(); }
+    if (enabled) { scheduleArm(); flush(); }
   }
-  // Still running at the ceiling: a primed card on screen shows its cover now (flush), and the
+  // Still running at the ceiling: a waiting card on screen shows its cover now (flush), and the
   // gate stays closed until the hero really ends, so nothing draws alongside it.
   function heroRunsLate() {
     if (!heroWaiting) return;
@@ -581,58 +619,48 @@
     for (const e of entries) {
       if (e.isIntersecting) nearMedia.add(e.target);
       else nearMedia.delete(e.target);
-      const rec = byMedia.get(e.target);
-      if (!rec) continue;
-      rec.near = e.isIntersecting;
-      if (rec.near && rec.phase === "idle" && rec.decoded) tryPrime(rec);
     }
     pump();
   }), { rootMargin: `${nearPx}px 0px ${nearPx}px 0px` });
 
   // Real content on screen is never hidden for choreography: a card already on screen when this
-  // file starts keeps its cover, untouched. One in the guard band but off screen at that moment
-  // stays idle (nearStart) and is armed later only at rest (waitForRest); one that comes into the
-  // band later, before its drawing has decoded, keeps its cover.
+  // file starts keeps its cover, untouched. A decoded card that leaves the 15 % band is armed at
+  // once; one inside it waits for armCheck.
   const guardIO = new IntersectionObserver(guard((entries) => {
     for (const e of entries) {
       const rec = byMedia.get(e.target);
       if (!rec) continue;
       rec.inGuard = e.isIntersecting;
-      if (!e.isIntersecting) {
-        // Scrolled well away from a start just off screen: an ordinary card from now on.
-        rec.nearStart = false;
-        if (rec.restWait) { rec.restWait = false; rec.qa.restWait = false; tryPrime(rec); }
-        continue;
-      }
       if (rec.phase !== "idle") continue;
       const b = e.boundingClientRect;
-      const onScreen = b.width > 0 && b.bottom > 0 && b.top < window.innerHeight;
-      if (firstGuard && !onScreen) { rec.nearStart = true; rec.qa.nearStart = true; continue; }
-      skip(rec, firstGuard ? "on-screen-at-start" : "near-viewport-before-drawing");
+      if (firstGuard && e.isIntersecting && b.width > 0 && b.bottom > 0 && b.top < window.innerHeight) {
+        skip(rec, "on-screen-at-start");
+        continue;
+      }
+      if (!rec.decoded) continue;
+      if (!rec.inGuard && b.width > 0) arm(rec, "far");
+      else scheduleArm();
     }
     if (firstGuard) { firstGuard = false; pump(); }
   }), { rootMargin: `${GUARD * 100}% 0px ${GUARD * 100}% 0px` });
 
   const viewIO = new IntersectionObserver(guard((entries) => {
+    let idle = false;
     for (const e of entries) {
       const rec = byMedia.get(e.target);
       if (!rec) continue;
       rec.ratio = e.isIntersecting ? e.intersectionRatio : 0;
-      if (active(rec) && rec.ratio === 0) { finish(rec, "offscreen"); continue; }
-      // Seen with its cover before it was armed (a card that started just off screen): keeps it.
-      if (rec.phase === "idle" && rec.ratio > 0) { skip(rec, firstGuard ? "on-screen-at-start" : "seen-before-drawing"); continue; }
-      if (rec.phase !== "primed") continue;
-      if (rec.ratio === 0) {
-        clearTimeout(rec.dwell);
-        rec.dwell = 0;
-        rec.dwellDone = false;
-      } else if (rec.ratio < PLAY_RATIO - 1e-3 && !rec.dwell && !rec.dwellDone) {
-        rec.dwell = setTimeout(guard(() => {
-          rec.dwell = 0;
-          if (rec.phase === "primed" && rec.ratio > 0) { rec.dwellDone = true; flush(); }
-        }), DWELL_MS);
+      if (rec.phase === "playing" && rec.ratio === 0) { rewind(rec); continue; }
+      if (rec.phase === "idle") {
+        if (rec.ratio > 0 && firstGuard) { skip(rec, "on-screen-at-start"); continue; }
+        if (rec.decoded) idle = true;
+        continue;
       }
+      if (rec.phase !== "primed") continue;
+      if (rec.ratio > 0) rec.qa.pencilSeen = true;
+      if (readable(rec)) waitFailsafe(rec); else stopFailsafe(rec);
     }
+    if (idle) scheduleArm();
     flush();
   }), { threshold: [0, 0.01, PLAY_RATIO] });   // 0.01: an edge-adjacent entry (ratio 0) still gets a callback once really on screen
 
@@ -644,44 +672,57 @@
   else window.addEventListener("load", () => setTimeout(guard(openLoads), 0), { once: true });
   setTimeout(guard(openLoads), LOAD_CEIL);
 
-  // ---- intent ----
+  // ---- scrolling and intent ----
   const on = (target, type, fn, opts) => target.addEventListener(type, guard(fn), opts);
-  // A fast scroll is moving on, not reading: cards drawing (or waiting white) on screen settle,
-  // and none starts meanwhile.
+  // Scrolling is how cards arrive, at any speed: it never settles a card. A waiting card on screen
+  // draws once the scroll is calm (flush; waitForCalm catches the stop).
   on(window, "scroll", () => {
     const t = now();
     scrolls.push([t, window.scrollY]);
     speed = scrollSpeed(t);
     lastScrollAt = t;
     if (speed > (QA.maxScrollSpeed || 0)) QA.maxScrollSpeed = Math.round(speed);
-    if (anchoring) {   // a same-page link's smooth scroll: it ends 150 ms after its last event
-      clearTimeout(anchorIdle);
-      anchorIdle = setTimeout(guard(anchorEnd), ANCHOR_IDLE);
-      return;
-    }
-    if (!enabled || speed <= fastLimit()) return;
-    for (const rec of recs) {
-      if ((rec.phase === "playing" && rec.ratio > 0) || onScreenPrimed(rec)) {
-        QA.fastScroll = (QA.fastScroll || 0) + 1;
-        settle(rec, "fast-scroll");
-      }
-    }
+    if (enabled && recs.some((rec) => rec.phase === "primed" && readable(rec))) flush();
   }, { passive: true });
   const recOf = (target) => {
     const card = target instanceof Element ? target.closest(".project-card") : null;
     return card ? byCard.get(card) : undefined;
   };
-  const live = (rec) => rec && (rec.phase === "playing" || onScreenPrimed(rec)
-    || (rec.phase === "primed" && rec.ratio === 0));
+  const live = (rec) => rec && (rec.phase === "playing" || rec.phase === "primed");
+  // A mouse or pen press on the card settles it. A touch never does on its own: a touch that
+  // starts a scroll is how cards arrive, and the slider (touch-action: pan-y, exploded.css) lets a
+  // vertical flick that starts on it scroll the page. A touch on the card's control is intent only
+  // once the browser has not taken it for a scroll (pointercancel): a sideways drag on the slider,
+  // or a release (a tap).
+  let touch = null;   // { id, rec, x, y } for a touch that began on a live card's control
+  const TOUCH_SLIDE = 10;   // px sideways (and more than vertical) that is a slider drag, not a pan
   on(window, "pointerdown", (e) => {
-    lastInputAt = now();   // a touch may start a scroll: no card is armed at rest meanwhile
     if (!enabled) return;
-    if (e.pointerType !== "touch") { settleAll("pointerdown"); return; }
-    // A touch that starts a scroll is how cards arrive; a touch on a card's own control is intent.
     const rec = recOf(e.target);
-    if (live(rec) && e.target.closest("[data-explode-control], input, select, button, a:not(.card-open)")) settle(rec, "touch-control");
+    if (!live(rec)) return;
+    if (e.pointerType !== "touch") { settle(rec, "pointerdown"); return; }
+    if (e.target.closest("[data-explode-control], input, select, button, a:not(.card-open)")) {
+      touch = { id: e.pointerId, rec, x: e.clientX, y: e.clientY };
+    }
   }, { capture: true, passive: true });
-  on(window, "keydown", () => { lastInputAt = now(); if (enabled) settleAll("keydown"); }, { capture: true, passive: true });
+  const touchIntent = (e) => {
+    const rec = touch.rec;
+    touch = null;
+    if (enabled && live(rec)) settle(rec, "touch-control");
+  };
+  on(window, "pointermove", (e) => {
+    if (!touch || e.pointerId !== touch.id) return;
+    const dx = Math.abs(e.clientX - touch.x), dy = Math.abs(e.clientY - touch.y);
+    if (dx >= TOUCH_SLIDE && dx > dy) touchIntent(e);
+  }, { capture: true, passive: true });
+  on(window, "pointerup", (e) => { if (touch && e.pointerId === touch.id) touchIntent(e); }, { capture: true, passive: true });
+  on(window, "pointercancel", (e) => { if (touch && e.pointerId === touch.id) touch = null; }, { capture: true, passive: true });
+  // A key with focus inside the card (keys that scroll the page from elsewhere are not intent).
+  on(window, "keydown", (e) => {
+    if (!enabled) return;
+    const rec = recOf(e.target);
+    if (live(rec)) settle(rec, "keydown");
+  }, { capture: true, passive: true });
   // Hover: a real pointer move over the card (a card scrolling under a still cursor is not one).
   let lastScreen = null;
   on(window, "pointermove", (e) => {
@@ -698,17 +739,9 @@
     if (live(rec)) settle(rec, "focus");
   });
   // The filter and search re-flow the grid (script.js FLIP): no drawing from then on.
-  // A same-page link (#work, "View all 16 projects") scrolls smoothly to its target: that scroll
-  // is not a fast scroll (see anchorStart).
   on(window, "click", (e) => {
-    if (!(e.target instanceof Element)) return;
-    if (e.target.closest(".filter-bar .filter")) { disable("filter"); return; }
-    const link = e.target.closest("a[href]");
-    if (link && link.hash && link.origin === location.origin && link.pathname === location.pathname
-      && link.search === location.search) anchorStart();
+    if (e.target instanceof Element && e.target.closest(".filter-bar .filter")) disable("filter");
   }, { capture: true });
-  on(window, "hashchange", () => { if (!anchoring) anchorStart(); });
-  if ("onscrollend" in window) on(window, "scrollend", () => { if (anchoring) anchorEnd(); });
   on(window, "input", (e) => {
     if (e.target instanceof Element && e.target.id === "project-search") disable("filter");
   }, { capture: true });

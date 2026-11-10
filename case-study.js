@@ -480,7 +480,7 @@
       poster.addEventListener('load', onDecoded, { once: true });
       poster.addEventListener('error', onDecoded, { once: true });
     }
-    import('./project-motion-arrival.js?v=refresh-20261107').then(({ frameArrival }) => {
+    import('./project-motion-arrival.js?v=cards-20261109').then(({ frameArrival }) => {
       if (done) return;
       claimed = true;
       stop();

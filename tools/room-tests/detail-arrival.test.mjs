@@ -121,10 +121,14 @@ test('Every stage observer reads the last entry of a batch', () => {
     return { inViewport, nearViewport };`)(batch);
   assert.deepEqual(stage, { inViewport: true, nearViewport: true }, 'project-case-3d.js sees the stage on screen');
 
-  const drawing = Function('entries', `let onScreen = false, triggered = false; const TRIGGER = .15, trigger = () => { triggered = true; }, holdClock = () => {};
+  // cards-20261109: the stage in view asks for the drawing once the scroll is calm (whenCalm; here it
+  // is calm), and one that left mid-draw goes back to pencil (offScreen).
+  const drawing = Function('entries', `let onScreen = false, inView = false, triggered = false, left = 0; const TRIGGER = .15, trigger = () => { triggered = true; }, holdClock = () => {},
+      whenCalm = (action) => action(), offScreen = () => { left++; };
     (${callback('project-motion-arrival.js', 'const visibility = new IntersectionObserver')})(entries);
-    return { onScreen, triggered };`)(batch);
-  assert.deepEqual(drawing, { onScreen: true, triggered: true }, 'project-motion-arrival.js starts the drawing');
+    return { onScreen, inView, triggered, left };`);
+  assert.deepEqual(drawing(batch), { onScreen: true, inView: true, triggered: true, left: 0 }, 'project-motion-arrival.js starts the drawing');
+  assert.deepEqual(drawing([entry(true, 92), entry(false, 2000)]), { onScreen: false, inView: false, triggered: false, left: 1 }, 'a stage that left goes back to pencil');
 
   const held = Function('entries', `let onScreen = false; const clock = () => {};
     (${callback('case-study.js', 'const visibility = new IntersectionObserver')})(entries);

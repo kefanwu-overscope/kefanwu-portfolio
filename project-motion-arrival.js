@@ -28,6 +28,15 @@
 // apart one node per idle slice. Below 768 px the same sequence runs on a shorter
 // clock (1.6 s), since the model on a phone waits behind it.
 //
+// A fast scroll does not lose it (cards-20261109): the stage in view starts the
+// drawing only once the scroll is calm (no scroll event for 150 ms, or slower than
+// about one screen a second, the homepage cards' rule), so a flick past an unpinned
+// stage (windows under 600 px tall) leaves it in pencil; and a drawing that leaves the
+// screen before it ends goes back to pencil, unseen, and draws again from the start
+// when the stage is back in view and the scroll is calm. Story progress and intent do
+// not wait (rush): the pinned story needs its stage, so a scroll into the story still
+// finishes the drawing within 200 ms, and a rushed drawing is never rewound.
+//
 // Every sheet has one Animation from pencil to retired: two animations of one
 // property on one element never reach the compositor, and these must not stop when
 // the main thread is busy with the model behind them. Sheets are decoded and resized
@@ -90,6 +99,12 @@ export function frameArrival({ key, host, media, poster, holdLeft: budget, reduc
   // The hold budget runs only while held and some of the stage is on screen with
   // its cover decoded: below the fold the print costs nothing.
   let onScreen = false, holdLeft = budget, holdFrom = null, holdTimer = 0;
+  // Calm (cards-20261109; card-drawing-20261027.js keeps the same rule): no scroll event for
+  // IDLE_MS, or a known speed (the lower median of the step speeds between scroll events over the
+  // last 150 ms, once two steps span 40 ms) at most the window's height per second, 700-1000 px/s.
+  const CALM_MIN = 700, CALM_MAX = 1000, IDLE_MS = 150;
+  const scrolls = [];
+  let inView = false, lastScrollAt = -Infinity, speed = -1, calmTimer = 0, calmWaits = 0, rewinds = 0;
   const drawing = document.createElement('div');
   drawing.className = 'case-drawing';
   drawing.setAttribute('aria-hidden', 'true');
@@ -161,6 +176,7 @@ export function frameArrival({ key, host, media, poster, holdLeft: budget, reduc
   function stop() {
     events.abort();
     visibility.disconnect();
+    clearTimeout(calmTimer); calmTimer = 0;
     clearTimeout(holdTimer); holdTimer = 0; holdFrom = null;
     clearTimeout(coverTimer);
     painter.close();
@@ -258,6 +274,57 @@ export function frameArrival({ key, host, media, poster, holdLeft: budget, reduc
     if (triggeredAt !== null || !alive()) return;
     triggeredAt = performance.now();
     if (phase === 'pencil') start();
+  }
+  // The sheets fade in to pencil (at the ready), or are back at pencil at once (a rewind).
+  function pencilIn(faded) {
+    for (const image of layers) {
+      const fade = image.animate([{ opacity: 0 }, { opacity: PENCIL }], { duration: LINES_IN, easing: 'linear', fill: 'forwards' });
+      if (faded) fade.finish();
+      animations.push(fade);
+    }
+  }
+  function scrollSpeed(now) {
+    while (scrolls.length && now - scrolls[0][0] > 150) scrolls.shift();
+    if (scrolls.length < 2 || scrolls[scrolls.length - 1][0] - scrolls[0][0] < 40) return -1;
+    const steps = [];
+    for (let index = 1; index < scrolls.length; index++) {
+      const dt = scrolls[index][0] - scrolls[index - 1][0];
+      if (dt >= 1) steps.push(Math.abs(scrolls[index][1] - scrolls[index - 1][1]) / dt * 1000);
+    }
+    if (!steps.length) return -1;
+    steps.sort((a, b) => a - b);
+    return steps[(steps.length - 1) >> 1];
+  }
+  const calmNow = () => performance.now() - lastScrollAt >= IDLE_MS
+    || (speed >= 0 && speed <= Math.min(CALM_MAX, Math.max(CALM_MIN, innerHeight || CALM_MIN)));
+  // The stage in view draws once the scroll is calm; until then it waits in pencil (or held). A
+  // scroll still going at the check moves lastScrollAt on, and the check waits again (in a frame
+  // callback, after that frame's scroll events).
+  function whenCalm(action) {
+    if (calmNow()) { clearTimeout(calmTimer); calmTimer = 0; action(); return; }
+    if (calmTimer) return;
+    calmWaits++;
+    calmTimer = setTimeout(() => {
+      calmTimer = 0;
+      nextFrame(() => { if (inView && alive()) whenCalm(action); });
+    }, Math.max(0, IDLE_MS - (performance.now() - lastScrollAt)) + 1);
+  }
+  // Off screen before it ended, and not rushed (the story has not asked for the stage): back to
+  // pencil, unseen, to draw again from the start when the stage is back in view and calm.
+  function offScreen() {
+    if (rushed) return;
+    // Reached while still held and left before the drawing was ready: forget the trigger, so the
+    // ready path does not start the drawing off screen (the observer fires again when it is back).
+    if (phase === 'held') { triggeredAt = null; return; }
+    if (phase !== 'drawing') return;
+    for (const animation of animations) animation.cancel();
+    animations = [];
+    clock = null;
+    phase = 'pencil';
+    triggeredAt = null;
+    startedAt = null;
+    rewinds++;
+    pencilIn(true);
   }
   // Scrolling the page toward the stage is not an interruption. Before the
   // drawing exists, an interruption gives today's cover back at once.
@@ -361,7 +428,7 @@ export function frameArrival({ key, host, media, poster, holdLeft: budget, reduc
     poster.style.removeProperty('filter');
     print.style.opacity = '1';
     paper.style.opacity = String(1 - GHOST);
-    for (const image of layers) animations.push(image.animate([{ opacity: 0 }, { opacity: PENCIL }], { duration: LINES_IN, easing: 'linear', fill: 'forwards' }));
+    pencilIn(false);
     if (triggeredAt !== null) start(); else holdClock();
   }, () => giveBack('drawing unavailable'));
 
@@ -370,10 +437,19 @@ export function frameArrival({ key, host, media, poster, holdLeft: budget, reduc
     const entry = entries[entries.length - 1];
     const ratio = entry.isIntersecting ? entry.intersectionRatio : 0;
     onScreen = ratio > 0;
-    if (ratio >= TRIGGER - .001) trigger();
+    inView = ratio >= TRIGGER - .001;
+    if (!onScreen) offScreen();
+    if (inView) whenCalm(trigger);
     holdClock();
   }, { threshold: [0, TRIGGER] });
   visibility.observe(media);
+  on(window, 'scroll', () => {
+    const now = performance.now();
+    scrolls.push([now, scrollY]);
+    speed = scrollSpeed(now);
+    lastScrollAt = now;
+    if (inView && triggeredAt === null && calmNow()) whenCalm(trigger);
+  });
   // A cover that has not decoded never holds the stage: the model, when it is
   // ready, or the wall clock takes the print back, with nothing on screen to fade.
   // Not while the tab is hidden, nor in a page opened in a hidden tab: there the model is ready
@@ -411,7 +487,7 @@ export function frameArrival({ key, host, media, poster, holdLeft: budget, reduc
   // A card morph is this page's arrival (page-transitions-20261027.js): the held print gives the cover back.
   on(window, 'kw-vt-morph', () => { if (phase === 'held') giveBack('morph'); else rush(); });
   // QA handle.
-  window.__caseArrival = { getState: () => ({ key, mode: 'frames', phase, reason, steps, slots: [...slots], sweep, layerWidth, triggeredAt, coverAt, readyAt, startedAt, settledAt, rushed,
+  window.__caseArrival = { getState: () => ({ key, mode: 'frames', phase, reason, steps, slots: [...slots], sweep, layerWidth, triggeredAt, coverAt, readyAt, startedAt, settledAt, rushed, rewinds, calmWaits,
     holdLeft: Math.round(holdFrom === null ? holdLeft : holdLeft - (performance.now() - holdFrom)),
     ms: phase === 'settled' ? TOTAL : clock ? Number(clock.currentTime) || 0 : 0, durationMs: TOTAL }) };
 }
