@@ -451,7 +451,9 @@ test("every refresh plays", { skip: !chromium && "Playwright not found (set PLAY
     await sub(t, "a homepage opened in a background tab waits, and plays when first shown", { skip: !fs.existsSync(CHROME) && `no Chrome at ${CHROME}` }, async () => {
       const probe = `(() => ({ cls: document.documentElement.className, pen: document.documentElement.getAttribute("data-hero-pen"), vis: document.visibilityState,
         state: window.__heroDraw && (({ geo, carSrc, ...r }) => r)(window.__heroDraw), rr: window.__rr, nodes: document.querySelectorAll(".hero-draw-veil, .hero-draw-lines").length }))()`;
-      const { hidden, shown } = await backgroundTab(`${base}/index.html`, { probe });
+      // pen-20261110: the hero pen ends about 5.3 s after its first ink at 1440 (last ink 4.18 s, develop 1 s);
+      // 7.5 s after the tab is shown leaves it room to finish.
+      const { hidden, shown } = await backgroundTab(`${base}/index.html`, { probe, afterMs: 7500 });
       assert.equal(hidden.vis, "hidden");
       assert.equal(hidden.pen, "wait");
       assert.ok(!hidden.cls.includes("hero-draw"), "the photo is untouched while hidden");
@@ -459,7 +461,11 @@ test("every refresh plays", { skip: !chromium && "Playwright not found (set PLAY
       assert.equal(shown.vis, "visible");
       assert.deepEqual(shown.rr.pen, ["wait", "late"]);
       assert.equal(shown.state.arm, "late");
-      assert.ok(shown.state.linesAt > shown.state.armedAt, `lines at ${shown.state.linesAt}, armed at ${shown.state.armedAt}`);
+      // pen-20261110: armed only once shown (the tab was hidden for 3 s); the pen's linesAt (its t0) is the timestamp of the
+      // first animation frame after the arm, which is that frame's start and can precede the visibilitychange handler that
+      // armed it by up to one frame.
+      assert.ok(shown.state.armedAt >= 2500, `armed at ${shown.state.armedAt}, before the tab was shown`);
+      assert.ok(shown.state.linesAt >= shown.state.armedAt - 17, `lines at ${shown.state.linesAt}, armed at ${shown.state.armedAt}`);
       assert.ok(shown.state.devStart >= 1000);
       assert.equal(shown.state.settledBy, undefined);
       assert.equal(shown.state.state, "done");

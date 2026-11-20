@@ -39,8 +39,12 @@
  *   is off screen, and draws again from the start the next time it is on screen and the scroll is
  *   calm (QA restarts). A card that finished stays finished for the rest of the page view. Scroll
  *   speed never settles a card.
- * - Cards wait for the hero opening (gate released at 10 s at the latest); if it is still running at
- *   3.2 s (a slow photo), a waiting card on screen shows its cover instead (160 ms).
+ * - Cards wait for the hero pen (pen-20261110), never longer than the visitor can still use it: the gate
+ *   opens at the earliest of its last ink (html.hero-draw-inked: the pen is up for good, the photo may
+ *   still be developing), the hero settling or ending (html.hero-draw-inked, then html.hero-draw gone),
+ *   most of the hero's photo box scrolled off screen (less than half of its height, or of the window's
+ *   if that is smaller, on screen), and 12.5 s at the latest. If it is still inking at 7.5 s (a stalled
+ *   device), a waiting card on screen shows its cover instead (160 ms).
  * - Settling to the end state (160 ms) comes only from input on that card: a mouse or pen press on it,
  *   a key while focus is inside it, a real pointer move over it (hover), focus moving into it, a tap
  *   or a sideways drag on its slider or another control (a touch there that the browser takes for a
@@ -142,8 +146,11 @@
   // compositor runs ahead of the main thread then reaches the card only after the paper is up.
   const ARM_PX = 24, ARM_LEAD = 50;
   const COVER_HOLD = 4000;                    // longest wait for the cover to decode
-  const HERO_CEIL = 3200;                     // longest wait for the hero opening
-  const HERO_FINAL = 10000;                   // gate released even if the hero never finishes
+  // The hero pen's last ink comes 2.9-4.2 s after its first (by class); with the 1.8 s photo decode hold and
+  // the 1 s develop, the longest normal hero ends about 7.0-7.3 s after this file starts (PEN_SPEC 13).
+  const HERO_CEIL = 7500;                     // longest wait for the hero pen's ink
+  const HERO_FINAL = 12500;                   // gate released even if the hero never finishes
+  const HERO_OUT = 0.5;                       // the hero's photo box under this share on screen: released
   const LOAD_CEIL = 4000;                     // line loading opens at window load, or by then
   const NEAR_MAX = 1000;                      // the zone whose covers load first: one screen, at most this (px)
   const LOAD_PARALLEL = 4;                    // line images in flight at once
@@ -573,17 +580,22 @@
     for (const io of observers) io.disconnect();
   }
 
-  // ---- hero opening: no card draws alongside it ----
+  // ---- hero opening: no card draws alongside the hero pen's ink ----
   // A hero still waiting for its tab's first visible (html[data-hero-pen=wait]) counts as running;
-  // its ceilings start when it arms.
+  // its ceilings start when it arms. The gate opens once the pen is up for good (html.hero-draw-inked,
+  // set by the inline engine at its last ink or when it settles), the hero ends (html.hero-draw gone),
+  // or most of the hero's photo box is off screen: a visitor who has scrolled to the cards no longer
+  // sees the hero, so the cards do not wait for it.
   const heroParked = () => root.getAttribute("data-hero-pen") === "wait";
-  let heroWaiting = root.classList.contains("hero-draw") || heroParked();
-  let heroMO = null, heroCeil = 0, heroFinal = 0, heroLate = false;
+  const heroInked = () => root.classList.contains("hero-draw-inked");
+  let heroWaiting = (root.classList.contains("hero-draw") && !heroInked()) || heroParked();
+  let heroMO = null, heroIO = null, heroCeil = 0, heroFinal = 0, heroLate = false;
   QA.heroWait = heroWaiting;
   function heroDone(why) {
     if (!heroWaiting) return;
     heroWaiting = false;
     if (heroMO) heroMO.disconnect();
+    if (heroIO) heroIO.disconnect();
     clearTimeout(heroCeil);
     clearTimeout(heroFinal);
     QA.heroDoneAt = Math.round(now());
@@ -606,10 +618,24 @@
     let parked = heroParked();
     heroMO = new MutationObserver(guard(() => {
       if (parked && !heroParked()) { parked = false; heroClocks(); }
-      if (!parked && !root.classList.contains("hero-draw")) heroDone("hero");
+      if (!parked && heroInked()) heroDone("hero-inked");
+      else if (!parked && !root.classList.contains("hero-draw")) heroDone("hero");
     }));
     heroMO.observe(root, { attributes: true, attributeFilter: ["class", "data-hero-pen"] });
     if (!parked) heroClocks();
+    // The hero's photo box (the drawing's frame): released once less than HERO_OUT of its height (or of the
+    // window's, when the box is taller) is on screen. Ratios every 5 % so the callback comes near that line.
+    const heroBox = document.querySelector(".white-home .cinematic-hero .hero-media");
+    if (heroBox) {
+      const steps = [];
+      for (let i = 0; i <= 20; i++) steps.push(i / 20);
+      heroIO = new IntersectionObserver(guard((entries) => {
+        const e = entries[entries.length - 1];
+        const full = Math.min(e.boundingClientRect.height, e.rootBounds ? e.rootBounds.height : window.innerHeight);
+        if (full > 0 && e.intersectionRect.height < HERO_OUT * full) heroDone("hero-offscreen");
+      }), { threshold: steps });
+      heroIO.observe(heroBox);
+    }
   }
 
   // ---- observers ----

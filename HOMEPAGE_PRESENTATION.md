@@ -1,5 +1,66 @@
 # Homepage presentation
 
+## Hero pen: the car drawn by one hand · 2026-11-10
+
+The owner asked on 2026-11-06: "保留，确保每次刷新网站线稿动画也能加载，线稿要有出现的顺序，要像是有人画出来的一样，
+封面在车的线稿可以更细节" (lines should appear in an order, as if a person draws them, and the
+hero car's line drawing can be more detailed). Commit pending. These rules supersede the hero
+drawing items in the 2026-11-06 section below (the inline SVG, ink by 1.2 s, the develop at
+1.05-2.05 s, the per-line retire, about 2.2 s in all, the 9.5 s CSS backstops) and the cards'
+`HERO_CEIL` 3200 / `HERO_FINAL` 10000. The R1 refresh rules and the 2026-11-09 card rules stay.
+The owner has not seen this; every choice here (duration, order, what is drawn, lettering only
+at 1280 px and up, the kept defaults, the polish, the card gate, the fix-r2 rhythm and phone
+rear tyre) is an agent decision he can change. Details: `AGENT_HANDOFF.md`, 2026-11-10. Films for review:
+`../releases/hero-pen-20261110/films/` (before and after, 1440 and 390; the after films show
+the final tree).
+
+- One pen draws the car in `index.html` (inline data block plus inline engine, three canvases
+  GUIDE / SHADE / INK in `.hero-draw-lines`; `hero-drawing-20261027.js` is no longer loaded).
+  Every stroke starts after the previous one ends; same strokes and timing on every load.
+- Every line lies on a real edge of the hero photo (`tools/hero-pen/out/strokes.json`, with
+  provenance): traced, or recorded as a fit (the rims) or a convention (the three faint lay-in
+  marks). The photo's pixels are never changed. Not drawn: hoop stalk, sponsor marks,
+  Hoosier lettering, people's names, hatching, nose shadow, ground shadow under the nose,
+  wheel crosshairs.
+- Classes by page width: D >= 1280 px (87 strokes), T 768-1279 (44), P < 768 (36). Lettering
+  "Olin College of Engineering" only at D. The rear-bay tubes are drawn at D and T; P draws
+  only `rear-tube-level`, which ties the phone's rear tyre to a real frame tube.
+- Order, from the first ink: 3 faint construction marks (0-316 ms; the long hop from the rear
+  rim to the nose lifts 86 ms); 9 silhouette strokes at hand speed (346-1585 ms: nose, nose
+  underside, rail, hoop arch, hoop column, brace, rear tyre, front tyre, helmet); form and detail
+  (stripes, plates, rims, hoop structure, driver); then the side "219", and at D the lettering
+  word by word and the nose-top "219" last. Pauses between these phases: 30, 78 and 50 ms.
+- Timing: last ink / photo starts developing / photo in, ms from the first ink: D 4197 / 4297 /
+  5297, T 2978 / 3078 / 4078, P 2919 / 3019 / 4019. The develop runs 1000 ms (the old develop
+  model); the lines leave by layer. Then all drawing nodes go and `<html>` is class `js`. A
+  window resize keeps the lines' fading opacity, and a device-pixel-ratio change lays the
+  canvases out again at the new resolution.
+- The pen starts on the first frame after first contentful paint and load + 140 ms, at most
+  FCP + 300 ms. Under half the car on screen at that moment: quick photo reveal, no lines.
+- Settles in about 165-175 ms (measured 163.9-174.5 ms) with no more ink: pointer down, touch,
+  wheel, key (including a scrollbar press and scrolling keys), a class change on resize or
+  rotation, the drawing under 50 % on screen, a lost canvas context. Scroll by itself does not settle it. A wall limit
+  (last ink + 1 s) and an 11 s ceiling end a stalled run.
+- Does not play: Back/Forward and bfcache restores, `#` link arrivals other than `#top`
+  (a reload drops the fragment and plays), reduced motion, forced colors, `?draw=off`,
+  `?hero=photo`. A hidden or prerendered tab draws when first shown. If the engine starts more
+  than 2.4 s into the veil's failsafe clock (a slow load, for example Slow 3G), the CSS failsafe
+  reveals the photo at 2.8-3.3 s and nothing is drawn. CSS backstops: veil and lines hidden at
+  12 s if the engine dies mid-run (the veil's 12 s from its first style, the lines' 12 s from
+  when they are shown; the engine's own 11 s ceiling starts at `begin()`).
+- The settled hero equals 85467bca's within 2 colour levels (0 at 1440 and 1280; 1 level on
+  5 device px at 768; 2 levels on 7 device px at 390).
+- Cards wait for the hero until the earliest of: the last ink (`html.hero-draw-inked`), the hero
+  ending, the hero photo box less than half on screen, or 12.5 s (`HERO_FINAL`). A card on
+  screen may therefore draw while the photo develops. From 7.5 s (`HERO_CEIL`) a waiting card
+  on screen shows its cover until the gate opens.
+- Cache label `?v=pen-20261110` on `white-home-20261011.css` and `card-drawing-20261027.js`.
+- `.gitattributes` keeps `tools/hero-pen/**` byte for byte (`-text`), because provenance records
+  the files' exact bytes; `.gitignore` ignores `/tools/hero-pen/out/build/`.
+- Not verified on real phones, Safari, Firefox, real slow networks, screen readers or a real
+  move between monitors with different scaling (headless Chrome on one Windows machine, CDP
+  throttling and emulation).
+
 ## Card drawings survive a fast scroll · 2026-11-09
 
 The owner wrote on 2026-11-09: "现在还有一个问题就是，呃，如果我在手机或者电脑上下滑的太快，我的项目的线稿就不会显示出来，请修复一下。"

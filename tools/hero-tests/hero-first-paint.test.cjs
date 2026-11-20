@@ -1,7 +1,9 @@
-// Hero line drawing: the stroke paths must stay out of the page's paint until the first contentful
-// paint has been reported. Their first GPU raster in a browser with an empty shader cache takes
-// about 100-150 ms and would otherwise delay the first paint, or the masked photo layer's paint on
-// phones (found 2026-11-04, see the contract at the top of hero-drawing-20261027.js).
+// Hero line drawing: the drawing must stay out of the page's paint until the first contentful
+// paint has been reported (found 2026-11-04 with the SVG drawing of hero-drawing-20261027.js, whose
+// first GPU raster in a browser with an empty shader cache took about 100-150 ms and delayed the first
+// paint). pen-20261110: the inline hero pen (index.html, script#hero-pen-data and the engine after it;
+// PEN_SPEC 10.2) keeps the hold: its first ink waits for the paint report (1.5 s at most) and the load
+// event + 140 ms (300 ms at most after that).
 //
 //   node --test tools/hero-tests/hero-first-paint.test.cjs
 //   (Playwright with Chrome; set PLAYWRIGHT_MODULE to its folder if it is not resolvable as
@@ -71,8 +73,10 @@ test("first-paint hold", { skip: !chromium && "Playwright not found (set PLAYWRI
         assert.ok(r.lines.unhiddenAt > 0, "the lines were never shown");
         assert.equal(r.lines.fcpKnown, true, `unhidden at ${r.lines.unhiddenAt} ms, before the paint report (FCP ${r.fcp})`);
         assert.ok(r.hero.t0 >= r.fcp - 1, `timeline t0 ${r.hero.t0} is before FCP ${r.fcp}`);
-        // Development: from 1.05 s on the timeline, at the latest after the 3 s decode hold.
-        assert.ok(r.hero.devStart >= 1000 && r.hero.devStart < 3300, `devStart ${r.hero.devStart}`);
+        // Development (pen clock, PEN_SPEC 8 and 13): 100 ms after the class's last ink, at the latest after the
+        // 1.8 s decode hold: [lastInk - 170, lastInk + 1850].
+        assert.ok(r.hero.lastInk > 0, `lastInk ${r.hero.lastInk}`);
+        assert.ok(r.hero.devStart >= r.hero.lastInk - 170 && r.hero.devStart <= r.hero.lastInk + 1850, `devStart ${r.hero.devStart}, lastInk ${r.hero.lastInk} (${r.hero.cls})`);
         assert.equal(r.nodes, 0);
         assert.equal(r.cls, "js");
       });

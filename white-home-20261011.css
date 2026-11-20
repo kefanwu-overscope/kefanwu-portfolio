@@ -606,20 +606,30 @@ html:has(.white-home) {
   .white-home .hero-media, .white-home .hero-shade, .white-home .hero-skill-strip { display: none; }
 }
 
-/* Hero opening, "Drawn, then built" (hero-drawing-20261027.js; first visit per tab session).
-   The race car is drawn in lines registered to the photo, then the photo develops through a
-   page-white veil (the whole frame together, the car slightly ahead) and the lines retire. The
-   script then removes the veil, the drawing and every class below, so the settled hero is
-   exactly the hero above.
+/* Hero opening: the hero pen (pen-20261110; every load and reload, never on Back/Forward).
+   The race car is drawn by one pen on three stacked canvases (GUIDE, SHADE, INK) registered to
+   the photo, then the photo develops through a page-white veil (the whole frame together, the car
+   slightly ahead) and the canvases leave by layer. The inline engine in index.html (after
+   script#hero-pen-data; readable source tools/hero-pen/engine/engine.js) then removes the veil,
+   the drawing and every class below, so the settled hero is exactly the hero above.
    html.hero-draw      set by the inline <head> guard before first paint: the veil paints page
                        white over both photo layers. The photos' own opacity and filter are never
                        touched, so the photo stays the LCP paint. CSS-only failsafe: the veil
-                       fades out at 2.8-3.3 s and is hidden from 3.3 s if the script never takes
-                       over (the guard also drops html.hero-draw at 4 s in that case).
-   html.hero-draw-js   the script owns the veil (painted per frame). Backstop: the veil and the
-                       lines hide at 9.5 s if the script dies mid-sequence.
-   html.hero-draw-own  the script also owns the reveal timing, so script.js's slow-load veil
-                       (.hero-media::after) stays off while it runs. */
+                       fades out at 2.8-3.3 s and is hidden from 3.3 s if the engine never takes
+                       over (the guard also drops html.hero-draw at 4 s in that case). An engine
+                       that starts after 2.4 s on this fade's clock (it waits for the scripts
+                       before it) does not take over either: it leaves this reveal to the CSS
+                       and only cleans up after it.
+   html.hero-draw-js   the engine owns the veil (painted per frame). Backstops if the engine dies
+                       mid-sequence: the veil hides 12 s into its own animation clock, which
+                       keeps the start of the veil's first style (Chrome keeps the same
+                       hero-draw-backstop animation and changes only its delay), and the lines
+                       hide 12 s after they are first shown. The engine's own ceiling settles
+                       11 s after the engine starts, up to 2.4 s after the veil's first style,
+                       so the three do not share a start and the veil's backstop can come first.
+   html.hero-draw-own  the engine also owns the reveal timing, so script.js's slow-load veil
+                       (.hero-media::after) stays off while it runs.
+   html.hero-draw-inked  no more ink will be drawn (no style; card-drawing-20261027.js reads it). */
 .hero-draw-veil, .hero-draw-lines { display: none; }
 html.hero-draw .white-home .hero-draw-veil {
   display: block;
@@ -637,7 +647,7 @@ html.hero-draw .white-home .hero-draw-veil {
    visible -> hidden interpolation can stop at progress 0.9999... and stay visible). */
 @keyframes hero-draw-backstop { from, to { visibility: hidden; } }
 html.hero-draw .white-home .hero-draw-lines { animation: hero-draw-backstop 1ms linear 3.3s forwards; }
-html.hero-draw.hero-draw-js .white-home .hero-draw-veil { animation: hero-draw-backstop 1ms linear 9.5s forwards; }
+html.hero-draw.hero-draw-js .white-home .hero-draw-veil { animation: hero-draw-backstop 1ms linear 12s forwards; }
 html.hero-draw.hero-draw-own .white-home .hero-media::after { opacity: 0 !important; transition: none !important; }
 /* Above the photo layers (same z-index, later in the hero), below all text. */
 html.hero-draw.hero-draw-js .white-home .hero-draw-lines:not([hidden]) {
@@ -649,10 +659,10 @@ html.hero-draw.hero-draw-js .white-home .hero-draw-lines:not([hidden]) {
   overflow: hidden;
   contain: strict;
   pointer-events: none;
-  animation: hero-draw-backstop 1ms linear 9.5s forwards;
+  animation: hero-draw-backstop 1ms linear 12s forwards;
 }
-.hero-draw-lines svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
-.hero-draw-lines path { stroke-dasharray: 1 1; stroke-dashoffset: 1; opacity: 0; }
+/* Each canvas is placed (left, top, width, height) by the engine over its own strokes' box. */
+.hero-draw-lines canvas { position: absolute; display: block; pointer-events: none; }
 @media (prefers-reduced-motion: reduce), print {
   .hero-draw-veil, .hero-draw-lines { display: none !important; }
 }

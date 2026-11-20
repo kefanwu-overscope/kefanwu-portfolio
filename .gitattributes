@@ -17,3 +17,6 @@ experience-hdr-worker.js -text -whitespace
 vendor/three/** -text -whitespace
 assets/studio-motion/**/*.json text eol=lf
 assets/studio-motion/index.json text eol=lf
+
+# The hero pen's out/provenance.json records SHA256 of these files' exact bytes; commit them byte for byte.
+tools/hero-pen/** -text

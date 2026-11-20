@@ -1,5 +1,12 @@
 # Hero line drawing ("drawn, then built")
 
+**Superseded (pen-20261110):** the homepage hero is now drawn by the hero pen (`tools/hero-pen/`: traced art
+`out/strokes.json`, engine `engine/`, inlined into `index.html` by `engine/build.cjs`). `index.html` no longer
+holds the inline SVG nor loads `hero-drawing-20261027.js`, so `inline_hero_svg.cjs` (and its `--check`, no longer
+in any test) has nothing to write. This folder, `hero-drawing-20261027.js` and `assets/hero-drawing-20261027/`
+stay as the record of the 2026-10-27 drawing; `trace_lines.py` and `np_cv2.py` are still imported by the hero
+pen's tracer (`tools/hero-pen/common.py`).
+
 Generates `assets/hero-drawing-20261027/hero-lines.svg`: a stroke-only pen sketch of the
 homepage hero photo (`assets/hero-fsae-track-2200.webp`), in that photo's own pixel
 coordinates (`viewBox="0 0 2200 1238"`), so it registers on the photo wherever the photo is

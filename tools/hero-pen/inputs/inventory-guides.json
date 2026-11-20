@@ -1,0 +1,5866 @@
+{
+ "source": "releases/hand-drawn-20261106/art/inventory.json (art stage, 2026-11-06), copied so a build never reads releases/",
+ "source_sha256": "436bac8d1211d508d872df65e26ec61331ecf5b14a922ee2e003ec65e9ff5a6a",
+ "note": "Guide polylines in source px of assets/hero-fsae-track-2200.webp, about 4 px accurate. Never used as strokes directly: trace.py snaps them onto measured edges.",
+ "features": {
+  "nose-top-edge": {
+   "group": "body",
+   "name": "Nose top silhouette, tip to rear of top surface",
+   "bbox": [
+    932,
+    638,
+    1294,
+    806
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      932,
+      806
+     ],
+     [
+      948,
+      778
+     ],
+     [
+      989,
+      739
+     ],
+     [
+      1044,
+      702
+     ],
+     [
+      1097,
+      677
+     ],
+     [
+      1147,
+      660
+     ],
+     [
+      1191,
+      647
+     ],
+     [
+      1262,
+      640
+     ],
+     [
+      1294,
+      638
+     ]
+    ]
+   ],
+   "note": "Blue or dark nose against grey asphalt. Contrast falls behind x 1215, where the dark textured top surface meets asphalt of a similar tone."
+  },
+  "nose-top-rear-corner": {
+   "group": "body",
+   "name": "Rear corner of nose top surface, down to the stripe end",
+   "bbox": [
+    1294,
+    636,
+    1356,
+    664
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1294,
+      636
+     ],
+     [
+      1320,
+      640
+     ],
+     [
+      1345,
+      652
+     ],
+     [
+      1356,
+      664
+     ]
+    ]
+   ],
+   "note": "Dark textured surface against asphalt. Current stroke stops at x 1334 and never closes the corner."
+  },
+  "nose-tip-front": {
+   "group": "body",
+   "name": "Nose tip, front face down to the shadow",
+   "bbox": [
+    931,
+    812,
+    957,
+    851
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      931,
+      812
+     ],
+     [
+      934,
+      824
+     ],
+     [
+      940,
+      836
+     ],
+     [
+      949,
+      846
+     ],
+     [
+      957,
+      851
+     ]
+    ]
+   ],
+   "note": "Black against bright asphalt. Below (957, 851) it meets the ground shadow."
+  },
+  "nose-cap-crescent": {
+   "group": "body",
+   "name": "Pale crescent reflection on the nose tip",
+   "bbox": [
+    936,
+    811,
+    953,
+    842
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      936,
+      811
+     ],
+     [
+      940,
+      822
+     ],
+     [
+      946,
+      832
+     ],
+     [
+      953,
+      842
+     ]
+    ]
+   ],
+   "note": "Only separable in the lifted crop. A soft reflection on the cap, not an edge of a part. Skip unless the tip looks empty."
+  },
+  "stripe-outer-lower": {
+   "group": "body",
+   "name": "Blue stripe, lower edge (blue to black)",
+   "bbox": [
+    946,
+    665,
+    1350,
+    809
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      946,
+      809
+     ],
+     [
+      975,
+      800
+     ],
+     [
+      1012,
+      786
+     ],
+     [
+      1054,
+      773
+     ],
+     [
+      1096,
+      761
+     ],
+     [
+      1125,
+      754
+     ],
+     [
+      1172,
+      733
+     ],
+     [
+      1220,
+      714
+     ],
+     [
+      1282,
+      692
+     ],
+     [
+      1350,
+      665
+     ]
+    ]
+   ],
+   "note": "Blue against the black side. Strong along the whole run."
+  },
+  "stripe-upper-edge-front": {
+   "group": "body",
+   "name": "Blue stripe, upper edge, dark top panel loop front half",
+   "bbox": [
+    948,
+    666,
+    1211,
+    792
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1211,
+      700
+     ],
+     [
+      1160,
+      721
+     ],
+     [
+      1110,
+      743
+     ],
+     [
+      1048,
+      761
+     ],
+     [
+      1004,
+      776
+     ],
+     [
+      961,
+      792
+     ],
+     [
+      952,
+      791
+     ],
+     [
+      948,
+      784
+     ],
+     [
+      976,
+      758
+     ],
+     [
+      1021,
+      724
+     ],
+     [
+      1069,
+      695
+     ],
+     [
+      1120,
+      675
+     ],
+     [
+      1146,
+      666
+     ]
+    ]
+   ],
+   "note": "Inner edge of the blue band round the dark top panel. Current stroke follows it."
+  },
+  "stripe-upper-edge-rear": {
+   "group": "body",
+   "name": "Blue stripe, upper edge, behind the plate",
+   "bbox": [
+    1211,
+    655,
+    1350,
+    700
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1211,
+      700
+     ],
+     [
+      1240,
+      692
+     ],
+     [
+      1282,
+      677
+     ],
+     [
+      1320,
+      664
+     ],
+     [
+      1350,
+      655
+     ]
+    ]
+   ],
+   "note": "Not in the current drawing: the upper edge of the blue band stops at x 1211 there."
+  },
+  "stripe-far-band": {
+   "group": "body",
+   "name": "Far blue band along the top silhouette, inner edge past the plate",
+   "bbox": [
+    1146,
+    651,
+    1186,
+    666
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1146,
+      666
+     ],
+     [
+      1168,
+      657
+     ],
+     [
+      1186,
+      651
+     ]
+    ]
+   ],
+   "note": "Short run before the plate corner; the band narrows to a few px and is partly masked by the far tyre."
+  },
+  "side-panel-rear-edge": {
+   "group": "body",
+   "name": "Rear edge of the nose side panel",
+   "bbox": [
+    1366,
+    700,
+    1371,
+    758
+   ],
+   "confidence": "faint",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1366,
+      700
+     ],
+     [
+      1369,
+      723
+     ],
+     [
+      1371,
+      741
+     ],
+     [
+      1367,
+      758
+     ]
+    ]
+   ],
+   "note": "Rounded corner, dark on darker. Reads at 3x without a lift."
+  },
+  "side-panel-lower-fold": {
+   "group": "body",
+   "name": "Lower fold of the side panel under the lettering",
+   "bbox": [
+    1252,
+    754,
+    1360,
+    779
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1252,
+      779
+     ],
+     [
+      1290,
+      771
+     ],
+     [
+      1330,
+      762
+     ],
+     [
+      1360,
+      754
+     ]
+    ]
+   ],
+   "note": "A lit band, visible in the plain crop as a soft grey streak. Not a sharp edge. Stops at about x 1250."
+  },
+  "side-highlight-band": {
+   "group": "body",
+   "name": "Soft highlight band below the stripe",
+   "bbox": [
+    1190,
+    690,
+    1345,
+    735
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "mass",
+   "guides": [],
+   "note": "Grainy grey sheen on the black side. A person would leave it blank or suggest it with the hatching direction. No edge to trace."
+  },
+  "lower-panel-terminator": {
+   "group": "body",
+   "name": "Lit lower panel, where it falls off into black",
+   "bbox": [
+    1170,
+    836,
+    1262,
+    884
+   ],
+   "confidence": "inferred",
+   "usable": "no",
+   "method": "mass",
+   "guides": [
+    [
+     [
+      1170,
+      884
+     ],
+     [
+      1205,
+      870
+     ],
+     [
+      1240,
+      850
+     ],
+     [
+      1262,
+      836
+     ]
+    ]
+   ],
+   "note": "Luminance 5-21 of 255 above this curve, 0-3 below (column table in _tools/lowerbody_profile.py). A soft terminator with block artefacts, not a contour."
+  },
+  "lower-body-contour": {
+   "group": "body",
+   "name": "Lower body contour, x 1000-1160",
+   "bbox": [
+    1000,
+    830,
+    1160,
+    915
+   ],
+   "confidence": "not-seen",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "Measured: luminance 0-2 of 255 on both sides of where it would be. Body and shadow are one black shape. tools/hero-drawing/README.md is right. Do not draw it; hatch the mass."
+  },
+  "nose-underside-start": {
+   "group": "body",
+   "name": "First 40 px of the nose underside against its shadow",
+   "bbox": [
+    955,
+    851,
+    998,
+    880
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      955,
+      851
+     ],
+     [
+      968,
+      858
+     ],
+     [
+      982,
+      866
+     ],
+     [
+      998,
+      880
+     ]
+    ]
+   ],
+   "note": "Step of only 2-10 levels (body about 1, shadow about 4-13), visible only after a lift. The sole measurable piece of the lower contour. Fades out by x 1000."
+  },
+  "panel-seam-1165": {
+   "group": "body",
+   "name": "Tone step near x 1165 on the black side",
+   "bbox": [
+    1165,
+    770,
+    1165,
+    880
+   ],
+   "confidence": "inferred",
+   "usable": "no",
+   "method": "mass",
+   "guides": [
+    [
+     [
+      1165,
+      770
+     ],
+     [
+      1165,
+      880
+     ]
+    ]
+   ],
+   "note": "Luminance 0 to about 5, so a step of a few levels; could be a reflection edge. Not evidence of a seam."
+  },
+  "top-plate": {
+   "group": "graphics",
+   "name": "White number plate on the nose top",
+   "bbox": [
+    1152,
+    646,
+    1283,
+    696
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1152,
+      664
+     ],
+     [
+      1207,
+      646
+     ],
+     [
+      1283,
+      675
+     ],
+     [
+      1222,
+      696
+     ],
+     [
+      1152,
+      664
+     ]
+    ]
+   ],
+   "note": "White on dark. Four straight sides, foreshortened."
+  },
+  "top-plate-numerals": {
+   "group": "graphics",
+   "name": "219 numerals on the nose plate",
+   "bbox": [
+    1163,
+    650,
+    1266,
+    692
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "glyph",
+   "guides": [],
+   "note": "Thin dark figures, seen upside down and foreshortened from this angle. Trace by threshold, not by eye. 1-2 strokes each."
+  },
+  "sae-mark": {
+   "group": "graphics",
+   "name": "White SAE mark on the nose top",
+   "bbox": [
+    1236,
+    637,
+    1312,
+    668
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "glyph",
+   "guides": [],
+   "note": "Bold shape is clear; the small line under it is not legible. Simplify to the block outline, do not redraw the logo form."
+  },
+  "top-names": {
+   "group": "graphics",
+   "name": "Names on the nose top, three lines",
+   "bbox": [
+    1118,
+    678,
+    1186,
+    722
+   ],
+   "confidence": "faint",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "Real names, not reliably legible at the photo's resolution. Do not trace letterforms; a misread is a misspelled person. Use a short baseline scribble at most."
+  },
+  "top-flag-decal": {
+   "group": "graphics",
+   "name": "Small white square decal",
+   "bbox": [
+    1100,
+    691,
+    1127,
+    710
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1100,
+      700
+     ],
+     [
+      1117,
+      691
+     ],
+     [
+      1127,
+      700
+     ],
+     [
+      1110,
+      710
+     ],
+     [
+      1100,
+      700
+     ]
+    ]
+   ],
+   "note": "Outer box only; interior shape is a compression smear."
+  },
+  "top-stripe-logo": {
+   "group": "graphics",
+   "name": "Stylised sponsor mark",
+   "bbox": [
+    1066,
+    703,
+    1118,
+    733
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "glyph",
+   "guides": [],
+   "note": "Not legible. Do not redraw; a loose stroke or nothing."
+  },
+  "top-t-logo": {
+   "group": "graphics",
+   "name": "Tesla T mark",
+   "bbox": [
+    1048,
+    713,
+    1090,
+    736
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "glyph",
+   "guides": [],
+   "note": "Clear silhouette. A third party's mark: outline only if the whole sponsor row is drawn. Default: omit."
+  },
+  "top-tesla-word": {
+   "group": "graphics",
+   "name": "TESLA wordmark",
+   "bbox": [
+    1033,
+    729,
+    1062,
+    750
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "glyph",
+   "guides": [],
+   "note": "Legible at 4x. Same treatment as the T mark."
+  },
+  "top-label": {
+   "group": "graphics",
+   "name": "Pale rectangular label near the tip",
+   "bbox": [
+    1006,
+    733,
+    1052,
+    763
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1006,
+      742
+     ],
+     [
+      1022,
+      733
+     ],
+     [
+      1052,
+      754
+     ],
+     [
+      1037,
+      763
+     ],
+     [
+      1006,
+      742
+     ]
+    ]
+   ],
+   "note": "Outer box is clear; the coloured contents are not resolved."
+  },
+  "olin-college": {
+   "group": "graphics",
+   "name": "'Olin College' lettering",
+   "bbox": [
+    1239,
+    697,
+    1349,
+    750
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "glyph",
+   "guides": [],
+   "note": "Bold white on black, about 15-25 px high. The best text on the car. Single-stroke along the letter centre lines reads as handwriting."
+  },
+  "of-engineering": {
+   "group": "graphics",
+   "name": "'of Engineering' lettering",
+   "bbox": [
+    1244,
+    724,
+    1367,
+    776
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "glyph",
+   "guides": [],
+   "note": "Thinner white on black; every letter legible."
+  },
+  "side-names-rear": {
+   "group": "graphics",
+   "name": "Three names ahead of the lettering",
+   "bbox": [
+    1150,
+    735,
+    1230,
+    792
+   ],
+   "confidence": "clear",
+   "usable": "no",
+   "method": "glyph",
+   "guides": [],
+   "note": "Readable at 3x, about 8 px high. Real people's names: on phone they would be noise and on desktop tiny. Baseline scribble only, or nothing."
+  },
+  "side-names-front": {
+   "group": "graphics",
+   "name": "Two names near the nose",
+   "bbox": [
+    1062,
+    776,
+    1120,
+    826
+   ],
+   "confidence": "clear",
+   "usable": "no",
+   "method": "glyph",
+   "guides": [],
+   "note": "Same treatment."
+  },
+  "side-mark": {
+   "group": "graphics",
+   "name": "Small pale mark on the black side",
+   "bbox": [
+    1049,
+    793,
+    1056,
+    806
+   ],
+   "confidence": "faint",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "A few px. Unknown. Could be a fastener or a decal. Leave out."
+  },
+  "side-plate": {
+   "group": "graphics",
+   "name": "White 219 plate on the side panel",
+   "bbox": [
+    1410,
+    684,
+    1500,
+    762
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1410,
+      707
+     ],
+     [
+      1496,
+      684
+     ],
+     [
+      1500,
+      748
+     ],
+     [
+      1454,
+      762
+     ],
+     [
+      1416,
+      752
+     ],
+     [
+      1410,
+      707
+     ]
+    ]
+   ],
+   "note": "Lower-left edge is the tyre overlapping the plate, not the plate's own edge."
+  },
+  "side-plate-2": {
+   "group": "graphics",
+   "name": "Numeral 2 on the side plate",
+   "bbox": [
+    1418,
+    710,
+    1438,
+    752
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "glyph",
+   "guides": [
+    [
+     [
+      1418,
+      717
+     ],
+     [
+      1425,
+      710
+     ],
+     [
+      1433,
+      711
+     ],
+     [
+      1438,
+      722
+     ],
+     [
+      1438,
+      733
+     ],
+     [
+      1434,
+      743
+     ],
+     [
+      1429,
+      752
+     ]
+    ]
+   ],
+   "note": "Heavy black figure, about 5 px stroke. Its foot is hidden by the front tyre."
+  },
+  "side-plate-1": {
+   "group": "graphics",
+   "name": "Numeral 1 on the side plate",
+   "bbox": [
+    1447,
+    705,
+    1461,
+    757
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "glyph",
+   "guides": [
+    [
+     [
+      1447,
+      713
+     ],
+     [
+      1457,
+      705
+     ],
+     [
+      1459,
+      730
+     ],
+     [
+      1461,
+      757
+     ]
+    ]
+   ],
+   "note": "Clear."
+  },
+  "side-plate-9": {
+   "group": "graphics",
+   "name": "Numeral 9 on the side plate",
+   "bbox": [
+    1472,
+    695,
+    1493,
+    751
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "glyph",
+   "guides": [
+    [
+     [
+      1493,
+      721
+     ],
+     [
+      1491,
+      703
+     ],
+     [
+      1483,
+      695
+     ],
+     [
+      1474,
+      700
+     ],
+     [
+      1472,
+      714
+     ],
+     [
+      1476,
+      725
+     ],
+     [
+      1485,
+      727
+     ],
+     [
+      1493,
+      721
+     ],
+     [
+      1491,
+      737
+     ],
+     [
+      1482,
+      751
+     ]
+    ]
+   ],
+   "note": "Clear. Closed bowl plus tail."
+  },
+  "side-plate-crease": {
+   "group": "graphics",
+   "name": "Soft crease across the side plate",
+   "bbox": [
+    1421,
+    719,
+    1490,
+    737
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1421,
+      737
+     ],
+     [
+      1450,
+      732
+     ],
+     [
+      1476,
+      725
+     ],
+     [
+      1490,
+      719
+     ]
+    ]
+   ],
+   "note": "A tonal fold line. Desktop only."
+  },
+  "cockpit-rail-upper": {
+   "group": "cockpit",
+   "name": "Cockpit rail, upper edge",
+   "bbox": [
+    1366,
+    664,
+    1526,
+    702
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1366,
+      702
+     ],
+     [
+      1410,
+      692
+     ],
+     [
+      1458,
+      681
+     ],
+     [
+      1497,
+      671
+     ],
+     [
+      1526,
+      664
+     ]
+    ]
+   ],
+   "note": "Lit grey round rail. Current stroke sits on it."
+  },
+  "cockpit-rail-lower": {
+   "group": "cockpit",
+   "name": "Cockpit rail, lower edge",
+   "bbox": [
+    1367,
+    671,
+    1527,
+    708
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1367,
+      708
+     ],
+     [
+      1410,
+      698
+     ],
+     [
+      1458,
+      687
+     ],
+     [
+      1497,
+      678
+     ],
+     [
+      1527,
+      671
+     ]
+    ]
+   ],
+   "note": "Not in the current drawing. Gives the rail its thickness."
+  },
+  "side-panel-black": {
+   "group": "cockpit",
+   "name": "Black side panel behind the number plate",
+   "bbox": [
+    1372,
+    700,
+    1530,
+    790
+   ],
+   "confidence": "clear",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "A flat black mass with no surface edges. Candidate for hatching."
+  },
+  "helmet-outline": {
+   "group": "driver",
+   "name": "Helmet silhouette",
+   "bbox": [
+    1384,
+    531,
+    1467,
+    621
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1396,
+      621
+     ],
+     [
+      1428,
+      618
+     ],
+     [
+      1456,
+      600
+     ],
+     [
+      1467,
+      571
+     ],
+     [
+      1461,
+      546
+     ],
+     [
+      1439,
+      531
+     ],
+     [
+      1412,
+      533
+     ],
+     [
+      1391,
+      550
+     ],
+     [
+      1384,
+      583
+     ],
+     [
+      1389,
+      610
+     ]
+    ]
+   ],
+   "note": "White against grass, black box and neck."
+  },
+  "visor-brow": {
+   "group": "driver",
+   "name": "Visor opening, top edge",
+   "bbox": [
+    1387,
+    573,
+    1442,
+    578
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1387,
+      573
+     ],
+     [
+      1403,
+      577
+     ],
+     [
+      1426,
+      578
+     ],
+     [
+      1442,
+      576
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "visor-lower": {
+   "group": "driver",
+   "name": "Visor opening, lower edge",
+   "bbox": [
+    1385,
+    578,
+    1442,
+    600
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1385,
+      595
+     ],
+     [
+      1400,
+      600
+     ],
+     [
+      1416,
+      600
+     ],
+     [
+      1436,
+      595
+     ],
+     [
+      1441,
+      586
+     ],
+     [
+      1442,
+      578
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "visor-seal": {
+   "group": "driver",
+   "name": "White seal lip below the visor",
+   "bbox": [
+    1383,
+    594,
+    1438,
+    606
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1383,
+      594
+     ],
+     [
+      1386,
+      602
+     ],
+     [
+      1402,
+      606
+     ],
+     [
+      1422,
+      603
+     ],
+     [
+      1438,
+      596
+     ]
+    ]
+   ],
+   "note": "White on white; only its shadow side reads. Desktop only."
+  },
+  "chin-slot-upper": {
+   "group": "driver",
+   "name": "Chin vent slot, upper",
+   "bbox": [
+    1403,
+    603,
+    1412,
+    605
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1403,
+      605
+     ],
+     [
+      1412,
+      603
+     ]
+    ]
+   ],
+   "note": "Dark slot about 9 px long."
+  },
+  "chin-slot-lower": {
+   "group": "driver",
+   "name": "Chin vent slot, lower",
+   "bbox": [
+    1414,
+    613,
+    1423,
+    617
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1414,
+      617
+     ],
+     [
+      1423,
+      613
+     ]
+    ]
+   ],
+   "note": "Blue-black slot."
+  },
+  "nose-slot": {
+   "group": "driver",
+   "name": "Small slot at the helmet front",
+   "bbox": [
+    1384,
+    598,
+    1390,
+    602
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1384,
+      598
+     ],
+     [
+      1390,
+      602
+     ]
+    ]
+   ],
+   "note": "Very small. Desktop only."
+  },
+  "helmet-badge": {
+   "group": "driver",
+   "name": "Oval badge on the helmet",
+   "bbox": [
+    1398,
+    554,
+    1413,
+    561
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "ellipse",
+   "guides": [
+    [
+     [
+      1398,
+      558
+     ],
+     [
+      1402,
+      554
+     ],
+     [
+      1409,
+      554
+     ],
+     [
+      1413,
+      558
+     ],
+     [
+      1409,
+      561
+     ],
+     [
+      1402,
+      561
+     ],
+     [
+      1398,
+      558
+     ]
+    ]
+   ],
+   "note": "Draw the oval only, no letters."
+  },
+  "helmet-top-vent": {
+   "group": "driver",
+   "name": "Vent slit on top of the helmet",
+   "bbox": [
+    1413,
+    534,
+    1418,
+    539
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1413,
+      539
+     ],
+     [
+      1418,
+      534
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "helmet-forehead-mark": {
+   "group": "driver",
+   "name": "Small metallic mark on the forehead",
+   "bbox": [
+    1426,
+    548,
+    1433,
+    560
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "mass",
+   "guides": [],
+   "note": "Grey mark. One tick at most."
+  },
+  "helmet-side-pod": {
+   "group": "driver",
+   "name": "Side pod and visor pivot area",
+   "bbox": [
+    1442,
+    563,
+    1453,
+    595
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1445,
+      569
+     ],
+     [
+      1453,
+      563
+     ],
+     [
+      1450,
+      579
+     ],
+     [
+      1442,
+      595
+     ]
+    ]
+   ],
+   "note": "Irregular shape with a black hole at (1449, 565). Outline loosely; do not imply a mechanism."
+  },
+  "helmet-side-decal": {
+   "group": "driver",
+   "name": "Small decal low on the helmet side",
+   "bbox": [
+    1447,
+    590,
+    1458,
+    600
+   ],
+   "confidence": "faint",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "Illegible."
+  },
+  "neck": {
+   "group": "driver",
+   "name": "Black neck, under the helmet",
+   "bbox": [
+    1404,
+    623,
+    1424,
+    640
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1404,
+      623
+     ],
+     [
+      1405,
+      634
+     ],
+     [
+      1414,
+      640
+     ],
+     [
+      1424,
+      638
+     ]
+    ]
+   ],
+   "note": "Black against the pale collar. A beige band crosses it at (1417-1432, 622-638); unidentified."
+  },
+  "collar-near": {
+   "group": "driver",
+   "name": "Near shoulder silhouette against asphalt",
+   "bbox": [
+    1358,
+    623,
+    1392,
+    670
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1361,
+      670
+     ],
+     [
+      1358,
+      654
+     ],
+     [
+      1366,
+      647
+     ],
+     [
+      1375,
+      635
+     ],
+     [
+      1383,
+      629
+     ],
+     [
+      1392,
+      623
+     ]
+    ]
+   ],
+   "note": "Blotchy blue, white and black suit pattern; the edge is clear, the interior is not simple."
+  },
+  "suit-pale-panel": {
+   "group": "driver",
+   "name": "Pale blue suit panels on the near chest",
+   "bbox": [
+    1365,
+    630,
+    1428,
+    672
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1365,
+      655
+     ],
+     [
+      1378,
+      645
+     ],
+     [
+      1390,
+      630
+     ]
+    ],
+    [
+     [
+      1382,
+      672
+     ],
+     [
+      1390,
+      650
+     ],
+     [
+      1396,
+      637
+     ]
+    ],
+    [
+     [
+      1398,
+      652
+     ],
+     [
+      1412,
+      648
+     ],
+     [
+      1428,
+      640
+     ]
+    ]
+   ],
+   "note": "Pattern on the suit. One or two strokes. Black patches around it are shadow and pattern mixed."
+  },
+  "harness-strap-1": {
+   "group": "driver",
+   "name": "Red strap, centre chest",
+   "bbox": [
+    1400,
+    653,
+    1423,
+    668
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1405,
+      653
+     ],
+     [
+      1423,
+      663
+     ]
+    ],
+    [
+     [
+      1400,
+      657
+     ],
+     [
+      1417,
+      668
+     ]
+    ]
+   ],
+   "note": "Saturated red webbing. Two long edges. Identity as harness is inferred from colour, position and buckle-like block; nothing on the page should label it."
+  },
+  "harness-strap-2": {
+   "group": "driver",
+   "name": "Red strap, lower chest, upper",
+   "bbox": [
+    1370,
+    669,
+    1391,
+    679
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1370,
+      679
+     ],
+     [
+      1391,
+      669
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "harness-strap-3": {
+   "group": "driver",
+   "name": "Red strap, lower chest, lower",
+   "bbox": [
+    1383,
+    678,
+    1402,
+    690
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1383,
+      690
+     ],
+     [
+      1402,
+      678
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "harness-strap-4": {
+   "group": "driver",
+   "name": "Pink strap segments, upper chest",
+   "bbox": [
+    1421,
+    645,
+    1438,
+    649
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1421,
+      649
+     ],
+     [
+      1438,
+      645
+     ]
+    ]
+   ],
+   "note": "Pale red, small."
+  },
+  "harness-strap-5": {
+   "group": "driver",
+   "name": "Red strap running to the far shoulder",
+   "bbox": [
+    1461,
+    635,
+    1480,
+    640
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1461,
+      635
+     ],
+     [
+      1480,
+      640
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "sleeve-band": {
+   "group": "driver",
+   "name": "Near sleeve, outer curve with black band",
+   "bbox": [
+    1440,
+    643,
+    1484,
+    666
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1440,
+      651
+     ],
+     [
+      1449,
+      647
+     ],
+     [
+      1465,
+      643
+     ],
+     [
+      1478,
+      644
+     ],
+     [
+      1484,
+      651
+     ],
+     [
+      1481,
+      660
+     ],
+     [
+      1475,
+      666
+     ]
+    ]
+   ],
+   "note": "White suit with black stripe. Reads as a rounded shoulder or upper arm."
+  },
+  "sleeve-inner-loop": {
+   "group": "driver",
+   "name": "Black strap loop on the sleeve",
+   "bbox": [
+    1450,
+    659,
+    1471,
+    664
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1450,
+      664
+     ],
+     [
+      1452,
+      659
+     ],
+     [
+      1462,
+      660
+     ],
+     [
+      1471,
+      664
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "torso-edge": {
+   "group": "driver",
+   "name": "White torso, left boundary",
+   "bbox": [
+    1404,
+    651,
+    1440,
+    682
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1404,
+      682
+     ],
+     [
+      1414,
+      672
+     ],
+     [
+      1425,
+      661
+     ],
+     [
+      1433,
+      654
+     ],
+     [
+      1440,
+      651
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "blue-cuff": {
+   "group": "driver",
+   "name": "Blue cuff or band",
+   "bbox": [
+    1437,
+    671,
+    1456,
+    680
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1437,
+      675
+     ],
+     [
+      1446,
+      671
+     ],
+     [
+      1456,
+      673
+     ],
+     [
+      1456,
+      680
+     ],
+     [
+      1441,
+      678
+     ],
+     [
+      1437,
+      675
+     ]
+    ]
+   ],
+   "note": "Saturated blue band. Do not call it a glove or a cuff on the page."
+  },
+  "pale-wedge": {
+   "group": "driver",
+   "name": "Pale wedge above the rail",
+   "bbox": [
+    1429,
+    685,
+    1453,
+    692
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1429,
+      692
+     ],
+     [
+      1437,
+      686
+     ],
+     [
+      1453,
+      685
+     ]
+    ]
+   ],
+   "note": "Sleeve, glove or thigh. Cannot tell which."
+  },
+  "blue-object": {
+   "group": "driver",
+   "name": "Blue object beside the far shoulder",
+   "bbox": [
+    1481,
+    645,
+    1522,
+    660
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1481,
+      645
+     ],
+     [
+      1495,
+      645
+     ],
+     [
+      1520,
+      652
+     ],
+     [
+      1522,
+      660
+     ],
+     [
+      1500,
+      658
+     ],
+     [
+      1484,
+      652
+     ],
+     [
+      1481,
+      645
+     ]
+    ]
+   ],
+   "note": "Saturated blue, irregular, unidentified."
+  },
+  "grey-wedge-far": {
+   "group": "driver",
+   "name": "Grey wedge behind the far shoulder",
+   "bbox": [
+    1452,
+    617,
+    1503,
+    634
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1452,
+      617
+     ],
+     [
+      1472,
+      624
+     ],
+     [
+      1488,
+      627
+     ],
+     [
+      1503,
+      634
+     ]
+    ]
+   ],
+   "note": "The current stroke is named shoulder-far, but the crop reads as a grey sheet behind the driver, not the shoulder. The stroke is fine; the name is doubtful."
+  },
+  "dark-pack-right": {
+   "group": "driver",
+   "name": "Rounded dark shape right of the sleeve",
+   "bbox": [
+    1483,
+    651,
+    1493,
+    679
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1485,
+      651
+     ],
+     [
+      1493,
+      663
+     ],
+     [
+      1483,
+      679
+     ]
+    ]
+   ],
+   "note": "Black on near black. Could be seat, arm shadow or a pad."
+  },
+  "steering-wheel": {
+   "group": "driver",
+   "name": "Steering wheel",
+   "bbox": null,
+   "confidence": "not-seen",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "No wheel rim, spoke or hub is visible anywhere in the cockpit area. Do not draw one."
+  },
+  "front-hoop": {
+   "group": "driver",
+   "name": "Front hoop",
+   "bbox": null,
+   "confidence": "not-seen",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "Nothing in the cockpit opening can be identified as a front hoop. Do not draw one."
+  },
+  "arch-outer": {
+   "group": "hoop",
+   "name": "Hoop arch, outer edge",
+   "bbox": [
+    1431,
+    426,
+    1511,
+    477
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1431,
+      477
+     ],
+     [
+      1436,
+      461
+     ],
+     [
+      1445,
+      441
+     ],
+     [
+      1460,
+      430
+     ],
+     [
+      1475,
+      426
+     ],
+     [
+      1490,
+      431
+     ],
+     [
+      1501,
+      441
+     ],
+     [
+      1508,
+      455
+     ],
+     [
+      1511,
+      465
+     ]
+    ]
+   ],
+   "note": "Black tube against grass and track. Current drawing has one centre line for the whole tube."
+  },
+  "arch-inner": {
+   "group": "hoop",
+   "name": "Hoop arch, inner edge",
+   "bbox": [
+    1451,
+    432,
+    1501,
+    455
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1451,
+      446
+     ],
+     [
+      1460,
+      436
+     ],
+     [
+      1475,
+      432
+     ],
+     [
+      1488,
+      436
+     ],
+     [
+      1497,
+      446
+     ],
+     [
+      1501,
+      455
+     ]
+    ]
+   ],
+   "note": "Above the lamp it borders the green patch. Gives the arch real thickness."
+  },
+  "arch-stalk": {
+   "group": "hoop",
+   "name": "Short black stalk on top of the arch",
+   "bbox": [
+    1473,
+    412,
+    1481,
+    427
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1473,
+      427
+     ],
+     [
+      1473,
+      412
+     ]
+    ],
+    [
+     [
+      1481,
+      427
+     ],
+     [
+      1481,
+      412
+     ]
+    ]
+   ],
+   "note": "Sits on the apex. Above y 412 it joins a dark shape at (1461-1495, 396-412) against a dark treeline, which may be background. Draw the stalk only if the owner confirms it is on the car; it is an unknown part."
+  },
+  "arch-top-object": {
+   "group": "hoop",
+   "name": "Dark shape above the stalk",
+   "bbox": [
+    1461,
+    396,
+    1495,
+    412
+   ],
+   "confidence": "faint",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "Left and lower edges read against the pale rocks behind, with a bright stripe at (1476-1480, 397-402). Top merges into the dark treeline. It may be a part mounted on the stalk or something in the background. Ask the owner; do not draw it from this photo."
+  },
+  "green-patch": {
+   "group": "hoop",
+   "name": "Green patch inside the arch, above the lamp",
+   "bbox": [
+    1451,
+    433,
+    1496,
+    447
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1451,
+      446
+     ],
+     [
+      1460,
+      437
+     ],
+     [
+      1475,
+      433
+     ],
+     [
+      1488,
+      437
+     ],
+     [
+      1496,
+      447
+     ]
+    ]
+   ],
+   "note": "Measured hue 113-116 degrees against 75-82 for the grass around the hoop, so it is not grass seen through the arch. Has a pale hot spot at (1476-1484, 438-444). May be a green lens. Identity unknown. Its upper line is the arch inner edge, so draw no extra part."
+  },
+  "lamp-housing": {
+   "group": "hoop",
+   "name": "Black housing around the amber lens",
+   "bbox": [
+    1445,
+    447,
+    1496,
+    474
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1445,
+      452
+     ],
+     [
+      1465,
+      447
+     ],
+     [
+      1486,
+      451
+     ],
+     [
+      1496,
+      461
+     ],
+     [
+      1494,
+      473
+     ],
+     [
+      1475,
+      474
+     ],
+     [
+      1456,
+      470
+     ],
+     [
+      1446,
+      465
+     ],
+     [
+      1445,
+      452
+     ]
+    ]
+   ],
+   "note": "Black against grass below and green patch above."
+  },
+  "lamp-lens": {
+   "group": "hoop",
+   "name": "Amber lamp lens",
+   "bbox": [
+    1448,
+    454,
+    1484,
+    469
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1455,
+      454
+     ],
+     [
+      1477,
+      454
+     ],
+     [
+      1484,
+      460
+     ],
+     [
+      1483,
+      466
+     ],
+     [
+      1476,
+      469
+     ],
+     [
+      1454,
+      469
+     ],
+     [
+      1449,
+      466
+     ],
+     [
+      1448,
+      460
+     ],
+     [
+      1455,
+      454
+     ]
+    ]
+   ],
+   "note": "Rounded rectangle. Pattern inside is not resolved. Current name says TSAL; nothing visible proves that, but no drawing labels it."
+  },
+  "lamp-lens-ribs": {
+   "group": "hoop",
+   "name": "Texture inside the lens",
+   "bbox": [
+    1449,
+    455,
+    1484,
+    469
+   ],
+   "confidence": "inferred",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "Grid-like blotches, likely LED pattern plus compression. Not countable. Do not draw individual LEDs."
+  },
+  "lamp-screw": {
+   "group": "hoop",
+   "name": "Bright fastener glint at the housing corner",
+   "bbox": [
+    1487,
+    471,
+    1493,
+    475
+   ],
+   "confidence": "clear",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "Too small."
+  },
+  "left-leg-shroud-outer": {
+   "group": "hoop",
+   "name": "Wide black leg left of the arch, outer edge",
+   "bbox": [
+    1403,
+    482,
+    1417,
+    533
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1417,
+      482
+     ],
+     [
+      1403,
+      533
+     ]
+    ]
+   ],
+   "note": "Wide black shape, about 20 px, going behind the helmet."
+  },
+  "left-leg-shroud-inner": {
+   "group": "hoop",
+   "name": "Wide black leg, inner edge",
+   "bbox": [
+    1425,
+    487,
+    1437,
+    530
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1437,
+      487
+     ],
+     [
+      1425,
+      530
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "left-leg-top": {
+   "group": "hoop",
+   "name": "Wide black leg, top edge",
+   "bbox": [
+    1417,
+    481,
+    1438,
+    487
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1417,
+      481
+     ],
+     [
+      1438,
+      487
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "diag-tube": {
+   "group": "hoop",
+   "name": "Thin tube from the arch to behind the helmet",
+   "bbox": [
+    1441,
+    489,
+    1481,
+    536
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1441,
+      489
+     ],
+     [
+      1460,
+      512
+     ],
+     [
+      1481,
+      536
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "red-block": {
+   "group": "hoop",
+   "name": "Red block on the thin tube",
+   "bbox": [
+    1442,
+    490,
+    1461,
+    506
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1442,
+      495
+     ],
+     [
+      1448,
+      490
+     ],
+     [
+      1460,
+      495
+     ],
+     [
+      1461,
+      501
+     ],
+     [
+      1455,
+      506
+     ],
+     [
+      1445,
+      505
+     ],
+     [
+      1442,
+      495
+     ]
+    ]
+   ],
+   "note": "Saturated red, unknown part."
+  },
+  "thin-rod": {
+   "group": "hoop",
+   "name": "Thin horizontal rod to the column",
+   "bbox": [
+    1463,
+    506,
+    1497,
+    511
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1463,
+      506
+     ],
+     [
+      1480,
+      508
+     ],
+     [
+      1497,
+      511
+     ]
+    ]
+   ],
+   "note": "Not in the current drawing."
+  },
+  "pink-sleeve": {
+   "group": "hoop",
+   "name": "Pink sleeve on the right leg",
+   "bbox": [
+    1503,
+    466,
+    1514,
+    496
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1503,
+      468
+     ],
+     [
+      1505,
+      496
+     ]
+    ],
+    [
+     [
+      1511,
+      466
+     ],
+     [
+      1514,
+      496
+     ]
+    ]
+   ],
+   "note": "Pale pink. Unknown part. Two sides."
+  },
+  "column-left": {
+   "group": "hoop",
+   "name": "Wide black column, left edge",
+   "bbox": [
+    1497,
+    499,
+    1507,
+    640
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1497,
+      499
+     ],
+     [
+      1500,
+      552
+     ],
+     [
+      1504,
+      582
+     ],
+     [
+      1507,
+      640
+     ]
+    ]
+   ],
+   "note": "Lower part borders the pale strips. Current hoop stroke runs one line down this column."
+  },
+  "column-right": {
+   "group": "hoop",
+   "name": "Wide black column, right edge",
+   "bbox": [
+    1520,
+    497,
+    1530,
+    630
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1520,
+      497
+     ],
+     [
+      1521,
+      540
+     ],
+     [
+      1523,
+      562
+     ],
+     [
+      1527,
+      606
+     ],
+     [
+      1530,
+      630
+     ]
+    ]
+   ],
+   "note": "Against grass above y 552, against the pale panel below."
+  },
+  "column-mid": {
+   "group": "hoop",
+   "name": "Column, internal vertical division",
+   "bbox": [
+    1512,
+    500,
+    1516,
+    600
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1512,
+      500
+     ],
+     [
+      1513,
+      553
+     ],
+     [
+      1516,
+      600
+     ]
+    ]
+   ],
+   "note": "Darker left half, greyer right half. May be two members side by side. Do not imply which."
+  },
+  "column-bands": {
+   "group": "hoop",
+   "name": "Short dark wrap marks on the column",
+   "bbox": [
+    1510,
+    510,
+    1523,
+    577
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1510,
+      511
+     ],
+     [
+      1520,
+      510
+     ]
+    ],
+    [
+     [
+      1510,
+      531
+     ],
+     [
+      1520,
+      530
+     ]
+    ],
+    [
+     [
+      1510,
+      553
+     ],
+     [
+      1521,
+      552
+     ]
+    ],
+    [
+     [
+      1511,
+      577
+     ],
+     [
+      1523,
+      576
+     ]
+    ]
+   ],
+   "note": "Short cross ticks, visible in the gamma crop. Could be tape or joints. Number and spacing are as seen; desktop only."
+  },
+  "column-below-rail": {
+   "group": "hoop",
+   "name": "Column continuing below the rail",
+   "bbox": [
+    1529,
+    672,
+    1537,
+    759
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1529,
+      672
+     ],
+     [
+      1533,
+      720
+     ],
+     [
+      1537,
+      759
+     ]
+    ]
+   ],
+   "note": "Black on black. Right edge only, where lit clutter sits behind it."
+  },
+  "brace": {
+   "group": "hoop",
+   "name": "Long diagonal brace, centre line",
+   "bbox": [
+    1514,
+    476,
+    1604,
+    664
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1514,
+      476
+     ],
+     [
+      1527,
+      509
+     ],
+     [
+      1550,
+      553
+     ],
+     [
+      1572,
+      597
+     ],
+     [
+      1593,
+      642
+     ],
+     [
+      1604,
+      664
+     ]
+    ]
+   ],
+   "note": "Black tube against grass and asphalt. Row profiles give a dark span about 7-11 px wide (y 560: x 1548-1556; y 600: x 1570-1576; y 640: x 1585-1596). Current stroke lies inside it."
+  },
+  "brace-outer-edge": {
+   "group": "hoop",
+   "name": "Brace, outer edge against asphalt",
+   "bbox": [
+    1531,
+    507,
+    1609,
+    664
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1531,
+      507
+     ],
+     [
+      1554,
+      553
+     ],
+     [
+      1576,
+      597
+     ],
+     [
+      1597,
+      640
+     ],
+     [
+      1609,
+      664
+     ]
+    ]
+   ],
+   "note": "From row profiles. Gives the brace thickness on desktop."
+  },
+  "brace-inner-edge": {
+   "group": "hoop",
+   "name": "Brace, inner edge",
+   "bbox": [
+    1525,
+    515,
+    1586,
+    640
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1525,
+      515
+     ],
+     [
+      1547,
+      560
+     ],
+     [
+      1568,
+      600
+     ],
+     [
+      1586,
+      640
+     ]
+    ]
+   ],
+   "note": "From row profiles. Lost in the clutter below about y 645."
+  },
+  "orange-tab": {
+   "group": "hoop",
+   "name": "Orange tab at the brace top",
+   "bbox": [
+    1523,
+    497,
+    1531,
+    509
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1523,
+      500
+     ],
+     [
+      1528,
+      497
+     ],
+     [
+      1531,
+      505
+     ],
+     [
+      1527,
+      509
+     ],
+     [
+      1523,
+      500
+     ]
+    ]
+   ],
+   "note": "Saturated orange. Small."
+  },
+  "brace-tab": {
+   "group": "hoop",
+   "name": "Small dark hook off the brace",
+   "bbox": [
+    1582,
+    605,
+    1590,
+    611
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1582,
+      611
+     ],
+     [
+      1590,
+      605
+     ]
+    ]
+   ],
+   "note": "Dark on asphalt. Unknown."
+  },
+  "black-box-top": {
+   "group": "hoop",
+   "name": "Black padded box behind the helmet, top edge",
+   "bbox": [
+    1450,
+    537,
+    1492,
+    546
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1450,
+      537
+     ],
+     [
+      1470,
+      541
+     ],
+     [
+      1492,
+      546
+     ]
+    ]
+   ],
+   "note": "Against grass. Identity (head restraint or seat back) is inferred."
+  },
+  "black-box-right": {
+   "group": "hoop",
+   "name": "Black padded box, right edge",
+   "bbox": [
+    1490,
+    548,
+    1492,
+    619
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1492,
+      548
+     ],
+     [
+      1491,
+      580
+     ],
+     [
+      1490,
+      619
+     ]
+    ]
+   ],
+   "note": "Against pale strip and black column. Partly lost in the column's darkness."
+  },
+  "pale-strip-upper": {
+   "group": "hoop",
+   "name": "Pale strip between box and column, upper",
+   "bbox": [
+    1493,
+    549,
+    1500,
+    572
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1493,
+      549
+     ],
+     [
+      1499,
+      549
+     ],
+     [
+      1500,
+      572
+     ],
+     [
+      1494,
+      572
+     ],
+     [
+      1493,
+      549
+     ]
+    ]
+   ],
+   "note": "Pale blue-grey, same material as the panel on the other side."
+  },
+  "pale-strip-lower": {
+   "group": "hoop",
+   "name": "Pale strip between box and column, lower",
+   "bbox": [
+    1491,
+    582,
+    1505,
+    628
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1491,
+      582
+     ],
+     [
+      1502,
+      584
+     ],
+     [
+      1505,
+      628
+     ],
+     [
+      1491,
+      620
+     ],
+     [
+      1491,
+      582
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "pale-panel": {
+   "group": "hoop",
+   "name": "Pale panel between column and brace",
+   "bbox": [
+    1523,
+    552,
+    1551,
+    628
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1523,
+      552
+     ],
+     [
+      1548,
+      556
+     ]
+    ],
+    [
+     [
+      1551,
+      561
+     ],
+     [
+      1532,
+      628
+     ]
+    ]
+   ],
+   "note": "Top edge and the thin black strut that bounds it on the right. Identity (firewall or similar) is not provable."
+  },
+  "panel-dot": {
+   "group": "hoop",
+   "name": "Dark dot on the pale panel",
+   "bbox": [
+    1538,
+    560,
+    1545,
+    567
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "mass",
+   "guides": [],
+   "note": "One small mark. Hole, fastener or marking. Desktop only."
+  },
+  "box-top": {
+   "group": "rear",
+   "name": "Dark box behind the hoop, top edge",
+   "bbox": [
+    1544,
+    612,
+    1573,
+    619
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1544,
+      619
+     ],
+     [
+      1560,
+      615
+     ],
+     [
+      1573,
+      612
+     ]
+    ]
+   ],
+   "note": "Black frame line."
+  },
+  "box-right": {
+   "group": "rear",
+   "name": "Dark box, right edge",
+   "bbox": [
+    1573,
+    613,
+    1581,
+    645
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1573,
+      613
+     ],
+     [
+      1578,
+      628
+     ],
+     [
+      1581,
+      645
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "box-bottom": {
+   "group": "rear",
+   "name": "Dark box, bottom edge",
+   "bbox": [
+    1553,
+    648,
+    1581,
+    661
+   ],
+   "confidence": "faint",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1581,
+      648
+     ],
+     [
+      1568,
+      654
+     ],
+     [
+      1553,
+      661
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "box-left": {
+   "group": "rear",
+   "name": "Dark box, left edge",
+   "bbox": [
+    1543,
+    620,
+    1550,
+    660
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1543,
+      620
+     ],
+     [
+      1547,
+      640
+     ],
+     [
+      1550,
+      660
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "box-labels": {
+   "group": "rear",
+   "name": "Pale marks on the box face",
+   "bbox": [
+    1548,
+    625,
+    1570,
+    655
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "mass",
+   "guides": [],
+   "note": "Pale blotches in loose rows. Not legible, not countable. Do not imply labels or connectors. Two or three short ticks on desktop at most."
+  },
+  "box-top-clutter": {
+   "group": "rear",
+   "name": "Clutter above the box",
+   "bbox": [
+    1538,
+    603,
+    1582,
+    620
+   ],
+   "confidence": "faint",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "Black and pale knots. Unresolved."
+  },
+  "rail-behind-hoop": {
+   "group": "rear",
+   "name": "Thin grey tube behind the column",
+   "bbox": [
+    1530,
+    648,
+    1590,
+    662
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1530,
+      662
+     ],
+     [
+      1555,
+      658
+     ],
+     [
+      1590,
+      648
+     ]
+    ]
+   ],
+   "note": "Lit grey. Continues the line of the cockpit rail."
+  },
+  "brace-inner-lit": {
+   "group": "rear",
+   "name": "Lit streak inside the brace shadow",
+   "bbox": [
+    1587,
+    642,
+    1593,
+    652
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1587,
+      642
+     ],
+     [
+      1593,
+      652
+     ]
+    ]
+   ],
+   "note": "Very short."
+  },
+  "tube-a": {
+   "group": "rear",
+   "name": "Short dark tube below the box, left",
+   "bbox": [
+    1560,
+    662,
+    1566,
+    672
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1560,
+      662
+     ],
+     [
+      1566,
+      672
+     ]
+    ]
+   ],
+   "note": "Dark on lit asphalt."
+  },
+  "tube-b": {
+   "group": "rear",
+   "name": "Short dark tube below the box, right",
+   "bbox": [
+    1568,
+    661,
+    1571,
+    672
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1568,
+      661
+     ],
+     [
+      1571,
+      672
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "tube-c": {
+   "group": "rear",
+   "name": "Diagonal thin rod",
+   "bbox": [
+    1572,
+    665,
+    1584,
+    677
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1572,
+      677
+     ],
+     [
+      1584,
+      665
+     ]
+    ]
+   ],
+   "note": "Bright against dark."
+  },
+  "tube-d": {
+   "group": "rear",
+   "name": "Dark upright",
+   "bbox": [
+    1580,
+    662,
+    1585,
+    682
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1585,
+      662
+     ],
+     [
+      1580,
+      682
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "tube-e": {
+   "group": "rear",
+   "name": "Thick dark member into the beam",
+   "bbox": [
+    1560,
+    678,
+    1582,
+    682
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1560,
+      678
+     ],
+     [
+      1582,
+      682
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "beam-top": {
+   "group": "rear",
+   "name": "Black flat beam, upper edge",
+   "bbox": [
+    1582,
+    669,
+    1628,
+    681
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1582,
+      681
+     ],
+     [
+      1608,
+      674
+     ],
+     [
+      1628,
+      669
+     ]
+    ]
+   ],
+   "note": "Against asphalt on its right half. Current rear-rail-top rides on this from x 1590, and is about 3 px off at its right end."
+  },
+  "beam-lower": {
+   "group": "rear",
+   "name": "Black flat beam, lower edge",
+   "bbox": [
+    1590,
+    680,
+    1633,
+    689
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1590,
+      689
+     ],
+     [
+      1612,
+      684
+     ],
+     [
+      1633,
+      680
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "beam-hole": {
+   "group": "rear",
+   "name": "Lit oval under the beam",
+   "bbox": [
+    1610,
+    683,
+    1623,
+    689
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1610,
+      685
+     ],
+     [
+      1616,
+      683
+     ],
+     [
+      1623,
+      686
+     ],
+     [
+      1616,
+      689
+     ],
+     [
+      1610,
+      685
+     ]
+    ]
+   ],
+   "note": "Asphalt showing through. Desktop only."
+  },
+  "rail-top-left-half": {
+   "group": "rear",
+   "name": "Current rear-rail-top, its left half",
+   "bbox": [
+    1526,
+    680,
+    1565,
+    681
+   ],
+   "confidence": "inferred",
+   "usable": "no",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1526,
+      681
+     ],
+     [
+      1550,
+      680
+     ],
+     [
+      1565,
+      680
+     ]
+    ]
+   ],
+   "note": "This part of the current stroke crosses the pink wire bundle; no continuous tube shows here. Replace with what is actually visible."
+  },
+  "diag-to-tyre": {
+   "group": "rear",
+   "name": "Diagonal tube to the rear tyre, top",
+   "bbox": [
+    1625,
+    672,
+    1655,
+    697
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1625,
+      672
+     ],
+     [
+      1639,
+      684
+     ],
+     [
+      1655,
+      697
+     ]
+    ]
+   ],
+   "note": "Sharp black on asphalt."
+  },
+  "arm-upper": {
+   "group": "rear",
+   "name": "Long straight member at y 706",
+   "bbox": [
+    1585,
+    705,
+    1647,
+    708
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1585,
+      705
+     ],
+     [
+      1620,
+      706
+     ],
+     [
+      1647,
+      708
+     ]
+    ]
+   ],
+   "note": "Pale on its left half, black on its right. One straight tube."
+  },
+  "strut-short": {
+   "group": "rear",
+   "name": "Short near-vertical strut",
+   "bbox": [
+    1622,
+    688,
+    1624,
+    703
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1624,
+      688
+     ],
+     [
+      1622,
+      703
+     ]
+    ]
+   ],
+   "note": "Not in the current drawing."
+  },
+  "line-b": {
+   "group": "rear",
+   "name": "Dark line under the long member",
+   "bbox": [
+    1628,
+    709,
+    1648,
+    716
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1628,
+      709
+     ],
+     [
+      1648,
+      716
+     ]
+    ]
+   ],
+   "note": "Dark on asphalt. Tube or cast shadow."
+  },
+  "line-c": {
+   "group": "rear",
+   "name": "Diagonal dark line, mid window",
+   "bbox": [
+    1621,
+    719,
+    1644,
+    729
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1621,
+      719
+     ],
+     [
+      1632,
+      724
+     ],
+     [
+      1644,
+      729
+     ]
+    ]
+   ],
+   "note": "Dark on asphalt. Tube or cast shadow."
+  },
+  "rod-lit": {
+   "group": "rear",
+   "name": "Long bright rod at y 731-739",
+   "bbox": [
+    1591,
+    731,
+    1630,
+    739
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1591,
+      731
+     ],
+     [
+      1610,
+      735
+     ],
+     [
+      1630,
+      739
+     ]
+    ]
+   ],
+   "note": "Bright rod. Current rear-wb-lower is about parallel, a few px off; check it."
+  },
+  "line-d": {
+   "group": "rear",
+   "name": "Dark diagonal rising to the tyre",
+   "bbox": [
+    1625,
+    742,
+    1638,
+    755
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1625,
+      755
+     ],
+     [
+      1638,
+      742
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "shadow-streaks-rear": {
+   "group": "rear",
+   "name": "Parallel dark streaks on the asphalt under the rear frame",
+   "bbox": [
+    1586,
+    747,
+    1627,
+    767
+   ],
+   "confidence": "inferred",
+   "usable": "partial",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1591,
+      747
+     ],
+     [
+      1609,
+      757
+     ],
+     [
+      1627,
+      767
+     ]
+    ],
+    [
+     [
+      1586,
+      754
+     ],
+     [
+      1617,
+      766
+     ]
+    ]
+   ],
+   "note": "Run down to the right at ground level with soft ends. Probably cast shadows of the tubes above, not tubes. Draw as shadow marks at most, never as suspension."
+  },
+  "rod-lit-low": {
+   "group": "rear",
+   "name": "Short bright rod",
+   "bbox": [
+    1597,
+    745,
+    1616,
+    752
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1597,
+      745
+     ],
+     [
+      1616,
+      752
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "white-junction": {
+   "group": "rear",
+   "name": "White Y-shaped glints",
+   "bbox": [
+    1570,
+    745,
+    1597,
+    760
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1570,
+      760
+     ],
+     [
+      1584,
+      757
+     ],
+     [
+      1597,
+      745
+     ]
+    ],
+    [
+     [
+      1584,
+      757
+     ],
+     [
+      1590,
+      759
+     ]
+    ]
+   ],
+   "note": "Bright. Looks like a joint between thin rods. Identity unknown."
+  },
+  "white-lump": {
+   "group": "rear",
+   "name": "White lump with rust-coloured area",
+   "bbox": [
+    1596,
+    688,
+    1621,
+    705
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1596,
+      689
+     ],
+     [
+      1605,
+      688
+     ],
+     [
+      1610,
+      693
+     ],
+     [
+      1615,
+      700
+     ],
+     [
+      1621,
+      705
+     ]
+    ]
+   ],
+   "note": "Bright and irregular. Unknown. Outline loosely."
+  },
+  "rear-clutter": {
+   "group": "rear",
+   "name": "Unresolved parts, x 1570-1625, y 690-735",
+   "bbox": [
+    1570,
+    690,
+    1625,
+    735
+   ],
+   "confidence": "faint",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "Dense small glints and blacks. No continuous lines. A person would suggest it with 8-12 short marks, which must be marked as impression."
+  },
+  "wires-orange": {
+   "group": "rear",
+   "name": "Orange and pink wire bundle",
+   "bbox": [
+    1530,
+    666,
+    1555,
+    688
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1532,
+      666
+     ],
+     [
+      1541,
+      680
+     ],
+     [
+      1548,
+      688
+     ]
+    ],
+    [
+     [
+      1530,
+      677
+     ],
+     [
+      1545,
+      685
+     ]
+    ],
+    [
+     [
+      1543,
+      668
+     ],
+     [
+      1555,
+      685
+     ]
+    ]
+   ],
+   "note": "Individual strands partly readable. Colour suggests HV cable, but nothing proves it. Strands are approximate."
+  },
+  "ribbed-lens-left": {
+   "group": "rear",
+   "name": "Pale ribbed shape, left outline",
+   "bbox": [
+    1531,
+    696,
+    1564,
+    751
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1531,
+      696
+     ],
+     [
+      1537,
+      711
+     ],
+     [
+      1543,
+      728
+     ],
+     [
+      1564,
+      751
+     ]
+    ]
+   ],
+   "note": "Thin pale lines forming a lens shape. Identity unknown. Do not call it a motor, cover or hose."
+  },
+  "ribbed-lens-right": {
+   "group": "rear",
+   "name": "Pale ribbed shape, right outline",
+   "bbox": [
+    1551,
+    698,
+    1569,
+    748
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1551,
+      698
+     ],
+     [
+      1564,
+      715
+     ],
+     [
+      1569,
+      731
+     ],
+     [
+      1568,
+      748
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "ribbed-lens-ribs": {
+   "group": "rear",
+   "name": "Pale ribbed shape, inner lines",
+   "bbox": [
+    1543,
+    703,
+    1561,
+    734
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1543,
+      703
+     ],
+     [
+      1550,
+      721
+     ],
+     [
+      1555,
+      734
+     ]
+    ],
+    [
+     [
+      1555,
+      707
+     ],
+     [
+      1561,
+      721
+     ]
+    ]
+   ],
+   "note": "At least two inner lines. Could be more."
+  },
+  "blue-part-a": {
+   "group": "rear",
+   "name": "Blue part, right",
+   "bbox": [
+    1536,
+    739,
+    1548,
+    758
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1536,
+      739
+     ],
+     [
+      1546,
+      740
+     ],
+     [
+      1548,
+      756
+     ],
+     [
+      1538,
+      758
+     ],
+     [
+      1536,
+      739
+     ]
+    ]
+   ],
+   "note": "Unidentified. White cap at (1532-1540, 730-737)."
+  },
+  "blue-part-b": {
+   "group": "rear",
+   "name": "Blue part, left",
+   "bbox": [
+    1525,
+    746,
+    1533,
+    765
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1527,
+      746
+     ],
+     [
+      1531,
+      746
+     ],
+     [
+      1533,
+      764
+     ],
+     [
+      1525,
+      765
+     ],
+     [
+      1527,
+      746
+     ]
+    ]
+   ],
+   "note": "Unidentified."
+  },
+  "yellow-part": {
+   "group": "rear",
+   "name": "Olive and yellow part",
+   "bbox": [
+    1511,
+    742,
+    1520,
+    769
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1520,
+      742
+     ],
+     [
+      1512,
+      755
+     ],
+     [
+      1511,
+      768
+     ],
+     [
+      1516,
+      769
+     ],
+     [
+      1520,
+      755
+     ]
+    ]
+   ],
+   "note": "Unidentified. Soft edges."
+  },
+  "rod-white-front": {
+   "group": "rear",
+   "name": "Bright thin rod beside the front tyre",
+   "bbox": [
+    1491,
+    772,
+    1506,
+    783
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1491,
+      783
+     ],
+     [
+      1498,
+      777
+     ],
+     [
+      1506,
+      772
+     ]
+    ]
+   ],
+   "note": "Sharp bright line. Identity unknown. It could be a pushrod or a tie rod: do not assert either."
+  },
+  "comb-bits": {
+   "group": "rear",
+   "name": "Small comb-like parts low near the tyre",
+   "bbox": [
+    1495,
+    782,
+    1509,
+    790
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1495,
+      783
+     ],
+     [
+      1498,
+      790
+     ]
+    ],
+    [
+     [
+      1504,
+      782
+     ],
+     [
+      1509,
+      790
+     ]
+    ]
+   ],
+   "note": "Small. Desktop only."
+  },
+  "lower-rail-top": {
+   "group": "rear",
+   "name": "Lower side rail, lit upper surface",
+   "bbox": [
+    1500,
+    771,
+    1570,
+    790
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1500,
+      790
+     ],
+     [
+      1516,
+      787
+     ],
+     [
+      1539,
+      780
+     ],
+     [
+      1570,
+      771
+     ]
+    ]
+   ],
+   "note": "Three lit segments with gaps. Current rear-rail-low runs about here."
+  },
+  "lower-rail-under": {
+   "group": "rear",
+   "name": "Lower side rail, underside against asphalt",
+   "bbox": [
+    1516,
+    776,
+    1575,
+    796
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1516,
+      796
+     ],
+     [
+      1540,
+      788
+     ],
+     [
+      1561,
+      781
+     ],
+     [
+      1575,
+      776
+     ]
+    ]
+   ],
+   "note": "Hard black to asphalt edge. Not in the current drawing."
+  },
+  "front-glint-long": {
+   "group": "front-susp",
+   "name": "Long bright glint ahead of the front tyre",
+   "bbox": [
+    1323,
+    781,
+    1358,
+    786
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1323,
+      781
+     ],
+     [
+      1340,
+      783
+     ],
+     [
+      1358,
+      786
+     ]
+    ]
+   ],
+   "note": "2-3 px wide, 36 px long, the largest in this area. A lit tube edge, but nothing connects it. Do not extend it to the wheel or the body."
+  },
+  "front-glint-curved": {
+   "group": "front-susp",
+   "name": "Curved glint",
+   "bbox": [
+    1321,
+    810,
+    1336,
+    816
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1321,
+      810
+     ],
+     [
+      1328,
+      814
+     ],
+     [
+      1336,
+      816
+     ]
+    ]
+   ],
+   "note": "Same."
+  },
+  "front-glint-small": {
+   "group": "front-susp",
+   "name": "Small glints",
+   "bbox": [
+    1284,
+    786,
+    1318,
+    826
+   ],
+   "confidence": "clear",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "Isolated 5-20 px specks. Not a tube path."
+  },
+  "front-cluster": {
+   "group": "front-susp",
+   "name": "Lit cluster against the tyre",
+   "bbox": [
+    1335,
+    768,
+    1360,
+    820
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "mass",
+   "guides": [],
+   "note": "Small vertical bits; unresolved."
+  },
+  "front-wishbones": {
+   "group": "front-susp",
+   "name": "Front wishbones as continuous tubes",
+   "bbox": [
+    1250,
+    780,
+    1360,
+    870
+   ],
+   "confidence": "not-seen",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "Confirmed: only disconnected glints in near-zero black. Luminance between them is 0-2 of 255. No inboard or outboard ends visible. Do not draw them. tools/hero-drawing/README.md is right."
+  },
+  "front-parallel-lines": {
+   "group": "front-susp",
+   "name": "Two parallel dark lines on lit asphalt",
+   "bbox": [
+    1304,
+    852,
+    1334,
+    868
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "valley",
+   "guides": [
+    [
+     [
+      1304,
+      852
+     ],
+     [
+      1316,
+      860
+     ],
+     [
+      1328,
+      868
+     ]
+    ],
+    [
+     [
+      1309,
+      852
+     ],
+     [
+      1322,
+      860
+     ],
+     [
+      1334,
+      867
+     ]
+    ]
+   ],
+   "note": "Sharp, on lit asphalt, same direction as the rear shadow streaks. May be tube silhouettes or cast shadows. Draw as shadow marks, not suspension."
+  },
+  "front-lens-lit": {
+   "group": "front-susp",
+   "name": "Lit lens-shaped patch",
+   "bbox": [
+    1329,
+    848,
+    1341,
+    858
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1329,
+      848
+     ],
+     [
+      1341,
+      858
+     ]
+    ]
+   ],
+   "note": "Asphalt or a lit part; unclear."
+  },
+  "fw-silhouette": {
+   "group": "front-wheel",
+   "name": "Front tyre, outer silhouette",
+   "bbox": [
+    1351,
+    753,
+    1498,
+    921
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1448,
+      921
+     ],
+     [
+      1468,
+      899
+     ],
+     [
+      1489,
+      865
+     ],
+     [
+      1497,
+      846
+     ],
+     [
+      1498,
+      826
+     ],
+     [
+      1493,
+      797
+     ],
+     [
+      1473,
+      775
+     ],
+     [
+      1438,
+      756
+     ],
+     [
+      1408,
+      753
+     ],
+     [
+      1380,
+      760
+     ],
+     [
+      1355,
+      775
+     ],
+     [
+      1351,
+      804
+     ],
+     [
+      1354,
+      845
+     ]
+    ]
+   ],
+   "note": "Right and top are clear. On the left, the last 30 px of the current stroke (below about y 830) has max luminance 0-2 within 8 px on either side (dark_regions.json): no edge is there, so that end is guesswork and should be cut back. The plate's lower-left edge is the same line."
+  },
+  "fw-tread-sidewall": {
+   "group": "front-wheel",
+   "name": "Tread to sidewall boundary",
+   "bbox": [
+    1398,
+    771,
+    1482,
+    860
+   ],
+   "confidence": "faint",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1398,
+      860
+     ],
+     [
+      1400,
+      830
+     ],
+     [
+      1412,
+      800
+     ],
+     [
+      1430,
+      781
+     ],
+     [
+      1452,
+      771
+     ],
+     [
+      1470,
+      775
+     ],
+     [
+      1482,
+      787
+     ]
+    ]
+   ],
+   "note": "Visible as a tone change. Below y 860 the left side is in black."
+  },
+  "fw-rib-1": {
+   "group": "front-wheel",
+   "name": "Moulded rib on the sidewall, outer",
+   "bbox": [
+    1412,
+    777,
+    1488,
+    803
+   ],
+   "confidence": "faint",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1412,
+      803
+     ],
+     [
+      1426,
+      787
+     ],
+     [
+      1452,
+      777
+     ],
+     [
+      1476,
+      785
+     ],
+     [
+      1488,
+      799
+     ]
+    ]
+   ],
+   "note": "Soft highlight, upper half only."
+  },
+  "fw-rib-2": {
+   "group": "front-wheel",
+   "name": "Moulded rib on the sidewall, inner",
+   "bbox": [
+    1426,
+    784,
+    1484,
+    799
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1426,
+      799
+     ],
+     [
+      1448,
+      784
+     ],
+     [
+      1468,
+      785
+     ],
+     [
+      1484,
+      797
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "fw-rim-lip": {
+   "group": "front-wheel",
+   "name": "Rim outer lip",
+   "bbox": [
+    1411,
+    799,
+    1488,
+    895
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "ellipse",
+   "guides": [
+    [
+     [
+      1411,
+      847
+     ],
+     [
+      1420,
+      816
+     ],
+     [
+      1436,
+      803
+     ],
+     [
+      1449,
+      799
+     ],
+     [
+      1470,
+      806
+     ],
+     [
+      1483,
+      824
+     ],
+     [
+      1488,
+      847
+     ],
+     [
+      1483,
+      871
+     ],
+     [
+      1467,
+      889
+     ],
+     [
+      1449,
+      895
+     ],
+     [
+      1428,
+      889
+     ],
+     [
+      1416,
+      870
+     ],
+     [
+      1411,
+      847
+     ]
+    ]
+   ],
+   "note": "Upper left is bright and clear. Right side, x 1470-1488 and y 810-870, is deep black: the ellipse there is a fit, not a seen edge. Say so in provenance."
+  },
+  "fw-rim-inner-arc-a": {
+   "group": "front-wheel",
+   "name": "Inner rim arc, lower right",
+   "bbox": [
+    1451,
+    872,
+    1473,
+    890
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1451,
+      890
+     ],
+     [
+      1461,
+      886
+     ],
+     [
+      1473,
+      872
+     ]
+    ]
+   ],
+   "note": "Bright. Not in the current drawing."
+  },
+  "fw-rim-inner-arc-b": {
+   "group": "front-wheel",
+   "name": "Inner rim arc, second",
+   "bbox": [
+    1443,
+    871,
+    1471,
+    884
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1443,
+      883
+     ],
+     [
+      1456,
+      884
+     ],
+     [
+      1471,
+      871
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "fw-rim-upper-arc": {
+   "group": "front-wheel",
+   "name": "Rim inner arc, upper left",
+   "bbox": [
+    1433,
+    803,
+    1461,
+    826
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1433,
+      826
+     ],
+     [
+      1439,
+      815
+     ],
+     [
+      1447,
+      809
+     ],
+     [
+      1461,
+      803
+     ]
+    ]
+   ],
+   "note": "Bright curved highlight just inside the lip."
+  },
+  "fw-spoke-right": {
+   "group": "front-wheel",
+   "name": "Lit wheel arm, right of centre",
+   "bbox": [
+    1448,
+    813,
+    1462,
+    862
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1453,
+      813
+     ],
+     [
+      1458,
+      830
+     ],
+     [
+      1462,
+      850
+     ],
+     [
+      1448,
+      862
+     ]
+    ]
+   ],
+   "note": "One clear lit arm. The wheel's spoke count is not countable: at most 3-4 arms are visible, and they mix with parts behind. Do not draw a symmetric spoke pattern."
+  },
+  "fw-lit-mass": {
+   "group": "front-wheel",
+   "name": "Bright irregular mass inside the wheel",
+   "bbox": [
+    1420,
+    848,
+    1448,
+    880
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "mass",
+   "guides": [],
+   "note": "Sunlit parts seen through the wheel. Could be hub, upright or brake parts. The owner has a brake project, so do NOT outline it as a rotor. One loose contour at most."
+  },
+  "fw-hub-hole": {
+   "group": "front-wheel",
+   "name": "Dark hole left of centre",
+   "bbox": [
+    1429,
+    832,
+    1438,
+    846
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "mass",
+   "guides": [],
+   "note": "Black gap. Not a wheel centre: the wheel centre mark at (1449, 847) is a fit."
+  },
+  "fw-bead-lower": {
+   "group": "front-wheel",
+   "name": "Lit arc below the rim, on the lower sidewall",
+   "bbox": [
+    1412,
+    880,
+    1470,
+    905
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1412,
+      880
+     ],
+     [
+      1425,
+      898
+     ],
+     [
+      1447,
+      905
+     ],
+     [
+      1470,
+      895
+     ]
+    ]
+   ],
+   "note": "Soft arc visible with a mild lift only. Flange or bead; do not name it."
+  },
+  "fw-hoosier-upper": {
+   "group": "front-wheel",
+   "name": "'Hoosier' lettering, upper-left arc",
+   "bbox": [
+    1403,
+    797,
+    1445,
+    880
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "glyph",
+   "guides": [],
+   "note": "White moulded or painted letters. H, o, o, s, i, e, r readable in order, H about 18 px high, others 8-12 px."
+  },
+  "fw-hoosier-lower": {
+   "group": "front-wheel",
+   "name": "'Hoosier' lettering, lower-right arc",
+   "bbox": [
+    1460,
+    826,
+    1500,
+    902
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "glyph",
+   "guides": [],
+   "note": "Letters partly merge with bright asphalt at the right; last letters thin. Harder to threshold than the upper arc."
+  },
+  "fw-grain": {
+   "group": "front-wheel",
+   "name": "Speckle on the front tread",
+   "bbox": [
+    1370,
+    760,
+    1450,
+    800
+   ],
+   "confidence": "clear",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "Rubber grain. A person might add a few dots; low value."
+  },
+  "fw-contact": {
+   "group": "front-wheel",
+   "name": "Front tyre contact patch",
+   "bbox": [
+    1385,
+    915,
+    1445,
+    930
+   ],
+   "confidence": "not-seen",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "Black tyre on black shadow. Luminance 0. Only the shadow's outer edge exists."
+  },
+  "uprights": {
+   "group": "front-wheel",
+   "name": "Uprights, hubs as parts",
+   "bbox": null,
+   "confidence": "not-seen",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "No upright or hub can be told apart on either wheel. Do not draw them."
+  },
+  "rw-silhouette": {
+   "group": "rear-wheel",
+   "name": "Rear tyre, outer silhouette",
+   "bbox": [
+    1641,
+    677,
+    1759,
+    793
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1729,
+      793
+     ],
+     [
+      1743,
+      767
+     ],
+     [
+      1756,
+      739
+     ],
+     [
+      1759,
+      718
+     ],
+     [
+      1754,
+      700
+     ],
+     [
+      1738,
+      686
+     ],
+     [
+      1710,
+      678
+     ],
+     [
+      1690,
+      677
+     ],
+     [
+      1670,
+      682
+     ],
+     [
+      1655,
+      696
+     ],
+     [
+      1645,
+      714
+     ],
+     [
+      1641,
+      744
+     ],
+     [
+      1643,
+      764
+     ]
+    ]
+   ],
+   "note": "All clear, except below y 765 on the left, where it joins its shadow."
+  },
+  "rw-tread-sidewall": {
+   "group": "rear-wheel",
+   "name": "Tread to sidewall boundary, top",
+   "bbox": [
+    1705,
+    688,
+    1751,
+    735
+   ],
+   "confidence": "faint",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1705,
+      735
+     ],
+     [
+      1706,
+      712
+     ],
+     [
+      1718,
+      695
+     ],
+     [
+      1737,
+      688
+     ],
+     [
+      1751,
+      694
+     ]
+    ]
+   ],
+   "note": "Soft tone change, with a few streaks at (1700-1730, 688-700). Not in the current drawing."
+  },
+  "rw-sidewall-lower": {
+   "group": "rear-wheel",
+   "name": "Sidewall boundary, lower left",
+   "bbox": [
+    1706,
+    750,
+    1724,
+    797
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1706,
+      750
+     ],
+     [
+      1706,
+      772
+     ],
+     [
+      1713,
+      790
+     ],
+     [
+      1724,
+      797
+     ]
+    ]
+   ],
+   "note": "Pale band against black, seen only in the gamma crop. The stroke would be a stretch at phone scale."
+  },
+  "rw-rim-upper-arc": {
+   "group": "rear-wheel",
+   "name": "Rim lip, upper",
+   "bbox": [
+    1723,
+    706,
+    1753,
+    723
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1723,
+      723
+     ],
+     [
+      1733,
+      711
+     ],
+     [
+      1747,
+      706
+     ],
+     [
+      1753,
+      707
+     ]
+    ]
+   ],
+   "note": "Bright."
+  },
+  "rw-rim-ellipse": {
+   "group": "rear-wheel",
+   "name": "Rim lip, full ellipse",
+   "bbox": [
+    1712,
+    705,
+    1752,
+    786
+   ],
+   "confidence": "faint",
+   "usable": "yes",
+   "method": "ellipse",
+   "guides": [
+    [
+     [
+      1722,
+      723
+     ],
+     [
+      1733,
+      710
+     ],
+     [
+      1746,
+      705
+     ],
+     [
+      1752,
+      715
+     ],
+     [
+      1750,
+      735
+     ],
+     [
+      1743,
+      760
+     ],
+     [
+      1733,
+      778
+     ],
+     [
+      1722,
+      786
+     ],
+     [
+      1714,
+      772
+     ],
+     [
+      1712,
+      750
+     ],
+     [
+      1716,
+      733
+     ],
+     [
+      1722,
+      723
+     ]
+    ]
+   ],
+   "note": "Upper and lower-left are seen, right side is in black and is a fit."
+  },
+  "rw-rim-inner-arc-a": {
+   "group": "rear-wheel",
+   "name": "Inner rim arc, lower",
+   "bbox": [
+    1718,
+    764,
+    1738,
+    778
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1718,
+      778
+     ],
+     [
+      1728,
+      775
+     ],
+     [
+      1738,
+      764
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "rw-rim-inner-arc-b": {
+   "group": "rear-wheel",
+   "name": "Inner rim arc, second",
+   "bbox": [
+    1720,
+    761,
+    1740,
+    775
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "ridge",
+   "guides": [
+    [
+     [
+      1720,
+      775
+     ],
+     [
+      1733,
+      768
+     ],
+     [
+      1740,
+      761
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "rw-glints": {
+   "group": "rear-wheel",
+   "name": "Glints inside the rear wheel",
+   "bbox": [
+    1716,
+    730,
+    1734,
+    782
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "mass",
+   "guides": [],
+   "note": "Small bright specks in loose arcs. Could be spokes or bolts. Not a pattern to complete."
+  },
+  "rw-hoosier-upper": {
+   "group": "rear-wheel",
+   "name": "'Hoosier' lettering, upper arc",
+   "bbox": [
+    1713,
+    695,
+    1752,
+    729
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "glyph",
+   "guides": [],
+   "note": "Readable. H at lower left is the largest."
+  },
+  "rw-hoosier-lower": {
+   "group": "rear-wheel",
+   "name": "'Hoosier' lettering, lower arc",
+   "bbox": [
+    1720,
+    752,
+    1753,
+    794
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "glyph",
+   "guides": [],
+   "note": "Letters small, merging at the edges."
+  },
+  "rw-grain": {
+   "group": "rear-wheel",
+   "name": "Worn grain patch on the tread",
+   "bbox": [
+    1652,
+    688,
+    1702,
+    735
+   ],
+   "confidence": "clear",
+   "usable": "partial",
+   "method": "mass",
+   "guides": [],
+   "note": "Mottled rubber, brighter than the rest. Real surface wear. A few stipple dots could suggest it; do not imply a tread pattern."
+  },
+  "rw-contact": {
+   "group": "rear-wheel",
+   "name": "Rear tyre contact patch",
+   "bbox": [
+    1670,
+    790,
+    1730,
+    810
+   ],
+   "confidence": "not-seen",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "Merged into the shadow."
+  },
+  "far-front-crown": {
+   "group": "rear-wheel",
+   "name": "Far-side front tyre crown",
+   "bbox": [
+    1124,
+    649,
+    1180,
+    667
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1124,
+      667
+     ],
+     [
+      1133,
+      658
+     ],
+     [
+      1144,
+      652
+     ],
+     [
+      1156,
+      649
+     ],
+     [
+      1168,
+      649
+     ],
+     [
+      1180,
+      653
+     ]
+    ]
+   ],
+   "note": "Dark on grey. Lower part is hidden by the nose."
+  },
+  "far-rear-tyre": {
+   "group": "rear-wheel",
+   "name": "Far-side rear tyre",
+   "bbox": null,
+   "confidence": "not-seen",
+   "usable": "no",
+   "method": "mass",
+   "guides": [],
+   "note": "No crown or sidewall can be identified in any crop, even with a lift. Its expected place is behind the dark box and frame clutter. Do not draw it."
+  },
+  "shadow-nose-lower": {
+   "group": "ground",
+   "name": "Body shadow, lower edge",
+   "bbox": [
+    915,
+    859,
+    1280,
+    918
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      915,
+      917
+     ],
+     [
+      965,
+      918
+     ],
+     [
+      1037,
+      915
+     ],
+     [
+      1107,
+      908
+     ],
+     [
+      1174,
+      895
+     ],
+     [
+      1239,
+      877
+     ],
+     [
+      1269,
+      862
+     ],
+     [
+      1280,
+      859
+     ]
+    ]
+   ],
+   "note": "Hard black to asphalt."
+  },
+  "shadow-nose-tip": {
+   "group": "ground",
+   "name": "Body shadow, tip",
+   "bbox": [
+    895,
+    891,
+    915,
+    917
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      915,
+      917
+     ],
+     [
+      903,
+      908
+     ],
+     [
+      895,
+      897
+     ],
+     [
+      897,
+      891
+     ]
+    ]
+   ],
+   "note": "Not in the current drawing. Soft-cornered."
+  },
+  "shadow-nose-upper": {
+   "group": "ground",
+   "name": "Body shadow, upper edge to the nose",
+   "bbox": [
+    897,
+    852,
+    955,
+    891
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      897,
+      891
+     ],
+     [
+      915,
+      878
+     ],
+     [
+      938,
+      860
+     ],
+     [
+      955,
+      852
+     ]
+    ]
+   ],
+   "note": "Not in the current drawing. Closes the shadow under the nose."
+  },
+  "shadow-asphalt-wedge": {
+   "group": "ground",
+   "name": "Asphalt wedge between body shadow and tyre shadow",
+   "bbox": [
+    1280,
+    859,
+    1340,
+    922
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1280,
+      859
+     ],
+     [
+      1305,
+      862
+     ],
+     [
+      1340,
+      873
+     ],
+     [
+      1312,
+      888
+     ],
+     [
+      1300,
+      902
+     ],
+     [
+      1322,
+      922
+     ]
+    ]
+   ],
+   "note": "Lit asphalt under the car. Not in the current drawing. Top run has broken patches."
+  },
+  "shadow-front": {
+   "group": "ground",
+   "name": "Front tyre shadow, outer edge",
+   "bbox": [
+    1322,
+    922,
+    1434,
+    937
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1322,
+      922
+     ],
+     [
+      1342,
+      933
+     ],
+     [
+      1365,
+      937
+     ],
+     [
+      1400,
+      934
+     ],
+     [
+      1434,
+      926
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "shadow-rear": {
+   "group": "ground",
+   "name": "Rear tyre shadow, outer edge",
+   "bbox": [
+    1610,
+    782,
+    1733,
+    809
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1610,
+      792
+     ],
+     [
+      1631,
+      801
+     ],
+     [
+      1664,
+      809
+     ],
+     [
+      1700,
+      806
+     ],
+     [
+      1721,
+      798
+     ],
+     [
+      1733,
+      782
+     ]
+    ]
+   ],
+   "note": ""
+  },
+  "shadow-rear-left": {
+   "group": "ground",
+   "name": "Rear tyre shadow, left end",
+   "bbox": [
+    1604,
+    770,
+    1640,
+    792
+   ],
+   "confidence": "clear",
+   "usable": "yes",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1610,
+      792
+     ],
+     [
+      1604,
+      785
+     ],
+     [
+      1610,
+      776
+     ],
+     [
+      1640,
+      770
+     ]
+    ]
+   ],
+   "note": "Not in the current drawing."
+  },
+  "shadow-rail": {
+   "group": "ground",
+   "name": "Thin shadow under the lower rail",
+   "bbox": [
+    1490,
+    796,
+    1516,
+    804
+   ],
+   "confidence": "faint",
+   "usable": "partial",
+   "method": "edge",
+   "guides": [
+    [
+     [
+      1490,
+      804
+     ],
+     [
+      1516,
+      796
+     ]
+    ]
+   ],
+   "note": "Hard to separate from the rail's own underside."
+  }
+ }
+}

@@ -17,3 +17,6 @@ Thumbs.db
 /tools/hdr/validation.json
 /tools/hdr/REPORT.md
 /tools/lod/polish-summary.md
+
+# The hero pen's default build output (engine/build.cjs); the shipped block lives in index.html.
+/tools/hero-pen/out/build/

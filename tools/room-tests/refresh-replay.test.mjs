@@ -14,6 +14,11 @@ const inline = (html, test) => {
   return found[0];
 };
 const guard = inline(index, (code) => code.includes('data-hero-pen') && code.includes('hero=draw'));
+// pen-20261110: the hero is drawn by the inline hero pen (the minified engine after script#hero-pen-data, built
+// from tools/hero-pen/engine/engine.js; tools/hero-tests/hero-pen.test.cjs pins the two to each other).
+const penInline = inline(index, (code) => code.includes('"hero-pen-data"'));
+const penSource = text('tools/hero-pen/engine/engine.js');
+const uncommented = (code) => code.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
 
 // A page with just enough of the DOM for the inline guard.
 function page({ nav = 'navigate', search = '', hash = '', visibility = 'visible', prerendering = false, reduce = false, forced = false, hold = '', masks = true } = {}) {
@@ -58,7 +63,8 @@ test('The hero guard arms on every plain load and every reload, with no session 
     assert.deepEqual(p.timers.map((t) => t.ms), [4000], 'the guard timer starts with the class');
   }
   assert.doesNotMatch(guard, /sessionStorage|localStorage|kw-hero-drawn/);
-  assert.doesNotMatch(text('hero-drawing-20261027.js'), /sessionStorage|kw-hero-drawn/, 'the engine has no session key either');
+  for (const engine of [penInline, uncommented(penSource)]) assert.doesNotMatch(engine, /sessionStorage|localStorage|kw-hero-drawn/, 'the engine has no session key either');
+  assert.doesNotMatch(index, /hero-drawing-20261027\.js|<svg[^>]*data-car=/, 'the old deferred hero script and its inline drawing are gone');
 });
 
 test('Back/Forward and deep links keep the photo; ?hero=draw replays them', () => {
@@ -94,7 +100,7 @@ test('A held view-transition arrival plays; a held deep link and a held Back/For
   assert.equal(page({ hold: 'parsed', nav: 'back_forward' }).armed(), false, 'a held Back keeps the photo');
   assert.equal(page({ hold: 'parsed', search: '?hero=photo' }).armed(), false, '?hero=photo still wins');
   assert.doesNotMatch(guard, /__vtBoot|\.hold/, 'the guard no longer reads the view-transition hold');
-  assert.doesNotMatch(text('hero-drawing-20261027.js').replace(/\/\*[\s\S]*?\*\//g, ''), /__vtBoot|\.hold\b/, 'nor does the engine (outside its comments)');
+  for (const engine of [penInline, uncommented(penSource)]) assert.doesNotMatch(engine, /__vtBoot|\.hold\b/, 'nor does the engine (outside its comments)');
 });
 
 test('A tab hidden or prerendered at parse waits, and arms on its first visible with fresh clocks', () => {
@@ -138,15 +144,46 @@ test('Intent before the engine has started drops the drawing; after, the engine 
 });
 
 test('The hero engine no longer reads a scroll as intent, and waits for a hidden tab', () => {
-  const engine = text('hero-drawing-20261027.js');
-  assert.doesNotMatch(engine, /on\(window, "scroll"/);
-  assert.doesNotMatch(engine, /scrollY > 4/);
-  for (const type of ['pointerdown', 'touchstart', 'wheel', 'keydown']) assert.match(engine, new RegExp(`on\\(window, "${type}", intent\\("${type}"\\)`));
-  assert.match(engine, /root\.getAttribute\("data-hero-pen"\) === "wait"/);
-  assert.match(engine, /state: "wait-visible"/);
-  assert.match(engine, /heroDrawing\(true\)/, 'the sequence runs from the first visible');
-  assert.match(engine, /performance\.now\(\) - armedAt/, 'a late arm counts its clocks from the arm');
-  assert.match(engine, /root\.removeAttribute\("data-hero-pen"\)/, 'the end state leaves nothing on <html>');
+  // pen-20261110: the inline hero pen (readable source tools/hero-pen/engine/engine.js)
+  const engine = uncommented(penSource);
+  for (const code of [engine, penInline]) {
+    assert.doesNotMatch(code, /"scroll"/, 'no scroll listener: a restored position fires one without any visitor');
+    assert.doesNotMatch(code, /scrollY/);
+  }
+  assert.match(engine, /for \(const e of \["pointerdown", "touchstart", "wheel", "keydown"\]\) on\(W, e, \(\) => settle\(SETTLE, e\), \{ capture: true, passive: true \}\);/);
+  assert.match(engine, /R\.getAttribute\("data-hero-pen"\) !== "wait"/, 'a tab waiting for its first visible is not torn down');
+  assert.match(engine, /H\.state = "wait-visible";/);
+  assert.match(engine, /if \(armed\(\) && !Dc\.hidden && !Dc\.prerendering\) \{ go = \(\) => 0; begin\(\); \}/, 'the sequence runs from the first visible');
+  assert.match(engine, /const begin = \(\) => \{[\s\S]*?H\.arm = R\.getAttribute\("data-hero-pen"\) \|\| "";[\s\S]*?H\.armedAt = H\.arm === "late" \? M\.round\(P\.now\(\)\) : 0;[\s\S]*?ceilTimer = setTimeout\(/,
+    'a late arm counts its clocks (the ceiling) from the arm');
+  assert.match(engine, /R\.classList\.remove\("hero-draw", "hero-draw-js", "hero-draw-own", "hero-draw-inked"\);\s*R\.removeAttribute\("data-hero-pen"\);/, 'the end state leaves nothing on <html>');
+});
+
+// fix-r1 (agent decision): the inline engine still waits for the parser-blocking scripts before it, so on a slow load
+// it can start while the CSS failsafe reveals the photo. Past 2.4 s on the failsafe's clock it leaves the reveal to
+// the CSS (as hero-drawing-20261027.js did) instead of taking the veil over and covering a shown photo with white.
+test('A hero engine that starts late leaves the reveal to the CSS failsafe', () => {
+  const engine = uncommented(penSource);
+  const css = text('white-home-20261011.css');
+  assert.match(css, /animation: hero-draw-failsafe 500ms cubic-bezier\(\.65, 0, \.35, 1\) 2\.8s both, hero-draw-backstop 1ms linear 3\.3s forwards;/,
+    'the failsafe the engine reads: a 500 ms fade from 2.8 s, hidden from 3.3 s');
+  assert.match(css, /html\.hero-draw\.hero-draw-js \.white-home \.hero-draw-veil \{ animation: hero-draw-backstop 1ms linear 12s forwards; \}/,
+    'hero-draw-js replaces the failsafe: why a late engine must not add it');
+  assert.match(engine, /const LATE = 2400, F_DELAY = 2800, F_END = 3500, F_FAST = 3, F_RUSH = 187;/);
+  const begin = engine.slice(engine.indexOf('const begin = () => {'));
+  assert.match(begin, /^const begin = \(\) => \{\s*H\.state = "pending";[\s\S]*?const fs = veil\.getAnimations && veil\.getAnimations\(\)\.find\(\(a\) => a\.animationName === "hero-draw-failsafe"\), el = fs \? \+fs\.currentTime : P\.now\(\) - H\.armedAt;\s*if \(el > LATE\) \{/);
+  const late = begin.slice(begin.indexOf('if (el > LATE) {'), begin.indexOf('R.classList.add("hero-draw-js", "hero-draw-own");'));
+  assert.ok(late.length > 0 && begin.indexOf('if (el > LATE) {') < begin.indexOf('R.classList.add("hero-draw-js", "hero-draw-own");'),
+    'the failsafe is read before the engine takes the veil over');
+  assert.match(late, /H\.state = "late";\s*H\.failsafeAt = M\.round\(el\);\s*penUp\(\);/, 'no ink will come: the cards may go');
+  assert.match(late, /if \(fs\.currentTime < F_DELAY\) fs\.currentTime = F_DELAY;\s*fs\.playbackRate = F_FAST;/, 'intent plays the rest of the fade at 3x');
+  assert.match(late, /ceilTimer = setTimeout\(finish, F_RUSH\);/);
+  assert.match(late, /ceilTimer = setTimeout\(finish, M\.max\(0, F_END - el\)\);\s*return;\s*\}\s*$/, 'then it only cleans up, after the fade');
+  assert.doesNotMatch(late, /hero-draw-js|hero-draw-own|setMask|wrap\.hidden/, 'the late path never touches the veil, the lines or the reveal classes');
+  // the inline copy carries the same path
+  assert.match(penInline, /\.getAnimations\(\)\.find\((\w+)=>\1\.animationName==="hero-draw-failsafe"\)/);
+  assert.match(penInline, /if\((\w+)>2400\)\{H\.state="late";H\.failsafeAt=M\.round\(\1\);/);
+  assert.match(penInline, /\.playbackRate=3/);
 });
 
 // ---- scroll restoration ----
@@ -375,6 +412,24 @@ test('The cards draw on every load and reload: no session list, Back/Forward sta
   assert.match(cards, /forced-colors: active[\s\S]*?QA\.reason = "forced-colors"/, 'forced colors stay off');
   assert.match(cards, /reduce\.matches\) \{ QA\.reason = "reduced-motion"/, 'reduced motion stays off');
   assert.match(cards, /const heroParked = \(\) => root\.getAttribute\("data-hero-pen"\) === "wait";/, 'a hero waiting for its tab counts as running');
+});
+
+// pen-20261110 (agent decision): the cards wait for the hero pen only while the visitor can still see it ink.
+test('The cards wait for the hero pen only while it inks and is on screen', () => {
+  const cards = text('card-drawing-20261027.js');
+  assert.match(cards, /const HERO_CEIL = 7500;/);
+  assert.match(cards, /const HERO_FINAL = 12500;/);
+  assert.match(cards, /const heroInked = \(\) => root\.classList\.contains\("hero-draw-inked"\);/);
+  assert.match(cards, /let heroWaiting = \(root\.classList\.contains\("hero-draw"\) && !heroInked\(\)\) \|\| heroParked\(\);/);
+  assert.match(cards, /if \(!parked && heroInked\(\)\) heroDone\("hero-inked"\);\s*else if \(!parked && !root\.classList\.contains\("hero-draw"\)\) heroDone\("hero"\);/);
+  assert.match(cards, /heroDone\("hero-offscreen"\)/);
+  assert.match(cards, /document\.querySelector\("\.white-home \.cinematic-hero \.hero-media"\)/);
+  // the engine sets the class once the pen is up for good: at its last ink, and when it settles
+  const engine = uncommented(penSource);
+  assert.match(engine, /const penUp = \(\) => \{ if \(!inked\) \{ inked = 1; H\.inkedAt = M\.round\(P\.now\(\)\); R\.classList\.add\("hero-draw-inked"\); \} \};/);
+  assert.match(engine, /if \(cur >= lim\) penUp\(\);/);
+  assert.match(engine, /if \(Dc\.hidden \|\| tStart < 0\) return finish\(\);\s*penUp\(\);/);
+  assert.match(penInline, /"hero-draw-inked"/);
 });
 
 // ---- detail pages ----
