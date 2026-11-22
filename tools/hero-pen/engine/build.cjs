@@ -36,7 +36,7 @@ const ENGINE_PROPS = { start: 'b', dur: 'd', end: 'e', upto: 'o', cap: 'c', sub:
 function loadCore(src = ENGINE_SRC) {
   const a = src.indexOf('//@core-start'), b = src.indexOf('//@core-end');
   if (a < 0 || b < a) throw Error('engine.js: core markers missing');
-  return new Function(src.slice(a, b) + '\nreturn { decode: decodeLine, posAt, ptAt, pick, ang };')();
+  return new Function(src.slice(a, b) + '\nreturn { decode: decodeLine, posAt, ptAt, pick, ang, dens, lop, ss };')();
 }
 const core = loadCore();
 
@@ -102,6 +102,10 @@ const DENY_FEATURES = ['side-names-front', 'side-names-rear', 'top-names', 'top-
   'green-patch', 'fw-hoosier-upper', 'fw-hoosier-lower', 'rw-hoosier-upper', 'rw-hoosier-lower', 'front-glint-long', 'front-glint-curved', 'front-glint-small', 'front-cluster',
   'front-parallel-lines', 'front-wishbones', 'fw-spoke-right', 'lower-body-contour', 'column-mid', 'rail-top-left-half'];
 const PROV = new Set(['traced', 'fitted', 'derived', 'convention']);
+// drafting hero (2026-11-21): the convention tiers. The car-mask gate and the 40 src px short-piece gate exempt a stroke
+// BY ITS TIER (p pencil construction, k chain line, m drafting ink, r arrowhead), never by its id; conventions are
+// checked by conventionGates() instead. Lettering (tier l) is traced glyph art and keeps the car-mask gate.
+const CONV_TIERS = new Set(['p', 'k', 'm', 'r']);
 function pointInPoly(q, poly) {
   let c = false;
   for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
@@ -116,17 +120,18 @@ function midpoint(p) {
   for (let i = 1; i < p.length; i++) { const d = Math.hypot(p[i][0] - p[i - 1][0], p[i][1] - p[i - 1][1]); if (s + d >= L / 2) { const u = d ? (L / 2 - s) / d : 0; return [p[i - 1][0] + (p[i][0] - p[i - 1][0]) * u, p[i - 1][1] + (p[i][1] - p[i - 1][1]) * u]; } s += d; }
   return p[p.length - 1];
 }
-function gates(N) {
+// det (dense3 final solver): { ids, minLen } gives the detail strokes their own short-piece floor (pens.cjs DK.MIN_LEN)
+function gates(N, minLen = 40, det = null) {
   const v = [], notRun = [];
   const lines = N.strokes.filter((s) => !ORDERED_KINDS.has(s.kind) && s.tier !== 'h');
   const linePts = lines.map((s) => [s, F.resample(s.pts, 1)]);
   for (const s of N.strokes) {
-    const L = F.plen(s.pts), toks = s.id.toLowerCase().split(/[^a-z0-9]+/);
-    if (!ORDERED_KINDS.has(s.kind) && s.tier !== 'h' && L < 39.5) v.push({ id: s.id, gate: 'short', msg: `${L.toFixed(1)} src px < 40` });
+    const L = F.plen(s.pts), toks = s.id.toLowerCase().split(/[^a-z0-9]+/), ml = det && det.ids.has(s.id) ? det.minLen : minLen;
+    if (!ORDERED_KINDS.has(s.kind) && s.tier !== 'h' && !CONV_TIERS.has(s.tier) && L < ml - 0.5) v.push({ id: s.id, gate: 'short', msg: `${L.toFixed(1)} src px < ${ml}` });
     if (DENY_IDS.has(s.id) || toks.some((t) => DENY_WORDS.includes(t))) v.push({ id: s.id, gate: 'deny-id', msg: 'id asserts a function or is dropped' });
     if (s.members && s.members.some((m) => DENY_FEATURES.includes(String(m).replace(/:.*$/, '')))) v.push({ id: s.id, gate: 'deny-feature', msg: 'member on the deny-list' });
     if (!PROV.has(s.prov)) v.push({ id: s.id, gate: 'provenance', msg: `provenance "${s.prov}" not one of traced/fitted/derived/convention` });
-    if (N.carMask) {
+    if (N.carMask && !CONV_TIERS.has(s.tier)) {
       const m = midpoint(s.pts);
       if (!N.carMask.some((poly) => pointInPoly(m, poly))) {
         const d = Math.min(...N.carMask.map((poly) => F.distToPolyline(m, poly.concat([poly[0]]))));
@@ -726,27 +731,586 @@ function pageInvariants(html, block) {
   return f;
 }
 
+// =====================================================================================================================
+// THE DRAFTING HERO, merge build (2026-11-21), the final line (2026-11-22). The car art is the final line's art
+// (out/final/strokes.json, the default set; its build options in out/final/build-options.json), every car stroke of a
+// class drawn at that class, plus the drafting conventions (out/final/conventions.json), pens A-C and the detail lanes
+// X Y Z, the develop and exits on the V
+// line. Every timing, lane and density limit fails the build (engine/pens.cjs). The owner's words (2026-11-21): draw the
+// denser set; every line must still fall on a real edge of the photo. All numbers here are agent decisions.
+// =====================================================================================================================
+const PN = require('./pens.cjs');
+const LETTER_WORDS = ['olin', 'college', 'of', 'engineering'];
+// The short-piece gate: v3's 40 src px floor drops to 20 src px for the denser tracing round's set (every line stroke of
+// that round was >= 20 src px; panel-top 21.4, post-lower 24.1, tie-low 30.3, rod-thin 30.4, diag-tube-far 34.9). Detail
+// strokes have their own floor (pens.cjs DK.MIN_LEN, 13 src px). An agent floor.
+const MIN_LEN = 20;
+// Size pins (agent decisions). The engine pin 6656 B br3 stays. The data-block pin (5800 B br3 since the merge build) is
+// lifted deliberately by the dense3 final solver: the clean art's measured data block plus a margin for about 15 more
+// strokes (README of dense3/final/solver).
+// solver round 2 (agent, 2026-11-22): 7264 -> 7345 B br3 = the final art's measured data block with the round-2 schedule
+// (runs/r2-final: 6945 B br3) + 400 B (about 16 strokes at 25 B br3). Before: 7264 = 6863 B (clean art) + 401 B.
+const PINS = { engineBr3: 6656, engineCeiling: 7000, dataBr3: 7345 };
+// Gate lifts: lifted for exactly this id and this gate, only when the art itself records the relaxation (its 'deny_lift');
+// every lift is written to build.json. R1's deny entry column-mid is an agent convention, not an owner rule.
+const GATE_LIFTS = {
+  'column-seam': { gate: 'deny-feature', needs: /column-mid/ },
+  // dense3 final solver: the three decal marks of dense passes 1 and 2, lifted exactly as dense2/art/work/build2.cjs and
+  // every dense3 build lifted them in memory (each art stroke records its deny_lift; the lift is written to build.json)
+  'decal-tesla-t': { gate: 'deny-feature', needs: /top-t-logo/ },
+  'decal-bose': { gate: 'deny-feature', needs: /top-stripe-logo/ },
+  'decal2-tesla-word': { gate: 'deny-feature', needs: /top-tesla-word/ },
+};
+// integration onto 5b20926f (2026-11-22, agent): the only shipped set is the final line's art. The earlier rounds' sets
+// (round 0, fix round 1, RICH) do not ship. A set folder may hold build-options.json: the options its build needs (groups,
+// the detail rule's fix1 ids, lanes, reorder, plan scale, car-with-lettering scope, class order, the T/P cabin block and
+// its pace, the data pin); buildDrafting applies them when the set is built from its own file, and explicit options win.
+const SETS = { final: 'out/final/strokes.json' };
+const DEFAULT_SET = 'final';
+function setOptions(set) {
+  const rel = SETS[set];
+  if (!rel) return {};
+  const dir = path.join(PEN_DIR, path.dirname(rel)), f = path.join(dir, 'build-options.json');
+  if (!fs.existsSync(f)) return {};
+  const j = JSON.parse(fs.readFileSync(f, 'utf8')), o = {};
+  if (j.conventions) o.conv = path.join(dir, j.conventions);
+  if (j.groups) o.groups = path.join(dir, j.groups);
+  for (const k of ['fix1Ids', 'ac', 'detailLanes', 'reorder', 'planScale', 'cwlScope', 'classOrder', 'cabinEarly', 'cabinPace', 'dataPin']) if (j[k] !== undefined) o[k] = j[k];
+  return o;
+}
+// fix round 1 (truth-1): the rim arcs and the compass ellipses keep off the Hoosier sidewall letters (conventions.json
+// tyreLetters: whole letter components; letterPixels also takes the rim's own highlights). A rim arc (car ink) has at
+// most RIM_LETTER_MAX samples (1 src px) within 2 src px of a letter. A compass ellipse (pencil lay-in, a full lap of the
+// rim fit) may graze letter ends where the rim fit runs in flat black next to them, but not run along them: at most
+// COMPASS_LETTER_SHARE of its samples and COMPASS_LETTER_RUN in a row within 2 src px (round 0's compass-front: 36 % and
+// 10 in a row, fails; compass-rear: 10 %, 6 in a row, recorded). Agent limits.
+const RIM_ARCS = ['fw-rim-seen', 'fw-rim-fit', 'rw-rim-seen', 'rw-rim-fit'], COMPASSES = ['compass-front', 'compass-rear'];
+const RIM_LETTER_MAX = 3, COMPASS_LETTER_SHARE = 0.12, COMPASS_LETTER_RUN = 8;
+function rimLetterGate(strokes, cdoc) {
+  const TL = cdoc.tyreLetters;
+  if (!TL) throw Error('conventions.json has no tyreLetters (run conventions.py of fix round 1)');
+  const px = TL.front.concat(TL.rear), v = [], rec = {};
+  for (const s of strokes) {
+    if (!RIM_ARCS.includes(s.id) && !COMPASSES.includes(s.id)) continue;
+    const P = F.resample(s.pts, 1);
+    let near = 0, min = Infinity, run = 0, cur = 0;
+    for (const p of P) { const d = distPts(p, px); min = Math.min(min, d); if (d <= 2) { near++; cur++; run = Math.max(run, cur); } else cur = 0; }
+    rec[s.id] = { samples: P.length, within2: near, longestRun: run, minDist: +min.toFixed(2) };
+    if (RIM_ARCS.includes(s.id) && near > RIM_LETTER_MAX) v.push({ id: s.id, gate: 'rim-letters', msg: `${near} of ${P.length} samples within 2 src px of the Hoosier letters` });
+    if (COMPASSES.includes(s.id) && (near / P.length > COMPASS_LETTER_SHARE || run > COMPASS_LETTER_RUN)) v.push({ id: s.id, gate: 'compass-letters', msg: `${near} of ${P.length} samples (${run} in a row) within 2 src px of the Hoosier letters` });
+  }
+  return { violations: v, records: rec };
+}
+
+function inPoly(q, poly) { return pointInPoly(q, poly); }
+function distPts(p, list) { let m = Infinity; for (const q of list) { const d = (p[0] - q[0]) ** 2 + (p[1] - q[1]) ** 2; if (d < m) m = d; } return Math.sqrt(m); }
+function ellipseInside(p, E, scale = 1) {
+  const [cx, cy, rx, ry, deg] = E, c = Math.cos((deg * Math.PI) / 180), s = Math.sin((deg * Math.PI) / 180);
+  const dx = p[0] - cx, dy = p[1] - cy, u = c * dx + s * dy, v = -s * dx + c * dy;
+  return (u / (rx * scale)) ** 2 + (v / (ry * scale)) ** 2 <= 1;
+}
+// the convention gates (DRAFTING_SPEC content 'Convention gates')
+function conventionGates(conv, cdoc, carMask, car) {
+  const v = [], rec = {};
+  const an = cdoc.anchors, LONG = an.long_line_end_x;
+  const segDist = (q, pts) => F.distToPolyline(q, pts);
+  const LP = cdoc.letterPixels || {};
+  const bodyPx = Object.entries(LP).filter(([k]) => !/hoosier/.test(k)).flatMap(([, o]) => o.px), tyrePx = Object.entries(LP).filter(([k]) => /hoosier/.test(k)).flatMap(([, o]) => o.px);
+  const carById = Object.fromEntries(car.map((s) => [s.id, s]));
+  for (const s of conv) {
+    const r = (rec[s.id] = {});
+    const c = s.convention || {};
+    if (!c.rule || !c.anchors) v.push({ id: s.id, gate: 'conv-record', msg: 'no rule or anchors' });
+    const P = F.resample(s.pts, 1);
+    r.maxX = +Math.max(...P.map((p) => p[0])).toFixed(1);
+    if (r.maxX > LONG + 0.5) v.push({ id: s.id, gate: 'conv-long', msg: `ends at x ${r.maxX} > ${LONG.toFixed(1)} (one rear-rim diameter past the rear wheel)` });
+    // lettering and names: nothing within 6 src px of the body's lettering, names and marks (the traced glyphs are car
+    // art, not conventions). The Hoosier lettering runs round both tyre sidewalls, which every wheel lay-in mark must
+    // cross: there drafting ink (m, r), which stays until density 0.98, may cross but never run along it (at most 3
+    // samples within 2 src px); pencil lay-in (p, k), erased by density 0.31, is exempt by tier (its proximity recorded). This refines the spec's literal 6 src px for the tyre lettering; recorded per stroke.
+    let near = Infinity, nearT = Infinity, alongT = 0;
+    for (const p of P) {
+      if (p[0] > 990 && p[0] < 1400 && p[1] > 620 && p[1] < 840) near = Math.min(near, distPts(p, bodyPx));
+      if (p[0] > 1390 && p[0] < 1770 && p[1] > 680 && p[1] < 910) { const d = distPts(p, tyrePx); nearT = Math.min(nearT, d); if (d <= 2) alongT++; }
+    }
+    r.toBodyLettering = Number.isFinite(near) ? +near.toFixed(2) : null;
+    r.toTyreLettering = Number.isFinite(nearT) ? +nearT.toFixed(2) : null;
+    r.tyreLetteringWithin2 = alongT;
+    if (near < 6) v.push({ id: s.id, gate: 'conv-lettering', msg: `${near.toFixed(1)} src px from the photo's lettering or names` });
+    // pencil lay-in (p, k) is gone by density 0.31, before the photo's sidewall letters read: exempt by tier, recorded
+    if ('mr'.includes(s.tier) && alongT > 3) v.push({ id: s.id, gate: 'conv-tyre-lettering', msg: `${alongT} of ${P.length} samples within 2 src px of the Hoosier lettering` });
+    // inside the car mask: drafting ink (m, r) stays outside, except centre marks within the rims and extension lines
+    // crossing the tyres; pencil and chain lines (p, k) serve the car and are exempt by tier (fraction recorded)
+    let inside = 0, allowed = 0;
+    for (const p of P) {
+      const inMask = carMask && carMask.some((poly) => inPoly(p, poly)) && Math.min(...carMask.map((poly) => segDist(p, poly.concat([poly[0]])))) > 3;
+      if (!inMask) continue;
+      inside++;
+      const inRim = ellipseInside(p, an.front_ellipse, 1.05) || ellipseInside(p, an.rear_ellipse, 1.05);
+      const inTyre = ['front-tyre', 'rear-tyre'].some((t) => { const q = carById[t].pts; const xs = q.map((z) => z[0]), ys = q.map((z) => z[1]); return p[0] >= Math.min(...xs) && p[0] <= Math.max(...xs) && p[1] >= Math.min(...ys) && p[1] <= Math.max(...ys); });
+      // the datum and the ground symbol lie on or under the ground line, which the car mask's shadow region covers
+      const onGround = (s.kind === 'datum' || s.kind === 'ground-tick') && p[1] >= an.datum.slope * p[0] + an.datum.intercept - 1.5;
+      if ((s.kind === 'centre-mark' && inRim) || (s.kind === 'extension' && inTyre) || onGround) allowed++;
+    }
+    r.insideCarMask = +(inside / P.length).toFixed(3);
+    if ('mr'.includes(s.tier) && inside - allowed > 0) v.push({ id: s.id, gate: 'conv-car-mask', msg: `${inside - allowed} of ${P.length} samples inside the car mask` });
+    // per kind
+    const ends = [s.pts[0], s.pts[s.pts.length - 1]];
+    if (s.kind === 'datum') {
+      r.contacts = [an.front_contact, an.rear_contact].map((q) => +segDist(q, P).toFixed(3));
+      if (r.contacts.some((d) => d > 1.5)) v.push({ id: s.id, gate: 'conv-datum', msg: `contacts ${r.contacts} src px from the datum (> 1.5)` });
+    }
+    if (s.kind === 'centre-mark' || s.kind === 'chain') {
+      // solver round 2 (agent, 2026-11-22; ported from the dtrial's in-memory conv-centre patch, dense3/final/art/scripts/
+      // pbuild.cjs patch 3): a convention that records anchors.lineThrough (an outer piece of a centre line split across the
+      // wheel centre) is tested against the LINE through the piece's two ends (<= 0.5 src px), not its polyline; every other
+      // centre mark and chain line is tested as before (stock sets build byte-identically)
+      const lt = c.anchors && c.anchors.lineThrough;
+      const cs = lt || (s.kind === 'chain' && s.id === 'centre-axle' ? [an.front_centre, an.rear_centre] : [c.anchors.centre]);
+      const lineDist = (q, a, b) => Math.abs((b[0] - a[0]) * (a[1] - q[1]) - (a[0] - q[0]) * (b[1] - a[1])) / Math.hypot(b[0] - a[0], b[1] - a[1]);
+      r.centres = cs.map((q) => +(lt ? lineDist(q, P[0], P[P.length - 1]) : segDist(q, P)).toFixed(3));
+      if (lt) r.lineThrough = true;
+      if (r.centres.some((d) => d > 0.5)) v.push({ id: s.id, gate: 'conv-centre', msg: `rim-fit centre ${r.centres} src px away (> 0.5)` });
+    }
+    if (s.kind === 'construction') {
+      const a = c.anchors, n = [-a.fit_dir[1], a.fit_dir[0]];
+      const off = (q) => Math.abs((q[0] - a.fit_centre[0]) * n[0] + (q[1] - a.fit_centre[1]) * n[1]);
+      r.endsOffFit = ends.map((q) => +off(q).toFixed(3));
+      const mem = carById[a.member];
+      r.memberPointsWithin2 = mem ? mem.pts.filter((q) => off(q) <= 2).length : 0;
+      if (r.endsOffFit.some((d) => d > 0.5)) v.push({ id: s.id, gate: 'conv-collinear', msg: `ends ${r.endsOffFit} src px off the member fit (> 0.5)` });
+      if (r.memberPointsWithin2 < 25) v.push({ id: s.id, gate: 'conv-member', msg: `only ${r.memberPointsWithin2} points of ${a.member} within 2 src px of the fit` });
+    }
+    if (s.kind === 'compass') {
+      const E = c.anchors.ellipse, [cx, cy, rx, ry, deg] = E, k = Math.PI / 180;
+      let worst = 0;
+      for (const p of P) {
+        const cc = Math.cos(deg * k), sn = Math.sin(deg * k), dx = p[0] - cx, dy = p[1] - cy, u = cc * dx + sn * dy, w = -sn * dx + cc * dy;
+        worst = Math.max(worst, Math.abs(Math.hypot(u / rx, w / ry) - 1) * Math.min(rx, ry));
+      }
+      r.offEllipse = +worst.toFixed(3);
+      if (worst > 0.5) v.push({ id: s.id, gate: 'conv-compass', msg: `${worst.toFixed(2)} src px off the rim fit` });
+    }
+  }
+  return { violations: v, records: rec };
+}
+
+function buildDrafting(o = {}) {
+  o = { set: DEFAULT_SET, quiet: false, write: true, ...o };
+  // integration: the set's own build options (out/final/build-options.json); an option given (not undefined) wins
+  if (!o.in) o = { ...setOptions(o.set), ...Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined)) };
+  const IN = path.resolve(o.in || path.join(PEN_DIR, SETS[o.set] || SETS[DEFAULT_SET]));
+  // integration: the default conventions are the shipped set's (the earlier rounds' out/conventions.json does not ship)
+  const CONV = path.resolve(o.conv || path.join(PEN_DIR, 'out', 'final', 'conventions.json'));
+  const OUT = path.resolve(o.out || path.join(PEN_DIR, 'out', 'build-drafting'));
+  log = o.quiet ? () => {} : console.log;
+  const raw = JSON.parse(fs.readFileSync(IN, 'utf8')), cdoc = JSON.parse(fs.readFileSync(CONV, 'utf8'));
+  const rawById = Object.fromEntries(raw.strokes.map((s) => [s.id, s]));
+  // ---- the car art, ordered exactly as the R3 build orders it (input order, ending, near wheels, overlap joins)
+  const N = normalize(raw, IN);
+  const convN = normalize({ strokes: cdoc.strokes, car: N.car, ordered: true }, CONV).strokes;
+  convN.forEach((s, k) => { const r = cdoc.strokes[k]; s.block = r.block; s.serves = r.serves || null; s.cut = r.cut || null; s.convention = r.convention; s.kind = r.kind; if (r.corners_pts) s.corners = r.corners_pts; });
+  // ---- gates: one run over car art and conventions together; the car-mask and short gates exempt conventions by tier
+  const all = { ...N, strokes: N.strokes.concat(convN) };
+  // ---- dense3 final solver: the detail layer. With o.groups or o.fix1 a detail stroke is a car line (phase 1-3, not a
+  // glyph) that carries clean metadata, or whose id the fix1 art (o.fix1) does not have (pass 2's extras). It runs on the
+  // detail lanes (pens.cjs) and has its own short-piece floor (o.minLenDetail, default pens.cjs DK.MIN_LEN).
+  // integration (2026-11-22): o.fix1Ids, the fix1 art's ids as a list, stands in for the file (the same rule)
+  const fix1Ids = o.fix1Ids ? new Set(o.fix1Ids) : o.fix1 ? new Set(JSON.parse(fs.readFileSync(path.resolve(o.fix1), 'utf8')).strokes.map((s) => s.id)) : null;
+  const GLYPH_BURST = new Set([...LETTER_WORDS, 'top-219', 'plate-219']);
+  const detIds = o.groups || o.fix1 || o.fix1Ids ? new Set(raw.strokes.filter((s) => s.phase >= 1 && s.phase <= 3 && !GLYPH_BURST.has(s.burst) && (s.clean || (fix1Ids && !fix1Ids.has(s.id)))).map((s) => s.id)) : null;
+  const minLenDetail = o.minLenDetail || PN.DK.MIN_LEN;
+  const G = gates(all, MIN_LEN, detIds ? { ids: detIds, minLen: minLenDetail } : null);
+  const lifted = [], hard = [], detailShort = [];
+  for (const x of G.violations) {
+    // dense3: o.recordDetailShort keeps a detail stroke under the detail floor as a recorded gate failure (build-final.cjs
+    // fails on it after the records are written) instead of throwing here
+    if (o.recordDetailShort && x.gate === 'short' && detIds && detIds.has(x.id)) { detailShort.push(x); continue; }
+    const L = GATE_LIFTS[x.id], r = rawById[x.id];
+    const recorded = r && L && L.gate === x.gate && L.needs.test(JSON.stringify(r.relaxes || []) + JSON.stringify(r.deny_lift || {}));
+    if (recorded) lifted.push({ ...x, reason: (r.relaxes || []).concat(r.deny_lift ? Object.values(r.deny_lift) : []).join(' | '), set: r.set || null });
+    else hard.push(x);
+  }
+  if (hard.length) { for (const x of hard.slice(0, 30)) log('  gate', x.gate, x.id, x.msg); throw Object.assign(Error('gates: ' + hard.length + ' violations'), { violations: hard }); }
+  // the 20 src px floor, recorded per stroke it admits (each would fail v3's 40)
+  const shortAdmitted = N.strokes.filter((s) => !ORDERED_KINDS.has(s.kind) && s.tier !== 'h' && !CONV_TIERS.has(s.tier) && F.plen(s.pts) < 39.5).map((s) => [s.id, +F.plen(s.pts).toFixed(1)]);
+  const CG = conventionGates(convN, cdoc, N.carMask, N.strokes);
+  const RG = rimLetterGate(N.strokes.concat(convN), cdoc);
+  if (RG.violations.length) { for (const x of RG.violations) log('  rim gate', x.id, x.msg); throw Object.assign(Error('rim letter gate: ' + RG.violations.length + ' violations'), { violations: RG.violations }); }
+  if (CG.violations.length) { for (const x of CG.violations.slice(0, 30)) log('  convention gate', x.gate, x.id, x.msg); throw Object.assign(Error('convention gates: ' + CG.violations.length + ' violations'), { violations: CG.violations }); }
+  const car = order(N, 'input');
+  const endRec = ending(car);
+  const wheelRec = nearWheels(car);
+  const overlapRec = overlapJoins(car);
+  // ---- the car art for the drafting hero. The car SET of a class = its phase 1-3 strokes (contours, form and detail,
+  // glyphs); the 3 phase-0 guides (two ghost rim loops, the nose gesture) are lay-in and the 5 phase-5 accents are never
+  // drawn (as in every R3 build since revision 1). Every stroke of the set is drawn at its class: no car stroke is cut.
+  // The ghost rim loops are replaced by the compass ellipses, the nose gesture becomes pencil (p, pen B), the lettering
+  // (l) and the nose-top 219 (u) go to pen C on the PENCIL canvas: written early and erased before the photo's own white
+  // letters read (pens.cjs); the side-plate 219 stays numeral ink (n, pen A).
+  const retier = [];
+  const carSeq = [];
+  for (const s of car) {
+    if (s.id === 'ghost-front-rim' || s.id === 'ghost-rear-rim') { retier.push([s.id, 'dropped: replaced by the compass ellipse']); continue; }
+    if (s.phase === 5) { retier.push([s.id, 'not drawn: P5 accent (as every R3 build)']); continue; }
+    const r = rawById[s.id];
+    if (s.id === 'nose-gesture') { s.tier = 'p'; s.block = 'gesture'; s.serves = ['nose-loop']; s.prov = 'convention'; s.kind = 'gesture'; retier.push([s.id, 'g -> p (pencil lay-in, pen B; counted as a convention)']); }
+    else if (o.text === 'side-219' && (LETTER_WORDS.includes(r.burst) || r.burst === 'top-219')) { retier.push([s.id, 'left to the photo (--text side-219, v3 comparison only)']); continue; }
+    else if (LETTER_WORDS.includes(r.burst)) { s.tier = 'l'; s.block = 'lettering'; s.word = r.burst; retier.push([s.id, 'd -> l (lettering on PENCIL, pen C; same geometry and width as 0e561624)']); }
+    else if (r.burst === 'top-219') { s.tier = 'u'; s.block = 'top-219'; s.number = 'top-219'; retier.push([s.id, 'n -> u (nose-top 219 on PENCIL, pen C; numeral width and motion as 0e561624)']); }
+    else if (r.burst === 'plate-219') { s.block = 'side-219'; s.number = 'plate-219'; }
+    else if (detIds && detIds.has(s.id)) s.block = 'detail';   // dense3: the detail lanes
+    else if (s.phase === 1) s.block = 'silhouette';
+    else if (s.phase === 2) s.block = PN.BLOCK_OF[s.id] || 'form';   // fix round 1: the wheel and cabin blocks (pens.cjs BLOCK_OF)
+    else throw Error('drafting: no block for ' + s.id);
+    s.cut = null;
+    carSeq.push(s);
+  }
+  const seq = carSeq.concat(convN);
+  for (const s of seq) { s.pen = s.block === 'detail' ? 'detail' : PN.PEN_OF_BLOCK[s.block] || PN.PEN_OF_TIER[s.tier]; if (!s.pen) throw Error('no pen for tier ' + s.tier + ' (' + s.id + ')'); }
+  const enc = seq.map(encodeGeometry);
+  const flags = joinFlags(seq, enc.map((e) => e.P)).map((f, i) => (CONV_TIERS.has(seq[i].tier) || 'lu'.includes(seq[i].tier) ? 0 : f));
+  const geos = enc.map((e, i) => core.decode(seq[i].tier + '000 ' + e.toks));
+  const prep = PN.prepare(core, seq, geos);
+  const isCar = (i) => seq[i].prov !== 'convention';
+  // ---- the car set per class, from the art file (the proof that nothing was dropped)
+  const CLS = [['D', 4], ['T', 2], ['P', 1]];
+  const carSet = Object.fromEntries(CLS.map(([c, bit]) => [c, raw.strokes.filter((s) => s.phase >= 1 && s.phase <= 3 && maskOf(s.classes) & bit).map((s) => s.id)]));
+  // ---- solve each class; on a failed limit only conventions may be cut (the class's cut order, down to its floor)
+  const masks = seq.map((s) => s.classes);
+  // ---- dense3: the detail units per class. The groups file (o.groups, the format of dense3/clean/merge/groups.json) gives
+  // the groups, their member order and one attach stroke per class; its entry for this art is the one whose members (all
+  // classes) are exactly the art's detail strokes (or o.groupsKey). Anything inconsistent throws.
+  // solver round 2 (agent, 2026-11-22): the nearest-line fallback is removed. Every detail stroke drawn at a class must be
+  // a member of exactly one group of that class (pass 2's extras included: groups-final-full.json), or the build throws.
+  // Hosts are matched by id only (no geometry is read for matching), so small geometry moves of any stroke cannot change
+  // them. An attach cycle between units (a unit hanging, directly or through other units, on its own members) throws.
+  const isDetail = (i) => seq[i].block === 'detail';
+  const idOf = Object.fromEntries(seq.map((s, i) => [s.id, i]));
+  const units = {}, detRec = { groupsFile: o.groups ? path.resolve(o.groups) : null, groupsEntry: null, membersNotDrawn: {} };
+  if (detIds) {
+    const GF = o.groups ? JSON.parse(fs.readFileSync(path.resolve(o.groups), 'utf8')) : { files: {} };
+    const cleanIds = raw.strokes.filter((s) => s.clean && detIds.has(s.id)).map((s) => s.id).sort().join(',');
+    const allDetIds = [...detIds].sort().join(',');
+    const ents = Object.entries(GF.files || {});
+    const memOf = (per) => [...new Set(['D', 'T', 'P'].flatMap((c) => (per[c] ? per[c].detailGroups.flatMap((g) => g.members.map((m) => m.stroke)) : [])))].sort().join(',');
+    const ent = o.groupsKey ? ents.find(([k]) => k === o.groupsKey) : ents.find(([, per]) => memOf(per) === allDetIds);
+    if (!ent && detIds.size) {
+      const near = ents.map(([k, per]) => { const m = new Set(memOf(per).split(',')); return [k, [...detIds].filter((id) => !m.has(id))]; }).sort((a, b) => a[1].length - b[1].length)[0];
+      throw Error('groups: no entry of ' + (o.groups || '(no groups file)') + ' has exactly the art\'s detail strokes as members' + (near ? `; the nearest entry ${near[0]} has no group for: ${near[1].join(', ')}` : '') + (cleanIds === allDetIds ? '' : ' (a groups file that lists only the clean strokes is not enough: every detail stroke needs a group)'));
+    }
+    detRec.groupsEntry = ent ? ent[0] : null;
+    for (const [c, bit] of CLS) {
+      const list = [], covered = new Set();
+      for (const g of ent && ent[1][c] ? ent[1][c].detailGroups : []) {
+        const mem = [];
+        for (const m of g.members) {
+          const i = idOf[m.stroke];
+          if (i == null || !isDetail(i)) throw Error(`groups ${g.group} (${c}): ${m.stroke} is not a detail stroke of the art`);
+          if (!(masks[i] & bit)) { (detRec.membersNotDrawn[c] = detRec.membersNotDrawn[c] || []).push(m.stroke); continue; }
+          if (covered.has(m.stroke)) throw Error(`groups (${c}): ${m.stroke} is in two groups`);
+          covered.add(m.stroke);
+          mem.push(i);
+        }
+        if (!mem.length) continue;
+        const ai = idOf[g.attachTo];
+        if (ai == null || !(masks[ai] & bit) || !isCar(ai) || PN.GLYPH_BLOCKS.has(seq[ai].block)) throw Error(`groups ${g.group} (${c}): attach ${g.attachTo} is not a car line drawn at the class`);
+        list.push({ key: g.group, attach: ai, members: mem, region: g.region || null });
+      }
+      const uncovered = seq.filter((s, i) => isDetail(i) && masks[i] & bit && !covered.has(s.id)).map((s) => s.id);
+      if (uncovered.length) throw Error(`groups (${c}): detail strokes drawn at the class with no group in ${o.groups || '(no groups file)'}: ${uncovered.join(', ')}`);
+      // attach cycles: unit u waits on the unit that holds its attach stroke
+      const holder = new Map();
+      list.forEach((u) => u.members.forEach((i) => holder.set(i, u)));
+      for (const u of list) {
+        const seen = new Set([u]);
+        for (let w = holder.get(u.attach); w; w = holder.get(w.attach)) {
+          if (seen.has(w)) throw Error(`groups (${c}): attach cycle through ${[...seen].map((x) => x.key).join(' -> ')} -> ${w.key}`);
+          seen.add(w);
+        }
+      }
+      units[c] = list;
+    }
+  }
+  // o.planExtra { cls: { pen: [[block, t0, t1, after], ...] } } puts blocks first on a lane (the glyph-slot trial only)
+  // solver round 3 (agent, 2026-11-22; OFF by default): o.cabinEarly { cls: id } moves pen C's 'cabin' block to the front of
+  // pen C's lane at that class, waiting for the stroke id (an earlier-solved lane's stroke, e.g. pen A's 'helmet'); it is
+  // placed at the pace it gets in the stock plan (pens.cjs opt.paceFix, computed per build from the art, below), so every
+  // cabin stroke keeps its stock duration; side-219 and the rest of pen C follow it. Stock plan when unset.
+  const planStock = (cls) => { const p = PN.PLAN[cls], x = (o.planExtra || {})[cls]; return x ? Object.fromEntries(Object.entries(p).map(([pen, bl]) => [pen, (x[pen] || []).concat(bl)])) : p; };
+  const cabinEarlyOf = (cls) => (o.cabinEarly && o.cabinEarly[cls]) || null;
+  const planFor = (cls) => {
+    const ce = cabinEarlyOf(cls);
+    if (!ce) return planStock(cls);
+    if (!(PN.PLAN[cls].C || []).some((b) => b[0] === 'cabin')) throw Error('cabinEarly: no cabin block on pen C at ' + cls);
+    if (idOf[ce] == null || !(masks[idOf[ce]] & { D: 4, T: 2, P: 1 }[cls]) || seq[idOf[ce]].pen === 'C' || seq[idOf[ce]].block === 'detail') throw Error('cabinEarly: ' + ce + ' is not a pen A or B stroke drawn at ' + cls);
+    const p = { ...PN.PLAN[cls], C: [['cabin', 0, 0, ce]].concat(PN.PLAN[cls].C.filter((b) => b[0] !== 'cabin')) }, x = (o.planExtra || {})[cls];
+    return x ? Object.fromEntries(Object.entries(p).map(([pen, bl]) => [pen, (x[pen] || []).concat(bl)])) : p;
+  };
+  // ---- solve each class (pens.cjs solveFit: o.ac 'keep', the default = the plan as it is; 'fit' = the what-if: the least
+  // pull-in of the A-C plan that passes); on a failed limit only conventions may be cut (the class's cut
+  // order, down to its floor). The detail lane count: o.detailLanes, else 2, and 3 only if a class fails with 2. Classes are
+  // solved hardest first (the least passing scale in a free solve of each); every later class keeps the lane each detail
+  // stroke got before, so a data line carries one lane for all classes.
+  const AC = o.ac || 'keep';
+  // solver round 2 (agent, 2026-11-22; the options are the main loop's levers, the defaults are the stock schedule):
+  //  o.reorder 'none' (default) | 'form' | 'form+cabin': ORDER ONLY. Within pen A's form block (and with 'form+cabin' also
+  //    pen C's cabin block, a what-if outside the brief) three sets in this order: the strokes that host cockpit or rear-bay
+  //    detail units at the class, together with any stroke another lane's block waits for (the plan's 'after' links:
+  //    side-plate, which pen C's side-219 and with it the cabin block wait for); then the strokes that host other detail
+  //    units; then the strokes that host nothing. Within a set: 'form' keeps the stock relative order (a stable partition),
+  //    'form-nn' takes the nearest start next, 'form-ll' the order with the least total hop lift (exact). The hosts are read
+  //    from this class's units (the groups file) and its plan, never from a hand list. The block's pace stays the stock
+  //    order's pace in the same window (o.pinPace, default true).
+  //  o.planScale { T: s, P: s }: the A-C plan of that class pulled in by s (pens.cjs scalePlan, about DK.ANCHOR = 0 ms).
+  //  o.cwlScope 'all' (default) | 'non-detail': the D car-with-lettering gate over every car stroke, or over pens A-C only
+  //    (the detail lanes then answer to the detail deadline alone; an orchestrator decision when used, not the owner's).
+  const regionsOf = (cls) => { const m = new Map(); for (const u of units[cls] || []) { if (!m.has(u.attach)) m.set(u.attach, new Set()); m.get(u.attach).add(u.region || 'other'); } return m; };
+  const reorderFor = (cls) => {
+    const mode = (o.reorder && typeof o.reorder === 'object' ? o.reorder[cls] : o.reorder) || 'none';   // one mode, or one per class
+    if (mode === 'none' || !detIds) { if (o.formFirst && o.formFirst[cls]) throw Error('formFirst at ' + cls + ' needs a reorder mode'); return null; }
+    const hosts = regionsOf(cls), waits = new Set(Object.values(planFor(cls)).flatMap((bl) => bl.filter((b) => b[3]).map((b) => b[3])));
+    // solver round 3 (agent, 2026-11-22; OFF by default): o.formFirst { cls: [id, ...] } puts the listed strokes first, in
+    // the listed order (each its own set, so no set order touches them), ahead of the three sets below; order only, pace pinned
+    const ff = (o.formFirst && o.formFirst[cls]) || null;
+    const rank0 = (i) => { const r = hosts.get(i); return waits.has(seq[i].id) || (r && (r.has('cockpit') || r.has('rear'))) ? 0 : r ? 1 : 2; };
+    const rank = ff ? (i) => { const k = ff.indexOf(seq[i].id); return k >= 0 ? k - ff.length : rank0(i); } : rank0;
+    // modes: 'form' (stable partition), 'form-nn' (the same partition, nearest start next within each set); a '+cabin'
+    // suffix applies the same to pen C's cabin block (a what-if outside the brief's wording)
+    const m = /^(form|form-nn|form-ll)(\+cabin)?$/.exec(mode);
+    if (!m) throw Error('reorder: ' + mode);
+    const order = { form: 'stable', 'form-nn': 'nn', 'form-ll': 'least-lift' }[m[1]];
+    const ro = { form: { pen: 'A', rank, order } };
+    if (m[2]) ro.cabin = { pen: 'C', rank, order };
+    return ro;
+  };
+  const scaleOf = (cls) => (o.planScale && o.planScale[cls] != null ? +o.planScale[cls] : 1);
+  // solver round 3: the cabin's stock pace at the class (the stock plan at the same plan scale and reorder), for o.cabinEarly
+  // o.cabinPace { cls: pace } (OFF by default): that pace instead, e.g. the round-2 stock pace on the art before the r3 drops
+  const paceFixOf = (cls, mk) => { if (!cabinEarlyOf(cls)) return undefined; if (o.cabinPace && o.cabinPace[cls] != null) return { cabin: +o.cabinPace[cls] }; const b = PN.solveClass(prep, cls, mk, { plan: PN.scalePlan(planStock(cls), scaleOf(cls)), reorder: reorderFor(cls), pinPace: o.pinPace }).blocks.cabin; return b ? { cabin: b.pace } : undefined; };
+  const solveC = (cls, mk, forced, nl) => {
+    const pf = paceFixOf(cls, mk);
+    const r = PN.solveFit(core, prep, seq, cls, mk, { mode: AC, plan: PN.scalePlan(planFor(cls), scaleOf(cls)), sMin: o.sMin, sStep: o.sStep, reorder: reorderFor(cls), pinPace: o.pinPace, cwlScope: o.cwlScope, ...(pf ? { paceFix: pf } : {}), detail: detIds ? { units: units[cls], lanes: nl, forced } : null });
+    const fit = { mode: AC, scale: r.scale, paceMax: r.paceMax == null ? null : +r.paceMax.toFixed(4), pace: r.sol.detail ? +r.sol.detail.pace.toFixed(4) : null, tried: r.tried, failed: !!r.failed, sMinTried: r.sMinTried || null, firstFail: r.firstFail || null };
+    if (o.recordPace0 && detIds && AC === 'keep') {
+      const s0 = PN.solveClass(prep, cls, mk, { plan: PN.scalePlan(planFor(cls), scaleOf(cls)), reorder: reorderFor(cls), pinPace: o.pinPace, cwlScope: o.cwlScope, ...(pf ? { paceFix: pf } : {}), detail: { units: units[cls], lanes: nl, forced, pace: 0 } }), c0 = PN.checkClass(core, prep, seq, s0, cls, mk);
+      fit.pace0 = { ok: c0.ok, lastDetail: c0.detail ? c0.detail.lastDetail : null, detailSlack: c0.slack.detailDeadline, inkHold: c0.slack.inkHold, failing: [...new Set(c0.violations.map((v) => v.split(':')[0]))] };
+    }
+    return { sol: r.sol, chk: r.chk, fit };
+  };
+  let results = {}, cuts = { D: [], T: [], P: [] }, lanesN = 0, classOrder = CLS.map((c) => c[0]);
+  const freeFit = {}, laneTry = !detIds ? [0] : o.detailLanes ? [o.detailLanes] : [2, 3], laneRuns = [];
+  for (const nl of laneTry) {
+    let order = CLS.slice();
+    if (detIds && !o.classOrder) {
+      freeFit[nl] = {};
+      for (const [cls] of CLS) { const r = solveC(cls, masks, null, nl); freeFit[nl][cls] = { ok: r.chk.ok, scale: r.fit.scale }; }
+      order = CLS.slice().sort((a, b) => (freeFit[nl][a[0]].ok ? freeFit[nl][a[0]].scale : 0) - (freeFit[nl][b[0]].ok ? freeFit[nl][b[0]].scale : 0));
+    } else if (o.classOrder) order = o.classOrder.map((c) => CLS.find((x) => x[0] === c));
+    results = {};
+    cuts = { D: [], T: [], P: [] };
+    const forced = new Map();
+    for (const [cls, bit] of order) {
+      const steps = PN.CUT_ORDER[cls].slice();
+      for (;;) {
+        const r = solveC(cls, masks, forced, nl), chk = r.chk;
+        if (chk.ok || !steps.length || o.noCuts) { results[cls] = r; break; }
+        const step = steps.shift();
+        const hit = seq.map((s, i) => (!isCar(i) && s.cut === step && masks[i] & bit ? i : -1)).filter((i) => i >= 0);
+        const left = seq.filter((s, i) => !isCar(i) && masks[i] & bit).length - hit.length;
+        if (!hit.length || left < PN.CONV_FLOOR[cls]) continue;
+        for (const i of hit) masks[i] &= ~bit;
+        cuts[cls].push({ step, strokes: hit.map((i) => seq[i].id), because: chk.violations.slice(0, 4) });
+        log(`class ${cls}: convention cut step ${step} (${hit.map((i) => seq[i].id).join(', ')}) because ${chk.violations.slice(0, 2).join(' ; ')}`);
+      }
+      // minimal cuts: give back each convention cut whenever the class still passes with it
+      if (results[cls].chk.ok) {
+        for (const c of cuts[cls].slice().reverse()) {
+          const idx = c.strokes.map((id) => seq.findIndex((s) => s.id === id));
+          for (const i of idx) masks[i] |= bit;
+          const r = solveC(cls, masks, forced, nl);
+          if (r.chk.ok) { c.restored = true; results[cls] = r; } else for (const i of idx) masks[i] &= ~bit;
+        }
+        cuts[cls] = cuts[cls].filter((c) => !c.restored);
+      }
+      const sl = results[cls].sol.lane;
+      seq.forEach((s, i) => { if (isDetail(i) && sl[i] && !forced.has(i)) forced.set(i, PN.DETAIL_LANES.indexOf(sl[i])); });
+    }
+    lanesN = nl;
+    classOrder = order.map((c) => c[0]);
+    laneRuns.push({ lanes: nl, classOrder, ok: CLS.every(([c]) => results[c].chk.ok), scale: Object.fromEntries(CLS.map(([c]) => [c, results[c].fit.scale])) });
+    if (CLS.every(([c]) => results[c].chk.ok)) break;
+  }
+  // every detail stroke keeps one lane across the classes that draw it (its home lane, carried by the phase digit)
+  const homeOf = {};
+  seq.forEach((s, i) => {
+    if (!isDetail(i)) return;
+    const ls = [...new Set(CLS.filter(([c, bit]) => masks[i] & bit && results[c].sol.lane[i]).map(([c]) => results[c].sol.lane[i]))];
+    if (ls.length > 1) throw Error(`detail ${s.id}: lanes ${ls.join(',')} across classes`);
+    homeOf[i] = ls[0] || null;
+  });
+  // ---- emit: one global line order (the D start order, then T-only and P-only strokes by start); absolute starts
+  const firstStart = (i) => { for (const [c, k] of [['D', 0], ['T', 1], ['P', 2]]) if (results[c].sol.start[i] != null && masks[i] & { D: 4, T: 2, P: 1 }[c]) return [k, results[c].sol.start[i]]; return [9, 0]; };
+  const order_ = seq.map((s, i) => i).filter((i) => masks[i]).sort((a, b) => { const ka = firstStart(a), kb = firstStart(b); return ka[0] - kb[0] || ka[1] - kb[1] || a - b; });
+  // the phase digit carries the lane for the page (engine H.pen): 0 4 6 pen B (6 = car ink by B), 1 2 pen A, 3 pen C
+  // dense3: 7 8 9 the detail lanes X Y Z (the stroke's home lane)
+  const phaseOf = (s, i) => (s.block === 'detail' ? PN.DETAIL_DIGIT[homeOf[i]] : s.pen === 'C' ? 3 : s.pen === 'B' ? ('mr'.includes(s.tier) ? 4 : s.prov !== 'convention' ? 6 : 0) : s.block === 'silhouette' ? 1 : s.block === 'form' ? 2 : 3);
+  const unplacedDetail = order_.filter((i) => isDetail(i) && !homeOf[i]).map((i) => seq[i].id);
+  if (unplacedDetail.length && !o.allowFail) throw Error('detail strokes on no lane: ' + unplacedDetail.join(', '));
+  const head = `HP1 2200 1238 ${N.car.join(' ')} ${N.seed}`;
+  const lines = order_.map((i) => `${seq[i].tier}${isDetail(i) && !homeOf[i] ? 7 : phaseOf(seq[i], i)}${masks[i]}${flags[i]} ${enc[i].toks}`);
+  const dataOrder = {};
+  for (const [c, bit] of CLS) dataOrder[c] = order_.filter((i) => masks[i] & bit);
+  const T = ['P', 'T', 'D'].map((c) => `T ${c} ` + dataOrder[c].map((i) => results[c].sol.start[i] + ' ' + results[c].sol.dur[i]).join(' '));
+  const Vl = ['P', 'T', 'D'].map((c) => `V ${c} ` + PN.V[c].join(' '));
+  const data = [head, ...lines, ...T, ...Vl].join('\n');
+  const dataBlock = `<script type="text/plain" id="hero-pen-data">\n${data}\n</script>`;
+  const engineMin = minifyAuto(ENGINE_SRC.replace('"use strict";', ''), ENGINE_PROPS).code;
+  { const left = require('./minify.cjs').tokenize(engineMin).filter((t) => t.t === 'w' && Object.prototype.hasOwnProperty.call(ENGINE_PROPS, t.v)); if (left.length) throw Error('minified engine still names ' + left.map((t) => t.v).join(',')); }
+  const block = `${dataBlock}\n    <script>${engineMin}</script>`;
+  const hashes = {};
+  for (const c of ['D', 'T', 'P']) {
+    const pk = core.pick(data, c);
+    hashes[c] = pk.hash;
+    if (pk.L.length !== dataOrder[c].length || pk.T.length !== 2 * pk.L.length || pk.V.length !== 13) throw Error('pick ' + c);
+  }
+  // ---- the proof: every id of the class's car set is drawn at that class (a missing one fails the build)
+  const drawnCar = Object.fromEntries(CLS.map(([c]) => [c, dataOrder[c].filter(isCar).map((i) => seq[i].id)]));
+  const proof = Object.fromEntries(CLS.map(([c]) => {
+    const set = carSet[c], drawn = drawnCar[c];
+    return [c, { set: set.length, drawn: drawn.length, missing: set.filter((id) => !drawn.includes(id)), extra: drawn.filter((id) => !set.includes(id)) }];
+  }));
+  for (const [c] of CLS) if (proof[c].missing.length || proof[c].extra.length) throw Error(`class ${c}: car set ${proof[c].set} vs drawn ${proof[c].drawn}; missing ${proof[c].missing.join(',')} extra ${proof[c].extra.join(',')}`);
+  const sizes = { dataBlock: { raw: Buffer.byteLength(dataBlock), br3: br3(dataBlock) }, engine: { raw: Buffer.byteLength(engineMin), br3: br3(engineMin) },
+    engineSource: { raw: Buffer.byteLength(ENGINE_SRC), br3: br3(ENGINE_SRC) }, block: { raw: Buffer.byteLength(block), br3: br3(block) } };
+  // agent pins: the engine near 7 KB br3 or less; the data block grows with the 40 glyph strokes v3 left out
+  // dense3 final solver: the data pin is lifted deliberately (PINS, below the function); o.allowSize records an over-pin
+  // build instead of throwing (build-final.cjs then fails on it after writing the records)
+  // solver round 3 (agent, 2026-11-22; OFF by default): o.dataPin replaces PINS.dataBr3 for this build (build-final.cjs --data-pin)
+  const dataPin = o.dataPin != null ? +o.dataPin : PINS.dataBr3;
+  const budgets = { ...PINS, ...(o.dataPin != null ? { dataBr3: dataPin, dataPinFrom: 'o.dataPin' } : {}), engineOk: sizes.engine.br3 <= PINS.engineBr3, engineUnderCeiling: sizes.engine.br3 <= PINS.engineCeiling, dataOk: sizes.dataBlock.br3 <= dataPin };
+  if ((!budgets.engineUnderCeiling || !budgets.dataOk) && !o.allowSize) throw Error(`size budget: engine ${sizes.engine.br3} B br3 (pin ${PINS.engineBr3}, ceiling ${PINS.engineCeiling}), data ${sizes.dataBlock.br3} (max ${dataPin})`);
+  const failed = ['D', 'T', 'P'].filter((c) => !results[c].chk.ok);
+  // ---- records
+  const kindOf = (s) => (s.prov === 'convention' ? `convention:${s.tier}:${s.kind}` : `car:${s.kind}`);
+  const counts = {};
+  for (const [c] of CLS) {
+    const by = {};
+    for (const i of dataOrder[c]) { const k = kindOf(seq[i]); by[k] = (by[k] || 0) + 1; }
+    const lanes = { A: 0, B: 0, C: 0 };
+    for (const i of dataOrder[c]) { const l = results[c].sol.lane[i] || seq[i].pen; lanes[l] = (lanes[l] || 0) + 1; }
+    counts[c] = { total: dataOrder[c].length, car: dataOrder[c].filter(isCar).length, convention: dataOrder[c].filter((i) => !isCar(i)).length,
+      carLines: dataOrder[c].filter((i) => isCar(i) && !['side-219', 'top-219', 'lettering'].includes(seq[i].block)).length,
+      glyphs: dataOrder[c].filter((i) => isCar(i) && ['side-219', 'top-219', 'lettering'].includes(seq[i].block)).length, lanes, byKind: by };
+  }
+  const index = order_.map((i) => {
+    const s = seq[i], r = rawById[s.id], e = { id: s.id, tier: s.tier, pen: s.pen, block: s.block, kind: s.kind, prov: s.prov, mask: masks[i], flags: flags[i], lengthSrcPx: +geos[i].L.toFixed(1),
+      fitErrSrcPx: +enc[i].err.toFixed(3), serves: s.serves || undefined, promoted: r && r.promoted ? r.promoted : undefined };
+    for (const [c, bit] of CLS) if (masks[i] & bit) e[c] = [results[c].sol.start[i], results[c].sol.dur[i]];
+    if (isDetail(i)) { e.pen = homeOf[i] || null; e.detail = true; }
+    return e;
+  });
+  const out = {
+    format: 'hero-pen-build/drafting-merge-1', set: o.set, text: o.text || 'all', seed: N.seed, car: N.car, builtFrom: IN, inputSha256: sha(fs.readFileSync(IN)), conventions: CONV, conventionsSha256: sha(fs.readFileSync(CONV)),
+    engineSha256: sha(ENGINE_SRC), engineMinSha256: sha(engineMin), dataSha256: sha(data), hashes, sizes, budgets, counts, proof, carSet, drawnCar, failed,
+    gates: { minLen: MIN_LEN, shortAdmitted, lifted, notRun: G.notRun, conventions: CG.records, rimLetters: RG.records, detailShort }, retier, cuts, ending: endRec, nearWheels: { moved: wheelRec.moved }, overlap: overlapRec,
+    timeline: Object.fromEntries(['D', 'T', 'P'].map((c) => [c, { V: PN.V[c], limit: PN.LIMIT[c], plan: results[c].sol.plan, planScale: results[c].fit.scale * scaleOf(c), ...results[c].chk }])),
+    schedule: { reorder: Object.fromEntries(CLS.map(([c]) => [c, (o.reorder && typeof o.reorder === 'object' ? o.reorder[c] : o.reorder) || 'none'])), pinPace: o.pinPace !== false, planScale: Object.fromEntries(CLS.map(([c]) => [c, scaleOf(c)])), cwlScope: o.cwlScope || 'all', ac: AC, ...(o.cabinEarly ? { cabinEarly: o.cabinEarly, cabinPace: Object.fromEntries(CLS.filter(([c]) => cabinEarlyOf(c)).map(([c]) => [c, results[c].sol.blocks.cabin ? results[c].sol.blocks.cabin.paceFixed : null])), cabinPaceFrom: o.cabinPace ? 'o.cabinPace' : 'the stock plan on this art' } : {}), ...(o.formFirst ? { formFirst: o.formFirst } : {}) },
+    speeds: Object.fromEntries(CLS.map(([c]) => [c, PN.speeds(prep, results[c].sol, c, masks)])),
+    // the T/P pen-speed cap against D's pen A at s = 1 in its stock order (pens.cjs speedCap); build-final.cjs gates it for a
+    // class whose plan is pulled in (planScale < 1) and records it otherwise
+    speedCap: (() => { const ref = PN.speeds(prep, PN.solveClass(prep, 'D', masks, { plan: planFor('D') }), 'D', masks); return Object.fromEntries(['T', 'P'].map((c) => [c, { planScale: scaleOf(c), ...PN.speedCap(ref, PN.speeds(prep, results[c].sol, c, masks), c) }])); })(),
+    fit: { maxErrSrcPx: +Math.max(...enc.map((e) => e.err)).toFixed(3) }, index,
+    // dense3 final solver
+    detail: detIds ? { ids: [...detIds], minLenSrcPx: minLenDetail, shortDetail: [...detIds].map((id) => [id, +F.plen(rawById[id].pts).toFixed(1)]).filter((x) => x[1] < MIN_LEN - 0.5), ...detRec,
+      units: Object.fromEntries(CLS.map(([c]) => [c, (units[c] || []).map((u) => ({ key: u.key, region: u.region, attach: seq[u.attach].id, attachBlock: seq[u.attach].block, attachPen: results[c].sol.lane[u.attach] || seq[u.attach].pen, attachEnd: results[c].sol.start[u.attach] == null ? null : results[c].sol.start[u.attach] + results[c].sol.dur[u.attach], members: u.members.map((i) => seq[i].id), at: u.members.map((i) => [results[c].sol.start[i], results[c].sol.dur[i]]) }))])),
+      lanes: lanesN, classOrder, laneRuns, freeFit, unplaced: unplacedDetail } : null,
+    acMode: AC, fitPerClass: Object.fromEntries(CLS.map(([c]) => [c, results[c].fit])),
+  };
+  if (o.write) {
+    fs.mkdirSync(OUT, { recursive: true });
+    fs.writeFileSync(path.join(OUT, 'data.txt'), data + '\n');
+    fs.writeFileSync(path.join(OUT, 'engine.min.js'), engineMin + '\n');
+    fs.writeFileSync(path.join(OUT, 'hero-pen-block.html'), block + '\n');
+    fs.writeFileSync(path.join(OUT, 'build.json'), JSON.stringify(out, null, 1));
+  }
+  log(`set ${o.set}: D ${counts.D.total} (car ${counts.D.car}, conv ${counts.D.convention}) T ${counts.T.total} (${counts.T.car}, ${counts.T.convention}) P ${counts.P.total} (${counts.P.car}, ${counts.P.convention}); fit max ${out.fit.maxErrSrcPx}`);
+  log(`sizes: data block ${sizes.dataBlock.raw} B (br3 ${sizes.dataBlock.br3}); engine ${sizes.engine.raw} B (br3 ${sizes.engine.br3}, pin ${PINS.engineBr3}${budgets.engineOk ? '' : ' OVER'})`);
+  for (const c of ['D', 'T', 'P']) {
+    const k = results[c].chk;
+    log(`class ${c}: ${k.ok ? 'ok' : 'FAIL'} n ${k.n} first ${k.firstInk} lastA ${k.lastA} lastB ${k.lastB} lastC ${k.lastC} last ${k.lastInk} (limit ${PN.LIMIT[c]}) holds ${JSON.stringify(k.holds)} dens ${JSON.stringify(k.densAt)} ends ${JSON.stringify(k.ends)} peak ${JSON.stringify(k.peak)} done ${k.doneAt}`);
+    log(`   blocks ${JSON.stringify(Object.fromEntries(Object.entries(k.blocks || {}).map(([n, b]) => [n, b.at.concat(b.over ? ['over ' + b.over] : [])])))}`);
+    if (!k.ok) log('   violations', k.violations.slice(0, 8).join(' ; '));
+  }
+  if (failed.length && !o.allowFail) throw Object.assign(Error('timing limits fail in class ' + failed.join(', ')), { out });
+  return { out, block, data, engineMin, geo: geos, seq, masks, results, prep, units, planFor };
+}
+
+// --page for the drafting hero: the base is index.html of 0e561624 (or later), which already holds the inline hero
+// pen; only the data block and the inline engine after it are replaced. Everything outside is byte-identical.
+const BLOCK_A = '<script type="text/plain" id="hero-pen-data">';
+function blockSpan(html) {
+  const a = html.indexOf(BLOCK_A);
+  const e0 = html.indexOf('<script>', html.indexOf('</script>', a));
+  const b = html.indexOf('</script>', e0) + '</script>'.length;
+  if (a < 0 || e0 < 0 || b < e0) throw Error('page: hero pen block not found');
+  if (html.split(BLOCK_A).length !== 2) throw Error('page: more than one data block');
+  if (!/^<script>\(\(\)=>\{/.test(html.slice(e0, e0 + 16))) throw Error('page: the inline engine does not follow the data block');
+  return [a, b];
+}
+function pageDrafting(dir, block, base) {
+  const html0 = baseHtml(base).replace(/\r\n/g, '\n');
+  const [a, b] = blockSpan(html0);
+  const html = html0.slice(0, a) + block + html0.slice(b);
+  if (dir) { fs.mkdirSync(dir, { recursive: true }); fs.writeFileSync(path.join(dir, 'index.html'), html); }
+  return html;
+}
+function checkDrafting(html, block, base) {
+  const html0 = baseHtml(base).replace(/\r\n/g, '\n');
+  const [a0, b0] = blockSpan(html0), [a1, b1] = blockSpan(html);
+  const f = {
+    blockIdentical: html.slice(a1, b1) === block,
+    outsideIdentical: html.slice(0, a1) === html0.slice(0, a0) && html.slice(b1) === html0.slice(b0),
+    canvases: html.includes(CANVASES), oneGuard: html.split('\n').filter(isGuard).length === 1, kwScroll: html.includes('<script id="kw-scroll">'),
+    noHeroScript: !/<script[^>]+src="hero-drawing-20261027\.js/.test(html),
+  };
+  f.ok = Object.values(f).every(Boolean);
+  return f;
+}
+
 if (require.main === module) {
   const argv = process.argv.slice(2);
   const opt = (k, d) => { const i = argv.indexOf('--' + k); return i >= 0 ? argv[i + 1] : d; };
   const flag = (k) => argv.includes('--' + k);
+  if (flag('r3')) {
+    // the R3 one-pen build (0e561624), kept for comparison
+    let r;
+    try {
+      r = build({ in: opt('in', DEFAULTS.in), out: opt('out', DEFAULTS.out), gate: opt('gate', 'fail'), order: opt('order', null), quiet: flag('quiet'), noCuts: flag('no-cuts'),
+        ending: !flag('no-ending'), nearWheels: !flag('no-near-wheels'), accents: flag('accents') });
+    } catch (e) { console.error(String(e.message || e)); process.exit(2); }
+    if (opt('page')) page(path.resolve(opt('page')), r.block, opt('base'), opt('site'));
+    process.exit(0);
+  }
+  // the drafting hero (default): --set final (the only shipped set), --text all|side-219, --in, --conv, --out, --page <dir>
+  // --base <a committed index.html; default git show HEAD:index.html>,
+  // --check <html> (with --base), --allow-fail (write the records even if a limit fails), --no-cuts, --quiet
   let r;
   try {
-    r = build({ in: opt('in', DEFAULTS.in), out: opt('out', DEFAULTS.out), gate: opt('gate', 'fail'), order: opt('order', null), quiet: flag('quiet'), noCuts: flag('no-cuts'),
-      ending: !flag('no-ending'), nearWheels: !flag('no-near-wheels'), accents: flag('accents') });
+    r = buildDrafting({ set: opt('set', DEFAULT_SET), text: opt('text', 'all'), in: opt('in'), conv: opt('conv'), out: opt('out'), quiet: flag('quiet'), noCuts: flag('no-cuts'), allowFail: flag('allow-fail') });
   } catch (e) { console.error(String(e.message || e)); process.exit(2); }
   if (opt('page')) {
     let html;
-    try { html = page(path.resolve(opt('page')), r.block, opt('base'), opt('site')); } catch (e) { console.error(String(e.message || e)); process.exit(2); }
-    const head = Buffer.from(baseHtml(opt('base')));
-    log(`page ${path.resolve(opt('page'), 'index.html')} from ${opt('base') || 'HEAD'}: ${Buffer.byteLength(html)} B, br3 ${br3(html)} (base index.html ${head.length} B, br3 ${br3(head)}; +${br3(html) - br3(head)} B br3)`);
+    try { html = pageDrafting(path.resolve(opt('page')), r.block, opt('base')); } catch (e) { console.error(String(e.message || e)); process.exit(2); }
+    const base = Buffer.from(baseHtml(opt('base')).replace(/\r\n/g, '\n'));
+    log(`page ${path.resolve(opt('page'), 'index.html')} from ${opt('base') || 'HEAD'}: ${Buffer.byteLength(html)} B, br3 ${br3(html)} (base ${base.length} B, br3 ${br3(base)}; ${br3(html) - br3(base) >= 0 ? '+' : ''}${br3(html) - br3(base)} B br3)`);
   }
   if (opt('check')) {
-    const html = fs.readFileSync(path.resolve(opt('check')), 'utf8').replace(/\r\n/g, '\n');   // a CRLF checkout counts as LF
-    if (!html.includes(r.block)) { console.error('check: the block in', opt('check'), 'differs from a fresh build'); process.exit(1); }
-    const inv = pageInvariants(html, r.block);
-    if (!inv.ok) { console.error('check: page invariants fail', JSON.stringify(inv)); process.exit(1); }
-    log('check: block identical; page invariants', JSON.stringify(inv));
+    const html = fs.readFileSync(path.resolve(opt('check')), 'utf8').replace(/\r\n/g, '\n');
+    const inv = checkDrafting(html, r.block, opt('base'));
+    if (!inv.ok) { console.error('check: fails', JSON.stringify(inv)); process.exit(1); }
+    log('check: block identical to a fresh build; everything outside it identical to the base;', JSON.stringify(inv));
   }
+  if (r.out.failed.length) process.exit(3);
 }
-module.exports = { build, normalize, order, encodeGeometry, loadCore, page, pageInvariants, guardRules, baseHtml, nearWheels, p2Hops, NEXT_TO_WHEEL, gates, joinFlags, ENGINE_SRC, ENGINE_PROPS, core, DEFAULTS };
+module.exports = { buildDrafting, pageDrafting, checkDrafting, conventionGates, blockSpan, CONV_TIERS, GATE_LIFTS, MIN_LEN, PINS, SETS, build, ending, overlapJoins, normalize, order, encodeGeometry, loadCore, page, pageInvariants, guardRules, baseHtml, nearWheels, p2Hops, NEXT_TO_WHEEL, gates, joinFlags, ENGINE_SRC, ENGINE_PROPS, core, DEFAULTS };

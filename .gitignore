@@ -20,3 +20,5 @@ Thumbs.db
 
 # The hero pen's default build output (engine/build.cjs); the shipped block lives in index.html.
 /tools/hero-pen/out/build/
+# The drafting build (engine/build.cjs without --r3) writes here by default; build.cjs --check without --out does too.
+/tools/hero-pen/out/build-drafting/

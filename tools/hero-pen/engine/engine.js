@@ -1,16 +1,30 @@
-/* Hero pen engine: the homepage car drawn by one hand (PEN_SPEC sections 6-10).
+/* Hero pen engine: the homepage car drafted by three pens while the photo rises behind it (merge build, 2026-11-21;
+ * started from the v3 production engine of DRAFTING_SPEC, 2026-11-20).
  * Readable source. engine/build.cjs inlines a comment-stripped, minified copy into the page after the data block
  * <script type="text/plain" id="hero-pen-data">, and evaluates the region between the core markers so the
- * schedules are solved and checked with exactly the motion the page runs.
- * One pen on one clock: a stroke starts only after the previous one ended (the schedule's gaps are never
- * negative). Each frame advances the pen clock by min(dt, 50 ms) and draws only that frame's new tapered
- * segments onto three stacked 2D canvases: GUIDE, SHADE, INK. No randomness at run time, no sessionStorage.
+ * schedules are solved and checked with exactly the motion and the develop the page runs.
+ * Three pens on one clock: pen A inks the car (tiers c y n f d), pen B lays out and dimensions (p k m r), pen C letters the
+ * white livery text (l, and u for the nose-top numerals) on the PENCIL canvas. Within a pen a stroke starts only after the
+ * previous one ended; the schedule line holds each stroke's absolute start and
+ * duration. Each frame advances the pen clock by min(dt, 50 ms) and draws only that frame's new tapered segments onto
+ * three stacked 2D canvases: PENCIL, DRAFT, INK. The photo develops through a flat page-white veil from V[0] on the pen
+ * clock (once both photo layers have decoded), and each canvas leaves on its own window of develop progress, so no
+ * layer can leave ahead of the photo. No randomness at run time, no sessionStorage.
  */
 (() => {
   "use strict";
   //@core-start
   const M = Math;
   const ang = (ax, ay, bx, by) => M.abs(M.atan2(ax * by - ay * bx, ax * bx + ay * by));
+  const ss = (a, b, v) => { const t = M.min(1, M.max(0, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
+  // V line: develop start, develop length (pen ms), the exit windows of PENCIL, DRAFT and INK in develop progress x 1000,
+  // gamma, ghost share, ghost end, and (fix round 1) the main rise's start and linear share (absent or 0 0: the merge
+  // curve). Photo density at develop progress v, and the opacity of canvas c.
+  const dens = (V, v) => {
+    const a = V[11] || 0, w = V[12] || 0;
+    return V[9] * ss(0, V[10], v) + (1 - V[9]) * M.pow((1 - w) * ss(a, 1, v) + w * M.min(1, M.max(0, (v - a) / (1 - a))), V[8]);
+  };
+  const lop = (V, c, v) => 1 - ss(V[2 + 2 * c] / 1e3, V[3 + 2 * c] / 1e3, v);
   // One stroke line "<tier><phase><mask><flags> x0 y0 dx1 dy1 dx2 dy2 dx3 dy3 [|] ..." (0.5 src px units) ->
   // flattened path (src px; segments <= 1.5 px and <= 8 deg), arc length s, curvature-warped arc U and the
   // submovements split at the corner markers, each with its share of the stroke's time.
@@ -33,7 +47,7 @@
       Y = h;
       i += 6;
     }
-    const n = x.length, s = [0], U = [0], q = [0], subs = [], nm = k[0][0] === "n";
+    const n = x.length, s = [0], U = [0], q = [0], subs = [], nm = "nu".includes(k[0][0]);
     for (let j = 1; j < n; j++) s[j] = s[j - 1] + M.hypot(x[j] - x[j - 1], y[j] - y[j - 1]);
     for (let j = 1; j < n - 1; j++) q[j] = ang(x[j] - x[j - 1], y[j] - y[j - 1], x[j + 1] - x[j], y[j + 1] - y[j]) / M.max(1e-6, (s[j + 1] - s[j - 1]) / 2);
     q[n - 1] = 0;
@@ -62,7 +76,7 @@
     if (tau >= 1) return st.n - 1;
     let r = st.sub[0];
     for (const b of st.sub) if (tau <= b[3]) { r = b; break; }
-    const v = M.min(1, (tau - r[2]) / (r[3] - r[2] || 1)), U = st.U, T = U[r[0]] + (st.t === "n" ? flat(v) : v * v * v * (10 - 15 * v + 6 * v * v)) * (U[r[1]] - U[r[0]]);
+    const v = M.min(1, (tau - r[2]) / (r[3] - r[2] || 1)), U = st.U, T = U[r[0]] + ("nu".includes(st.t) ? flat(v) : v * v * v * (10 - 15 * v + 6 * v * v)) * (U[r[1]] - U[r[0]]);
     let lo = r[0], hi = r[1];
     while (hi - lo > 1) { const m = (lo + hi) >> 1; if (U[m] <= T) lo = m; else hi = m; }
     const d = U[hi] - U[lo];
@@ -73,17 +87,17 @@
     const i = M.max(0, M.min(st.n - 2, M.floor(f))), u = f - i;
     return [st.x[i] + (st.x[i + 1] - st.x[i]) * u, st.y[i] + (st.y[i + 1] - st.y[i]) * u, st.s[i] + (st.s[i + 1] - st.s[i]) * u];
   };
-  // The chosen class's stroke lines and schedule from the block; hash = FNV-1a of those lines and the schedule line.
+  // The chosen class's stroke lines, schedule (T) and develop timeline (V) from the block; hash = FNV-1a of them.
   const pick = (txt, c) => {
     const bit = c === "D" ? 4 : c === "T" ? 2 : 1, L = txt.trim().split("\n"), out = [];
-    let sc = "", h = 2166136261;
+    let sc = "", vl = "", h = 2166136261;
     for (let i = 1; i < L.length; i++) {
       const l = L[i];
-      if (l[0] === "T") { if (l[2] === c) sc = l; } else if (+l[2] & bit) out.push(l);
+      if (l[0] === "T") { if (l[2] === c) sc = l; } else if (l[0] === "V") { if (l[2] === c) vl = l; } else if (+l[2] & bit) out.push(l);
     }
-    const z = out.join("\n") + "\n" + sc;
+    const z = out.join("\n") + "\n" + sc + "\n" + vl;
     for (let i = 0; i < z.length; i++) h = M.imul(h ^ z.charCodeAt(i), 16777619) >>> 0;
-    return { h: L[0].split(" ").map(Number), L: out, T: sc.split(" ").slice(2).map(Number), hash: h.toString(16) };
+    return { h: L[0].split(" ").map(Number), L: out, T: sc.split(" ").slice(2).map(Number), V: vl.split(" ").slice(2).map(Number), hash: h.toString(16) };
   };
   //@core-end
 
@@ -95,7 +109,7 @@
   const wrap = hero && hero.querySelector(".hero-draw-lines");
   const bg = media && media.querySelector(".hero-photo-background");
   const photos = media ? [...media.querySelectorAll("img")] : [];
-  const cv = wrap ? [...wrap.querySelectorAll("canvas")] : [];      // GUIDE, SHADE, INK, bottom to top
+  const cv = wrap ? [...wrap.querySelectorAll("canvas")] : [];      // PENCIL, DRAFT, INK, bottom to top
   const drop = (n) => {
     if (!n || !n.isConnected) return;
     const s = n.nextSibling;
@@ -115,18 +129,24 @@
   const armed = () => R.classList.contains("hero-draw");
   if ((!armed() && R.getAttribute("data-hero-pen") !== "wait") || !dataEl || !veil || !wrap || !bg || cv.length < 3) { teardown(); return; }
 
-  // revision 3: the develop starts DEV_GAP after last ink (the finished drawing is seen whole)
-  const DEV_MS = 1000, DEV_GAP = 100, DEV_MIN = 900, HOLD = 1800, G_EXIT = 300, SETTLE = 160, GH_MS = 150;
+  // The develop starts at V[0] on the pen clock once both photo layers have decoded; a later decode starts it from
+  // progress 0 and runs it over max(DEV_MIN, V[1] - lateness). Dense3 decode cap: a photo still not decoded at DECODE_CAP
+  // on the pen clock develops anyway, as 0e561624 did (its last ink + 1800 ms: 4719 ms at P, the earliest class), and
+  // hands the hero back to the CSS (hero-draw-own off), so the no-photo case ends no later than the live page.
+  const DEV_MIN = 900, SETTLE = 160, DECODE_CAP = 4500;
   const FCP_HOLD = 1500, LOAD_WAIT = 140, LOAD_CAP = 300, STEP = 50, WALL = 1000, CEIL = 11000, CEIL_FADE = 400, QUICK = 300;
-  const ELL = 1.6, INNER = 0.3, BIAS = 0.25, RPOW = 0.8;
   // the CSS failsafe (white-home-20261011.css): a 500 ms fade from 2.8 s on the veil's clock; past LATE the engine
   // leaves the reveal to it and finishes at F_END on that clock, 200 ms after the fade (fix-r1; hero-drawing-20261027.js's
   // LATE_MS, FAILSAFE_DELAY and FAILSAFE_FAST). F_RUSH: the rest of the fade at 3x (at most 167 ms) + 20 ms.
   const LATE = 2400, F_DELAY = 2800, F_END = 3500, F_FAST = 3, F_RUSH = 187;
-  // tier: [width factor, colour, canvas (0 GUIDE, 1 SHADE, 2 INK), destination-over, no white mix at the floor]
-  // GUIDE floors at 1 device px in #a9b1ba unmixed (revision 1: mixed, the guides were level 201-215 at DPR 1)
-  const TIER = { g: [0.36, 0xa9b1ba, 0, 0, 1], c: [0.95, 0x111316, 2], y: [1.05, 0x111316, 2], a: [1, 0x111316, 2], n: [0.8, 0x111316, 2],
-    f: [0.62, 0x2a3036, 2, 1], d: [0.42, 0x505b66, 2, 1], h: [0.3, 0x7b848d, 1] };
+  // tier: [width factor, colour, canvas (0 PENCIL, 1 DRAFT, 2 INK), destination-over, floor at 1 device px unmixed, dashed]
+  // pen A: c contour, y tyre, f form and d detail (under the contour) on INK; pen B: p pencil construction and k chain
+  // centre line on PENCIL, m drafting ink and r filled arrowheads on DRAFT; pen C: l lettering and u nose-top numerals on
+  // PENCIL, n side numerals on INK (merge build: u is new; l keeps 0e561624 detail-tier weight, mixed below 1 device px;
+  // fix round 1: n 0.8 -> 1.12, about the photo numerals' stroke (3.5 src px; 3.3 src px at 1440 and 390), so the side
+  // 219 covers them instead of sitting beside them)
+  const TIER = { c: [1.08, 0x111316, 2], y: [1.16, 0x111316, 2], n: [1.12, 0x111316, 2], f: [0.62, 0x262c32, 2, 1], d: [0.44, 0x3b444d, 2, 1],
+    p: [0.32, 0x9aa3ac, 0, 0, 1], k: [0.34, 0x7f8992, 0, 0, 1, 1], l: [0.44, 0x3b444d, 0], u: [0.8, 0x111316, 0], m: [0.4, 0x3b434b, 1, 0, 1], r: [0.4, 0x3b434b, 1, 0, 1] };
   const H = (W.__heroDraw = { state: "pending" }), boot = P.now();
 
   let done = 0, raf = 0, ceilTimer = 0, ro = null, io = null, inked = 0;
@@ -158,45 +178,29 @@
   const rm = matchMedia("(prefers-reduced-motion: reduce)");
   on(rm, "change", () => { if (rm.matches) finish(); });
 
-  const ss = (a, b, v) => { const t = M.min(1, M.max(0, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
-  // developEase = cubic-bezier(.65, 0, .35, 1)
-  // v in [0, 1]; 0 and 1 are fixed points of the Newton step
-  const ease = (v) => {
-    let t = v;
-    for (let i = 0; i < 8; i++) {
-      const fx = ((1.9 * t - 2.85) * t + 1.95) * t - v, d = (5.7 * t - 5.7) * t + 1.95;
-      if (M.abs(fx) < 1e-5) break;
-      t = M.min(1, M.max(0, t - fx / d));
-    }
-    return t * t * (3 - 2 * t);
-  };
-
-  let klass = "", S = [], last = 0, G = null, dpr = 1, lim = 0, lw = 0, lh = 0;
+  let klass = "", S = [], V = [], last = 0, G = null, dpr = 1, lim = 0, lw = 0, lh = 0;
   const ctx = [], box = [];
   const pickCls = () => { const w = R.clientWidth; return w >= 1280 ? "D" : w >= 768 ? "T" : "P"; };
   const prepare = () => {
     klass = pickCls();
     const d = pick(dataEl.textContent, klass);
-    if (d.T.length !== 2 * d.L.length || !d.L.length) throw "data";
-    let t = 0;
+    if (d.T.length !== 2 * d.L.length || !d.L.length || d.V.length < 11) throw "data";
+    last = 0;
     S = d.L.map((l, i) => {
       const s = decodeLine(l);
-      t += d.T[2 * i];
-      s.start = t;
+      s.start = d.T[2 * i];
       s.dur = d.T[2 * i + 1];
-      t += s.dur;
-      s.end = t;
+      s.end = s.start + s.dur;
       s.upto = 0;
+      last = M.max(last, s.end);
       return s;
     });
-    last = t;
+    V = d.V;
     lim = S.length;
-    // ghost rim loops (flag bit 4): the k-th flagged guide (tier g) retires GH_MS after the k-th flagged line, its
-    // rim's last stroke, has ended (s.r: that line)
-    const gq = [];
-    for (const s of S) if (s.f & 4) s.t === "g" ? gq.push(s) : (gq.shift().r = s);
+    S.sort((a, b) => a.start - b.start);
     H.car = d.h.slice(3, 7);
-    Object.assign(H, { cls: klass, n: S.length, lastInk: last, schedule: S.map((s) => [s.start, s.dur]), hash: d.hash, len: S.map((s) => M.round(s.L)), ph: S.map((s) => s.p), tier: S.map((s) => s.t), gr: S.map((s) => (s.r ? s.r.end : -1)) });
+    Object.assign(H, { cls: klass, n: S.length, lastInk: last, tl: V, schedule: S.map((s) => [s.start, s.dur]), hash: d.hash, len: S.map((s) => M.round(s.L)), ph: S.map((s) => s.p), tier: S.map((s) => s.t),
+      pen: S.map((s) => "BAACBABXYZ"[s.p]) });   // the lane from the phase digit (0 4 6 B, 1 2 5 A, 3 C; dense3: 7 8 9 detail X Y Z)
     return layout();
   };
 
@@ -212,14 +216,11 @@
     const nw = bg.naturalWidth || 2200, nh = bg.naturalHeight || 1238, sc = M.max(w / nw, h / nh), iw = nw * sc, ih = nh * sc;
     const op = getComputedStyle(bg).objectPosition.split(" "), ox = pos(op[0], w - iw), oy = pos(op[1] || "50%", h - ih);
     const kx = iw / 2200, ky = ih / 1238, [x0, y0, x1, y1] = H.car;
-    const cx = ox + ((x0 + x1) / 2) * kx, cy = oy + ((y0 + y1) / 2) * ky, dist = (x, y) => M.hypot((x - cx) / ELL, y - cy);
     const vx0 = br.left + ox + x0 * kx, vx1 = br.left + ox + x1 * kx, vy0 = br.top + oy + y0 * ky, vy1 = br.top + oy + y1 * ky;
     const share = (M.max(0, M.min(vx1, R.clientWidth) - M.max(vx0, 0)) * M.max(0, M.min(vy1, innerHeight) - M.max(vy0, 0))) / M.max(1, (vx1 - vx0) * (vy1 - vy0));
-    let far = 0;
-    for (const s of S) if (s.p === 1) for (let i = 0; i < s.n; i += 4) far = M.max(far, dist(ox + s.x[i] * kx, oy + s.y[i] * ky));
-    const k0 = far / INNER;
-    G = { kx, ky, ox, oy, cx, cy, k0, k1: M.max(k0, M.max(dist(0, 0), dist(w, 0), dist(0, h), dist(w, h)) / INNER + 2), share, car: (x1 - x0) * kx,
-      w1: M.min(2.1, M.max(1.4, 1.4 + ((R.clientWidth - 390) * 0.7) / 1050)) };
+    // fix round 1 (truth critic's registration note): the art is in pixel-centre coordinates, so src x maps to the
+    // centre of photo pixel x, ox + (x + 0.5) kx (was its left edge)
+    G = { kx, ky, ox: ox + kx / 2, oy: oy + ky / 2, share, car: (x1 - x0) * kx, w1: M.min(2.1, M.max(1.4, 1.4 + ((R.clientWidth - 390) * 0.7) / 1050)) };
     lw = w;
     lh = h;
     place(wrap, br.left - hr.left, br.top - hr.top, w, h);
@@ -246,7 +247,7 @@
     return 1;
   };
 
-  // ---- drawing (section 7) ----
+  // ---- drawing ----
   const cc = {};
   // device-pixel floor: below 1 device px draw 1 device px, the colour mixed toward white by 1 - wd
   const col = (rgb, wd) => {
@@ -256,24 +257,29 @@
   };
   const taper = (st, p, Lc) => {
     const k = G.car / 582, t = st.t;
-    if (t === "a") return 0.95 + 0.45 * ss(0, 1, M.min(p, Lc - p) / (10 * k));
-    if (t === "g") { const z = M.min(0.2 * Lc, 14 * k); return 0.35 + 0.65 * ss(0, 1, M.min(p, Lc - p) / z); }
-    if (t === "h") return M.min(0.85 + 0.15 * ss(0, M.min(0.1 * Lc, 2 * k), p), p > 0.55 * Lc ? 0.12 + 0.88 * ss(0, 0.45 * Lc, Lc - p) : 1);
+    // a struck pencil line: a light landing and a lift that thins; ruled drafting lines (k m r) keep one width
+    if (t === "p") return M.min(0.55 + 0.45 * ss(0, M.min(0.12 * Lc, 8 * k), p), 0.4 + 0.6 * ss(0, M.min(0.2 * Lc, 12 * k), Lc - p));
+    if (t === "k" || t === "m" || t === "r") return 1;
     return M.min(st.f & 1 ? 1 : 0.5 + 0.5 * ss(0, M.min(0.15 * Lc, 9 * k), p), st.f & 2 ? 1 : 0.15 + 0.85 * ss(0, M.min(0.25 * Lc, 18 * k), Lc - p));
   };
   // Draw stroke st from float index A to B, batching segments of equal width and colour into one path.
-  // A retiring ghost (st.fd 0 -> 1) is redrawn mixed toward white over the opaque veil; at 1 it is gone.
   const drawRange = (st, A, B) => {
     const T = TIER[st.t], c = ctx[T[2]];
-    if (B <= A || !c || st.fd >= 1) return;
+    if (B <= A || !c) return;
     const kx = G.kx, ky = G.ky, sc = (kx + ky) / 2, Lc = st.L * sc, pts = [ptAt(st, A)];
     for (let i = M.floor(A) + 1; i < B; i++) pts.push([st.x[i], st.y[i], st.s[i]]);
     pts.push(ptAt(st, B));
     c.globalCompositeOperation = T[3] ? "destination-over" : "source-over";
     let cw = -1, cs = "";
+    // chain line (tier k): long 16, gap 3, short 3, gap 3 (x car scale), decided per flattened segment by its middle
+    const kd = G.car / 582, per = 25 * kd;
     for (let j = 1; j < pts.length; j++) {
       const p = pts[j - 1], q = pts[j], w = T[0] * G.w1 * taper(st, ((p[2] + q[2]) / 2) * sc, Lc), wd = w * dpr;
-      const lw2 = M.round((wd < 1 ? 1 / dpr : w) * 20) / 20, s = col(T[1], T[4] ? 1 - (st.fd || 0) : wd);
+      if (T[5]) {
+        const m = (((p[2] + q[2]) / 2) * sc) % per;
+        if (!(m < 16 * kd || (m >= 19 * kd && m < 22 * kd))) { if (cw > 0) c.stroke(); cw = -1; continue; }
+      }
+      const lw2 = M.round((wd < 1 ? 1 / dpr : w) * 20) / 20, s = col(T[1], T[4] ? 1 : wd);
       if (lw2 !== cw || s !== cs) {
         if (cw > 0) c.stroke();
         c.beginPath();
@@ -284,6 +290,13 @@
       c.lineTo(G.ox + q[0] * kx, G.oy + q[1] * ky);
     }
     if (cw > 0) c.stroke();
+    // a closed arrowhead (tier r) is filled once its outline is complete
+    if (st.t === "r" && B >= st.n - 1) {
+      c.beginPath();
+      for (let i = 0; i < st.n; i++) c.lineTo(G.ox + st.x[i] * kx, G.oy + st.y[i] * ky);
+      c.fillStyle = col(T[1], 1);
+      c.fill();
+    }
   };
   // after layout(), which resized (and so cleared) the canvases: replay all ink up to pen time t
   const replay = (t) => {
@@ -294,34 +307,25 @@
     }
   };
 
-  // ---- develop (today's model, hero-drawing-20261027.js:90-98, 358-385) and the exit by layer ----
-  const fall = (u) => (u <= INNER ? 1 : u >= 1 ? 0 : 1 - ss(INNER, 1, u));
-  const STOPS = [];
-  for (let i = 0; i < 12; i++) STOPS.push(INNER + ((1 - INNER) * i) / 11);
-  let mask = "";
-  const setMask = (k, D, B) => {
-    const a = (u) => "rgb(255 255 255 / " + (1 - D * (1 - B * (1 - fall(u)))).toFixed(3) + ")";
-    const ry = M.max(1, k), v = B < 5e-4 || D <= 0 ? a(0)
-      : "radial-gradient(" + (ry * ELL).toFixed(1) + "px " + ry.toFixed(1) + "px at " + G.cx.toFixed(1) + "px " + G.cy.toFixed(1) + "px, " + a(0) + " 0%, " + STOPS.map((u) => a(u) + " " + (u * 100).toFixed(2) + "%").join(", ") + ")";
-    if (v !== mask) veil.style.background = mask = v;
+  // ---- develop: the photo rises evenly through a flat page-white veil; each canvas leaves on its develop window ----
+  let Dn = 0, va = -1, devDur = 1;
+  // the veil is written only when its alpha moves by 1/255 or more (and always at its ends)
+  const setVeil = (D) => {
+    const a = M.max(0, 1 - D);
+    if (M.abs(a - va) >= 1 / 255 || (a !== va && (a === 0 || a === 1))) { va = a; veil.style.background = "rgb(255 255 255 / " + a.toFixed(3) + ")"; }
   };
   const setOp = (c, v) => { const s = v >= 0.999 ? "" : v.toFixed(3); if (cv[c].style.opacity !== s) cv[c].style.opacity = s; };
-  let K = 0, Dn = 0, Bi = 0, devDur = DEV_MS;
-  const develop = (t, d0) => {
-    const dev = d0 < 0 ? 0 : M.min(1, M.max(0, (t - d0) / devDur)), p = ease(dev);
-    Dn = p;
-    Bi = BIAS * (1 - ss(0.3, 0.8, dev));
-    K = G.k0 + (G.k1 - G.k0) * M.pow(Dn, RPOW);
-    setMask(K, Dn, Bi);
-    setOp(0, 1 - ease(M.min(1, (dev * devDur) / G_EXIT)));
-    setOp(1, 1 - ss(0.1, 0.4, p));
-    setOp(2, 1 - ss(0.4, 0.95, p));
-    return dev;
+  const develop = (t) => {
+    const dev = devAt < 0 ? 0 : M.min(1, M.max(0, (t - devAt) / devDur));
+    H.dens = Dn = dens(V, dev);
+    setVeil(Dn);
+    let all = 1;
+    for (let c = 0; c < 3; c++) { const o = lop(V, c, dev); setOp(c, o); if (o > 0) all = 0; }
+    return dev >= 1 && all;
   };
 
   // ---- the live sequence ----
-  let fcpAt = -1, loadT = -1, c1At = -1, tStart = -1, prev = 0, clock = 0, cur = 0, devAt = -1, decAt = -1, sAt = -1, sMs = SETTLE;
-  let sK = 0, sD = 0, sB = 0;
+  let fcpAt = -1, loadT = -1, c1At = -1, tStart = -1, prev = 0, clock = 0, cur = 0, devAt = -1, decAt = -1, sAt = -1, sMs = SETTLE, sD = 0;
   const op0 = [];
   try {
     const po = new PerformanceObserver((l) => { for (const e of l.getEntries()) if (e.name === "first-contentful-paint") fcpAt = e.startTime; if (fcpAt >= 0) po.disconnect(); });
@@ -342,9 +346,7 @@
     sAt = tNow;
     sMs = want;
     H.state = "settling";
-    sK = K;
     sD = Dn;
-    sB = Bi;
     for (let c = 0; c < 3; c++) op0[c] = cv[c].style.opacity === "" ? 1 : +cv[c].style.opacity;
     if (decAt < 0) R.classList.remove("hero-draw-own");
   };
@@ -370,66 +372,62 @@
         H.state = "drawing";
         if (W.IntersectionObserver) {
           let first = 1;
+          // scroll is not intent, but a car scrolled under half on screen while ink is still to come settles
           io = new IntersectionObserver((es) => {
-            for (const e of es) if (!first && e.intersectionRatio < 0.5 && devAt < 0) settle(300, "offscreen");
+            for (const e of es) if (!first && e.intersectionRatio < 0.5 && !inked) settle(300, "offscreen");
             first = 0;
           }, { threshold: [0.5] });
           io.observe(cv[2]);
         }
       }
       // fix-r2: a devicePixelRatio change without a CSS size change (the window moved to a screen with another scaling)
-      // lays the canvases out again and replays the ink. The ResizeObserver sees CSS sizes only, and a (resolution)
-      // media query's change event did not fire for Chrome's emulated scale change, so the ratio is read every frame
-      // (the loop, and so the check, ends with the sequence).
+      // lays the canvases out again and replays the ink. The ResizeObserver sees CSS sizes only, so the ratio is read
+      // every frame (the loop, and so the check, ends with the sequence).
       if (M.min(3, W.devicePixelRatio || 1) !== dpr && layout()) replay(clock);
       if (sAt >= 0) {
         const p = M.min(1, (tNow - sAt) / sMs), e = 1 - (1 - p) * (1 - p);
-        K = sK + (G.k1 - sK) * e;
-        Dn = sD + (1 - sD) * e;
-        Bi = sB * (1 - e);
-        setMask(K, Dn, Bi);
+        H.dens = Dn = sD + (1 - sD) * e;
+        setVeil(Dn);
         for (let c = 0; c < 3; c++) setOp(c, op0[c] * (1 - e));
         if (p >= 1) finish();
         return;
       }
       clock += M.min(tNow - prev, STEP);
       prev = tNow;
-      // wall limit: never fast-forward; what is left is skipped and the photo develops now
+      // wall limit: never fast-forward; what is left is skipped (every started stroke stops where it is); the develop
+      // keeps its own clock
       if (cur < lim && tNow - tStart > last + WALL) {
-        const part = S[cur].upto > 0 ? 1 : 0;
-        H.skipped = lim - cur - part;
-        S[cur].cap = S[cur].upto;
-        lim = cur + part;
+        let k = cur;
+        while (k < lim && S[k].upto > 0) { S[k].cap = S[k].upto; k++; }
+        H.skipped = lim - k;
+        lim = k;
         cur = lim;
-        if (devAt < 0) { devAt = clock; devDur = DEV_MIN; H.devStart = devAt; H.state = "developing"; }
       }
+      // both pens: the strokes under way this frame (at most one per pen) draw their new part; cur moves past the
+      // strokes that are finished
       const drawnFrom = cur;
-      while (cur < lim && S[cur].start < clock) {
-        const s = S[cur], f = posAt(s, (clock - s.start) / s.dur);
+      let live = 0;
+      for (let i = cur; i < lim && S[i].start < clock; i++) {
+        const s = S[i];
+        if (s.upto >= s.n - 1) continue;
+        const f = posAt(s, (clock - s.start) / s.dur);
         drawRange(s, s.upto, f);
         s.upto = f;
-        if (clock >= s.end) cur++;
-        else break;
+        if (f < s.n - 1) live++;
       }
+      while (cur < lim && S[cur].upto >= S[cur].n - 1) cur++;
       if (cur >= lim) penUp();
-      // revision 2: each ghost loop retires over GH_MS once its rim's last stroke has inked (no double rim line)
-      let rg = 0;
-      for (const s of S) if (s.r) { const v = M.min(1, M.max(0, (clock - s.r.end) / GH_MS)); if (v !== (s.fd || 0)) { s.fd = v; rg = 1; } }
-      if (rg && ctx[0]) { ctx[0].clearRect(0, 0, 1e5, 1e5); for (const s of S) if (s.t === "g") drawRange(s, 0, s.upto); }
-      H.frame = { penT: +clock.toFixed(2), from: drawnFrom, to: cur, partial: cur < lim && S[cur].start < clock };
+      H.frame = { penT: +clock.toFixed(2), from: drawnFrom, to: cur, live, partial: live > 0 };
       H.penT = M.round(clock);
-      if (devAt < 0) {
-        const want = last + DEV_GAP;
-        if (clock >= want && (decAt >= 0 || clock >= last + HOLD)) {
-          devAt = clock;
-          devDur = clock > want + 1 ? M.max(DEV_MIN, DEV_MS - (clock - want)) : DEV_MS;
-          if (decAt < 0) R.classList.remove("hero-draw-own");
-          H.devStart = devAt;
-          H.decodedAt = decAt < 0 ? -1 : decAt - tStart;
-          H.state = "developing";
-        }
+      if (devAt < 0 && clock >= V[0] && (decAt >= 0 || clock >= DECODE_CAP)) {
+        devAt = clock;
+        devDur = M.max(DEV_MIN, V[1] - (clock - V[0]));
+        if (decAt < 0) R.classList.remove("hero-draw-own");
+        H.devStart = devAt;
+        H.decodedAt = decAt < 0 ? -1 : decAt - tStart;
+        H.state = "developing";
       }
-      if (develop(clock, devAt) >= 1 && devAt >= 0) finish();
+      if (develop(clock) && cur >= lim) finish();
     } catch (err) {
       fail(err);
     }
@@ -475,7 +473,7 @@
       if (done) return;
       try {
         if (getComputedStyle(media).display === "none" || !prepare()) return finish();
-        setMask(0, 0, 0);
+        setVeil(0);
         for (const c of cv) on(c, "contextlost", () => settle(SETTLE, "contextlost"));
         ro = new ResizeObserver(() => {
           if (done || !G) return;

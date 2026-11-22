@@ -1,0 +1,4377 @@
+{
+ "made": "2026-11-22T11:09:17.553Z",
+ "by": "solver round 2 (agent, 2026-11-22; dense3/final/solver scripts/r2/groups-full.cjs): the final art groups file plus one explicit group per class for each of pass 2's extras; every choice is an agent decision, not the owner's",
+ "rules": "see scripts/groups.cjs header; extras: see scripts/r2/groups-full.cjs header",
+ "files": {
+  "strokes-final.json": {
+   "D": {
+    "promotedHosts": [],
+    "hostsWithoutDependants": [],
+    "groups": 45,
+    "members": 54,
+    "srcPx": 1150.2,
+    "detailGroups": [
+     {
+      "group": "g008",
+      "inventoryGroup": "g008",
+      "name": "driver-left-shoulder",
+      "region": "cockpit",
+      "attachTo": "nose-loop",
+      "attachToPhase": 1,
+      "attachToPass2Order": 3,
+      "attachAtSrcPx": 7.2,
+      "members": [
+       {
+        "stroke": "ck-suit-side",
+        "part": "suit, left side panel seam (dark side panel against the light blue)",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0027"
+        ],
+        "lenSrc": 23.3,
+        "devLen": 16.4,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 23.3
+     },
+     {
+      "group": "g025",
+      "inventoryGroup": "g025",
+      "name": "hoop-lamp",
+      "region": "rear",
+      "attachTo": "hoop-leg-arch",
+      "attachToPhase": 1,
+      "attachToPass2Order": 6,
+      "attachAtSrcPx": 167.9,
+      "members": [
+       {
+        "stroke": "r-gusset",
+        "part": "small triangular opening at the left hoop leg junction (its two sides and its base)",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0552"
+        ],
+        "lenSrc": 39,
+        "devLen": 27.5,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 39
+     },
+     {
+      "group": "g040",
+      "inventoryGroup": "g040",
+      "name": "hoop-lamp",
+      "region": "rear",
+      "attachTo": "hoop-column",
+      "attachToPhase": 1,
+      "attachToPass2Order": 7,
+      "attachAtSrcPx": 16.4,
+      "members": [
+       {
+        "stroke": "r-leg-inner",
+        "part": "right hoop leg: inner edge against the grass",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0236"
+        ],
+        "lenSrc": 35.9,
+        "devLen": 25.3,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 35.9
+     },
+     {
+      "group": "g026",
+      "inventoryGroup": "g026",
+      "name": "cockpit-blue-part",
+      "region": "cockpit",
+      "attachTo": "hoop-column",
+      "attachToPhase": 1,
+      "attachToPass2Order": 7,
+      "attachAtSrcPx": 163.4,
+      "members": [
+       {
+        "stroke": "ck-blue-crease",
+        "part": "blue cockpit part, edge between its lit upper face and its darker lower face",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0020"
+        ],
+        "lenSrc": 37.1,
+        "devLen": 26.2,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 37.1
+     },
+     {
+      "group": "g059",
+      "inventoryGroup": "g059",
+      "name": "cockpit-blue-part",
+      "region": "cockpit",
+      "attachTo": "hoop-column",
+      "attachToPhase": 1,
+      "attachToPass2Order": 7,
+      "attachAtSrcPx": 163.4,
+      "members": [
+       {
+        "stroke": "ck-blue-low",
+        "part": "blue cockpit part, lower edge",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0476"
+        ],
+        "lenSrc": 24.9,
+        "devLen": 17.6,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 24.9
+     },
+     {
+      "group": "g007",
+      "inventoryGroup": "g007",
+      "name": "front-hub-spokes",
+      "region": "front",
+      "attachTo": "fw-rim-seen",
+      "attachToPhase": 2,
+      "attachToPass2Order": 19,
+      "attachAtSrcPx": 15.5,
+      "members": [
+       {
+        "stroke": "fw-inner-lip-upper",
+        "part": "front rim: inner lip (inner edge of the dark flange band), upper left: from under the top of the rim flange down the left side",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0469",
+         "u0136"
+        ],
+        "lenSrc": 43.3,
+        "devLen": 30.5,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 43.3
+     },
+     {
+      "group": "front-wheel-face",
+      "inventoryGroup": "front-wheel-face",
+      "name": "front wheel centre: the lit bars of the wheel face (one edge each)",
+      "region": "front",
+      "attachTo": "fw-rim-seen",
+      "attachToPhase": 2,
+      "attachToPass2Order": 19,
+      "attachAtSrcPx": 16.7,
+      "members": [
+       {
+        "stroke": "fw-face-bar-up",
+        "part": "front wheel centre: lit bar from the centre up to the inner lip (the inventory's 'front rim inner flange' chain u0265), its right edge where the lit face meets the shadow",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0265"
+        ],
+        "lenSrc": 32.6,
+        "devLen": 23,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "fw-face-bar-low",
+        "part": "front wheel centre: lit bar from the centre down to the left (inventory g022 'front hub spoke', chain u0400), its lower right edge",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0400"
+        ],
+        "lenSrc": 22.1,
+        "devLen": 15.6,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "fw-face-bar-left",
+        "part": "front wheel centre: lit bar from the centre to the left (chain u0431), its lower edge, turning up at the left end where the bar meets the inner lip",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0431"
+        ],
+        "lenSrc": 21.7,
+        "devLen": 15.3,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 76.4
+     },
+     {
+      "group": "g019",
+      "inventoryGroup": "g019",
+      "name": "front-rim-lip",
+      "region": "front",
+      "attachTo": "fw-rim-fit",
+      "attachToPhase": 2,
+      "attachToPass2Order": 20,
+      "attachAtSrcPx": 0,
+      "members": [
+       {
+        "stroke": "fw-inner-lip-lower",
+        "part": "front rim: inner lip, lower left round the bottom to the lower right (the inner of the two lower lip highlights); desktop version",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0087",
+         "u0443",
+         "u0208"
+        ],
+        "lenSrc": 55.4,
+        "devLen": 39,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 55.4
+     },
+     {
+      "group": "g009",
+      "inventoryGroup": "g009",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "brace-inner",
+      "attachToPhase": 2,
+      "attachToPass2Order": 26,
+      "attachAtSrcPx": 31.3,
+      "members": [
+       {
+        "stroke": "r-box-frame-top",
+        "part": "electronics box: top bar of its frame, under the cable ties",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0419",
+         "u0033"
+        ],
+        "lenSrc": 27.7,
+        "devLen": 19.5,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 27.7
+     },
+     {
+      "group": "g010",
+      "inventoryGroup": "g010",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "brace-inner",
+      "attachToPhase": 2,
+      "attachToPass2Order": 26,
+      "attachAtSrcPx": 39.8,
+      "members": [
+       {
+        "stroke": "r-box-face",
+        "part": "electronics box: outline of its face (four sides)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0445",
+         "u0318",
+         "u0444",
+         "u0374",
+         "u0317",
+         "u0126",
+         "u0358",
+         "u0359",
+         "u0432",
+         "u0599"
+        ],
+        "lenSrc": 122.2,
+        "devLen": 86.1,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "r-box-frame-bottom",
+        "part": "electronics box: bottom bar of its frame",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0285"
+        ],
+        "lenSrc": 25.8,
+        "devLen": 18.2,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 148
+     },
+     {
+      "group": "g077",
+      "inventoryGroup": "g077",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "brace-inner",
+      "attachToPhase": 2,
+      "attachToPass2Order": 26,
+      "attachAtSrcPx": 65.6,
+      "members": [
+       {
+        "stroke": "r-chain",
+        "part": "chain hanging from the brace to the electronics box (its left edge)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0035"
+        ],
+        "lenSrc": 24.3,
+        "devLen": 17.1,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 24.3
+     },
+     {
+      "group": "g028a",
+      "inventoryGroup": "g028",
+      "name": "headrest-box",
+      "region": "rear",
+      "attachTo": "leg-block",
+      "attachToPhase": 2,
+      "attachToPass2Order": 33,
+      "attachAtSrcPx": 0,
+      "members": [
+       {
+        "stroke": "r-support-right",
+        "part": "headrest support below the left hoop leg: its right edge against the grass",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0360"
+        ],
+        "lenSrc": 31,
+        "devLen": 21.8,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 31
+     },
+     {
+      "group": "g028b",
+      "inventoryGroup": "g028",
+      "name": "headrest-box",
+      "region": "rear",
+      "attachTo": "diag-tube-far",
+      "attachToPhase": 2,
+      "attachToPass2Order": 34,
+      "attachAtSrcPx": 4.1,
+      "members": [
+       {
+        "stroke": "r-support-top",
+        "part": "headrest support below the left hoop leg: its top edge, under the red block",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0360"
+        ],
+        "lenSrc": 26,
+        "devLen": 18.3,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 26
+     },
+     {
+      "group": "g064",
+      "inventoryGroup": "g064",
+      "name": "headrest-box",
+      "region": "cockpit",
+      "attachTo": "box-top-right",
+      "attachToPhase": 2,
+      "attachToPass2Order": 37,
+      "attachAtSrcPx": 35,
+      "members": [
+       {
+        "stroke": "ck-headrest-top",
+        "part": "headrest box, top face back edge (against the grass)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0301"
+        ],
+        "lenSrc": 35.4,
+        "devLen": 24.9,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 35.4
+     },
+     {
+      "group": "g000",
+      "inventoryGroup": "g000",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "bar-below-brace",
+      "attachToPhase": 2,
+      "attachToPass2Order": 42,
+      "attachAtSrcPx": 2.9,
+      "members": [
+       {
+        "stroke": "r-node-tube-right",
+        "part": "frame node under the electronics box: right tube, its outer edge, down to the bar",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0450"
+        ],
+        "lenSrc": 16.8,
+        "devLen": 11.8,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "r-node-diag",
+        "part": "frame node under the electronics box: thin diagonal rod across its centre window",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0128",
+         "u0175"
+        ],
+        "lenSrc": 16.3,
+        "devLen": 11.5,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "r-node-tube-left",
+        "part": "frame node under the electronics box: left tube, its outer edge, down to the beam",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0219",
+         "u0481"
+        ],
+        "lenSrc": 18.8,
+        "devLen": 13.2,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "r-node-window",
+        "part": "frame node under the electronics box: outline of its centre window (four sides)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0128",
+         "u0104"
+        ],
+        "lenSrc": 52.8,
+        "devLen": 37.2,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "r-beam-left",
+        "part": "frame tube meeting the bar under the electronics box (upper edge)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0482",
+         "u0526",
+         "u0258"
+        ],
+        "lenSrc": 28.8,
+        "devLen": 20.3,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 133.4
+     },
+     {
+      "group": "g065",
+      "inventoryGroup": "g065",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "rear-tube-level",
+      "attachToPhase": 2,
+      "attachToPass2Order": 43,
+      "attachAtSrcPx": 25,
+      "members": [
+       {
+        "stroke": "r-post-right",
+        "part": "short post between the bar and the level tube: right edge",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0534"
+        ],
+        "lenSrc": 19.7,
+        "devLen": 13.9,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 19.7
+     },
+     {
+      "group": "g021",
+      "inventoryGroup": "g021",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "rear-tube-level",
+      "attachToPhase": 2,
+      "attachToPass2Order": 43,
+      "attachAtSrcPx": 29,
+      "members": [
+       {
+        "stroke": "r-post-left",
+        "part": "short post between the bar and the level tube: left edge",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0535"
+        ],
+        "lenSrc": 21.2,
+        "devLen": 14.9,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 21.2
+     },
+     {
+      "group": "g036",
+      "inventoryGroup": "g036",
+      "name": "driver-right-arm",
+      "region": "cockpit",
+      "attachTo": "sleeve-torso",
+      "attachToPhase": 2,
+      "attachToPass2Order": 48,
+      "attachAtSrcPx": 21.4,
+      "members": [
+       {
+        "stroke": "ck-shoulder-outer",
+        "part": "right shoulder, outer edge of the suit",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0014"
+        ],
+        "lenSrc": 29.3,
+        "devLen": 20.6,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 29.3
+     },
+     {
+      "group": "g006",
+      "inventoryGroup": "g006",
+      "name": "driver-right-arm",
+      "region": "cockpit",
+      "attachTo": "sleeve-torso",
+      "attachToPhase": 2,
+      "attachToPass2Order": 48,
+      "attachAtSrcPx": 47.9,
+      "members": [
+       {
+        "stroke": "ck-glove-panel-low",
+        "part": "right glove back panel, lower piping edge",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0498"
+        ],
+        "lenSrc": 26.7,
+        "devLen": 18.8,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 26.7
+     },
+     {
+      "group": "g037",
+      "inventoryGroup": "g037",
+      "name": "harness",
+      "region": "cockpit",
+      "attachTo": "sleeve-torso",
+      "attachToPhase": 2,
+      "attachToPass2Order": 48,
+      "attachAtSrcPx": 80.1,
+      "members": [
+       {
+        "stroke": "ck-adjuster",
+        "part": "shoulder-strap red adjuster plate, outline",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0024"
+        ],
+        "lenSrc": 39.6,
+        "devLen": 27.9,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 39.6
+     },
+     {
+      "group": "g042",
+      "inventoryGroup": "g042",
+      "name": "harness",
+      "region": "cockpit",
+      "attachTo": "sleeve-torso",
+      "attachToPhase": 2,
+      "attachToPass2Order": 48,
+      "attachAtSrcPx": 100.1,
+      "members": [
+       {
+        "stroke": "ck-lap-plate2-top",
+        "part": "lap-belt buckle, right red plate, upper edge against the black latch",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0243"
+        ],
+        "lenSrc": 23.3,
+        "devLen": 16.4,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 23.3
+     },
+     {
+      "group": "g015",
+      "inventoryGroup": "g015",
+      "name": "harness",
+      "region": "cockpit",
+      "attachTo": "neck",
+      "attachToPhase": 2,
+      "attachToPass2Order": 50,
+      "attachAtSrcPx": 54.3,
+      "members": [
+       {
+        "stroke": "ck-shoulder-top",
+        "part": "right shoulder, top edge of the light suit against the dark neck padding (continues the neck line toward ck-shoulder-outer)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0368"
+        ],
+        "lenSrc": 18.8,
+        "devLen": 13.3,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 18.8
+     },
+     {
+      "group": "g078",
+      "inventoryGroup": "g078",
+      "name": "front-suspension",
+      "region": "front",
+      "attachTo": "mech-front-rod-a",
+      "attachToPhase": 2,
+      "attachToPass2Order": 51,
+      "attachAtSrcPx": 15.8,
+      "members": [
+       {
+        "stroke": "mech-front-link",
+        "part": "front corner: lit near-vertical member between the upper and lower rods (its left edge)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0470"
+        ],
+        "lenSrc": 30.8,
+        "devLen": 21.7,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 30.8
+     },
+     {
+      "group": "g027",
+      "inventoryGroup": "g027",
+      "name": "helmet-visor-mechanism",
+      "region": "cockpit",
+      "attachTo": "mech-visor-lower",
+      "attachToPhase": 2,
+      "attachToPass2Order": 53,
+      "attachAtSrcPx": 49.5,
+      "members": [
+       {
+        "stroke": "ck-chin-lip-d",
+        "part": "helmet chin bar, lower edge of the lip under the visor: right part curling into the visor tab (D copy of ck-chin-lip, left 35 src px trimmed)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0319",
+         "u0099"
+        ],
+        "lenSrc": 12.9,
+        "devLen": 9.1,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "ck-visor-tab",
+        "part": "helmet visor side tab, outer edge (pivot down to the chin bar)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0179"
+        ],
+        "lenSrc": 23,
+        "devLen": 16.2,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 35.9
+     },
+     {
+      "group": "g001",
+      "inventoryGroup": "g001",
+      "name": "harness",
+      "region": "cockpit",
+      "attachTo": "mlong-left-strap-inner",
+      "attachToPhase": 2,
+      "attachToPass2Order": 56,
+      "attachAtSrcPx": 6.4,
+      "members": [
+       {
+        "stroke": "ck-lap-plate-end",
+        "part": "lap-belt buckle, left red plate, outer end",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0003",
+         "u0277"
+        ],
+        "lenSrc": 22.2,
+        "devLen": 15.6,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 22.2
+     },
+     {
+      "group": "g004a",
+      "inventoryGroup": "g004",
+      "name": "bay-disc",
+      "region": "rear",
+      "attachTo": "mech-bay-disc-left",
+      "attachToPhase": 2,
+      "attachToPass2Order": 59,
+      "attachAtSrcPx": 57.4,
+      "members": [
+       {
+        "stroke": "r-canister",
+        "part": "blue canister below the bay disc: its two sides and its top under the white cap",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0295",
+         "u0296",
+         "u0448",
+         "u0487"
+        ],
+        "lenSrc": 46.3,
+        "devLen": 32.6,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "r-disc-ring-left",
+        "part": "bay disc: inner ring line on its left side (the edge of the slotted web inside the rim band)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0421"
+        ],
+        "lenSrc": 19,
+        "devLen": 13.4,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 65.3
+     },
+     {
+      "group": "g004b",
+      "inventoryGroup": "g004",
+      "name": "bay-disc",
+      "region": "rear",
+      "attachTo": "mech-bay-disc-right",
+      "attachToPhase": 2,
+      "attachToPass2Order": 60,
+      "attachAtSrcPx": 0,
+      "members": [
+       {
+        "stroke": "r-disc-ring-right",
+        "part": "bay disc: inner ring line on its right side (the edge of the slotted web inside the rim band)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0446",
+         "u0453"
+        ],
+        "lenSrc": 39,
+        "devLen": 27.5,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 39
+     },
+     {
+      "group": "g053",
+      "inventoryGroup": "g053",
+      "name": "g053",
+      "region": "marks",
+      "attachTo": "decal-square-mark",
+      "attachToPhase": 2,
+      "attachToPass2Order": 65,
+      "attachAtSrcPx": 23.5,
+      "members": [
+       {
+        "stroke": "mk-square-icon",
+        "part": "square sponsor mark on the nose top: the dark icon inside the white tile (its upper and right edges)",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0193"
+        ],
+        "lenSrc": 17.3,
+        "devLen": 12.2,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 17.3
+     },
+     {
+      "group": "x-mech-front-rod-a",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (front-bay)",
+      "region": "front",
+      "attachTo": "front-tyre",
+      "attachToDetail": false,
+      "attachDistSrcPx": 0.03,
+      "attachEndsSrcPx": [
+       29.35,
+       0.79
+      ],
+      "attachCategory": "joins",
+      "members": [
+       {
+        "stroke": "mech-front-rod-a",
+        "tier": "d",
+        "lenSrc": 33.1,
+        "attachHow": "joins: 0.03 src px (ends 29.4 / 0.8); pass 1"
+       }
+      ],
+      "srcPx": 33.1,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-front-rod-b",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (front-bay)",
+      "region": "front",
+      "attachTo": "front-tyre",
+      "attachToDetail": false,
+      "attachDistSrcPx": 0.01,
+      "attachEndsSrcPx": [
+       27.92,
+       0.99
+      ],
+      "attachCategory": "joins",
+      "members": [
+       {
+        "stroke": "mech-front-rod-b",
+        "tier": "d",
+        "lenSrc": 30.3,
+        "attachHow": "joins: 0.01 src px (ends 27.9 / 1.0); pass 1"
+       }
+      ],
+      "srcPx": 30.3,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-visor-lower",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (helmet)",
+      "region": "cockpit",
+      "attachTo": "helmet",
+      "attachToDetail": false,
+      "attachDistSrcPx": 0.81,
+      "attachEndsSrcPx": [
+       0.81,
+       17.34
+      ],
+      "attachCategory": "joins",
+      "members": [
+       {
+        "stroke": "mech-visor-lower",
+        "tier": "f",
+        "lenSrc": 56.3,
+        "attachHow": "joins: 0.81 src px (ends 0.8 / 17.3); pass 1"
+       }
+      ],
+      "srcPx": 56.3,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-headrest-lower",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (box)",
+      "region": "cockpit",
+      "attachTo": "grey-wedge-far",
+      "attachToDetail": false,
+      "attachDistSrcPx": 3.86,
+      "attachEndsSrcPx": [
+       6.74,
+       4
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "mech-headrest-lower",
+        "tier": "d",
+        "lenSrc": 32,
+        "attachHow": "beside: 3.86 src px (ends 6.7 / 4.0); pass 1"
+       }
+      ],
+      "srcPx": 32,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-strap-edge",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (driver)",
+      "region": "cockpit",
+      "attachTo": "ck-adjuster",
+      "attachToDetail": true,
+      "attachDistSrcPx": 3.87,
+      "attachEndsSrcPx": [
+       20.94,
+       20.7
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "mech-strap-edge",
+        "tier": "f",
+        "lenSrc": 50.7,
+        "attachHow": "beside: 3.87 src px (ends 20.9 / 20.7); pass 2"
+       }
+      ],
+      "srcPx": 50.7,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mlong-left-strap-inner",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (driver)",
+      "region": "cockpit",
+      "attachTo": "neck",
+      "attachToDetail": false,
+      "attachDistSrcPx": 0.2,
+      "attachEndsSrcPx": [
+       47.43,
+       1.58
+      ],
+      "attachCategory": "joins",
+      "members": [
+       {
+        "stroke": "mlong-left-strap-inner",
+        "tier": "f",
+        "lenSrc": 51.9,
+        "attachHow": "joins: 0.20 src px (ends 47.4 / 1.6); pass 1"
+       }
+      ],
+      "srcPx": 51.9,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mlong-forearm-edge",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (driver)",
+      "region": "cockpit",
+      "attachTo": "sleeve-torso",
+      "attachToDetail": false,
+      "attachDistSrcPx": 2.08,
+      "attachEndsSrcPx": [
+       2.08,
+       15.06
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "mlong-forearm-edge",
+        "tier": "f",
+        "lenSrc": 38.3,
+        "attachHow": "beside: 2.08 src px (ends 2.1 / 15.1); pass 1"
+       }
+      ],
+      "srcPx": 38.3,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-bar-lower-edge",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (rear-bay)",
+      "region": "rear",
+      "attachTo": "r-post-left",
+      "attachToDetail": true,
+      "attachDistSrcPx": 3.4,
+      "attachEndsSrcPx": [
+       31.04,
+       10.55
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "mech-bar-lower-edge",
+        "tier": "f",
+        "lenSrc": 42.2,
+        "attachHow": "beside: 3.40 src px (ends 31.0 / 10.5); pass 2"
+       }
+      ],
+      "srcPx": 42.2,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-bay-disc-left",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (rear-bay)",
+      "region": "rear",
+      "attachTo": "mech-bay-disc-right",
+      "attachToDetail": true,
+      "attachDistSrcPx": 9.55,
+      "attachEndsSrcPx": [
+       22.01,
+       9.55
+      ],
+      "attachCategory": "nearest",
+      "members": [
+       {
+        "stroke": "mech-bay-disc-left",
+        "tier": "d",
+        "lenSrc": 65.1,
+        "attachHow": "nearest: 9.55 src px (ends 22.0 / 9.6); pass 2; nearer but cyclic: r-canister 5.32 (cycle), r-disc-ring-left 8.28 (cycle); no car line within 6.5 src px makes no cycle"
+       }
+      ],
+      "srcPx": 65.1,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-bay-disc-right",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (rear-bay)",
+      "region": "rear",
+      "attachTo": "rod-lower-edge",
+      "attachToDetail": false,
+      "attachDistSrcPx": 10.49,
+      "attachEndsSrcPx": [
+       41.16,
+       21.63
+      ],
+      "attachCategory": "nearest",
+      "members": [
+       {
+        "stroke": "mech-bay-disc-right",
+        "tier": "d",
+        "lenSrc": 54,
+        "attachHow": "nearest: 10.49 src px (ends 41.2 / 21.6); pass 2; nearer but cyclic: r-disc-ring-right 3.35 (cycle), mech-bay-disc-left 9.55 (cycle); no car line within 6.5 src px makes no cycle"
+       }
+      ],
+      "srcPx": 54,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal-tip-sticker",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "stripe-upper-front-b",
+      "attachToDetail": false,
+      "attachDistSrcPx": 1.87,
+      "attachEndsSrcPx": [
+       3.08,
+       1.87
+      ],
+      "attachCategory": "joins",
+      "members": [
+       {
+        "stroke": "decal-tip-sticker",
+        "tier": "d",
+        "lenSrc": 99.3,
+        "attachHow": "joins: 1.87 src px (ends 3.1 / 1.9); pass 1"
+       }
+      ],
+      "srcPx": 99.3,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal-tesla-t",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "decal-bose",
+      "attachToDetail": true,
+      "attachDistSrcPx": 5.01,
+      "attachEndsSrcPx": [
+       33.87,
+       33.98
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "decal-tesla-t",
+        "tier": "d",
+        "lenSrc": 95.1,
+        "attachHow": "beside: 5.01 src px (ends 33.9 / 34.0); pass 2"
+       }
+      ],
+      "srcPx": 95.1,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal2-tesla-word",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "decal-tip-sticker",
+      "attachToDetail": true,
+      "attachDistSrcPx": 5.88,
+      "attachEndsSrcPx": [
+       9.22,
+       10.98
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "decal2-tesla-word",
+        "tier": "d",
+        "lenSrc": 57.1,
+        "attachHow": "beside: 5.88 src px (ends 9.2 / 11.0); pass 2"
+       }
+      ],
+      "srcPx": 57.1,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal-bose",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "stripe-upper-front-b",
+      "attachToDetail": false,
+      "attachDistSrcPx": 6.25,
+      "attachEndsSrcPx": [
+       6.25,
+       6.68
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "decal-bose",
+        "tier": "d",
+        "lenSrc": 110.1,
+        "attachHow": "beside: 6.25 src px (ends 6.3 / 6.7); pass 2; nearer but cyclic: decal-tesla-t 5.01 (cycle)"
+       }
+      ],
+      "srcPx": 110.1,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal-square-mark",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "stripe-upper-front-b",
+      "attachToDetail": false,
+      "attachDistSrcPx": 11.07,
+      "attachEndsSrcPx": [
+       11.07,
+       11.79
+      ],
+      "attachCategory": "nearest",
+      "members": [
+       {
+        "stroke": "decal-square-mark",
+        "tier": "d",
+        "lenSrc": 71.8,
+        "attachHow": "nearest: 11.07 src px (ends 11.1 / 11.8); pass 2; nearer but cyclic: mk-square-icon 3.22 (cycle); no car line within 6.5 src px makes no cycle"
+       }
+      ],
+      "srcPx": 71.8,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal-sae-mark",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "decal2-sae-intl",
+      "attachToDetail": true,
+      "attachDistSrcPx": 3.82,
+      "attachEndsSrcPx": [
+       44.73,
+       45.83
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "decal-sae-mark",
+        "tier": "d",
+        "lenSrc": 196.4,
+        "attachHow": "beside: 3.82 src px (ends 44.7 / 45.8); pass 2"
+       }
+      ],
+      "srcPx": 196.4,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal2-sae-intl",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "top-plate",
+      "attachToDetail": false,
+      "attachDistSrcPx": 6.67,
+      "attachEndsSrcPx": [
+       7.1,
+       6.88
+      ],
+      "attachCategory": "nearest",
+      "members": [
+       {
+        "stroke": "decal2-sae-intl",
+        "tier": "d",
+        "lenSrc": 30.6,
+        "attachHow": "nearest: 6.67 src px (ends 7.1 / 6.9); pass 2; nearer but cyclic: decal-sae-mark 3.82 (cycle); no car line within 6.5 src px makes no cycle"
+       }
+      ],
+      "srcPx": 30.6,
+      "explicitExtra": true
+     }
+    ],
+    "pass2StrokesPromotedToThisClass": [],
+    "pass2StrokesWithChangedGeometry": [
+     "top-plate",
+     "fw-rim-seen",
+     "fw-rim-fit",
+     "top-219-01-2",
+     "top-219-03-9"
+    ],
+    "scheduleNotes": null,
+    "extrasAdded": 17
+   },
+   "T": {
+    "promotedHosts": [
+     {
+      "stroke": "mech-visor-lower",
+      "neededBy": [
+       "ck-chin-lip",
+       "ck-visor-tab"
+      ],
+      "stillDrawnHere": [
+       "ck-visor-tab"
+      ]
+     }
+    ],
+    "hostsWithoutDependants": [],
+    "groups": 44,
+    "members": 46,
+    "srcPx": 978,
+    "detailGroups": [
+     {
+      "group": "g008a",
+      "inventoryGroup": "g008",
+      "name": "driver-left-shoulder",
+      "region": "cockpit",
+      "attachTo": "nose-loop",
+      "attachToPhase": 1,
+      "attachToPass2Order": 3,
+      "attachAtSrcPx": 7.2,
+      "members": [
+       {
+        "stroke": "ck-suit-side",
+        "part": "suit, left side panel seam (dark side panel against the light blue)",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0027"
+        ],
+        "lenSrc": 23.3,
+        "devLen": 21.4,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 23.3
+     },
+     {
+      "group": "g025",
+      "inventoryGroup": "g025",
+      "name": "hoop-lamp",
+      "region": "rear",
+      "attachTo": "hoop-leg-arch",
+      "attachToPhase": 1,
+      "attachToPass2Order": 6,
+      "attachAtSrcPx": 167.9,
+      "members": [
+       {
+        "stroke": "r-gusset",
+        "part": "small triangular opening at the left hoop leg junction (its two sides and its base)",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0552"
+        ],
+        "lenSrc": 39,
+        "devLen": 35.9,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 39
+     },
+     {
+      "group": "g040",
+      "inventoryGroup": "g040",
+      "name": "hoop-lamp",
+      "region": "rear",
+      "attachTo": "hoop-column",
+      "attachToPhase": 1,
+      "attachToPass2Order": 7,
+      "attachAtSrcPx": 16.4,
+      "members": [
+       {
+        "stroke": "r-leg-inner",
+        "part": "right hoop leg: inner edge against the grass",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0236"
+        ],
+        "lenSrc": 35.9,
+        "devLen": 33,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 35.9
+     },
+     {
+      "group": "g026",
+      "inventoryGroup": "g026",
+      "name": "cockpit-blue-part",
+      "region": "cockpit",
+      "attachTo": "hoop-column",
+      "attachToPhase": 1,
+      "attachToPass2Order": 7,
+      "attachAtSrcPx": 163.4,
+      "members": [
+       {
+        "stroke": "ck-blue-crease",
+        "part": "blue cockpit part, edge between its lit upper face and its darker lower face",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0020"
+        ],
+        "lenSrc": 37.1,
+        "devLen": 34.2,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 37.1
+     },
+     {
+      "group": "g059",
+      "inventoryGroup": "g059",
+      "name": "cockpit-blue-part",
+      "region": "cockpit",
+      "attachTo": "hoop-column",
+      "attachToPhase": 1,
+      "attachToPass2Order": 7,
+      "attachAtSrcPx": 163.4,
+      "members": [
+       {
+        "stroke": "ck-blue-low",
+        "part": "blue cockpit part, lower edge",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0476"
+        ],
+        "lenSrc": 24.9,
+        "devLen": 23,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 24.9
+     },
+     {
+      "group": "g009",
+      "inventoryGroup": "g009",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "brace-inner",
+      "attachToPhase": 2,
+      "attachToPass2Order": 26,
+      "attachAtSrcPx": 31.3,
+      "members": [
+       {
+        "stroke": "r-box-frame-top",
+        "part": "electronics box: top bar of its frame, under the cable ties",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0419",
+         "u0033"
+        ],
+        "lenSrc": 27.7,
+        "devLen": 25.5,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 27.7
+     },
+     {
+      "group": "g010",
+      "inventoryGroup": "g010",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "brace-inner",
+      "attachToPhase": 2,
+      "attachToPass2Order": 26,
+      "attachAtSrcPx": 39.8,
+      "members": [
+       {
+        "stroke": "r-box-face",
+        "part": "electronics box: outline of its face (four sides)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0445",
+         "u0318",
+         "u0444",
+         "u0374",
+         "u0317",
+         "u0126",
+         "u0358",
+         "u0359",
+         "u0432",
+         "u0599"
+        ],
+        "lenSrc": 122.2,
+        "devLen": 112.6,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "r-box-frame-bottom",
+        "part": "electronics box: bottom bar of its frame",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0285"
+        ],
+        "lenSrc": 25.8,
+        "devLen": 23.7,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 148
+     },
+     {
+      "group": "g077",
+      "inventoryGroup": "g077",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "brace-inner",
+      "attachToPhase": 2,
+      "attachToPass2Order": 26,
+      "attachAtSrcPx": 65.6,
+      "members": [
+       {
+        "stroke": "r-chain",
+        "part": "chain hanging from the brace to the electronics box (its left edge)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0035"
+        ],
+        "lenSrc": 24.3,
+        "devLen": 22.4,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 24.3
+     },
+     {
+      "group": "g028a",
+      "inventoryGroup": "g028",
+      "name": "headrest-box",
+      "region": "rear",
+      "attachTo": "leg-block",
+      "attachToPhase": 2,
+      "attachToPass2Order": 33,
+      "attachAtSrcPx": 0,
+      "members": [
+       {
+        "stroke": "r-support-right",
+        "part": "headrest support below the left hoop leg: its right edge against the grass",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0360"
+        ],
+        "lenSrc": 31,
+        "devLen": 28.6,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 31
+     },
+     {
+      "group": "g028b",
+      "inventoryGroup": "g028",
+      "name": "headrest-box",
+      "region": "rear",
+      "attachTo": "diag-tube-far",
+      "attachToPhase": 2,
+      "attachToPass2Order": 34,
+      "attachAtSrcPx": 4.1,
+      "members": [
+       {
+        "stroke": "r-support-top",
+        "part": "headrest support below the left hoop leg: its top edge, under the red block",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0360"
+        ],
+        "lenSrc": 26,
+        "devLen": 23.9,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 26
+     },
+     {
+      "group": "g064",
+      "inventoryGroup": "g064",
+      "name": "headrest-box",
+      "region": "cockpit",
+      "attachTo": "box-top-right",
+      "attachToPhase": 2,
+      "attachToPass2Order": 37,
+      "attachAtSrcPx": 35,
+      "members": [
+       {
+        "stroke": "ck-headrest-top",
+        "part": "headrest box, top face back edge (against the grass)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0301"
+        ],
+        "lenSrc": 35.4,
+        "devLen": 32.6,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 35.4
+     },
+     {
+      "group": "g031",
+      "inventoryGroup": "g031",
+      "name": "g031",
+      "region": "rear",
+      "attachTo": "lower-rail-top",
+      "attachToPhase": 2,
+      "attachToPass2Order": 41,
+      "attachAtSrcPx": 38.5,
+      "members": [
+       {
+        "stroke": "r-blue-a",
+        "part": "second blue canister below the side box (tapered): its two long sides and its narrow top",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0092",
+         "u0086",
+         "u0093"
+        ],
+        "lenSrc": 39.4,
+        "devLen": 36.3,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 39.4
+     },
+     {
+      "group": "g000",
+      "inventoryGroup": "g000",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "bar-below-brace",
+      "attachToPhase": 2,
+      "attachToPass2Order": 42,
+      "attachAtSrcPx": 1.9,
+      "members": [
+       {
+        "stroke": "r-beam-left",
+        "part": "frame tube meeting the bar under the electronics box (upper edge)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0482",
+         "u0526",
+         "u0258"
+        ],
+        "lenSrc": 28.8,
+        "devLen": 26.5,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "r-node-window",
+        "part": "frame node under the electronics box: outline of its centre window (four sides)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0128",
+         "u0104"
+        ],
+        "lenSrc": 52.8,
+        "devLen": 48.6,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 81.6
+     },
+     {
+      "group": "g065",
+      "inventoryGroup": "g065",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "rear-tube-level",
+      "attachToPhase": 2,
+      "attachToPass2Order": 43,
+      "attachAtSrcPx": 25,
+      "members": [
+       {
+        "stroke": "r-post-right",
+        "part": "short post between the bar and the level tube: right edge",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0534"
+        ],
+        "lenSrc": 19.7,
+        "devLen": 18.1,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 19.7
+     },
+     {
+      "group": "g021",
+      "inventoryGroup": "g021",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "rear-tube-level",
+      "attachToPhase": 2,
+      "attachToPass2Order": 43,
+      "attachAtSrcPx": 29,
+      "members": [
+       {
+        "stroke": "r-post-left",
+        "part": "short post between the bar and the level tube: left edge",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0535"
+        ],
+        "lenSrc": 21.2,
+        "devLen": 19.5,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 21.2
+     },
+     {
+      "group": "g036",
+      "inventoryGroup": "g036",
+      "name": "driver-right-arm",
+      "region": "cockpit",
+      "attachTo": "sleeve-torso",
+      "attachToPhase": 2,
+      "attachToPass2Order": 48,
+      "attachAtSrcPx": 21.4,
+      "members": [
+       {
+        "stroke": "ck-shoulder-outer",
+        "part": "right shoulder, outer edge of the suit",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0014"
+        ],
+        "lenSrc": 29.3,
+        "devLen": 27,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 29.3
+     },
+     {
+      "group": "g006",
+      "inventoryGroup": "g006",
+      "name": "driver-right-arm",
+      "region": "cockpit",
+      "attachTo": "sleeve-torso",
+      "attachToPhase": 2,
+      "attachToPass2Order": 48,
+      "attachAtSrcPx": 47.9,
+      "members": [
+       {
+        "stroke": "ck-glove-panel-low",
+        "part": "right glove back panel, lower piping edge",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0498"
+        ],
+        "lenSrc": 26.7,
+        "devLen": 24.6,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 26.7
+     },
+     {
+      "group": "g037",
+      "inventoryGroup": "g037",
+      "name": "harness",
+      "region": "cockpit",
+      "attachTo": "sleeve-torso",
+      "attachToPhase": 2,
+      "attachToPass2Order": 48,
+      "attachAtSrcPx": 80.1,
+      "members": [
+       {
+        "stroke": "ck-adjuster",
+        "part": "shoulder-strap red adjuster plate, outline",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0024"
+        ],
+        "lenSrc": 39.6,
+        "devLen": 36.5,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 39.6
+     },
+     {
+      "group": "g042",
+      "inventoryGroup": "g042",
+      "name": "harness",
+      "region": "cockpit",
+      "attachTo": "sleeve-torso",
+      "attachToPhase": 2,
+      "attachToPass2Order": 48,
+      "attachAtSrcPx": 100.1,
+      "members": [
+       {
+        "stroke": "ck-lap-plate2-top",
+        "part": "lap-belt buckle, right red plate, upper edge against the black latch",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0243"
+        ],
+        "lenSrc": 23.3,
+        "devLen": 21.5,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 23.3
+     },
+     {
+      "group": "g001",
+      "inventoryGroup": "g001",
+      "name": "harness",
+      "region": "cockpit",
+      "attachTo": "collar",
+      "attachToPhase": 2,
+      "attachToPass2Order": 49,
+      "attachAtSrcPx": 0,
+      "members": [
+       {
+        "stroke": "ck-suit-lap",
+        "part": "white suit fabric bunched under the lap-belt buckle, outer edge",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0500"
+        ],
+        "lenSrc": 29.6,
+        "devLen": 27.2,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 29.6
+     },
+     {
+      "group": "g008b",
+      "inventoryGroup": "g008",
+      "name": "driver-left-shoulder",
+      "region": "cockpit",
+      "attachTo": "collar",
+      "attachToPhase": 2,
+      "attachToPass2Order": 49,
+      "attachAtSrcPx": 55.8,
+      "members": [
+       {
+        "stroke": "ck-pad-lower",
+        "part": "left shoulder pad (black), lower edge and left end (rises to the printed lettering)",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0323",
+         "u0477"
+        ],
+        "lenSrc": 30.1,
+        "devLen": 27.7,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 30.1
+     },
+     {
+      "group": "g015",
+      "inventoryGroup": "g015",
+      "name": "harness",
+      "region": "cockpit",
+      "attachTo": "neck",
+      "attachToPhase": 2,
+      "attachToPass2Order": 50,
+      "attachAtSrcPx": 54.3,
+      "members": [
+       {
+        "stroke": "ck-shoulder-top",
+        "part": "right shoulder, top edge of the light suit against the dark neck padding (continues the neck line toward ck-shoulder-outer)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0368"
+        ],
+        "lenSrc": 18.8,
+        "devLen": 17.3,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 18.8
+     },
+     {
+      "group": "g078",
+      "inventoryGroup": "g078",
+      "name": "front-suspension",
+      "region": "front",
+      "attachTo": "mech-front-rod-a",
+      "attachToPhase": 2,
+      "attachToPass2Order": 51,
+      "attachAtSrcPx": 15.8,
+      "members": [
+       {
+        "stroke": "mech-front-link",
+        "part": "front corner: lit near-vertical member between the upper and lower rods (its left edge)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0470"
+        ],
+        "lenSrc": 30.8,
+        "devLen": 28.3,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 30.8
+     },
+     {
+      "group": "g027",
+      "inventoryGroup": "g027",
+      "name": "helmet-visor-mechanism",
+      "region": "cockpit",
+      "attachTo": "mech-visor-lower",
+      "attachToPhase": 2,
+      "attachToPass2Order": 53,
+      "attachAtSrcPx": 56.3,
+      "members": [
+       {
+        "stroke": "ck-visor-tab",
+        "part": "helmet visor side tab, outer edge (pivot down to the chin bar)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0179"
+        ],
+        "lenSrc": 23,
+        "devLen": 21.2,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 23
+     },
+     {
+      "group": "g004b",
+      "inventoryGroup": "g004",
+      "name": "bay-disc",
+      "region": "rear",
+      "attachTo": "mech-bay-disc-left",
+      "attachToPhase": 2,
+      "attachToPass2Order": 59,
+      "attachAtSrcPx": 57.4,
+      "members": [
+       {
+        "stroke": "r-canister",
+        "part": "blue canister below the bay disc: its two sides and its top under the white cap",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0295",
+         "u0296",
+         "u0448",
+         "u0487"
+        ],
+        "lenSrc": 46.3,
+        "devLen": 42.7,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 46.3
+     },
+     {
+      "group": "g002",
+      "inventoryGroup": "g002",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "mech-bay-disc-right",
+      "attachToPhase": 2,
+      "attachToPass2Order": 60,
+      "attachAtSrcPx": 0,
+      "members": [
+       {
+        "stroke": "r-cable-top",
+        "part": "orange cable bundle: its upper edge",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0355"
+        ],
+        "lenSrc": 27,
+        "devLen": 24.9,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 27
+     },
+     {
+      "group": "g004a",
+      "inventoryGroup": "g004",
+      "name": "bay-disc",
+      "region": "rear",
+      "attachTo": "mech-bay-disc-right",
+      "attachToPhase": 2,
+      "attachToPass2Order": 60,
+      "attachAtSrcPx": 0,
+      "members": [
+       {
+        "stroke": "r-disc-ring-right",
+        "part": "bay disc: inner ring line on its right side (the edge of the slotted web inside the rim band)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0446",
+         "u0453"
+        ],
+        "lenSrc": 39,
+        "devLen": 35.9,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 39
+     },
+     {
+      "group": "x-mech-front-rod-a",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (front-bay)",
+      "region": "front",
+      "attachTo": "front-tyre",
+      "attachToDetail": false,
+      "attachDistSrcPx": 0.03,
+      "attachEndsSrcPx": [
+       29.35,
+       0.79
+      ],
+      "attachCategory": "joins",
+      "members": [
+       {
+        "stroke": "mech-front-rod-a",
+        "tier": "d",
+        "lenSrc": 33.1,
+        "attachHow": "joins: 0.03 src px (ends 29.4 / 0.8); pass 1"
+       }
+      ],
+      "srcPx": 33.1,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-front-rod-b",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (front-bay)",
+      "region": "front",
+      "attachTo": "front-tyre",
+      "attachToDetail": false,
+      "attachDistSrcPx": 0.01,
+      "attachEndsSrcPx": [
+       27.92,
+       0.99
+      ],
+      "attachCategory": "joins",
+      "members": [
+       {
+        "stroke": "mech-front-rod-b",
+        "tier": "d",
+        "lenSrc": 30.3,
+        "attachHow": "joins: 0.01 src px (ends 27.9 / 1.0); pass 1"
+       }
+      ],
+      "srcPx": 30.3,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-visor-lower",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (helmet)",
+      "region": "cockpit",
+      "attachTo": "helmet",
+      "attachToDetail": false,
+      "attachDistSrcPx": 0.81,
+      "attachEndsSrcPx": [
+       0.81,
+       17.34
+      ],
+      "attachCategory": "joins",
+      "members": [
+       {
+        "stroke": "mech-visor-lower",
+        "tier": "f",
+        "lenSrc": 56.3,
+        "attachHow": "joins: 0.81 src px (ends 0.8 / 17.3); pass 1"
+       }
+      ],
+      "srcPx": 56.3,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-headrest-lower",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (box)",
+      "region": "cockpit",
+      "attachTo": "grey-wedge-far",
+      "attachToDetail": false,
+      "attachDistSrcPx": 3.86,
+      "attachEndsSrcPx": [
+       6.74,
+       4
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "mech-headrest-lower",
+        "tier": "d",
+        "lenSrc": 32,
+        "attachHow": "beside: 3.86 src px (ends 6.7 / 4.0); pass 1"
+       }
+      ],
+      "srcPx": 32,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-strap-edge",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (driver)",
+      "region": "cockpit",
+      "attachTo": "ck-adjuster",
+      "attachToDetail": true,
+      "attachDistSrcPx": 3.87,
+      "attachEndsSrcPx": [
+       20.94,
+       20.7
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "mech-strap-edge",
+        "tier": "f",
+        "lenSrc": 50.7,
+        "attachHow": "beside: 3.87 src px (ends 20.9 / 20.7); pass 2"
+       }
+      ],
+      "srcPx": 50.7,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mlong-left-strap-inner",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (driver)",
+      "region": "cockpit",
+      "attachTo": "neck",
+      "attachToDetail": false,
+      "attachDistSrcPx": 0.2,
+      "attachEndsSrcPx": [
+       47.43,
+       1.58
+      ],
+      "attachCategory": "joins",
+      "members": [
+       {
+        "stroke": "mlong-left-strap-inner",
+        "tier": "f",
+        "lenSrc": 51.9,
+        "attachHow": "joins: 0.20 src px (ends 47.4 / 1.6); pass 1"
+       }
+      ],
+      "srcPx": 51.9,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mlong-forearm-edge",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (driver)",
+      "region": "cockpit",
+      "attachTo": "sleeve-torso",
+      "attachToDetail": false,
+      "attachDistSrcPx": 2.08,
+      "attachEndsSrcPx": [
+       2.08,
+       15.06
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "mlong-forearm-edge",
+        "tier": "f",
+        "lenSrc": 38.3,
+        "attachHow": "beside: 2.08 src px (ends 2.1 / 15.1); pass 1"
+       }
+      ],
+      "srcPx": 38.3,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-bar-lower-edge",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (rear-bay)",
+      "region": "rear",
+      "attachTo": "r-post-left",
+      "attachToDetail": true,
+      "attachDistSrcPx": 3.4,
+      "attachEndsSrcPx": [
+       31.04,
+       10.55
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "mech-bar-lower-edge",
+        "tier": "f",
+        "lenSrc": 42.2,
+        "attachHow": "beside: 3.40 src px (ends 31.0 / 10.5); pass 2"
+       }
+      ],
+      "srcPx": 42.2,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-bay-disc-left",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (rear-bay)",
+      "region": "rear",
+      "attachTo": "mech-bay-disc-right",
+      "attachToDetail": true,
+      "attachDistSrcPx": 9.55,
+      "attachEndsSrcPx": [
+       22.01,
+       9.55
+      ],
+      "attachCategory": "nearest",
+      "members": [
+       {
+        "stroke": "mech-bay-disc-left",
+        "tier": "d",
+        "lenSrc": 65.1,
+        "attachHow": "nearest: 9.55 src px (ends 22.0 / 9.6); pass 2; nearer but cyclic: r-canister 5.32 (cycle); no car line within 6.5 src px makes no cycle"
+       }
+      ],
+      "srcPx": 65.1,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-bay-disc-right",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (rear-bay)",
+      "region": "rear",
+      "attachTo": "rod-lower-edge",
+      "attachToDetail": false,
+      "attachDistSrcPx": 10.49,
+      "attachEndsSrcPx": [
+       41.16,
+       21.63
+      ],
+      "attachCategory": "nearest",
+      "members": [
+       {
+        "stroke": "mech-bay-disc-right",
+        "tier": "d",
+        "lenSrc": 54,
+        "attachHow": "nearest: 10.49 src px (ends 41.2 / 21.6); pass 2; nearer but cyclic: r-disc-ring-right 3.35 (cycle), mech-bay-disc-left 9.55 (cycle); no car line within 6.5 src px makes no cycle"
+       }
+      ],
+      "srcPx": 54,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal-tip-sticker",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "stripe-upper-front-b",
+      "attachToDetail": false,
+      "attachDistSrcPx": 1.87,
+      "attachEndsSrcPx": [
+       3.08,
+       1.87
+      ],
+      "attachCategory": "joins",
+      "members": [
+       {
+        "stroke": "decal-tip-sticker",
+        "tier": "d",
+        "lenSrc": 99.3,
+        "attachHow": "joins: 1.87 src px (ends 3.1 / 1.9); pass 1"
+       }
+      ],
+      "srcPx": 99.3,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal-tesla-t",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "decal-bose",
+      "attachToDetail": true,
+      "attachDistSrcPx": 5.01,
+      "attachEndsSrcPx": [
+       33.87,
+       33.98
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "decal-tesla-t",
+        "tier": "d",
+        "lenSrc": 95.1,
+        "attachHow": "beside: 5.01 src px (ends 33.9 / 34.0); pass 2"
+       }
+      ],
+      "srcPx": 95.1,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal2-tesla-word",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "decal-tip-sticker",
+      "attachToDetail": true,
+      "attachDistSrcPx": 5.88,
+      "attachEndsSrcPx": [
+       9.22,
+       10.98
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "decal2-tesla-word",
+        "tier": "d",
+        "lenSrc": 57.1,
+        "attachHow": "beside: 5.88 src px (ends 9.2 / 11.0); pass 2"
+       }
+      ],
+      "srcPx": 57.1,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal-bose",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "stripe-upper-front-b",
+      "attachToDetail": false,
+      "attachDistSrcPx": 6.25,
+      "attachEndsSrcPx": [
+       6.25,
+       6.68
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "decal-bose",
+        "tier": "d",
+        "lenSrc": 110.1,
+        "attachHow": "beside: 6.25 src px (ends 6.3 / 6.7); pass 2; nearer but cyclic: decal-tesla-t 5.01 (cycle)"
+       }
+      ],
+      "srcPx": 110.1,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal-square-mark",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "stripe-upper-front-b",
+      "attachToDetail": false,
+      "attachDistSrcPx": 11.07,
+      "attachEndsSrcPx": [
+       11.07,
+       11.79
+      ],
+      "attachCategory": "nearest",
+      "members": [
+       {
+        "stroke": "decal-square-mark",
+        "tier": "d",
+        "lenSrc": 71.8,
+        "attachHow": "nearest: 11.07 src px (ends 11.1 / 11.8); pass 1; no car line within 6.5 src px makes no cycle"
+       }
+      ],
+      "srcPx": 71.8,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal-sae-mark",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "nose-loop",
+      "attachToDetail": false,
+      "attachDistSrcPx": 10.2,
+      "attachEndsSrcPx": [
+       15.2,
+       13.93
+      ],
+      "attachCategory": "nearest",
+      "members": [
+       {
+        "stroke": "decal-sae-mark",
+        "tier": "d",
+        "lenSrc": 196.4,
+        "attachHow": "nearest: 10.20 src px (ends 15.2 / 13.9); pass 2; nearer but cyclic: decal2-sae-intl 3.82 (cycle); no car line within 6.5 src px makes no cycle"
+       }
+      ],
+      "srcPx": 196.4,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal2-sae-intl",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "decal-sae-mark",
+      "attachToDetail": true,
+      "attachDistSrcPx": 3.82,
+      "attachEndsSrcPx": [
+       10.69,
+       4.55
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "decal2-sae-intl",
+        "tier": "d",
+        "lenSrc": 30.6,
+        "attachHow": "beside: 3.82 src px (ends 10.7 / 4.6); pass 2"
+       }
+      ],
+      "srcPx": 30.6,
+      "explicitExtra": true
+     }
+    ],
+    "pass2StrokesPromotedToThisClass": [
+     "mech-visor-lower"
+    ],
+    "pass2StrokesWithChangedGeometry": [
+     "fw-rim-seen",
+     "fw-rim-fit"
+    ],
+    "scheduleNotes": null,
+    "extrasAdded": 17
+   },
+   "P": {
+    "promotedHosts": [
+     {
+      "stroke": "sleeve-torso",
+      "neededBy": [
+       "ck-adjuster",
+       "ck-glove-panel-low",
+       "ck-lap-plate2-top",
+       "ck-shoulder-outer"
+      ],
+      "stillDrawnHere": [
+       "ck-adjuster",
+       "ck-glove-panel-low",
+       "ck-lap-plate2-top",
+       "ck-shoulder-outer"
+      ]
+     },
+     {
+      "stroke": "neck",
+      "neededBy": [
+       "ck-shoulder-top"
+      ],
+      "stillDrawnHere": [
+       "ck-shoulder-top"
+      ]
+     },
+     {
+      "stroke": "mech-visor-lower",
+      "neededBy": [
+       "ck-chin-lip",
+       "ck-visor-tab"
+      ],
+      "stillDrawnHere": [
+       "ck-chin-lip",
+       "ck-visor-tab"
+      ]
+     },
+     {
+      "stroke": "mech-headrest-lower",
+      "neededBy": [],
+      "stillDrawnHere": []
+     },
+     {
+      "stroke": "mech-strap-edge",
+      "neededBy": [
+       "ck-adjuster"
+      ],
+      "stillDrawnHere": [
+       "ck-adjuster"
+      ]
+     },
+     {
+      "stroke": "mlong-forearm-edge",
+      "neededBy": [],
+      "stillDrawnHere": []
+     }
+    ],
+    "hostsWithoutDependants": [],
+    "groups": 46,
+    "members": 54,
+    "srcPx": 1265.2,
+    "detailGroups": [
+     {
+      "group": "g008b",
+      "inventoryGroup": "g008",
+      "name": "driver-left-shoulder",
+      "region": "cockpit",
+      "attachTo": "nose-loop",
+      "attachToPhase": 1,
+      "attachToPass2Order": 3,
+      "attachAtSrcPx": 7.2,
+      "members": [
+       {
+        "stroke": "ck-suit-side",
+        "part": "suit, left side panel seam (dark side panel against the light blue)",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0027"
+        ],
+        "lenSrc": 23.3,
+        "devLen": 22,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 23.3
+     },
+     {
+      "group": "g025",
+      "inventoryGroup": "g025",
+      "name": "hoop-lamp",
+      "region": "rear",
+      "attachTo": "hoop-leg-arch",
+      "attachToPhase": 1,
+      "attachToPass2Order": 6,
+      "attachAtSrcPx": 167.9,
+      "members": [
+       {
+        "stroke": "r-gusset",
+        "part": "small triangular opening at the left hoop leg junction (its two sides and its base)",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0552"
+        ],
+        "lenSrc": 39,
+        "devLen": 36.8,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 39
+     },
+     {
+      "group": "g040",
+      "inventoryGroup": "g040",
+      "name": "hoop-lamp",
+      "region": "rear",
+      "attachTo": "hoop-column",
+      "attachToPhase": 1,
+      "attachToPass2Order": 7,
+      "attachAtSrcPx": 16.4,
+      "members": [
+       {
+        "stroke": "r-leg-inner",
+        "part": "right hoop leg: inner edge against the grass",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0236"
+        ],
+        "lenSrc": 35.9,
+        "devLen": 33.9,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 35.9
+     },
+     {
+      "group": "g026",
+      "inventoryGroup": "g026",
+      "name": "cockpit-blue-part",
+      "region": "cockpit",
+      "attachTo": "hoop-column",
+      "attachToPhase": 1,
+      "attachToPass2Order": 7,
+      "attachAtSrcPx": 163.4,
+      "members": [
+       {
+        "stroke": "ck-blue-crease",
+        "part": "blue cockpit part, edge between its lit upper face and its darker lower face",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0020"
+        ],
+        "lenSrc": 37.1,
+        "devLen": 35.1,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 37.1
+     },
+     {
+      "group": "g059",
+      "inventoryGroup": "g059",
+      "name": "cockpit-blue-part",
+      "region": "cockpit",
+      "attachTo": "hoop-column",
+      "attachToPhase": 1,
+      "attachToPass2Order": 7,
+      "attachAtSrcPx": 163.4,
+      "members": [
+       {
+        "stroke": "ck-blue-low",
+        "part": "blue cockpit part, lower edge",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0476"
+        ],
+        "lenSrc": 24.9,
+        "devLen": 23.5,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 24.9
+     },
+     {
+      "group": "g008a",
+      "inventoryGroup": "g008",
+      "name": "driver-left-shoulder",
+      "region": "cockpit",
+      "attachTo": "helmet",
+      "attachToPhase": 1,
+      "attachToPass2Order": 11,
+      "attachAtSrcPx": 0,
+      "members": [
+       {
+        "stroke": "ck-pad-top",
+        "part": "left shoulder pad (black), upper edge",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0262"
+        ],
+        "lenSrc": 18.7,
+        "devLen": 17.7,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 18.7
+     },
+     {
+      "group": "g007",
+      "inventoryGroup": "g007",
+      "name": "front-hub-spokes",
+      "region": "front",
+      "attachTo": "fw-rim-seen",
+      "attachToPhase": 2,
+      "attachToPass2Order": 19,
+      "attachAtSrcPx": 15.5,
+      "members": [
+       {
+        "stroke": "fw-inner-lip-upper",
+        "part": "front rim: inner lip (inner edge of the dark flange band), upper left: from under the top of the rim flange down the left side",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0469",
+         "u0136"
+        ],
+        "lenSrc": 43.3,
+        "devLen": 40.9,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 43.3
+     },
+     {
+      "group": "g019",
+      "inventoryGroup": "g019",
+      "name": "front-rim-lip",
+      "region": "front",
+      "attachTo": "fw-rim-fit",
+      "attachToPhase": 2,
+      "attachToPass2Order": 20,
+      "attachAtSrcPx": 0,
+      "members": [
+       {
+        "stroke": "fw-inner-lip-lower-tp",
+        "part": "front rim: inner lip, lower left round the bottom to the lower right (the inner of the two lower lip highlights); tablet and phone version",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0087",
+         "u0443",
+         "u0208",
+         "u0192",
+         "u0581"
+        ],
+        "lenSrc": 81.4,
+        "devLen": 76.8,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 81.4
+     },
+     {
+      "group": "g009",
+      "inventoryGroup": "g009",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "brace-inner",
+      "attachToPhase": 2,
+      "attachToPass2Order": 26,
+      "attachAtSrcPx": 31.3,
+      "members": [
+       {
+        "stroke": "r-box-frame-top",
+        "part": "electronics box: top bar of its frame, under the cable ties",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0419",
+         "u0033"
+        ],
+        "lenSrc": 27.7,
+        "devLen": 26.1,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 27.7
+     },
+     {
+      "group": "g010",
+      "inventoryGroup": "g010",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "brace-inner",
+      "attachToPhase": 2,
+      "attachToPass2Order": 26,
+      "attachAtSrcPx": 39.8,
+      "members": [
+       {
+        "stroke": "r-box-face",
+        "part": "electronics box: outline of its face (four sides)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0445",
+         "u0318",
+         "u0444",
+         "u0374",
+         "u0317",
+         "u0126",
+         "u0358",
+         "u0359",
+         "u0432",
+         "u0599"
+        ],
+        "lenSrc": 122.2,
+        "devLen": 115.5,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "r-box-frame-bottom",
+        "part": "electronics box: bottom bar of its frame",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0285"
+        ],
+        "lenSrc": 25.8,
+        "devLen": 24.3,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 148
+     },
+     {
+      "group": "g077",
+      "inventoryGroup": "g077",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "brace-inner",
+      "attachToPhase": 2,
+      "attachToPass2Order": 26,
+      "attachAtSrcPx": 65.6,
+      "members": [
+       {
+        "stroke": "r-chain",
+        "part": "chain hanging from the brace to the electronics box (its left edge)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0035"
+        ],
+        "lenSrc": 24.3,
+        "devLen": 23,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 24.3
+     },
+     {
+      "group": "g028a",
+      "inventoryGroup": "g028",
+      "name": "headrest-box",
+      "region": "rear",
+      "attachTo": "leg-block",
+      "attachToPhase": 2,
+      "attachToPass2Order": 33,
+      "attachAtSrcPx": 0,
+      "members": [
+       {
+        "stroke": "r-support-right",
+        "part": "headrest support below the left hoop leg: its right edge against the grass",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0360"
+        ],
+        "lenSrc": 31,
+        "devLen": 29.3,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 31
+     },
+     {
+      "group": "g028b",
+      "inventoryGroup": "g028",
+      "name": "headrest-box",
+      "region": "rear",
+      "attachTo": "diag-tube-far",
+      "attachToPhase": 2,
+      "attachToPass2Order": 34,
+      "attachAtSrcPx": 4.1,
+      "members": [
+       {
+        "stroke": "r-support-top",
+        "part": "headrest support below the left hoop leg: its top edge, under the red block",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0360"
+        ],
+        "lenSrc": 26,
+        "devLen": 24.5,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 26
+     },
+     {
+      "group": "g064",
+      "inventoryGroup": "g064",
+      "name": "headrest-box",
+      "region": "cockpit",
+      "attachTo": "box-top-right",
+      "attachToPhase": 2,
+      "attachToPass2Order": 37,
+      "attachAtSrcPx": 35,
+      "members": [
+       {
+        "stroke": "ck-headrest-top",
+        "part": "headrest box, top face back edge (against the grass)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0301"
+        ],
+        "lenSrc": 35.4,
+        "devLen": 33.4,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 35.4
+     },
+     {
+      "group": "g031",
+      "inventoryGroup": "g031",
+      "name": "g031",
+      "region": "rear",
+      "attachTo": "lower-rail-top",
+      "attachToPhase": 2,
+      "attachToPass2Order": 41,
+      "attachAtSrcPx": 38.5,
+      "members": [
+       {
+        "stroke": "r-blue-a",
+        "part": "second blue canister below the side box (tapered): its two long sides and its narrow top",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0092",
+         "u0086",
+         "u0093"
+        ],
+        "lenSrc": 39.4,
+        "devLen": 37.2,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 39.4
+     },
+     {
+      "group": "g000",
+      "inventoryGroup": "g000",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "bar-below-brace",
+      "attachToPhase": 2,
+      "attachToPass2Order": 42,
+      "attachAtSrcPx": 2.9,
+      "members": [
+       {
+        "stroke": "r-node-tube-right",
+        "part": "frame node under the electronics box: right tube, its outer edge, down to the bar",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0450"
+        ],
+        "lenSrc": 16.8,
+        "devLen": 15.8,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "r-node-diag",
+        "part": "frame node under the electronics box: thin diagonal rod across its centre window",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0128",
+         "u0175"
+        ],
+        "lenSrc": 16.3,
+        "devLen": 15.4,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "r-node-tube-left",
+        "part": "frame node under the electronics box: left tube, its outer edge, down to the beam",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0219",
+         "u0481"
+        ],
+        "lenSrc": 18.8,
+        "devLen": 17.8,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "r-node-window",
+        "part": "frame node under the electronics box: outline of its centre window (four sides)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0128",
+         "u0104"
+        ],
+        "lenSrc": 52.8,
+        "devLen": 49.8,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "r-beam-left",
+        "part": "frame tube meeting the bar under the electronics box (upper edge)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0482",
+         "u0526",
+         "u0258"
+        ],
+        "lenSrc": 28.8,
+        "devLen": 27.2,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 133.4
+     },
+     {
+      "group": "g065",
+      "inventoryGroup": "g065",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "rear-tube-level",
+      "attachToPhase": 2,
+      "attachToPass2Order": 43,
+      "attachAtSrcPx": 25,
+      "members": [
+       {
+        "stroke": "r-post-right",
+        "part": "short post between the bar and the level tube: right edge",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0534"
+        ],
+        "lenSrc": 19.7,
+        "devLen": 18.6,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 19.7
+     },
+     {
+      "group": "g021",
+      "inventoryGroup": "g021",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "rear-tube-level",
+      "attachToPhase": 2,
+      "attachToPass2Order": 43,
+      "attachAtSrcPx": 29,
+      "members": [
+       {
+        "stroke": "r-post-left",
+        "part": "short post between the bar and the level tube: left edge",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0535"
+        ],
+        "lenSrc": 21.2,
+        "devLen": 20,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 21.2
+     },
+     {
+      "group": "g036",
+      "inventoryGroup": "g036",
+      "name": "driver-right-arm",
+      "region": "cockpit",
+      "attachTo": "sleeve-torso",
+      "attachToPhase": 2,
+      "attachToPass2Order": 48,
+      "attachAtSrcPx": 21.4,
+      "members": [
+       {
+        "stroke": "ck-shoulder-outer",
+        "part": "right shoulder, outer edge of the suit",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0014"
+        ],
+        "lenSrc": 29.3,
+        "devLen": 27.6,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 29.3
+     },
+     {
+      "group": "g006",
+      "inventoryGroup": "g006",
+      "name": "driver-right-arm",
+      "region": "cockpit",
+      "attachTo": "sleeve-torso",
+      "attachToPhase": 2,
+      "attachToPass2Order": 48,
+      "attachAtSrcPx": 47.9,
+      "members": [
+       {
+        "stroke": "ck-glove-panel-low",
+        "part": "right glove back panel, lower piping edge",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0498"
+        ],
+        "lenSrc": 26.7,
+        "devLen": 25.2,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 26.7
+     },
+     {
+      "group": "g037",
+      "inventoryGroup": "g037",
+      "name": "harness",
+      "region": "cockpit",
+      "attachTo": "sleeve-torso",
+      "attachToPhase": 2,
+      "attachToPass2Order": 48,
+      "attachAtSrcPx": 80.1,
+      "members": [
+       {
+        "stroke": "ck-adjuster",
+        "part": "shoulder-strap red adjuster plate, outline",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0024"
+        ],
+        "lenSrc": 39.6,
+        "devLen": 37.4,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 39.6
+     },
+     {
+      "group": "g042",
+      "inventoryGroup": "g042",
+      "name": "harness",
+      "region": "cockpit",
+      "attachTo": "sleeve-torso",
+      "attachToPhase": 2,
+      "attachToPass2Order": 48,
+      "attachAtSrcPx": 100.1,
+      "members": [
+       {
+        "stroke": "ck-lap-plate2-top",
+        "part": "lap-belt buckle, right red plate, upper edge against the black latch",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0243"
+        ],
+        "lenSrc": 23.3,
+        "devLen": 22.1,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 23.3
+     },
+     {
+      "group": "g001a",
+      "inventoryGroup": "g001",
+      "name": "harness",
+      "region": "cockpit",
+      "attachTo": "collar",
+      "attachToPhase": 2,
+      "attachToPass2Order": 49,
+      "attachAtSrcPx": 0,
+      "members": [
+       {
+        "stroke": "ck-suit-lap",
+        "part": "white suit fabric bunched under the lap-belt buckle, outer edge",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0500"
+        ],
+        "lenSrc": 29.6,
+        "devLen": 27.9,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 29.6
+     },
+     {
+      "group": "g008c",
+      "inventoryGroup": "g008",
+      "name": "driver-left-shoulder",
+      "region": "cockpit",
+      "attachTo": "collar",
+      "attachToPhase": 2,
+      "attachToPass2Order": 49,
+      "attachAtSrcPx": 55.8,
+      "members": [
+       {
+        "stroke": "ck-pad-lower",
+        "part": "left shoulder pad (black), lower edge and left end (rises to the printed lettering)",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0323",
+         "u0477"
+        ],
+        "lenSrc": 30.1,
+        "devLen": 28.4,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 30.1
+     },
+     {
+      "group": "g015",
+      "inventoryGroup": "g015",
+      "name": "harness",
+      "region": "cockpit",
+      "attachTo": "neck",
+      "attachToPhase": 2,
+      "attachToPass2Order": 50,
+      "attachAtSrcPx": 54.3,
+      "members": [
+       {
+        "stroke": "ck-shoulder-top",
+        "part": "right shoulder, top edge of the light suit against the dark neck padding (continues the neck line toward ck-shoulder-outer)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0368"
+        ],
+        "lenSrc": 18.8,
+        "devLen": 17.8,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 18.8
+     },
+     {
+      "group": "g027",
+      "inventoryGroup": "g027",
+      "name": "helmet-visor-mechanism",
+      "region": "cockpit",
+      "attachTo": "mech-visor-lower",
+      "attachToPhase": 2,
+      "attachToPass2Order": 53,
+      "attachAtSrcPx": 17.2,
+      "members": [
+       {
+        "stroke": "ck-chin-lip",
+        "part": "helmet chin bar, lower edge of the lip under the visor",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0319",
+         "u0099"
+        ],
+        "lenSrc": 48.4,
+        "devLen": 45.7,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "ck-visor-tab",
+        "part": "helmet visor side tab, outer edge (pivot down to the chin bar)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0179"
+        ],
+        "lenSrc": 23,
+        "devLen": 21.7,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 71.5
+     },
+     {
+      "group": "g001b",
+      "inventoryGroup": "g001",
+      "name": "harness",
+      "region": "cockpit",
+      "attachTo": "mlong-left-strap-inner",
+      "attachToPhase": 2,
+      "attachToPass2Order": 56,
+      "attachAtSrcPx": 9.2,
+      "members": [
+       {
+        "stroke": "ck-lap-plate-top",
+        "part": "lap-belt buckle, left red plate, top edge (against the black latch above it)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0022",
+         "u0021"
+        ],
+        "lenSrc": 17.5,
+        "devLen": 16.5,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "ck-lap-plate-end",
+        "part": "lap-belt buckle, left red plate, outer end",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0003",
+         "u0277"
+        ],
+        "lenSrc": 22.2,
+        "devLen": 21,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 39.7
+     },
+     {
+      "group": "g002b",
+      "inventoryGroup": "g002",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "mech-bay-disc-left",
+      "attachToPhase": 2,
+      "attachToPass2Order": 59,
+      "attachAtSrcPx": 0,
+      "members": [
+       {
+        "stroke": "r-cable-wire",
+        "part": "orange cable bundle: one wire inside it (the red one)",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0316",
+         "u0388"
+        ],
+        "lenSrc": 15.6,
+        "devLen": 14.8,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 15.6
+     },
+     {
+      "group": "g004a",
+      "inventoryGroup": "g004",
+      "name": "bay-disc",
+      "region": "rear",
+      "attachTo": "mech-bay-disc-left",
+      "attachToPhase": 2,
+      "attachToPass2Order": 59,
+      "attachAtSrcPx": 57.4,
+      "members": [
+       {
+        "stroke": "r-canister",
+        "part": "blue canister below the bay disc: its two sides and its top under the white cap",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0295",
+         "u0296",
+         "u0448",
+         "u0487"
+        ],
+        "lenSrc": 46.3,
+        "devLen": 43.8,
+        "attachHow": "region attachTo"
+       },
+       {
+        "stroke": "r-disc-ring-left",
+        "part": "bay disc: inner ring line on its left side (the edge of the slotted web inside the rim band)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0421"
+        ],
+        "lenSrc": 19,
+        "devLen": 17.9,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 65.3
+     },
+     {
+      "group": "g002a",
+      "inventoryGroup": "g002",
+      "name": "rear-bay-internals",
+      "region": "rear",
+      "attachTo": "mech-bay-disc-right",
+      "attachToPhase": 2,
+      "attachToPass2Order": 60,
+      "attachAtSrcPx": 0,
+      "members": [
+       {
+        "stroke": "r-cable-top",
+        "part": "orange cable bundle: its upper edge",
+        "tier": "f",
+        "inventoryMembers": [
+         "u0355"
+        ],
+        "lenSrc": 27,
+        "devLen": 25.5,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 27
+     },
+     {
+      "group": "g004b",
+      "inventoryGroup": "g004",
+      "name": "bay-disc",
+      "region": "rear",
+      "attachTo": "mech-bay-disc-right",
+      "attachToPhase": 2,
+      "attachToPass2Order": 60,
+      "attachAtSrcPx": 0,
+      "members": [
+       {
+        "stroke": "r-disc-ring-right",
+        "part": "bay disc: inner ring line on its right side (the edge of the slotted web inside the rim band)",
+        "tier": "d",
+        "inventoryMembers": [
+         "u0446",
+         "u0453"
+        ],
+        "lenSrc": 39,
+        "devLen": 36.8,
+        "attachHow": "region attachTo"
+       }
+      ],
+      "srcPx": 39
+     },
+     {
+      "group": "x-mech-visor-lower",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (helmet)",
+      "region": "cockpit",
+      "attachTo": "helmet",
+      "attachToDetail": false,
+      "attachDistSrcPx": 0.81,
+      "attachEndsSrcPx": [
+       0.81,
+       17.34
+      ],
+      "attachCategory": "joins",
+      "members": [
+       {
+        "stroke": "mech-visor-lower",
+        "tier": "f",
+        "lenSrc": 56.3,
+        "attachHow": "joins: 0.81 src px (ends 0.8 / 17.3); pass 1"
+       }
+      ],
+      "srcPx": 56.3,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-headrest-lower",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (box)",
+      "region": "cockpit",
+      "attachTo": "grey-wedge-far",
+      "attachToDetail": false,
+      "attachDistSrcPx": 3.86,
+      "attachEndsSrcPx": [
+       6.74,
+       4
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "mech-headrest-lower",
+        "tier": "d",
+        "lenSrc": 32,
+        "attachHow": "beside: 3.86 src px (ends 6.7 / 4.0); pass 1"
+       }
+      ],
+      "srcPx": 32,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-strap-edge",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (driver)",
+      "region": "cockpit",
+      "attachTo": "ck-lap-plate-top",
+      "attachToDetail": true,
+      "attachDistSrcPx": 2.34,
+      "attachEndsSrcPx": [
+       2.34,
+       45.77
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "mech-strap-edge",
+        "tier": "f",
+        "lenSrc": 50.7,
+        "attachHow": "beside: 2.34 src px (ends 2.3 / 45.8); pass 2"
+       }
+      ],
+      "srcPx": 50.7,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mlong-left-strap-inner",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (driver)",
+      "region": "cockpit",
+      "attachTo": "neck",
+      "attachToDetail": false,
+      "attachDistSrcPx": 0.2,
+      "attachEndsSrcPx": [
+       47.43,
+       1.58
+      ],
+      "attachCategory": "joins",
+      "members": [
+       {
+        "stroke": "mlong-left-strap-inner",
+        "tier": "f",
+        "lenSrc": 51.9,
+        "attachHow": "joins: 0.20 src px (ends 47.4 / 1.6); pass 1"
+       }
+      ],
+      "srcPx": 51.9,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mlong-forearm-edge",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (driver)",
+      "region": "cockpit",
+      "attachTo": "sleeve-torso",
+      "attachToDetail": false,
+      "attachDistSrcPx": 2.08,
+      "attachEndsSrcPx": [
+       2.08,
+       15.06
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "mlong-forearm-edge",
+        "tier": "f",
+        "lenSrc": 38.3,
+        "attachHow": "beside: 2.08 src px (ends 2.1 / 15.1); pass 1"
+       }
+      ],
+      "srcPx": 38.3,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-bar-lower-edge",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (rear-bay)",
+      "region": "rear",
+      "attachTo": "r-post-left",
+      "attachToDetail": true,
+      "attachDistSrcPx": 3.4,
+      "attachEndsSrcPx": [
+       31.04,
+       10.55
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "mech-bar-lower-edge",
+        "tier": "f",
+        "lenSrc": 42.2,
+        "attachHow": "beside: 3.40 src px (ends 31.0 / 10.5); pass 2"
+       }
+      ],
+      "srcPx": 42.2,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-bay-disc-left",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (rear-bay)",
+      "region": "rear",
+      "attachTo": "mech-bay-disc-right",
+      "attachToDetail": true,
+      "attachDistSrcPx": 9.55,
+      "attachEndsSrcPx": [
+       22.01,
+       9.55
+      ],
+      "attachCategory": "nearest",
+      "members": [
+       {
+        "stroke": "mech-bay-disc-left",
+        "tier": "d",
+        "lenSrc": 65.1,
+        "attachHow": "nearest: 9.55 src px (ends 22.0 / 9.6); pass 2; nearer but cyclic: r-canister 5.32 (cycle), r-disc-ring-left 8.28 (cycle); no car line within 6.5 src px makes no cycle"
+       }
+      ],
+      "srcPx": 65.1,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-mech-bay-disc-right",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (rear-bay)",
+      "region": "rear",
+      "attachTo": "rod-lower-edge",
+      "attachToDetail": false,
+      "attachDistSrcPx": 10.49,
+      "attachEndsSrcPx": [
+       41.16,
+       21.63
+      ],
+      "attachCategory": "nearest",
+      "members": [
+       {
+        "stroke": "mech-bay-disc-right",
+        "tier": "d",
+        "lenSrc": 54,
+        "attachHow": "nearest: 10.49 src px (ends 41.2 / 21.6); pass 2; nearer but cyclic: r-disc-ring-right 3.35 (cycle), mech-bay-disc-left 9.55 (cycle); no car line within 6.5 src px makes no cycle"
+       }
+      ],
+      "srcPx": 54,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal-tip-sticker",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "stripe-upper-front-b",
+      "attachToDetail": false,
+      "attachDistSrcPx": 1.87,
+      "attachEndsSrcPx": [
+       3.08,
+       1.87
+      ],
+      "attachCategory": "joins",
+      "members": [
+       {
+        "stroke": "decal-tip-sticker",
+        "tier": "d",
+        "lenSrc": 99.3,
+        "attachHow": "joins: 1.87 src px (ends 3.1 / 1.9); pass 1"
+       }
+      ],
+      "srcPx": 99.3,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal-tesla-t",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "decal-bose",
+      "attachToDetail": true,
+      "attachDistSrcPx": 5.01,
+      "attachEndsSrcPx": [
+       33.87,
+       33.98
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "decal-tesla-t",
+        "tier": "d",
+        "lenSrc": 95.1,
+        "attachHow": "beside: 5.01 src px (ends 33.9 / 34.0); pass 2"
+       }
+      ],
+      "srcPx": 95.1,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal2-tesla-word",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "decal-tip-sticker",
+      "attachToDetail": true,
+      "attachDistSrcPx": 5.88,
+      "attachEndsSrcPx": [
+       9.22,
+       10.98
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "decal2-tesla-word",
+        "tier": "d",
+        "lenSrc": 57.1,
+        "attachHow": "beside: 5.88 src px (ends 9.2 / 11.0); pass 2"
+       }
+      ],
+      "srcPx": 57.1,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal-bose",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "stripe-upper-front-b",
+      "attachToDetail": false,
+      "attachDistSrcPx": 6.25,
+      "attachEndsSrcPx": [
+       6.25,
+       6.68
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "decal-bose",
+        "tier": "d",
+        "lenSrc": 110.1,
+        "attachHow": "beside: 6.25 src px (ends 6.3 / 6.7); pass 2; nearer but cyclic: decal-tesla-t 5.01 (cycle)"
+       }
+      ],
+      "srcPx": 110.1,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal-square-mark",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "stripe-upper-front-b",
+      "attachToDetail": false,
+      "attachDistSrcPx": 11.07,
+      "attachEndsSrcPx": [
+       11.07,
+       11.79
+      ],
+      "attachCategory": "nearest",
+      "members": [
+       {
+        "stroke": "decal-square-mark",
+        "tier": "d",
+        "lenSrc": 71.8,
+        "attachHow": "nearest: 11.07 src px (ends 11.1 / 11.8); pass 1; no car line within 6.5 src px makes no cycle"
+       }
+      ],
+      "srcPx": 71.8,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal-sae-mark",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "nose-loop",
+      "attachToDetail": false,
+      "attachDistSrcPx": 10.2,
+      "attachEndsSrcPx": [
+       15.2,
+       13.93
+      ],
+      "attachCategory": "nearest",
+      "members": [
+       {
+        "stroke": "decal-sae-mark",
+        "tier": "d",
+        "lenSrc": 196.4,
+        "attachHow": "nearest: 10.20 src px (ends 15.2 / 13.9); pass 2; nearer but cyclic: decal2-sae-intl 3.82 (cycle); no car line within 6.5 src px makes no cycle"
+       }
+      ],
+      "srcPx": 196.4,
+      "explicitExtra": true
+     },
+     {
+      "group": "x-decal2-sae-intl",
+      "inventoryGroup": null,
+      "name": "pass-2 extra (nose-top)",
+      "region": "marks",
+      "attachTo": "decal-sae-mark",
+      "attachToDetail": true,
+      "attachDistSrcPx": 3.82,
+      "attachEndsSrcPx": [
+       10.69,
+       4.55
+      ],
+      "attachCategory": "beside",
+      "members": [
+       {
+        "stroke": "decal2-sae-intl",
+        "tier": "d",
+        "lenSrc": 30.6,
+        "attachHow": "beside: 3.82 src px (ends 10.7 / 4.6); pass 2"
+       }
+      ],
+      "srcPx": 30.6,
+      "explicitExtra": true
+     }
+    ],
+    "pass2StrokesPromotedToThisClass": [
+     "brace-inner",
+     "lens-housing-b",
+     "lens-housing-top",
+     "diag-tube-far",
+     "bar-below-brace",
+     "tie-low",
+     "sleeve-torso",
+     "neck",
+     "mech-visor-lower",
+     "mech-headrest-lower",
+     "mech-strap-edge",
+     "mlong-forearm-edge",
+     "mech-bar-lower-edge",
+     "mech-bay-disc-left",
+     "mech-bay-disc-right"
+    ],
+    "pass2StrokesWithChangedGeometry": [
+     "fw-rim-seen",
+     "fw-rim-fit"
+    ],
+    "scheduleNotes": null,
+    "extrasAdded": 15
+   }
+  }
+ },
+ "fullFrom": {
+  "entry": "strokes-final.json",
+  "extras": [
+   "mech-front-rod-a",
+   "mech-front-rod-b",
+   "mech-visor-lower",
+   "mech-headrest-lower",
+   "mech-strap-edge",
+   "mlong-left-strap-inner",
+   "mlong-forearm-edge",
+   "mech-bar-lower-edge",
+   "mech-bay-disc-left",
+   "mech-bay-disc-right",
+   "decal-tip-sticker",
+   "decal-tesla-t",
+   "decal2-tesla-word",
+   "decal-bose",
+   "decal-square-mark",
+   "decal-sae-mark",
+   "decal2-sae-intl"
+  ],
+  "radiusBesideSrcPx": 6.5,
+  "radiusJoinSrcPx": 2
+ },
+ "extrasTable": {
+  "D": {
+   "mech-front-rod-a": {
+    "host": "front-tyre",
+    "hostIsDetail": false,
+    "distSrcPx": 0.03,
+    "category": "joins",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "front-tyre 0.03",
+     "mech-front-link* 2.58",
+     "mech-front-rod-b* 27.46"
+    ]
+   },
+   "mech-front-rod-b": {
+    "host": "front-tyre",
+    "hostIsDetail": false,
+    "distSrcPx": 0.01,
+    "category": "joins",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "front-tyre 0.01",
+     "mech-front-link* 1.40",
+     "mech-front-rod-a* 27.46"
+    ]
+   },
+   "mech-visor-lower": {
+    "host": "helmet",
+    "hostIsDetail": false,
+    "distSrcPx": 0.81,
+    "category": "joins",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "helmet 0.81",
+     "ck-chin-lip-d* 3.73",
+     "ck-visor-tab* 6.04"
+    ]
+   },
+   "mech-headrest-lower": {
+    "host": "grey-wedge-far",
+    "hostIsDetail": false,
+    "distSrcPx": 3.86,
+    "category": "beside",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "grey-wedge-far 3.86",
+     "box-top-right 6.50",
+     "ck-shoulder-top* 6.52"
+    ]
+   },
+   "mech-strap-edge": {
+    "host": "ck-adjuster",
+    "hostIsDetail": true,
+    "distSrcPx": 3.87,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [],
+    "top3": [
+     "ck-adjuster* 3.87",
+     "neck 4.80",
+     "ck-lap-plate-end* 11.01"
+    ]
+   },
+   "mlong-left-strap-inner": {
+    "host": "neck",
+    "hostIsDetail": false,
+    "distSrcPx": 0.2,
+    "category": "joins",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "neck 0.20",
+     "ck-lap-plate-end* 1.72",
+     "collar 5.24"
+    ]
+   },
+   "mlong-forearm-edge": {
+    "host": "sleeve-torso",
+    "hostIsDetail": false,
+    "distSrcPx": 2.08,
+    "category": "beside",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "sleeve-torso 2.08",
+     "rail 4.76",
+     "ck-glove-panel-low* 8.63"
+    ]
+   },
+   "mech-bar-lower-edge": {
+    "host": "r-post-left",
+    "hostIsDetail": true,
+    "distSrcPx": 3.4,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [],
+    "top3": [
+     "r-post-left* 3.40",
+     "tie-low 4.08",
+     "r-post-right* 5.65"
+    ]
+   },
+   "mech-bay-disc-left": {
+    "host": "mech-bay-disc-right",
+    "hostIsDetail": true,
+    "distSrcPx": 9.55,
+    "category": "nearest",
+    "pass": 2,
+    "nearerCyclic": [
+     "r-canister 5.32 (cycle)",
+     "r-disc-ring-left 8.28 (cycle)"
+    ],
+    "top3": [
+     "r-canister* 5.32",
+     "r-disc-ring-left* 8.28",
+     "mech-bay-disc-right* 9.55"
+    ]
+   },
+   "mech-bay-disc-right": {
+    "host": "rod-lower-edge",
+    "hostIsDetail": false,
+    "distSrcPx": 10.49,
+    "category": "nearest",
+    "pass": 2,
+    "nearerCyclic": [
+     "r-disc-ring-right 3.35 (cycle)",
+     "mech-bay-disc-left 9.55 (cycle)"
+    ],
+    "top3": [
+     "r-disc-ring-right* 3.35",
+     "mech-bay-disc-left* 9.55",
+     "rod-lower-edge 10.49"
+    ]
+   },
+   "decal-tip-sticker": {
+    "host": "stripe-upper-front-b",
+    "hostIsDetail": false,
+    "distSrcPx": 1.87,
+    "category": "joins",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "stripe-upper-front-b 1.87",
+     "stripe-upper-front-a 5.79",
+     "decal2-tesla-word* 5.88"
+    ]
+   },
+   "decal-tesla-t": {
+    "host": "decal-bose",
+    "hostIsDetail": true,
+    "distSrcPx": 5.01,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [],
+    "top3": [
+     "decal-bose* 5.01",
+     "decal2-tesla-word* 7.21",
+     "stripe-upper-front-b 16.98"
+    ]
+   },
+   "decal2-tesla-word": {
+    "host": "decal-tip-sticker",
+    "hostIsDetail": true,
+    "distSrcPx": 5.88,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [],
+    "top3": [
+     "decal-tip-sticker* 5.88",
+     "decal-tesla-t* 7.23",
+     "stripe-upper-front-b 10.05"
+    ]
+   },
+   "decal-bose": {
+    "host": "stripe-upper-front-b",
+    "hostIsDetail": false,
+    "distSrcPx": 6.25,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [
+     "decal-tesla-t 5.01 (cycle)"
+    ],
+    "top3": [
+     "decal-tesla-t* 5.01",
+     "stripe-upper-front-b 6.25",
+     "decal-square-mark* 11.24"
+    ]
+   },
+   "decal-square-mark": {
+    "host": "stripe-upper-front-b",
+    "hostIsDetail": false,
+    "distSrcPx": 11.07,
+    "category": "nearest",
+    "pass": 2,
+    "nearerCyclic": [
+     "mk-square-icon 3.22 (cycle)"
+    ],
+    "top3": [
+     "mk-square-icon* 3.22",
+     "stripe-upper-front-b 11.07",
+     "decal-bose* 11.24"
+    ]
+   },
+   "decal-sae-mark": {
+    "host": "decal2-sae-intl",
+    "hostIsDetail": true,
+    "distSrcPx": 3.82,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [],
+    "top3": [
+     "decal2-sae-intl* 3.82",
+     "nose-loop 10.20",
+     "top-plate 10.55"
+    ]
+   },
+   "decal2-sae-intl": {
+    "host": "top-plate",
+    "hostIsDetail": false,
+    "distSrcPx": 6.67,
+    "category": "nearest",
+    "pass": 2,
+    "nearerCyclic": [
+     "decal-sae-mark 3.82 (cycle)"
+    ],
+    "top3": [
+     "decal-sae-mark* 3.82",
+     "top-plate 6.67",
+     "nose-loop 14.18"
+    ]
+   }
+  },
+  "T": {
+   "mech-front-rod-a": {
+    "host": "front-tyre",
+    "hostIsDetail": false,
+    "distSrcPx": 0.03,
+    "category": "joins",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "front-tyre 0.03",
+     "mech-front-link* 2.58",
+     "mech-front-rod-b* 27.46"
+    ]
+   },
+   "mech-front-rod-b": {
+    "host": "front-tyre",
+    "hostIsDetail": false,
+    "distSrcPx": 0.01,
+    "category": "joins",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "front-tyre 0.01",
+     "mech-front-link* 1.40",
+     "mech-front-rod-a* 27.46"
+    ]
+   },
+   "mech-visor-lower": {
+    "host": "helmet",
+    "hostIsDetail": false,
+    "distSrcPx": 0.81,
+    "category": "joins",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "helmet 0.81",
+     "ck-visor-tab* 6.04",
+     "visor-brow 15.53"
+    ]
+   },
+   "mech-headrest-lower": {
+    "host": "grey-wedge-far",
+    "hostIsDetail": false,
+    "distSrcPx": 3.86,
+    "category": "beside",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "grey-wedge-far 3.86",
+     "box-top-right 6.50",
+     "ck-shoulder-top* 6.52"
+    ]
+   },
+   "mech-strap-edge": {
+    "host": "ck-adjuster",
+    "hostIsDetail": true,
+    "distSrcPx": 3.87,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [],
+    "top3": [
+     "ck-adjuster* 3.87",
+     "neck 4.80",
+     "mlong-left-strap-inner* 11.28"
+    ]
+   },
+   "mlong-left-strap-inner": {
+    "host": "neck",
+    "hostIsDetail": false,
+    "distSrcPx": 0.2,
+    "category": "joins",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "neck 0.20",
+     "collar 5.24",
+     "ck-suit-lap* 6.25"
+    ]
+   },
+   "mlong-forearm-edge": {
+    "host": "sleeve-torso",
+    "hostIsDetail": false,
+    "distSrcPx": 2.08,
+    "category": "beside",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "sleeve-torso 2.08",
+     "rail 4.76",
+     "ck-glove-panel-low* 8.63"
+    ]
+   },
+   "mech-bar-lower-edge": {
+    "host": "r-post-left",
+    "hostIsDetail": true,
+    "distSrcPx": 3.4,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [],
+    "top3": [
+     "r-post-left* 3.40",
+     "tie-low 4.08",
+     "r-post-right* 5.65"
+    ]
+   },
+   "mech-bay-disc-left": {
+    "host": "mech-bay-disc-right",
+    "hostIsDetail": true,
+    "distSrcPx": 9.55,
+    "category": "nearest",
+    "pass": 2,
+    "nearerCyclic": [
+     "r-canister 5.32 (cycle)"
+    ],
+    "top3": [
+     "r-canister* 5.32",
+     "mech-bay-disc-right* 9.55",
+     "r-disc-ring-right* 16.35"
+    ]
+   },
+   "mech-bay-disc-right": {
+    "host": "rod-lower-edge",
+    "hostIsDetail": false,
+    "distSrcPx": 10.49,
+    "category": "nearest",
+    "pass": 2,
+    "nearerCyclic": [
+     "r-disc-ring-right 3.35 (cycle)",
+     "mech-bay-disc-left 9.55 (cycle)"
+    ],
+    "top3": [
+     "r-disc-ring-right* 3.35",
+     "mech-bay-disc-left* 9.55",
+     "rod-lower-edge 10.49"
+    ]
+   },
+   "decal-tip-sticker": {
+    "host": "stripe-upper-front-b",
+    "hostIsDetail": false,
+    "distSrcPx": 1.87,
+    "category": "joins",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "stripe-upper-front-b 1.87",
+     "stripe-upper-front-a 5.79",
+     "decal2-tesla-word* 5.88"
+    ]
+   },
+   "decal-tesla-t": {
+    "host": "decal-bose",
+    "hostIsDetail": true,
+    "distSrcPx": 5.01,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [],
+    "top3": [
+     "decal-bose* 5.01",
+     "decal2-tesla-word* 7.21",
+     "stripe-upper-front-b 16.98"
+    ]
+   },
+   "decal2-tesla-word": {
+    "host": "decal-tip-sticker",
+    "hostIsDetail": true,
+    "distSrcPx": 5.88,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [],
+    "top3": [
+     "decal-tip-sticker* 5.88",
+     "decal-tesla-t* 7.23",
+     "stripe-upper-front-b 10.05"
+    ]
+   },
+   "decal-bose": {
+    "host": "stripe-upper-front-b",
+    "hostIsDetail": false,
+    "distSrcPx": 6.25,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [
+     "decal-tesla-t 5.01 (cycle)"
+    ],
+    "top3": [
+     "decal-tesla-t* 5.01",
+     "stripe-upper-front-b 6.25",
+     "decal-square-mark* 11.24"
+    ]
+   },
+   "decal-square-mark": {
+    "host": "stripe-upper-front-b",
+    "hostIsDetail": false,
+    "distSrcPx": 11.07,
+    "category": "nearest",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "stripe-upper-front-b 11.07",
+     "decal-bose* 11.24",
+     "nose-loop 16.59"
+    ]
+   },
+   "decal-sae-mark": {
+    "host": "nose-loop",
+    "hostIsDetail": false,
+    "distSrcPx": 10.2,
+    "category": "nearest",
+    "pass": 2,
+    "nearerCyclic": [
+     "decal2-sae-intl 3.82 (cycle)"
+    ],
+    "top3": [
+     "decal2-sae-intl* 3.82",
+     "nose-loop 10.20",
+     "stripe-upper-rear 10.73"
+    ]
+   },
+   "decal2-sae-intl": {
+    "host": "decal-sae-mark",
+    "hostIsDetail": true,
+    "distSrcPx": 3.82,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [],
+    "top3": [
+     "decal-sae-mark* 3.82",
+     "nose-loop 14.18",
+     "stripe-upper-rear 21.59"
+    ]
+   }
+  },
+  "P": {
+   "mech-visor-lower": {
+    "host": "helmet",
+    "hostIsDetail": false,
+    "distSrcPx": 0.81,
+    "category": "joins",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "helmet 0.81",
+     "ck-chin-lip* 2.73",
+     "ck-visor-tab* 6.04"
+    ]
+   },
+   "mech-headrest-lower": {
+    "host": "grey-wedge-far",
+    "hostIsDetail": false,
+    "distSrcPx": 3.86,
+    "category": "beside",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "grey-wedge-far 3.86",
+     "box-top-right 6.50",
+     "ck-shoulder-top* 6.52"
+    ]
+   },
+   "mech-strap-edge": {
+    "host": "ck-lap-plate-top",
+    "hostIsDetail": true,
+    "distSrcPx": 2.34,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [],
+    "top3": [
+     "ck-lap-plate-top* 2.34",
+     "ck-adjuster* 3.87",
+     "neck 4.80"
+    ]
+   },
+   "mlong-left-strap-inner": {
+    "host": "neck",
+    "hostIsDetail": false,
+    "distSrcPx": 0.2,
+    "category": "joins",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "neck 0.20",
+     "ck-lap-plate-top* 1.18",
+     "ck-lap-plate-end* 1.72"
+    ]
+   },
+   "mlong-forearm-edge": {
+    "host": "sleeve-torso",
+    "hostIsDetail": false,
+    "distSrcPx": 2.08,
+    "category": "beside",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "sleeve-torso 2.08",
+     "rail 4.76",
+     "ck-glove-panel-low* 8.63"
+    ]
+   },
+   "mech-bar-lower-edge": {
+    "host": "r-post-left",
+    "hostIsDetail": true,
+    "distSrcPx": 3.4,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [],
+    "top3": [
+     "r-post-left* 3.40",
+     "tie-low 4.08",
+     "r-post-right* 5.65"
+    ]
+   },
+   "mech-bay-disc-left": {
+    "host": "mech-bay-disc-right",
+    "hostIsDetail": true,
+    "distSrcPx": 9.55,
+    "category": "nearest",
+    "pass": 2,
+    "nearerCyclic": [
+     "r-canister 5.32 (cycle)",
+     "r-disc-ring-left 8.28 (cycle)"
+    ],
+    "top3": [
+     "r-canister* 5.32",
+     "r-disc-ring-left* 8.28",
+     "mech-bay-disc-right* 9.55"
+    ]
+   },
+   "mech-bay-disc-right": {
+    "host": "rod-lower-edge",
+    "hostIsDetail": false,
+    "distSrcPx": 10.49,
+    "category": "nearest",
+    "pass": 2,
+    "nearerCyclic": [
+     "r-disc-ring-right 3.35 (cycle)",
+     "mech-bay-disc-left 9.55 (cycle)"
+    ],
+    "top3": [
+     "r-disc-ring-right* 3.35",
+     "mech-bay-disc-left* 9.55",
+     "rod-lower-edge 10.49"
+    ]
+   },
+   "decal-tip-sticker": {
+    "host": "stripe-upper-front-b",
+    "hostIsDetail": false,
+    "distSrcPx": 1.87,
+    "category": "joins",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "stripe-upper-front-b 1.87",
+     "stripe-upper-front-a 5.79",
+     "decal2-tesla-word* 5.88"
+    ]
+   },
+   "decal-tesla-t": {
+    "host": "decal-bose",
+    "hostIsDetail": true,
+    "distSrcPx": 5.01,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [],
+    "top3": [
+     "decal-bose* 5.01",
+     "decal2-tesla-word* 7.21",
+     "stripe-upper-front-b 16.98"
+    ]
+   },
+   "decal2-tesla-word": {
+    "host": "decal-tip-sticker",
+    "hostIsDetail": true,
+    "distSrcPx": 5.88,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [],
+    "top3": [
+     "decal-tip-sticker* 5.88",
+     "decal-tesla-t* 7.23",
+     "stripe-upper-front-b 10.05"
+    ]
+   },
+   "decal-bose": {
+    "host": "stripe-upper-front-b",
+    "hostIsDetail": false,
+    "distSrcPx": 6.25,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [
+     "decal-tesla-t 5.01 (cycle)"
+    ],
+    "top3": [
+     "decal-tesla-t* 5.01",
+     "stripe-upper-front-b 6.25",
+     "decal-square-mark* 11.24"
+    ]
+   },
+   "decal-square-mark": {
+    "host": "stripe-upper-front-b",
+    "hostIsDetail": false,
+    "distSrcPx": 11.07,
+    "category": "nearest",
+    "pass": 1,
+    "nearerCyclic": [],
+    "top3": [
+     "stripe-upper-front-b 11.07",
+     "decal-bose* 11.24",
+     "nose-loop 16.59"
+    ]
+   },
+   "decal-sae-mark": {
+    "host": "nose-loop",
+    "hostIsDetail": false,
+    "distSrcPx": 10.2,
+    "category": "nearest",
+    "pass": 2,
+    "nearerCyclic": [
+     "decal2-sae-intl 3.82 (cycle)"
+    ],
+    "top3": [
+     "decal2-sae-intl* 3.82",
+     "nose-loop 10.20",
+     "stripe-upper-rear 10.73"
+    ]
+   },
+   "decal2-sae-intl": {
+    "host": "decal-sae-mark",
+    "hostIsDetail": true,
+    "distSrcPx": 3.82,
+    "category": "beside",
+    "pass": 2,
+    "nearerCyclic": [],
+    "top3": [
+     "decal-sae-mark* 3.82",
+     "nose-loop 14.18",
+     "stripe-upper-rear 21.59"
+    ]
+   }
+  }
+ },
+ "r3": {
+  "made": "scripts/r3/groups-r3.cjs",
+  "by": "dense3/final/solver (agent); the eye critic's fixes as the orchestrator's brief worded them, chosen per class by the r3 what-ifs; not the owner's",
+  "spec": "",
+  "edits": [],
+  "note": "D unchanged; hosts by id only",
+  "from": "groups-final-full.json (the solver round 2 groups file; not shipped)",
+  "drops": "inputs/drops-r3.json"
+ }
+}

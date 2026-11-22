@@ -1,703 +1,415 @@
 #!/usr/bin/env node
-// Objective pen checks (PEN_SPEC 16.1, plus the refresh, determinism and input parts of 16.2) on any page that
-// runs the hero pen engine. Headless Chrome through Playwright, fresh temporary profile per browser.
-//   #1 schedule sequential (window.__heroDraw.schedule)
-//   #2 runtime trace: penT never decreases, each frame's drawn range starts where the previous ended, at most one
-//      partial stroke per frame (structural), no ink after lastInk
-//   #3 pixels: about 10 samples per load; the inked-pixel count never decreases before the develop; every inked
-//      pixel lies within 2 device px of a stroke (its own width included) whose scheduled start <= penT
-//   #4 long lines seen growing (frames by length, P0 >= 3 frames, P1 >= 5) and peak tip advance <= A[p]
-//   #5 bursts: any 16.67 ms window has <= 4 strokes ending (6 in P4), <= 0.40 cw ink, all ink within 0.25 cw of
-//      the window's first inked point (exact engine motion through __heroDraw.at)
-//   #6 input stops the pen: pointerdown (tap on phones) at penT >= 1000; ink never rises after it; done in 250 ms
-//   refresh: every load and reload draws; same hash on every load
-//   Back with and without the back/forward cache: 0 replays, scroll position kept
-//   revision 1: numerals (tier n) >= 4 frames with >= 30 ms between digits; class P detail (P3) non-hatch strokes of
-//      0.05 cw or more >= 2 frames; --fold 1: the car box under half on screen at t0 gives the 300 ms quick reveal
-//      (no lines, no pen frames), once scrolled past the car before t0 and once in a short viewport
-//   revision 2: phases run P0 P1 P2 P4 P5 P3 (the payoff last); P1 strokes under 0.10 cw >= 4 frames; SHADE edges
-//      (tier h, 0.1 cw or more) peak <= 0.12 cw per frame and >= 6 frames from 0.3 cw, else >= 4; the INK + SHADE pixel
-//      count never decreases before the develop (GUIDE is separate: its ghost rim loops retire 150 ms after their rim
-//      line, __heroDraw.gr); once a ghost has retired, any of its pixels left on the GUIDE canvas counts as outside
-//   revision 3: the develop starts >= 100 ms (pen clock) after last ink (devAfterLastInkOk); the determinism samples are
-//      taken where no stroke moves: the finished drawing in that 100 ms hold (devPixelDiff, finalSampled) and the
-//      longest lift between two P3 strokes (liftPixelDiff; at D the College -> of line break); P2 form/detail lines of
-//      0.15 cw or more last >= 2 frames and no two end within 33.3 ms (p2LongOk)
-//   revision 4: numerals <= 35 % of their length per frame and >= 3 growing frames, class P numerals >= 100 ms, closed
-//      loops >= 60 src px >= 2 frames, class P P2 strokes >= 50 src px >= 1 frame (rev4Ok); the wall-clock pixel samples
-//      are compared exactly (frac) and dilated by 1 device px (frac1), on record only since revision 6
-//   revision 5: P1 strokes >= 4 frames (P1_FLOOR_MS); every P2 stroke >= 1 frame at every class; a P2 pen travel over
-//      50 src px lifts >= 17 ms (rev5Ok). Determinism (E6) is judged on a VIRTUAL CLOCK pass (--vloads, default 5):
-//      requestAnimationFrame is wrapped so every frame advances the timestamp by exactly 1000/60 ms once the page runs,
-//      so every load cuts the strokes into the same frame chunks and the samples land on identical pen times; the
-//      three layers are hashed at every sample and must be identical (vclockOk). The wall-clock samples stay on record
-//      (devPixelDiff, liftPixelDiff) without a verdict: their differences are frame-chunk effects (see the README).
-//      --vstep2 <ms> adds a virtual pass with another frame step (an experiment: same pen times, other chunks).
-//   revision 6: the wall-clock pixel-repeat verdicts (devPixelDiffOk, liftPixelDiffOk and their Exact forms) are gone
-//      (anti-aliasing at frame cut points, not visible); vclockOk is the determinism verdict. --nav 1 checks the R1
-//      arrival rules on the R1 page: #contact does not draw, its reload drops the fragment and draws at the top, #top
-//      draws, the wordmark from a detail page (a held view-transition arrival) draws (navOk). verdict.failed / pass
-//      summarise the verdicts that count.
-// usage: node pen-checks.cjs --url http://127.0.0.1:4822/index.html --w 1440 --h 900 --dpr 1 [--mobile] [--cpu 4]
-//          [--loads 10] [--input 1] [--back 1] [--resize 1] [--fold 1] [--nav 1] [--vloads 5] [--vstep2 15] [--shots] --out <dir> --tag <name>
-// Timing numbers are from one machine; other headless Chrome work running at the same time makes them noisy.
+// Objective pen checks for the drafting hero, merge build (2026-11-21): three lanes (A car ink, B lay-in and drafting, C
+// lettering), the merge caps (<= 1 end per frame per line lane, <= 2 for the lettering lane, <= 3 in total: fix round 1) and the merge
+// develop curve. Started from the two-pen checks (v3), which replaced the R3 one-pen checks (pen-checks.r3.cjs.txt).
+// Headless Chrome through Playwright on a VIRTUAL CLOCK (the page's requestAnimationFrame, performance.now and timers
+// advance only when this script steps them, 60 Hz), so every load cuts the strokes into the same frame chunks.
+//   #1 per pen sequential: within pen A (car ink) and pen B (layout, dimensions) a stroke starts only after the previous
+//      one ended (window.__heroDraw.schedule and .pen)
+//   #2 runtime: penT never decreases; at most one partial stroke per pen in every frame (at most 2 live strokes)
+//   #3 pixels: each canvas's inked-pixel count never decreases before that canvas starts to leave
+//   #5 stroke ends: at most 2 in any 16.67 ms window in total and per pen (schedule), and at most 2 strokes finishing in
+//      any one runtime frame
+//   #6 input: pointerdown (tap on phones) at pen 900, 1600 and 2200 ms settles to the photo in <= 190 ms of page time
+//      with no new ink after it and a clean end (class "js", no drawing nodes)
+//   develop: the density the engine reports at the 10 timeline checkpoints within 0.02 of the spec table; it never falls
+//   dense3 final solver (2026-11-22, agent): #1, #2 and #5 run over every lane the page reports (A B C and the detail
+//      lanes X Y Z, caps A B X Y Z 1 and C 2 per window; A-C <= 3 among them; the detail lanes <= one each); runtime live
+//      strokes <= the lane count; finishes per frame A-C <= 3 and detail <= one per detail lane; R.frames logs every frame;
+//   #7 a photo that never decodes develops at the engine's DECODE_CAP (--decode-cap none: the stock 11 s ceiling);
+//      --only-nophoto runs #7 alone
+//   restored from the R3 checks (pen-checks at 0e561624; integration onto 5b20926f, 2026-11-21, an agent decision):
+//   #3b no stray ink: every 100 ms each canvas's inked pixels (alpha >= 24) lie within 2 device px of a stroke (its own
+//      width included; arrowheads filled) that belongs to that canvas and has started by the pen time (__heroDraw.at)
+//   determinism: two virtual-clock loads give identical alpha hashes on all three canvases at six pen times
+//   fix1 (2026-11-22, agent): restored from 5b20926f's --resize and --fold checks (R3's one-pen checks) and adapted to the
+//   drafting engine: its classes (D >= 1280, T 768-1279, P < 768 px of documentElement.clientWidth, engine.js pickCls),
+//   its ResizeObserver on the photo box, SETTLE 160 ms, QUICK 300 ms and the V line's canvas exit windows; on the
+//   virtual clock like the rest (the ResizeObserver runs in the page's own rendering step, so the script waits for it in
+//   real time before the next step):
+//   resizeSameClass: in the middle of the first canvas exit window (PENCIL at every class, so its opacity is strictly
+//      between 0 and 1), and at least 100 ms before the last ink, the viewport width changes within the class (at least
+//      40 px from a class edge). The
+//      engine must lay the canvases out again on the new photo box (the cover scale and the lines box match it), replay
+//      the ink up to the pen time (no inked pixel outside the strokes started by then, and at least half the ink there was,
+//      scaled), keep every canvas at or below the opacity it had (no flash back to full-strength lines, in the frame
+//      after the resize or later), then draw on to its own end: no settle, nothing skipped, every stroke finished, pen
+//      time never back, a clean end.
+//   resizeClassChange: the same moment, a width in another class: settledBy "class-change", done within SETTLE + 2
+//      frames, no new ink after the resize, opacities never rise, a clean end.
+//   quickScrolled / quickShort: part of the car box, under half, on screen at t0 (the page scrolled so the car's top three
+//      quarters are above the viewport before t0, by a scroll, not intent; or a short viewport, --quick-h, default 360 px,
+//      400 px with --mobile): 0 < H.quick < 0.5, settledBy "quick", no lines shown (linesAt unset, the lines box hidden,
+//      no pen frame, no inked pixel), done within QUICK + 2 frames of t0, a clean end.
+//   --only <groups> runs some of: sequence, input, nophoto, determinism, resize, quick (default all; --only-nophoto is
+//   --only nophoto). tools/hero-tests/hero-pen.test.cjs runs --only resize,quick at each class in the suite.
+// usage: node pen-checks.cjs --url http://127.0.0.1:5171/index.html --w 1440 --h 900 --dpr 1 [--mobile]
+//          [--only sequence,input,nophoto,determinism,resize,quick] [--quick-h <px>] --out <file.json>
 'use strict';
-const path = require('path'), fs = require('fs'), os = require('os');
-const PW = process.env.PLAYWRIGHT || 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright';
+const fs = require('fs'), path = require('path');
+const PW = process.env.PLAYWRIGHT_MODULE || process.env.PLAYWRIGHT || 'C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright';
 const { chromium } = require(PW);
 const argv = process.argv.slice(2);
 const opt = (k, d) => { const i = argv.indexOf('--' + k); return i >= 0 ? argv[i + 1] : d; };
-const flag = (k) => argv.includes('--' + k);
-const URL_ = opt('url', 'http://127.0.0.1:4822/index.html'), W = +opt('w', 1440), H = +opt('h', 900), DPR = +opt('dpr', 1), MOBILE = flag('mobile');
-const VLOADS = +opt('vloads', 5), VSTEP2 = +opt('vstep2', 0);
-const CPU = +opt('cpu', 1), LOADS = +opt('loads', 10), INPUTS = +opt('input', 1), BACK = +opt('back', 1), OUT = path.resolve(opt('out', '.')), TAG = opt('tag', `${W}x${H}-dpr${DPR}-x${CPU}`);
-// A[0] 0.25 since revision 1 (P0 in 250 ms; tools/hero-pen/engine/solve.cjs)
-const FR = 1000 / 60, CW = 827, A = [0.25, 0.12, 0.25, 0.30, 0.35, 0.25], ENDS = [9, 9, 4, 4, 6, 4], RANK = [0, 1, 2, 5, 3, 4];
-const GH_MS = 150;
+const URL_ = opt('url', 'http://127.0.0.1:5171/index.html'), W = +opt('w', 1440), H = +opt('h', 900), DPR = +opt('dpr', 1), MOBILE = argv.includes('--mobile');
+const OUT = opt('out', null), FR = 1000 / 60;
+// dense3 final solver: the lanes and their per-window end caps (pens.cjs K.ENDS_PER_PEN), the detail lanes, the decode cap
+// the engine is expected to have (engine.js DECODE_CAP; --decode-cap none expects the stock engine's 11 s ceiling instead)
+const CAP = { A: 1, B: 1, C: 2, X: 1, Y: 1, Z: 1 }, DETAIL = ['X', 'Y', 'Z'];
+const DECODE_CAP = opt('decode-cap', '4500'), ONLY_NOPHOTO = argv.includes('--only-nophoto');
+// fix1: check groups (default all)
+const GROUPS = ['sequence', 'input', 'nophoto', 'determinism', 'resize', 'quick'];
+const ONLY = opt('only', null) ? new Set(opt('only').split(',')) : ONLY_NOPHOTO ? new Set(['nophoto']) : null;
+if (ONLY) for (const g of ONLY) if (!GROUPS.includes(g)) { console.error('unknown group ' + g + ' (' + GROUPS.join(', ') + ')'); process.exit(2); }
+const want = (g) => !ONLY || ONLY.has(g);
+const QUICK_H = +opt('quick-h', MOBILE ? 400 : 360);
+const VT = fs.readFileSync(path.join(__dirname, 'vclock.js'), 'utf8');
 
-// Playwright launches Chromium with --disable-back-forward-cache; the bfcache Back test removes that default.
-async function launch(extraArgs = [], ignoreDefaultArgs = []) {
-  const prof = fs.mkdtempSync(path.join(os.tmpdir(), 'hero-pen-checks-'));
-  const ctx = await chromium.launchPersistentContext(prof, {
-    channel: 'chrome', headless: true, args: ['--ignore-gpu-blocklist', '--enable-gpu-rasterization', '--use-angle=d3d11', '--hide-scrollbars', ...extraArgs],
-    ignoreDefaultArgs, viewport: { width: W, height: H }, deviceScaleFactor: DPR, isMobile: MOBILE, hasTouch: MOBILE,
-    userAgent: MOBILE ? 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36' : undefined,
-  });
-  return { ctx, close: async () => { await ctx.close(); fs.rmSync(prof, { recursive: true, force: true }); } };
-}
-// revision 5: a virtual frame clock. Every requestAnimationFrame callback of one real frame gets the same timestamp;
-// the first real frame keeps its own, each later real frame adds exactly `step` ms. The engine's pen clock reads
-// only these timestamps after t0, so the frame chunks (and the pixels) depend on pen time alone.
-function VCLOCK(step) {
-  const raf = window.requestAnimationFrame.bind(window);
-  let lastReal = null, v = 0;
-  window.__vclock = step;
-  window.requestAnimationFrame = (cb) => raf((ts) => {
-    if (ts !== lastReal) { v = lastReal === null ? ts : v + step; lastReal = ts; }
-    cb(v);
-  });
-}
-async function newPage(ctx, pre) {
-  const page = ctx.pages()[0] || (await ctx.newPage());
-  if (CPU > 1) { const s = await ctx.newCDPSession(page); await s.send('Emulation.setCPUThrottlingRate', { rate: CPU }); }
+async function load(browser, o = {}) {
+  const ctx = await browser.newContext({ viewport: { width: W, height: o.h || H }, deviceScaleFactor: DPR, isMobile: MOBILE, hasTouch: MOBILE });
+  const page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(String(e)));
   page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
-  if (pre) await page.addInitScript(pre[0], pre[1]);
-  await page.addInitScript(INIT);
-  return { page, errors };
+  if (o.pre) await page.addInitScript(o.pre);
+  await page.addInitScript(VT);
+  await page.goto(URL_, { waitUntil: 'load' });
+  await page.evaluate(async () => { await Promise.all([...document.querySelectorAll('.hero-media img')].map((i) => i.decode().catch(() => 0))); });
+  const step = () => page.evaluate((d) => window.__film.step(d), FR);
+  let s = null;
+  for (let g = 0; g < 3000; g++) { s = await step(); if (s.t0 != null) break; }
+  await page.evaluate(MASK);
+  return { ctx, page, errors, step };
 }
-
-// ---- in-page instrumentation (init script) ----
-function INIT() {
-  let hd;
-  const log = (window.__penLog = []), pix = (window.__pix = []);
-  window.__pd = -1;
-  addEventListener('pointerdown', () => { if (window.__pd < 0) window.__pd = performance.now(); }, { capture: true });
-  addEventListener('pageshow', (e) => { window.__persisted = e.persisted; });
-  Object.defineProperty(window, '__heroDraw', {
-    configurable: true, get() { return hd; },
-    set(v) {
-      hd = v;
-      let fr;
-      Object.defineProperty(v, 'frame', { configurable: true, enumerable: true, get() { return fr; }, set(x) { fr = x; log.push([performance.now(), x.penT, x.from, x.to, x.partial ? 1 : 0]); } });
-    },
-  });
-  // pixel sampler: one rAF loop; ~10 samples during the drawing plus one at the first developing frame
-  const alphaCount = (c, th) => { if (!c || !c.width || !c.height) return 0; const a = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let j = 3; j < a.length; j += 4) if (a[j] >= th) n++; return n; };
-  // allowed region per layer, kept across samples (strokes are added in schedule order as they start): every stroke
-  // of the layer with scheduled start <= penT, stroked 4 device px wider than its widest point
-  const AL = [];
-  window.__allowed = (c, layer, penT, s) => {
-    const [G, box, dpr] = s.geo;
-    let A = AL[layer];
-    if (!A || A.o.width !== c.width || A.o.height !== c.height || layer === 0) { A = AL[layer] = { o: new OffscreenCanvas(c.width, c.height), next: 0 }; }
-    const x = A.o.getContext('2d');
-    x.lineCap = x.lineJoin = 'round';
-    x.strokeStyle = '#000';
-    const b = box[layer];
-    for (let i = A.next; i < s.n; i++) {
-      if (s.schedule[i][0] > penT) break;
-      A.next = i + 1;
-      const cv = s.tier[i] === 'g' ? 0 : s.tier[i] === 'h' ? 1 : 2;
-      if (cv !== layer) continue;
-      // revision 2: a ghost loop that has retired (one frame of slack) may leave no pixel
-      if (layer === 0 && s.gr && s.gr[i] >= 0 && penT >= s.gr[i] + 150 + 17) continue;
-      const f = { g: 0.36, c: 0.95, y: 1.05, a: 1.40, n: 0.8, f: 0.62, d: 0.42, h: 0.3 }[s.tier[i]];
-      x.lineWidth = Math.max(1, f * G.w1 * dpr) + 4;
-      x.beginPath();
-      const k = Math.max(16, Math.ceil(s.len[i] / 1.5));
-      for (let q = 0; q <= k; q++) { const p = s.at(i, q / k), X = (G.ox + p[0] * G.kx - b[0]) * dpr, Y = (G.oy + p[1] * G.ky - b[1]) * dpr; q ? x.lineTo(X, Y) : x.moveTo(X, Y); }
-      x.stroke();
-    }
-    return x.getImageData(0, 0, A.o.width, A.o.height).data;
-  };
-  let targets = null, devDone = false, lift = null, liftDone = false, finDone = false;
-  const alpha64 = (c) => { const a = c.getContext('2d').getImageData(0, 0, c.width, c.height).data, al = new Uint8Array(a.length / 4); for (let j = 0; j < al.length; j++) al[j] = a[4 * j + 3]; let bin = ''; for (let j = 0; j < al.length; j += 8192) bin += String.fromCharCode.apply(null, al.subarray(j, j + 8192)); return { w: c.width, h: c.height, b64: btoa(bin) }; };
-  const tick = () => {
-    const s = window.__heroDraw;
-    if (s && s.state === 'done') return;
-    requestAnimationFrame(tick);
-    if (!s || !s.schedule || !s.frame) return;
-    if (!targets) targets = Array.from({ length: 10 }, (_, k) => (s.lastInk * (k + 0.5)) / 10).concat((s.gr || []).filter((t) => t >= 0).flatMap((t) => [t + 60, t + 190])).sort((a, b) => a - b);
-    const st = s.state, penT = s.frame.penT;
-    // revision 3 (E6): a determinism sample at a fixed pen time inside a pen lift (no stroke moving): the longest gap
-    // between two P3 strokes (at D the lift at the line break, College -> of), sampled on the first frame inside it.
-    // Pen-time jitter between loads cannot change the ink there.
-    if (!lift) { lift = [0, 0]; const sc = s.schedule; for (let i = 1; i < sc.length; i++) { const a = sc[i - 1][0] + sc[i - 1][1], b = sc[i][0]; if (s.ph[i] === 3 && s.ph[i - 1] === 3 && b - a >= 25 && b - a > lift[1] - lift[0]) lift = [a, b]; } }
-    if (st === 'drawing' && !liftDone && lift[1] > lift[0] && penT > lift[0] + 0.5 && penT < lift[1] - 0.5) { liftDone = true; const c = document.querySelectorAll('.hero-draw-lines canvas')[2]; pix.push({ penT, state: 'lift', lift, inkAlpha: alpha64(c), inked: 0, outside: 0, perLayer: [], h: [...document.querySelectorAll('.hero-draw-lines canvas')].map((x) => { if (!x.width) return '0'; const a = x.getContext('2d').getImageData(0, 0, x.width, x.height).data; let hh = 2166136261; for (let j = 3; j < a.length; j += 4) hh = Math.imul(hh ^ a[j], 16777619); return (hh >>> 0).toString(16) + ':' + x.width + 'x' + x.height; }) }); }
-    // revision 3: the finished drawing, in the 100 ms between last ink and the develop start (pen lifted, all ink down)
-    const fin = st === 'drawing' && !finDone && penT > s.lastInk + 0.5;
-    const sampleNow = (st === 'drawing' && targets.length && penT >= targets[0]) || fin || (st === 'developing' && !devDone);
-    if (!sampleNow) return;
-    if (st === 'drawing') while (targets.length && penT >= targets[0]) targets.shift();
-    const cvs = [...document.querySelectorAll('.hero-draw-lines canvas')];
-    const w0 = performance.now(), rec = { penT, state: st, inked: 0, outside: 0, perLayer: [], outsideByLayer: [] };
-    rec.h = [];
-    cvs.forEach((c, layer) => {
-      if (!c.width || !c.height) { rec.perLayer.push(0); rec.h.push('0'); return; }
-      const a = c.getContext('2d').getImageData(0, 0, c.width, c.height).data, m = window.__allowed(c, layer, penT, s);
-      // revision 5: FNV-1a over the layer's alpha bytes (the virtual-clock pass compares these)
-      let hh = 2166136261;
-      for (let j = 3; j < a.length; j += 4) hh = Math.imul(hh ^ a[j], 16777619);
-      rec.h.push((hh >>> 0).toString(16) + ':' + c.width + 'x' + c.height);
-      let n = 0, out = 0;
-      for (let j = 3; j < a.length; j += 4) if (a[j] >= 24) { n++; if (m[j] < 8) out++; }
-      if (layer) rec.inked += n;
-      rec.outside += out; rec.perLayer.push(n); rec.outsideByLayer.push(out);
+// #3b (restored): inked pixels outside the strokes started by penT on that canvas; and an FNV-1a hash of each canvas's alpha
+const MASK = () => {
+  const W1 = { c: 1.08, y: 1.16, n: 1.12, f: 0.62, d: 0.44, p: 0.32, k: 0.34, l: 0.44, u: 0.8, m: 0.4, r: 0.4 };
+  const CAN = { c: 2, y: 2, n: 2, f: 2, d: 2, p: 0, k: 0, l: 0, u: 0, m: 1, r: 1 };
+  window.__outside = (penT) => {
+    const h = window.__heroDraw, [G, box, dpr] = h.geo, cvs = [...document.querySelectorAll('.hero-draw-lines canvas')];
+    return cvs.map((c, ci) => {
+      if (!c.width || !c.height || !box[ci]) return 0;
+      const o = new OffscreenCanvas(c.width, c.height), x = o.getContext('2d');
+      x.lineCap = x.lineJoin = 'round'; x.strokeStyle = x.fillStyle = '#000';
+      for (let i = 0; i < h.n; i++) {
+        const t = h.tier[i];
+        if (h.schedule[i][0] > penT || CAN[t] !== ci) continue;
+        x.lineWidth = Math.max(1, W1[t] * G.w1 * dpr) + 4;
+        x.beginPath();
+        const k = Math.max(16, Math.ceil(h.len[i] / 1.5));
+        for (let q = 0; q <= k; q++) { const p = h.at(i, q / k), X = (G.ox + p[0] * G.kx - box[ci][0]) * dpr, Y = (G.oy + p[1] * G.ky - box[ci][1]) * dpr; if (q) x.lineTo(X, Y); else x.moveTo(X, Y); }
+        x.stroke();
+        if (t === 'r') { x.closePath(); x.fill(); }
+      }
+      const m = x.getImageData(0, 0, c.width, c.height).data, a = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+      let out = 0;
+      for (let j = 3; j < a.length; j += 4) if (a[j] >= 24 && m[j] < 8) out++;
+      return out;
     });
-    if (fin) { finDone = true; rec.final = true; rec.inkAlpha = alpha64(cvs[2]); }
-    if (st === 'developing') {
-      devDone = true;
-      // only when the hold sample was missed (a frame jumped the whole 100 ms)
-      if (!finDone) rec.inkAlpha = alpha64(cvs[2]);
-    }
-    rec.ms = +(performance.now() - w0).toFixed(1);
-    pix.push(rec);
   };
-  requestAnimationFrame(tick);
-}
+  window.__alphaHash = () => [...document.querySelectorAll('.hero-draw-lines canvas')].map((c) => {
+    if (!c.width || !c.height) return '0';
+    const a = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+    let hh = 2166136261;
+    for (let j = 3; j < a.length; j += 4) hh = Math.imul(hh ^ a[j], 16777619);
+    return (hh >>> 0).toString(16) + ':' + c.width + 'x' + c.height;
+  });
+};
 
-// ---- schedule-based checks, evaluated in the page with the engine's own motion (__heroDraw.at) ----
-function scheduleChecks([FR, CW, A, ENDS, RANK]) {
-  const s = window.__heroDraw, sch = s.schedule, n = s.n, res = { sequential: true, floorViolations: [], peak: {}, peakViolations: [], windows: {} };
-  for (let i = 1; i < n; i++) if (sch[i][0] < sch[i - 1][0] + sch[i - 1][1]) res.sequential = false;
-  for (let i = 1; i < n; i++) if (RANK[s.ph[i]] < RANK[s.ph[i - 1]]) res.phaseOrder = false;
-  res.phaseRuns = s.ph.filter((p, i) => !i || p !== s.ph[i - 1]);
-  res.lastTier = s.tier[n - 1];
-  if (res.phaseOrder !== false) res.phaseOrder = true;
-  const arc = (i, t) => s.at(i, Math.max(0, Math.min(1, (t - sch[i][0]) / sch[i][1])))[2];
-  for (let i = 0; i < n; i++) {
-    const l = s.len[i] / CW, d = sch[i][1], fr = d / FR, p = s.ph[i], need = l >= 0.5 ? 3 : l >= 0.25 ? 2 : l >= 0.12 ? 1 : 0;
-    if (fr + 1e-9 < need) res.floorViolations.push(`#${i} ${l.toFixed(3)} cw over ${fr.toFixed(2)} frames`);
-    if (p === 0 && d < 50) res.floorViolations.push(`#${i} P0 ${d} ms`);
-    // revision 5: every P1 stroke >= 4 frames (P1_FLOOR_MS; the peak-advance cap below is the seen-speed rule)
-    if (p === 1 && d < 4 * FR - 1e-9) res.floorViolations.push(`#${i} P1 ${d} ms`);
-    const shade = s.tier[i] === 'h' && l >= 0.1;
-    if (shade && d < (l >= 0.3 ? 6 : 4) * FR - 1e-9) res.floorViolations.push(`#${i} shade ${d} ms`);
-    if (l >= 0.12 || shade) {
-      let pk = 0;
-      for (let t = sch[i][0] - FR; t <= sch[i][0] + d; t += 0.5) pk = Math.max(pk, arc(i, t + FR) - arc(i, t));
-      pk /= CW;
-      res.peak[p] = Math.max(res.peak[p] || 0, +pk.toFixed(4));
-      if (pk > A[p] + 1e-6) res.peakViolations.push(`#${i} P${p} ${pk.toFixed(3)} cw/frame`);
-      if (shade) { res.peak.shade = Math.max(res.peak.shade || 0, +pk.toFixed(4)); if (pk > 0.12 + 1e-6) res.peakViolations.push(`#${i} shade ${pk.toFixed(3)} cw/frame`); }
-    }
+// ---- fix1: resize while drawing, and the quick reveal (see the header)
+const CLS_OF = (w) => (w >= 1280 ? 'D' : w >= 768 ? 'T' : 'P');
+// a width in the same class at least 40 px from its edges, and one in another class (client widths)
+const sameClassW = (w) => { const c = CLS_OF(w); if (c === 'D') return w - 80 >= 1320 ? w - 80 : w + 80; if (c === 'T') return w - 60 >= 808 ? w - 60 : w + 60; return w - 40 >= 320 ? w - 40 : w + 40; };
+const otherClassW = (w) => ({ D: 1000, T: 640, P: 900 })[CLS_OF(w)];
+// the page state the resize checks read: canvas opacities (style.opacity, '' = 1), inked pixels (alpha > 24) per canvas,
+// the engine's layout scale against the photo box's cover scale (engine.js layout()), and the lines box
+const SNAP = () => {
+  const h = window.__heroDraw || {}, R = document.documentElement, wrap = document.querySelector('.hero-draw-lines'), bg = document.querySelector('.white-home .cinematic-hero .hero-photo-background');
+  const cv = [...document.querySelectorAll('.hero-draw-lines canvas')];
+  const px = cv.map((c) => { if (!c.width || !c.height) return 0; const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i] > 24) n++; return n; });
+  let reg = null;
+  if (bg && h.geo) {
+    // engine.js layout(): cover scale, object-position offsets (+ half a photo pixel: the art is in pixel centres)
+    const br = bg.getBoundingClientRect(), nw = bg.naturalWidth || 2200, nh = bg.naturalHeight || 1238, sc = Math.max(br.width / nw, br.height / nh), iw = nw * sc, ih = nh * sc;
+    const pos = (v, free) => (v.slice(-1) === '%' ? (free * parseFloat(v)) / 100 : parseFloat(v) || 0), op = getComputedStyle(bg).objectPosition.split(' ');
+    const G = h.geo[0];
+    reg = { kx: G.kx, kxWant: iw / 2200, ky: G.ky, kyWant: ih / 1238, ox: G.ox, oxWant: pos(op[0], br.width - iw) + iw / 4400, oy: G.oy, oyWant: pos(op[1] || '50%', br.height - ih) + ih / 2476,
+      wrapW: wrap ? parseFloat(wrap.style.width) : null, wrapH: wrap ? parseFloat(wrap.style.height) : null, bgW: br.width, bgH: br.height };
   }
-  // sliding windows, 1 ms step
-  let worst = { ends: 0, ink: 0, loc: 0 }, over = { ends: 0, ink: 0, loc: 0 }, j0 = 0, count = 0;
-  const last = sch[n - 1][0] + sch[n - 1][1];
-  for (let w = -FR; w <= last; w += 1) {
-    const e = w + FR;
-    while (j0 < n && sch[j0][0] + sch[j0][1] <= w) j0++;
-    let ends = 0, ink = 0, first = null, loc = 0, act = 0, ph = 0;
-    for (let j = j0; j < n && sch[j][0] < e; j++) {
-      const a = Math.max(w, sch[j][0]), b = Math.min(e, sch[j][0] + sch[j][1]), end = sch[j][0] + sch[j][1];
-      if (end > w && end <= e) ends++;
-      if (b <= a) continue;
-      act++;
-      ph = Math.max(ph, s.ph[j]);
-      const pa = s.at(j, (a - sch[j][0]) / sch[j][1]), pb = s.at(j, (b - sch[j][0]) / sch[j][1]);
-      if (pb[2] - pa[2] <= 1e-9) continue;
-      ink += (pb[2] - pa[2]) / CW;
-      if (!first) first = pa;
-      for (let q = 0; q <= 8; q++) { const pt = s.at(j, (a + ((b - a) * q) / 8 - sch[j][0]) / sch[j][1]); loc = Math.max(loc, Math.hypot(pt[0] - first[0], pt[1] - first[1]) / CW); }
-    }
-    if (!act) continue;
-    count++;
-    if (ends > ENDS[ph]) over.ends++;
-    if (ink > 0.40 + 1e-9) over.ink++;
-    if (loc > 0.25 + 1e-9) over.loc++;
-    worst = { ends: Math.max(worst.ends, ends), ink: Math.max(worst.ink, ink), loc: Math.max(worst.loc, loc) };
+  return { vt: window.__film ? window.__film.now() : performance.now(), state: h.state || null, penT: h.frame ? h.frame.penT : null, frameTo: h.frame ? h.frame.to : null, n: h.n, cls: h.cls, settledBy: h.settledBy || null,
+    skipped: h.skipped || 0, linesAt: h.linesAt == null ? null : h.linesAt, quick: h.quick == null ? null : h.quick, t0: h.t0 == null ? null : h.t0, doneAt: h.doneAt == null ? null : h.doneAt,
+    op: cv.map((c) => (c.style.opacity === '' ? 1 : +c.style.opacity)), px, reg, hidden: wrap ? wrap.hidden : null, cw: R.clientWidth, scrollY: Math.round(scrollY),
+    html: R.className, nodes: document.querySelectorAll('.hero-draw-lines, .hero-draw-veil, #hero-pen-data').length, frameSeen: !!h.frame };
+};
+async function resizeCase(browser, mode) {
+  const { ctx, page, errors, step } = await load(browser);
+  const info = await page.evaluate(() => { const h = window.__heroDraw; return { cls: h.cls, n: h.n, lastInk: h.lastInk, tl: h.tl, cw: document.documentElement.clientWidth }; });
+  // the first canvas exit window on the pen clock (V line: start, length, then per canvas the window in progress x 1000)
+  const win = [0, 1, 2].map((c) => [info.tl[0] + (info.tl[2 + 2 * c] / 1e3) * info.tl[1], info.tl[0] + (info.tl[3 + 2 * c] / 1e3) * info.tl[1]]).sort((a, b) => a[0] - b[0])[0];
+  const at = Math.min((win[0] + win[1]) / 2, info.lastInk - 100);
+  let s = null;
+  for (let g = 0; g < 400; g++) { s = await step(); if (s.state === 'done' || (s.penT != null && s.penT >= at)) break; }
+  const before = await page.evaluate(SNAP);
+  await page.evaluate(() => { window.__geoRef = window.__heroDraw.geo; });
+  const cw2 = mode === 'same-class' ? sameClassW(info.cw) : otherClassW(info.cw), w2 = cw2 + (W - info.cw);
+  await page.setViewportSize({ width: w2, height: H });
+  // the engine's ResizeObserver runs in the page's rendering step, not on the virtual clock: wait for it in real time
+  let reacted = false, waitedMs = 0;
+  for (let g = 0; g < 80 && !reacted; g++) {
+    await page.waitForTimeout(25);
+    waitedMs += 25;
+    reacted = await page.evaluate((m) => { const h = window.__heroDraw; return m === 'same-class' ? h.geo !== window.__geoRef : !!h.settledBy; }, mode);
   }
-  res.windows = { count, worstEnds: worst.ends, worstInkCw: +worst.ink.toFixed(3), worstLocalityCw: +worst.loc.toFixed(3), overEndCap: over.ends, overInk040: over.ink, localityOver025: over.loc };
-  // revision 1 floors (runtime data has tiers, phases and lengths, not ids: lettering rules are checked by the build)
-  res.glyphRules = { numerals: [], numeralLifts: [], pDetailMinMs: null, violations: [] };
-  for (let i = 0; i < n; i++) {
-    const d = sch[i][1];
-    if (s.tier[i] === 'n') {
-      res.glyphRules.numerals.push(d);
-      if (d < 4 * FR - 1e-9) res.glyphRules.violations.push(`#${i} numeral ${d} ms`);
-      if (i && s.tier[i - 1] === 'n') { const g = sch[i][0] - sch[i - 1][0] - sch[i - 1][1]; res.glyphRules.numeralLifts.push(g); if (g < 30) res.glyphRules.violations.push(`#${i} digit lift ${g} ms`); }
-    }
-    if (s.cls === 'P' && s.ph[i] === 3 && s.tier[i] !== 'h' && s.len[i] / CW >= 0.05) {
-      res.glyphRules.pDetailMinMs = res.glyphRules.pDetailMinMs == null ? d : Math.min(res.glyphRules.pDetailMinMs, d);
-      if (d < 2 * FR - 1e-9) res.glyphRules.violations.push(`#${i} P detail ${d} ms`);
-    }
+  const after = await page.evaluate(SNAP);   // before the next step: what the next paint shows
+  const out0 = after.state !== 'done' ? await page.evaluate((p) => window.__outside(p), after.penT) : [0, 0, 0];
+  const res = { mode, from: W, to: w2, clientWidth: [info.cw, after.cw], cls: info.cls, clsOfNewWidth: CLS_OF(after.cw), lastInk: info.lastInk, exitWindow: win.map((x) => +x.toFixed(1)), resizeAtPen: +at.toFixed(1), penTAtResize: before.penT, reacted, waitedMs,
+    opBefore: before.op, opAfterResize: after.op, pxBefore: before.px, pxAfterResize: after.px, regBefore: before.reg, regAfter: after.reg, outsideAfterResize: out0 };
+  // then every frame to the end: opacities never rise, pen time never back, new ink, stray ink every 6th frame
+  let prev = after, opRise = [], penBack = 0, inkFrames = 0, pxRise = 0, outMax = Math.max(...out0), outSamples = 1, frames = 0, last = after;
+  for (let g = 0; g < 600; g++) {
+    s = await step();
+    const f = await page.evaluate(SNAP);
+    frames++;
+    for (let c = 0; c < 3; c++) if (f.op[c] > prev.op[c] + 1e-3 && opRise.length < 5) opRise.push([f.penT, c, prev.op[c], f.op[c]]);
+    if (f.penT != null && prev.penT != null && f.penT < prev.penT) penBack++;
+    if (f.px.some((v, c) => v > prev.px[c])) { inkFrames++; pxRise++; }
+    if (f.state !== 'done' && f.penT != null && g % 6 === 0) { const o = await page.evaluate((p) => window.__outside(p), f.penT); outSamples++; outMax = Math.max(outMax, ...o); }
+    last = f;
+    if (f.state === 'done') break;
+    prev = f;
   }
-  // revision 3: P2 form/detail lines (tier f or d) of 0.15 cw or more: >= 2 frames, no two ends within 33.3 ms
-  res.p2Long = { n: 0, minMs: null, minEndGapMs: null, violations: [] };
-  let pe = null;
-  for (let i = 0; i < n; i++) {
-    if (s.ph[i] !== 2 || !'fd'.includes(s.tier[i]) || s.len[i] / CW < 0.15) continue;
-    const d = sch[i][1], end = sch[i][0] + d;
-    res.p2Long.n++;
-    res.p2Long.minMs = res.p2Long.minMs == null ? d : Math.min(res.p2Long.minMs, d);
-    if (d < 2 * FR - 1e-9) res.p2Long.violations.push(`#${i} ${s.len[i]} src px in ${d} ms`);
-    if (pe != null) { res.p2Long.minEndGapMs = res.p2Long.minEndGapMs == null ? end - pe : Math.min(res.p2Long.minEndGapMs, end - pe); if (end - pe <= 2 * FR) res.p2Long.violations.push(`#${i} ends ${end - pe} ms after the previous long line`); }
-    pe = end;
+  const end = last, endH = await page.evaluate(() => { const h = window.__heroDraw || {}; return { state: h.state, settledBy: h.settledBy || null, skipped: h.skipped || 0, frameTo: h.frame ? h.frame.to : null, n: h.n, cls: h.cls, doneAt: h.doneAt }; });
+  Object.assign(res, { framesAfter: frames, opRise, penBack, inkFramesAfter: inkFrames, outsideMax: outMax, outsideSamples: outSamples, end: { ...endH, html: end.html, nodes: end.nodes }, errors: errors.slice() });
+  const clean = end.html === 'js' && end.nodes === 0 && endH.state === 'done' && !errors.length;
+  const partFaded = before.op.some((v) => v > 0.001 && v < 0.999);
+  if (mode === 'same-class') {
+    // registration: the layout matches the new photo box (scale, offsets, lines box), and that box did change
+    const a = after.reg, b = before.reg;
+    const regOk = !!(a && b && Math.abs(a.kx - a.kxWant) < 1e-6 && Math.abs(a.ky - a.kyWant) < 1e-6 && Math.abs(a.ox - a.oxWant) < 1e-3 && Math.abs(a.oy - a.oyWant) < 1e-3
+      && Math.abs(a.wrapW - a.bgW) < 0.01 && Math.abs(a.wrapH - a.bgH) < 0.01 && Math.abs(a.bgW - b.bgW) + Math.abs(a.bgH - b.bgH) > 0.5);
+    const scale = after.reg && before.reg ? Math.min(1, after.reg.kx / before.reg.kx) : 0;
+    const replayed = before.px.every((v, c) => !v || after.px[c] >= 0.5 * v * scale);
+    const noFlash = after.op.every((v, c) => v <= before.op[c] + 1.5e-3) && !opRise.length;
+    Object.assign(res, { partFadedAtResize: partFaded, registration: regOk, replayed, noFlash });
+    res.ok = reacted && res.clsOfNewWidth === info.cls && before.penT != null && before.penT < info.lastInk && partFaded && regOk && replayed && noFlash && outMax === 0 && !penBack && inkFrames >= 1
+      && !endH.settledBy && !endH.skipped && endH.frameTo === endH.n && endH.cls === info.cls && clean;
+  } else {
+    const noInk = !pxRise && after.px.every((v, c) => v <= before.px[c]);
+    const msToDone = endH.doneAt != null ? +(endH.doneAt - after.vt).toFixed(1) : null;
+    Object.assign(res, { noNewInk: noInk, msToDone, noFlash: !opRise.length });
+    res.ok = reacted && res.clsOfNewWidth !== info.cls && before.penT != null && before.penT < info.lastInk && endH.settledBy === 'class-change' && msToDone != null && msToDone <= 160 + 2 * FR + 1e-6 && noInk && !opRise.length && endH.cls === info.cls && clean;
   }
-  // revision 4, with the engine's own motion: numerals advance <= 35 % of their length per 16.67 ms window and grow
-  // over >= 3 frames (each >= 5 % of the length) at every frame phase; class P numerals >= 100 ms; closed loops of
-  // 60 src px or more >= 2 frames; class P P2 non-hatch strokes of 50 src px or more >= 1 frame. Areas and join flags
-  // are not in the runtime data: the per-area end cap (E5) and the join speed (E3) are checked by the build, and the
-  // geometric continuations seen here are reported (rev4.joins: [i, ms / src px before, after]) without a verdict.
-  res.rev4 = { numerals: [], closed: [], p2p: [], joins: [], violations: [] };
-  const arcF = (i, u) => s.at(i, Math.max(0, Math.min(1, u)))[2];
-  for (let i = 0; i < n; i++) {
-    const d = sch[i][1], L = s.len[i], t = s.tier[i], p0 = s.at(i, 0), p1 = s.at(i, 1);
-    if (t === 'n') {
-      let adv = 0, grow = 1e9;
-      for (let w = -FR; w <= d; w += 0.25) adv = Math.max(adv, arcF(i, (w + FR) / d) - arcF(i, w / d));
-      for (let ph = 0; ph < FR; ph += 1) { let k = 0; for (let w = -ph; w < d; w += FR) if (arcF(i, (w + FR) / d) - arcF(i, w / d) >= 0.05 * L) k++; grow = Math.min(grow, k); }
-      res.rev4.numerals.push([i, d, +(adv / L).toFixed(3), grow]);
-      if (adv / L > 0.35 + 1e-6) res.rev4.violations.push(`#${i} numeral ${(100 * adv / L).toFixed(1)} % per frame`);
-      if (grow < 3) res.rev4.violations.push(`#${i} numeral grows over ${grow} frames`);
-      if (s.cls === 'P' && d < 100) res.rev4.violations.push(`#${i} P numeral ${d} ms < 100`);
-    }
-    const line = t !== 'h' && t !== 'n' && t !== 'g';
-    if (line && L >= 60 && Math.hypot(p0[0] - p1[0], p0[1] - p1[1]) <= Math.max(3, 0.05 * L)) { res.rev4.closed.push([i, L, d]); if (d < 2 * FR - 1e-9) res.rev4.violations.push(`#${i} closed loop ${L} src px in ${d} ms`); }
-    if (s.cls === 'P' && s.ph[i] === 2 && line && L >= 50) { res.rev4.p2p.push([i, L, d]); if (d < FR - 1e-9) res.rev4.violations.push(`#${i} P P2 ${L} src px in ${d} ms`); }
-    if (i && line && s.ph[i] === s.ph[i - 1] && !'hng'.includes(s.tier[i - 1])) {
-      const q = s.at(i - 1, 1);
-      if (Math.hypot(q[0] - p0[0], q[1] - p0[1]) <= 3) res.rev4.joins.push([i, +(sch[i - 1][1] / s.len[i - 1]).toFixed(3), +(d / L).toFixed(3)]);
-    }
+  await ctx.close();
+  return res;
+}
+// scrolled: at DOMContentLoaded, scroll (not intent) so the car's top three quarters are above the viewport; the car box
+// mapped as the engine maps it (object-fit: cover, object-position; the box from the data block's header)
+const SCROLL_PAST_CAR = () => addEventListener('DOMContentLoaded', () => {
+  const bg = document.querySelector('.white-home .cinematic-hero .hero-photo-background'), d = document.getElementById('hero-pen-data');
+  if (!bg || !d) return;
+  const hd = d.textContent.trim().split('\n')[0].split(' ').map(Number);   // HP1 2200 1238 x0 y0 x1 y1 seed
+  const r = bg.getBoundingClientRect(), nw = bg.naturalWidth || 2200, nh = bg.naturalHeight || 1238, sc = Math.max(r.width / nw, r.height / nh), ih = nh * sc;
+  const op = getComputedStyle(bg).objectPosition.split(' ')[1] || '50%', oy = op.slice(-1) === '%' ? ((r.height - ih) * parseFloat(op)) / 100 : parseFloat(op) || 0;
+  const ky = ih / 1238, y0 = r.top + scrollY + oy + hd[4] * ky, y1 = r.top + scrollY + oy + hd[6] * ky;
+  scrollTo({ top: Math.max(0, y0 + 0.75 * (y1 - y0)), behavior: 'instant' });
+  window.__quickScroll = scrollY;
+}, { once: true });
+async function quickCase(browser, mode) {
+  const { ctx, page, errors, step } = await load(browser, mode === 'short' ? { h: QUICK_H } : { pre: SCROLL_PAST_CAR });
+  let f = await page.evaluate(SNAP), maxPx = Math.max(...f.px), everShown = f.hidden === false, frameSeen = f.frameSeen, frames = 0;
+  const atT0 = f;
+  for (let g = 0; g < 120 && f.state !== 'done'; g++) {
+    await step();
+    f = await page.evaluate(SNAP);
+    frames++;
+    maxPx = Math.max(maxPx, ...f.px);
+    if (f.hidden === false) everShown = true;
+    if (f.frameSeen) frameSeen = true;
   }
-  // revision 5: every P2 stroke >= 1 frame; a P2 pen travel over 50 src px lifts >= 17 ms
-  res.rev5 = { p2MinMs: null, lifts: 0, minLiftOver50: null, violations: [] };
-  for (let i = 0; i < n; i++) {
-    if (s.ph[i] !== 2) continue;
-    const d = sch[i][1];
-    res.rev5.p2MinMs = res.rev5.p2MinMs == null ? d : Math.min(res.rev5.p2MinMs, d);
-    if (d < FR - 1e-9) res.rev5.violations.push(`#${i} P2 ${d} ms < 1 frame`);
-    if (!i) continue;
-    const q = s.at(i - 1, 1), p0 = s.at(i, 0), J = Math.hypot(q[0] - p0[0], q[1] - p0[1]), g = sch[i][0] - sch[i - 1][0] - sch[i - 1][1];
-    if (J > 50) {
-      res.rev5.lifts++;
-      res.rev5.minLiftOver50 = res.rev5.minLiftOver50 == null ? g : Math.min(res.rev5.minLiftOver50, g);
-      if (g < 17) res.rev5.violations.push(`#${i} P2 lift ${g} ms over ${J.toFixed(0)} src px`);
-    }
-  }
-  res.p0Ms = (() => { const k = s.ph.lastIndexOf(0); return k < 0 ? null : sch[k][0] + sch[k][1]; })();
-  res.p1 = (() => { const i = s.ph.indexOf(1), k = s.ph.lastIndexOf(1); return i < 0 ? null : { start: sch[i][0], end: sch[k][0] + sch[k][1] }; })();
+  const h = await page.evaluate(() => { const x = window.__heroDraw || {}; return { state: x.state, quick: x.quick == null ? null : x.quick, settledBy: x.settledBy || null, linesAt: x.linesAt == null ? null : x.linesAt, t0: x.t0 == null ? null : x.t0, doneAt: x.doneAt == null ? null : x.doneAt, scrollAtDcl: window.__quickScroll == null ? null : window.__quickScroll }; });
+  const doneMs = h.doneAt != null && h.t0 != null ? +(h.doneAt - h.t0).toFixed(1) : null;
+  const res = { mode, viewport: [W, mode === 'short' ? QUICK_H : H], scrollYAtT0: atT0.scrollY, ...h, doneMsAfterT0: doneMs, maxInkedPx: maxPx, linesBoxShown: everShown, penFrameSeen: frameSeen, framesToDone: frames,
+    end: { html: f.html, nodes: f.nodes }, errors: errors.slice() };
+  res.ok = h.quick != null && h.quick > 0 && h.quick < 0.5 && h.settledBy === 'quick' && h.linesAt == null && !frameSeen && !everShown && maxPx === 0 && h.state === 'done' && doneMs != null && doneMs <= 300 + 2 * FR + 1e-6
+    && f.html === 'js' && f.nodes === 0 && !errors.length && (mode === 'short' || atT0.scrollY > 0);
+  await ctx.close();
   return res;
 }
 
-function traceCheck(log, lastInk, t0) {
-  let penBack = 0, notContiguous = 0, inkAfterLastInk = 0, maxRaf = 0, maxRafP01 = 0, gapsOver50P01 = 0, firstInkMs = null;
-  for (let i = 0; i < log.length; i++) {
-    const [now, penT, from, to, partial] = log[i];
-    if (firstInkMs == null && (to > from || partial)) firstInkMs = +(now - t0).toFixed(1);
-    if (!i) continue;
-    const p = log[i - 1];
-    if (penT < p[1]) penBack++;
-    if (from !== p[3]) notContiguous++;
-    if (p[1] >= lastInk && (to > from || partial)) inkAfterLastInk++;
-    const gap = now - p[0];
-    maxRaf = Math.max(maxRaf, gap);
-    if (penT <= 1700) { maxRafP01 = Math.max(maxRafP01, gap); if (gap > 50) gapsOver50P01++; }
-  }
-  return { frames: log.length, penBack, notContiguous, inkAfterLastInk, firstInkAfterT0Ms: firstInkMs, maxRafGapMs: +maxRaf.toFixed(1), maxRafGapP0P1Ms: +maxRafP01.toFixed(1), rafGapsOver50P0P1: gapsOver50P01 };
-}
-
-const summary = (page) => page.evaluate(() => {
-  const s = window.__heroDraw || {};
-  return {
-    state: s.state, cls: s.cls, n: s.n, t0: s.t0, fcp: s.fcp, loadAt: s.loadAt, linesAt: s.linesAt, lastInk: s.lastInk, devStart: s.devStart, decodedAt: s.decodedAt, doneAt: s.doneAt,
-    settledBy: s.settledBy || null, gr: s.gr || null, skipped: s.skipped || 0, quick: s.quick == null ? null : s.quick, hash: s.hash, error: s.error || null,
-    htmlClass: document.documentElement.className, penAttr: document.documentElement.getAttribute('data-hero-pen'),
-    nodes: document.querySelectorAll('.hero-draw-lines, .hero-draw-veil, #hero-pen-data').length, scrollY, overflowX: document.documentElement.scrollWidth > innerWidth,
-    nav: (performance.getEntriesByType('navigation')[0] || {}).type, log: window.__penLog || [], pix: window.__pix || [],
-  };
-});
-
 (async () => {
-  fs.mkdirSync(OUT, { recursive: true });
-  const report = { tag: TAG, url: URL_, viewport: { W, H, DPR, mobile: MOBILE }, cpu: CPU, loads: [], input: [], back: [], note: 'one machine, headless Chrome; other headless work ran concurrently, so timings are noisy' };
-  const t00 = Date.now();
-  // ---- loads: one cold load + reloads in one profile ----
-  {
-    const B = await launch();
-    try {
-      const { page, errors } = await newPage(B.ctx);
-      let sched = null;
-      for (let k = 0; k < LOADS; k++) {
-        if (k === 0) await page.goto(URL_, { waitUntil: 'load' }); else await page.reload({ waitUntil: 'load' });
-        if (k === 1 && flag('shots')) {
-          for (const t of [600, 1200, 2200, 3000]) {
-            await page.waitForFunction((t) => window.__heroDraw && (window.__heroDraw.penT >= t || window.__heroDraw.state === 'done'), t, { timeout: 15000, polling: 'raf' }).catch(() => {});
-            await page.screenshot({ path: path.join(OUT, `${TAG}-pen${t}.png`) });
-          }
-        }
-        await page.waitForFunction(() => window.__heroDraw && window.__heroDraw.state === 'done', null, { timeout: 20000, polling: 100 }).catch(() => {});
-        const r = await summary(page);
-        if (!sched && r.state === 'done' && r.n) sched = await page.evaluate(() => null);
-        r.errors = errors.splice(0);
-        r.trace = traceCheck(r.log, r.lastInk, r.t0);
-        // pixels
-        const drawn = r.pix.filter((x) => x.state === 'drawing');
-        let dec = 0;
-        for (let i = 1; i < drawn.length; i++) if (drawn[i].inked < drawn[i - 1].inked) dec++;
-        const gsm = r.pix.filter((x) => x.state === 'drawing').map((x) => [x.penT, x.perLayer[0] || 0, x.outsideByLayer ? x.outsideByLayer[0] || 0 : 0]);
-        r.ghost = { gr: r.gr, guideSamples: gsm, guideOutsideAfterRetire: gsm.reduce((a, x) => a + x[2], 0),
-          guideDropped: (r.gr || []).filter((t) => t >= 0).map((t) => { const b = gsm.filter((x) => x[0] < t).pop(), a = gsm.find((x) => x[0] >= t + 150 + 17); return b && a ? [b[1], a[1]] : null; }) };
-        r.pixels = { sampleMsMax: Math.max(0, ...r.pix.map((x) => x.ms || 0)), samples: r.pix.length, drawingSamples: drawn.length, inkedDecreases: dec, outsideMax: Math.max(0, ...r.pix.map((x) => x.outside)), outsideTotal: r.pix.reduce((a, x) => a + x.outside, 0), inkedMax: Math.max(0, ...r.pix.map((x) => x.inked)), perSample: r.pix.map((x) => [x.penT, x.state, x.inked, x.outside]) };
-        const devPix = r.pix.find((x) => x.inkAlpha && x.final) || r.pix.find((x) => x.inkAlpha && x.state === 'developing'), liftPix = r.pix.find((x) => x.state === 'lift');
-        r.finalSampled = !!(devPix && devPix.final);
-        // revision 3: the develop starts >= 100 ms (pen clock) after last ink
-        r.devAfterLastInk = r.devStart != null && r.lastInk != null ? +(r.devStart - r.lastInk).toFixed(2) : null;
-        r.liftAlpha = liftPix ? liftPix.inkAlpha : null;
-        r.liftAt = liftPix ? [liftPix.penT, liftPix.lift] : null;
-        r.pix = r.pix.filter((x) => x.state !== 'lift');
-        r.devAlpha = devPix ? devPix.inkAlpha : null;
-        r.devAlphaPenT = devPix ? devPix.penT : null;
-        delete r.pix;
-        r.drew = r.linesAt != null && r.state === 'done' && !r.settledBy && !r.skipped && !r.error;
-        r.endStateOk = r.nodes === 0 && r.htmlClass === 'js' && r.penAttr == null;
-        report.loads.push(r);
-        console.log(TAG, 'load', k, r.nav, r.state, 'cls', r.cls, 'n', r.n, 'drew', r.drew, 'settledBy', r.settledBy, 'skipped', r.skipped, 'hash', r.hash, 't0', r.t0 && r.t0.toFixed(0), 'fcp', r.fcp && r.fcp.toFixed(0), 'load', r.loadAt && r.loadAt.toFixed(0),
-          'trace', JSON.stringify(r.trace), 'pix', `${r.pixels.samples} dec ${r.pixels.inkedDecreases} outside ${r.pixels.outsideTotal}`, 'end', r.endStateOk, 'err', r.errors.length);
-        if (k === 0) {
-          // schedule checks (exact engine motion) once per page: identical on every load (same hash)
-          await page.reload({ waitUntil: 'load' });
-          await page.waitForFunction(() => window.__heroDraw && window.__heroDraw.schedule && window.__heroDraw.geo, null, { timeout: 15000 });
-          report.schedule = await page.evaluate(scheduleChecks, [FR, CW, A, ENDS, RANK]);
-          await page.waitForFunction(() => window.__heroDraw && window.__heroDraw.state === 'done', null, { timeout: 20000, polling: 100 }).catch(() => {});
-          errors.splice(0);
-          console.log(TAG, 'schedule', JSON.stringify({ ...report.schedule, floorViolations: report.schedule.floorViolations.length, peakViolations: report.schedule.peakViolations.length }));
+  const browser = await chromium.launch({ channel: 'chrome', headless: true, args: ['--ignore-gpu-blocklist', '--enable-gpu-rasterization', '--use-angle=d3d11'] });
+  const R = { url: URL_, w: W, h: H, dpr: DPR, mobile: MOBILE, groups: GROUPS.filter(want), checks: {}, errors: [] };
+  // ---- pass 1: the whole sequence, every frame
+  if (want('sequence')) {
+    const { ctx, page, errors, step } = await load(browser);
+    const info = await page.evaluate(() => { const h = window.__heroDraw; return { cls: h.cls, n: h.n, schedule: h.schedule, pen: h.pen, tier: h.tier, tl: h.tl, lastInk: h.lastInk }; });
+    R.cls = info.cls; R.n = info.n; R.lastInk = info.lastInk;
+    // #1 (dense3: every lane the page reports, pens A-C and the detail lanes X Y Z; a lane letter the checks do not know fails)
+    const LANES = [...new Set(info.pen)].sort(), DET = LANES.filter((p) => DETAIL.includes(p)), isDet = (p) => DETAIL.includes(p);
+    const bad1 = LANES.filter((p) => !(p in CAP)).map((p) => ['unknown lane', p]);
+    for (const pen of LANES) {
+      const q = info.schedule.map((s, i) => [s[0], s[0] + s[1], i]).filter((x) => info.pen[x[2]] === pen).sort((a, b) => a[0] - b[0]);
+      for (let k = 1; k < q.length; k++) if (q[k][0] < q[k - 1][1]) bad1.push([pen, q[k][2]]);
+    }
+    R.lanes = LANES;
+    R.checks.perPenSequential = { ok: !bad1.length, bad: bad1, lanes: LANES };
+    // #5 schedule windows: pens A-C <= 3 among them, each lane <= its cap (A B 1, C 2, X Y Z 1), the detail lanes together
+    // <= one per detail lane in use; every lane together recorded
+    const ends = info.schedule.map((s, i) => [s[0] + s[1], info.pen[i]]).sort((a, b) => a[0] - b[0]);
+    let worst = 0, worstDetail = 0, worstAll = 0;
+    const worstPen = Object.fromEntries(LANES.map((p) => [p, 0]));
+    for (const [e, p0] of ends) {
+      const w = ends.filter(([f]) => f >= e && f < e + FR), d = w.filter(([, q]) => isDet(q)).length;
+      if (!isDet(p0)) worst = Math.max(worst, w.length - d);
+      else worstDetail = Math.max(worstDetail, d);
+      worstAll = Math.max(worstAll, w.length);
+      for (const p of LANES) worstPen[p] = Math.max(worstPen[p], w.filter(([, q]) => q === p).length);
+    }
+    R.checks.endsPerWindow = { ok: worst <= 3 && LANES.every((p) => worstPen[p] <= CAP[p]) && worstDetail <= DET.length, worst, worstDetail, worstAll, perPen: worstPen };
+    // runtime frames: #2, #3, #5 (runtime), develop
+    const exitT = [0, 1, 2].map((c) => info.tl[0] + (info.tl[2 + 2 * c] / 1e3) * info.tl[1]);
+    let prevPen = -1, bad2 = [], maxLive = 0, prevPx = null, bad3 = [], maxFinish = 0, densLog = {}, prevDens = -1, densDrop = 0, frames = 0, maxFinishAC = 0, maxFinishDet = 0;
+    const frameLog = [];
+    let outSamples = 0, outMax = 0;
+    const outside = [0, 0, 0], outAt = [];
+    for (let k = 0; k < 400; k++) {
+      const f = await page.evaluate(() => {
+        const h = window.__heroDraw, cv = [...document.querySelectorAll('.hero-draw-lines canvas')];
+        const px = cv.map((c) => { if (!c.width || !c.height) return 0; const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i] > 24) n++; return n; });
+        return { state: h.state, penT: h.frame ? h.frame.penT : null, from: h.frame ? h.frame.from : null, to: h.frame ? h.frame.to : null, live: h.frame ? h.frame.live : 0, dens: h.dens, px };
+      });
+      frames++;
+      if (f.state === 'done') break;
+      if (f.penT != null) {
+        if (f.penT < prevPen) bad2.push(['penT decreased', k]);
+        // strokes partial at this pen time, per lane (every lane the page reports)
+        const part = Object.fromEntries(LANES.map((p) => [p, 0]));
+        info.schedule.forEach((s, i) => { if (s[0] < f.penT && s[0] + s[1] > f.penT) part[info.pen[i]]++; });
+        if (LANES.some((p) => part[p] > 1)) bad2.push(['two partial strokes in one lane', k, part]);
+        maxLive = Math.max(maxLive, f.live);
+        // strokes finishing within this frame: pens A-C and the detail lanes apart (dense3), and the frame log
+        const finIdx = info.schedule.map((s, i) => i).filter((i) => info.schedule[i][0] + info.schedule[i][1] > prevPen && info.schedule[i][0] + info.schedule[i][1] <= f.penT);
+        const fin = finIdx.length, finDet = finIdx.filter((i) => isDet(info.pen[i])).length;
+        maxFinish = Math.max(maxFinish, fin);
+        maxFinishAC = Math.max(maxFinishAC, fin - finDet);
+        maxFinishDet = Math.max(maxFinishDet, finDet);
+        const liveDet = info.schedule.filter((s, i) => isDet(info.pen[i]) && s[0] < f.penT && s[0] + s[1] > f.penT).length;
+        frameLog.push([+f.penT.toFixed(2), f.live, liveDet, fin - finDet, finDet]);
+        if (prevPx) for (let c = 0; c < 3; c++) if (f.px[c] < prevPx[c] && f.penT < exitT[c]) bad3.push([c, k, prevPx[c], f.px[c]]);
+        prevPx = f.px;
+        prevPen = f.penT;
+        if (f.dens != null) { if (f.dens < prevDens - 1e-9) densDrop++; prevDens = f.dens; }
+        for (const t of [300, 700, 1000, 1400, 1600, 1800, 2000, 2200, 2400]) if (densLog[t] == null && f.penT >= t - 1e-6 && f.penT < t + FR) densLog[t] = +f.dens.toFixed(3);
+        // #3b (restored): no stray ink, every 6th frame (100 ms) while any layer is still drawn
+        if (k % 6 === 0) {
+          const o = await page.evaluate((p) => window.__outside(p), f.penT);
+          outSamples++;
+          for (let c = 0; c < 3; c++) if (o[c]) { outside[c] += o[c]; outMax = Math.max(outMax, o[c]); if (outAt.length < 5) outAt.push([Math.round(f.penT), c, o[c]]); }
         }
       }
-    } finally { await B.close(); }
-  }
-  // determinism of pixels just before the develop: compare each load's INK alpha with the first
-  // the base is the load whose sample landed at the median pen time: the pen may still be inking when the develop
-  // starts, so a load sampled 1-2 ms of pen time later (a slow cold frame) differs by that ink, not by chance
-  // revision 4 (E6): 1 device px tolerance as the critic proposed: both alpha images are dilated by 1 px (3 x 3 max)
-  // before the diff (frame-chunk joins change the anti-aliased edge of a line, not where the ink is)
-  const dil = (a, w, h) => {
-    const o = new Uint8Array(a.length);
-    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-      let m = 0;
-      for (let dy = -1; dy <= 1; dy++) { const Y = y + dy; if (Y < 0 || Y >= h) continue; for (let dx = -1; dx <= 1; dx++) { const X = x + dx; if (X >= 0 && X < w && a[Y * w + X] > m) m = a[Y * w + X]; } }
-      o[y * w + x] = m;
+      await step();
     }
-    return o;
-  };
-  const diff1 = (a, b, w, h) => { const A = dil(a, w, h), B = dil(b, w, h); let d = 0; for (let i = 0; i < A.length; i++) if (Math.abs(A[i] - B[i]) > 32) d++; return d; };
-  const withA = report.loads.filter((r) => r.devAlpha).sort((a, b) => a.devAlphaPenT - b.devAlphaPenT);
-  const base = withA[Math.floor((withA.length - 1) / 2)];
-  const diffs = [];
-  if (base) {
-    const a0 = Buffer.from(base.devAlpha.b64, 'base64');
-    let inked0 = 0;
-    for (const v of a0) if (v >= 24) inked0++;
-    for (const r of report.loads) {
-      if (!r.devAlpha || r === base) continue;
-      if (r.devAlpha.w !== base.devAlpha.w || r.devAlpha.h !== base.devAlpha.h) { diffs.push({ size: 'differs' }); continue; }
-      const a = Buffer.from(r.devAlpha.b64, 'base64');
-      let d = 0;
-      for (let i = 0; i < a.length; i++) if (Math.abs(a[i] - a0[i]) > 32) d++;
-      const d1 = diff1(a, a0, base.devAlpha.w, base.devAlpha.h);
-      diffs.push({ penT: r.devAlphaPenT, basePenT: base.devAlphaPenT, diffPx: d, frac: +(d / Math.max(1, inked0)).toFixed(4), diffPx1: d1, frac1: +(d1 / Math.max(1, inked0)).toFixed(4) });
+    R.checks.noStrayInk = { ok: outSamples >= 10 && outMax === 0, samples: outSamples, outsideByCanvas: outside, outMax, firstAt: outAt };
+    // the develop as engine/build.cjs records it: T and P the merge curve (gamma 3.0, ghost 0.06 to 0.40); D fix round 1
+    // (ghost 0.05 to 0.47, then a main rise from 0.47, half linear, half smoothstep; engine/pens.cjs)
+    const want = R.cls === 'D' ? { 300: 0, 700: 0.017, 1000: 0.038, 1400: 0.081, 1600: 0.221, 1800: 0.407, 2000: 0.609, 2200: 0.8, 2400: 0.949 }
+      : { 300: 0, 700: 0.027, 1000: 0.066, 1400: 0.178, 1600: 0.301, 1800: 0.474, 2000: 0.676, 2200: 0.864, 2400: 0.983 };
+    const densBad = Object.entries(want).filter(([t, d]) => densLog[t] == null || Math.abs(densLog[t] - d) > 0.02);
+    R.checks.runtime = { ok: !bad2.length && maxLive <= LANES.length, bad: bad2.slice(0, 5), maxLive, maxLiveAllowed: LANES.length, frames };
+    R.checks.pixelsNeverDecrease = { ok: !bad3.length, bad: bad3.slice(0, 5), exitStart: exitT.map(Math.round) };
+    R.checks.finishesPerFrame = { ok: maxFinishAC <= 3 && maxFinishDet <= DET.length, maxFinish, maxFinishAC, maxFinishDetail: maxFinishDet, detailAllowed: DET.length };
+    // frame log: [pen ms, strokes live (engine), detail live, A-C finishes, detail finishes] per runtime frame (dense3)
+    R.frames = frameLog;
+    R.checks.develop = { ok: !densBad.length && !densDrop, densAt: densLog, densDrop };
+    R.errors.push(...errors);
+    await ctx.close();
+  }
+  // ---- #6 input settles at three times
+  if (want('input')) R.checks.input = {};
+  for (const at of want('input') ? [900, 1600, 2200] : []) {
+    const { ctx, page, errors, step } = await load(browser);
+    let s;
+    for (let g = 0; g < 400; g++) { s = await step(); if (s.penT >= at) break; }
+    const pxBefore = await page.evaluate(() => [...document.querySelectorAll('.hero-draw-lines canvas')].map((c) => { if (!c.width) return 0; const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i] > 24) n++; return n; }));
+    const vt0 = s.vt;
+    if (MOBILE) await page.touchscreen.tap(Math.round(W / 2), Math.round(H * 0.3)); else { await page.mouse.move(Math.round(W * 0.9), 120); await page.mouse.down(); await page.mouse.up(); }
+    let more = false, end = null;
+    for (let g = 0; g < 60; g++) {
+      s = await step();
+      const px = await page.evaluate(() => [...document.querySelectorAll('.hero-draw-lines canvas')].map((c) => { if (!c.width) return 0; const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i] > 24) n++; return n; }));
+      if (px.some((v, c) => v > pxBefore[c])) more = true;
+      if (s.state === 'done') { end = s; break; }
     }
+    const dom = await page.evaluate(() => ({ cls: document.documentElement.className, nodes: document.querySelectorAll('.hero-draw-lines, .hero-draw-veil, #hero-pen-data').length, by: (window.__heroDraw || {}).settledBy }));
+    const ms = end ? end.vt - vt0 : null;
+    R.checks.input[at] = { ok: !!end && ms <= 190 && !more && dom.cls === 'js' && dom.nodes === 0, msToDone: ms == null ? null : +ms.toFixed(1), newInk: more, ...dom };
+    R.errors.push(...errors);
+    await ctx.close();
   }
-  // the same inside a pen lift (identical pen state on every load): what is left is frame-chunk anti-aliasing
-  const liftDiffs = [];
-  const lb = report.loads.find((r) => r.liftAlpha);
-  if (lb) {
-    const a0 = Buffer.from(lb.liftAlpha.b64, 'base64');
-    let inked0 = 0;
-    for (const v of a0) if (v >= 24) inked0++;
-    for (const r of report.loads) {
-      if (!r.liftAlpha || r === lb) continue;
-      const a = Buffer.from(r.liftAlpha.b64, 'base64');
-      if (a.length !== a0.length) { liftDiffs.push({ size: 'differs' }); continue; }
-      let d = 0;
-      for (let i = 0; i < a.length; i++) if (Math.abs(a[i] - a0[i]) > 32) d++;
-      const d1 = diff1(a, a0, lb.liftAlpha.w, lb.liftAlpha.h);
-      liftDiffs.push({ penT: r.liftAt[0], basePenT: lb.liftAt[0], lift: r.liftAt[1], diffPx: d, frac: +(d / Math.max(1, inked0)).toFixed(4), diffPx1: d1, frac1: +(d1 / Math.max(1, inked0)).toFixed(4) });
+  // ---- #7 (dense3) a photo that never decodes: every hero-photo request is held open (never answered), so neither the
+  // decode nor the load event comes. The engine must still develop at DECODE_CAP on the pen clock (H.devStart), hand the
+  // hero back to the CSS (hero-draw-own off), and end cleanly without the 11 s ceiling. With --decode-cap none (the stock
+  // engine, negative control) the expectation is the old one: lines on white until the ceiling settles at about 11 s.
+  if (want('nophoto')) {
+    const ctx = await browser.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: DPR, isMobile: MOBILE, hasTouch: MOBILE });
+    const page = await ctx.newPage();
+    const errors = [];
+    page.on('pageerror', (e) => errors.push(String(e)));
+    page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
+    let held = 0;
+    await page.route(/hero-fsae-/, () => { held++; });   // never continued: the request stays pending
+    await page.addInitScript(VT);
+    await page.goto(URL_, { waitUntil: 'domcontentloaded' });
+    const step = () => page.evaluate((d) => window.__film.step(d), FR);
+    let s = null, own = null, ownAfter = null;
+    for (let g = 0; g < 1200; g++) {
+      s = await step();
+      if (s.devStart != null && own == null) own = await page.evaluate(() => document.documentElement.classList.contains('hero-draw-own'));
+      if (s.state === 'done') break;
     }
+    const h = await page.evaluate(() => { const x = window.__heroDraw || {}; return { devStart: x.devStart == null ? null : x.devStart, decodedAt: x.decodedAt == null ? null : x.decodedAt, settledBy: x.settledBy || null, t0: x.t0 == null ? null : x.t0, doneAt: x.doneAt == null ? null : x.doneAt, state: x.state, cls: x.cls }; });
+    ownAfter = own;
+    const dom = await page.evaluate(() => ({ cls: document.documentElement.className, nodes: document.querySelectorAll('.hero-draw-lines, .hero-draw-veil, #hero-pen-data').length }));
+    const wall = h.doneAt != null && h.t0 != null ? +(h.doneAt - h.t0).toFixed(0) : null;
+    const ok = DECODE_CAP === 'none'
+      ? h.settledBy === 'ceiling' && h.devStart == null
+      : h.devStart != null && h.devStart >= +DECODE_CAP - 1e-6 && h.devStart < +DECODE_CAP + FR + 1e-6 && h.decodedAt === -1 && ownAfter === false && h.state === 'done' && !h.settledBy && dom.cls === 'js' && dom.nodes === 0;
+    R.checks.photoNeverDecodes = { ok, expect: DECODE_CAP === 'none' ? 'stock: ceiling at 11 s' : `develop at ${DECODE_CAP} ms pen clock`, heldRequests: held, ...h, heroDrawOwnAtDevelop: ownAfter, endWallMsFromT0: wall, ...dom };
+    R.errors.push(...errors.filter((e) => !/hero-fsae-/.test(e)));
+    await ctx.close();
   }
-  for (const r of report.loads) { delete r.devAlpha; delete r.liftAlpha; }
-  // ---- revision 5 (E6): determinism on a virtual frame clock: identical pen times, identical frame chunks ----
-  const vpass = async (step, loads) => {
-    const out = { step: +step.toFixed(4), loads: [] };
-    const B = await launch();
-    try {
-      const { page, errors } = await newPage(B.ctx, [VCLOCK, step]);
-      for (let k = 0; k < loads; k++) {
-        if (k === 0) await page.goto(URL_, { waitUntil: 'load' }); else await page.reload({ waitUntil: 'load' });
-        await page.waitForFunction(() => window.__heroDraw && window.__heroDraw.state === 'done', null, { timeout: 30000, polling: 100 }).catch(() => {});
-        const r = await summary(page);
-        const lift = r.pix.find((x) => x.state === 'lift'), fin = r.pix.find((x) => x.final);
-        out.loads.push({ state: r.state, settledBy: r.settledBy, skipped: r.skipped, hash: r.hash, drew: r.linesAt != null && r.state === 'done' && !r.settledBy && !r.skipped && !r.error,
-          samples: r.pix.map((x) => [x.penT, x.state === 'lift' ? 'lift' : x.final ? 'final' : x.state, (x.h || []).join(' ')]),
-          liftAlpha: lift ? lift.inkAlpha : null, finAlpha: fin ? fin.inkAlpha : null, errors: errors.splice(0), trace: traceCheck(r.log, r.lastInk, r.t0) });
-      }
-    } finally { await B.close(); }
-    return out;
-  };
-  const cmpAlpha = (x, y) => {
-    if (!x || !y) return null;
-    if (x.w !== y.w || x.h !== y.h) return { size: 'differs' };
-    const a = Buffer.from(x.b64, 'base64'), b = Buffer.from(y.b64, 'base64');
-    let d = 0, inked = 0;
-    for (let i = 0; i < a.length; i++) { if (b[i] >= 24) inked++; if (Math.abs(a[i] - b[i]) > 32) d++; }
-    return { diffPx: d, frac: +(d / Math.max(1, inked)).toFixed(4), diffPx1: diff1(a, b, x.w, x.h), inked };
-  };
-  report.vclock = null;
-  if (VLOADS > 0) {
-    const V = await vpass(1000 / 60, VLOADS), b0 = V.loads[0];
-    V.compare = V.loads.slice(1).map((r) => {
-      // the first developing frame is not a pen sample: the develop waits for the photo's decode (real time, by
-      // design), so its pen time may differ by a frame; its hashes are still compared
-      const n = Math.min(r.samples.length, b0.samples.length);
-      let samePenT = r.samples.length === b0.samples.length, sameHash = samePenT, firstDiff = null;
-      for (let i = 0; i < n; i++) {
-        if (r.samples[i][1] === 'developing' && b0.samples[i][1] === 'developing') { if (r.samples[i][2] !== b0.samples[i][2]) sameHash = false; continue; }
-        if (r.samples[i][0] !== b0.samples[i][0]) samePenT = false;
-        if (r.samples[i][2] !== b0.samples[i][2]) { sameHash = false; if (!firstDiff) firstDiff = [r.samples[i], b0.samples[i]]; }
-      }
-      return { samples: r.samples.length, samePenT, sameHash, firstDiff, lift: cmpAlpha(r.liftAlpha, b0.liftAlpha), final: cmpAlpha(r.finAlpha, b0.finAlpha) };
-    });
-    V.penTs = b0.samples.map((x) => [x[0], x[1]]);
-    if (VSTEP2 > 0) {
-      // the experiment: the same strokes cut into other frame chunks, compared at pen times where no stroke moves
-      const V2 = await vpass(VSTEP2, 2);
-      V.otherStep = { step: VSTEP2, lift: cmpAlpha(V2.loads[0].liftAlpha, b0.liftAlpha), final: cmpAlpha(V2.loads[0].finAlpha, b0.finAlpha),
-        liftPenT: [V2.loads[0].samples.find((x) => x[1] === 'lift'), b0.samples.find((x) => x[1] === 'lift')].map((x) => x && x[0]),
-        repeat: cmpAlpha(V2.loads[1].finAlpha, V2.loads[0].finAlpha) };
+  // ---- determinism (restored): two virtual-clock loads, identical alpha hashes on every canvas at six pen times
+  // (integration onto 5b20926f: skipped with --only-nophoto, like every check but #7)
+  if (want('determinism')) {
+    const AT = [300, 700, 1100, 1500, 1900, 2300], runs = [];
+    for (let r = 0; r < 2; r++) {
+      const { ctx, page, errors, step } = await load(browser);
+      const got = {};
+      let s, i = 0;
+      for (let g = 0; g < 400 && i < AT.length; g++) { s = await step(); if (s.state === 'done') break; if (s.penT != null && s.penT >= AT[i]) { got[AT[i]] = { penT: +s.penT.toFixed(2), h: await page.evaluate(() => window.__alphaHash()) }; i++; } }
+      runs.push(got);
+      R.errors.push(...errors);
+      await ctx.close();
     }
-    for (const r of V.loads) { delete r.liftAlpha; delete r.finAlpha; }
-    report.vclock = V;
-    console.log(TAG, 'vclock', JSON.stringify({ loads: V.loads.map((r) => [r.drew, r.hash, r.samples.length]), compare: V.compare.map((c) => [c.samePenT, c.sameHash, c.lift && c.lift.frac, c.final && c.final.frac]), otherStep: V.otherStep || null }));
+    const same = AT.every((t) => runs[0][t] && runs[1][t] && JSON.stringify(runs[0][t]) === JSON.stringify(runs[1][t]));
+    R.checks.determinism = { ok: same, at: AT, load1: runs[0], load2: runs[1] };
   }
-  // ---- #6 input stops the pen ----
-  for (let k = 0; k < INPUTS; k++) {
-    const B = await launch();
-    try {
-      const { page, errors } = await newPage(B.ctx);
-      await page.addInitScript(() => {
-        window.__ink = [];
-        const f = () => {
-          const s = window.__heroDraw, c = document.querySelector('.hero-draw-lines canvas[data-layer="ink"]') || document.querySelectorAll('.hero-draw-lines canvas')[2];
-          if (s && s.state === 'done') { window.__ink.push([performance.now(), 'done', s.penT, -1]); return; }
-          requestAnimationFrame(f);
-          if (!c || !c.width || !s || !s.frame) return;
-          const a = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
-          let n = 0;
-          for (let j = 3; j < a.length; j += 4) if (a[j] >= 64) n++;
-          window.__ink.push([performance.now(), s.state, s.penT, n]);
-        };
-        requestAnimationFrame(f);
-      });
-      await page.goto(URL_, { waitUntil: 'load' });
-      await page.waitForFunction(() => window.__heroDraw && window.__heroDraw.penT >= 1000, null, { timeout: 15000, polling: 'raf' });
-      const pt = MOBILE ? [Math.round(W * 0.75), Math.round(H * 0.72)] : [Math.round(W * 0.86), Math.round(H * 0.7)];
-      const hit = await page.evaluate(([x, y]) => { const e = document.elementFromPoint(x, y); return e ? (e.closest('a,button') ? 'LINK' : e.tagName + '.' + e.className) : null; }, pt);
-      if (MOBILE) await page.touchscreen.tap(pt[0], pt[1]); else { await page.mouse.move(pt[0], pt[1]); await page.mouse.down(); }
-      await page.waitForFunction(() => window.__heroDraw.state === 'done', null, { timeout: 3000, polling: 50 }).catch(() => {});
-      if (!MOBILE) await page.mouse.up();
-      const r = await page.evaluate(() => ({ pd: window.__pd, ink: window.__ink, frames: window.__penLog, s: { state: window.__heroDraw.state, settledBy: window.__heroDraw.settledBy, doneAt: window.__heroDraw.doneAt, penT: window.__heroDraw.penT } }));
-      // the sampler runs before the engine in each frame, so the first sample after the input still shows the ink of
-      // the engine frame before it: that sample is the baseline; any later rise is ink drawn after the input
-      const before = r.ink.filter((x) => x[0] < r.pd && x[3] >= 0), after = r.ink.filter((x) => x[0] >= r.pd && x[3] >= 0);
-      let rises = 0, prev = after.length ? after[0][3] : null;
-      for (const x of after.slice(1)) { if (prev != null && x[3] > prev) rises++; prev = x[3]; }
-      const res = { hit, penTAtInput: before.length ? before[before.length - 1][2] : null, settledBy: r.s.settledBy, state: r.s.state, doneMsAfterInput: r.s.doneAt != null ? +(r.s.doneAt - r.pd).toFixed(1) : null,
-        inkRisesAfter: rises, inkSamplesAfter: after.length, engineDrawFramesAfterInput: r.frames.filter((x) => x[0] > r.pd).length, errors };
-      res.ok = res.state === 'done' && res.inkRisesAfter === 0 && res.engineDrawFramesAfterInput === 0 && res.doneMsAfterInput != null && res.doneMsAfterInput <= 250 && hit !== 'LINK';
-      report.input.push(res);
-      console.log(TAG, 'input', k, JSON.stringify(res));
-    } finally { await B.close(); }
+  // ---- fix1: resize while drawing (same class, class change) and the quick reveal (scrolled, short viewport)
+  if (want('resize')) {
+    R.checks.resizeSameClass = await resizeCase(browser, 'same-class');
+    R.checks.resizeClassChange = await resizeCase(browser, 'class-change');
   }
-  // ---- Back with and without the back/forward cache: no replay, position kept ----
-  for (const mode of BACK ? ['bfcache', 'no-bfcache'] : []) {
-    const B = mode === 'no-bfcache' ? await launch(['--disable-back-forward-cache']) : await launch([], ['--disable-back-forward-cache']);
-    try {
-      const { page, errors } = await newPage(B.ctx);
-      await page.goto(URL_, { waitUntil: 'load' });
-      await page.waitForFunction(() => window.__heroDraw && window.__heroDraw.state === 'done', null, { timeout: 20000, polling: 100 }).catch(() => {});
-      const first = await page.evaluate(() => ({ linesAt: window.__heroDraw && window.__heroDraw.linesAt, t: performance.timeOrigin }));
-      await page.evaluate(() => scrollTo({ top: 700, behavior: 'instant' }));
-      await page.waitForTimeout(300);
-      await page.goto(new URL('case-study.html?project=steering', URL_).href, { waitUntil: 'load' });
-      await page.waitForTimeout(600);
-      await page.goBack({ waitUntil: 'commit' });   // a bfcache restore fires pageshow, not load
-      await page.waitForTimeout(1500);
-      const r = await page.evaluate((f) => {
-        const s = window.__heroDraw;
-        return { persisted: !!window.__persisted, sameDocument: performance.timeOrigin === f.t, nav: (performance.getEntriesByType('navigation')[0] || {}).type, heroDraw: s ? { state: s.state, linesAt: s.linesAt } : null,
-          replayed: !!(s && s.linesAt != null && (performance.timeOrigin !== f.t || s.linesAt !== f.linesAt)), nodes: document.querySelectorAll('.hero-draw-lines, .hero-draw-veil, #hero-pen-data').length,
-          canvases: document.querySelectorAll('.hero-draw-lines canvas').length, htmlClass: document.documentElement.className, scrollY };
-      }, first);
-      r.mode = mode;
-      r.errors = errors;
-      r.ok = !r.replayed && r.nodes === 0 && Math.abs(r.scrollY - 700) <= 2 && (mode === 'bfcache' ? r.persisted : !r.persisted);
-      report.back.push(r);
-      console.log(TAG, 'back', JSON.stringify(r));
-    } finally { await B.close(); }
+  if (want('quick')) {
+    R.checks.quickScrolled = await quickCase(browser, 'scrolled');
+    R.checks.quickShort = await quickCase(browser, 'short');
   }
-  // ---- revision 6 (--nav 1): the R1 arrival rules on the R1 page (HEAD 9af034df guard and kw-scroll) ----
-  // a #link other than #top does not draw; its reload drops the fragment, lands at the top and draws; #top draws; the
-  // wordmark from a detail page is a held view-transition arrival (__vtBoot.hold) and draws
-  report.nav = [];
-  if (+opt('nav', 0)) {
-    const B = await launch();
-    try {
-      const { page, errors } = await newPage(B.ctx);
-      const state = () => page.evaluate(() => {
-        const s = window.__heroDraw;
-        return { nav: (performance.getEntriesByType('navigation')[0] || {}).type, hash: location.hash, y: Math.round(scrollY), hold: window.__vtBoot ? window.__vtBoot.hold : null,
-          hd: s ? { state: s.state, linesAt: s.linesAt, settledBy: s.settledBy || null, skipped: s.skipped || null, error: s.error || null } : null };
-      });
-      const done = () => page.waitForFunction(() => !window.__heroDraw || window.__heroDraw.state === 'done', null, { timeout: 20000, polling: 100 }).catch(() => {});
-      const drew = (r) => !!(r.hd && r.hd.linesAt != null && r.hd.state === 'done' && !r.hd.settledBy && !r.hd.skipped && !r.hd.error);
-      const step = async (name, want, go) => {
-        await go();
-        await page.waitForTimeout(400);
-        await done();
-        const r = await state();
-        r.name = name; r.drew = drew(r); r.want = want;
-        // the wordmark makes a held arrival only where page-transitions holds one (at 390 it did not: hold ""); the step
-        // passes when it draws either way, and verdict.navHeld says whether a held arrival was seen
-        r.ok = r.drew === want && (name !== '#contact reload' || (r.hash === '' && r.y === 0 && r.nav === 'reload'));
-        report.nav.push(r);
-        console.log(TAG, 'nav', JSON.stringify(r));
-      };
-      await step('#contact', false, async () => { await page.goto('about:blank'); await page.goto(URL_.replace(/#.*$/, '') + '#contact', { waitUntil: 'load' }); });
-      await step('#contact reload', true, () => page.reload({ waitUntil: 'load' }));
-      await step('#top', true, async () => { await page.goto('about:blank'); await page.goto(URL_.replace(/#.*$/, '') + '#top', { waitUntil: 'load' }); });
-      await step('wordmark (held arrival)', true, async () => {
-        await page.goto(new URL('case-study.html?project=steering', URL_).href, { waitUntil: 'load' });
-        await page.waitForTimeout(1500);
-        await page.click('.wordmark');
-        await page.waitForURL(/\/index\.html$/, { timeout: 10000 });
-      });
-      report.navErrors = errors.slice();
-    } finally { await B.close(); }
-  }
-  // ---- resize while drawing: same class re-lays out and keeps drawing; a class change settles ----
-  report.resize = [];
-  for (const mode of +opt('resize', 0) ? ['same-class', 'class-change'] : []) {
-    const B = await launch();
-    try {
-      const { page, errors } = await newPage(B.ctx);
-      await page.goto(URL_, { waitUntil: 'load' });
-      await page.waitForFunction(() => window.__heroDraw && window.__heroDraw.penT >= 1500, null, { timeout: 15000, polling: 'raf' });
-      const w2 = mode === 'same-class' ? (W >= 1280 ? Math.max(1280, W - 60) : W >= 768 ? W - 30 : W - 20) : (W >= 1280 ? 1000 : W >= 768 ? 700 : 800);
-      const at = await page.evaluate(() => [performance.now(), window.__heroDraw.penT, window.__heroDraw.cls]);
-      await page.setViewportSize({ width: w2, height: H });
-      await page.waitForFunction(() => window.__heroDraw.state === 'done', null, { timeout: 15000, polling: 100 }).catch(() => {});
-      const r = await summary(page);
-      const after = r.log.filter((x) => x[0] > at[0]);
-      const res = { mode, from: W, to: w2, clsBefore: at[2], penTAtResize: at[1], state: r.state, settledBy: r.settledBy, framesAfter: after.length, skipped: r.skipped, error: r.error, errors, endStateOk: r.nodes === 0 && r.htmlClass === 'js',
-        traceAfter: traceCheck(after, r.lastInk, at[0]) };
-      res.ok = res.state === 'done' && res.endStateOk && !res.error && !errors.length && (mode === 'same-class' ? !res.settledBy && res.framesAfter > 10 && !res.traceAfter.penBack : res.settledBy === 'class-change');
-      report.resize.push(res);
-      console.log(TAG, 'resize', JSON.stringify(res));
-    } finally { await B.close(); }
-  }
-  // ---- start rule 3: the car box under half on screen at t0 -> 300 ms quick reveal, no lines ----
-  report.fold = [];
-  for (const mode of +opt('fold', 0) ? ['scrolled', 'short'] : []) {
-    const H2 = mode === 'short' ? +opt('fold-h', MOBILE ? 300 : 360) : H;
-    const B = await launch();
-    try {
-      const { page, errors } = await newPage(B.ctx);
-      if (mode === 'short') await page.setViewportSize({ width: W, height: H2 });
-      else await page.addInitScript(() => addEventListener('DOMContentLoaded', () => {
-        // scroll (not a wheel or key: scroll is not intent) so the hero photo's lower part is above the viewport
-        // the car box mapped as the engine maps it (object-fit: cover, object-position), its lower quarter at the top edge
-        const bg = document.querySelector('.white-home .cinematic-hero .hero-photo-background');
-        if (bg) {
-          const r = bg.getBoundingClientRect(), sc = Math.max(r.width / 2200, r.height / 1238), ih = 1238 * sc;
-          const op = getComputedStyle(bg).objectPosition.split(' ')[1] || '50%', oy = op.slice(-1) === '%' ? ((r.height - ih) * parseFloat(op)) / 100 : parseFloat(op) || 0;
-          const y0 = r.top + scrollY + oy + 430.7 * sc, y1 = r.top + scrollY + oy + 927.6 * sc;
-          scrollTo({ top: Math.max(0, y0 + 0.75 * (y1 - y0)), behavior: 'instant' });
-        }
-        window.__foldY = scrollY;
-      }, { once: true }));
-      await page.goto(URL_, { waitUntil: 'load' });
-      await page.waitForFunction(() => window.__heroDraw && window.__heroDraw.state === 'done', null, { timeout: 15000, polling: 50 }).catch(() => {});
-      const r = await summary(page);
-      const res = { mode, viewport: [W, H2], scrollY: r.scrollY, state: r.state, quick: r.quick, settledBy: r.settledBy, linesAt: r.linesAt, penFrames: r.log.length,
-        doneMsAfterT0: r.t0 != null && r.doneAt != null ? +(r.doneAt - r.t0).toFixed(1) : null, endStateOk: r.nodes === 0 && r.htmlClass === 'js' && r.penAttr == null, errors: r.errors || errors };
-      res.ok = res.state === 'done' && res.quick != null && res.quick < 0.5 && res.settledBy === 'quick' && res.linesAt == null && res.penFrames === 0 && res.doneMsAfterT0 != null && res.doneMsAfterT0 <= 450 && res.endStateOk && !errors.length;
-      report.fold.push(res);
-      console.log(TAG, 'fold', JSON.stringify(res));
-    } finally { await B.close(); }
-  }
-  // ---- verdict ----
-  const L = report.loads, hashes = [...new Set(L.map((r) => r.hash))];
-  report.verdict = {
-    loads: L.length,
-    drew: L.filter((r) => r.drew).length,
-    endStateOk: L.filter((r) => r.endStateOk).length,
-    sameHash: hashes.length === 1, hashes,
-    scheduleSequential: !!(report.schedule && report.schedule.sequential && report.schedule.phaseOrder),
-    floorsOk: !!(report.schedule && !report.schedule.floorViolations.length && !report.schedule.peakViolations.length),
-    windowsOk: !!(report.schedule && !report.schedule.windows.overEndCap && !report.schedule.windows.overInk040 && !report.schedule.windows.localityOver025),
-    traceOk: L.every((r) => !r.trace.penBack && !r.trace.notContiguous && !r.trace.inkAfterLastInk),
-    pixelsMonotonic: L.every((r) => r.pixels.inkedDecreases === 0),
-    ghostRetired: L.every((r) => r.ghost && r.ghost.guideOutsideAfterRetire === 0 && r.ghost.guideDropped.length === (r.gr || []).filter((t) => t >= 0).length && r.ghost.guideDropped.every((x) => x && x[1] < x[0])),
-    payoffLast: !!(report.schedule && (report.schedule.lastTier === 'n' || report.schedule.lastTier === 'd')), phaseRuns: report.schedule ? report.schedule.phaseRuns.join('') : null,
-    pixelsOutside: L.reduce((a, r) => a + r.pixels.outsideTotal, 0),
-    pixelSamplesPerLoad: L.map((r) => r.pixels.samples),
-    // revision 3: the "dev" sample is the finished drawing in the 100 ms hold after last ink (finalSampled), not the
-    // develop start; the develop start is >= 100 ms after last ink on every load that drew
-    // revision 4 (E6): the verdicts compare with 1 device px tolerance (frac1); the exact comparison stays on record
-    // wall-clock samples: on record only since revision 5 (frame-chunk effects); the verdict is vclockOk
-    // revision 6 (main loop): the wall-clock pixel-repeat verdicts are dropped; the samples stay on record (frac, frac1)
-    devPixelDiff: diffs,
-    rev4Ok: !!(report.schedule && report.schedule.rev4 && !report.schedule.rev4.violations.length),
-    rev5Ok: !!(report.schedule && report.schedule.rev5 && !report.schedule.rev5.violations.length),
-    // revision 5 (E6): determinism is judged at identical pen times on the virtual frame clock: every load draws, the
-    // same schedule hash, the same sample pen times, and every sample's three layer hashes identical
-    vclockOk: !!(report.vclock && report.vclock.loads.length === VLOADS && report.vclock.loads.every((r) => r.drew && r.hash === report.vclock.loads[0].hash && !r.errors.length)
-      && report.vclock.compare.every((c) => c.samePenT && c.sameHash)),
-    vclockLoads: report.vclock ? report.vclock.loads.length : 0,
-    finalSampled: L.filter((r) => r.finalSampled).length,
-    devAfterLastInkMs: L.map((r) => r.devAfterLastInk), devAfterLastInkOk: L.filter((r) => r.drew).every((r) => r.devAfterLastInk != null && r.devAfterLastInk >= 100 - 1e-6),
-    p2LongOk: !!(report.schedule && report.schedule.p2Long && !report.schedule.p2Long.violations.length),
-    liftPixelDiff: liftDiffs,
-    firstInkAfterT0Ms: L.map((r) => r.trace.firstInkAfterT0Ms),
-    t0AfterFcpMs: L.map((r) => (r.t0 != null && r.fcp != null ? +(r.t0 - r.fcp).toFixed(0) : null)),
-    rafGapsOver50InP0P1: L.map((r) => r.trace.rafGapsOver50P0P1), maxRafGapP0P1Ms: L.map((r) => r.trace.maxRafGapP0P1Ms),
-    errors: L.reduce((a, r) => a + r.errors.length, 0), overflowX: L.some((r) => r.overflowX),
-    inputOk: report.input.every((r) => r.ok) && report.input.length === INPUTS,
-    backOk: report.back.every((r) => r.ok),
-    resizeOk: report.resize.every((r) => r.ok),
-    glyphRulesOk: !!(report.schedule && report.schedule.glyphRules && !report.schedule.glyphRules.violations.length),
-    p0Ms: report.schedule ? report.schedule.p0Ms : null,
-    foldOk: report.fold.every((r) => r.ok), foldRuns: report.fold.length,
-    navOk: report.nav.every((r) => r.ok) && !(report.navErrors || []).length, navRuns: report.nav.length,
-    navHeld: report.nav.length ? report.nav.some((r) => r.name === 'wordmark (held arrival)' && r.hold === 'parsed' && r.drew) : null,
-    wallSeconds: Math.round((Date.now() - t00) / 1000),
-  };
-  { const v = report.verdict, need = ['scheduleSequential', 'floorsOk', 'windowsOk', 'traceOk', 'pixelsMonotonic', 'ghostRetired', 'payoffLast', 'rev4Ok', 'rev5Ok', 'vclockOk', 'devAfterLastInkOk', 'p2LongOk', 'glyphRulesOk', 'inputOk', 'backOk', 'resizeOk', 'foldOk', 'navOk', 'sameHash'];
-    v.failed = need.filter((k) => !v[k]).concat(v.drew === v.loads ? [] : ['drew']).concat(v.endStateOk === v.loads ? [] : ['endStateOk']).concat(v.pixelsOutside ? ['pixelsOutside'] : []).concat(v.errors ? ['errors'] : []).concat(v.overflowX ? ['overflowX'] : []);
-    v.pass = !v.failed.length; }
-  fs.writeFileSync(path.join(OUT, `checks-${TAG}.json`), JSON.stringify(report, null, 1));
-  console.log(TAG, 'VERDICT', JSON.stringify(report.verdict));
-})().catch((e) => { console.error(e); process.exit(1); });
+  await browser.close();
+  const KEYS = { sequence: ['perPenSequential', 'endsPerWindow', 'runtime', 'pixelsNeverDecrease', 'finishesPerFrame', 'develop', 'noStrayInk'], input: ['input'], nophoto: ['photoNeverDecodes'], determinism: ['determinism'],
+    resize: ['resizeSameClass', 'resizeClassChange'], quick: ['quickScrolled', 'quickShort'] };
+  R.missing = R.groups.flatMap((g) => KEYS[g].filter((k) => !(k in R.checks)));
+  R.pass = !R.missing.length && Object.values(R.checks).every((c) => (c.ok !== undefined ? c.ok : Object.values(c).every((x) => x.ok))) && !R.errors.length;
+  if (OUT) fs.writeFileSync(OUT, JSON.stringify(R, null, 1));
+  for (const [k, v] of Object.entries(R.checks)) console.log(k, JSON.stringify(v).slice(0, 240));
+  console.log('errors', R.errors.length, 'pass', R.pass);
+  process.exit(R.pass ? 0 : 1);
+})().catch((e) => { console.error(e); process.exit(2); });

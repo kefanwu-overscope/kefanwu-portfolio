@@ -1,10 +1,89 @@
 # Homepage presentation
 
+## Drafting hero: the car drafted while the photo emerges · 2026-11-22
+
+The owner said on 2026-11-20 (voice) that the one-pen hero drawing (0e561624) is too long and
+too simple, that about 2.5 s is good, and that it should feel like someone hand-drafting an
+engineering drawing with the photo slowly emerging behind it; on 2026-11-21, to use the denser
+set with every line on a real edge of the photo, and then "still denser" (from mechanical detail
+and from body decals and marks); on 2026-11-22, that the denser motion at three sizes is fine;
+and, after whole-page films at 1440, 768 and 390 px, that the new hero can go live. Commit: this
+entry's own commit (parent 5b20926f). These rules supersede the drawing described in the
+2026-11-10 "Hero pen" section below (one pen, 87 / 44 / 36 strokes, GUIDE / SHADE / INK, its
+order and timing with last ink about 4.2 / 3.0 / 2.9 s, the develop after the last ink, the
+165-175 ms settle figures measured on that engine, the settled-hero comparison with 85467bca) and
+the words "the hero pen (2026-11-10, unchanged)" in the 2026-11-21 section. The rest of that
+section still holds: the card gate (`HERO_CEIL` 7.5 s, `HERO_FINAL` 12.5 s), the 12 s CSS
+backstops, the late-engine rule, `?v=pen-20261110` on `white-home-20261011.css`, the
+`.gitattributes` `-text` rule and the `out/build/` ignore. The 2026-11-21 monograph rules, the R1
+refresh rules and the 2026-11-09 card rules stay. The owner approved
+publishing the hero as the films showed it; every individual choice here is an agent decision
+they can change (details and the list of decisions: `AGENT_HANDOFF.md`, 2026-11-22). Films:
+`../releases/hero-drafting-20261120/prod/integrate2/owner/`.
+
+- `index.html` changes only inside its inline hero-pen block (the data block and the minified
+  engine); the rest of the page, the photo, masks, feather, halo and hero text are as at
+  5b20926f (hero text 0 px from 5b20926f at six widths). No `?v=` change, no new asset.
+- Classes by page width: D >= 1280 px, T 768-1279, P < 768. Strokes D 195 (145 car, 54 of them
+  detail; 50 drafting conventions), T 125 (83, 36; 42), P 116 (79, 35; 37).
+- Three pens and three detail lanes on one clock: pen A inks the car, pen B lays out and
+  dimensions it (pencil construction, wheel squares and compasses, chain centre lines, datum,
+  dimension and extension lines with arrowheads, ground ticks) and inks the wheels it laid in
+  (rims, tread edges, ribs), pen C letters (the pencil lettering at D, the "219"s) and draws the
+  cockpit and lamp block; lanes X, Y and Z draw mechanical detail and decals and marks. One stroke at a time per lane, so up to 6 at once (at most 3 on pens A-C).
+  Canvases PENCIL / DRAFT / INK, bottom to top.
+- Every car line lies on a real edge of the published hero photo (tyres traced, rims fitted),
+  with these recorded exceptions: the drafting marks are conventions in provenance (construction
+  lines, wheel compass arcs and squares, ground ticks, datum, dimensions, arrowheads, chain
+  lines); the rear tyre's top follows a tread-against-asphalt texture boundary with no luminance
+  edge (a main-loop ruling); the side "219" follows the printed numerals' centrelines; a straight
+  line may bridge up to about 10 src px of dark gap that shows no edge. The photo's pixels are
+  never changed. Not drawn: tyre lettering, shading hatches on the car (the ground line carries
+  short drafting ticks), the people's names on the body.
+- Timing (pen ms from the first stroke): car complete D 1263 (pens A-C 1208), T 1416, P 1486;
+  last ink D 1518, T 1611, P 1655. The photo develops from 300 ms (once decoded) to 2500 ms;
+  each canvas leaves on its own window of the develop; at 2517 ms the canvases, veil and data
+  block are removed and `<html>` is class `js`. Photo density at the last ink about 0.16 / 0.31 /
+  0.34 (D / T / P).
+- Lettering "Olin College of Engineering" in pencil only at D; T and P letter nothing. Every class
+  draws the side "219"; only D draws the nose-top "219". The fit rule dropped 10 detail lines at T and 19 at P
+  from each class's own set; their nose top keeps one logo (the SAE mark).
+- Start: the first frame after first contentful paint and load + 140 ms (unchanged). Under half
+  the car on screen at that moment: 300 ms quick reveal, no lines.
+- Ends early in 160 ms, with no more ink: pointer down, touch, wheel, key (at any point, also after
+  the last ink), a class change on resize or rotation, a lost canvas context; in 300 ms when the
+  ink canvas is scrolled under half on screen while ink is still to come. A wall limit (last ink +
+  1 s) and the 11 s ceiling end a stalled run. Scroll by itself does not end it. Measured 169-181 ms
+  from the input to done (headless Chrome, one Windows machine).
+- Does not play: Back/Forward and bfcache restores, `#` link arrivals other than `#top` (a reload
+  drops the fragment and plays), reduced motion, forced colors, `?draw=off`, `?hero=photo`. A
+  hidden or prerendered tab draws when first shown. A late engine (past 2.4 s on the veil's
+  failsafe clock) leaves the reveal to the CSS failsafe (2.8-3.3 s) and draws nothing.
+- Photo slow or failing: the develop waits for the decode (a late decode develops over max(900,
+  2200 - lateness) ms; a failed request counts as decoded). `DECODE_CAP` 4500 ms: still not
+  decoded, it develops anyway and hands the reveal back to the CSS (measured done about 5.4 s after
+  t0). A photo that never decodes also means no window `load`, so the card drawings never start
+  (as before).
+- The settled hero equals 5b20926f's within 2 colour levels (0 pixels over 2 levels at 1440, 768
+  and 390).
+- Cards: unchanged; their gate opens at the last ink (now about 1.5-1.7 s after t0) or when the
+  hero photo box is under half on screen.
+- Known, kept: at T and P the last dimension lines, arrows and ground ticks draw onto an already
+  readable photo for about the last 0.2 s; several pens visibly work at once at D; a few marks
+  appear alone early (wheel-centre squares, the datum's start, the SAE logo on the bare nose top at
+  T and P).
+- Rebuild: `node tools/hero-pen/engine/build.cjs --page <dir> --base <a committed index.html>`;
+  `--check index.html` exits 0 when the block is a fresh build. The old one-pen build needs `--r3`
+  and can no longer reproduce 0e561624's page byte for byte (it inlines the drafting engine).
+- Not verified on real phones, tablets or touch screens, Safari, Firefox, screen readers, slow or
+  throttled networks, CPU throttling, real-time window drags, rotation or devicePixelRatio changes
+  while drawing (headless Chrome on one Windows machine, device emulation).
+
 ## Site refresh batch 1: the homepage as a monograph · 2026-11-21
 
 The owner asked on 2026-11-20: "继续优化我的网站，你可以大改美工，项目的描述可以适当加入细节，你可以到我的google drive找到大多数项目文件"
 (keep improving the site; the visual design may change a lot; project descriptions may gain
-detail from his Google Drive). Commit pending. These rules supersede, in the sections below:
+detail from his Google Drive). Commit 5b20926f. These rules supersede, in the sections below:
 the hero bottom row (`.hero-baseline` with the role line, "FROM THE WORKSHOP TO THE TRACK." and
 the "Explore the work" cue), the CTA order (studio button filled, projects as a 14px text link),
 the filled studio button in the nav, the mono uppercase kickers ("01 / SELECTED WORK"), the
@@ -79,6 +158,10 @@ not cropped). He has not seen the stills yet; this is an agent decision he can c
   Chrome on one Windows machine).
 
 ## Hero pen: the car drawn by one hand · 2026-11-10
+
+The drawing described here (one pen, its strokes, order, timing and develop) was superseded on
+2026-11-22 by the drafting hero (the section at the top). Its card gate, CSS backstops, late-engine
+rule, cache label and git rules still hold.
 
 The owner asked on 2026-11-06: "保留，确保每次刷新网站线稿动画也能加载，线稿要有出现的顺序，要像是有人画出来的一样，
 封面在车的线稿可以更细节" (lines should appear in an order, as if a person draws them, and the

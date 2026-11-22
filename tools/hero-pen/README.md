@@ -43,7 +43,7 @@ repo, keyed by the photo's SHA256: `%TEMP%/hero-pen-cache`, or `HERO_PEN_CACHE`.
 | `review.py`, `look.py`, `look_guides.py` | Review renders and authoring crops (rulers in src px). |
 | `review_page.cjs` | The art painted on the real homepage layout (a test copy of the committed `index.html`, `?draw=off`) in headless Chrome (one context per case at its real device scale factor) at 1440 DPR 2, 1440 DPR 1, 1280 DPR 1, 768 DPR 2 and 390 DPR 3: alone on white and over the photo, at section 7 weights, no animation; for class D also the plate and lettering crop at the page weights and with every glyph stroke at a flat 2.0 CSS px (the lettering gate). `node review_page.cjs <baseUrl> out/strokes.json <outDir> [playwright]`. Revision 5: the P5 accents are left out, as the engine's build drops them (`HERO_PEN_ACCENTS=1` draws them). Serve the committed tree with `node test/serve.cjs <port> -`. |
 | `clock_estimate.py` | A port of the R2 pilot's solver of PEN_SPEC section 5, run over the art. An estimate, not the engine. |
-| `engine/`, `test/` | The engine, its build (reads `out/strokes.json`) and its tests; see the header of `engine/build.cjs`. |
+| `engine/`, `test/` | The engine, its build and its tests; see the header of `engine/build.cjs`. The default build (the drafting hero) reads `out/final/`; the R3 build (`--r3`) reads `out/strokes.json`. |
 
 ## `out/strokes.json`
 
@@ -220,16 +220,41 @@ Failing gates (the build exits non-zero):
 
 Node: `C:/Users/oc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe`; no npm packages.
 
+### The drafting build (the default since 2026-11-22)
+
+Since the drafting hero was integrated onto 5b20926f, `engine/build.cjs` builds the drafting hero unless it is given
+`--r3`. Its inputs are the four files in `out/final/`: `strokes.json` (the art), `conventions.json` (the drafting
+conventions), `groups.json` (the detail units) and `build-options.json` (the schedule options). It also reads the
+engine sources in `engine/`. The build writes the data block, the minified engine and `build.json` to `--out`
+(default `out/build-drafting/`, which git ignores). `--page` writes `<dir>/index.html`: the `--base` page with only
+its hero-pen block replaced. `--check` compares a page with a fresh build and with `--base`. `--base` defaults to
+`git show HEAD:index.html`, so outside a git checkout it has to be given. Pass the committed page the block was built
+on, or the checked page itself. Both pass when only the block changed.
+
 ```
-node engine/build.cjs [--in out/strokes.json] [--out out/build] [--gate fail|warn|drop] [--order input|build]
-                      [--page <dir> [--base <rev|file>] [--site <label>]] [--check <index.html>] [--no-cuts] [--no-ending]
+node tools/hero-pen/engine/build.cjs --out <dir> --page <dir> --base <committed index.html>    # the page, from the site root
+node tools/hero-pen/engine/build.cjs --check index.html --base <committed index.html> --out <dir>   # exit 0: the block is a fresh build
+node --test tools/hero-pen/test/engine.test.cjs                                              # unit tests on the shipped build
+```
+
+### The R3 build and the tools (R3 commands need `--r3` now)
+
+```
+node engine/build.cjs --r3 [--in out/strokes.json] [--out out/build] [--gate fail|warn|drop] [--order input|build]
+                      [--page <dir> [--base <rev|file>] [--site <label>]] [--no-cuts] [--no-ending]
                       [--no-near-wheels] [--accents] [--quiet]
 node engine/pilot-to-strokes.cjs <pilot pen-data.json> <strokes.json>     # the R2 pilot in this shape
-node --test test/engine.test.cjs                                          # unit tests
+node --test test/engine.test.cjs                                          # unit tests (the drafting build)
 node test/serve.cjs <port> <overlayDir>                                   # git HEAD tree + overlay (test pages)
-node test/pen-checks.cjs --url <page> --w 1440 --h 900 --dpr 1 [--mobile] [--cpu 4] [--loads 10] [--input 3] [--back 1] [--resize 1] [--fold 1] [--nav 1] [--vloads 5] [--shots] --out <dir> --tag <name>
+node test/pen-checks.cjs --url <page> --w 1440 --h 900 --dpr 1 [--mobile] [--only sequence,input,nophoto,determinism,resize,quick] [--quick-h <px>] --out <file.json>
 node test/bgtab-check.cjs <page> [forwardAfterMs] [out.json]              # background tab, raw CDP
 ```
+
+The R3 build has no `--check`: `--check` checks the drafting block only. With `--r3` the build still solves R3's
+one-pen schedule from `out/strokes.json`, but it inlines the current `engine/engine.js` (the drafting engine), so
+`--r3 --page` gives R3's data block on a page with the drafting engine. R3's own engine is kept as
+`engine/engine-0e561624.js`. `test/pen-checks.cjs` holds the drafting hero's Chrome checks (R3's one-pen checks and
+their flags, such as `--loads`, `--back`, `--resize`, `--fold` and `--nav`, are not in the repo any more).
 
 **What the build reads from `out/strokes.json`.** Per stroke: `id`, `phase`, `area`, `tier`, `kind`, `classes`
 (or `mask`), `prov`, `members`, `pinned`, `burst` (or `group`/`patch`/`word`), `joined`, `cut`, `pts`, `segs`,
@@ -520,9 +545,11 @@ The integration step put the pen on the site, on top of HEAD 85467bca. Every cho
 main loop's or this step's), not the owner's, who has not seen any R3 output.
 
 - `index.html` is the output of `node engine/build.cjs --out <dir> --page <dir> --base <85467bca's index.html> --site
-  pen-20261110`, copied as is. `--site <label>` is the shipped form of `--page`: no test STYLE (its rules are now in
+  pen-20261110`, copied as is (since the drafting integration this command needs `--r3`, and it then inlines the
+  drafting engine: see "The R3 build and the tools"). `--site <label>` is the shipped form of `--page`: no test STYLE (its rules are now in
   `white-home-20261011.css`), and the `?v=` of `white-home-20261011.css` and `card-drawing-20261027.js` set to the
-  label. `node engine/build.cjs --check index.html` passes (block identical, page invariants true). The R1 guard,
+  label. `node engine/build.cjs --check index.html` passed (block identical, page invariants true); today that command
+  checks the drafting block, and the R3 build has no `--check`. The R1 guard,
   `script#kw-scroll` and the shared head bootstrap are not touched. `build.cjs` reads `engine.js` and the `--check` page
   with CRLF folded to LF, so a Windows checkout (core.autocrlf) builds the same block.
 - `engine.js` additions: `window.__heroDraw.arm` (the guard's `data-hero-pen`: `now`, or `late` for a tab first shown
@@ -625,3 +652,126 @@ decision, not the owner's, who has not seen any R3 output.
   keeps the same animation and changes its delay; measured with the engine starting at 1.83 s), the lines' starts when
   they are shown, and the engine's 11 s ceiling counts from the engine's start.
 - Sizes (brotli q3): engine 12313 B, 6458 B br3; data block 7690 B, 2907 B br3; `index.html` 70817 B, 22681 B br3.
+
+## The drafting hero, final line (integration onto 5b20926f, 2026-11-22)
+
+Since this integration `engine/build.cjs` builds the drafting hero by default (`buildDrafting`, the set `final`); the R3
+one-pen build described above needs `--r3`. R3's art (`out/strokes.json`), its record (`out/provenance.json`) and its
+tools (`build_art.py`, `features.py`, `inputs/`) are unchanged and no longer drawn.
+
+**Owner decisions** (the owner's recorded words, the only ones about this hero): about 2.5 s (2026-11-20); the feel of someone
+hand-drafting an engineering drawing, with the photo slowly emerging behind it (2026-11-20); denser car linework with
+every line on a real edge of the photo (2026-11-21); "still denser", the extra lines from mechanical detail and from body
+decals and marks, not tyre lettering and not hatching or extra dimensions (2026-11-21); the denser version's motion at
+the three sizes is acceptable, said after car-crop comparison films (2026-11-22); the new hero may go live, said after
+whole-page films at 1440, 768 and 390 px (2026-11-22). **Everything else in this section is an agent decision** (an
+orchestrator decision where it says so). The owner approved publishing the hero as those films showed it, not the
+individual choices, which they can still change.
+
+### Run
+
+```
+node tools/hero-pen/engine/build.cjs --page <dir> --base <a committed index.html>     # <dir>/index.html: only the block replaced
+node tools/hero-pen/engine/build.cjs --check index.html [--base <file>] [--out <dir>]  # exit 0: the block is a fresh build
+node --test tools/hero-pen/test/engine.test.cjs                                        # 46 unit tests on the shipped build
+node tools/hero-pen/test/pen-checks.cjs --url <served index.html> --w 1440 --h 900 --dpr 1 --out <file.json>   # Chrome, all checks
+```
+
+`--base` defaults to `git show HEAD:index.html` (it needs the repo). Without `--out` the drafting build writes
+`out/build-drafting/` (git-ignored). `--check` reads only the files in `out/final/`, the engine sources and the page.
+
+### Files
+
+- `engine/engine.js`: the page engine. Pens A (car ink), B (lay-in and drafting conventions, the wheels) and C (the
+  lettering, both 219s, the cockpit block) plus the detail lanes X, Y and Z (phase digits 7, 8 and 9 of a data line;
+  the page's lane string is `BAACBABXYZ`). `DECODE_CAP = 4500`: a hero photo still not decoded 4.5 s into the pen clock
+  develops anyway, and the engine hands the reveal back to the CSS (`hero-draw-own` removed), so a photo that never
+  decodes no longer leaves the lines on white until the 11 s ceiling. A photo request that fails outright rejects its
+  decode, and the develop then runs on its normal schedule.
+- `engine/build.cjs`: the build (gates, fit, the per-class solve, the data block, `--page`, `--check`). `engine/pens.cjs`:
+  the pens' plan, the detail lanes and every timing gate (`checkClass`). `engine/solve.cjs`, `fit.cjs`, `minify.cjs`:
+  unchanged. `engine/engine-0e561624.js`: R3's engine, read by the unit test that pins the teardown lines.
+- `out/final/strokes.json`: the art (162 strokes). `out/final/conventions.json`: the drafting conventions (85).
+  `out/final/groups.json`: the detail units and the car line each one waits for, per class. `out/final/build-options.json`:
+  the schedule options `--set final` applies (below).
+- `test/engine.test.cjs`, `test/pen-checks.cjs` (Chrome), `test/vclock.js`. `tools/hero-tests/hero-pen.test.cjs` runs
+  `pen-checks.cjs --only resize,quick` at each class (D 1440x900, T 768x1024, P 390x844), so the resize and quick-reveal
+  checks are part of the hero-tests suite; the other pen checks run by hand.
+
+### What is drawn
+
+| Class | Strokes | Car (of which detail) | Conventions | Last ink | Car complete | Photo in | Done |
+|---|---|---|---|---|---|---|---|
+| D (>= 1280 px) | 195 | 145 (54) | 50 | 1518 ms | 1263 ms (pens A-C 1208) | 2500 ms | 2517 ms |
+| T (768-1279 px) | 125 | 83 (36) | 42 | 1611 ms | 1416 ms | 2500 ms | 2517 ms |
+| P (< 768 px) | 116 | 79 (35) | 37 | 1655 ms | 1486 ms | 2500 ms | 2517 ms |
+
+Times are on the pen clock (0 = the engine's first drawn frame, t0), from the build (`build.json` timeline). The develop
+(V lines) and every layer exit are those of the merge build: the photo starts at 300 ms and is in by 2500 ms.
+
+### Agent decisions of the hero line (recorded in its release folders; not re-decided here)
+
+- **Detail lanes X, Y, Z:** a detail stroke is a phase 1-3 car line that is not a glyph and either carries `clean`
+  metadata or is one of pass 2's additions (an id not in the fix round 1 art: `fix1Ids` in the build options). Each lane
+  draws one stroke at a time; a unit starts after the car line it hangs on has ended and its members run back to back;
+  every member lasts at least 2 frames; detail strokes are at least 13 src px (other car lines 20).
+- **Up to 6 strokes in flight:** at most 3 on pens A-C and one per detail lane. Ends per 16.67 ms window: pens A-C at
+  most 3 among them (A, B one each, C two), each detail lane one.
+- **Data pin 7345 B brotli q3** (the final art's measured block in solver round 2, 6945 B, plus 400 B; the shipped block
+  is 6885 B). The engine pin stays 6656 B (the engine is 6180 B).
+- **The D car-with-lettering gate scoped to pens A-C and the lettering** (an orchestrator decision of solver round 2):
+  pens A-C end at 1208 ms, 115 ms before the lettering's layer leaves (1323 ms). The detail lanes answer to the D detail
+  deadline (1334 ms; last detail 1263 ms) instead. Unscoped, the whole car is complete at 1263 ms, 60 ms before the
+  lettering leaves: the 100 ms rule would fail by 40 ms. That figure is recorded, not gated.
+- **The cabin block right after the helmet at T and P** (pen C draws the cockpit first, then the side 219; an
+  orchestrator decision of solver round 3), at a fixed pace: the round-2 schedule's cabin pace on the art before the
+  drops, T 3.408213380134839 and P 1.280044999675738 (the full doubles are in the build options).
+- **10 T and 19 P detail strokes dropped by the fit rule** (solver round 3: drop the whole unit that ends latest, ties to
+  the least ink, until the class passes with detail slack of 20 ms or more). T lost the nose decals, the strap edge, the
+  bar's lower edge, the headrest's lower edge, the canister and the left bay disc; P lost the same decals and the rear
+  bay's node and beam set, both disc rings, the canister, both supports, the strap edge, the bar's lower edge and the
+  headrest pieces. D keeps all 54.
+- **DECODE_CAP 4500 ms** (above).
+- **Lettering:** D writes the pencil hand-lettering (24 letters in 37 strokes, gone by photo density 0.09); T and P letter nothing and
+  draw only the side 219.
+- **Schedule:** reorders D `form-ll`, T `form`, P `form-ll` (order only, pace pinned); T's pens A-C plan pulled in to
+  0.93; classes solved D, T, P (a later class keeps each detail stroke's lane).
+- **Truth rulings on the art** (every line on a real edge of the published 2200 px photo): truthfix moved `rod-thin` and
+  `collar` onto their edges; truthfix2 trimmed or moved `column-right`, `post-lower`, `neck`, `r-box-frame-top`,
+  `fw-inner-lip-upper` and `fw-face-bar-left` (and trimmed `diag-tube`); truthfix3 restored `diag-tube` to its truthfix
+  geometry. Each changed stroke records the ruling in its own `truthfix` or `truthfix2` field.
+- **Gate lifts:** `column-seam`, and the decal marks `decal-tesla-t`, `decal-bose` and `decal2-tesla-word` (deny-feature;
+  each stroke records the relaxation).
+
+### Integration decisions (this integration)
+
+- `index.html` is rebuilt with this `build.cjs` on the committed 5b20926f page: only the data block and the inline engine
+  differ, and both are byte-identical to the hero line's own build of its art of record.
+- The art files here are copies with provenance fields of an earlier tracing round removed or reworded (the header of
+  that round, two strokes' flags and round names, field-name lists, absolute paths and two hashes of files that do not
+  ship); no drawn field changed, and the build from these copies is byte-identical. The earlier rounds' art sets, RICH,
+  `conventions.py` and its outputs do not ship; `build_art.py`, `features.py` and `inputs/features.json` keep their
+  5b20926f bytes, so R3's provenance record holds.
+- No `?v=` changes: the hero's data and engine are inline in `index.html`, and no referenced runtime file changed.
+- The CSS failsafe (`white-home-20261011.css`) and the card gate (`card-drawing-20261027.js`) are unchanged: their
+  constants follow the engine's LATE 2400 / CEIL 11000 rules, which did not change. With the photo never decoding the
+  hero ends at about 5.4 s, inside the 12 s CSS backstops; the card gate still opens at the last ink.
+- `build.cjs`: the `final` set and its build options, `o.fix1Ids` for the detail rule, the default conventions in
+  `out/final/`. `engine.test.cjs`: every test runs on the shipped build; the `final:` tests run unconditionally.
+
+### Checks added before release (fix1, 2026-11-22)
+
+These are agent decisions, made in the pre-release pass. None changes the built page.
+
+- `test/pen-checks.cjs` again has real Chrome checks for a resize while the drawing is in progress and for the quick
+  reveal (R3's `--resize` and `--fold`, adapted to the drafting engine). A resize within the class must lay the canvases
+  out again, replay the ink, keep every canvas at or below its opacity (no flash back to full-strength lines) and draw on
+  to the end. A resize into another class must settle with `class-change` within 160 ms and two frames, with no new ink.
+  The page scrolled past the car before t0, or a short viewport, must give the 300 ms quick reveal with no line drawn.
+  Each case was shown to fail on a mutated copy of the engine.
+- `test/engine.test.cjs` bounds the pen lifts of the shipped schedule. Every two consecutive strokes of a lane are at
+  least the lift the rule in `engine/pens.cjs` requires apart (the hop lift of the lane for a line, the letter, word,
+  line, digit or block lift for a glyph). The lift is exact within a block on pens A and B, and at most 16 ms more on pen
+  C and within a detail unit. The test pins the rule's constants and recomputes the lift itself.
+- `out/final/strokes.json` no longer carries two provenance fields (`dense.ownerWords` and `dense2.ownerWords`). The
+  build does not read them, and its output is byte-identical.
