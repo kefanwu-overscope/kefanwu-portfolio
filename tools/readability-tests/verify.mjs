@@ -44,7 +44,8 @@ for (const { path, value } of approvedEdits.edits) {
   parent[path.at(-1)] = plain(value);
 }
 // Archive corrections replace single baseline chapter sentences that contradict a 2026-10-22 owner fact
-// (Mk.7 seat authorship and unconfirmed material/process; lineFollower as an individual project).
+// (Mk.7 seat authorship and unconfirmed material/process; lineFollower as an individual project, an owner fact
+// that the owner revised on 2026-11-20: lineFollower is a two-person team project; see approved-edits-20261120.json).
 // Each names the exact baseline sentence it replaces and a reason; every other archive sentence stays verbatim.
 for (const { path, from, value, reason } of approvedEdits.archiveCorrections || []) {
   assert(path.length === 6 && path[0] === 'caseStudyData' && path[2] === 'chapters' && path[4] === 'paragraphs'
@@ -55,6 +56,22 @@ for (const { path, from, value, reason } of approvedEdits.archiveCorrections || 
   assert(typeof value === 'string' && value.trim() && value !== from, `Archive correction supplies replacement text: ${path.join('.')}`);
   paragraphs[path[5]] = value;
 }
+// 2026-11-20 site refresh, copy track: verified Google Drive additions and two corrections (MT-12, PL-9),
+// applied after the 2026-10-22 edits. "add" entries may create a new array element (at the end) or a new
+// object key; all other entries replace an existing value. Chapter archives never appear here; chapters that
+// received verified reading-copy additions are listed in expandedChapters with a reading-length cap.
+const refreshEdits = JSON.parse(await read('tools/readability-tests/approved-edits-20261120.json'));
+for (const { path, value, add } of refreshEdits.edits) {
+  assert(!path.includes('chapters'), `Refresh edits never touch chapters: ${path.join('.')}`);
+  const parent = path.slice(0, -1).reduce((node, key) => node?.[key], original);
+  const key = path.at(-1);
+  assert(parent && typeof parent === 'object', `Refresh edit parent exists: ${path.join('.')}`);
+  if (add) assert(Array.isArray(parent) ? key === parent.length : !Object.hasOwn(parent, key), `Refresh addition is new: ${path.join('.')}`);
+  else assert(Object.hasOwn(parent, key), `Refresh edit path exists: ${path.join('.')}`);
+  parent[key] = plain(value);
+}
+const expandedChapters = new Set(refreshEdits.expandedChapters);
+assert(Number.isInteger(refreshEdits.readingCap) && refreshEdits.readingCap <= 800, 'Expanded reading copy keeps a cap');
 const current = data(sources);
 const keys = Object.keys(original.caseStudyData);
 const homepageOrder = [...(await read('index.html')).matchAll(/<article class="project-card"[^>]*data-project="([^"]+)"/g)].map(match => match[1]);
@@ -254,7 +271,8 @@ await check('16 projects / 64 chapter archives preserve the exact baseline parag
       assert.deepEqual(chapter.detailParagraphs, old.paragraphs, `${key}/${old.id}: verbatim engineering archive`);
       assert(chapter.paragraphs.length >= 1 && chapter.paragraphs.length <= 2, `${key}/${old.id}: one or two compact paragraphs`);
       assert(chapter.paragraphs.every(text => typeof text === 'string' && text.trim()), `${key}/${old.id}: no empty reading copy`);
-      assert(chapter.paragraphs.join(' ').length < old.paragraphs.join(' ').length, `${key}/${old.id}: first reading is shorter`);
+      const reading = chapter.paragraphs.join(' ').length;
+      assert(reading < old.paragraphs.join(' ').length || (expandedChapters.has(`${key}/${old.id}`) && reading <= refreshEdits.readingCap), `${key}/${old.id}: first reading is shorter (or a listed 2026-11-20 expansion within the cap)`);
       chapter.title = old.title; chapter.paragraphs = old.paragraphs; delete chapter.detailParagraphs;
     }
     assert.deepEqual(after, before, `${key}: identities, labels, summaries, engineering checks, notes, images, covers, downloads and next route`);

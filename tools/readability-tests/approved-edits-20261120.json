@@ -1,0 +1,851 @@
+{
+  "baseline": "0e561624 data after approved-edits-20261022.json",
+  "prepared": "2026-11-20",
+  "note": "Site refresh batch 1, copy track: Google Drive additions that a verifier checked against their sources (releases/site-refresh-20261120/drive/additions-approved.json; items held for owner questions LF-Q1 and ED-1 are not included). The owner has not reviewed these additions yet. Also two corrections of existing wording, both checked against their sources and both still open owner questions: the materialTest highlight \"under 4.9%\" became \"about 5% or less\" (MT-12), and the pool \"two-way switch\" wording was replaced by pool-add-05 (PL-9). The lineFollower My role line follows the 2026-11-20 owner fact that it was a two-person team project (it replaces the 2026-10-22 \"Individual project\" line). Entries with \"add\": true create a new array element or object key; all others replace an existing value. Chapter archives (detailParagraphs) never appear here.",
+  "readingNote": "Chapters listed in expandedChapters received the verified additions in their reading paragraphs, so their reading copy may reach the archive length. They keep one or two paragraphs and a conclusion lead, and stay at or under readingCap characters. Every other chapter keeps the rule that the first reading is shorter than its archive.",
+  "readingCap": 800,
+  "expandedChapters": [
+    "steering/constraint",
+    "steering/decisions",
+    "steering/build",
+    "vineRobot/constraint",
+    "vineRobot/decisions",
+    "vineRobot/build",
+    "vineRobot/validation",
+    "javelin/constraint",
+    "javelin/integration",
+    "scanner/constraint",
+    "scanner/decisions",
+    "scanner/build",
+    "scanner/validation",
+    "brakeSim/constraint",
+    "aura/constraint",
+    "aura/decisions",
+    "aura/build",
+    "aura/integration",
+    "seat/constraint",
+    "seat/fit",
+    "seat/interfaces",
+    "materialTest/method",
+    "materialTest/direction",
+    "pool/constraint",
+    "pool/mechanism",
+    "pool/build",
+    "formlabs/constraint",
+    "formlabs/learning",
+    "ftc/constraint",
+    "ftc/result"
+  ],
+  "edits": [
+    {
+      "path": [
+        "projectData",
+        "steering",
+        "details",
+        2,
+        "points"
+      ],
+      "value": [
+        "Designed rack mounts, shaft interfaces, bearing cages, and sensor packaging around available shop processes.",
+        "The V2 lower bearing cage was designed with holes and standoffs for a sensor mount, plus a magnet mount, to hold the electrical team's Hall-effect steering-angle sensor. That team plans to use the angle for vehicle-dynamics tuning and as an input to future torque vectoring.",
+        "Balanced bearing-cage mass and stiffness, removing 0.9 kg from the previous year's column.",
+        "Personally lathe-turned splined shafts, waterjet-cut rack mounts, and TIG-welded chassis integration along the load paths.",
+        "Used higher-grade critical fasteners and preload-aware retention to prevent looseness from becoming steering play."
+      ]
+    },
+    {
+      "path": [
+        "projectData",
+        "javelin",
+        "details",
+        2,
+        "points"
+      ],
+      "value": [
+        "Four T-Motor F90 2806 motors use tractor props for clean airflow and cooling.",
+        "Two parallel 4S LiPo packs maintain 14.8 V while roughly doubling current and burst capacity for sustained high-speed power.",
+        "The BOM lists four T-Motor F90 KV1300 motors, four Foxeer Reaper 80A F4 128k ESCs and two CNHL 4S 130C LiPo packs; the matrix answers its 'reaching high speed' requirement by connecting the two 4S packs in parallel.",
+        "Testing multiple high-pitch APC props; standardized XT90-S anti-spark connectors manage inrush current."
+      ]
+    },
+    {
+      "path": [
+        "projectData",
+        "javelin",
+        "details",
+        3,
+        "points",
+        3
+      ],
+      "add": true,
+      "value": "The matrix answers signal requirements with placement: the GPS module and the Remote ID unit both point to the sky, and the FPV camera is installed in the fairing with a seal, for which the BOM lists Permatex 82180 camera sealant."
+    },
+    {
+      "path": [
+        "projectData",
+        "seat",
+        "details",
+        2,
+        "points",
+        2
+      ],
+      "add": true,
+      "value": "The seat bolts to the chassis at multiple points through weld nuts, an approach carried over from Mk.6 to reduce the tools and handling needed to remove and reinstall it. The multiple bolted points also restrain bending of the sheet and make the seat stronger."
+    },
+    {
+      "path": [
+        "projectData",
+        "formlabs",
+        "details",
+        3,
+        "points",
+        2
+      ],
+      "add": true,
+      "value": "The team's recorded lessons include checking the BOM for part availability and compatibility, watching for interference within complex mechanisms, and focusing on the key features of a minimum viable product rather than getting stuck on minor issues."
+    },
+    {
+      "path": [
+        "projectData",
+        "vineRobot",
+        "details",
+        1,
+        "points",
+        3
+      ],
+      "add": true,
+      "value": "On the lab's high-pressure air system, the earlier printed jar prototype extended at 3 psi and retracted at 2 psi, with slight buckling on retraction. Its TPU gasket sealed well, but the prototype had air-tightness problems and the hot glue holding the spool mount failed, so the team used bolted joints with TPU gaskets instead of hot glue on the pail build."
+    },
+    {
+      "path": [
+        "projectData",
+        "vineRobot",
+        "details",
+        3,
+        "points"
+      ],
+      "value": [
+        "Before the pail, the team built a printed PLA prototype around a food jar to try the swappable-converter idea. Its stick-reinforced test body matched the jar's 154 x 60 mm maximum outlet, but it folded to 225 mm wide (184 mm estimated) against the 171 mm the spool could take, so it would not wind onto the spool. The preferred fix was a larger vessel rather than a smaller body.",
+        "Lab high-pressure testing: the pail held 1.2 psi, about 1.7 times the 0.71 psi at which a thin-wall hand calculation predicted wall yield, with significant deformation, TPU coupler decoupling, vine-to-spool connection failure, and minor leaks. The design notes attribute the gap to ignoring the pail's corner curvature and the lid's added stiffness. Even so, the stock pail reached only about a quarter of the 5 psi design pressure. That set the reinforcement strategy: external structure carries the pressure load, and the polypropylene wall only seals.",
+        "Leaks were repaired by PLA welding. The reinforcement uses four 6.35 mm 6061-T6 plates, 190 x 292 mm on each side, 152 x 292 mm on the back and 206 x 249 mm on the bottom, plus an aluminum replacement lid. PETG connectors with heat-set inserts tie the plates to three C-shaped A36 brackets that close the load path; most of the reinforcement parts were waterjet-cut. Open cutouts preserved debugging visibility.",
+        "The SolidWorks static study modeled the reinforcement structure alone, without the pail or lid and with the top open, on a 218,429-node mesh. Separate studies were run on the two bracket designs and the spool; of those, the first bracket was the weakest. Reinforcement FEA at 500 lbf per face (5.8 psi): 6.524 mm maximum deformation and 0.2339 GPa maximum stress versus A36 steel's 0.25 GPa yield. The vine outlet remains weakest. This FEA backs the 5 psi design pressure; the reinforced vessel has not been pressure-tested at 5 psi."
+      ]
+    },
+    {
+      "path": [
+        "projectData",
+        "vineRobot",
+        "details",
+        4,
+        "points"
+      ],
+      "value": [
+        "Full factorial: 3 body types x 2 load shapes x 3 pressures x 2 loads = 36 loaded conditions, plus 9 unloaded baselines, for 45 runs.",
+        "The three bodies were made from single-side TPU-coated fabric joined with heat-sealed seams. The trial log records unloaded reference heights of 105 mm for the circular body, 80 mm for the three-chamber partitioned body and 82 mm for the stick-reinforced body.",
+        "The rig uses four 10 mm steel rods, eight linear bearings, and a dovetail connector for quick load-shape swaps. A 0.01 kg scale directly beneath the vine measures actual force, since rod-bearing friction makes applied weight a poor proxy for the load reaching the body.",
+        "For setup, the robot was laid on its side, its outlet axis shimmed level with 1/4 in aluminum stock, and the rig leveled on its four adjustable feet. Each trial tared the scale with the plate and unloaded body in place, loaded to the target, scanned the body, and logged its height and any collapse or metastable behavior.",
+        "Two-stage regulation reduces 862 kPa (125 psi) shop air to a 34 kPa outlet gauge. The air line was switched to semi-stiff tubing to avoid leaks, and a Honeywell 0-5 psi gauge-pressure sensor on the lab's controller shield gave a pressure readout; each trial waited for that reading to settle before loading. Creality scans capture deformed geometry for comparison with the prediction model."
+      ]
+    },
+    {
+      "path": [
+        "projectData",
+        "materialTest",
+        "highlights",
+        1
+      ],
+      "value": "Every tensile group's scatter was about 5% of its mean or less; on-axis fabric fits reached R2 0.992 (MD) and 0.993 (TD)."
+    },
+    {
+      "path": [
+        "projectData",
+        "materialTest",
+        "details",
+        2,
+        "points"
+      ],
+      "value": [
+        "The plane-stress orthotropic compliance relation converts three measured moduli into a full directional curve, rather than three isolated values.",
+        "Solving the plane-stress orthotropic relation through the three measured mean moduli gives 1/E(θ) = cos⁴θ/(76.30 MPa) + sin⁴θ/(69.89 MPa) + (0.0683 MPa⁻¹) sin²θ cos²θ, with θ measured from the machine direction. Three directions fix only the combined coupling term (2S₁₂ + S₆₆), not S₁₂ and S₆₆ separately, but that is enough to give the uniaxial modulus at any in-plane angle.",
+        "Fabric model inputs: MD maximum 76.3 MPa, TD 69.9 MPa, and minimum near 41.8 MPa at about 46 deg.",
+        "Lower fit quality at 45 deg and for LDPE (R2 0.967 and 0.950) reflects mild curvature in the fit window, limiting confidence in those moduli."
+      ]
+    },
+    {
+      "path": [
+        "projectData",
+        "aura",
+        "details",
+        2,
+        "points",
+        1
+      ],
+      "value": "LPD3806 encoders on 3/8 in front wheel shafts were intended to provide speed and displacement feedback. At full wheel speed the Raspberry Pi missed encoder pulses, so measured distance and speed undercounted; the team's conclusion was that each encoder needs a dedicated hardware counter or real-time microcontroller."
+    },
+    {
+      "path": [
+        "projectData",
+        "aura",
+        "details",
+        2,
+        "points",
+        2
+      ],
+      "value": "The drivetrain uses heavy-duty solid rubber wheels, eight bearings across the wheel assemblies, and steel shafts with redundancy for expected load cases. Solid rubber wheels were chosen so the loaded robot carries no puncture risk."
+    },
+    {
+      "path": [
+        "projectData",
+        "pool",
+        "details",
+        1,
+        "points",
+        2
+      ],
+      "value": "Chain drive and sprocket ratio package the motion and provide sufficient pull force; an adjustable tensioner reduces chain skipping."
+    },
+    {
+      "path": [
+        "projectData",
+        "pool",
+        "details",
+        2,
+        "points",
+        0
+      ],
+      "value": "Laser aiming enables shots without traditional pool stance or sighting skill. One switch charges up or lets down the energy stored in the tubing, a separate switch turns on the trajectory laser, and the wiring includes battery charging."
+    },
+    {
+      "path": [
+        "projectData",
+        "pool",
+        "details",
+        3,
+        "points"
+      ],
+      "value": [
+        "Tight packaging required wire-length planning and fit checks to preserve routing and component access.",
+        "The team built two test-fit prototypes to check that the sliding trigger, rack and pinion, chain drive, laser pointer and tubing launcher could be integrated in the small package.",
+        "Switched from plasma-cut plates with uncontrolled tolerances to waterjet parts for the final build.",
+        "Long cue machining required manual finishing; shop iteration brought the mechanism to working condition."
+      ]
+    },
+    {
+      "path": [
+        "caseStudyData",
+        "steering",
+        "engineering",
+        "constraints",
+        0
+      ],
+      "value": "Cockpit template, dashboard space, driver ingress, and chassis clearance; the design goals also called for minimal slop and backlash, a new bearing-cage mount, a column package under 50 mm wide, and better driver ergonomics."
+    },
+    {
+      "path": [
+        "caseStudyData",
+        "steering",
+        "engineering",
+        "iteration"
+      ],
+      "value": "Mk.7 packaging informed the closer wheel and lighter cages. The column was then refined through successive design reviews, from November 2025 to the 9 February 2026 Delta review: the bearing support began as a weld-on steel cage with two bearings and became the V2 layout, an upper cage plus a lower cage with a single bearing, and the rack joint changed from a press fit with a grade 12.9 M3 bolt to a friction joint checked against the required bolt preload. The model also exposes the remaining sensitivity: joint alignment and phasing matter as much as nominal shaft strength. Next step: measure steering input and output motion with encoders and run a torque–twist test, so the predicted ripple and shaft twist can be checked against measurements."
+    },
+    {
+      "path": [
+        "caseStudyData",
+        "scanner",
+        "engineering",
+        "iteration"
+      ],
+      "value": "The project changed both the motion architecture and the operating range in response to observed errors. The X axis ran unevenly near both ends of travel: the team traced it to the two horizontal M8 guide rods being slightly out of parallel because of 3D-printing tolerances, which raised resistance at the ends, and planned CNC-machined parts or a design with more tolerance. Unmanaged wiring made first-day faults hard to trace; the whole system was rewired over about three hours before debugging, and testing then went smoothly. Building the software in separate blocks, first a script that only read the LiDAR, then one that only moved a single stepper, then combining them step by step, made debugging much easier. A next version would replace the breadboard with a PCB; independent geometry checks would quantify full point-cloud accuracy."
+    },
+    {
+      "path": [
+        "caseStudyData",
+        "brakeSim",
+        "engineering",
+        "iteration"
+      ],
+      "value": "At the February 2026 review the Mk.8 rotor was still a fallback design: a “sure thing” derived from the Mk.7 rotor (30 holes per revolution) and intended to brake much like Mk.7 while the thermal model remained unvalidated. Further iteration with the thermal model led to the lighter 72-hole rotor in the later design review, which advances it to planned waterjet cutting and surface grinding, with caliper rebuilding and brake-line inspection still ahead. The cold rear rotor keeps airflow integration open; measured vehicle temperatures would complete the model-to-hardware comparison."
+    },
+    {
+      "path": [
+        "caseStudyData",
+        "aura",
+        "engineering",
+        "constraints",
+        2
+      ],
+      "add": true,
+      "value": "An early team requirement bounded the package: the robot had to fit through a 38-inch-wide campus doorway and move at walking pace."
+    },
+    {
+      "path": [
+        "caseStudyData",
+        "aura",
+        "engineering",
+        "checks",
+        3,
+        2
+      ],
+      "value": "Roughly 1 m/s² remains the drivetrain design target; the encoders were intended to supply speed/displacement feedback, but the Raspberry Pi missed pulses at full wheel speed."
+    },
+    {
+      "path": [
+        "caseStudyData",
+        "aura",
+        "engineering",
+        "iteration"
+      ],
+      "value": "Payload testing met the original carrying objective, but steering speed and chain engagement remained coupled. Below 1600 steps the chain slipped quickly, and the team noted that 1600 steps instead of 200 makes steering eight times slower, on top of the 18:80 reduction. Steering was open-loop, so a skip or an off-center wheel could not be detected or corrected; steering lagged the responsive drive, and in autonomous following, fast or side-to-side movement by the user could make the cart lose the person. This is why DC steering motors with absolute encoders are the identified redesign."
+    },
+    {
+      "path": [
+        "caseStudyData",
+        "seat",
+        "engineering",
+        "constraints",
+        2
+      ],
+      "add": true,
+      "value": "Easy removal: the Mk.7 cockpit binder listed it as a seat goal, tied to accumulator installation."
+    },
+    {
+      "path": [
+        "caseStudyData",
+        "seat",
+        "engineering",
+        "constraints",
+        3
+      ],
+      "add": true,
+      "value": "The cockpit was specified to fit drivers from the 5th-percentile female to the 95th-percentile male; removable foam padding lets drivers of different heights adjust their position in the seat quickly."
+    },
+    {
+      "path": [
+        "caseStudyData",
+        "materialTest",
+        "engineering",
+        "checks",
+        1,
+        2
+      ],
+      "value": "Coefficients of variation 4.0% (MD), 3.5% (TD), 2.4% (45°) and 5.0% (LDPE); on-axis fabric R² 0.992 (MD) and 0.993 (TD), with lower 45° and LDPE fits."
+    },
+    {
+      "path": [
+        "caseStudyData",
+        "pool",
+        "engineering",
+        "constraints",
+        2
+      ],
+      "add": true,
+      "value": "At concept review the team named its biggest risks: the rubber tubing breaking or deforming after use, too little motor torque, the motor overheating, a housing that might not be strong enough, and the need to keep the launcher small and portable."
+    },
+    {
+      "path": [
+        "caseStudyData",
+        "pool",
+        "engineering",
+        "checks"
+      ],
+      "value": [
+        [
+          "Adjustable cue launch",
+          "Surgical tubing, rack pullback, and sliding release",
+          "Mechanism brought to working condition through shop iteration.",
+          "Working build"
+        ],
+        [
+          "Mechanical fit",
+          "Review early plasma-cut plates during assembly",
+          "Final plates changed to waterjet parts after tolerance problems.",
+          "Process revision"
+        ],
+        [
+          "Integration",
+          "Two test-fit prototypes",
+          "The team built two test-fit prototypes to check that the sliding trigger, rack and pinion, chain drive, laser pointer and tubing launcher could be integrated in the small package.",
+          "Process iteration"
+        ],
+        [
+          "Cue and base geometry",
+          "Long cue machining, manual finishing, and conversational milling",
+          "Fabricated cue/base integrated with the loading mechanism.",
+          "Fabricated"
+        ],
+        [
+          "Accessible, repeatable shots",
+          "Laser aim and physical power adjustment in the prototype",
+          "These features implement the intended interaction; quantified shot and user outcomes remain open.",
+          "Intended use"
+        ]
+      ]
+    },
+    {
+      "path": [
+        "caseStudyData",
+        "ftc",
+        "summary",
+        2,
+        1
+      ],
+      "value": "Built and competed through the 2022–2023 season; held the mechanical engineering role from May 2022 to May 2023."
+    },
+    {
+      "path": [
+        "caseStudySupplements",
+        "scanner",
+        "sections",
+        0,
+        "items"
+      ],
+      "value": [
+        {
+          "id": "SC-01",
+          "label": "Gantry transmission",
+          "value": "Two NEMA 17 motors, commanded to the same position by the firmware, drive Y through the dual 235 mm M8 lead screws, guided by two M8 steel rods; a NEMA 17 24B motor and 2GT belt drive X."
+        },
+        {
+          "id": "SC-02",
+          "label": "Retained pan / tilt",
+          "value": "Two MG996R servos retained for wide-range, lower-precision scanning."
+        },
+        {
+          "id": "SC-03",
+          "label": "Power and cooling",
+          "value": "LRS-150-12 supply and two TL-9015 PWM cooling fans; the fans cool both the drivers and the power supply. A 12 V to 5 V converter feeds the TFmini-S a steady 5.1 V, and each DRV8825’s motor current was set with its on-board potentiometer."
+        },
+        {
+          "id": "SC-04",
+          "label": "Driver protection",
+          "value": "Three DRV8825 drivers, each with a 100 µF VMOT capacitor; one 15 A fuse before the E-stop and three 2 A branch fuses."
+        },
+        {
+          "id": "SC-07",
+          "label": "Power-up sequence",
+          "value": "Because of how the E-stop and the 12 V-to-5 V converter are wired, the scanner has a fixed start-up order: E-stop engaged, supply on, controller on, E-stop released, then the start button. The order is needed to get correct sensor data."
+        }
+      ]
+    },
+    {
+      "path": [
+        "caseStudySupplements",
+        "scanner",
+        "sections",
+        1,
+        "items"
+      ],
+      "value": [
+        {
+          "id": "SC-05",
+          "label": "Data timing",
+          "value": "115,200-baud sensor UART; coordinate packets sent at 100 ms intervals. The firmware waits for the TFmini-S two-byte 0x59 frame header and checks each frame’s checksum before accepting a distance. The Arduino Nano ESP32 was used because its dedicated serial pins could read the sensor’s 115,200-baud stream."
+        },
+        {
+          "id": "SC-06",
+          "label": "Surface reconstruction",
+          "value": "Cubic interpolation onto a 300 × 300 grid, followed by a Gaussian filter with σ = 2.0 grid samples in the archived Python script. The archived PySerial script starts recording X, Y, Z lines when the firmware reports that homing is done, stops at a scan-complete message, and saves the points to CSV."
+        },
+        {
+          "id": "SC-08",
+          "label": "Motion sequence",
+          "value": "AccelStepper’s non-blocking control lets the axes move in coordination. At start-up, Y homes to its limit switch first, then X, which sets the scan origin. Testing put the Y travel at 16,700 motor steps; that travel is divided by the number of scan lines to set the Y increment, and X sweeps back and forth on each line."
+        },
+        {
+          "id": "SC-09",
+          "label": "Calibration law",
+          "value": "The measured-versus-true relationship was approximately linear, so a linear fit in MATLAB Curve Fitter gave the correction D_actual = 0.9938 × D_measured + 4.576 (distances in cm)."
+        }
+      ]
+    },
+    {
+      "path": [
+        "caseStudySupplements",
+        "javelin",
+        "sections",
+        1,
+        "items",
+        0,
+        "value"
+      ],
+      "value": "26 populated requirements: 23 marked met and three left unmet in the April 2026 record. Each row carries only a met / not-met checkbox, with no test method or measured value, so a checked row is the record’s own status rather than recorded test evidence."
+    },
+    {
+      "path": [
+        "caseStudySupplements",
+        "steering",
+        "sections"
+      ],
+      "value": [
+        {
+          "id": "steering-documented-components",
+          "title": "Components specified in the Mk.8 draft BOM",
+          "items": [
+            {
+              "id": "steering-quick-release",
+              "label": "Quick release",
+              "value": "Strange Q1000, as listed in the Mk.8 draft BOM."
+            },
+            {
+              "id": "steering-u-joint-interface",
+              "label": "Universal-joint interface",
+              "value": "Two universal joints, each with 3/4-inch–20 spline connections at both ends, specified in the draft BOM."
+            },
+            {
+              "id": "steering-bearing-model",
+              "label": "Column bearing specification",
+              "value": "Shielded R12 ball bearings for a 3/4-inch shaft are listed in the draft BOM."
+            }
+          ]
+        },
+        {
+          "id": "steering-column-dimensions-and-model",
+          "title": "Documented column dimensions and model assumptions",
+          "items": [
+            {
+              "id": "steering-shaft-dimensions",
+              "label": "Shaft geometry",
+              "value": "The Mk.8 design presentation retains a 0.53-inch bore and 0.75-inch outside diameter, with shaft lengths of 5.5 and 6.75 inches."
+            },
+            {
+              "id": "steering-misalignment-study",
+              "label": "Misalignment sensitivity",
+              "value": "With 3° of misalignment and 3° of yoke phasing assumed, the presentation reports a maximum speed ratio of 1.032 and elastic torsion of 0.065°."
+            }
+          ]
+        },
+        {
+          "id": "steering-bearing-support-trade-study",
+          "title": "Bearing support trade study",
+          "items": [
+            {
+              "id": "steering-cage-upper-only",
+              "label": "Upper cage alone",
+              "value": "An upper cage alone was lighter, lower, and easier to make and assemble, but it was vulnerable to imperfection, made the steering sensor hard to mount, and could add slop."
+            },
+            {
+              "id": "steering-cage-two-cages",
+              "label": "Two cages",
+              "value": "Two cages tolerated imperfection and took the sensor easily, but they were heavier, sat higher, and were harder to build."
+            },
+            {
+              "id": "steering-cage-v2",
+              "label": "V2 layout",
+              "value": "V2 pairs the upper cage with a lower cage that holds a single bearing. That keeps the tolerance to imperfection and unexpected load and the sensor mounting, with lower mass and center of mass than V1."
+            }
+          ]
+        },
+        {
+          "id": "steering-confirmed-build",
+          "title": "Final steering hardware",
+          "items": [
+            {
+              "id": "steering-final-fastener",
+              "label": "Final fastener size",
+              "value": "M4."
+            },
+            {
+              "id": "steering-rack-length",
+              "label": "NARRco eye-to-eye distance",
+              "value": "17.4 in, measured between the heim-joint attachment bolts."
+            },
+            {
+              "id": "steering-rack-speed",
+              "label": "NARRco rack speed",
+              "value": "4.0 in of rack travel per pinion revolution (4.0 in/rev)."
+            },
+            {
+              "id": "steering-assembly-plan",
+              "label": "Assembly plan",
+              "value": "I planned a 19-step assembly sequence covering the bearing press fits, the welds to the chassis and the joint connections, ending with every critical fastener torqued or lock-wired."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": [
+        "caseStudySupplements",
+        "brakeSim",
+        "sections"
+      ],
+      "value": [
+        {
+          "id": "brakeSim-documented-model-inputs",
+          "title": "Thermal-model scope in the design review",
+          "items": [
+            {
+              "id": "brakeSim-duty-cycle",
+              "label": "Duty cycle",
+              "value": "The design-review result covers 22 simulated laps, with the first three laps excluded from the working-temperature assessment."
+            },
+            {
+              "id": "brakeSim-energy-partition",
+              "label": "Heat input and losses",
+              "value": "Separate rotor, paired-pad, hub and caliper nodes store heat. Braking power enters the network; speed-dependent convection, radiation evaluated in kelvin and finite conductive links between components remove or redistribute it."
+            },
+            {
+              "id": "brakeSim-model-assumptions",
+              "label": "Simplifications",
+              "value": "On/off braking with no trail braking, no aerodynamic drag and no regenerative braking. The model sends all kinetic energy removed in braking into the brakes and sets cornering speeds with a point-mass grip model that assumes 2,450 N of downforce at 65 mph; that downforce is a modeling assumption, not a measured value."
+            },
+            {
+              "id": "brakeSim-result-configuration",
+              "label": "Published plot inputs",
+              "value": "The DR 32 chart identifies 295 kg including driver and aero, no regenerative braking, 72/28 front/rear brake heat, rotor emissivity 0.32, 72 holes of 0.400 in and a 2.99 mm shallow wave. These are the labels of the published result."
+            },
+            {
+              "id": "brakeSim-validation-scope",
+              "label": "Cooling comparison",
+              "value": "The review cites Luis Alberto Mora, Design of a FSAE Braking System (MIT, June 2018). It compares radiation and conduction against cooling-curve behavior and explicitly excludes convection from that validation."
+            },
+            {
+              "id": "brakeSim-model-version",
+              "label": "Track and geometry versions",
+              "value": "The DR method slide states 25 track segments; the saved MATLAB implementation contains 26. The published thermal history uses a 4.7498 mm rotor thickness; the displayed native CAD uses 5.08 mm, matching the DR’s 0.2 in specification. The review’s temperature and mass results have not been recalculated from the displayed CAD. The DR text omits linear-speed effects; the saved implementation combines vehicle and rotor-edge speed for effective airflow. These version-dependent boundary assumptions are not experimentally calibrated."
+            }
+          ]
+        },
+        {
+          "id": "brakeSim-rule-requirements",
+          "title": "Related Formula SAE rules",
+          "items": [
+            {
+              "id": "brakeSim-rule-circuits-clearance",
+              "label": "Hydraulic circuits and clearance",
+              "value": "The design review cites Formula SAE rules T 3.1.3 and T 3.1.9: two independent hydraulic circuits, so that a leak or failure still leaves braking on at least two wheels, and no sprung-mounted brake part below the lower surface of the chassis."
+            }
+          ]
+        },
+        {
+          "id": "brakeSim-hardware-context",
+          "title": "Hardware selected in the design review",
+          "items": [
+            {
+              "id": "brakeSim-calipers-pads",
+              "label": "Calipers and pads",
+              "value": "Wilwood GP200 calipers: two new and two planned for rebuilding. Wilwood BP28 pads."
+            },
+            {
+              "id": "brakeSim-hydraulic-selection",
+              "label": "Hydraulic hardware",
+              "value": "Tilton 78-625 master cylinder with a ⅝ in bore, Tilton 77-262 bias bar and Autobahn 88 AN3 quick-disconnect coupler."
+            },
+            {
+              "id": "brakeSim-rotor-material",
+              "label": "Rotor material",
+              "value": "ASTM A48 Class 40 cast iron. The design review specifies a 3.75 in radius and 0.2 in thickness; the displayed native CAD has a 190.5 mm outer diameter and 5.08 mm thickness."
+            },
+            {
+              "id": "brakeSim-sensing-retention",
+              "label": "Sensing and retention",
+              "value": "GS1005 wheel-speed sensor with a stated 3 mm minimum gap; RCV FSAE brake-rotor pins and snap rings."
+            },
+            {
+              "id": "brakeSim-wheel-speed-sensor-update",
+              "label": "Wheel-speed sensor, February 2026 review",
+              "value": "The February 2026 review replaced the earlier wheel-speed sensor, judged not capable enough, with a GS1005; the slide lists the upgrade as going from 0.5 kHz to 15 kHz. Its target holes must be equally spaced, at least 8 mm in size and at least 3 mm apart."
+            }
+          ]
+        },
+        {
+          "id": "brakeSim-design-results",
+          "title": "Design comparison and thermal prediction",
+          "items": [
+            {
+              "id": "brakeSim-design-comparison",
+              "label": "Mk.7 → Mk.8",
+              "value": "DR design comparison: mass 1.39 → 1.07 lb (−23%); rotational inertia 11.55 → 9.35 lb·in² (−19%)."
+            },
+            {
+              "id": "brakeSim-temperature-result",
+              "label": "Front-rotor working range",
+              "value": "DR prediction: 90.75% of time at 350–450°C after three warm-up laps, against an 80% target."
+            }
+          ]
+        },
+        {
+          "id": "brakeSim-analysis-results",
+          "title": "Reported structural and fatigue results",
+          "items": [
+            {
+              "id": "brakeSim-structural-loads",
+              "label": "Structural load case",
+              "value": "14.93 kN pad force calculated from a 2 kN pedal force; 1,517.96 N·m brake torque; 450°C; stated minimum tensile strength 276 MPa."
+            },
+            {
+              "id": "brakeSim-fea-results",
+              "label": "Reported FEA result",
+              "value": "Factor of safety 2.455 and maximum deformation 0.52 mm. The displayed stress plot has a 1.124 × 10⁹ Pa von Mises maximum. The review does not establish the failure criterion needed to reconcile that plot with the stated factor of safety; independent verification remains open."
+            },
+            {
+              "id": "brakeSim-fatigue-results",
+              "label": "Reference fatigue result",
+              "value": "Maximum reference damage: 53.95%. Minimum reference equivalent life: 5.561 × 22 km endurances. The review separately sets a goal above three endurances (66 laps); its 22-lap thermal history spans 27.72 km. These block definitions must not be treated as an independently verified fatigue pass or measured service life."
+            }
+          ]
+        },
+        {
+          "id": "brakeSim-fabrication-next-steps",
+          "title": "Fabrication and integration next steps",
+          "items": [
+            {
+              "id": "brakeSim-fabrication",
+              "label": "Rotor and calipers",
+              "value": "Waterjet the rotor, surface-grind the friction faces and rebuild the retained calipers."
+            },
+            {
+              "id": "brakeSim-brake-lines",
+              "label": "Brake-line reuse",
+              "value": "Inspect Mk.6 components for reuse and consider CAD routing of the brake lines."
+            },
+            {
+              "id": "brakeSim-rear-cooling",
+              "label": "Rear thermal behavior",
+              "value": "The design review identifies cold rear rotors and asks the aerodynamics team to consider reducing rear airflow. This remains an integration question."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": [
+        "caseStudySupplements",
+        "materialTest",
+        "sections",
+        2
+      ],
+      "add": true,
+      "value": {
+        "id": "materialTest-test-record",
+        "title": "Test record",
+        "items": [
+          {
+            "id": "materialTest-test-dates",
+            "label": "Test dates",
+            "value": "The fabric specimens were tested on 24 June 2026 and the LDPE and bamboo specimens on 25 June 2026; the tensile moduli were presented in the lab’s weekly retrospective for 22–26 June."
+          }
+        ]
+      }
+    },
+    {
+      "path": [
+        "caseStudySupplements",
+        "aura",
+        "sections",
+        1,
+        "items",
+        2
+      ],
+      "add": true,
+      "value": {
+        "id": "aura-steering-debugging",
+        "label": "Steering debugging",
+        "value": "Steering was the team’s hardest integration problem: the wheels kept jumping and losing precision. Integrating everything at once had made it hard to debug, so the team isolated components and removed the chain. That showed the stepper was not turning consistently and its mount was rubbing the steering pinion. Mechanical adjustments were combined with a software smoothing algorithm, tested with the gear ratio in mind, and software steering limits with a zero position referenced to the straight rear wheels."
+      }
+    },
+    {
+      "path": [
+        "caseStudySupplements",
+        "aura",
+        "sections",
+        1,
+        "items",
+        3
+      ],
+      "add": true,
+      "value": {
+        "id": "aura-stepper-threading",
+        "label": "Step timing in software",
+        "value": "The higher step count also exposed a control problem in the team’s software: each stepper is pulsed one step at a time, so the long step loops occupied the main thread. The two front wheels steered one after the other, and the drive moved only after steering finished. The team moved each steering and drive motor to its own thread so commands went out nearly at once."
+      }
+    },
+    {
+      "path": [
+        "caseStudySupplements",
+        "aura",
+        "sections",
+        2,
+        "items",
+        2
+      ],
+      "add": true,
+      "value": {
+        "id": "aura-tracking-pivot",
+        "label": "Tracking pivot",
+        "value": "The first person-tracking design, three UWB anchors on the robot and a tag on the user, gave inconsistent positions, partly because the steel motor and steering mounts reflected the signal. The team switched to the depth camera tracking a reflective belt in infrared."
+      }
+    },
+    {
+      "path": [
+        "caseStudySupplements",
+        "aura",
+        "sections",
+        2,
+        "items",
+        3
+      ],
+      "add": true,
+      "value": {
+        "id": "aura-collision-stop",
+        "label": "Collision stop",
+        "value": "In autonomous mode, a horizontal slice of the depth image acts as a forward stop zone: any object within 0.6 m directly ahead disables forward motion, leaving only reverse."
+      }
+    },
+    {
+      "path": [
+        "caseStudySupplements",
+        "aura",
+        "sections",
+        3,
+        "items",
+        2,
+        "value"
+      ],
+      "value": "MY1016Z geared DC motor, purchased as a 24 V, 250 W unit."
+    },
+    {
+      "path": [
+        "caseStudySupplements",
+        "pool",
+        "sections",
+        0,
+        "items",
+        1,
+        "value"
+      ],
+      "value": "The cue-base used a conversational mill to make its intricate geometry; maintaining a consistent cue diameter was a fabrication challenge. To keep the long cue’s diameter consistent, I learned long-part lathe techniques for holding tight tolerances from the shop assistants."
+    },
+    {
+      "path": [
+        "caseStudySupplements",
+        "formlabs",
+        "sections",
+        2
+      ],
+      "add": true,
+      "value": {
+        "id": "formlabs-procurement",
+        "title": "Purchased parts",
+        "items": [
+          {
+            "id": "formlabs-order-form",
+            "label": "Order form",
+            "value": "The organizers ordered 26 purchased items for the team, totalling $475.22 on the hackathon order form."
+          }
+        ]
+      }
+    },
+    {
+      "path": [
+        "caseStudyData",
+        "lineFollower",
+        "summary",
+        0,
+        1
+      ],
+      "value": "Two-person team project — the team’s work covered compact packaging, power, reflectance sensing, motor integration, and controller tuning."
+    }
+  ]
+}

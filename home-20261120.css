@@ -1,0 +1,689 @@
+/* Homepage overlay, site refresh batch 1 (refresh-20261120): B1 (running head, first screen) and
+   B2 (catalogue, leadership, studio teaser, How I work, contact, footer). Loaded after
+   white-home-20261011.css and site-tokens-20261120.css; it keeps every production class hook.
+
+   First-screen rule: the photo, its masks and feather, the pen drawing, the KEFAN WU. wordmark and
+   the skills strip box do not move. The wordmark sits in .hero-content, which centres its in-flow
+   content, so everything after the name lives in .hero-lede, whose in-flow height is the height
+   the replaced tagline and CTA rows had in each layout band (measured on 0e561624; the band edges
+   are white-home-20261011.css's own). What .hero-lede holds may run below that height into the
+   room the removed bottom row (.hero-baseline) used, which .hero-content keeps as margin. */
+
+/* ============ running head ============ */
+.white-home .site-header.kw-rh,
+.white-home .site-header.kw-rh.is-scrolled,
+.white-home .site-header.kw-rh:not(.is-scrolled) {
+  min-height: 72px;
+  padding: 0 max(64px, calc((100% - 1440px) / 2));
+  background: #fff;
+  border-bottom: 1px solid var(--kw-hair);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition: none;
+}
+.white-home .kw-rh .brand { gap: 12px; min-height: 44px; color: var(--kw-ink); font: 600 16px/20px var(--kw-f-text); letter-spacing: 0; text-transform: none; }
+.white-home .kw-rh .brand-mark { width: 32px; height: 32px; font: 600 13px/1 var(--kw-f-display); letter-spacing: .01em; }
+.white-home .kw-rh .site-nav { gap: 28px; color: var(--kw-text); font: 500 15px/20px var(--kw-f-text); letter-spacing: 0; text-transform: none; }
+.white-home .kw-rh .site-nav a,
+.white-home .kw-rh .site-nav a:not(.nav-experience) {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 12px 0;
+  color: var(--kw-text); font-size: 15px; transition: color var(--kw-t-micro) var(--kw-ease-fade);
+}
+.white-home .kw-rh .site-nav a:hover { color: var(--kw-accent); }
+/* The current section: a 1px ink underline under the words (no motion). */
+.white-home .kw-rh .site-nav a::after,
+.white-home .kw-rh .site-nav a:not(.nav-experience)::after {
+  inset: auto 0 10px 0; bottom: 10px; height: 1px; background: var(--kw-ink); transform: scaleX(0); transition: none;
+}
+.white-home .kw-rh .site-nav a:hover::after,
+.white-home .kw-rh .site-nav a:focus-visible::after { transform: scaleX(0); }
+.white-home .kw-rh .site-nav a.is-current { color: var(--kw-ink); }
+.white-home .kw-rh .site-nav a.is-current::after { transform: none; }
+/* The studio entry is a text link after a hairline divider, not a filled button. */
+.white-home .kw-rh .site-nav .nav-experience,
+.white-home .kw-rh .site-nav .nav-experience:hover {
+  padding: 12px 0; margin: 0; border: 0; border-radius: 0; background: none;
+  font: 500 15px/20px var(--kw-f-text); letter-spacing: 0;
+}
+.white-home .kw-rh .site-nav .nav-experience { color: var(--kw-ink); }
+.white-home .kw-rh .site-nav .nav-experience:hover { color: var(--kw-accent); }
+.white-home .kw-rh .site-nav .nav-experience::before {
+  content: ""; display: block; width: 1px; height: 20px; margin: 0 22px 0 0; border-radius: 0;
+  background: var(--kw-hair); box-shadow: none; animation: none;
+}
+.white-home .kw-rh .site-nav .nav-experience::after { content: none; }
+.white-home .kw-rh .nav-toggle { width: 44px; height: 44px; padding: 12px 11px; border: 1px solid var(--kw-control); border-radius: 0; background: #fff; box-shadow: none; }
+.white-home .kw-rh .nav-toggle::after { content: none; }
+.white-home .kw-rh .nav-toggle span:not(.sr-only) { height: 1.5px; margin: 5px 0; background: var(--kw-ink); }
+.white-home .kw-rh .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.white-home .kw-rh .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ============ first screen ============ */
+.white-home .hero .eyebrow {
+  gap: 13px; margin-bottom: 22px; color: var(--kw-text);
+  font: 500 15px/20px var(--kw-f-text); letter-spacing: 0; text-transform: none;
+}
+.white-home .hero-rule { width: 32px; background: var(--kw-ink); }
+.white-home .hero .eyebrow-sep { color: var(--kw-muted); }
+/* The copy block: imprint (who and what he leads) directly under the name, then the tagline. The
+   white halo (white-home-20261011.css, .hero-copy::before) now spans both. */
+.white-home .hero-copy {
+  width: fit-content; max-width: none; margin: 12px 0 0;
+  color: var(--kw-text); font: 400 19px/28px var(--kw-f-text);
+}
+.white-home .hero-imprint { margin: 0; }
+.white-home .hero-imprint strong { display: block; color: var(--kw-ink); font: 600 24px/32px var(--kw-f-text); letter-spacing: -.005em; }
+.white-home .hero-imprint > span { display: block; color: var(--kw-muted); font: 500 16px/24px var(--kw-f-text); }
+.white-home .hero-tagline { margin: 16px 0 0; color: var(--kw-text); font: 400 19px/28px var(--kw-f-text); }
+.white-home .hero-actions {
+  display: flex; flex-flow: row wrap; align-items: center; gap: 12px 16px;
+  margin: 32px 0 0; font-size: 16px;
+}
+.white-home .hero-actions::before,
+.white-home .hero-actions::after { content: none; }
+.white-home .hero-actions > a { order: 0; }
+.white-home .hero-actions .button,
+.white-home .contact-rows .button {
+  gap: 20px; min-height: 48px; padding: 0 20px; border: 1px solid var(--kw-ink); border-radius: 0;
+  font: 500 16px/20px var(--kw-f-text); letter-spacing: 0; text-transform: none; white-space: nowrap;
+  box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; overflow: visible;
+  transition: background-color var(--kw-t-micro) var(--kw-ease-fade), color var(--kw-t-micro) var(--kw-ease-fade), border-color var(--kw-t-micro) var(--kw-ease-fade);
+}
+.white-home .hero-actions .button::after,
+.white-home .contact-rows .button::after { content: none; }
+.white-home .hero-actions .button:active,
+.white-home .contact-rows .button:active { filter: none; }
+.white-home .hero-actions .hero-projects,
+.white-home .contact-rows .button.primary { color: #fff; background: var(--kw-ink); }
+.white-home .hero-actions .hero-projects:hover,
+.white-home .contact-rows .button.primary:hover { color: #fff; background: #2a2f35; border-color: #2a2f35; }
+.white-home .hero-actions .studio-secondary { color: var(--kw-ink); background: #fff; }
+.white-home .hero-actions .studio-secondary:hover { color: #fff; background: var(--kw-ink); }
+.white-home .kw-arrow-text { font-size: 16px; line-height: 1; }
+
+/* Text links site-wide on this page: a 1px underline on the words only; the arrow is not underlined. */
+.white-home .text-link,
+.white-home .hero-actions .text-link {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0;
+  border-bottom: 0; color: var(--kw-ink); font: 500 16px/20px var(--kw-f-text); letter-spacing: 0;
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; text-decoration-color: var(--kw-control);
+  transition: color var(--kw-t-micro) var(--kw-ease-fade), text-decoration-color var(--kw-t-micro) var(--kw-ease-fade);
+}
+.white-home .text-link:hover,
+.white-home .hero-actions .text-link:hover { color: var(--kw-accent); text-decoration-color: var(--kw-accent); border-bottom-color: transparent; }
+
+/* The skills strip: same box, height, place and motion; only its type changes (Inter 500 14px,
+   sentence case, middots). The line box stays 16.25px so the strip is exactly as tall. */
+.white-home .hero-skill-track span {
+  position: relative; padding-inline: 16px; color: var(--kw-muted);
+  font: 500 14px/16.25px var(--kw-f-text); letter-spacing: 0; text-transform: none;
+}
+.white-home .hero-skill-track span::after {
+  content: "·"; position: absolute; top: 50%; right: -2px; transform: translateY(-50%);
+  color: var(--kw-control); font: 500 14px/1 var(--kw-f-text); pointer-events: none;
+}
+.white-home .hero-skill-track span:hover { color: var(--kw-ink); }
+
+/* Lede height per band = the in-flow height of the replaced tagline + CTA rows on 0e561624. */
+@media (min-width: 721px) {
+  .white-home .hero-content { margin-bottom: 96px; }
+  .white-home .hero-lede { height: 214.89px; }
+  /* The two buttons share a row; the résumé link takes the row under them, on the white side of
+     the photo's feather (beside the buttons it would sit on the asphalt). */
+  .white-home .hero-actions { row-gap: 6px; }
+  .white-home .hero-actions::before { content: ""; order: 1; flex-basis: 100%; height: 0; }
+  .white-home .hero-actions .hero-resume { order: 2; }
+}
+@media (min-width: 721px) and (max-height: 760px) {
+  .white-home .hero-content { margin-bottom: 83px; }
+  .white-home .hero .eyebrow { margin-bottom: 20px; }
+}
+@media (min-width: 1101px) and (max-height: 880px) {
+  .white-home .hero .eyebrow { margin-bottom: 14px; }
+}
+@media (min-width: 721px) and (max-width: 1279px) and (max-height: 880px) {
+  .white-home .hero .eyebrow { margin-bottom: 12px; }
+}
+@media (min-width: 721px) and (max-width: 739px) { .white-home .hero-lede { height: 263.15px; } }
+@media (min-width: 740px) and (max-width: 819px) { .white-home .hero-lede { height: 269.77px; } }
+@media (min-width: 820px) and (max-width: 1100px) { .white-home .hero-lede { height: 241.73px; } }
+@media (min-width: 1101px) and (max-width: 1279px) { .white-home .hero-lede { height: 242.94px; } }
+@media (min-width: 1101px) and (max-width: 1279px) and (max-aspect-ratio: 5/4) { .white-home .hero-lede { height: 294.94px; } }
+@media (min-width: 1280px) and (max-aspect-ratio: 5/4) { .white-home .hero-lede { height: 266.89px; } }
+@media (min-width: 721px) and (max-height: 880px) {
+  .white-home .hero-lede { height: 184.89px; }
+}
+@media (min-width: 721px) and (max-width: 739px) and (max-height: 880px) { .white-home .hero-lede { height: 225.15px; } }
+@media (min-width: 740px) and (max-width: 819px) and (max-height: 880px) { .white-home .hero-lede { height: 231.77px; } }
+@media (min-width: 820px) and (max-width: 1100px) and (max-height: 880px) { .white-home .hero-lede { height: 203.72px; } }
+@media (min-width: 1101px) and (max-width: 1279px) and (max-height: 880px) { .white-home .hero-lede { height: 204.94px; } }
+
+/* ============ section openers and titles ============ */
+.white-home .kw-section-head { display: block; width: 100%; margin: 0 0 40px; }
+.white-home .kw-section-head .kw-opener { margin-bottom: 40px; }
+.white-home .kw-section-head h2,
+.white-home .section-head.kw-section-head h2 { margin: 0; color: var(--kw-ink); font: 600 72px/72px var(--kw-f-display); letter-spacing: -.035em; }
+
+/* ============ projects ============ */
+.white-home .work-archive { padding-block: 112px 64px; }
+/* The live count is the opener's aside (always shown; still announced). */
+.white-home .kw-opener .project-count,
+.white-home .kw-opener .project-count.is-idle {
+  margin: 0 0 0 auto; opacity: 1; color: var(--kw-muted); font: 500 14px/20px var(--kw-f-text);
+  letter-spacing: 0; font-variant-numeric: tabular-nums; transition: none;
+}
+.white-home .archive-tools {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 16px 40px;
+  margin: 0 0 40px; padding: 0; border-bottom: 1px solid var(--kw-hair);
+}
+.white-home .filter-bar { flex-wrap: wrap; gap: 0 24px; }
+.white-home .filter,
+.white-home .filter.active,
+.white-home .filter:hover:not(.active) {
+  position: relative; overflow: visible; min-height: 44px; padding: 12px 0; margin-bottom: -1px;
+  border: 0; border-bottom: 1px solid transparent; border-radius: 0; background: none; box-shadow: none;
+  color: var(--kw-muted); font: 500 15px/20px var(--kw-f-text); letter-spacing: 0; text-transform: none;
+}
+.white-home .filter:hover:not(.active) { color: var(--kw-ink); }
+.white-home .filter.active { color: var(--kw-ink); border-bottom-color: var(--kw-ink); }
+.white-home .filter,
+.white-home .filter.active { backdrop-filter: none; -webkit-backdrop-filter: none; }
+.white-home .filter::after { content: none; }
+.white-home .filter:active { transform: none; }
+.white-home .filter-count { margin-left: 6px; color: var(--kw-quiet); font-variant-numeric: tabular-nums; }
+.white-home .project-search { flex: none; }
+.white-home .project-search input {
+  width: 220px; min-height: 44px; margin-bottom: -1px; padding: 10px 0; border: 0; border-bottom: 1px solid var(--kw-control);
+  border-radius: 0; background: transparent; color: var(--kw-ink); font: 400 16px/24px var(--kw-f-text);
+}
+.white-home .project-search input::placeholder { color: var(--kw-quiet); opacity: 1; }
+.white-home .search-empty { margin-top: 24px; color: var(--kw-muted); font: 400 16px/24px var(--kw-f-text); }
+
+/* Catalogue: today's 3 / 2 / 1 columns and today's media boxes. Each card spans five rows of the
+   grid (media, title, meta, result, status) through subgrid, so a row's titles, meta and results
+   line up; the case number hangs in a 32px gutter. */
+.white-home .project-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 28px; row-gap: 0; }
+.white-home .project-card:not(.project-card--studio) {
+  display: grid; grid-template-columns: 32px minmax(0, 1fr); grid-row: span 5; grid-template-rows: subgrid;
+  row-gap: 0; padding-bottom: 48px; border-bottom: 0; background: transparent;
+}
+/* A card the filter or the search leaves out leaves the grid. The rule above (0,3,0) would beat
+   styles.css's `.project-card.is-hidden` (0,2,0); this one has the same weight and comes later.
+   No !important: the FLIP keeps a leaving card on screen with an inline display while it fades. */
+.white-home .project-card.is-hidden { display: none; }
+.white-home .project-card .card-media { grid-column: 1 / -1; grid-row: 1; }
+.white-home .project-card:not(.project-card--studio)::before {
+  content: ""; position: static; grid-column: 1 / -1; grid-row: 2; align-self: start;
+  height: 0; border-top: 1px solid var(--kw-hair); background: none; opacity: 1; transform: none;
+}
+.white-home .project-card .card-no {
+  grid-column: 1; grid-row: 2; align-self: start; padding-top: 30px;
+  color: var(--kw-ink); font: 500 13px/20px var(--kw-f-index); letter-spacing: .02em; font-variant-numeric: tabular-nums;
+}
+.white-home .project-card .project-body,
+.white-home .project-card:not(.project-card--studio) .project-body {
+  display: grid; grid-column: 2; grid-row: 2 / span 4; grid-template-rows: subgrid; row-gap: 0;
+  padding: 20px 0 0; gap: 0;
+}
+.white-home .project-body h3 { grid-row: 1; margin: 0; padding: 0; color: var(--kw-ink); font: 600 24px/32px var(--kw-f-display); letter-spacing: -.012em; }
+.white-home .project-body .project-meta { grid-row: 2; margin: 8px 0 0; color: var(--kw-muted); font: 500 14px/20px var(--kw-f-text); letter-spacing: 0; text-transform: none; text-wrap: wrap; }
+.white-home .project-meta > span { display: block; }
+.white-home .project-meta > .meta-sep { display: none; }
+.white-home .project-body p.project-sub { grid-row: 3; margin: 12px 0 0; max-width: 40ch; color: var(--kw-text); font: 400 16px/24px var(--kw-f-text); }
+.white-home .project-status { grid-row: 4; margin: 12px 0 0; }
+.white-home .project-card .card-open {
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; text-decoration-color: transparent;
+  transition: text-decoration-color var(--kw-t-micro) var(--kw-ease-fade);
+}
+.white-home .project-card:hover .card-open { text-decoration-color: var(--kw-ink); }
+.white-home .project-card:has(.card-open:focus-visible) { outline: 2px solid var(--kw-accent); outline-offset: 3px; }
+.white-home .project-card .card-open:focus-visible { outline: none; }
+.white-home .project-download-text {
+  position: relative; z-index: 3; display: inline-block; padding-block: 12px; margin-block: -12px;
+  color: var(--kw-ink); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: var(--kw-control);
+}
+.white-home .project-download-text:hover { color: var(--kw-accent); text-decoration-color: var(--kw-accent); }
+/* Card overlay text (hover label and hint) reaches the 13px floor. */
+.white-home .card-explode-label { font: 500 13px/18px var(--kw-f-text); letter-spacing: 0; border-radius: 0; }
+.white-home .card-explode-controls::before { font: 500 13px/18px var(--kw-f-text); letter-spacing: 0; }
+
+/* ============ leadership ============ */
+.white-home .leadership-section { padding-block: 64px 112px; }
+.white-home .leadership-section > .kw-opener { margin-bottom: 48px; }
+.white-home .leadership,
+.white-home .leadership-section .leadership {
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: start; margin: 0;
+}
+.white-home .leadership-plate { grid-column: 1 / span 6; margin: 0; }
+.white-home .leadership-plate img,
+.white-home .leadership .leadership-plate img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; filter: none; transform: none; }
+.white-home .leadership-plate figcaption,
+.white-home .leadership figcaption { margin: 12px 0 0; color: var(--kw-muted); font: 400 15px/24px var(--kw-f-text); letter-spacing: 0; text-transform: none; }
+.white-home .leadership-copy { grid-column: 8 / -1; }
+.white-home .leadership-copy h2 { margin: 0; color: var(--kw-ink); font: 600 56px/56px var(--kw-f-display); letter-spacing: -.035em; }
+.white-home .leadership-copy > p,
+.white-home .leadership .leadership-copy > p:not(.section-kicker) { margin: 32px 0 0; max-width: 34em; color: var(--kw-text); font: 400 18px/30px var(--kw-f-text); }
+.white-home .leadership-figures { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin: 40px 0 0; padding-top: 24px; border-top: 1px solid var(--kw-ink); }
+.white-home .leadership-figures p,
+.white-home .leadership .leadership-figures p:not(.section-kicker) { display: grid; gap: 8px; margin: 0; max-width: none; color: var(--kw-muted); font: 500 14px/20px var(--kw-f-text); }
+.white-home .fig-xl { color: var(--kw-ink); font: 600 56px/56px var(--kw-f-text); letter-spacing: -.03em; font-variant-numeric: tabular-nums lining-nums; }
+.white-home .role-path,
+.white-home .leadership .role-path {
+  display: block; margin: 40px 0 24px; padding: 0; list-style: none; border: 0; border-top: 1px solid var(--kw-hair);
+  color: var(--kw-text); font: 400 16px/24px var(--kw-f-text); letter-spacing: 0;
+}
+.white-home .role-path li { display: grid; grid-template-columns: 72px 1fr; align-items: center; min-height: 52px; border-bottom: 1px solid var(--kw-hair); }
+.white-home .role-path .kw-num { color: var(--kw-muted); }
+.white-home .role-path .is-current .kw-num { color: var(--kw-ink); }
+.white-home .role-path strong { display: inline-flex; align-items: center; gap: 10px; color: var(--kw-ink); font-weight: 600; }
+.white-home .role-path strong::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--kw-accent); }
+
+/* ============ studio teaser ============ */
+.white-home .studio-entry { padding-block: 0 112px; }
+.white-home .studio-entry .kw-opener { margin-bottom: 48px; }
+.white-home .studio-entry-link,
+.white-home .studio-entry-link:hover {
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: center;
+  min-height: 0; overflow: visible; border: 0; background: #fff;
+}
+.white-home .studio-entry-copy { grid-column: 1 / span 5; padding: 0; }
+.white-home .studio-entry h2 { margin: 0; color: var(--kw-ink); font: 600 48px/52px var(--kw-f-display); letter-spacing: -.025em; }
+.white-home .studio-entry-copy > p:not(.section-kicker) { max-width: 30em; margin: 24px 0 32px; color: var(--kw-text); font: 400 18px/30px var(--kw-f-text); }
+.white-home .studio-entry-cta {
+  display: inline-flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 48px; padding: 0 20px;
+  border: 1px solid var(--kw-ink); border-radius: 0; background: #fff; color: var(--kw-ink);
+  font: 500 16px/20px var(--kw-f-text); letter-spacing: 0;
+  transition: background-color var(--kw-t-micro) var(--kw-ease-fade), color var(--kw-t-micro) var(--kw-ease-fade);
+}
+.white-home .studio-entry-link:hover .studio-entry-cta { background: var(--kw-ink); color: #fff; }
+.white-home .studio-entry-link:focus-visible { outline: 2px solid var(--kw-accent); outline-offset: 3px; }
+.white-home .studio-entry-preview { grid-column: 6 / -1; aspect-ratio: 16 / 9; min-height: 0; background: #15171c; }
+.white-home .studio-entry-preview img,
+.white-home .studio-entry-link:hover .studio-entry-preview img { transform: none; transition: none; }
+
+/* ============ How I work ============ */
+.white-home .approach { padding-block: 0 112px; }
+.white-home .method-evidence {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 56px; align-items: start; margin: 0 0 64px;
+}
+.white-home .method-evidence figure { margin: 0; }
+.white-home .method-evidence img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; background: var(--kw-tint); }
+/* The caption keeps to its photo's column: on phones under about 384px the two-column photos are
+   narrower than "PHYSICAL PROTOTYPE", so the tag wraps there (its dot stays on the first line). */
+.white-home .method-evidence figcaption { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; padding-top: 12px; color: var(--kw-ink); font: 400 15px/24px var(--kw-f-text); }
+.white-home .method-evidence figcaption > span.kw-tag:first-child { display: inline-flex; align-items: flex-start; margin: 0; color: var(--kw-muted); font: 500 13px/20px var(--kw-f-index); letter-spacing: .04em; white-space: normal; }
+.white-home .method-evidence figcaption > span.kw-tag:first-child::before { margin-top: 7px; }
+.white-home .method-caption { display: inline-flex; align-items: center; gap: 8px; }
+.white-home .method-evidence a:hover figcaption { color: var(--kw-accent); }
+.white-home .method-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 56px; }
+.white-home .method-grid article { padding-top: 16px; border-top: 1px solid var(--kw-hair); opacity: 1; transform: none; }
+.white-home .method-number { color: var(--kw-ink); font: 500 13px/20px var(--kw-f-index); letter-spacing: .02em; }
+.white-home .method-grid h3 { margin: 24px 0 12px; color: var(--kw-ink); font: 600 28px/32px var(--kw-f-display); letter-spacing: -.02em; }
+.white-home .method-grid p { max-width: 36ch; color: var(--kw-text); font: 400 17px/28px var(--kw-f-text); }
+.white-home .method-grid p.method-tools { margin: 16px 0 8px; color: var(--kw-muted); font: 400 14px/20px var(--kw-f-text); letter-spacing: 0; }
+.white-home .method-grid .text-link { margin-top: auto; font-size: 16px; }
+
+/* ============ contact ============ */
+.white-home .contact { padding-block: 0 112px; background: #fff; border-top: 0; }
+.white-home .contact .kw-opener { margin-bottom: 48px; }
+.white-home .contact-grid,
+.white-home .contact .contact-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: start; }
+.white-home .contact-copy { grid-column: 1 / span 6; }
+.white-home .contact h2 { margin: 0; color: var(--kw-ink); font: 600 96px/92px var(--kw-f-display); letter-spacing: -.045em; }
+.white-home .contact .contact-copy p,
+.white-home .contact p:not(.section-kicker):not(.kw-opener) { max-width: 26em; margin: 32px 0 0; color: var(--kw-text); font: 500 24px/32px var(--kw-f-text); }
+.white-home .contact-rows { grid-column: 8 / -1; margin: 8px 0 0; border-top: 1px solid var(--kw-ink); }
+.white-home .contact-rows > div { display: grid; grid-template-columns: 112px minmax(0, 1fr); align-items: center; min-height: 80px; padding-block: 12px; border-bottom: 1px solid var(--kw-hair); }
+.white-home .contact-rows dt { color: var(--kw-muted); font: 500 14px/20px var(--kw-f-text); }
+.white-home .contact-rows dd { margin: 0; min-width: 0; }
+/* The address is the page's main contact action: an inline-flex box at least 44px tall, with the
+   words centred in it, so the underline stays on the words and the tap target meets 44px. */
+.white-home .contact-email,
+.white-home .contact .contact-email {
+  display: inline-flex; align-items: center; min-height: 44px; max-width: 100%; width: auto; padding: 0; border: 0; color: var(--kw-ink);
+  font: 600 40px/48px var(--kw-f-display); letter-spacing: -.02em; overflow-wrap: anywhere;
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 6px; text-decoration-color: var(--kw-control);
+}
+.white-home .contact-email:hover { color: var(--kw-accent); text-decoration-color: var(--kw-accent); }
+
+/* ============ footer ============ */
+.white-home .site-footer { padding: 0; background: #fff; border-top: 1px solid var(--kw-hair); }
+.white-home .footer-grid { display: flex; align-items: center; justify-content: space-between; gap: 0 24px; min-height: 72px; color: var(--kw-muted); font: 400 14px/20px var(--kw-f-text); letter-spacing: 0; text-transform: none; }
+.white-home .footer-grid p { margin: 0; }
+.white-home .footer-grid a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: var(--kw-ink); font-weight: 500; }
+.white-home .footer-grid a:hover { color: var(--kw-accent); }
+
+/* ============ skill hover cards ============ */
+.white-home .skill-glass-card { width: min(380px, calc(100vw - 24px)); padding: 12px; border-color: var(--kw-hair); border-radius: 0; }
+.white-home .skill-card-inner { grid-template-columns: 128px minmax(0, 1fr); gap: 16px; min-height: 128px; }
+.white-home .skill-card-inner:has(.skill-card-media.is-technical) { grid-template-columns: minmax(0, 1fr); }
+.white-home .skill-card-media { height: 128px; min-height: 0; background: #fff; }
+.white-home .skill-card-media img { object-fit: cover; }
+/* Plots and screenshots (MATLAB, FEA, CFD, topology, CAD) are text only here. */
+.white-home .skill-card-media.is-technical { display: none; }
+.white-home .skill-card-kicker { color: var(--kw-muted); font: 500 14px/20px var(--kw-f-text); letter-spacing: 0; text-transform: none; }
+.white-home .skill-card-content h2 { margin-top: 4px; color: var(--kw-ink); font: 600 18px/24px var(--kw-f-display); letter-spacing: -.01em; }
+.white-home .skill-card-text { margin-top: 8px; color: var(--kw-text); font: 400 14px/20px var(--kw-f-text); }
+
+/* ============ focus ============ */
+.white-home a:focus-visible,
+.white-home button:focus-visible,
+.white-home input:focus-visible { outline: 2px solid var(--kw-accent); outline-offset: 3px; }
+.white-home .hero-skill-track span:focus-visible { outline: 2px solid var(--kw-accent); outline-offset: -2px; }
+
+/* ============ widths ============ */
+@media (max-width: 1279px) {
+  .white-home .leadership-copy h2 { font-size: 48px; line-height: 52px; }
+  .white-home .contact h2 { font-size: 80px; line-height: 80px; }
+}
+@media (max-width: 1100px) {
+  .white-home .site-header.kw-rh,
+  .white-home .site-header.kw-rh.is-scrolled,
+  .white-home .site-header.kw-rh:not(.is-scrolled) { padding-inline: 36px; }
+  .white-home .kw-rh .site-nav { gap: 22px; }
+  .white-home .kw-rh .site-nav .nav-experience::before { margin-right: 18px; }
+  .white-home .method-evidence,
+  .white-home .method-grid { gap: 32px; }
+  .white-home .leadership-plate { grid-column: 1 / span 5; }
+  .white-home .leadership-copy { grid-column: 7 / -1; }
+  .white-home .leadership-copy h2 { font-size: 40px; line-height: 44px; letter-spacing: -.03em; }
+  .white-home .leadership-copy > p,
+  .white-home .leadership .leadership-copy > p:not(.section-kicker) { margin-top: 24px; font-size: 17px; line-height: 28px; }
+  .white-home .leadership-figures { margin-top: 32px; }
+  .white-home .fig-xl { font-size: 44px; line-height: 44px; }
+  .white-home .role-path { margin-top: 32px; }
+  .white-home .studio-entry h2 { font-size: 40px; line-height: 44px; }
+  .white-home .studio-entry-copy > p:not(.section-kicker) { margin: 16px 0 24px; font-size: 17px; line-height: 28px; }
+  .white-home .contact h2 { font-size: 64px; line-height: 64px; letter-spacing: -.04em; }
+  .white-home .contact .contact-copy p,
+  .white-home .contact p:not(.section-kicker):not(.kw-opener) { font-size: 20px; line-height: 28px; }
+  .white-home .contact-rows > div { grid-template-columns: 96px minmax(0, 1fr); min-height: 72px; }
+  .white-home .contact-email,
+  .white-home .contact .contact-email { font-size: 32px; line-height: 40px; }
+}
+@media (min-width: 721px) and (max-width: 1100px) {
+  .white-home .kw-rh .site-nav a,
+  .white-home .kw-rh .site-nav a:not(.nav-experience) { font-size: 15px; padding-block: 12px; }
+}
+@media (max-width: 1000px) {
+  .white-home .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
+  .white-home .archive-tools { flex-wrap: wrap; }
+  .white-home .project-search { flex: 1 1 100%; }
+  .white-home .project-search input { width: 100%; }
+  .white-home .kw-section-head h2 { font-size: 64px; line-height: 64px; }
+}
+@media (max-width: 900px) {
+  .white-home .kw-section-head h2 { font-size: 56px; line-height: 56px; }
+  .white-home .leadership-copy h2 { font-size: 36px; line-height: 40px; }
+  .white-home .method-evidence,
+  .white-home .method-grid { gap: 24px; }
+  .white-home .method-grid h3 { font-size: 24px; line-height: 28px; }
+  .white-home .method-grid p { font-size: 16px; line-height: 26px; }
+  .white-home .contact h2 { font-size: 56px; line-height: 56px; }
+  .white-home .contact-copy { grid-column: 1 / span 5; }
+  .white-home .contact-rows { grid-column: 6 / -1; }
+  .white-home .contact-rows > div { grid-template-columns: 84px minmax(0, 1fr); }
+  .white-home .contact-email,
+  .white-home .contact .contact-email { font-size: 26px; line-height: 32px; }
+}
+/* Phones: one column for the spreads, two for the method photos (the first spans both). */
+@media (max-width: 720px) {
+  .white-home .leadership-plate,
+  .white-home .leadership-copy,
+  .white-home .studio-entry-copy,
+  .white-home .studio-entry-preview,
+  .white-home .contact-copy,
+  .white-home .contact-rows { grid-column: 1 / -1; }
+  .white-home .studio-entry-preview { grid-row: 1; }
+  .white-home .method-evidence { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .white-home .method-evidence figure:first-child { grid-column: 1 / -1; }
+  .white-home .method-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+}
+
+/* ============ phones ============ */
+@media (max-width: 720px) {
+  .white-home .site-header.kw-rh,
+  .white-home .site-header.kw-rh.is-scrolled,
+  .white-home .site-header.kw-rh:not(.is-scrolled) { min-height: 60px; padding: 0 20px; }
+  .white-home .kw-rh .brand { font-size: 16px; }
+  .white-home .kw-rh .nav-toggle { margin-right: -8px; border-color: transparent; }
+  /* One flowing tagline on phones (the desktop turn after "Real hardware." would leave a widow). */
+  .white-home .hero-tagline br { display: none; }
+  .white-home .kw-rh .site-nav {
+    inset: 60px 0 auto; padding: 8px 20px 16px; gap: 0; background: #fff; border: 0; border-bottom: 1px solid var(--kw-hair); border-radius: 0; box-shadow: none;
+    backdrop-filter: none; -webkit-backdrop-filter: none; transform: none; transition: opacity 120ms var(--kw-ease-fade), visibility 0s 120ms;
+  }
+  .white-home .kw-rh .site-nav.is-open { transition-delay: 0s; }
+  .white-home .kw-rh .site-nav a,
+  .white-home .kw-rh .site-nav a:not(.nav-experience),
+  .white-home .kw-rh .site-nav .nav-experience {
+    min-height: 52px; padding: 14px 0; margin: 0; border-bottom: 1px solid var(--kw-hair); font-size: 17px; line-height: 24px;
+  }
+  .white-home .kw-rh .site-nav a:last-child { border-bottom: 0; }
+  .white-home .kw-rh .site-nav .nav-experience::before { content: none; }
+  .white-home .kw-rh .site-nav a::after { bottom: 12px; right: auto; width: 0; }
+  .white-home .kw-rh .site-nav a.is-current { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 5px; }
+
+  .white-home .hero .eyebrow { gap: 10px; margin-bottom: 22px; }
+  .white-home .hero-rule { width: 24px; }
+  .white-home .hero-copy { margin-top: clamp(172px, 48vw, 220px); font-size: 17px; line-height: 26px; }
+  .white-home .hero-imprint strong { font-size: 20px; line-height: 28px; }
+  .white-home .hero-imprint > span { font-size: 15px; line-height: 22px; }
+  .white-home .hero-tagline { margin-top: 12px; font-size: 17px; line-height: 26px; }
+  .white-home .hero-actions { gap: 12px 16px; margin-top: 24px; }
+  .white-home .hero-actions .hero-projects { width: 100%; }
+  .white-home .hero-actions .studio-secondary { padding-inline: 14px; gap: 12px; }
+
+  .white-home .work-archive { padding-block: 72px 48px; }
+  .white-home .kw-section-head { margin-bottom: 32px; }
+  .white-home .kw-section-head .kw-opener { margin-bottom: 32px; }
+  .white-home .kw-section-head h2 { font-size: 44px; line-height: 44px; letter-spacing: -.03em; }
+  .white-home .archive-tools { display: block; margin-bottom: 32px; border-bottom: 0; }
+  .white-home .filter-bar {
+    flex-wrap: nowrap; gap: 0 22px; overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--kw-hair);
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 40px), #0000); mask-image: linear-gradient(90deg, #000 calc(100% - 40px), #0000);
+  }
+  .white-home .filter-bar::-webkit-scrollbar { display: none; }
+  .white-home .filter,
+  .white-home .filter.active,
+  .white-home .filter:hover:not(.active) { flex: none; white-space: nowrap; margin-bottom: 0; }
+  .white-home .project-search input { width: 100%; margin: 16px 0 0; }
+  .white-home .project-grid { column-gap: 20px; }
+  .white-home .project-card:not(.project-card--studio) { padding-bottom: 40px; }
+  .white-home .project-body h3 { font-size: 22px; line-height: 28px; }
+  .white-home .project-card .card-no { padding-top: 26px; }
+
+  .white-home .leadership-section { padding-block: 48px 72px; }
+  .white-home .leadership-section > .kw-opener,
+  .white-home .studio-entry .kw-opener,
+  .white-home .contact .kw-opener { margin-bottom: 32px; }
+  .white-home .leadership-plate img { aspect-ratio: 4 / 3; }
+  .white-home .leadership-copy { display: block; margin-top: 32px; }
+  .white-home .leadership-copy h2 { font-size: 36px; line-height: 40px; letter-spacing: -.03em; }
+  .white-home .leadership-copy > p,
+  .white-home .leadership .leadership-copy > p:not(.section-kicker) { margin-top: 24px; font-size: 17px; line-height: 28px; }
+  .white-home .fig-xl { font-size: 44px; line-height: 44px; }
+  .white-home .leadership-figures { margin-top: 32px; }
+  .white-home .role-path { margin-top: 32px; }
+
+  .white-home .studio-entry { padding-bottom: 72px; }
+  .white-home .studio-entry-preview { margin-bottom: 24px; }
+  .white-home .studio-entry h2 { font-size: 36px; line-height: 40px; }
+  .white-home .studio-entry-copy > p:not(.section-kicker) { margin: 16px 0 24px; font-size: 17px; line-height: 28px; }
+
+  .white-home .approach { padding-bottom: 72px; }
+  .white-home .method-evidence { gap: 24px 16px; margin-bottom: 48px; }
+  .white-home .method-grid h3 { font-size: 26px; line-height: 32px; margin-top: 16px; }
+
+  .white-home .contact { padding-bottom: 72px; }
+  .white-home .contact h2 { font-size: 56px; line-height: 52px; letter-spacing: -.04em; }
+  .white-home .contact .contact-copy p,
+  .white-home .contact p:not(.section-kicker):not(.kw-opener) { margin-top: 24px; font-size: 20px; line-height: 28px; }
+  .white-home .contact-rows { margin-top: 40px; }
+  .white-home .contact-rows > div { grid-template-columns: 84px minmax(0, 1fr); gap: 0 8px; min-height: 64px; padding-block: 10px; }
+  .white-home .contact-email,
+  .white-home .contact .contact-email { font-size: 30px; line-height: 36px; }
+
+  .white-home .footer-grid { flex-wrap: wrap; align-items: center; padding-block: 16px; min-height: 72px; }
+}
+@media (max-width: 600px) {
+  .white-home .project-grid { grid-template-columns: minmax(0, 1fr); }
+}
+/* Phones where the three CTAs share rows: the projects button spans the column, the studio button
+   and the résumé link share the next row. */
+@media (max-width: 499px) {
+  .white-home .hero-actions .studio-primary { width: auto; }
+  .white-home .hero-actions .hero-projects { width: 100%; justify-content: space-between; }
+}
+@media (max-width: 370px) {
+  .white-home .hero .eyebrow { margin-bottom: 14.5px; font-size: 14px; }
+  .white-home .hero-copy { margin-top: 160px; }
+  .white-home .hero-imprint strong { font-size: 19px; }
+  .white-home .hero-imprint > span { font-size: 14px; letter-spacing: -.01em; }
+  .white-home .hero-tagline { font-size: 16px; line-height: 24px; }
+  .white-home .hero-actions { gap: 12px 16px; }
+  .white-home .hero-actions .studio-secondary { padding-inline: 14px; gap: 12px; font-size: 15px; }
+  .white-home .hero-actions .text-link { font-size: 15px; }
+  .white-home .kw-section-head h2 { font-size: 40px; line-height: 40px; }
+  .white-home .contact h2 { font-size: 48px; line-height: 46px; }
+  .white-home .contact-rows > div { grid-template-columns: minmax(0, 1fr); gap: 4px; padding-block: 14px; }
+  .white-home .contact-email,
+  .white-home .contact .contact-email { font-size: 26px; line-height: 32px; }
+}
+
+/* ============ motion and forced colours ============ */
+@media (prefers-reduced-motion: reduce) {
+  .white-home .kw-rh .site-nav a, .white-home .text-link, .white-home .project-card .card-open,
+  .white-home .hero-actions .button, .white-home .studio-entry-cta, .white-home .contact-rows .button { transition: none; }
+}
+@media (forced-colors: active) {
+  .white-home .hero-actions .button, .white-home .studio-entry-cta, .white-home .contact-rows .button { border: 1px solid ButtonText; }
+  .white-home .role-path strong::after, .white-home .kw-tag::before { background: CanvasText; forced-color-adjust: none; }
+}
+/* Forced colours from 721px up: the name paints above the copy (white-home-20261011.css), and its
+   backplate covers the font's full ascent and descent, which reaches the imprint 8-12px under the h1.
+   Here the copy paints above the name instead, without its white halo (above the name, the halo's top
+   feather would pale the foot of "WU."; the backplates carry the words). Phones keep both as they
+   were: there the copy sits well under the name. */
+@media (forced-colors: active) and (min-width: 721px) {
+  .white-home .hero-copy { z-index: 2; }
+  .white-home .hero-copy::before { content: none; }
+}
+
+/* ============ first screen, tablets and small laptops (721-1279px) ============ */
+/* The imprint and tagline step down a size. On small laptops wider than 4:3 (1101-1279px) the car's
+   nose stays well right of the copy: the imprint keeps its two lines, the copy's widest, and the
+   halo's widest reach moves up to them. */
+.white-home .imprint-turn { display: none; }
+@media (min-width: 721px) and (max-width: 1279px) {
+  .white-home .hero-copy { font-size: 17px; line-height: 26px; }
+  .white-home .hero-imprint strong { font-size: 20px; line-height: 28px; }
+  .white-home .hero-imprint > span { font-size: 15px; line-height: 22px; }
+  .white-home .hero-tagline { margin-top: 12px; font-size: 17px; line-height: 26px; }
+  .white-home .hero-actions { margin-top: 24px; }
+}
+@media (min-width: 1101px) and (max-width: 1279px) {
+  .white-home .hero-copy { --halo-cy: 12%; }
+}
+/* Tablets (721-1100px) and small laptops of 4:3 or taller: the nose comes in beside the copy, so the
+   copy block stays about as narrow as 0e561624's tagline was. The imprint keeps to four short lines
+   ("Leading 30 / mechanical engineers / Mechanical Lead · / Olin Electric Motorsports") and the box
+   hugs its longest line. The halo (white-home-20261011.css, .hero-copy::before) runs a fixed reach
+   past that box, so its right edge sits about where 0e561624's did and stays off the nose at every
+   height (hero-halo check 1; the wider box lifted the nose by up to 172 levels, fix round 1). */
+@media (min-width: 721px) and (max-width: 1100px), (min-width: 1101px) and (max-width: 1279px) and (max-aspect-ratio: 4/3) {
+  .white-home .hero-copy { width: max-content; max-width: none; }
+  .white-home .imprint-turn { display: inline; }
+  .white-home .hero-imprint > span > .nowrap:last-child { display: block; }
+}
+@media (min-width: 1101px) and (max-width: 1279px) and (max-aspect-ratio: 4/3) {
+  .white-home .hero-copy { --halo-cy: 68%; }
+}
+/* 721-819px: an 18px imprint, so "mechanical engineers" is no wider than the tagline. 721-739px: the
+   16px tagline 0e561624 used there, which clears the nose (white-home-20261011.css); tall tablets
+   keep 17px, which their halo is tuned to (below). */
+@media (min-width: 721px) and (max-width: 819px) {
+  .white-home .hero-imprint strong { font-size: 18px; line-height: 26px; }
+}
+@media (min-width: 721px) and (max-width: 739px) {
+  .white-home .hero-tagline { font-size: 16px; }
+}
+
+/* Leadership spread on tablets and small laptops: photo and copy share the width. */
+@media (min-width: 721px) and (max-width: 1100px) {
+  .white-home .leadership-plate { grid-column: 1 / span 6; }
+  .white-home .leadership-copy { grid-column: 7 / -1; padding-left: 24px; }
+}
+@media (min-width: 721px) and (max-width: 900px) {
+  .white-home .leadership-copy { padding-left: 8px; }
+  .white-home .leadership-copy h2 { font-size: 32px; line-height: 36px; letter-spacing: -.025em; }
+}
+/* Links whose words can wrap keep the arrow on the last line, right after the words. */
+.white-home .method-grid .text-link,
+.white-home .method-caption { display: inline; line-height: 24px; }
+.white-home .method-grid .text-link { padding-block: 10px; }
+.white-home .method-grid .text-link .kw-arrow,
+.white-home .method-caption .kw-arrow { margin-left: 2px; vertical-align: 0; }
+.white-home .skip-link { font: 500 15px/20px var(--kw-f-text); letter-spacing: 0; text-transform: none; }
+/* Tall tablets: the photo ends above the CTA row, so the résumé link joins the buttons' row (less
+   white under the first screen's actions). */
+@media (min-width: 721px) and (max-width: 1100px) and (min-height: 900px) {
+  .white-home .hero-actions::before { content: none; }
+  .white-home .hero-actions .hero-resume { order: 0; }
+}
+/* Tall tablets (721-1100px wide, 900px or taller): the first screen ends 60px under the CTA row.
+   With the bottom row gone, 0e561624's box would leave about 195px of white under the buttons
+   (768x1024). The hero gets shorter; the copy box and the photo keep 0e561624's boxes, written out
+   with the same clamp(760px, 100svh, 1100px) the hero used, so the name, the copy and every photo
+   pixel stay where they were (the copy box overflows into the clipped part, which holds no text).
+   --kw-cta-end is the CTA row's bottom minus half the hero height (constant per band; for 901px up
+   it grows with the name's size: 0.82 x its font size per line, two lines, halved). */
+@media (min-width: 721px) and (max-width: 1100px) and (min-height: 900px) {
+  .white-home { --kw-hero-h: clamp(760px, 100svh, 1100px); --kw-cta-end: 308.63px; }
+  .white-home .cinematic-hero { height: calc(var(--kw-hero-h) / 2 + var(--kw-cta-end) + 60px); min-height: 0; max-height: none; justify-content: flex-start; }
+  .white-home .hero-content { flex: none; height: calc(var(--kw-hero-h) - 264px); margin-bottom: 0; }
+  .white-home .hero-media { inset-block: clamp(128px, calc(var(--kw-hero-h) / 2 - 315px), 235px) auto; }
+}
+@media (min-width: 721px) and (max-width: 739px) and (min-height: 900px) { .white-home { --kw-cta-end: 316.11px; } }
+@media (min-width: 740px) and (max-width: 819px) and (min-height: 900px) { .white-home { --kw-cta-end: 312.8px; } }
+@media (min-width: 820px) and (max-width: 900px) and (min-height: 900px) { .white-home { --kw-cta-end: 304.83px; } }
+@media (min-width: 901px) and (max-width: 1100px) and (min-height: 900px) {
+  .white-home { --kw-cta-end: calc(214.63px + .82 * clamp(112px, 12.25vw, 188px)); }
+}
+/* Tall tablets: the photo sits higher than the copy's right end, so the halo's widest reach sits
+   lower, beside the tagline; at 721-739px it is held short, with the 17px tagline (hero-halo checks
+   1 and 2). */
+@media (min-width: 721px) and (max-width: 1100px) and (min-height: 900px) {
+  .white-home .hero-copy { --halo-cy: 70%; }
+}
+@media (min-width: 721px) and (max-width: 739px) and (min-height: 900px) {
+  .white-home .hero-copy { --halo-r: 22px; --halo-er: 9px; }
+  .white-home .hero-tagline { font-size: 17px; }
+}
+/* From 1280px, windows of aspect 1.45 or less (1280x883 and taller, 1366x1000, 4:3, near-square):
+   the photo scales up and the nose comes in beside the tagline, so the tagline takes its tablet
+   breaks and the halo keeps the near-square reach. At aspect 27/20 or less the nose also reaches the
+   imprint's rows, so the imprint keeps to four lines as well (hero-halo checks 1 and 2). */
+@media (min-width: 1280px) and (max-aspect-ratio: 29/20) {
+  .white-home .hero-copy-turn { display: inline; }
+  .white-home .hero-copy { --halo-r: 30px; --halo-er: 21px; }
+}
+@media (min-width: 1280px) and (max-aspect-ratio: 27/20) {
+  .white-home .imprint-turn { display: inline; }
+  .white-home .hero-imprint > span > .nowrap:last-child { display: block; }
+}
+/* Short windows: the copy block is taller than 0e561624's tagline, so the gaps tighten (and on
+   721-1100px, where the imprint takes four lines, it steps down a size) to keep the résumé row
+   inside the first screen, which clips at its foot. */
+@media (min-width: 1280px) and (min-height: 761px) and (max-height: 880px) {
+  .white-home .hero-tagline { margin-top: 12px; }
+  .white-home .hero-actions { margin-top: 16px; }
+}
+@media (min-width: 721px) and (max-width: 1100px) and (max-height: 880px) {
+  .white-home .hero-copy { margin-top: 8px; }
+  .white-home .hero-imprint strong { font-size: 18px; line-height: 26px; }
+  .white-home .hero-imprint > span { font-size: 14px; line-height: 20px; }
+  .white-home .hero-tagline { margin-top: 8px; }
+  .white-home .hero-actions { margin-top: 12px; row-gap: 0; }
+}

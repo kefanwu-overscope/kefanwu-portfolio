@@ -45,6 +45,7 @@ const projectData = {
         "title": "Hardware and fabrication",
         "points": [
           "Designed rack mounts, shaft interfaces, bearing cages, and sensor packaging around available shop processes.",
+          "The V2 lower bearing cage was designed with holes and standoffs for a sensor mount, plus a magnet mount, to hold the electrical team's Hall-effect steering-angle sensor. That team plans to use the angle for vehicle-dynamics tuning and as an input to future torque vectoring.",
           "Balanced bearing-cage mass and stiffness, removing 0.9 kg from the previous year's column.",
           "Personally lathe-turned splined shafts, waterjet-cut rack mounts, and TIG-welded chassis integration along the load paths.",
           "Used higher-grade critical fasteners and preload-aware retention to prevent looseness from becoming steering play."
@@ -143,6 +144,7 @@ const projectData = {
         "points": [
           "Four T-Motor F90 2806 motors use tractor props for clean airflow and cooling.",
           "Two parallel 4S LiPo packs maintain 14.8 V while roughly doubling current and burst capacity for sustained high-speed power.",
+          "The BOM lists four T-Motor F90 KV1300 motors, four Foxeer Reaper 80A F4 128k ESCs and two CNHL 4S 130C LiPo packs; the matrix answers its 'reaching high speed' requirement by connecting the two 4S packs in parallel.",
           "Testing multiple high-pitch APC props; standardized XT90-S anti-spark connectors manage inrush current."
         ]
       },
@@ -151,7 +153,8 @@ const projectData = {
         "points": [
           "Matek H743-WING runs ArduPlane VTOL/tail-sitter modes and motor mixing; the Matek M10Q-5883 GPS/compass faces skyward.",
           "Matek ASPD-4525 airspeed sensor uses a pitot tube beyond the nose and short silicone tubing for accurate, low-lag stall-prevention readings.",
-          "ELRS radio, FPV camera, 5.8 GHz VTX with tail-mounted antenna for clearance, Holybro Remote ID, and separated HV/LV cabling to minimize EMI."
+          "ELRS radio, FPV camera, 5.8 GHz VTX with tail-mounted antenna for clearance, Holybro Remote ID, and separated HV/LV cabling to minimize EMI.",
+          "The matrix answers signal requirements with placement: the GPS module and the Remote ID unit both point to the sky, and the FPV camera is installed in the fairing with a seal, for which the BOM lists Permatex 82180 camera sealant."
         ]
       },
       {
@@ -301,7 +304,8 @@ const projectData = {
         "title": "Vehicle context",
         "points": [
           "The Mk.7 cockpit and vehicle photographs show the surrounding chassis and packaging.",
-          "Seat geometry, frame clearance, and access are visible together in the project record."
+          "Seat geometry, frame clearance, and access are visible together in the project record.",
+          "The seat bolts to the chassis at multiple points through weld nuts, an approach carried over from Mk.6 to reduce the tools and handling needed to remove and reinstall it. The multiple bolted points also restrain bending of the sheet and make the seat stronger."
         ]
       },
       {
@@ -629,7 +633,8 @@ const projectData = {
         title: "Failure and learning",
         points: [
           "Sustained operation overheated the stepper lead-screw actuator, exposing duty-cycle and thermal-management issues.",
-          "Actuator selection must account for runtime alongside force, stroke, and CAD packaging."
+          "Actuator selection must account for runtime alongside force, stroke, and CAD packaging.",
+          "The team's recorded lessons include checking the BOM for part availability and compatibility, watching for interference within complex mechanisms, and focusing on the key features of a minimum viable product rather than getting stuck on minor issues."
         ]
       }
     ],
@@ -700,6 +705,7 @@ const projectData = {
           "Selected a stock transparent 19 L (5 gal) polypropylene pail with 1.4 mm walls: the shop's sheet metal tooling and budget ruled out a precise custom metal vessel, while flat sides supported component mounts.",
           "The stock snap lid could neither seal nor support the motor and drive shaft. A custom PETG lid and mount grip behind the pail flange; the mount was later welded to the flange for airtightness.",
           "FDM-printed TPU 85A gaskets replace hand-cut seals to match each joint's geometry precisely; compared with machined faces, printed joints demand greater attention to stiffness and bolt count.",
+          "On the lab's high-pressure air system, the earlier printed jar prototype extended at 3 psi and retracted at 2 psi, with slight buckling on retraction. Its TPU gasket sealed well, but the prototype had air-tightness problems and the hot glue holding the spool mount failed, so the team used bolted joints with TPU gaskets instead of hot glue on the pail build.",
         ],
       },
       {
@@ -713,17 +719,20 @@ const projectData = {
       {
         title: "Test, failure, reinforcement",
         points: [
-          "Lab high-pressure testing held 1.2 psi versus the 0.71 psi wall-yield hand calculation, with significant deformation, TPU coupler decoupling, vine-to-spool connection failure, and minor leaks.",
-          "PLA-welded leaks; added 6061 plates to both sides, back, and bottom, an aluminum replacement lid, three C-shaped A36 steel brackets, and PETG connection brackets. Open cutouts preserved debugging visibility.",
-          "Reinforcement FEA at 500 lbf per face (5.8 psi): 6.524 mm maximum deformation and 0.2339 GPa maximum stress versus A36 steel's 0.25 GPa yield. The vine outlet remains weakest. This FEA backs the 5 psi design pressure; the reinforced vessel has not been pressure-tested at 5 psi.",
+          "Before the pail, the team built a printed PLA prototype around a food jar to try the swappable-converter idea. Its stick-reinforced test body matched the jar's 154 x 60 mm maximum outlet, but it folded to 225 mm wide (184 mm estimated) against the 171 mm the spool could take, so it would not wind onto the spool. The preferred fix was a larger vessel rather than a smaller body.",
+          "Lab high-pressure testing: the pail held 1.2 psi, about 1.7 times the 0.71 psi at which a thin-wall hand calculation predicted wall yield, with significant deformation, TPU coupler decoupling, vine-to-spool connection failure, and minor leaks. The design notes attribute the gap to ignoring the pail's corner curvature and the lid's added stiffness. Even so, the stock pail reached only about a quarter of the 5 psi design pressure. That set the reinforcement strategy: external structure carries the pressure load, and the polypropylene wall only seals.",
+          "Leaks were repaired by PLA welding. The reinforcement uses four 6.35 mm 6061-T6 plates, 190 x 292 mm on each side, 152 x 292 mm on the back and 206 x 249 mm on the bottom, plus an aluminum replacement lid. PETG connectors with heat-set inserts tie the plates to three C-shaped A36 brackets that close the load path; most of the reinforcement parts were waterjet-cut. Open cutouts preserved debugging visibility.",
+          "The SolidWorks static study modeled the reinforcement structure alone, without the pail or lid and with the top open, on a 218,429-node mesh. Separate studies were run on the two bracket designs and the spool; of those, the first bracket was the weakest. Reinforcement FEA at 500 lbf per face (5.8 psi): 6.524 mm maximum deformation and 0.2339 GPa maximum stress versus A36 steel's 0.25 GPa yield. The vine outlet remains weakest. This FEA backs the 5 psi design pressure; the reinforced vessel has not been pressure-tested at 5 psi.",
         ],
       },
       {
         title: "The experiment it runs",
         points: [
           "Full factorial: 3 body types x 2 load shapes x 3 pressures x 2 loads = 36 loaded conditions, plus 9 unloaded baselines, for 45 runs.",
+          "The three bodies were made from single-side TPU-coated fabric joined with heat-sealed seams. The trial log records unloaded reference heights of 105 mm for the circular body, 80 mm for the three-chamber partitioned body and 82 mm for the stick-reinforced body.",
           "The rig uses four 10 mm steel rods, eight linear bearings, and a dovetail connector for quick load-shape swaps. A 0.01 kg scale directly beneath the vine measures actual force, since rod-bearing friction makes applied weight a poor proxy for the load reaching the body.",
-          "Two-stage regulation reduces 862 kPa (125 psi) shop air to a 34 kPa outlet gauge; Creality scans capture deformed geometry for comparison with the prediction model.",
+          "For setup, the robot was laid on its side, its outlet axis shimmed level with 1/4 in aluminum stock, and the rig leveled on its four adjustable feet. Each trial tared the scale with the plate and unloaded body in place, loaded to the target, scanned the body, and logged its height and any collapse or metastable behavior.",
+          "Two-stage regulation reduces 862 kPa (125 psi) shop air to a 34 kPa outlet gauge. The air line was switched to semi-stiff tubing to avoid leaks, and a Honeywell 0-5 psi gauge-pressure sensor on the lab's controller shield gave a pressure readout; each trial waited for that reading to settle before loading. Creality scans capture deformed geometry for comparison with the prediction model.",
         ],
       },
       {
@@ -835,7 +844,7 @@ const projectData = {
     summary: "Measured stiffness inputs for the Olin Vine Robotics Lab using 30 membrane tensile specimens and 11 bamboo rods on an Instron 3345. Adapted the setup to available grips, characterized fabric directionality, and fitted rod force–deflection data. Measured rod stiffness supports EI = 0.672 ± 0.063 N·m²; the historical rod modulus requires a diameter-convention recheck.",
     "highlights": [
       "Tested TPU-coated fabric in three directions because its weave is orthotropic: MD 76.30 +/- 3.08 MPa, TD 69.89 +/- 2.47 MPa, 45 deg 41.78 +/- 0.99 MPa; LDPE film measured 100.96 +/- 5.00 MPa.",
-      "Every group's scatter stayed under 4.9% of its mean; on-axis fabric fits reached R2 0.99.",
+      "Every tensile group's scatter was about 5% of its mean or less; on-axis fabric fits reached R2 0.992 (MD) and 0.993 (TD).",
       "The 45 deg modulus is ~55% of MD, indicating shear-governed off-axis response. Three measurements determine the plane-stress compliance model, with a minimum near 46 deg.",
       "Three-point bending on 11 rods: 81.7 +/- 7.7 N/mm stiffness and EI = 0.672 +/- 0.063 N.m2; every fit exceeded R2 0.999.",
       "Adapted gauge length to available grips: 100 mm versus 250 mm nominal, with crosshead speeds following the standard's strain-rate rule."
@@ -868,6 +877,7 @@ const projectData = {
         "title": "Orthotropic model of the fabric",
         "points": [
           "The plane-stress orthotropic compliance relation converts three measured moduli into a full directional curve, rather than three isolated values.",
+          "Solving the plane-stress orthotropic relation through the three measured mean moduli gives 1/E(θ) = cos⁴θ/(76.30 MPa) + sin⁴θ/(69.89 MPa) + (0.0683 MPa⁻¹) sin²θ cos²θ, with θ measured from the machine direction. Three directions fix only the combined coupling term (2S₁₂ + S₆₆), not S₁₂ and S₆₆ separately, but that is enough to give the uniaxial modulus at any in-plane angle.",
           "Fabric model inputs: MD maximum 76.3 MPa, TD 69.9 MPa, and minimum near 41.8 MPa at about 46 deg.",
           "Lower fit quality at 45 deg and for LDPE (R2 0.967 and 0.950) reflects mild curvature in the fit window, limiting confidence in those moduli."
         ]
@@ -959,8 +969,8 @@ const projectData = {
         "title": "Drive and load path",
         "points": [
           "Two MY1016Z 24 V DC motors and a 9:16 sprocket ratio target roughly 1 m/s^2 acceleration under payload.",
-          "LPD3806 encoders on 3/8 in front wheel shafts provide speed and displacement feedback.",
-          "The drivetrain uses heavy-duty solid rubber wheels, eight bearings across the wheel assemblies, and steel shafts with redundancy for expected load cases."
+          "LPD3806 encoders on 3/8 in front wheel shafts were intended to provide speed and displacement feedback. At full wheel speed the Raspberry Pi missed encoder pulses, so measured distance and speed undercounted; the team's conclusion was that each encoder needs a dedicated hardware counter or real-time microcontroller.",
+          "The drivetrain uses heavy-duty solid rubber wheels, eight bearings across the wheel assemblies, and steel shafts with redundancy for expected load cases. Solid rubber wheels were chosen so the loaded robot carries no puncture risk."
         ]
       },
       {
@@ -1091,13 +1101,13 @@ const projectData = {
         points: [
           "Surgical tubing stores energy; a sliding trigger releases the cue at adjustable pullback distances.",
           "Rack-and-pinion pullback loads the cue; trigger position sets launch force.",
-          "Chain drive and sprocket ratio package the motion and provide sufficient pull force."
+          "Chain drive and sprocket ratio package the motion and provide sufficient pull force; an adjustable tensioner reduces chain skipping."
         ]
       },
       {
         title: "Aiming and usability",
         points: [
-          "Laser aiming and a two-way switch enable shots without traditional pool stance or sighting skill.",
+          "Laser aiming enables shots without traditional pool stance or sighting skill. One switch charges up or lets down the energy stored in the tubing, a separate switch turns on the trajectory laser, and the wiring includes battery charging.",
           "Kept the device compact and hand-operable.",
           "The sliding trigger provides intuitive, physical shot-power control instead of a hidden software parameter."
         ]
@@ -1106,6 +1116,7 @@ const projectData = {
         title: "Build challenges",
         points: [
           "Tight packaging required wire-length planning and fit checks to preserve routing and component access.",
+          "The team built two test-fit prototypes to check that the sliding trigger, rack and pinion, chain drive, laser pointer and tubing launcher could be integrated in the small package.",
           "Switched from plasma-cut plates with uncontrolled tolerances to waterjet parts for the final build.",
           "Long cue machining required manual finishing; shop iteration brought the mechanism to working condition."
         ]

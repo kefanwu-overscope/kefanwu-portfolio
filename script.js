@@ -164,35 +164,46 @@ header?.addEventListener("focusout", (event) => {
 
 /* ============ scrollspy (current section in nav) ============ */
 
+// The nav marks the section under a thin band at 35-40 % of the viewport. Every top-level section is
+// watched, not only the three with a nav link: while a section without one (the hero, Leadership,
+// the studio teaser) is under the band, no link is current. Before refresh-20261120 only the linked
+// sections were watched, so the last one marked stayed lit over the sections between them.
 const spyLinks = new Map(
   [...document.querySelectorAll('#site-nav a[href^="#"]')].map((a) => [
     a.getAttribute("href").slice(1),
     a,
   ])
 );
+const spySections = [...document.querySelectorAll("main > section")];
+const spyInBand = new Set();
+
+function markSpy() {
+  // The lowest section in the band wins (sections are contiguous, so at most two touch it).
+  const inBand = spySections.filter((section) => spyInBand.has(section));
+  const current = inBand.length ? inBand[inBand.length - 1].id : "";
+  spyLinks.forEach((link, id) => {
+    const on = id === current;
+    link.classList.toggle("is-current", on);
+    if (on) link.setAttribute("aria-current", "location");
+    else link.removeAttribute("aria-current");
+  });
+}
 
 let spyObserver;
 function configureScrollSpy() {
   spyObserver?.disconnect();
+  spyInBand.clear();
   spyObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      spyLinks.forEach((link, id) => {
-        const current = id === entry.target.id;
-        link.classList.toggle("is-current", current);
-        if (current) link.setAttribute("aria-current", "location");
-        else link.removeAttribute("aria-current");
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) spyInBand.add(entry.target);
+        else spyInBand.delete(entry.target);
       });
-    });
-  },
-  { rootMargin: `-${Math.round(innerHeight * .35)}px 0px -${Math.round(innerHeight * .60)}px 0px` }
-);
-
-spyLinks.forEach((link, id) => {
-  const section = document.getElementById(id);
-  if (section) spyObserver.observe(section);
-});
+      markSpy();
+    },
+    { rootMargin: `-${Math.round(innerHeight * .35)}px 0px -${Math.round(innerHeight * .60)}px 0px` }
+  );
+  spySections.forEach((section) => spyObserver.observe(section));
 }
 configureScrollSpy();
 let spyResizeFrame = 0;
@@ -321,7 +332,7 @@ const ENTER_MS = 240;
 const ENTER_DELAY = 80;
 const JUMP_FADE_MS = 200;   // a long jump (> 0.8 screens) fades in at its new place
 const JUMP_SCREENS = 0.8;
-const LEAVE_STYLE = ["position", "left", "top", "width", "height", "margin", "display", "box-sizing", "pointer-events"];
+const LEAVE_STYLE = ["position", "left", "top", "width", "height", "margin", "display", "box-sizing", "pointer-events", "grid-template-rows"];
 const flipSupported = Boolean(projectGrid && Element.prototype.animate && window.CSS?.supports?.("translate", "1px 1px"))
   && !/[?&]cards=static(&|$)/.test(location.search);
 const flipping = new Map(); // card -> { anims, leaving }
@@ -362,6 +373,31 @@ function trackFlip(card, animation, leaving = false) {
     }
   }, () => {});
 }
+// A card whose rows are a subgrid of the grid's (home-20261120.css: media, title, meta, result,
+// status line up across a row) loses them once it is taken out of the flow to fade, because an
+// absolutely positioned box cannot be a subgrid. Its rows are the grid's tracks it spans, read
+// here while it is still in the grid, so its words stay where they were while it fades. A card
+// caught mid-glide is matched by where it sits in the grid, without the glide's running translate.
+function subgridRows(card) {
+  if (!projectGrid || !getComputedStyle(card).gridTemplateRows.startsWith("subgrid")) return "";
+  const grid = getComputedStyle(projectGrid);
+  const tracks = grid.gridTemplateRows.split(/\s+/).filter((item) => item.endsWith("px")).map(parseFloat);
+  const own = getComputedStyle(card);
+  const span = Number((`${own.gridRowStart} ${own.gridRowEnd}`.match(/span\s+(\d+)/) || [])[1]) || 1;
+  const gap = parseFloat(grid.rowGap) || 0;
+  const glideY = own.translate === "none" ? 0 : parseFloat(own.translate.split(/\s+/)[1] || "0") || 0;
+  const offset = card.getBoundingClientRect().top - glideY - projectGrid.getBoundingClientRect().top
+    - projectGrid.clientTop - parseFloat(grid.paddingTop || 0);
+  let y = 0;
+  for (let i = 0; i < tracks.length; i += 1) {
+    if (Math.abs(y - offset) < 1) {
+      const rows = tracks.slice(i, i + span);
+      return rows.length === span ? rows.map((px) => `${px}px`).join(" ") : "";
+    }
+    y += tracks[i] + gap;
+  }
+  return "";
+}
 // First: where every shown card (or card still fading out) is on screen right now.
 function flipFirst() {
   const first = new Map();
@@ -372,6 +408,7 @@ function flipFirst() {
       rect: card.getBoundingClientRect(),
       opacity: motion ? Number(getComputedStyle(card).opacity) : 1,
       leaving: Boolean(motion?.leaving),
+      rows: motion?.leaving ? card.style.gridTemplateRows : subgridRows(card),
     });
   });
   return first;
@@ -393,12 +430,13 @@ function flipPlay(first) {
     const box = projectGrid.getBoundingClientRect();
     const left = box.left + projectGrid.clientLeft;
     const top = box.top + projectGrid.clientTop;
-    leaving.forEach(([card, { rect }]) => {
+    leaving.forEach(([card, { rect, rows }]) => {
       Object.assign(card.style, {
         position: "absolute", left: `${rect.left - left}px`, top: `${rect.top - top}px`,
         width: `${rect.width}px`, height: `${rect.height}px`, margin: "0",
         display: "grid", boxSizing: "border-box", pointerEvents: "none",
       });
+      if (rows) card.style.gridTemplateRows = rows;
       card.inert = true;
     });
   }

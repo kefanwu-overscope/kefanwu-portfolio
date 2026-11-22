@@ -237,7 +237,9 @@ test("a fast scroll no longer loses a card's drawing", { skip: !chromium && "Pla
       for (const how of ["anchor", "keys", "jump"]) {
         const { ctx, page, errors } = await open();
         await ready(page);
-        if (how === "anchor") await page.click("a.hero-scroll[href='#work']");
+        // refresh-20261120 removed the hero's bottom row with its "Explore the work" cue (a.hero-scroll to
+        // #work); the one cue left is the hero's projects button, an in-page link to the catalogue opener.
+        if (how === "anchor") await page.click("a.hero-projects[href='#project-directory']");
         else if (how === "keys") {
           await page.mouse.move(12, 450);
           for (let i = 0; i < 4; i += 1) { await page.keyboard.press("PageDown"); await sleep(120); }

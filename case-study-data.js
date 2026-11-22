@@ -12,7 +12,7 @@ window.caseStudyData = {
     engineering: {
       "goal": "Improve steering reach and reduce column mass while keeping a precise, serviceable path from wheel to rack.",
       "constraints": [
-        "Cockpit template, dashboard space, driver ingress, and chassis clearance.",
+        "Cockpit template, dashboard space, driver ingress, and chassis clearance; the design goals also called for minimal slop and backlash, a new bearing-cage mount, a column package under 50 mm wide, and better driver ergonomics.",
         "Joint angles, shaft torsion, bearing stiffness, and available shop processes."
       ],
       "checks": [
@@ -41,7 +41,7 @@ window.caseStudyData = {
           "Observed operation"
         ]
       ],
-      "iteration": "Mk.7 packaging informed the closer wheel and lighter cages. The model also exposes the remaining sensitivity: joint alignment and phasing matter as much as nominal shaft strength."
+      "iteration": "Mk.7 packaging informed the closer wheel and lighter cages. The column was then refined through successive design reviews, from November 2025 to the 9 February 2026 Delta review: the bearing support began as a weld-on steel cage with two bearings and became the V2 layout, an upper cage plus a lower cage with a single bearing, and the rack joint changed from a press fit with a grade 12.9 M3 bolt to a friction joint checked against the required bolt preload. The model also exposes the remaining sensitivity: joint alignment and phasing matter as much as nominal shaft strength. Next step: measure steering input and output motion with encoders and run a torque–twist test, so the predicted ripple and shaft twist can be checked against measurements."
     },
     "cover": {
       "src": "assets/editorial/neutral-20260915/steering-wide-1800.webp?v=1dc33b0efc43",
@@ -73,7 +73,7 @@ window.caseStudyData = {
         "title": "Driver reach and cockpit clearance",
         "paragraphs": [
           "The Mk.8 revision moved the wheel 3.5 inches closer to the driver and reduced bearing-cage mass by 0.9 kg relative to Mk.7.",
-          "Cockpit-template clearance, dashboard space, ingress, and hardware access set the shaft path before sizing. The reach change had to work within all four interfaces."
+          "As steering lead in the Cockpit subteam, I wrote the system’s requirements document. It required the column to turn steering-wheel motion into wheel motion, to achieve Ackermann geometry together with the front-knuckle steering arms, to minimize steering force, to mount through brackets welded to the chassis, and to stay clear of the suspension and the driver’s legs. Cockpit-template clearance, dashboard space, ingress, and hardware access then set the shaft path before sizing."
         ],
         "detailParagraphs": [
           "The Mk.8 column had to improve driver reach while preserving the cockpit template, dashboard space, ingress, and access to the hardware. Those interfaces constrained the steering path before shaft sizes were chosen.",
@@ -88,8 +88,8 @@ window.caseStudyData = {
         "label": "Decisions",
         "title": "U-joint angles and phasing",
         "paragraphs": [
-          "Matched bends around 27.5° cancel rotational speed variation in the ideal paired U-joint model. I used shaft-angle and yoke-phasing comparisons to choose the column geometry.",
-          "The sensitivity case predicts a 1.032 maximum speed ratio with 3° misalignment and 3° phase error. Clearance alone therefore could not determine the layout."
+          "In the ideal model of two U-joints in series, speed ripple cancels only when both bend angles are equal (θ₁ = θ₂) and yoke phasing is minimized. I set both bends to 27.5°, the smallest angle the physical constraints allowed. Mk.7 used 30° per joint: 60° between the input and output axes, against 55° on Mk.8.",
+          "The sensitivity case predicts a 1.032 maximum speed ratio with 3° misalignment and 3° phase error, so clearance alone could not determine the layout. The shaft section stayed at Mk.7’s 0.75 in outside diameter and 0.53 in bore, because the bore is set by the NARRco rack and spline-joint interfaces."
         ],
         "detailParagraphs": [
           "A bent U-joint introduces rotational speed variation. I compared shaft angles and yoke phasing, choosing matched bends around 27.5° to cancel that variation in the ideal paired-joint model.",
@@ -104,8 +104,8 @@ window.caseStudyData = {
         "label": "Build",
         "title": "Fabricated column and rack interfaces",
         "paragraphs": [
-          "I fabricated every steering part, waterjet-cutting rack mounts, lathe-turning shafts, and TIG-welding the chassis integration. Lighter bearing cages balanced mass against stiffness, with retention addressing interface play.",
-          "The built assembly uses M4 fasteners and a NARRco rack: 17.4 inches between heim-joint attachment bolts and 4.0 inches of travel per pinion revolution."
+          "I fabricated every steering part, waterjet-cutting rack mounts, lathe-turning shafts, and TIG-welding the chassis integration. The bearing support was chosen by weighing two layouts: V2 pairs the upper cage with a lower cage that holds a single bearing, which keeps the tolerance to imperfection and unexpected load and the sensor mounting, with lower mass and center of mass than V1.",
+          "Because the bearing cages are welded to the chassis, the welding plan called for steel-shielded bearings, skip and short stitch welds, and pauses between welds to limit warping. The built assembly uses M4 fasteners and a NARRco rack: 17.4 inches between heim-joint attachment bolts and 4.0 inches of travel per pinion revolution."
         ],
         "detailParagraphs": [
           "I waterjet-cut rack mounts, lathe-turned shafts, and TIG-welded the chassis integration. Removing bearing-cage material traded mass against stiffness; critical fasteners and preload-aware retention addressed play at the interfaces.",
@@ -204,8 +204,8 @@ window.caseStudyData = {
         "label": "Requirements",
         "title": "Interchangeable vine bodies",
         "paragraphs": [
-          "A transparent 19 L polypropylene pail provided visible eversion and flat mounting faces within the available tooling and budget. The platform accepted bodies up to 571 mm circumference, with frequent swaps between three cross-sections.",
-          "The vessel is designed for 34 kPa (5 psi), about 3.3× the 1.5 psi maximum working pressure. Choosing the pail also introduced a stiffness problem exposed by the first pressure test."
+          "The platform supplied validation data for the team’s CAD and simulation tool, which predicts how a proposed vine cross-section deforms under internal pressure and external load. Uses such as eldercare, where a vine grows beneath a patient to support them, often call for non-circular cross-sections. The platform accepted bodies up to 571 mm circumference, with frequent swaps between three cross-sections.",
+          "A transparent 19 L polypropylene pail provided visible eversion and flat mounting faces within the available tooling and budget. The vessel is designed for 34 kPa (5 psi), about 3.3× the 1.5 psi maximum working pressure; choosing the pail also introduced a stiffness problem exposed by the first pressure test."
         ],
         "detailParagraphs": [
           "The lab needed circular, three-partition, and stick-reinforced vine bodies for deformation research. The platform targeted 34 kPa (5 psi), accepted body circumferences up to 571 mm, and needed frequent swaps without hiding eversion faults.",
@@ -220,7 +220,7 @@ window.caseStudyData = {
         "label": "Decisions",
         "title": "Lid, seals, and drive supports",
         "paragraphs": [
-          "A flange-gripping bolted mount replaced the stock lid’s inadequate support, carrying the calculated blow-off load in tension. TPU 85A gaskets conform to the printed surfaces.",
+          "A flange-gripping bolted mount replaced the stock lid’s inadequate support, carrying the calculated blow-off load in tension. Because hot glue had failed on the earlier jar prototype, the pail build used bolted joints with TPU gaskets instead of hot glue; the TPU 85A gaskets conform to the printed surfaces.",
           "A fixed outlet stiffens the cut wall while interchangeable converters change body geometry. Separate spool bearings carry weight and vine tension; a flexible coupling accommodates motor alignment."
         ],
         "detailParagraphs": [
@@ -236,8 +236,8 @@ window.caseStudyData = {
         "label": "Iteration",
         "title": "Pressure failures and reinforcement",
         "paragraphs": [
-          "The first vessel held 1.2 psi but deformed substantially; the coupling released, the spool connection failed, and leaks appeared. These failures drove reinforcement beyond the initial 0.71 psi hand estimate.",
-          "I added 6061 plates, an aluminum lid, and three A36 brackets while retaining viewing cutouts. FEA assessed the revised load path, with the outlet still weakest."
+          "The pail held 1.2 psi, about 1.7 times the 0.71 psi at which a thin-wall hand calculation predicted wall yield, yet that was only about a quarter of the 5 psi design pressure. It also deformed substantially, the coupling released, the spool connection failed, and leaks appeared.",
+          "That set the reinforcement strategy: external structure carries the pressure load, and the polypropylene wall only seals. I added four 6.35 mm 6061-T6 plates, an aluminum lid, and three C-shaped A36 brackets while retaining viewing cutouts. FEA at 500 lbf per face predicts 6.524 mm displacement and 0.2339 GPa peak stress, with the outlet still weakest; it does not establish physical 5 psi containment."
         ],
         "detailParagraphs": [
           "The first vessel held 1.2 psi with substantial deformation, compared with a 0.71 psi thin-wall hand estimate. The coupling released, the vine-to-spool connection failed, and leaks appeared: pressure retention alone did not describe the complete system.",
@@ -253,7 +253,7 @@ window.caseStudyData = {
         "title": "Force measurement and 45-run study",
         "paragraphs": [
           "The experiment completed 36 loaded conditions and nine unloaded baselines. A scale beneath the vine set transmitted force within ±0.05 kg of target, accounting for friction that made applied weight unreliable.",
-          "Scans captured deformation for the prediction model. Separately, reinforcement FEA predicted 6.524 mm displacement and 0.2339 GPa peak stress at 500 lbf per face; it does not establish physical 5 psi containment."
+          "Before the main matrix, loaded tests at a constant 7.2 lbf on the square block, at 0.23 to 0.4 psi, showed no mechanical failure or obvious leaks. The scanner struggled where the body meets the floor, so a fabric-wrapped round tube resting on the floor was scanned in the rig as a qualitative check; it gave a reliable result, though not a calibrated accuracy figure. Scans then captured deformation for the prediction model."
         ],
         "detailParagraphs": [
           "I ran 36 loaded conditions plus nine unloaded baselines. A scale directly below the body measured the transmitted force because friction in the guide bearings made applied weight an unreliable proxy; the procedure set load within ±0.05 kg of target.",
@@ -336,7 +336,7 @@ window.caseStudyData = {
         "title": "Differential-thrust flight control",
         "paragraphs": [
           "Four-motor differential thrust replaces flaps, ailerons, rudders, and servos in Javelin’s intended vertical-takeoff and forward-flight sequence. Fewer mechanical control surfaces make motor mixing responsible for attitude control.",
-          "A 26-item requirements matrix guided packaging and system decisions. The 300 km/h speed remains a design target, separate from demonstrated flight performance."
+          "A 26-item requirements matrix guided packaging and system decisions, pairing each listed requirement with the design decision that answers it: stall prevention with an airspeed sensor, anti-spark connection with standardized XT90-S connectors, battery removal with a quick-release body, and regulatory compliance with an integrated Remote ID module. The 300 km/h speed remains a design target, separate from demonstrated flight performance."
         ],
         "detailParagraphs": [
           "Javelin is designed to take off vertically and transition into forward flight. Removing flaps, ailerons, rudders, and servos reduces mechanical complexity but makes four-motor differential-thrust mixing responsible for attitude control.",
@@ -367,7 +367,7 @@ window.caseStudyData = {
         "label": "Integration",
         "title": "Powertrain and electronics integration",
         "paragraphs": [
-          "Four T-Motor F90 motors and parallel 4S packs define the integrated 14.8 V powertrain. XT90-S connectors manage inrush; separate high- and low-voltage routes accommodate the flight controller, sensors, radio, and FPV system.",
+          "The BOM lists four T-Motor F90 KV1300 motors, four Foxeer Reaper 80A F4 128k ESCs and two CNHL 4S 130C LiPo packs; the matrix answers its ‘reaching high speed’ requirement by connecting the two 4S packs in parallel, which keeps the powertrain at 14.8 V. XT90-S connectors manage inrush, and the BOM designates 10 AWG silicone wire as the high-voltage wire, in line with the matrix decision to run high- and low-voltage cables separately to minimize EMI.",
           "Three propeller types support testing, routine use, and speed attempts. MATLAB screened 10 candidates using an 8S / 10% slip assumption, a separate configuration from the built power system."
         ],
         "detailParagraphs": [
@@ -429,7 +429,7 @@ window.caseStudyData = {
           "Processed measurement"
         ]
       ],
-      "iteration": "The project changed both the motion architecture and the operating range in response to observed errors. Independent geometry checks would be the next step for quantifying full point-cloud accuracy."
+      "iteration": "The project changed both the motion architecture and the operating range in response to observed errors. The X axis ran unevenly near both ends of travel: the team traced it to the two horizontal M8 guide rods being slightly out of parallel because of 3D-printing tolerances, which raised resistance at the ends, and planned CNC-machined parts or a design with more tolerance. Unmanaged wiring made first-day faults hard to trace; the whole system was rewired over about three hours before debugging, and testing then went smoothly. Building the software in separate blocks, first a script that only read the LiDAR, then one that only moved a single stepper, then combining them step by step, made debugging much easier. A next version would replace the breadboard with a PCB; independent geometry checks would quantify full point-cloud accuracy."
     },
     "cover": {
       "src": "assets/editorial/neutral-20260915/scanner-wide-1800.webp?v=ffd3ab3e99cd",
@@ -460,8 +460,8 @@ window.caseStudyData = {
         "label": "Requirements",
         "title": "Cartesian scan coordinates",
         "paragraphs": [
-          "The one-week build replaced a less accurate servo pan/tilt concept with a Cartesian gantry, giving each distance reading a controlled raster coordinate.",
-          "The added mechanism traded structural complexity for repeatability. Pan/tilt remained an option for wider coverage at lower precision, so the two layouts served different scanning needs."
+          "The one-week build replaced a servo pan/tilt concept with a Cartesian gantry, giving each distance reading a controlled raster coordinate. On the first test day the servo pan/tilt proved less accurate than expected, with angular error above 10°.",
+          "Angular sweeping also made measured distances inconsistent, which would have needed software compensation, and it was poorly suited to capturing detail at object edges, so the team moved to a gantry that translates the sensor in X and Y for more precise positioning. The gantry traded structural complexity for repeatability; pan/tilt remained an option for wider coverage at lower precision."
         ],
         "detailParagraphs": [
           "The scanner needed a known location for every distance reading. During the one-week build, we replaced a less accurate servo pan/tilt concept with a Cartesian gantry for controlled raster coordinates.",
@@ -476,8 +476,8 @@ window.caseStudyData = {
         "label": "Calibration",
         "title": "Distance calibration and working range",
         "paragraphs": [
-          "A correction curve fitted to 14 ruler-measured distances reduced TFmini-S error below roughly 3% in its working range. Less stable readings below about 30 cm determined sensor placement.",
-          "This calibration checks the sensor. Gantry positioning, sampling, and later surface processing still contribute to the accuracy of the reconstructed shape."
+          "A linear correction fitted to 14 ruler-measured distances was validated by a second round of measurements. Calibration reduced percentage error across the measured range, most of all below 30 cm, and after calibration the error was below 3% beyond 30 cm.",
+          "The TFmini-S datasheet indicates accurate distances without external calibration, but bench tests with a cardboard target showed noticeable errors. Readings were inconsistent between 10 and 30 cm, where the calibration plot changes slope, and consistent and accurate beyond 100 cm, so the test object was placed about 30 cm from the scanner, at the near edge of the range treated as stable. The check covers the sensor, not the full reconstruction."
         ],
         "detailParagraphs": [
           "I measured 14 known distances with a ruler and fitted a TFmini-S correction curve in MATLAB. Readings below about 30 cm were less stable, so sensor placement kept the intended scan within the more reliable range.",
@@ -492,8 +492,8 @@ window.caseStudyData = {
         "label": "Integration",
         "title": "Gantry drive and electrical noise",
         "paragraphs": [
-          "Homing switches establish the raster origin; dual M8 lead screws control Y and a belt drives X. NEMA 17 motors and DRV8825 drivers move the carriage.",
-          "Motor-rail capacitors, copper-lined packaging, and shielded sensor wiring reduced noise. The emergency stop cuts motor voltage while retaining controller logic and test state."
+          "At start-up, Y homes to its limit switch first, then X, which sets the scan origin. Two NEMA 17 motors, commanded to the same position by the firmware, drive Y through the dual 235 mm M8 lead screws, guided by two M8 steel rods; a belt drives X, with DRV8825 drivers on the steppers.",
+          "Motor-rail capacitors, copper-lined packaging, and shielded sensor wiring reduced noise; the LiDAR wiring is also wrapped in aluminum shielding because the cables pass close to the power supply as the gantry moves. The emergency stop cuts motor voltage while retaining controller logic and test state."
         ],
         "detailParagraphs": [
           "Dual M8 lead screws and guide rods control Y travel; a belt drives X. NEMA 17 motors, DRV8825 drivers, and physical homing switches establish the raster path and its coordinate origin.",
@@ -508,8 +508,8 @@ window.caseStudyData = {
         "label": "Validation",
         "title": "Measured samples and reconstruction",
         "paragraphs": [
-          "The scanner captured 2,206 readings across 140 × 165 mm, pairing each distance with carriage position. This demonstrated the complete motion, acquisition, calibration, and reconstruction chain.",
-          "Interpolation to a 300 × 300 grid and Gaussian filtering improve visualization. They add no measured samples, and sensor calibration alone does not establish full point-cloud accuracy."
+          "The scanner captured 2,206 readings across 140 × 165 mm, pairing each distance with carriage position and demonstrating the complete motion, acquisition, calibration, and reconstruction chain. The test object, about 2.25 in (57 mm) in radius, combines sharp corners with a circular outer boundary, so a single scan exercised both small edge features and curvature.",
+          "Contour plots with light and strong Gaussian filtering were compared on the interpolated 300 × 300 grid; filtering smoothed surface irregularities, which is a presentation choice and adds no measured samples. Sensor calibration alone does not establish full point-cloud accuracy."
         ],
         "detailParagraphs": [
           "The scanner captured 2,206 distance readings across a 140 × 165 mm region. Each reading was paired with carriage position, demonstrating the complete motion, acquisition, calibration, and reconstruction chain.",
@@ -567,7 +567,7 @@ window.caseStudyData = {
           "Reference prediction"
         ]
       ],
-      "iteration": "The review advances the lighter rotor to planned waterjet cutting and surface grinding, with caliper rebuilding and brake-line inspection still ahead. The cold rear rotor keeps airflow integration open; measured vehicle temperatures would complete the model-to-hardware comparison."
+      "iteration": "At the February 2026 review the Mk.8 rotor was still a fallback design: a “sure thing” derived from the Mk.7 rotor (30 holes per revolution) and intended to brake much like Mk.7 while the thermal model remained unvalidated. Further iteration with the thermal model led to the lighter 72-hole rotor in the later design review, which advances it to planned waterjet cutting and surface grinding, with caliper rebuilding and brake-line inspection still ahead. The cold rear rotor keeps airflow integration open; measured vehicle temperatures would complete the model-to-hardware comparison."
     },
     "cover": {
       "src": "assets/editorial/brake-dr-20261005/brakeSim-wide-1800.webp?v=8aba11208295",
@@ -599,7 +599,7 @@ window.caseStudyData = {
         "title": "Rotor thermal requirements",
         "paragraphs": [
           "Rotor mass and inertia could fall only while meeting a thermal target: 350–450°C for at least 80% of endurance after warm-up. That band supports the BP28 pad’s target friction coefficient of 0.47–0.48.",
-          "Manufacturable geometry, two independent hydraulic circuits, simultaneous wheel lock, chassis clearance, and reuse of serviceable Mk.6 parts constrain the redesign."
+          "Calipers, pads, the master cylinder, brake lines and fittings are commercial parts selected for the car; the design work concentrates on the rotor geometry and the brake temperature model behind it. Manufacturable geometry, two independent hydraulic circuits, simultaneous wheel lock, chassis clearance, and reuse of serviceable Mk.6 parts constrain the redesign."
         ],
         "detailParagraphs": [
           "The design starts with a temperature requirement: keep the front rotor at 350–450°C for at least 80% of endurance after warm-up. That range supports the BP28 pad’s target friction coefficient of 0.47–0.48. Mass and rotational inertia should fall while the geometry stays practical to make.",
@@ -615,7 +615,7 @@ window.caseStudyData = {
         "title": "Thermal model and validation limits",
         "paragraphs": [
           "The 22-lap simulation tracks braking heat through lumped rotor, pad, hub, and caliper nodes. Michigan 2024 track segments set heat input; convection, radiation, and conduction provide cooling.",
-          "On/off braking excludes trail braking, aerodynamic drag, and regeneration. Comparison with published MIT cooling curves covers radiation and conduction only; convection remains outside that validation, and endurance performance is not measured."
+          "On/off braking excludes trail braking, aerodynamic drag, and regeneration. In spring 2026 the team’s car had no brake-temperature sensor, so the model could not be calibrated against track data; the February 2026 review presented it as unvalidated. The later design review compared only its radiation and conduction behavior with a published MIT FSAE brake study; convection remains outside that validation, and endurance performance is not measured."
         ],
         "detailParagraphs": [
           "Track segments from Michigan 2024 turn speed changes and braking demand into heat input. Separate lumped rotor, pad, hub and caliper nodes store heat; speed-dependent convection, radiation and conduction to adjacent components remove it. The design-review plot spans 22 simulated laps.",
@@ -674,7 +674,8 @@ window.caseStudyData = {
       "goal": "Drive and steer a luggage robot under a 200 lb payload using two compact front modules.",
       "constraints": [
         "Drive and steering chains, shafts, bearings, and mounts must clear one another throughout wheel motion.",
-        "Loaded steering torque, chain engagement, fabrication access, and controller feedback."
+        "Loaded steering torque, chain engagement, fabrication access, and controller feedback.",
+        "An early team requirement bounded the package: the robot had to fit through a 38-inch-wide campus doorway and move at walking pace."
       ],
       "checks": [
         [
@@ -698,11 +699,11 @@ window.caseStudyData = {
         [
           "Drive response",
           "MY1016Z motors, 9:16 reduction, and shaft encoders",
-          "Roughly 1 m/s² remains the drivetrain design target; encoders supply speed/displacement feedback.",
+          "Roughly 1 m/s² remains the drivetrain design target; the encoders were intended to supply speed/displacement feedback, but the Raspberry Pi missed pulses at full wheel speed.",
           "Intended performance"
         ]
       ],
-      "iteration": "Payload testing met the original carrying objective. Steering speed and chain engagement remained coupled, leading the team to identify DC steering motors with absolute encoders as the next architecture to evaluate."
+      "iteration": "Payload testing met the original carrying objective, but steering speed and chain engagement remained coupled. Below 1600 steps the chain slipped quickly, and the team noted that 1600 steps instead of 200 makes steering eight times slower, on top of the 18:80 reduction. Steering was open-loop, so a skip or an off-center wheel could not be detected or corrected; steering lagged the responsive drive, and in autonomous following, fast or side-to-side movement by the user could make the cart lose the person. This is why DC steering motors with absolute encoders are the identified redesign."
     },
     "cover": {
       "src": "assets/editorial/neutral-20260915/aura-wide-1800.webp?v=6033855dcc5f",
@@ -734,7 +735,7 @@ window.caseStudyData = {
         "title": "Front-wheel swerve packaging",
         "paragraphs": [
           "The front-wheel swerve layout combines traction and steering around a 200 lb payload target. My scope covered the motors, chains, sprockets, shafts, bearings, and mounts needed for those two motions.",
-          "Independent front-wheel angles approach Ackermann behavior to reduce loaded scrub. Clearance and steering torque therefore matter alongside carrying capacity."
+          "Front-wheel swerve was chosen over front-wheel steering with rear-wheel drive, which would have reduced maneuverability and made traction harder to keep. Steering each front wheel independently also let the wheel angles approach Ackermann behavior, with one wheel steering less than the other to reduce loaded scrub; the cost was a harder packaging and integration problem that later forced several parts to be rethought."
         ],
         "detailParagraphs": [
           "Project AURA began with a 200 lb payload target. My scope was the front-wheel swerve mechanics: combining traction and steering while accommodating motors, sprockets, chains, shafts, bearings, and mounts.",
@@ -749,8 +750,8 @@ window.caseStudyData = {
         "label": "Tradeoffs",
         "title": "Chain reduction and steering response",
         "paragraphs": [
-          "Moving steering motors inward and increasing the step setting from 200 to 1600 reduced chain skipping, at the cost of slower steering.",
-          "NEMA 23 steering motors use an 18:80 sprocket reduction for torque. Separate MY1016Z 24 V traction motors use a 9:16 ratio, keeping drive and steering reductions distinct."
+          "Chain skipping shaped the steering drive. Space was tight around the MY1016Z drive motors, so the steering steppers were first mounted at the robot’s corners, driving through a 10-tooth sprocket; there they were unstable and left the sprockets too close together to tension the chain, and with the large difference in sprocket sizes and the short center distance the chain skipped.",
+          "Moving the steppers toward the center, at the cost of a slightly smaller maximum steering angle, and redesigning the mount for an 18-tooth driving sprocket set farther away gave enough sprocket spacing to tension the chain and reduced skipping; the final steering reduction is 18:80. Raising the step setting from 200 to 1600 reduced skipping further but slowed steering."
         ],
         "detailParagraphs": [
           "Each NEMA 23 steering stepper uses an 18:80 sprocket reduction, exchanging steering speed for torque. MY1016Z 24 V drive motors use a separate 9:16 ratio, keeping the traction and steering choices distinct.",
@@ -765,8 +766,8 @@ window.caseStudyData = {
         "label": "Iteration",
         "title": "Fabricated mounts and clearance",
         "paragraphs": [
-          "Spacers and shortened fasteners resolved interference discovered during assembly, making the tightly packed wheel mechanism operable.",
-          "Quarter-inch A36 steel provided strong, weldable housings and motor mounts suited to the available waterjet, TIG-welding, and painting processes. Final clearance depended on fitting the assembled hardware."
+          "The drivetrain was kept as compact as possible to minimize steering resistance, which left little room for the wheel, wheel mount and wheel sprocket; the chain interfered with bolts in that space and broke. After testing several sprocket spacers, the thinnest one that cleared was kept, and shorter bolts were used to mount the drivetrain, freeing space for the rotating parts.",
+          "Before the steel parts were waterjet-cut and welded, the drivetrain was built as a 3D-printed subassembly to test the fit, and the motor mount was slotted so the chain could be tensioned. Quarter-inch A36 steel provided strong, weldable housings and motor mounts suited to the available waterjet, TIG-welding, and painting processes."
         ],
         "detailParagraphs": [
           "Quarter-inch A36 steel provided strong, weldable wheel housings and motor mounts that could be OMAX-waterjetted, TIG-welded, and painted using available shop processes.",
@@ -781,8 +782,8 @@ window.caseStudyData = {
         "label": "Validation",
         "title": "Payload test and steering limits",
         "paragraphs": [
-          "The robot carried 300 lb in testing, exceeding its 200 lb target. Shaft-mounted LPD3806 encoders provide speed and displacement feedback; roughly 1 m/s² acceleration remains a design target.",
-          "Slower steering persisted after the chain-skipping improvements. The team identified DC steering motors with absolute encoders as a future architecture to evaluate."
+          "The robot carried 300 lb in testing, exceeding its 200 lb target; roughly 1 m/s² acceleration remains a design target. Shaft-mounted LPD3806 encoders were intended to provide speed and displacement feedback, but at full wheel speed the Raspberry Pi missed encoder pulses, so measured distance and speed undercounted.",
+          "Steering was open-loop: with no steering encoder, only the stepper’s commanded step count, a skip or an off-center wheel could not be detected or corrected. Slower steering persisted after the chain-skipping improvements, so the team identified DC steering motors with absolute encoders as a future architecture to evaluate."
         ],
         "detailParagraphs": [
           "The robot carried 300 lb in testing, exceeding the initial 200 lb target. LPD3806 encoders on the 3/8-inch front shafts provide speed and displacement feedback; the roughly 1 m/s² acceleration figure remains a design target.",
@@ -931,7 +932,9 @@ window.caseStudyData = {
       "goal": "Design and produce the Mk.7 driver seat for the vehicle build.",
       "constraints": [
         "5052-H32 aluminum; perforated pan and back with folded side panels.",
-        "The surrounding chassis and cockpit hardware define the installation space."
+        "The surrounding chassis and cockpit hardware define the installation space.",
+        "Easy removal: the Mk.7 cockpit binder listed it as a seat goal, tied to accumulator installation.",
+        "The cockpit was specified to fit drivers from the 5th-percentile female to the 95th-percentile male; removable foam padding lets drivers of different heights adjust their position in the seat quickly."
       ],
       "checks": [
         [
@@ -984,8 +987,8 @@ window.caseStudyData = {
         "label": "Requirements",
         "title": "Mk.7 seat design and fabrication",
         "paragraphs": [
-          "I designed and made the Mk.7 driver seat for the Formula SAE car in 5052-H32 aluminum: a perforated pan and back with folded side panels.",
-          "The contribution covers the seat design and its fabrication. Numerical structural validation would require evidence separate from the build."
+          "I designed and made the Mk.7 driver seat for the Formula SAE car in 5052-H32 aluminum: a perforated pan and back with folded side panels. The Mk.7 cockpit binder listed easy removal as a seat goal, tied to accumulator installation, alongside supporting the driver and fitting drivers of all sizes.",
+          "Seat geometry drew on a team mock-cockpit study: 20 team members of different heights and builds sat in an adjustable cockpit rig, giving data on preferred seat angle, visibility, steering-wheel height, and knee and elbow room. The study confirmed that the car should keep a relaxed driving position and set the location of the sub-belt bar. It was a pre-design ergonomics study, not a fit trial of the finished seat."
         ],
         "detailParagraphs": [
           "My responsibility was designing and making the 5052-H32 aluminum driver seat for the Mk.7 Formula SAE car. The seat geometry includes a perforated pan and back with folded side panels.",
@@ -1001,7 +1004,7 @@ window.caseStudyData = {
         "title": "The seat in the cockpit",
         "paragraphs": [
           "The Mk.7 seat design became a physical cockpit component, retaining the folded sides and perforated surfaces visible in the design record.",
-          "The cockpit photograph places the finished seat beside the surrounding frame and controls, showing its installation context."
+          "Mk.6 drivers reported sliding around in the seat, so the Mk.7 design review proposed angling the seat’s side walls inward; the seat also carries flanges along the hip area for stiffer side support. The cockpit photograph places the finished seat beside the surrounding frame and controls."
         ],
         "detailParagraphs": [
           "The work translated the Mk.7 seat geometry into the physical cockpit component. The folded sides and perforated surfaces are the principal features visible in the design record.",
@@ -1016,8 +1019,8 @@ window.caseStudyData = {
         "label": "Interfaces",
         "title": "Seat and vehicle interfaces",
         "paragraphs": [
-          "Chassis tubes, steering hardware, and neighboring cockpit components define the seat’s installation space. Reviewing them together makes the geometry and access relationships visible.",
-          "Vehicle photographs preserve those interfaces for inspection. They support that discussion without importing driver-fit trials or dimensions from a different car."
+          "The seat bolts to the chassis at multiple points through weld nuts, an approach carried over from Mk.6 to reduce the tools and handling needed to remove and reinstall it; the multiple bolted points also restrain bending of the sheet and make the seat stronger. On Mk.6 the seat had no opening for the anti-submarine belts, so they wrapped around the side of the seat; the Mk.7 seat pan has an opening for them, and their mounting points moved to a dedicated chassis bar under the driver.",
+          "The seat works with a purchased six-point FIA racing harness whose anti-submarine straps pass through that opening to the chassis bar. Removable foam seat pads adjust each driver’s head position and line of sight, so drivers of different heights can use the same seat."
         ],
         "detailParagraphs": [
           "The seat occupies space shared with chassis tubes, steering hardware, and other cockpit components. Those neighboring parts explain why the seat shape and its installation context belong in the same review.",
@@ -1068,7 +1071,7 @@ window.caseStudyData = {
         [
           "Repeatability and fit quality",
           "Group scatter and least-squares fit review",
-          "Group scatter about 5% of the mean or less; on-axis fabric R² ≈ 0.99, with lower 45° and LDPE fits.",
+          "Coefficients of variation 4.0% (MD), 3.5% (TD), 2.4% (45°) and 5.0% (LDPE); on-axis fabric R² 0.992 (MD) and 0.993 (TD), with lower 45° and LDPE fits.",
           "Statistical check"
         ],
         [
@@ -1132,7 +1135,7 @@ window.caseStudyData = {
         "title": "Tensile procedure and modulus fitting",
         "paragraphs": [
           "Thirty specimens compared fabric direction and LDPE: seven MD, seven TD, eight 45°, and eight film samples. The ASTM D882-based procedure adapted the nominal 250 mm gauge length to 100 mm for the available grips.",
-          "Strain-rate-based speeds, measured dimensions, and controlled conditions supported comparison. Least-squares modulus fits used explicit strain windows."
+          "Before each tensile test, the initial jaw-to-jaw separation was measured with a digital caliper and recorded as that specimen’s gauge length (99.79–100.26 mm). Width and thickness were measured on every specimen and multiplied to give its cross-sectional area (2.39–5.47 mm²). Strain-rate-based speeds and controlled conditions supported comparison, and least-squares modulus fits used explicit strain windows."
         ],
         "detailParagraphs": [
           "The 30 tensile specimens included seven MD, seven TD, eight 45° fabric, and eight LDPE samples. The ASTM D882-based procedure used a 100 mm gauge length adapted from the nominal 250 mm to fit the available grips, with speeds following the strain-rate rule.",
@@ -1147,8 +1150,8 @@ window.caseStudyData = {
         "label": "Validation",
         "title": "Directional stiffness and fit limits",
         "paragraphs": [
-          "Fabric stiffness measured 76.30 MPa in MD, 69.89 MPa in TD, and 41.78 MPa at 45°, supporting an orthotropic description. The fitted directional minimum lies near 46°.",
-          "Group scatter was about 5% or less. Curvature reduced R² to 0.967 for 45° fabric and 0.950 for LDPE, limiting confidence in a single fitted modulus."
+          "Fabric stiffness measured 76.30 MPa in MD, 69.89 MPa in TD, and 41.78 MPa at 45°, supporting an orthotropic description. Solving the plane-stress orthotropic relation through the three measured mean moduli gives the uniaxial modulus at any in-plane angle, with its minimum near 46°.",
+          "Coefficients of variation were 4.0% (MD), 3.5% (TD), 2.4% (45°) and 5.0% (LDPE). On-axis fits reached R² 0.992 (MD) and 0.993 (TD), while curvature reduced R² to 0.967 for 45° fabric and 0.950 for LDPE, limiting confidence in a single fitted modulus."
         ],
         "detailParagraphs": [
           "The fabric measured 76.30 MPa in MD, 69.89 MPa in TD, and 41.78 MPa at 45°. The much softer off-axis response supports an orthotropic description; the fitted directional curve has a minimum near 46°.",
@@ -1163,7 +1166,7 @@ window.caseStudyData = {
         "label": "Result & review",
         "title": "Bamboo bending stiffness",
         "paragraphs": [
-          "Eleven rods tested over a 73.37 mm span gave 81.7 ± 7.7 N/mm stiffness and EI = 0.672 ± 0.063 N·m². Every linear fit had R² above 0.999.",
+          "Eleven rods tested over a 73.37 mm span gave 81.7 ± 7.7 N/mm stiffness and EI = 0.672 ± 0.063 N·m², and every linear fit had R² above 0.999. Bending stiffness varied more from rod to rod than the membrane groups did: 9.4% across the eleven bamboo rods.",
           "The measured 5.79–6.33 mm dimensions are diameters. The historical modulus conversion needs that convention rechecked, so bending stiffness EI remains the primary model input."
         ],
         "detailParagraphs": [
@@ -1326,7 +1329,8 @@ window.caseStudyData = {
       "goal": "Reduce the need for a traditional pool stance and striking motion while keeping aim and shot strength under user control.",
       "constraints": [
         "Compact packaging, adequate pullback force, cue alignment, and accessible physical controls.",
-        "Plate tolerances, long-part machining, wire routing, and component access."
+        "Plate tolerances, long-part machining, wire routing, and component access.",
+        "At concept review the team named its biggest risks: the rubber tubing breaking or deforming after use, too little motor torque, the motor overheating, a housing that might not be strong enough, and the need to keep the launcher small and portable."
       ],
       "checks": [
         [
@@ -1340,6 +1344,12 @@ window.caseStudyData = {
           "Review early plasma-cut plates during assembly",
           "Final plates changed to waterjet parts after tolerance problems.",
           "Process revision"
+        ],
+        [
+          "Integration",
+          "Two test-fit prototypes",
+          "The team built two test-fit prototypes to check that the sliding trigger, rack and pinion, chain drive, laser pointer and tubing launcher could be integrated in the small package.",
+          "Process iteration"
         ],
         [
           "Cue and base geometry",
@@ -1385,8 +1395,8 @@ window.caseStudyData = {
         "label": "Requirements",
         "title": "Adjustable cue power and aiming",
         "paragraphs": [
-          "Laser alignment and a physical release setting let the player choose shot direction and strength. The compact launcher targets beginners and users who find conventional cue stance, sighting, or striking difficult.",
-          "The team mechanism aims to provide break-shot power. My documented contribution was the cue and cue base."
+          "The launcher started from a local need: pool is one of the most popular games at Olin, but it is not beginner-friendly, especially for people with disabilities or eye conditions. The team set out to build a shooter that could make the shot without any pool experience, with laser alignment and a physical release setting to choose shot direction and strength.",
+          "The compact team mechanism aims to provide break-shot power. My documented contribution was the cue and cue base."
         ],
         "detailParagraphs": [
           "The launcher is intended for beginners and users who find traditional cue stance, sighting, or striking difficult. It aims to provide break-shot power and adjustable strength within a compact package.",
@@ -1401,8 +1411,8 @@ window.caseStudyData = {
         "label": "Decisions",
         "title": "Tubing storage and trigger position",
         "paragraphs": [
-          "Surgical tubing stores energy as a chain-driven rack and pinion pull back the cue. A sliding trigger selects the release position and therefore the shot setting.",
-          "The bottom slider supports the rack against tubing tension. Laser aiming and switch actuation connect that adjustable mechanism to the player’s controls."
+          "Surgical tubing stores energy as a chain-driven rack and pinion pull back the cue. The trigger latch holds the cue and can be released at any point along the loading track, so the release position sets the shot.",
+          "The motor drives the pinion through a chain drive whose ratio was chosen to give enough torque to load the cue; an adjustable tensioner reduces chain skipping. The bottom slider supports the rack against tubing tension, and laser aiming and switch actuation connect the mechanism to the player’s controls."
         ],
         "detailParagraphs": [
           "Surgical tubing stores energy during cue pullback. A rack and pinion load the cue through a chain-and-sprocket drive, while a sliding trigger selects the release position.",
@@ -1417,8 +1427,8 @@ window.caseStudyData = {
         "label": "Iteration",
         "title": "Waterjet fit and cue machining",
         "paragraphs": [
-          "Waterjet parts replaced poorly toleranced plasma-cut plates after assembly problems. The process change improved fit in the compact mechanism.",
-          "The long cue needed manual finishing to maintain diameter, while a conversational mill handled the intricate cue base. Wire lengths and routing also had to clear the moving assembly."
+          "At concept review the team planned a process for each part: CNC milling for the sprocket mounts, 3D printing for the rack and pinion, waterjet cutting and CNC for the trigger parts, and the lathe for the latch pins. Plasma-cut parts, however, could not hold the hole and joint tolerances the crowded mechanism needed, even after hours of sanding and angle grinding, so the team switched those parts to the waterjet, which cuts far more accurately.",
+          "To keep the long cue’s diameter consistent, I learned long-part lathe techniques for holding tight tolerances from the shop assistants, while a conversational mill handled the intricate cue base. Wire lengths and routing also had to clear the moving assembly."
         ],
         "detailParagraphs": [
           "Early plasma-cut plates had poorly controlled tolerances. The final build used waterjet parts to improve fit, changing the manufacturing route in response to assembly problems.",
@@ -1433,7 +1443,7 @@ window.caseStudyData = {
         "label": "Review",
         "title": "Working prototype and user tests",
         "paragraphs": [
-          "Shop iteration produced a working cue-loading and release prototype with laser aiming and adjustable shot strength.",
+          "Shop iteration produced a working cue-loading and release prototype with laser aiming and adjustable shot strength; the launcher was working 48 hours before the project deadline.",
           "Repeatable shot behavior and operation by the intended users remain the next checks. Those tests would assess the original accessibility and aiming objectives beyond the demonstrated fabrication and integration."
         ],
         "detailParagraphs": [
@@ -1500,7 +1510,7 @@ window.caseStudyData = {
     summary: [
       [
         "My role",
-        "Individual project — compact packaging, power, reflectance sensing, motor integration, and controller tuning."
+        "Two-person team project — the team’s work covered compact packaging, power, reflectance sensing, motor integration, and controller tuning."
       ],
       [
         "Result",
@@ -1643,7 +1653,7 @@ window.caseStudyData = {
         "title": "Six-base fragrance dispensing",
         "paragraphs": [
           "Smelly combines a gantry and pipette to dispense mixtures from intensity settings for six fragrance bases. The 2.5-day hackathon required time for printing, assembly, and complete-machine testing.",
-          "I owned the gantry and linear actuators; teammates integrated software and dispensing. Mechanical packaging and actuator motion had to support their integration."
+          "Smelly was built by a four-person team at the Formlabs IAP Hackathon 2026: two members with mechanical-engineering backgrounds and two with electrical and computer engineering. I owned the gantry and linear actuators; teammates integrated software and dispensing."
         ],
         "detailParagraphs": [
           "Smelly accepts intensity settings for six fragrance bases, then uses a gantry and pipette to carry out the requested mixture. The mechanical task was to position the dispensing hardware and actuate it within a 2.5-day hackathon.",
@@ -1659,7 +1669,7 @@ window.caseStudyData = {
         "title": "Actuator choice and print schedule",
         "paragraphs": [
           "Motion-critical fits took priority when comparing stepper lead-screw and rack-and-pinion concepts. The actuator had to meet motion and packaging needs within the sprint’s printing, assembly, and debugging time.",
-          "Formlabs Form 4 resin printing supported detailed parts; Bambu Lab P1S FDM printing enabled quick iterations before integration."
+          "Formlabs Form 4 resin printing supported detailed parts, and Bambu Lab P1S FDM printing enabled quick iterations before integration; I brought my own Bambu Lab printer to the event."
         ],
         "detailParagraphs": [
           "The mechanical concepts included a stepper lead screw and a rack-and-pinion actuator. Selection had to consider required motion and packaging alongside what could be printed, assembled, and debugged during the sprint.",
@@ -1691,7 +1701,7 @@ window.caseStudyData = {
         "title": "Actuator overheating and duty cycle",
         "paragraphs": [
           "Sustained operation overheated the stepper lead-screw actuator, exposing a duty-cycle limit after the mechanism met its immediate motion and packaging needs.",
-          "Runtime, current setting, and heat removal must therefore join force and stroke in the next selection. Continuous dispensing needs repeat testing of a revised configuration before overheating is resolved."
+          "Runtime, current setting, and heat removal must therefore join force and stroke in the next selection; continuous dispensing needs repeat testing of a revised configuration before overheating is resolved. The team’s final presentation lists two fabrication issues besides the actuator: press-fit tolerances, worked around on site with a drill and force, and an incorrect print setup."
         ],
         "detailParagraphs": [
           "Sustained operation overheated the stepper lead-screw actuator. A mechanism that met the immediate motion and packaging needs therefore still had a duty-cycle limitation.",
@@ -2015,7 +2025,7 @@ window.caseStudyData = {
       ],
       [
         "Status",
-        "Built and competed through the 2022–2023 season."
+        "Built and competed through the 2022–2023 season; held the mechanical engineering role from May 2022 to May 2023."
       ]
     ],
     chapters: [
@@ -2025,7 +2035,7 @@ window.caseStudyData = {
         "title": "Cone handoffs and subsystem scope",
         "paragraphs": [
           "Intake, transfer, lift, and deposit had to hand cones between mechanisms repeatedly while remaining serviceable during the 2022–2023 season.",
-          "As Senior Mechanical Engineer on Pioneer Robotics FTC Team 12589, I contributed to the linkage extension, claw and arm intake, string-driven slide, rotational deposit, and mecanum drivetrain."
+          "As Senior Mechanical Engineer on Pioneer Robotics FTC Team 12589, I contributed to the linkage extension, claw and arm intake, string-driven slide, rotational deposit, and mecanum drivetrain. I also instructed and onboarded new team members in mechanical design, CAD, prototyping and shop safety."
         ],
         "detailParagraphs": [
           "The 2022–2023 game required intake, transfer, lift, and deposit to work repeatedly. A successful subsystem had to deliver the cone in a position the next mechanism could use, while remaining serviceable during competition.",
@@ -2072,7 +2082,7 @@ window.caseStudyData = {
         "label": "Result",
         "title": "Team season results",
         "paragraphs": [
-          "The team earned Massachusetts Championship Tournament Winning Alliance, plus Motivate and Gracious Professionalism awards. These outcomes reflect the combined robot, controls, drivers, and team effort.",
+          "The team earned Massachusetts Championship Tournament Winning Alliance, plus Motivate and Gracious Professionalism awards, and during the 2022–2023 season the team’s robot also set a Massachusetts state record. Like the awards, it reflects the combined robot, controls, drivers and team effort rather than any single mechanism.",
           "The season developed mechanism iteration and integration skills later used in Formula SAE. Mechanism-specific reliability or cycle-time claims would require measurements separate from the championship result."
         ],
         "detailParagraphs": [

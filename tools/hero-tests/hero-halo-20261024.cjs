@@ -10,6 +10,10 @@
 //      against the text colour. Measured per glyph, not per line box, so a last glyph
 //      on the halo's feather edge fails.
 //   3. No horizontal page overflow and no console errors.
+// refresh-20261120: .hero-copy is now the copy block that holds the imprint ("Leading 30
+// mechanical engineers" / "Mechanical Lead · Olin Electric Motorsports") and the tagline, so each
+// word is measured against its own text colour (ink, muted or body) and the glyphs are hidden on
+// every descendant. The thresholds are unchanged.
 //
 // Usage (no npm install; uses the Playwright that ships with the local Codex runtime):
 //   node tools/hero-tests/hero-halo-20261024.cjs [--base http://localhost:4173/] [--out <dir>] [--viewports '[[820,1180]]']
@@ -71,7 +75,7 @@ const MIN_CONTRAST = 4.5;
         while ((m = re.exec(node.data))) {
           const r = document.createRange(); r.setStart(node, m.index); r.setEnd(node, m.index + m[0].length);
           const q = r.getBoundingClientRect();
-          words.push({ w: m[0], box: [q.left, q.top, q.right, q.bottom] });
+          words.push({ w: m[0], box: [q.left, q.top, q.right, q.bottom], color: getComputedStyle(node.parentElement).color });
         }
       }
       const lines = [];
@@ -89,7 +93,7 @@ const MIN_CONTRAST = 4.5;
     if (OUT) await page.screenshot({ path: path.join(OUT, `${tag}-fold.png`) });
     const shot = async () => (await page.screenshot()).toString('base64');
     const D = await shot();
-    await page.addStyleTag({ content: '.white-home .hero-copy{color:transparent!important}' });
+    await page.addStyleTag({ content: '.white-home .hero-copy,.white-home .hero-copy *{color:transparent!important}' });
     await page.waitForTimeout(80);
     const A = await shot(); // background behind the glyphs: halo box + glyph text-shadow
     await page.addStyleTag({ content: '.white-home .hero-copy{text-shadow:none!important}' });
@@ -109,10 +113,10 @@ const MIN_CONTRAST = 4.5;
       const lin = (v) => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
       const L = (x, i) => 0.2126 * lin(x[i]) + 0.7152 * lin(x[i + 1]) + 0.0722 * lin(x[i + 2]);
       const luma = (x, i) => 0.2126 * x[i] + 0.7152 * x[i + 1] + 0.0722 * x[i + 2];
-      const [tr, tg, tb] = color.match(/\d+/g).map(Number);
-      const Lt = 0.2126 * lin(tr) + 0.7152 * lin(tg) + 0.0722 * lin(tb);
-      const ratio = (v) => (v + 0.05) / (Lt + 0.05);
+      const lum = (c) => { const [tr, tg, tb] = c.match(/\d+/g).map(Number); return 0.2126 * lin(tr) + 0.7152 * lin(tg) + 0.0722 * lin(tb); };
       const contrast = words.map((wd) => {
+        const Lt = lum(wd.color || color);
+        const ratio = (v) => (v + 0.05) / (Lt + 0.05);
         const x0 = Math.floor(wd.box[0]) - 3, y0 = Math.floor(wd.box[1]), x1 = Math.ceil(wd.box[2]) + 3, y1 = Math.ceil(wd.box[3]);
         const glyph = new Set();
         for (let y = Math.max(0, y0); y < Math.min(H, y1); y++) for (let x = Math.max(0, x0); x < Math.min(W, x1); x++) {

@@ -134,7 +134,7 @@
   const STAGGER = 70;                         // between cards starting together (reading order)
   const SETTLE_MS = 160;                      // intent -> end state (+ a frame: < 250 ms)
   const PLAY_RATIO = 0.25;                    // share of the cover on screen that is enough to read
-  const PENCIL = 0.3;                         // the waiting drawing's strength (the wipe's unshown side)
+  const PENCIL = 0.45;                        // the waiting drawing's strength (the wipe's unshown side); 0.3 until refresh-20261120 (B4: reads as a drawing, not a failed image)
   // Calm: no scroll event for IDLE_MS, or a scroll slower than calmLimit() px/s (about one screen a
   // second). Chosen from releases/cards-fast-scroll-20261109/impl/before: reading pace (450-600 px/s)
   // stays well under it, 1000 px/s and up on a 844-900 px window is over it.

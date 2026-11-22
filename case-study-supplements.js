@@ -119,7 +119,7 @@ window.caseStudySupplements = {
           {
             "id": "SC-01",
             "label": "Gantry transmission",
-            "value": "Two 235 mm M8 lead screws on Y; a NEMA 17 24B motor and 2GT belt on X."
+            "value": "Two NEMA 17 motors, commanded to the same position by the firmware, drive Y through the dual 235 mm M8 lead screws, guided by two M8 steel rods; a NEMA 17 24B motor and 2GT belt drive X."
           },
           {
             "id": "SC-02",
@@ -129,12 +129,17 @@ window.caseStudySupplements = {
           {
             "id": "SC-03",
             "label": "Power and cooling",
-            "value": "LRS-150-12 supply and two TL-9015 PWM cooling fans."
+            "value": "LRS-150-12 supply and two TL-9015 PWM cooling fans; the fans cool both the drivers and the power supply. A 12 V to 5 V converter feeds the TFmini-S a steady 5.1 V, and each DRV8825’s motor current was set with its on-board potentiometer."
           },
           {
             "id": "SC-04",
             "label": "Driver protection",
             "value": "Three DRV8825 drivers, each with a 100 µF VMOT capacitor; one 15 A fuse before the E-stop and three 2 A branch fuses."
+          },
+          {
+            "id": "SC-07",
+            "label": "Power-up sequence",
+            "value": "Because of how the E-stop and the 12 V-to-5 V converter are wired, the scanner has a fixed start-up order: E-stop engaged, supply on, controller on, E-stop released, then the start button. The order is needed to get correct sensor data."
           }
         ]
       },
@@ -145,12 +150,22 @@ window.caseStudySupplements = {
           {
             "id": "SC-05",
             "label": "Data timing",
-            "value": "115,200-baud sensor UART; coordinate packets sent at 100 ms intervals."
+            "value": "115,200-baud sensor UART; coordinate packets sent at 100 ms intervals. The firmware waits for the TFmini-S two-byte 0x59 frame header and checks each frame’s checksum before accepting a distance. The Arduino Nano ESP32 was used because its dedicated serial pins could read the sensor’s 115,200-baud stream."
           },
           {
             "id": "SC-06",
             "label": "Surface reconstruction",
-            "value": "Cubic interpolation onto a 300 × 300 grid, followed by a Gaussian filter with σ = 2.0 grid samples in the archived Python script."
+            "value": "Cubic interpolation onto a 300 × 300 grid, followed by a Gaussian filter with σ = 2.0 grid samples in the archived Python script. The archived PySerial script starts recording X, Y, Z lines when the firmware reports that homing is done, stops at a scan-complete message, and saves the points to CSV."
+          },
+          {
+            "id": "SC-08",
+            "label": "Motion sequence",
+            "value": "AccelStepper’s non-blocking control lets the axes move in coordination. At start-up, Y homes to its limit switch first, then X, which sets the scan origin. Testing put the Y travel at 16,700 motor steps; that travel is divided by the number of scan lines to set the Y increment, and X sweeps back and forth on each line."
+          },
+          {
+            "id": "SC-09",
+            "label": "Calibration law",
+            "value": "The measured-versus-true relationship was approximately linear, so a linear fit in MATLAB Curve Fitter gave the correction D_actual = 0.9938 × D_measured + 4.576 (distances in cm)."
           }
         ]
       }
@@ -438,7 +453,7 @@ window.caseStudySupplements = {
           {
             "id": "javelin-requirement-count",
             "label": "Matrix coverage",
-            "value": "26 populated requirements: 23 marked met and three left unmet in the April 2026 record."
+            "value": "26 populated requirements: 23 marked met and three left unmet in the April 2026 record. Each row carries only a met / not-met checkbox, with no test method or measured value, so a checked row is the record’s own status rather than recorded test evidence."
           },
           {
             "id": "javelin-unmet-requirements",
@@ -510,6 +525,27 @@ window.caseStudySupplements = {
         ]
       },
       {
+        "id": "steering-bearing-support-trade-study",
+        "title": "Bearing support trade study",
+        "items": [
+          {
+            "id": "steering-cage-upper-only",
+            "label": "Upper cage alone",
+            "value": "An upper cage alone was lighter, lower, and easier to make and assemble, but it was vulnerable to imperfection, made the steering sensor hard to mount, and could add slop."
+          },
+          {
+            "id": "steering-cage-two-cages",
+            "label": "Two cages",
+            "value": "Two cages tolerated imperfection and took the sensor easily, but they were heavier, sat higher, and were harder to build."
+          },
+          {
+            "id": "steering-cage-v2",
+            "label": "V2 layout",
+            "value": "V2 pairs the upper cage with a lower cage that holds a single bearing. That keeps the tolerance to imperfection and unexpected load and the sensor mounting, with lower mass and center of mass than V1."
+          }
+        ]
+      },
+      {
         "id": "steering-confirmed-build",
         "title": "Final steering hardware",
         "items": [
@@ -527,6 +563,11 @@ window.caseStudySupplements = {
             "id": "steering-rack-speed",
             "label": "NARRco rack speed",
             "value": "4.0 in of rack travel per pinion revolution (4.0 in/rev)."
+          },
+          {
+            "id": "steering-assembly-plan",
+            "label": "Assembly plan",
+            "value": "I planned a 19-step assembly sequence covering the bearing press fits, the welds to the chassis and the joint connections, ending with every critical fastener torqued or lock-wired."
           }
         ]
       }
@@ -639,7 +680,7 @@ window.caseStudySupplements = {
           {
             "id": "brakeSim-model-assumptions",
             "label": "Simplifications",
-            "value": "On/off braking with no trail braking, no aerodynamic drag and no regenerative braking. The driving model uses a point-mass cornering calculation with an assumed downforce contribution."
+            "value": "On/off braking with no trail braking, no aerodynamic drag and no regenerative braking. The model sends all kinetic energy removed in braking into the brakes and sets cornering speeds with a point-mass grip model that assumes 2,450 N of downforce at 65 mph; that downforce is a modeling assumption, not a measured value."
           },
           {
             "id": "brakeSim-result-configuration",
@@ -655,6 +696,17 @@ window.caseStudySupplements = {
             "id": "brakeSim-model-version",
             "label": "Track and geometry versions",
             "value": "The DR method slide states 25 track segments; the saved MATLAB implementation contains 26. The published thermal history uses a 4.7498 mm rotor thickness; the displayed native CAD uses 5.08 mm, matching the DR’s 0.2 in specification. The review’s temperature and mass results have not been recalculated from the displayed CAD. The DR text omits linear-speed effects; the saved implementation combines vehicle and rotor-edge speed for effective airflow. These version-dependent boundary assumptions are not experimentally calibrated."
+          }
+        ]
+      },
+      {
+        "id": "brakeSim-rule-requirements",
+        "title": "Related Formula SAE rules",
+        "items": [
+          {
+            "id": "brakeSim-rule-circuits-clearance",
+            "label": "Hydraulic circuits and clearance",
+            "value": "The design review cites Formula SAE rules T 3.1.3 and T 3.1.9: two independent hydraulic circuits, so that a leak or failure still leaves braking on at least two wheels, and no sprung-mounted brake part below the lower surface of the chassis."
           }
         ]
       },
@@ -681,6 +733,11 @@ window.caseStudySupplements = {
             "id": "brakeSim-sensing-retention",
             "label": "Sensing and retention",
             "value": "GS1005 wheel-speed sensor with a stated 3 mm minimum gap; RCV FSAE brake-rotor pins and snap rings."
+          },
+          {
+            "id": "brakeSim-wheel-speed-sensor-update",
+            "label": "Wheel-speed sensor, February 2026 review",
+            "value": "The February 2026 review replaced the earlier wheel-speed sensor, judged not capable enough, with a GS1005; the slide lists the upgrade as going from 0.5 kHz to 15 kHz. Its target holes must be equally spaced, at least 8 mm in size and at least 3 mm apart."
           }
         ]
       },
@@ -802,6 +859,17 @@ window.caseStudySupplements = {
             "value": "5.79–6.33 mm diameter."
           }
         ]
+      },
+      {
+        "id": "materialTest-test-record",
+        "title": "Test record",
+        "items": [
+          {
+            "id": "materialTest-test-dates",
+            "label": "Test dates",
+            "value": "The fabric specimens were tested on 24 June 2026 and the LDPE and bamboo specimens on 25 June 2026; the tensile moduli were presented in the lab’s weekly retrospective for 22–26 June."
+          }
+        ]
       }
     ]
   },
@@ -861,6 +929,16 @@ window.caseStudySupplements = {
             "id": "aura-documented-limitation",
             "label": "Documented limitation",
             "value": "Increasing the step setting from 200 to 1600 reduced chain skipping but slowed steering. The team identified DC steering motors with absolute encoders as a future redesign."
+          },
+          {
+            "id": "aura-steering-debugging",
+            "label": "Steering debugging",
+            "value": "Steering was the team’s hardest integration problem: the wheels kept jumping and losing precision. Integrating everything at once had made it hard to debug, so the team isolated components and removed the chain. That showed the stepper was not turning consistently and its mount was rubbing the steering pinion. Mechanical adjustments were combined with a software smoothing algorithm, tested with the gear ratio in mind, and software steering limits with a zero position referenced to the straight rear wheels."
+          },
+          {
+            "id": "aura-stepper-threading",
+            "label": "Step timing in software",
+            "value": "The higher step count also exposed a control problem in the team’s software: each stepper is pulsed one step at a time, so the long step loops occupied the main thread. The two front wheels steered one after the other, and the drive moved only after steering finished. The team moved each steering and drive motor to its own thread so commands went out nearly at once."
           }
         ]
       },
@@ -877,6 +955,16 @@ window.caseStudySupplements = {
             "id": "aura-manual-input",
             "label": "Manual input",
             "value": "Logitech F310 controller with bumper-held command interlocks."
+          },
+          {
+            "id": "aura-tracking-pivot",
+            "label": "Tracking pivot",
+            "value": "The first person-tracking design, three UWB anchors on the robot and a tag on the user, gave inconsistent positions, partly because the steel motor and steering mounts reflected the signal. The team switched to the depth camera tracking a reflective belt in infrared."
+          },
+          {
+            "id": "aura-collision-stop",
+            "label": "Collision stop",
+            "value": "In autonomous mode, a horizontal slice of the depth image acts as a forward stop zone: any object within 0.6 m directly ahead disables forward motion, leaving only reverse."
           }
         ]
       },
@@ -897,7 +985,7 @@ window.caseStudySupplements = {
           {
             "id": "aura-drive-model",
             "label": "Drive motor",
-            "value": "MY1016Z."
+            "value": "MY1016Z geared DC motor, purchased as a 24 V, 250 W unit."
           }
         ]
       }
@@ -917,7 +1005,7 @@ window.caseStudySupplements = {
           {
             "id": "pool-machining-process",
             "label": "Machining process",
-            "value": "The cue-base used a conversational mill to make its intricate geometry; maintaining a consistent cue diameter was a fabrication challenge."
+            "value": "The cue-base used a conversational mill to make its intricate geometry; maintaining a consistent cue diameter was a fabrication challenge. To keep the long cue’s diameter consistent, I learned long-part lathe techniques for holding tight tolerances from the shop assistants."
           }
         ]
       },
@@ -965,6 +1053,17 @@ window.caseStudySupplements = {
             "id": "formlabs-controller-link",
             "label": "Controller link",
             "value": "USB serial connected the Raspberry Pi and Arduino."
+          }
+        ]
+      },
+      {
+        "id": "formlabs-procurement",
+        "title": "Purchased parts",
+        "items": [
+          {
+            "id": "formlabs-order-form",
+            "label": "Order form",
+            "value": "The organizers ordered 26 purchased items for the team, totalling $475.22 on the hackathon order form."
           }
         ]
       }

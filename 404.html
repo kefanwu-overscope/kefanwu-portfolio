@@ -9,258 +9,94 @@
     <!-- root-absolute paths: Vercel serves this page at any missing (possibly nested) URL -->
     <link rel="preload" as="font" type="font/woff2" href="/assets/fonts/InterTight-600.woff2" crossorigin />
     <link rel="stylesheet" href="/fonts.css?v=studio-polish-20260907" />
+    <link rel="stylesheet" href="/site-tokens-20261120.css?v=refresh-20261120" />
     <style>
-      /* white homepage tokens (white-home-20261011.css) */
-      :root {
-        --bg: #ffffff;
-        --bg-elevated: #f5f6f7;
-        --ink: #111316;
-        --ink-hover: #34383e;
-        --muted: #60666d;
-        --quiet: #69717a;
-        --line: #e4e6e8;
-        --line-mid: #d7dadd;
-        --blue: #245cab;
-        --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-        --font-display: "Inter Tight", var(--font-body);
-        --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-      }
-
+      /* The site's running head and type (site-tokens-20261120.css); this page adds only its own layout. */
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      html { background: #fff; color-scheme: light; }
       body {
         min-height: 100vh;
         min-height: 100svh;
         display: flex;
         flex-direction: column;
-        background: var(--bg);
-        color: var(--ink);
-        font-family: var(--font-body);
+        background: var(--kw-paper);
+        color: var(--kw-text);
+        font: 400 18px/30px var(--kw-f-text);
         -webkit-font-smoothing: antialiased;
       }
-
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-
-      a:focus-visible {
-        outline: 2px solid var(--blue);
-        outline-offset: 3px;
-      }
-
-      .site-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 24px;
-        min-height: 80px;
-        padding: 17px 64px;
-        border-bottom: 1px solid #171a1e12;
-        background: var(--bg);
-      }
-
-      .brand {
-        display: inline-flex;
-        align-items: center;
-        gap: 11px;
-        font-size: 13px;
-        font-weight: 600;
-        letter-spacing: 0.075em;
-        text-transform: uppercase;
-      }
-
-      .brand-mark {
-        display: grid;
-        width: 31px;
-        height: 31px;
-        place-items: center;
-        background: var(--ink);
-        color: #fff;
-        font-size: 12px;
-        font-weight: 800;
-      }
-
-      .site-nav {
-        display: flex;
-        align-items: center;
-        gap: 28px;
-        color: #50565c;
-        font-size: 13px;
-        font-weight: 500;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .site-nav a {
-        padding: 4px 0;
-        border-bottom: 1px solid transparent;
-      }
-
-      .site-nav a:hover {
-        color: var(--ink);
-        border-bottom-color: var(--ink);
-      }
-
+      a { color: inherit; text-decoration: none; }
       main {
         flex: 1;
-        display: flex;
-        align-items: center;
         width: calc(100% - 128px);
         max-width: 1440px;
         margin: 0 auto;
-        padding: 96px 0 120px;
+        padding: 96px 0 128px;
       }
-
-      .wrap {
-        max-width: 760px;
-      }
-
-      .kicker {
-        display: block;
-        margin: 0 0 22px;
-        color: var(--quiet);
-        font-family: var(--font-mono);
-        font-size: 12px;
-        font-weight: 500;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
+      .wrap { max-width: 960px; }
+      .kw-opener { margin-bottom: 48px; }
       h1 {
         margin: 0;
-        font-family: var(--font-display);
-        font-size: clamp(44px, 6.2vw, 88px);
-        /* homepage display system: Inter Tight 600, display tracking eased to
-           -0.03em so r-o and r-n stay apart at the 44px phone size */
-        font-weight: 600;
-        line-height: 1;
-        letter-spacing: -0.03em;
+        max-width: 11em;
+        text-wrap: balance;
+        color: var(--kw-ink);
+        font: 600 96px/92px var(--kw-f-display);
+        letter-spacing: -0.045em;
       }
-
-      p {
-        margin: 26px 0 0;
-        color: var(--muted);
-        font-size: 17px;
-        line-height: 1.6;
-      }
-
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 40px;
-      }
-
-      .btn {
-        display: inline-flex;
+      .lead { margin: 32px 0 0; max-width: 36em; color: var(--kw-text); font: 400 18px/30px var(--kw-f-text); }
+      .exits { margin: 56px 0 0; padding: 0; max-width: 560px; list-style: none; border-top: 1px solid var(--kw-ink); }
+      .exits li { border-bottom: 1px solid var(--kw-hair); }
+      .exits a {
+        display: grid;
+        grid-template-columns: 48px 1fr auto;
         align-items: center;
-        justify-content: center;
-        gap: 12px;
-        min-height: 48px;
-        padding: 16px 21px;
-        border: 1px solid var(--line-mid);
-        background: var(--bg);
-        color: var(--ink);
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        min-height: 64px;
+        color: var(--kw-ink);
+        font: 500 18px/24px var(--kw-f-text);
+        transition: color var(--kw-t-micro) var(--kw-ease-fade);
       }
-
-      .btn:hover {
-        border-color: var(--ink);
-      }
-
-      .btn-primary {
-        background: var(--ink);
-        border-color: var(--ink);
-        color: #fff;
-      }
-
-      .btn-primary:hover {
-        background: var(--ink-hover);
-        border-color: var(--ink-hover);
-      }
-
+      .exits a:hover { color: var(--kw-accent); }
+      .exits .kw-num { color: var(--kw-muted); }
+      .exits a:hover .kw-num { color: inherit; }
+      .exits .go { color: var(--kw-muted); font-size: 16px; }
+      a:focus-visible { outline: 2px solid var(--kw-accent); outline-offset: 3px; }
       @media (max-width: 1100px) {
-        .site-header {
-          padding-inline: 36px;
-        }
-
-        main {
-          width: calc(100% - 72px);
-        }
+        main { width: calc(100% - 72px); }
       }
-
       @media (max-width: 720px) {
-        .site-header {
-          min-height: 66px;
-          padding: 12px 20px;
-        }
-
-        .brand {
-          font-size: 12px;
-        }
-
-        /* the three page actions below repeat these links */
-        .site-nav {
-          display: none;
-        }
-
-        main {
-          width: calc(100% - 40px);
-          align-items: flex-start;
-          padding: 72px 0 80px;
-        }
-
-        p {
-          font-size: 16px;
-        }
-
-        .actions {
-          flex-direction: column;
-          margin-top: 32px;
-        }
-
-        .btn {
-          width: 100%;
-        }
+        /* the numbered exits below repeat these links */
+        .kw-rh-plain .site-nav { display: none; }
+        main { width: calc(100% - 40px); padding: 56px 0 80px; }
+        .kw-opener { margin-bottom: 32px; }
+        h1 { font-size: 56px; line-height: 52px; letter-spacing: -0.04em; }
+        .lead { margin-top: 24px; font-size: 17px; line-height: 28px; }
+        .exits { margin-top: 40px; }
       }
-
+      @media (max-width: 370px) {
+        h1 { font-size: 48px; line-height: 46px; }
+      }
       @media (prefers-reduced-motion: reduce) {
-        .btn {
-          transition: none;
-        }
+        .exits a { transition: none; }
       }
     </style>
   </head>
-  <body>
-    <header class="site-header">
+  <body class="kw-page">
+    <header class="site-header kw-rh-plain">
       <a class="brand" href="/" aria-label="Kefan Wu home"><span class="brand-mark" aria-hidden="true">KW</span><span>Kefan Wu</span></a>
       <nav class="site-nav" aria-label="Primary navigation">
-        <a href="/index.html#work">Projects</a><a href="/index.html#contact">Contact</a><a href="/assets/kefan-wu-resume.pdf?v=8aef14b9d874" target="_blank" rel="noopener">Resume</a>
+        <a href="/index.html#work">Projects</a><a href="/index.html#approach">Approach</a><a href="/index.html#contact">Contact</a><a href="/assets/kefan-wu-resume.pdf?v=8aef14b9d874" target="_blank" rel="noopener">Resume <svg class="kw-arrow" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" focusable="false"><path d="M3.5 8.5 8.5 3.5M4.25 3.5H8.5v4.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a><a class="nav-studio" href="/experience.html">3D Studio <svg class="kw-arrow" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" focusable="false"><path d="M3.5 8.5 8.5 3.5M4.25 3.5H8.5v4.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a>
       </nav>
     </header>
     <main>
       <div class="wrap">
-        <span class="kicker">ERR 404 / PAGE NOT FOUND</span>
+        <p class="kw-opener"><span class="kw-num">404</span><span class="kw-label">Page not found</span></p>
         <h1>This page took a wrong turn.</h1>
-        <p>The link may be broken or the page may have moved.</p>
-        <div class="actions">
-          <a class="btn btn-primary" href="/index.html#work">View projects</a>
-          <a class="btn" href="/assets/kefan-wu-resume.pdf?v=8aef14b9d874" target="_blank" rel="noopener">Resume (PDF) <span aria-hidden="true">↗</span></a>
-          <a class="btn" href="/index.html#contact">Contact</a>
-        </div>
+        <p class="lead">The link may be broken or the page may have moved.</p>
+        <ol class="exits">
+          <li><a href="/index.html#work"><span class="kw-num">01</span><span>Projects</span></a></li>
+          <li><a href="/assets/kefan-wu-resume.pdf?v=8aef14b9d874" target="_blank" rel="noopener"><span class="kw-num">02</span><span>Resume (PDF)</span><svg class="kw-arrow go" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" focusable="false"><path d="M3.5 8.5 8.5 3.5M4.25 3.5H8.5v4.25" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></a></li>
+          <li><a href="/index.html#contact"><span class="kw-num">03</span><span>Contact</span></a></li>
+        </ol>
       </div>
     </main>
   </body>

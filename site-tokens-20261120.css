@@ -1,0 +1,109 @@
+/* Site tokens and shared components (site refresh, refresh-20261120).
+   One sheet for the white pages: the homepage and the 404 in this release; the detail pages join
+   in a later batch. Loaded as a plain <link> after each page's own sheets, never inside the shared
+   head bootstrap. No new font files or requests: Inter (text, UI, figures), Inter Tight 600
+   (display) and IBM Plex Mono 500 (numbering only: case and section numbers, evidence tags) are
+   the faces fonts.css already declares. Colours on #fff: ink 18.61:1, text 11.91:1, muted 7.81:1,
+   quiet 5.18:1 (counts and placeholders only), accent 6.57:1 (focus, link hover, the one current
+   marker), hair #d9dde1 (non-text lines only), control #8a9299 3.16:1 (input and control edges). */
+:root {
+  --kw-paper: #ffffff;
+  --kw-ink: #111316;
+  --kw-text: #30383f;
+  --kw-muted: #4b535b;
+  --kw-quiet: #666e76;
+  --kw-accent: #245cab;
+  --kw-hair: #d9dde1;
+  --kw-control: #8a9299;
+  --kw-tint: #f5f6f7;
+  --kw-f-text: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --kw-f-display: "Inter Tight", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --kw-f-index: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --kw-margin: clamp(20px, 4.4vw, 64px);
+  --kw-ease-move: cubic-bezier(.65, 0, .35, 1);
+  --kw-ease-fade: cubic-bezier(.2, .6, .2, 1);
+  --kw-t-micro: 120ms;
+}
+
+/* Arrows: the font subset has only the up and down arrows, so the right and north-east arrows are
+   drawn (1.5px stroke in a 12px box, the text colour). */
+.kw-arrow { display: inline-block; flex: none; width: 12px; height: 12px; vertical-align: -1px; overflow: visible; }
+
+/* Numbering apparatus: mono only here, never under 13px. */
+.kw-num { font: 500 13px/20px var(--kw-f-index); letter-spacing: .02em; font-variant-numeric: tabular-nums; color: var(--kw-ink); }
+
+/* Section opener: one 1px ink rule, then the number and the name on one line, an optional aside on
+   the right. */
+.kw-opener {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px;
+  margin: 0; padding-top: 16px; border-top: 1px solid var(--kw-ink);
+  color: var(--kw-ink); font: 500 14px/20px var(--kw-f-text); letter-spacing: 0; text-transform: none;
+}
+.kw-opener .kw-num { min-width: 24px; }
+.kw-opener .kw-label { color: var(--kw-ink); }
+.kw-opener .kw-aside { margin-left: auto; color: var(--kw-muted); font: 500 14px/20px var(--kw-f-text); }
+.kw-opener--plain { border-top-color: var(--kw-hair); }
+
+/* Evidence tag: a 6px ink dot and the basis in mono capitals. */
+.kw-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--kw-muted); font: 500 13px/20px var(--kw-f-index); letter-spacing: .04em; text-transform: uppercase; white-space: nowrap;
+}
+.kw-tag::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--kw-ink); }
+
+/* Inline figure (a real measured, built, calculated or design-review result): ink, 600, tabular. */
+.fig { font-weight: 600; color: var(--kw-ink); font-variant-numeric: tabular-nums lining-nums; }
+
+/* Square buttons, 48px tall: ink-filled primary, 1px ink outline secondary. */
+.kw-btn {
+  display: inline-flex; align-items: center; justify-content: space-between; gap: 20px;
+  min-height: 48px; padding: 0 20px; border: 1px solid var(--kw-ink); border-radius: 0;
+  font: 500 16px/20px var(--kw-f-text); letter-spacing: 0; text-transform: none; text-decoration: none; white-space: nowrap;
+  transition: background-color var(--kw-t-micro) var(--kw-ease-fade), color var(--kw-t-micro) var(--kw-ease-fade);
+}
+.kw-btn--ink { background: var(--kw-ink); color: #fff; }
+.kw-btn--ink:hover { background: #2a2f35; border-color: #2a2f35; }
+.kw-btn--line { background: #fff; color: var(--kw-ink); }
+.kw-btn--line:hover { background: var(--kw-ink); color: #fff; }
+
+/* Text link: a 1px underline on the words only, accent on hover; 44px hit area. */
+.kw-link {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px;
+  color: var(--kw-ink); font: 500 16px/20px var(--kw-f-text); letter-spacing: 0;
+  text-decoration: none;
+}
+.kw-link > .kw-link-text {
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; text-decoration-color: var(--kw-control);
+  transition: color var(--kw-t-micro) var(--kw-ease-fade), text-decoration-color var(--kw-t-micro) var(--kw-ease-fade);
+}
+.kw-link:hover { color: var(--kw-accent); }
+.kw-link:hover > .kw-link-text { text-decoration-color: var(--kw-accent); }
+
+/* Running head on pages without the homepage cascade (the 404): opaque, one hairline, no blur. */
+.kw-rh-plain {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  min-height: 72px; padding: 0 var(--kw-margin);
+  background: #fff; border-bottom: 1px solid var(--kw-hair);
+}
+.kw-rh-plain .brand { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; color: var(--kw-ink); font: 600 16px/20px var(--kw-f-text); letter-spacing: 0; text-transform: none; text-decoration: none; }
+.kw-rh-plain .brand-mark { display: grid; place-items: center; width: 32px; height: 32px; background: var(--kw-ink); color: #fff; font: 600 13px/1 var(--kw-f-display); letter-spacing: .01em; }
+.kw-rh-plain .site-nav { display: flex; align-items: center; gap: 28px; color: var(--kw-text); font: 500 15px/20px var(--kw-f-text); letter-spacing: 0; text-transform: none; }
+.kw-rh-plain .site-nav a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: inherit; text-decoration: none; transition: color var(--kw-t-micro) var(--kw-ease-fade); }
+.kw-rh-plain .site-nav a:hover { color: var(--kw-accent); }
+/* The studio entry sits after a 20px hairline divider, drawn by ::before so the link keeps the 44px
+   target of every nav link (1px + 22px + the 6px gap = the 28px the border and padding gave). */
+.kw-rh-plain .site-nav .nav-studio::before { content: ""; flex: none; width: 1px; height: 20px; margin-right: 22px; background: var(--kw-hair); }
+@media (max-width: 720px) {
+  .kw-rh-plain { min-height: 60px; }
+}
+
+/* Focus: one ring everywhere. */
+.kw-page a:focus-visible, .kw-page button:focus-visible, .kw-page input:focus-visible { outline: 2px solid var(--kw-accent); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .kw-btn, .kw-link > .kw-link-text, .kw-rh-plain .site-nav a { transition: none; }
+}
+@media (forced-colors: active) {
+  .kw-tag::before { background: CanvasText; forced-color-adjust: none; }
+  .kw-btn { border: 1px solid ButtonText; }
+}

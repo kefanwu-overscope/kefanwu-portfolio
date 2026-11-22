@@ -1,10 +1,88 @@
 # Homepage presentation
 
+## Site refresh batch 1: the homepage as a monograph · 2026-11-21
+
+The owner asked on 2026-11-20: "继续优化我的网站，你可以大改美工，项目的描述可以适当加入细节，你可以到我的google drive找到大多数项目文件"
+(keep improving the site; the visual design may change a lot; project descriptions may gain
+detail from his Google Drive). Commit pending. These rules supersede, in the sections below:
+the hero bottom row (`.hero-baseline` with the role line, "FROM THE WORKSHOP TO THE TRACK." and
+the "Explore the work" cue), the CTA order (studio button filled, projects as a 14px text link),
+the filled studio button in the nav, the mono uppercase kickers ("01 / SELECTED WORK"), the
+section and cover notes, the separate "Showing n of 16" line, the card meta line above the
+title, the circled CFD download icon, the leadership track photo, the studio "EXPLORE IN 3D"
+chip, `data-reveal` on leadership, method and contact, `PENCIL` 0.3 (2026-11-09) and the
+`?v=pen-20261110` / `?v=dtb-20261027` labels on `card-drawing-20261027.js` / `script.js`. The
+photo, masks, feather, the hero pen (2026-11-10, unchanged), the wordmark, the skills strip box,
+the card media boxes and every card drawing rule other than `PENCIL` stay. The owner has not
+seen this; every choice is an agent decision he can change (details and the list of decisions:
+`AGENT_HANDOFF.md`, 2026-11-21). The agent-written plan (B1 acceptance 2) asked for an owner
+look at the halo stills before the push; the main loop pushed under the owner's standing push
+authorization after the design verifier judged the end state by the owner's stated criteria (soft
+natural gradient, no erased or masked look, car and driver clear, some real track kept, suspension
+not cropped). He has not seen the stills yet; this is an agent decision he can change. Stills:
+`../releases/site-refresh-20261120/impl/r2/verify-design-r1/halo/`.
+
+- Sheets: `site-tokens-20261120.css` (colour and type tokens; Inter text, Inter Tight 600
+  display, IBM Plex Mono only for case and section numbers and evidence tags) and
+  `home-20261120.css`, after `white-home-20261011.css`; both `?v=refresh-20261120`.
+- Running head: opaque white, 1px #d9dde1 hairline, 72px (60px at 720 and below), no blur.
+  "KW" plus "Kefan Wu"; Projects, Approach, Contact, Resume ↗, then "3D Studio ↗" as a text link
+  after a hairline divider. The current section has a 1px ink underline; no link is current
+  over the hero, Leadership or the studio teaser.
+- First screen: eyebrow "Mechanical engineering / Olin ’28" (Inter 500 15px); the name; directly
+  under it "Leading 30 mechanical engineers" (600 24/32) and "Mechanical Lead · Olin Electric
+  Motorsports" (500 16/24); then the tagline (19/28). Actions: "See the 16 projects ↓" filled,
+  "Enter the 3D Studio ↗" 48px outline, "Resume (PDF) ↗" text link (its own row from 721px; on
+  the buttons' row on tall tablets). No bottom row and no second scroll cue.
+- Everything after the name sits in `.hero-lede`, whose height per layout band equals
+  0e561624's tagline and CTA rows, so the name does not move. The imprint takes four lines at
+  721-1100px, at 1101-1279px of 4:3 or taller and at aspect 27/20 or less from 1280px; tall tablets end the first screen 60px
+  under the CTAs. The white halo now spans imprint and tagline and keeps off the car's nose
+  (`hero-halo-20261024.cjs` passes 496/496 sizes); in forced colours from 721px the copy paints
+  above the name with no halo.
+- Skills strip: same box and motion; Inter 500 14px, sentence case.
+- Openers: "01 Projects" (aside: the live "Showing n of 16 projects"), "02 Leadership" (aside
+  "30 engineers. One race car."), unnumbered "3D Studio" (aside "The interactive portfolio"),
+  "03 How I work", "04 Let’s build something". Titles at 72/72 (44/44 on phones). No note between
+  a heading and its content.
+- Filters: text tabs with counts (All 16, Motorsport 4, Robotics 8, Product 9, Analysis 6,
+  Fabrication 12; written in the HTML, pinned to the tags by `home-catalogue.test.mjs`), 1px ink
+  underline on the active tab, search on a 1px rule; phones scroll the tabs with a right-edge
+  fade. The FLIP stays; a leaving card keeps its rows while it fades, also mid-glide.
+- Cards: 3 / 2 / 1 columns, media boxes unchanged. Hairline, hanging case number 01-16, title
+  (Inter Tight 600 24/32), two-line meta (context, role), result; rows aligned by subgrid. Only
+  real results are inked: 0.9 kg, 23%, 19%, 2,206-point, 300 lb, 33.6%. Javelin has an
+  "In progress" tag; ansysCfd's download is the text link "Workflow (.zip)" in its meta.
+  LineFollower is "Olin PIE · Two-person team". Nothing beside a title.
+- Card waiting state: `PENCIL` 0.45 (was 0.3). Everything else from 2026-11-09 stays.
+- Leadership: `assets/fsae-mk7-shop.webp` (Mk.7 in the paddock, native size) beside
+  "Engineer the system. Enable the team.", the paragraph, the figures 30 and 4 ("Mechanical
+  engineers", "Subteams"), the role path 2024 Engineer, 2025 Cockpit Lead, 2026 Mechanical Lead,
+  and the Olin Electric Motorsports link.
+- Studio teaser: the image and one outline "Enter the 3D Studio ↗".
+- How I work: the three photos over the three method columns (4:3), captions 15px with mono
+  evidence tags; "Own the whole loop." at 72/72.
+- Contact: "What’s next starts here.", the existing Summer 2027 sentence, then hairline rows for
+  Email, Resume (filled button), LinkedIn and 3D Studio. Footer: one row, "© 2026 Kefan Wu ·
+  Olin College of Engineering · Needham, MA" and "Back to top ↑".
+- 404: the same running head, "404 · Page not found", "This page took a wrong turn.", and three
+  numbered exits (Projects, Resume (PDF), Contact); status 404.
+- Known, kept: in ordinary laptop windows such as 1366x657 and 1536x695 the Resume (PDF) link is
+  below the fold, and at about 1366x625 both hero buttons are cut by the fold (0e561624 showed all
+  three actions there); on phones the photo sits between the name and the imprint (160-187px apart); some link arrows wrap
+  alone onto their own line.
+- Agent decisions to note: the CTA swap (projects button filled, studio outline) goes against the
+  plan's default for owner question 1. The leadership photo `assets/fsae-mk7-shop.webp` is one
+  354,772 B file with no srcset, up to about 290 KB more than 0e561624 on phones (lazy-loaded);
+  to be fixed in the next batch.
+- Not verified on real phones, Safari, Firefox, screen readers or throttled networks (headless
+  Chrome on one Windows machine).
+
 ## Hero pen: the car drawn by one hand · 2026-11-10
 
 The owner asked on 2026-11-06: "保留，确保每次刷新网站线稿动画也能加载，线稿要有出现的顺序，要像是有人画出来的一样，
 封面在车的线稿可以更细节" (lines should appear in an order, as if a person draws them, and the
-hero car's line drawing can be more detailed). Commit pending. These rules supersede the hero
+hero car's line drawing can be more detailed). Commit 0e561624. These rules supersede the hero
 drawing items in the 2026-11-06 section below (the inline SVG, ink by 1.2 s, the develop at
 1.05-2.05 s, the per-line retire, about 2.2 s in all, the 9.5 s CSS backstops) and the cards'
 `HERO_CEIL` 3200 / `HERO_FINAL` 10000. The R1 refresh rules and the 2026-11-09 card rules stay.
