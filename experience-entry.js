@@ -11,7 +11,7 @@ function redirectProject() {
 window.addEventListener('hashchange', redirectProject);
 if (!redirectProject()) {
   prefetchStartupDrawing();
-  await import('./experience.js?v=dtb-20261027');
+  await import('./experience.js?v=arrows-20261125');
 }
 
 // 2026-10-27 ("Drawn, then built", #5): the optional startup drawing downloads

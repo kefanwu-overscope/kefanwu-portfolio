@@ -37,7 +37,7 @@ import { RectAreaLightUniformsLib } from "three/addons/lights/RectAreaLightUnifo
 import { GTAOPass } from "three/addons/postprocessing/GTAOPass.js";
 import { BokehPass } from "three/addons/postprocessing/BokehPass.js";
 import { RESUME } from "./experience-data.js?v=resume-align-20261023";
-import { RESUME_ASSET, RESUME_PAPER, resumeHTML, attachResumeReader } from "./experience-resume.js?v=dtb-20261027";
+import { RESUME_ASSET, RESUME_PAPER, resumeHTML, attachResumeReader } from "./experience-resume.js?v=arrows-20261125";
 
 document.documentElement.classList.add("exp-js");
 

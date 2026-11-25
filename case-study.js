@@ -292,7 +292,7 @@
   function sourceLinks() {
     const sources = project.sources || [];
     return sources.length ? `<div class="project-downloads"><h3>Project sources</h3>${sources.map(source =>
-      `<a class="text-link" href="${escape(source.href)}" target="_blank" rel="noopener">${escape(source.label)} <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>`).join('')}</div>` : '';
+      `<a class="text-link" href="${escape(source.href)}" target="_blank" rel="noopener">${escape(source.label)}<span class="sr-only"> (opens in a new tab)</span></a>`).join('')}</div>` : '';
   }
 
   function documentedDetails() {
@@ -366,7 +366,7 @@
         <aside class="preview-introduction motion-notes" aria-label="Animation notes"><p class="eyebrow motion-step-count">01 / 04</p><h2 id="preview-title">Take a closer look.</h2><p class="motion-note-body">${escape(cover.caption || editorial.deck)}</p><p class="motion-evidence-note"></p></aside>
       </div>
       <p class="motion-scroll-cue" aria-hidden="true">Scroll to explore <span>↓</span></p>
-      <div class="motion-story-footer"><p id="preview-instructions" class="sr-only">${previewInstructions}</p><div class="motion-step-buttons" role="group" aria-label="Animation stages"></div><div class="motion-story-timeline"><label class="sr-only" for="motion-story-progress">Animation progress</label><input type="range" id="motion-story-progress" min="0" max="1000" step="1" value="0" aria-describedby="preview-instructions"><output for="motion-story-progress">0%</output></div><div class="preview-links">${liveModel ? '<button type="button" class="text-link motion-explore" aria-pressed="false">Explore freely</button>' : `<a class="text-link" href="${studioURL}">Explore in 3D <span aria-hidden="true">↗</span></a>`}</div></div>
+      <div class="motion-story-footer"><p id="preview-instructions" class="sr-only">${previewInstructions}</p><div class="motion-step-buttons" role="group" aria-label="Animation stages"></div><div class="motion-story-timeline"><label class="sr-only" for="motion-story-progress">Animation progress</label><input type="range" id="motion-story-progress" min="0" max="1000" step="1" value="0" aria-describedby="preview-instructions"><output for="motion-story-progress">0%</output></div><div class="preview-links">${liveModel ? '<button type="button" class="text-link motion-explore" aria-pressed="false">Explore freely</button>' : `<a class="text-link" href="${studioURL}">Explore in 3D</a>`}</div></div>
       </div></section>
     <nav class="chapter-nav" aria-label="Case study sections"><div class="chapter-nav-inner wrap">
       <a href="#motion">Motion</a>${engineering ? '<a href="#brief">Brief</a>' : ''}${editorial.chapters.map((chapter, index) => `<a href="#${escape(chapter.id)}"><span class="mono">${number(index + 1)}</span>${escape(chapter.label)}</a>`).join('')}
@@ -381,7 +381,7 @@
     ${requirementsReview()}
     <section class="evidence-section wrap" id="evidence" aria-labelledby="evidence-title">
       <div class="section-heading"><div><p class="eyebrow">The project images</p><h2 id="evidence-title">A closer look.</h2></div><p>${archive.length ? `${archive.length} more image${archive.length === 1 ? '' : 's'}. Open any to browse all ${gallery.length}.` : `${gallery.length === 1 ? 'The project image appears' : `All ${gallery.length} project images appear`} in the chapters above. Open any to browse the complete set.`}</p></div>
-      ${archive.length ? `<div class="gallery-grid">${archive.map(({ image, index }) => `<figure class="gallery-item ${mediaClass(image)}"${mediaStyle(image)}>${imageButton(image, index)}<figcaption><span class="mono">${number(index + 1)}</span><span>${escape(image.caption || image.alt)}</span></figcaption></figure>`).join('')}</div>` : gallery.length ? `<button type="button" class="text-link gallery-browse" data-image="0">Browse ${gallery.length === 1 ? 'the image' : `all ${imageCount(gallery.length)}`} <span aria-hidden="true">↗</span></button>` : ''}
+      ${archive.length ? `<div class="gallery-grid">${archive.map(({ image, index }) => `<figure class="gallery-item ${mediaClass(image)}"${mediaStyle(image)}>${imageButton(image, index)}<figcaption><span class="mono">${number(index + 1)}</span><span>${escape(image.caption || image.alt)}</span></figcaption></figure>`).join('')}</div>` : gallery.length ? `<button type="button" class="text-link gallery-browse" data-image="0">Browse ${gallery.length === 1 ? 'the image' : `all ${imageCount(gallery.length)}`}</button>` : ''}
     </section>
     ${billOfMaterials()}
     <section class="record-section wrap" id="record" aria-labelledby="record-title">
@@ -393,10 +393,10 @@
     </section>
     <section class="next-section" aria-label="Continue exploring"><div class="next-inner wrap">
       <div class="next-primary">
-        <a class="next-link" href="${casePage}?project=${encodeURIComponent(nextKey)}"><span class="eyebrow">Next case / ${escape(next.number)}</span><span class="next-title"><span class="next-name">${escape(next.title)}</span><span class="next-arrow" aria-hidden="true">↗</span></span></a>
-        <p class="case-contact"><a href="mailto:kwu@olin.edu">kwu@olin.edu</a><span aria-hidden="true">·</span><a href="https://www.linkedin.com/in/kefan-wu-olin/" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a><span aria-hidden="true">·</span><a href="${escape(resumeHref)}" target="_blank" rel="noopener">Resume (PDF) <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></p>
+        <a class="next-link" href="${casePage}?project=${encodeURIComponent(nextKey)}"><span class="eyebrow">Next case / ${escape(next.number)}</span><span class="next-title"><span class="next-name">${escape(next.title)}</span></span></a>
+        <p class="case-contact"><a href="mailto:kwu@olin.edu">kwu@olin.edu</a><span aria-hidden="true">·</span><a href="https://www.linkedin.com/in/kefan-wu-olin/" target="_blank" rel="noreferrer">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a><span aria-hidden="true">·</span><a href="${escape(resumeHref)}" target="_blank" rel="noopener">Resume (PDF)<span class="sr-only"> (opens in a new tab)</span></a></p>
       </div>
-      <div class="studio-invitation"><h3>${studioMode ? 'Explore the studio.' : 'Explore the hardware.'}</h3><p>${inStudioFrame ? 'Return to the room to explore more engineering projects.' : studioMode || project.noStudio ? 'Browse more projects in the interactive engineering studio.' : 'Rotate the model and control its motion in the interactive studio.'}</p><a class="text-link" href="${studioURL}">${studioLabel} 3D Studio <span aria-hidden="true">↗</span></a></div>
+      <div class="studio-invitation"><h3>${studioMode ? 'Explore the studio.' : 'Explore the hardware.'}</h3><p>${inStudioFrame ? 'Return to the room to explore more engineering projects.' : studioMode || project.noStudio ? 'Browse more projects in the interactive engineering studio.' : 'Rotate the model and control its motion in the interactive studio.'}</p><a class="text-link" href="${studioURL}">${studioLabel} 3D Studio <span aria-hidden="true">→</span></a></div>
     </div></section>
   </article>`;
   resolveCover().then(refineCover);
@@ -565,7 +565,7 @@
     document.getElementById('lightbox-counter').textContent = `${number(imageIndex + 1)} / ${number(images.length)}`;
     const original = document.getElementById('lightbox-original');
     original.href = item.src;
-    original.innerHTML = `${escape(view.originalLabel || 'Original')} <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span>`;
+    original.innerHTML = `${escape(view.originalLabel || 'Original')}<span class="sr-only"> (opens in a new tab)</span>`;
   }
 
   root.addEventListener('click', (event) => {

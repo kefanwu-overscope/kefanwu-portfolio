@@ -80,7 +80,7 @@ test('First screen: imprint under the name, projects first, no bottom row', () =
   assert.match(hero, /<a class="button primary hero-projects" href="#project-directory">See the 16 projects/);
   assert.match(hero, /<a class="button secondary studio-secondary" href="experience\.html">Enter the 3D Studio/);
   assert.doesNotMatch(hero, /hero-baseline|hero-scroll|hero-location|FROM THE WORKSHOP|Explore the work/);
-  assert.doesNotMatch(html, /↗/, 'north-east arrows are drawn (the font subset has none)');
+  assert.doesNotMatch(html, /↗|class="kw-arrow[ "]|M3\.5 8\.5 8\.5 3\.5/, 'no north-east arrow mark, glyph or drawn (owner, 2026-11-25)');
   // the skills strip keeps every hover-card key (skills-card-20261012.js matches the lower-cased text)
   const keys = ['arduino', 'tig welding', 'autocad', 'topology study', 'solidworks', 'matlab', 'fea', 'cfd', 'cnc mill', 'lathe', 'waterjet', 'carbon fiber', 'team management', 'ai-assisted eng'];
   const track = hero.match(/<div class="hero-skill-track">([\s\S]*?)<\/div>/)[1];
@@ -95,4 +95,21 @@ test('Cache labels: the files this release changes are requested with refresh-20
   assert.deepEqual(links.slice(-3), ['white-home-20261011.css', 'site-tokens-20261120.css', 'home-20261120.css'], 'the overlays load after the white homepage sheet');
   const cardDrawing = readFileSync(new URL('../../card-drawing-20261027.js', import.meta.url), 'utf8');
   assert.match(cardDrawing, /const PENCIL = 0\.45;/, 'B4: the waiting pencil drawing at 45 %');
+});
+
+test('No north-east arrow marks anywhere on the site (owner, 2026-11-25)', () => {
+  const read = (f) => readFileSync(new URL('../../' + f, import.meta.url), 'utf8');
+  const NE = /[↖-↙⇖-⇙⬈-⬋]|&#8599;|&#x2197;|&nearr;|\2197|\u2197|class="kw-arrow[ "]|M3\.5 8\.5 8\.5 3\.5/i;
+  for (const f of ['index.html', '404.html', 'case-study.html', 'project-3d.html', 'experience.html', 'case-study.js', 'project-case-3d.js',
+    'project-motion-story.js', 'project-motion-arrival.js', 'script.js', 'experience.js', 'experience-resume.js', 'studio-navigation.js',
+    'case-study-data.js', 'case-study-supplements.js', 'project-data.js', 'experience-data.js', 'site-tokens-20261120.css', 'home-20261120.css',
+    'case-study.css', 'white-case-20261011.css', 'experience.css']) {
+    assert.doesNotMatch(read(f), NE, f);
+  }
+  assert.doesNotMatch(read('case-study.js'), /next-arrow/, 'the next-case link has no arrow');
+  // the same-tab studio invitation keeps its plain right arrow (case-study.css draws it)
+  assert.match(read('case-study.js'), /3D Studio <span aria-hidden="true">→<\/span><\/a>/);
+  // the new-tab hints stay for screen readers
+  for (const f of ['case-study.html', 'project-3d.html']) assert.match(read(f), /Resume<span class="sr-only"> \(PDF, opens in a new tab\)<\/span>/, f);
+  assert.match(read('experience-resume.js'), /aria-label="Open résumé PDF in a new tab"/);
 });

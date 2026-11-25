@@ -1,5 +1,28 @@
 # Homepage presentation
 
+## No diagonal arrow marks · 2026-11-25
+
+The owner sent a picture of a small diagonal north-east arrow icon on 2026-11-25 and asked for
+that kind of arrow mark to be removed from the site; they do not much like it. Commit: this
+entry's own commit, parent f7822731. The scope and every choice here are agent decisions they
+can change (details: `AGENT_HANDOFF.md`, 2026-11-25). These rules supersede every "↗" in the
+sections below.
+
+- No link or button carries a diagonal arrow (`svg.kw-arrow` or "↗"): running head, hero
+  actions, leadership link, studio teaser, method captions and links, contact rows, and the 404
+  page's nav and Resume exit (the same on the detail pages and in the studio). Screen-reader
+  "(opens in a new tab)" hints, `target` and `rel` are unchanged.
+- Kept: "See the 16 projects ↓", "Back to top ↑", other down, up, left and right arrows, the hero
+  drawing's arrowheads, leaders and control icons.
+- The hero pen block is byte-identical and the hero text has not moved (0 px at six widths). The
+  studio button is 24-32 px narrower; on phones 327-386 px wide the Resume link now shares the
+  studio button's row (as from 390 px), so the actions are 56 px shorter and everything below sits
+  56 px higher. 320 and 390+ are unchanged.
+- No CSS change: the unused `.kw-arrow` rules in `site-tokens-20261120.css` and
+  `home-20261120.css` stay, so no cache label changes on the homepage.
+- Not verified on real phones, Safari, Firefox or screen readers (headless Chrome on one Windows
+  machine).
+
 ## Drafting hero: the car drafted while the photo emerges · 2026-11-22
 
 The owner said on 2026-11-20 (voice) that the one-pen hero drawing (0e561624) is too long and
@@ -8,7 +31,7 @@ engineering drawing with the photo slowly emerging behind it; on 2026-11-21, to 
 set with every line on a real edge of the photo, and then "still denser" (from mechanical detail
 and from body decals and marks); on 2026-11-22, that the denser motion at three sizes is fine;
 and, after whole-page films at 1440, 768 and 390 px, that the new hero can go live. Commit: this
-entry's own commit (parent 5b20926f). These rules supersede the drawing described in the
+entry's own commit (f7822731) (parent 5b20926f). These rules supersede the drawing described in the
 2026-11-10 "Hero pen" section below (one pen, 87 / 44 / 36 strokes, GUIDE / SHADE / INK, its
 order and timing with last ink about 4.2 / 3.0 / 2.9 s, the develop after the last ink, the
 165-175 ms settle figures measured on that engine, the settled-hero comparison with 85467bca) and
@@ -105,13 +128,13 @@ not cropped). He has not seen the stills yet; this is an agent decision he can c
   display, IBM Plex Mono only for case and section numbers and evidence tags) and
   `home-20261120.css`, after `white-home-20261011.css`; both `?v=refresh-20261120`.
 - Running head: opaque white, 1px #d9dde1 hairline, 72px (60px at 720 and below), no blur.
-  "KW" plus "Kefan Wu"; Projects, Approach, Contact, Resume ↗, then "3D Studio ↗" as a text link
+  "KW" plus "Kefan Wu"; Projects, Approach, Contact, Resume, then "3D Studio" as a text link
   after a hairline divider. The current section has a 1px ink underline; no link is current
   over the hero, Leadership or the studio teaser.
 - First screen: eyebrow "Mechanical engineering / Olin ’28" (Inter 500 15px); the name; directly
   under it "Leading 30 mechanical engineers" (600 24/32) and "Mechanical Lead · Olin Electric
   Motorsports" (500 16/24); then the tagline (19/28). Actions: "See the 16 projects ↓" filled,
-  "Enter the 3D Studio ↗" 48px outline, "Resume (PDF) ↗" text link (its own row from 721px; on
+  "Enter the 3D Studio" 48px outline, "Resume (PDF)" text link (its own row from 721px; on
   the buttons' row on tall tablets). No bottom row and no second scroll cue.
 - Everything after the name sits in `.hero-lede`, whose height per layout band equals
   0e561624's tagline and CTA rows, so the name does not move. The imprint takes four lines at
@@ -138,7 +161,7 @@ not cropped). He has not seen the stills yet; this is an agent decision he can c
   "Engineer the system. Enable the team.", the paragraph, the figures 30 and 4 ("Mechanical
   engineers", "Subteams"), the role path 2024 Engineer, 2025 Cockpit Lead, 2026 Mechanical Lead,
   and the Olin Electric Motorsports link.
-- Studio teaser: the image and one outline "Enter the 3D Studio ↗".
+- Studio teaser: the image and one outline "Enter the 3D Studio".
 - How I work: the three photos over the three method columns (4:3), captions 15px with mono
   evidence tags; "Own the whole loop." at 72/72.
 - Contact: "What’s next starts here.", the existing Summer 2027 sentence, then hairline rows for
@@ -148,8 +171,8 @@ not cropped). He has not seen the stills yet; this is an agent decision he can c
   numbered exits (Projects, Resume (PDF), Contact); status 404.
 - Known, kept: in ordinary laptop windows such as 1366x657 and 1536x695 the Resume (PDF) link is
   below the fold, and at about 1366x625 both hero buttons are cut by the fold (0e561624 showed all
-  three actions there); on phones the photo sits between the name and the imprint (160-187px apart); some link arrows wrap
-  alone onto their own line.
+  three actions there); on phones the photo sits between the name and the imprint (160-187px apart). (The link arrows
+  that wrapped alone onto their own line were removed on 2026-11-25.)
 - Agent decisions to note: the CTA swap (projects button filled, studio outline) goes against the
   plan's default for owner question 1. The leadership photo `assets/fsae-mk7-shop.webp` is one
   354,772 B file with no srcset, up to about 290 KB more than 0e561624 on phones (lazy-loaded);

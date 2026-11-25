@@ -6,7 +6,7 @@ export const RESUME_PAPER = Object.freeze({ width: .234, height: .234 * 22 / 17,
 export function resumeHTML() {
   const pdf = `${RESUME_ASSET.source}?v=${RESUME_ASSET.sourceSha256.slice(0, 12)}`;
   return `<div class="exp-sheet__toolbar" aria-label="Résumé controls">
-    <a href="${pdf}" target="_blank" rel="noopener" class="exp-sheet__pdf" aria-label="Open résumé PDF in a new tab"><span class="exp-sheet__open-label">Open </span>PDF ↗</a>
+    <a href="${pdf}" target="_blank" rel="noopener" class="exp-sheet__pdf" aria-label="Open résumé PDF in a new tab"><span class="exp-sheet__open-label">Open </span>PDF</a>
     <a href="${pdf}" download="Kefan-Wu-Resume.pdf" class="exp-sheet__download" aria-label="Download résumé PDF" title="Download PDF">↓</a>
     <div class="exp-sheet__views" role="group" aria-label="Résumé view">
       <button type="button" data-resume-view="page" aria-pressed="true">Page</button>

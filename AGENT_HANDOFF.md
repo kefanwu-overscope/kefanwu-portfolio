@@ -2,9 +2,44 @@
 
 > Project rules for agents live in ../CLAUDE.md. Entries below are a dated log, newest first; when entries disagree, the newest one wins.
 
+## Diagonal arrow marks removed site-wide · 2026-11-25
+
+Commit: this entry's own commit, parent f7822731. The entry was written before the commit, so it cannot name its own hash. The owner's words (2026-11-25, with a picture of a small diagonal north-east arrow icon), in English: remove this kind of arrow mark from the website; they do not much like it. That is the whole request. The scope and every choice below are agent decisions (the main loop and the implementer), not the owner's; the owner can change any of them. This entry was written before the push, so it holds no live result.
+
+Release: 13 paths (list: `../releases/arrows-20261125/release-files.txt`): 10 modified (`404.html`, `case-study.html`, `case-study.js`, `experience-entry.js`, `experience-resume.js`, `experience.html`, `experience.js`, `index.html`, `project-3d.html`, `tools/room-tests/home-catalogue.test.mjs`), 0 new, 0 deleted, plus these 3 docs. Evidence: `../releases/arrows-20261125/impl/` (`record.json`, `apply-record.json`, `compare.json`, `phones.json`, `endshots.json`, `hero-block-proof.json`, `before/`, `after/`).
+
+### What changed
+
+- Every diagonal north-east arrow (the `svg.kw-arrow` icon and the "↗" glyph) is gone from the site:
+  - `index.html`, 15: header nav Resume and 3D Studio; hero "Enter the 3D Studio" and "Resume (PDF)"; leadership "Olin Electric Motorsports"; studio teaser "Enter the 3D Studio"; the three method captions and the three method links; contact "View resume (PDF)", LinkedIn and "Enter the 3D Studio".
+  - `404.html`, 3: header nav Resume and 3D Studio, exit "02 Resume (PDF)"; its now unused inline rule `.exits .go` was deleted.
+  - Detail pages (`case-study.html`, `project-3d.html`, `case-study.js`): header Resume, lightbox "Original", "Project sources" links, "Explore in 3D", the gallery "Browse ... images" button, the large next-project arrow (`span.next-arrow`), and the contact LinkedIn and "Resume (PDF)" links.
+  - Studio: the loader's "Portfolio" exit (`experience.html`) and the résumé sheet's "Open PDF" (`experience-resume.js`).
+- The studio invitation's hidden glyph in `case-study.js` changed from "↗" to "→"; `case-study.css` already drew it as "→", so it looks the same.
+- Screen-reader text is unchanged: the "(PDF, opens in a new tab)" and "(opens in a new tab)" hints and the résumé sheet's aria-label stay; `target` and `rel` are unchanged; accessible names were identical before and after on all 22 page loads.
+- Kept: down, up, left and right arrows ("See the 16 projects ↓", "Back to top ↑", "←" and "→" where they occur) used for navigation, controls and data; the hero drawing's dimension arrowheads; callout leaders; control icons.
+- Hero: the inline hero-pen block is byte-identical to f7822731 (29,700 B, SHA256 ac857b92...); `index.html` 84,928 -> 81,778 B. Hero text (eyebrow, name, imprint, tagline, actions row top) 0 px from f7822731 at six widths and at 483 sweep points. The studio button is 24-32 px narrower and the Resume link 20 px narrower.
+- Cache labels `?v=arrows-20261125`: `case-study.js` (was `cards-20261109`; `case-study.html`, `project-3d.html`), and the studio module chain `experience-entry.js`, `experience.js`, `experience-resume.js` (were `dtb-20261027`; `experience.html` and the module imports). No CSS changed; `index.html` and `404.html` need no label (inline markup). No asset, `vercel.json` unchanged.
+
+### Tests
+
+- Working tree before the commit (headless Chrome, Playwright channel chrome, one Windows machine): `node --check` 5/5; readability 22/22; room-tests 253/253 (252 plus the new "No north-east arrow marks anywhere on the site", which scans 22 files (pages, scripts, data and style sheets); the hero test's old "↗" check was widened to the drawn icon); hero-tests 52/52, 0 skipped (`PLAYWRIGHT_MODULE` set); engine 46/46; `hero-halo-20261024.cjs` 32/32 in pen mode and with `?hero=photo`. `build.cjs --check index.html --base <the edited page>` exits 0; without `--base` it fails only `outsideIdentical` until this is committed (the base is then the f7822731 page, by design).
+- Browser: home at six widths, hero ends by itself at 2500.7-2501.3 ms, 0 overflow, 0 errors, 0 broken images, 15 -> 0 arrow icons; 404 at six widths; detail pages (case-study steering and brakeSim, project-3d scanner and brakeSim, 1440 and 390) 5-7 visible diagonal marks -> 0; studio 1440 and 390 revealed, `window.__exp` present, 0 errors.
+
+### Decisions recorded for the owner (agent decisions, not the owner's)
+
+- Scope: diagonal arrows only. The "↓ ↑ ← →" navigation, control and data arrows stay.
+- The large next-project arrow on the detail pages is removed with no replacement; its hover nudge went with it. The next-project title box is unchanged (761x68 at 1440).
+- On phones 327-386 px wide (the independent verifier swept 1 px steps; 337-396 px in desktop windows) the shorter studio button lets the Resume link join its row, as it already did from 390 px: the hero actions are 56 px shorter and everything below them sits 56 px higher. 320 and 387+ are unchanged. Captions and links that wrapped only because of the arrow now fit on one line, so the approach section is 24 px shorter at some widths (80 px in total at 348-365 px phones); pages only got shorter.
+- Dead arrow CSS (`.kw-arrow` in `site-tokens-20261120.css` and `home-20261120.css`, `.next-arrow` in `case-study.css`) is left in place so no CSS cache label changes.
+
+### Not tested
+
+Real phones, tablets and touch screens; Safari and Firefox; screen readers. The implementer loaded detail pages for 3 of the 16 projects (steering, scanner, brakeSim); for the independent check of all 16, see the release record. The gallery "Browse ... images" button was not rendered on the pages checked. Live site: see the release record.
+
 ## Drafting hero: the car drafted while the photo emerges · 2026-11-22
 
-Commit: this entry's own commit, whose parent is 5b20926f (live). The entry was written before the commit, so it cannot name its own hash. The owner's words about this hero are listed under "Owner's words" below. The last of them came after whole-page films at 1440, 768 and 390 px and approves publishing the hero as those films showed it. Every individual choice in the hero (time, order, what is drawn, the pens and lanes, the build, the tests) is an agent decision: the drafting spec, the art, critic and solver rounds, an orchestrator where noted, the integration, the fix1 pass, two independent verifiers and the main loop. None of them is the owner's choice.
+Commit: this entry's own commit (f7822731), whose parent is 5b20926f (live). The entry was written before the commit, so it cannot name its own hash. The owner's words about this hero are listed under "Owner's words" below. The last of them came after whole-page films at 1440, 768 and 390 px and approves publishing the hero as those films showed it. Every individual choice in the hero (time, order, what is drawn, the pens and lanes, the build, the tests) is an agent decision: the drafting spec, the art, critic and solver rounds, an orchestrator where noted, the integration, the fix1 pass, two independent verifiers and the main loop. None of them is the owner's choice.
 
 Release: 20 paths (list: `../releases/hero-drafting-20261120/release-files.txt`): 10 modified (`.gitignore`, `index.html`, `tools/hero-pen/README.md`, `tools/hero-pen/engine/build.cjs`, `tools/hero-pen/engine/engine.js`, `tools/hero-pen/test/engine.test.cjs`, `tools/hero-pen/test/pen-checks.cjs`, `tools/hero-tests/hero-first-paint.test.cjs`, `tools/hero-tests/hero-pen.test.cjs`, `tools/hero-tests/refresh-replay.test.cjs`), 7 new (`tools/hero-pen/engine/engine-0e561624.js`, `tools/hero-pen/engine/pens.cjs`, `tools/hero-pen/out/final/build-options.json`, `tools/hero-pen/out/final/conventions.json`, `tools/hero-pen/out/final/groups.json`, `tools/hero-pen/out/final/strokes.json`, `tools/hero-pen/test/vclock.js`), 0 deleted, plus these 3 docs. The 17 code and data files were copied byte for byte from the verified isolated tree (`../releases/hero-drafting-20261120/prod/integrate2/tree`); `prod/integrate2/apply-list.json` holds the SHA256, size and git blob of each, and all 17 matched in the repo before staging. Evidence: `../releases/hero-drafting-20261120/prod/integrate2/` (`integrate-record.json`, `verify/verify-record.json`, `fix1/fix1-record.json`, `verify2/verify2-record.json`, `preship-rulings.json`), the art of record `../releases/hero-drafting-20261120/prod/dense3/final/build4/`, the films the owner watched `prod/integrate2/owner/`, the pre-push run `../releases/hero-drafting-20261120/release/prepush/`. This entry was written before the push, so it holds no live result.
 
